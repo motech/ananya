@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bbcwt" basedir=".">
+
+    <property file="${basedir}\build.properties"/>
+    <condition property="script.interpreter" value="bash" else="cmd">
+        <os family="unix"/>
+    </condition>
+    <condition property="script.switch" value="/c" else="">
+        <not>
+            <os family="unix"/>
+        </not>
+    </condition>
+    <condition property="script.suffix" value="sh" else="bat">
+        <os family="unix"/>
+    </condition>
+
+    <target name="copy.bbcwt.from.hudson">
+        <copy todir="${target.dir}" flatten="true">
+            <resources>
+                <url url="http://${hudson.server}:${hudson.server.port}/job/${hudson.job.name}/${hudson.build.number}/org.motechproject.bbcwt$bbcwt/artifact/org.motechproject.bbcwt/bbcwt/${hudson.maven.release.no}/bbcwt-${hudson.maven.release.no}.war"/>
+            </resources>
+        </copy>
+        <move file="${target.dir}/bbcwt-${hudson.maven.release.no}.war" tofile="${target.dir}/${app_name}.war"/>
+    </target>
+
+    <target name="deploy.war" depends="copy.bbcwt.from.hudson">
+        <echo message="Deploying to tomcat at ${tomcat.url} with tomcat home ${tomcat.home}"/>
+        <delete dir="${tomcat.home}/webapps/${app_name}"/>
+        <copy file="${war.file}" tofile="${tomcat.home}/webapps/${app_name}.war" overwrite="true"/>
+        <delete dir="${tomcat.home}/work/Catalina/localhost/${app_name}"/>
+    </target>
+
+
+    <target name="start.tomcat" depends="stop.tomcat">
+        <echo message="Starting tomcat..."/>
+        <echo message="Waiting for tomcat to start on ${tomcat.url}"/>
+        <exec executable="${script.interpreter}" dir="${tomcat.home}" spawn="true">
+            <arg line="${script.switch} ${tomcat.home}/bin/startup.${script.suffix}"/>
+        </exec>
+        <waitfor checkevery="100" checkeveryunit="millisecond" maxwait="2" maxwaitunit="minute"
+                 timeoutproperty="tomcat.timeout">
+            <http url="${tomcat.url}"/>
+        </waitfor>
+        <fail if="tomcat.timeout" message="Error starting up tomcat..."/>
+        <echo message="Tomcat started"/>
+    </target>
+
+    <target name="stop.tomcat" description="Stop Tomcat">
+        <echo message="Stopping tomcat..."/>
+        <echo message="Waiting for tomcat to stop on ${tomcat.url}"/>
+        <exec executable="${script.interpreter}" dir="${tomcat.home}" spawn="true">
+            <arg line="${script.switch} ${tomcat.home}/bin/shutdown.${script.suffix}"/>
+        </exec>
+        <waitfor checkevery="100" checkeveryunit="millisecond" maxwait="2" maxwaitunit="minute"
+                 timeoutproperty="tomcat.timeout">
+            <not>
+                <http url="${tomcat.url}"/>
+            </not>
+        </waitfor>
+        <fail if="tomcat.timeout" message="Error shutting down tomcat..."/>
+    </target>
+
+    <target name="clean.tomcat.logs" depends="stop.tomcat" description="Nuke all tomcat logs">
+        <delete failonerror="false">
+            <fileset dir="${tomcat.home}/logs" includes="*"/>
+        </delete>
+    </target>
+
+    <path id="libs">
+        <fileset dir="${tomcat.home}/webapps/${app_name}/WEB-INF/lib/" includes="**/*.jar"/>
+    </path>
+
+    <target name="load.seed.data">
+        <java fork="true" classname="${seed.main.class}">
+            <classpath>
+                <path location="${tomcat.home}/webapps/${app_name}/WEB-INF/classes"/>
+                <path refid="libs"/>
+            </classpath>
+        </java>
+        <path refid="dev.lib"/>
+    </target>
+
+    <path id="dev.lib">
+        <fileset dir="../target/bbcwt-0.1.0.BUILD-SNAPSHOT/WEB-INF/lib" includes="**/*.jar"/>
+    </path>
+
+     <target name="dev.load.seed.data">
+        <java fork="true" classname="${seed.main.class}">
+            <classpath>
+                <path location="../target/classes"/>
+                <path refid="dev.lib"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="drop.db">
+        <exec executable="curl">
+            <arg value="-X"/>
+            <arg value="DELETE"/>
+            <arg value="http://${db.server}:5984/${db.name}"/>
+        </exec>
+    </target>
+
+    <target name="deploy.bbcwt.and.reset.db" depends="stop.tomcat,drop.db,deploy.war,start.tomcat,load.seed.data"
+            description="Deploy bbcwt by droping database and seed data (which creates database if doesn't exist)"/>
+
+    <target name="deploy.bbcwt" depends="stop.tomcat,deploy.war,start.tomcat"
+            description="Deploy bbcwt without recreating database and seed data"/>
+</project>
