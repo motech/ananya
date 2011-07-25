@@ -9,11 +9,21 @@
 
     <context:property-placeholder location="classpath*:META-INF/spring/*.properties"/>
     <util:properties id="ivrProperties" location="classpath:/ivr.properties"/>
-    <context:spring-configured/>
+    <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
     <context:component-scan base-package="org.motechproject.bbcwt">
         <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
+
+    <bean id="bbcwtCouchDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+        <constructor-arg>
+            <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
+        </constructor-arg>
+    </bean>
+    <bean id="bbcwtDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+        <constructor-arg value="bbcwt"/>
+        <constructor-arg ref="bbcwtCouchDbInstance"/>
+    </bean>
 
     <bean id="actions" class="org.motechproject.bbcwt.ivr.action.Actions">
         <constructor-arg>
