@@ -29,6 +29,7 @@
         <constructor-arg>
             <map>
                 <entry key="newcall" value-ref="newCallEventAction"/>
+                <entry key="gotdtmf" value-ref="dtmfEventAction"/>
             </map>
         </constructor-arg>
     </bean>
