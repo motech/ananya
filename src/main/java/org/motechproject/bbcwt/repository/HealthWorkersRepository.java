@@ -26,4 +26,10 @@ public class HealthWorkersRepository extends CouchDbRepositorySupport<HealthWork
         }
         return null;
     }
+
+    @GenerateView
+    @Override
+    public List<HealthWorker> getAll() {
+        return super.getAll();
+    }
 }

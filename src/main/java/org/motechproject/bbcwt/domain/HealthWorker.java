@@ -1,7 +1,9 @@
 package org.motechproject.bbcwt.domain;
 
 import org.ektorp.support.CouchDbDocument;
+import org.ektorp.support.TypeDiscriminator;
 
+@TypeDiscriminator("doc.documentType == 'HealthWorker'")
 public class HealthWorker extends CouchDbDocument {
     private String callerId;
 
