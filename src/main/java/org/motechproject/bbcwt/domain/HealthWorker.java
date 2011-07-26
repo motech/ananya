@@ -7,11 +7,14 @@ import org.ektorp.support.TypeDiscriminator;
 public class HealthWorker extends CouchDbDocument {
     private String callerId;
 
-    public HealthWorker() {
+    private String documentType;
 
+    public HealthWorker() {
+        this.documentType = this.getClass().getSimpleName();
     }
 
     public HealthWorker(String callerId) {
+        this();
         this.callerId = callerId;
     }
 
@@ -21,5 +24,13 @@ public class HealthWorker extends CouchDbDocument {
 
     public void setCallerId(String callerId) {
         this.callerId = callerId;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
     }
 }
