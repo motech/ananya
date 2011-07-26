@@ -40,6 +40,7 @@ public class NewCallEventActionTest extends BaseActionTest {
         when(request.getSession()).thenReturn(session);
         when(healthWorkers.findByCallerId(ivrRequest.getCid())).thenReturn(null);
         when(messages.get("wc.msg.new.user")).thenReturn("Welcome. This is the first time you are accessing FLW Training course.");
+        when(messages.get("msg.new.user.options")).thenReturn("Please press 1 for Help, 2 for starting Chapters.");
 
         String ivrResponse = action.handle(ivrRequest, request, response);
 
@@ -48,6 +49,8 @@ public class NewCallEventActionTest extends BaseActionTest {
         verify(healthWorkers).add(argThat(new HealthWorkerCallerIdMatcher(callerId)));
 
         assertTrue("IVR Response should contain welcome message for new user.", ivrResponse.contains("Welcome. This is the first time you are accessing FLW Training course."));
+        assertTrue("Collect Dtmf should be present", ivrResponse.contains("collectdtmf"));
+        assertTrue("Collect Dtmf prompt should be present", ivrResponse.contains("Please press 1 for Help, 2 for starting Chapters."));
     }
 
     @Test
