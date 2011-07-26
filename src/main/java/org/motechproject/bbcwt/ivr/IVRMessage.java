@@ -8,7 +8,8 @@ import java.util.Properties;
 
 @Component
 public class IVRMessage {
-    public static final String BBCWT_IVR_WELCOME_MESSAGE = "welcome.message";
+    public static final String BBCWT_IVR_NEW_USER_WC_MESSAGE = "wc.msg.new.user";
+    public static final String BBCWT_IVR_EXISTING_USER_WC_MESSAGE = "wc.msg.existing.user";
 
     @Qualifier("ivrProperties")
     @Autowired
