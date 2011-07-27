@@ -34,10 +34,7 @@ public class IVR {
     }
 
     public static class Attributes {
-        public static final String CALL_STATE = "call_state";
-        public static final String CALL_ID = "call_id";
         public static final String CALLER_ID = "caller_id";
-        public static final String PATIENT_DOCUMENT_ID = "patient_doc_id";
-        public static final String NUMBER_OF_ATTEMPTS = "number_of_retries";
+        public static final String NEXT_INTERACTION = "next_interaction";
     }
 }

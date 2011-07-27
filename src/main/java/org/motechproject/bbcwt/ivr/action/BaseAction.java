@@ -2,6 +2,7 @@ package org.motechproject.bbcwt.ivr.action;
 
 import com.ozonetel.kookoo.CollectDtmf;
 import com.ozonetel.kookoo.Response;
+import org.apache.log4j.Logger;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
@@ -9,6 +10,7 @@ import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class BaseAction implements IVRAction {
+    protected static final Logger LOG = Logger.getLogger(BaseAction.class);
     @Autowired
     protected IVRMessage messages;
 

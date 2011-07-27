@@ -1,23 +1,22 @@
 package org.motechproject.bbcwt.ivr.action.event;
 
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
+import org.motechproject.bbcwt.ivr.action.HelpMenuAnswerAction;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class DtmfEventActionTest extends BaseActionTest {
-    private DtmfEventAction action;
+public class HelpMenuAnswerActionTest extends BaseActionTest {
+    private HelpMenuAnswerAction action;
 
     @Before
     public void setUp() {
         initMocks(this);
-        action = new DtmfEventAction(messages);
+        action = new HelpMenuAnswerAction(messages);
     }
 
     @Test

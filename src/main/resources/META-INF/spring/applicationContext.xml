@@ -12,7 +12,6 @@
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
     <context:component-scan base-package="org.motechproject.bbcwt">
-        <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
 
     <bean id="bbcwtCouchDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
@@ -25,12 +24,4 @@
         <constructor-arg ref="bbcwtCouchDbInstance"/>
     </bean>
 
-    <bean id="actions" class="org.motechproject.bbcwt.ivr.action.Actions">
-        <constructor-arg>
-            <map>
-                <entry key="newcall" value-ref="newCallEventAction"/>
-                <entry key="gotdtmf" value-ref="dtmfEventAction"/>
-            </map>
-        </constructor-arg>
-    </bean>
 </beans>
