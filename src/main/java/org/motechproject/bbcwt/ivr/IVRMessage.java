@@ -11,6 +11,7 @@ public class IVRMessage {
     public static final String BBCWT_IVR_NEW_USER_WC_MESSAGE = "wc.msg.new.user";
     public static final String BBCWT_IVR_EXISTING_USER_WC_MESSAGE = "wc.msg.existing.user";
     public static final String BBCWT_IVR_NEW_USER_OPTIONS = "msg.new.user.options";
+    public static final String IVR_HELP = "msg.help";
 
     @Qualifier("ivrProperties")
     @Autowired

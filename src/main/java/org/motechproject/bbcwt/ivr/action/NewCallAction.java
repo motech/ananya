@@ -4,14 +4,12 @@ import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,35 +17,40 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/newcall")
-public class NewCallEventAction extends BaseAction {
+public class NewCallAction extends BaseAction {
 
     private HealthWorkersRepository healthWorkers;
 
     @Autowired
-    public NewCallEventAction(IVRMessage messages, HealthWorkersRepository healthWorkers) {
+    public NewCallAction(IVRMessage messages, HealthWorkersRepository healthWorkers) {
         this.messages = messages;
         this.healthWorkers = healthWorkers;
     }
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         LOG.info("Handling new call.");
+
         HttpSession session = request.getSession();
-        session.setAttribute(IVR.Attributes.CALLER_ID, ivrRequest.getCid());
-        HealthWorker healthWorker = healthWorkers.findByCallerId(ivrRequest.getCid());
+
+        String callerId = ivrRequest.getCid();
+
+        session.setAttribute(IVR.Attributes.CALLER_ID, callerId);
+        HealthWorker healthWorker = healthWorkers.findByCallerId(callerId);
+
+        IVRResponseBuilder ivrResponseBuilder = ivrResponseBuilder(request);
+
         if(healthWorker == null) {
-            healthWorkers.add(new HealthWorker(ivrRequest.getCid()));
+            healthWorkers.add(new HealthWorker(callerId));
 
-            IVRDtmfBuilder optionsBuilder = ivrDtmfBuilder().withPlayText(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS));
-            IVRResponseBuilder ivrResponseBuilder = ivrResponseBuilder().withPlayText(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)).withCollectDtmf(optionsBuilder.create());
+            ivrResponseBuilder.addPlayText(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE));
 
-            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
-            return ivrResponseBuilder.create().getXML();
+            return "forward:/helpMenu";
         }
         else {
-            return responseWith(ivrRequest, IVRMessage.BBCWT_IVR_EXISTING_USER_WC_MESSAGE);
+            ivrResponseBuilder.addPlayText(messages.get(IVRMessage.BBCWT_IVR_EXISTING_USER_WC_MESSAGE));
+            return "forward:/existingUserMenu";
         }
     }
 }

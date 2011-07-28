@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +21,13 @@ public class HelpMenuAnswerAction extends BaseAction {
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         String input = ivrRequest.getData();
         if(input.charAt(0) == '1') {
-            return responseWith(ivrRequest, "msg.help");
+            ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.IVR_HELP));
+            return "forward:/helpMenu";
         }
-        return responseWith(ivrRequest, "content.chapter1");
+        return "forward:/chapter";
     }
 
 }

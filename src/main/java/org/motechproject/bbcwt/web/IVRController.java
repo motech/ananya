@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,9 @@ public class IVRController {
     @RequestMapping(value = "reply", method = RequestMethod.GET)
     public String reply(@ModelAttribute IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
+
+        LOG.info("Interaction for: " + ivrRequest.getCid());
+
         if(session == null) {
             LOG.info("There is no session, new call, forwarding.");
             return "forward:/newcall";
@@ -36,6 +40,7 @@ public class IVRController {
     @RequestMapping(value = "continueInteraction", method = RequestMethod.GET)
     public String continueInteraction(@ModelAttribute IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         String nextController = (String)request.getSession().getAttribute(IVR.Attributes.NEXT_INTERACTION);
+        LOG.info("Continuing to next interaction at: " + nextController);
         return "forward:" + nextController;
     }
 }

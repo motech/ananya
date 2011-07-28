@@ -4,25 +4,31 @@ import com.ozonetel.kookoo.CollectDtmf;
 import com.ozonetel.kookoo.Response;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IVRResponseBuilder {
     private String sid;
-    private String playText;
+    private List<String> playTexts = new ArrayList<String>();
     private CollectDtmf collectDtmf;
     private boolean isHangUp;
-    private String playAudio;
+    private List<String> playAudios = new ArrayList<String>();
+    private String nextUrl;
 
     public IVRResponseBuilder withSid(String sid) {
         this.sid = sid;
         return this;
     }
 
-    public IVRResponseBuilder withPlayText(String playText) {
-        this.playText = playText;
+    public IVRResponseBuilder addPlayText(String... playTexts) {
+        for (String playText : playTexts)
+            this.playTexts.add(playText);
         return this;
     }
 
-    public IVRResponseBuilder withPlayAudio(String playAudio) {
-        this.playAudio = playAudio;
+    public IVRResponseBuilder addPlayAudio(String... playAudios) {
+        for (String playAudio : playAudios)
+            this.playAudios.add(playAudio);
         return this;
     }
 
@@ -36,11 +42,17 @@ public class IVRResponseBuilder {
         return this;
     }
 
+    public IVRResponseBuilder withNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+        return this;
+    }
+
     public Response create() {
         Response response = new Response();
         if (StringUtils.isNotBlank(sid)) response.setSid(sid);
-        if (StringUtils.isNotBlank(playText)) response.addPlayText(playText);
-        if (StringUtils.isNotBlank(playAudio)) response.addPlayAudio(playAudio);
+        for (String playText : playTexts) response.addPlayText(playText);
+        for (String playAudio : playAudios) response.addPlayAudio(playAudio);
+        if (StringUtils.isNotBlank(nextUrl)) response.addGotoNEXTURL(this.nextUrl);
         if (collectDtmf != null) response.addCollectDtmf(collectDtmf);
         if (isHangUp) response.addHangup();
         return response;
