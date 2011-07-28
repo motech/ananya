@@ -11,11 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class HealthWorkersRepository extends CouchDbRepositorySupport<HealthWorker> {
+public class HealthWorkersRepository extends AbstractCouchRepository<HealthWorker> {
     @Autowired
     public HealthWorkersRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db) {
         super(HealthWorker.class, db);
-        initStandardDesignDocument();
     }
 
     @GenerateView
@@ -25,11 +24,5 @@ public class HealthWorkersRepository extends CouchDbRepositorySupport<HealthWork
             return healthWorkers.get(0);
         }
         return null;
-    }
-
-    @GenerateView
-    @Override
-    public List<HealthWorker> getAll() {
-        return super.getAll();
     }
 }
