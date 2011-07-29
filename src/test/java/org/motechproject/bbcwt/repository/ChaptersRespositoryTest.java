@@ -44,11 +44,10 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
         chapter.addLesson(lesson2);
 
         chaptersRespository.add(chapter);
+        markForDeletion(chapter);
 
         Chapter persistedChapter = chaptersRespository.get(chapter.getId());
 
         assertThat(persistedChapter.getLessons(), hasItems(lesson1,lesson2));
     }
-
-
 }

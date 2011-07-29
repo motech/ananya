@@ -1,6 +1,5 @@
 package org.motechproject.bbcwt.domain;
 
-import org.apache.log4j.Logger;
 import org.ektorp.support.CouchDbDocument;
 
 public class BaseCouchEntity extends CouchDbDocument {

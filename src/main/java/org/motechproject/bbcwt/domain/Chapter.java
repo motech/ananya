@@ -4,7 +4,6 @@ import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @TypeDiscriminator("doc.documentType == 'Chapter'")
 public class Chapter extends BaseCouchEntity {

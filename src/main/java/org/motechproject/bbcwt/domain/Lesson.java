@@ -2,6 +2,9 @@ package org.motechproject.bbcwt.domain;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.bbcwt.util.UUIDUtil;
+
+import java.util.UUID;
 
 @TypeDiscriminator("doc.documentType == 'Lesson'")
 public class Lesson extends BaseCouchEntity {
@@ -14,8 +17,9 @@ public class Lesson extends BaseCouchEntity {
     }
 
     public Lesson(int number, String location) {
-       this.number = number;
-       this.location = location;
+        this.number = number;
+        this.location = location;
+        this.setId(UUIDUtil.newUUID());
     }
 
     public int getNumber() {
@@ -43,5 +47,11 @@ public class Lesson extends BaseCouchEntity {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "id: " + this.getId() + ", number: " + this.getNumber() + ", location: " + this.getLocation();
+
     }
 }
