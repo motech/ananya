@@ -20,6 +20,16 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
     @Test
     public void shouldPlayHelpWhenOptionChosenIs1() {
         String userInput = "1";
+        IVRRequest ivrRequest = new IVRRequest("unique-call-id", "9999988888", IVR.Event.GOT_DTMF.key(), userInput);
+
+        String chainedAction = action.handle(ivrRequest, request, response);
+
+        assertEquals("The help menu answer action should be chained to chapter to play the chapter.", "forward:/chapter", chainedAction);
+    }
+
+    @Test
+    public void shouldPlayHelpWhenOptionChosenIs2() {
+        String userInput = "2";
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, IVR.Event.GOT_DTMF.key(), userInput);
 
         String HELP_KEY = IVRMessage.IVR_HELP;
@@ -36,12 +46,18 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldPlayHelpWhenOptionChosenIs2() {
-        String userInput = "2";
-        IVRRequest ivrRequest = new IVRRequest("unique-call-id", "9999988888", IVR.Event.GOT_DTMF.key(), userInput);
+    public void shouldPlayInvalidInputWhenInvalidOptionIsChosen() {
+        String userInput = "3";
+        IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, IVR.Event.GOT_DTMF.key(), userInput);
+
+        final String INVALID_IP_MSG = "Invalid Input";
+        when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(INVALID_IP_MSG);
 
         String chainedAction = action.handle(ivrRequest, request, response);
 
-        assertEquals("The help menu answer action should be chained to chapter to play the chapter.", "forward:/chapter", chainedAction);
+        verify(messages, atLeastOnce()).get(IVRMessage.INVALID_INPUT);
+        verify(ivrResponseBuilder, atMost(1)).addPlayText(INVALID_IP_MSG);
+
+        assertEquals("The help menu should be played again in case of an invalid input.", "forward:/helpMenu", chainedAction);
     }
 }

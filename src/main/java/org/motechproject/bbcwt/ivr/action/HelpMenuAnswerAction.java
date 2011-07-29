@@ -22,12 +22,25 @@ public class HelpMenuAnswerAction extends BaseAction {
     @Override
     @RequestMapping(method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        String input = ivrRequest.getData();
-        if(input.charAt(0) == '1') {
-            ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.IVR_HELP));
-            return "forward:/helpMenu";
+        String dtmfInput = ivrRequest.getData();
+        char chosenOption = ' ';
+
+        if(dtmfInput!=null && dtmfInput.length() > 0) {
+            chosenOption = dtmfInput.charAt(0);
         }
-        return "forward:/chapter";
+
+        if(chosenOption == '1') {
+            return "forward:/chapter";
+        }
+        else {
+           if(chosenOption == '2') {
+               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.IVR_HELP));
+           }
+           else {
+               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
+           }
+        }
+        return "forward:/helpMenu";
     }
 
 }
