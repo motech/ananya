@@ -36,6 +36,51 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!--DATA SETUP-->
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>recreate-Db</id>
+                                <phase>test-compile</phase>
+                                <configuration>
+                                    <target>
+                                        <echo message="Recreating DB: START"/>
+                                        <property name="compile_classpath" refid="maven.compile.classpath"/>
+                                        <java classname="org.motechproject.bbcwt.tools.RecreateDB">
+                                            <classpath>
+                                                <pathelement path="${compile_classpath}"/>
+                                            </classpath>
+                                        </java>
+                                        <echo message="Recreating DB: END"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>load-seed-data-in-Db</id>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <target>
+                                        <echo message="Seed data loading: START"/>
+                                        <property name="compile_classpath" refid="maven.compile.classpath"/>
+                                        <java classname="org.motechproject.bbcwt.tools.seed.SetupSeedData">
+                                            <classpath>
+                                                <pathelement path="${compile_classpath}"/>
+                                            </classpath>
+                                        </java>
+                                        <echo message="Seed data loading: END"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>selenium-maven-plugin</artifactId>
