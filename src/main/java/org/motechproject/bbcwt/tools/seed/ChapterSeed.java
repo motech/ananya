@@ -23,7 +23,7 @@ public class ChapterSeed extends Seed {
 
         chapters.add(chapter1);
 
-        Chapter chapter2 = new Chapter(1);
+        Chapter chapter2 = new Chapter(2);
         Lesson lesson1Ch2 = new Lesson(1, "You are hearing to lesson 1 in chapter 2.");
         Lesson lesson2Ch2 = new Lesson(2, "You are hearing to lesson 2 in chapter 2.");
 

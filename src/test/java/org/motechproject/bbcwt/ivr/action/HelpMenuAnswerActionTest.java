@@ -24,7 +24,7 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
 
         String chainedAction = action.handle(ivrRequest, request, response);
 
-        assertEquals("The help menu answer action should be chained to chapter to play the chapter.", "forward:/chapter", chainedAction);
+        assertEquals("The help menu answer action should be chained to chapter to play the chapter.", "forward:/chapter/1/lesson/1", chainedAction);
     }
 
     @Test

@@ -27,10 +27,11 @@ public class HelpMenuAction extends BaseAction {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        LOG.info("In here to render help menu...");
         IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS));
         IVRResponseBuilder responseBuilder = ivrResponseBuilder(request).withCollectDtmf(dtmfBuilder.create());
         request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
-
+        LOG.info("Rendering help menu now.");
         return responseBuilder.create().getXML();
     }
 }

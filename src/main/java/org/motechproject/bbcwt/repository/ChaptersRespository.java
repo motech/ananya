@@ -19,7 +19,7 @@ public class ChaptersRespository extends AbstractCouchRepository<Chapter> {
     }
 
     @GenerateView
-    public Chapter findByNumber(String chapterNumber) {
+    public Chapter findByNumber(int chapterNumber) {
         List<Chapter> chapters = queryView("by_number", chapterNumber);
         if(chapters!=null && !chapters.isEmpty()) {
             return chapters.get(0);

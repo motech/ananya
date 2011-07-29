@@ -38,5 +38,13 @@ public class Chapter extends BaseCouchEntity {
         this.lessons = lessons;
     }
 
+    public Lesson getLessonByNumber(int number) {
+        for(Lesson lesson:this.getLessons()) {
+            if(lesson.getNumber() == number) {
+                return lesson;
+            }
+        }
+        return null;
+    }
 
 }

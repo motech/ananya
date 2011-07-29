@@ -30,7 +30,7 @@ public class HelpMenuAnswerAction extends BaseAction {
         }
 
         if(chosenOption == '1') {
-            return "forward:/chapter";
+            return "forward:/chapter/1/lesson/1";
         }
         else {
            if(chosenOption == '2') {

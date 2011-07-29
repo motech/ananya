@@ -25,7 +25,6 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
 
     @Test
     public void shouldPersistAChapter() {
-
         chaptersRespository.add(chapter);
         markForDeletion(chapter);
 
@@ -33,6 +32,17 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
 
         assertNotNull(persistedChapter);
         assertEquals("Chapter number should be the same which was saved.", chapter.getNumber(), persistedChapter.getNumber());
+    }
+
+    @Test
+    public void shouldReturnAChapterNumberForAGivenChapterNumber() {
+        chaptersRespository.add(chapter);
+        markForDeletion(chapter);
+
+        Chapter chapterByNumber = chaptersRespository.findByNumber(1);
+
+        assertNotNull(chapterByNumber);
+        assertEquals("Chapter number should the same as what was requested.", chapterByNumber.getNumber(), chapter.getNumber());
     }
 
     @Test
