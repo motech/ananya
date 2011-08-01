@@ -37,21 +37,4 @@ public class Lesson extends BaseCouchEntity {
     public void setLocation(String location) {
         this.location = location;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if(o!=null && this.getClass().equals(o.getClass())) {
-            Lesson other = (Lesson) o;
-            if(this.getLocation().equals(other.getLocation()) && this.getNumber() == other.getNumber()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return "id: " + this.getId() + ", number: " + this.getNumber() + ", location: " + this.getLocation();
-
-    }
 }

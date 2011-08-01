@@ -1,13 +1,21 @@
 package org.motechproject.bbcwt.repository;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -58,6 +66,38 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
 
         Chapter persistedChapter = chaptersRespository.get(chapter.getId());
 
-        assertThat(persistedChapter.getLessons(), hasItems(lesson1,lesson2));
+        assertThat(persistedChapter, hasLessons(lesson1, lesson2));
+    }
+
+    private Matcher<Chapter> hasLesson(final Lesson lesson) {
+        return new BaseMatcher<Chapter>() {
+            @Override
+            public boolean matches(Object item) {
+                if(item instanceof Chapter){
+                    Chapter chapter = (Chapter) item;
+                    return CollectionUtils.exists(chapter.getLessons(), new Predicate() {
+                        @Override
+                        public boolean evaluate(Object o) {
+                            Lesson aLesson = (Lesson) o;
+                            return aLesson.getId().equals(lesson.getId());
+                        }
+                    });
+                }
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Lesson " + lesson.getId() + ", at location: " + lesson.getLocation() + " is not present.");
+            }
+        };
+    }
+
+    private Matcher<Chapter> hasLessons(Lesson... lessons) {
+        List<Matcher<? extends Chapter>> matchersByLesson = new ArrayList<Matcher<? extends Chapter>>();
+        for(Lesson eachLesson: lessons) {
+            matchersByLesson.add(hasLesson(eachLesson));
+        }
+        return allOf(matchersByLesson);
     }
 }
