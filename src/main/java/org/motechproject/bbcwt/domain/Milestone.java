@@ -1,5 +1,6 @@
 package org.motechproject.bbcwt.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ektorp.support.TypeDiscriminator;
 
 import java.util.Date;
@@ -62,5 +63,10 @@ public class Milestone extends BaseCouchEntity {
 
     public void setHealthWorkerId(String healthWorkerId) {
         this.healthWorkerId = healthWorkerId;
+    }
+
+    @JsonIgnore
+    public boolean isAccomplished() {
+        return this.endDate != null;
     }
 }
