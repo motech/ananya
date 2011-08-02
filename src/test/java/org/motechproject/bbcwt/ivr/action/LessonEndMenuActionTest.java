@@ -1,14 +1,11 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import org.hamcrest.text.pattern.internal.ast.Exactly;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.powermock.api.mockito.PowerMockito.when;

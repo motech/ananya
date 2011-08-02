@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.ivr.action;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;

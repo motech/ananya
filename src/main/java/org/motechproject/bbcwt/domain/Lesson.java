@@ -1,10 +1,7 @@
 package org.motechproject.bbcwt.domain;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.bbcwt.util.UUIDUtil;
-
-import java.util.UUID;
 
 @TypeDiscriminator("doc.documentType == 'Lesson'")
 public class Lesson extends BaseCouchEntity {

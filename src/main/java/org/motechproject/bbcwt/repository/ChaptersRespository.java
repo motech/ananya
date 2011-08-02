@@ -1,7 +1,6 @@
 package org.motechproject.bbcwt.repository;
 
 import org.ektorp.CouchDbConnector;
-import org.ektorp.support.CouchDbRepositorySupport;
 import org.ektorp.support.GenerateView;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -17,9 +17,13 @@ public class ChapterSeed extends Seed {
         Chapter chapter1 = new Chapter(1);
         Lesson lesson1Ch1 = new Lesson(1, "You are hearing to lesson 1 in chapter 1.");
         Lesson lesson2Ch1 = new Lesson(2, "You are hearing to lesson 2 in chapter 1.");
+        Lesson lesson3Ch1 = new Lesson(3, "You are hearing to lesson 3 in chapter 1.");
+        Lesson lesson4Ch1 = new Lesson(4, "You are hearing to lesson 4 in chapter 1.");
 
         chapter1.addLesson(lesson1Ch1);
         chapter1.addLesson(lesson2Ch1);
+        chapter1.addLesson(lesson3Ch1);
+        chapter1.addLesson(lesson4Ch1);
 
         chapters.add(chapter1);
 
