@@ -1,5 +1,8 @@
 package org.motechproject.bbcwt.domain;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.lang.StringUtils;
 import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
@@ -47,4 +50,12 @@ public class Chapter extends BaseCouchEntity {
         return null;
     }
 
+    public Lesson getLessonById(final String lessonId) {
+        return (Lesson)CollectionUtils.find(lessons, new Predicate() {
+            @Override
+            public boolean evaluate(Object lesson) {
+                return StringUtils.equals(lessonId, ((Lesson)lesson).getId());
+            }
+        });
+    }
 }
