@@ -13,6 +13,10 @@ public class Milestone extends BaseCouchEntity {
     private Date startDate;
     private Date endDate;
 
+    private HealthWorker healthWorker;
+    private Chapter chapter;
+    private Lesson lesson;
+
     public Milestone()
     {
 
@@ -68,5 +72,35 @@ public class Milestone extends BaseCouchEntity {
     @JsonIgnore
     public boolean isAccomplished() {
         return this.endDate != null;
+    }
+
+    @JsonIgnore
+    public HealthWorker getHealthWorker() {
+        return healthWorker;
+    }
+
+    @JsonIgnore
+    public void setHealthWorker(HealthWorker healthWorker) {
+        this.healthWorker = healthWorker;
+    }
+
+    @JsonIgnore
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    @JsonIgnore
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
+    }
+
+    @JsonIgnore
+    public Lesson getLesson() {
+        return lesson;
+    }
+
+    @JsonIgnore
+    public void setLesson(Lesson lesson) {
+        this.lesson = lesson;
     }
 }

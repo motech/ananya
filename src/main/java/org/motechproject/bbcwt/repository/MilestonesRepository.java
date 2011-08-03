@@ -81,6 +81,16 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
 
     //TODO: Throw exceptions in case no milestone or healthworker is found.
     public Milestone markLastMilestoneFinish(String healthWorkerCallerId) {
+        Milestone milestone = milestoneForHealthWorker(healthWorkerCallerId);
+        if (milestone == null) return null;
+
+        milestone.setEndDate(dateProvider.getDate());
+
+        this.add(milestone);
+        return milestone;
+    }
+
+    private Milestone milestoneForHealthWorker(String healthWorkerCallerId) {
         HealthWorker healthWorker = healthWorkers.findByCallerId(healthWorkerCallerId);
 
         if(healthWorker == null) {
@@ -89,21 +99,24 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
 
         Milestone milestone = this.findByHealthWorker(healthWorker);
 
-        if(milestone == null) {
-            return null;
+        if(milestone != null) {
+            milestone.setHealthWorker(healthWorker);
         }
 
-        milestone.setEndDate(dateProvider.getDate());
-
-        this.add(milestone);
         return milestone;
     }
 
     public Milestone currentMilestoneWithLinkedReferences(String healthWorkerCallerId) {
-        return null;
+        Milestone currentMilestone = milestoneForHealthWorker(healthWorkerCallerId);
+
+        if(currentMilestone != null) {
+            Chapter chapter = chapters.get(currentMilestone.getChapterId());
+            currentMilestone.setChapter(chapter);
+
+            currentMilestone.setLesson(chapter.getLessonById(currentMilestone.getLessonId()));
+        }
+
+        return currentMilestone;
     }
 
-    public Milestone nextMilestoneWithLinkedReferences(String healthWorkerCallerId) {
-        return null;
-    }
 }
