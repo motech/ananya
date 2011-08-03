@@ -24,15 +24,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LessonEndAnswerAction extends BaseAction {
     private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
-    private HealthWorkersRepository healthWorkersRepository;
-    private DateUtil dateUtil;
 
     @Autowired
-    public LessonEndAnswerAction(HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, DateUtil dateUtil, IVRMessage messages) {
-        this.healthWorkersRepository = healthWorkersRepository;
+    public LessonEndAnswerAction(ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.chaptersRespository = chaptersRespository;
         this.milestonesRepository = milestonesRepository;
-        this.dateUtil = dateUtil;
         this.messages = messages;
     }
 
@@ -47,10 +43,7 @@ public class LessonEndAnswerAction extends BaseAction {
         }
 
         String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
-        HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);
-        Milestone milestone = milestonesRepository.findByHealthWorker(healthWorker);
-        milestone.setEndDate(dateUtil.getDate());
-        milestonesRepository.add(milestone);
+        Milestone milestone = milestonesRepository.markLastMilestoneFinish(callerId);
 
         Chapter currentChapter = chaptersRespository.get(milestone.getChapterId());
         Lesson lastLesson = currentChapter.getLessonById(milestone.getLessonId());

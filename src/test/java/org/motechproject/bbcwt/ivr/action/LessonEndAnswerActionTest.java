@@ -9,16 +9,13 @@ import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.matcher.MilestoneMatcher;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
-import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.util.DateUtil;
 
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -31,10 +28,6 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
     private ChaptersRespository chaptersRespository;
     @Mock
     private MilestonesRepository milestonesRepository;
-    @Mock
-    private HealthWorkersRepository healthWorkersRepository;
-    @Mock
-    private DateUtil dateUtil;
 
     private String callerId;
     private Milestone currentMilestone;
@@ -45,8 +38,6 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
     @Before
     public void setUp() {
         callerId = "9999988888";
-        healthWorker = new HealthWorker(callerId);
-        healthWorker.setId("UniqueHealthWorkerId");
 
         chapter = new Chapter(1);
         chapter.setId("ChapterId1");
@@ -57,27 +48,22 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
         chapter.addLesson(currentLesson);
         chapter.addLesson(lesson3);
 
-        currentMilestone = new Milestone(healthWorker.getId(), chapter.getId(), currentLesson.getId(), new Date());
+        currentMilestone = new Milestone("unique-id-for-" + callerId, chapter.getId(), currentLesson.getId(), new Date());
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);
-        when(healthWorkersRepository.findByCallerId(callerId)).thenReturn(healthWorker);
-        when(milestonesRepository.findByHealthWorker(healthWorker)).thenReturn(currentMilestone);
+        when(milestonesRepository.markLastMilestoneFinish(callerId)).thenReturn(currentMilestone);
         when(chaptersRespository.get(currentMilestone.getChapterId())).thenReturn(chapter);
 
-        lessonEndAnswerAction = new LessonEndAnswerAction(healthWorkersRepository, chaptersRespository, milestonesRepository, dateUtil, messages);
+        lessonEndAnswerAction = new LessonEndAnswerAction(chaptersRespository, milestonesRepository, messages);
     }
 
     @Test
     public void shouldSetTheEndDateInTheMilestone() {
-        Date currentTime = new Date();
-        when(dateUtil.getDate()).thenReturn(currentTime);
-
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
 
         lessonEndAnswerAction.handle(ivrRequest, request, response);
 
-        verify(milestonesRepository, times(1)).add(currentMilestone);
-        verify(milestonesRepository, times(1)).add(argThat(new MilestoneMatcher(currentMilestone.getHealthWorkerId(), currentMilestone.getChapterId(), currentMilestone.getLessonId(), currentMilestone.getStartDate(), currentTime)));
+        verify(milestonesRepository, times(1)).markLastMilestoneFinish(callerId);
     }
 
     @Test

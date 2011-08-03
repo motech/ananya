@@ -28,7 +28,7 @@ public class NewCallActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldWelcomeNewUserAndRegisterCallerId() {
+    public void shouldWelcomeNewUser() {
         String callerId = "9898982323";
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", callerId, IVR.Event.NEW_CALL.key(), "Data");
 
@@ -39,7 +39,6 @@ public class NewCallActionTest extends BaseActionTest {
 
         verify(session).setAttribute(IVR.Attributes.CALLER_ID, callerId);
         verify(healthWorkers).findByCallerId(ivrRequest.getCid());
-        verify(healthWorkers).add(argThat(new HealthWorkerCallerIdMatcher(callerId)));
         verify(ivrResponseBuilder).addPlayText("Welcome. This is the first time you are accessing FLW Training course.");
 
         assertEquals("The next action chained in case of new user should be helpMenu", "forward:/helpMenu", nextAction);
@@ -60,30 +59,6 @@ public class NewCallActionTest extends BaseActionTest {
         verify(healthWorkers).findByCallerId(ivrRequest.getCid());
 
         assertEquals("The next action chained in case of existing user should be /existingUserMenu.", "forward:/existingUserMenu", nextAction);
-    }
-
-    public static class HealthWorkerCallerIdMatcher extends ArgumentMatcher<HealthWorker> {
-        private String callerIdToMatch;
-        private String calledWith;
-
-        public HealthWorkerCallerIdMatcher(String callerIdToMatch) {
-            this.callerIdToMatch = callerIdToMatch;
-        }
-
-        @Override
-        public boolean matches(Object arg) {
-            if(arg instanceof HealthWorker) {
-                HealthWorker arg1 = (HealthWorker) arg;
-                calledWith = arg1.getCallerId();
-                return calledWith.matches(callerIdToMatch);
-            }
-            return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("Expected the health worker to have caller ID: " + callerIdToMatch + " but has been called with: " + calledWith);
-        }
     }
 
 }

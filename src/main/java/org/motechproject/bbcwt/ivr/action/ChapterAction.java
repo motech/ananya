@@ -43,21 +43,24 @@ public class ChapterAction extends BaseAction {
         Lesson lessonToPlay = chapter.getLessonByNumber(lessonNumber);
 
         String callerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
-        HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);
-        Milestone milestone = milestonesRepository.findByHealthWorker(healthWorker);
 
-        if(milestone == null) {
-            milestone = new Milestone();
+        HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);
+
+        if(healthWorker == null) {
+            healthWorker = registerNewHealthWorker(callerId);
         }
 
-        milestone.setChapterId(chapter.getId());
-        milestone.setLessonId(lessonToPlay.getId());
-        milestone.setStartDate(dateUtil.getDate());
-        milestone.setHealthWorkerId(healthWorker.getId());
-        milestonesRepository.add(milestone);
+        milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
         ivrResponseBuilder(request).addPlayText(lessonToPlay.getLocation());
         return "forward:/lessonEndMenu";
+    }
+
+    private HealthWorker registerNewHealthWorker(String callerId) {
+        HealthWorker healthWorker;
+        healthWorker = new HealthWorker(callerId);
+        healthWorkersRepository.add(healthWorker);
+        return healthWorker;
     }
 
     @Override

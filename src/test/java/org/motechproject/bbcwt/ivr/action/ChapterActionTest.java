@@ -8,6 +8,7 @@ import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
+import org.motechproject.bbcwt.matcher.HealthWorkerCallerIdMatcher;
 import org.motechproject.bbcwt.matcher.MilestoneMatcher;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
@@ -63,6 +64,17 @@ public class ChapterActionTest extends BaseActionTest {
     }
 
     @Test
+    public void shouldRegisterUserIfNotPresent() {
+        String newNumber = "1-NEW-NUMBER";
+        when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(newNumber);
+        when(healthWorkersRepository.findByCallerId(newNumber)).thenReturn(null);
+
+        String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
+
+        verify(healthWorkersRepository).add(argThat(new HealthWorkerCallerIdMatcher(newNumber)));
+    }
+
+    @Test
     public void shouldPlayTheLessonRequested()
     {
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
@@ -81,23 +93,6 @@ public class ChapterActionTest extends BaseActionTest {
 
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
 
-        verify(milestonesRepository).add(argThat(new MilestoneMatcher(healthWorker.getId(), chapter.getId(), lesson.getId(), currentDate, null)));
-    }
-
-    @Test
-    public void shouldModifyTheExistingMilestone() {
-        healthWorker.setId("healthWorkerUniqueId");
-        chapter.setId("chapterUniqueId");
-
-        Milestone existingMilestone = new Milestone();
-
-        when(milestonesRepository.findByHealthWorker(healthWorker)).thenReturn(existingMilestone);
-        Date currentDate = new Date();
-        when(dateUtil.getDate()).thenReturn(currentDate);
-
-        String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
-
-        verify(milestonesRepository).add(existingMilestone);
-        verify(milestonesRepository).add(argThat(new MilestoneMatcher(healthWorker.getId(), chapter.getId(), lesson.getId(), currentDate, null)));
+        verify(milestonesRepository).markNewChapterStart(healthWorker.getCallerId(), chapter.getNumber(), lesson.getNumber());
     }
 }
