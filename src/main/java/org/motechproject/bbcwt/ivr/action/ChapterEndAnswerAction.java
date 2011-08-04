@@ -52,6 +52,7 @@ public class ChapterEndAnswerAction extends BaseAction{
             return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+lastLesson.getNumber();
         }
         else {
+            //TODO: Will have to handle if there is no quiz.
            if(chosenOption == '2') {
                return "forward:/chapter/"+currentChapter.getNumber()+"/question/1";
            }

@@ -22,6 +22,22 @@ public class ChapterTest {
     }
 
     @Test
+    public void shouldReturnQuestionGivenANumber() {
+        Chapter chapter = new Chapter(1);
+        Question question1 = new Question();
+        question1.setNumber(1);
+        Question question2 = new Question();
+        question2.setNumber(2);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+
+        Question questionWithNumber1 = chapter.getQuestionByNumber(1);
+
+        assertEquals("Should return the question with correct number", questionWithNumber1, question1);
+
+    }
+
+    @Test
     public void shouldReturnNullIfNoLessonWithGivenNumberExists() {
         Chapter chapter = new Chapter(1);
         Lesson lesson1 = new Lesson(1, "Lesson1");
@@ -36,6 +52,26 @@ public class ChapterTest {
         Chapter chapterWithNoLessons = new Chapter(2);
         nonExistentLesson = chapterWithNoLessons.getLessonByNumber(1);
         assertNull("Should return null if there are no lessons at all.", nonExistentLesson);
+    }
+
+    @Test
+    public void shouldReturnNullIfNoQuestionWithGivenNumberExists() {
+        Chapter chapter = new Chapter(1);
+        Question question1 = new Question();
+        question1.setNumber(1);
+        Question question2 = new Question();
+        question2.setNumber(2);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+
+
+        Question nonExistentQuestion = chapter.getQuestionByNumber(3);
+
+        assertNull("Should return null if there is no question with the number.", nonExistentQuestion);
+
+        Chapter chapterWithNoQuestions = new Chapter(2);
+        nonExistentQuestion = chapterWithNoQuestions.getQuestionByNumber(1);
+        assertNull("Should return null if there are no questions at all.", nonExistentQuestion);
     }
 
     @Test
@@ -55,6 +91,23 @@ public class ChapterTest {
     }
 
     @Test
+    public void getQuestionByIdShouldReturnTheQuestionWithPassedId() {
+        Chapter chapter = new Chapter(1);
+        Question question1 = new Question();
+        Question question2 = new Question();
+        question1.setNumber(1);
+        question2.setNumber(2);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+
+        String wantedQuestionId = question1.getId();
+
+        Question obtainedQuestion = chapter.getQuestionById(wantedQuestionId);
+
+        assertThat(obtainedQuestion, is(question1));
+    }
+
+    @Test
     public void getLessonByIdShouldReturnNullIfThereIsNoLessonWithPassedId() {
         Chapter chapter = new Chapter(1);
         Lesson lesson1 = new Lesson(1, "Lesson1");
@@ -69,6 +122,26 @@ public class ChapterTest {
         Lesson obtainedLesson = chapter.getLessonById(wantedLessonId);
 
         assertNull(obtainedLesson);
+    }
+
+    @Test
+    public void getQuestionByIdShouldReturnNullIfThereIsNoQuestionWithPassedId() {
+        Chapter chapter = new Chapter(1);
+        Question question1 = new Question();
+        Question question2 = new Question();
+        question1.setNumber(1);
+        question2.setNumber(2);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+
+        Question questionNotInChapter = new Question();
+        questionNotInChapter.setNumber(3);
+
+        String wantedQuestionId = questionNotInChapter.getId();
+
+        Question obtainedQuestion = chapter.getQuestionById(wantedQuestionId);
+
+        assertNull(obtainedQuestion);
     }
 
     @Test

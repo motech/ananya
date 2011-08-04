@@ -13,6 +13,7 @@ public class Chapter extends BaseCouchEntity {
     private int number;
 
     private List<Lesson> lessons = new ArrayList<Lesson>();
+    private List<Question> questions = new ArrayList<Question>();
 
     public Chapter() {
     }
@@ -41,13 +42,13 @@ public class Chapter extends BaseCouchEntity {
         this.lessons = lessons;
     }
 
-    public Lesson getLessonByNumber(int number) {
-        for(Lesson lesson:this.getLessons()) {
-            if(lesson.getNumber() == number) {
-                return lesson;
+    public Lesson getLessonByNumber(final int number) {
+        return (Lesson)CollectionUtils.find(this.getLessons(), new Predicate() {
+            @Override
+            public boolean evaluate(Object lesson) {
+                return number == ((Lesson)lesson).getNumber();
             }
-        }
-        return null;
+        });
     }
 
     public Lesson getLessonById(final String lessonId) {
@@ -57,5 +58,35 @@ public class Chapter extends BaseCouchEntity {
                 return StringUtils.equals(lessonId, ((Lesson)lesson).getId());
             }
         });
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Question getQuestionByNumber(final int number) {
+        return (Question)CollectionUtils.find(this.getQuestions(), new Predicate() {
+            @Override
+            public boolean evaluate(Object question) {
+                return  number == ((Question)question).getNumber();
+            }
+        });
+    }
+
+    public Question getQuestionById(final String questionId) {
+        return (Question)CollectionUtils.find(this.getQuestions(), new Predicate() {
+            @Override
+            public boolean evaluate(Object question) {
+                return StringUtils.equals(questionId, ((Question)question).getId());
+            }
+        });
+    }
+
+    public void addQuestion(Question question) {
+        questions.add(question);
     }
 }
