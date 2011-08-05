@@ -2,6 +2,7 @@ package org.motechproject.bbcwt.domain;
 
 
 import org.junit.Test;
+import org.motechproject.bbcwt.util.UUIDUtil;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -128,7 +129,9 @@ public class ChapterTest {
     public void getQuestionByIdShouldReturnNullIfThereIsNoQuestionWithPassedId() {
         Chapter chapter = new Chapter(1);
         Question question1 = new Question();
+        question1.setId(UUIDUtil.newUUID());
         Question question2 = new Question();
+        question2.setId(UUIDUtil.newUUID());
         question1.setNumber(1);
         question2.setNumber(2);
         chapter.addQuestion(question1);
