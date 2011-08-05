@@ -6,7 +6,6 @@ import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.domain.ReportCard;
-import org.motechproject.bbcwt.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
@@ -18,9 +17,12 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
 
     @Autowired
     private HealthWorkersRepository healthWorkersRepository;
+    @Autowired
+    private ChaptersRespository chaptersRespository;
 
     private Chapter chapter;
-    private Question question;
+    private Question question1;
+    private Question question2;
     private HealthWorker healthWorker;
     private int response;
     private ReportCard reportCard;
@@ -29,17 +31,23 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
 
     @Before
     public void setUp(){
-        callerId = "9876543210";
         chapter = new Chapter(1);
-        chapter.setId(UUIDUtil.newUUID());
-        question = new Question(1, null, null, -1, null, null);
+        question1 = new Question(1, null, null, -1, null, null);
+        question2 = new Question(2, null, null, -1, null, null);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+        chaptersRespository.add(chapter);
+        markForDeletion(chapter);
+
+        callerId = "9876543210";
         healthWorker = new HealthWorker();
         healthWorker.setCallerId(callerId);
         healthWorkersRepository.add(healthWorker);
         markForDeletion(healthWorker);
+
         response = 1;
         reportCard = new ReportCard(healthWorker.getId());
-        response1 = reportCard.recordResponse(chapter, question, response);
+        response1 = reportCard.recordResponse(chapter, question1, response);
     }
 
     @Test
@@ -48,7 +56,7 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
         markForDeletion(reportCard);
 
         ReportCard reportCardFromDB = reportCardsRepository.get(reportCard.getId());
-        ReportCard.HealthWorkerResponseToQuestion expectedResponse =  new ReportCard.HealthWorkerResponseToQuestion(chapter.getId(), question.getId(), response);
+        ReportCard.HealthWorkerResponseToQuestion expectedResponse =  new ReportCard.HealthWorkerResponseToQuestion(chapter.getId(), question1.getId(), response);
 
         assertNotNull(reportCard.getId());
         assertEquals(reportCard.getId(), reportCardFromDB.getId());
@@ -81,7 +89,6 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
         reportCardsRepository.add(reportCard);
         markForDeletion(reportCard);
 
-        Question question2 = new Question(2, null, null, -1, null, null);
 
         ReportCard.HealthWorkerResponseToQuestion response2 = reportCard.recordResponse(chapter, question2, 1);
 
@@ -92,5 +99,24 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
 
         assertThat(updatedReportCardFromDB, hasResponse(response1));
         assertThat(updatedReportCardFromDB, hasResponse(response2));
+    }
+
+    @Test
+    public void addUserResponseShouldCreateNewReportCardIfOneDoesNotExistForUser() {
+        ReportCard reportCardForHealthWorkerFromDB = reportCardsRepository.findByHealthWorker(healthWorker);
+        assertNull("Since we have not added any reponse, report card should be null.", reportCardForHealthWorkerFromDB);
+
+        reportCardsRepository.addUserResponse(healthWorker.getCallerId(), chapter.getNumber(), question1.getNumber(), 1);
+
+        reportCardForHealthWorkerFromDB = reportCardsRepository.findByHealthWorker(healthWorker);
+        assertNotNull("After adding a response, report card should contain the response", reportCardForHealthWorkerFromDB);
+
+        reportCardsRepository.addUserResponse(healthWorker.getCallerId(), chapter.getNumber(), question2.getNumber(), 2);
+
+        reportCardForHealthWorkerFromDB = reportCardsRepository.findByHealthWorker(healthWorker);
+        markForDeletion(reportCardForHealthWorkerFromDB);
+
+        assertThat(reportCardForHealthWorkerFromDB, hasResponse(new ReportCard.HealthWorkerResponseToQuestion(chapter.getId(), question1.getId(), 1)));
+        assertThat(reportCardForHealthWorkerFromDB, hasResponse(new ReportCard.HealthWorkerResponseToQuestion(chapter.getId(), question2.getId(), 2)));
     }
 }

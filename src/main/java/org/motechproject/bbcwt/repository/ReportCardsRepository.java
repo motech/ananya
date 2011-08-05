@@ -2,8 +2,7 @@ package org.motechproject.bbcwt.repository;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
-import org.motechproject.bbcwt.domain.HealthWorker;
-import org.motechproject.bbcwt.domain.ReportCard;
+import org.motechproject.bbcwt.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -13,14 +12,17 @@ import java.util.List;
 @Repository
 public class ReportCardsRepository extends AbstractCouchRepository<ReportCard> {
     private HealthWorkersRepository healthWorkersRepository;
+    private ChaptersRespository chaptersRespository;
+
 
     @Autowired
-    public ReportCardsRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository) {
+    public ReportCardsRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository) {
         super(ReportCard.class, db);
-        this. healthWorkersRepository = healthWorkersRepository;
+        this.healthWorkersRepository = healthWorkersRepository;
+        this.chaptersRespository = chaptersRespository;
     }
 
-    public ReportCard findByCallerId(String healthWorkerCallerId) {
+    protected ReportCard findByCallerId(String healthWorkerCallerId) {
         HealthWorker healthWorker = healthWorkersRepository.findByCallerId(healthWorkerCallerId);
 
         if(healthWorker == null) {
@@ -29,8 +31,7 @@ public class ReportCardsRepository extends AbstractCouchRepository<ReportCard> {
 
         ReportCard reportCard = this.findByHealthWorker(healthWorker);
         if(reportCard==null) {
-            reportCard = new ReportCard();
-            reportCard.setHealthWorkerId(healthWorker.getId());
+            reportCard = new ReportCard(healthWorker.getId());
         }
         return reportCard;
     }
@@ -47,6 +48,21 @@ public class ReportCardsRepository extends AbstractCouchRepository<ReportCard> {
         else {
             this.update(reportCard);
         }
+    }
+
+    public ReportCard.HealthWorkerResponseToQuestion addUserResponse(String healthWorkerCallerId, int chapterNumber, int questionNumber, int response) {
+        Chapter chapter = chaptersRespository.findByNumber(chapterNumber);
+        Question question = chapter.getQuestionByNumber(questionNumber);
+        ReportCard reportCard = this.findByCallerId(healthWorkerCallerId);
+
+        if(reportCard == null || chapter == null || question == null) {
+            return null;
+        }
+
+        ReportCard.HealthWorkerResponseToQuestion responseToQuestion = reportCard.recordResponse(chapter, question, response);
+
+        this.add(reportCard);
+        return responseToQuestion;
     }
 
     @GenerateView
