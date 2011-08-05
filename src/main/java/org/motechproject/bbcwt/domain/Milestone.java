@@ -27,6 +27,7 @@ public class Milestone extends BaseCouchEntity {
         this.healthWorkerId = healthWorkerId;
         this.chapterId = chapterId;
         this.lessonId = lessonId;
+        this.questionId = questionId;
         this.startDate = startDate;
     }
 

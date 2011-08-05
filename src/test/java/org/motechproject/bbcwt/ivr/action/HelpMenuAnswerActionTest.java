@@ -7,9 +7,7 @@ import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.atMost;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class HelpMenuAnswerActionTest extends BaseActionTest {
