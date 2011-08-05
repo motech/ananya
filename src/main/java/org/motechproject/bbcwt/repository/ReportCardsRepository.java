@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.repository;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
 import org.motechproject.bbcwt.domain.HealthWorker;
-import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.domain.ReportCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

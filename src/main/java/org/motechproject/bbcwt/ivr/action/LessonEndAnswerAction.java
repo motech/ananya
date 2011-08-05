@@ -1,16 +1,13 @@
 package org.motechproject.bbcwt.ivr.action;
 
 import org.motechproject.bbcwt.domain.Chapter;
-import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
-import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
-import org.motechproject.bbcwt.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

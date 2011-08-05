@@ -16,7 +16,6 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class ChapterEndAnswerActionTest extends BaseActionTest {

@@ -1,9 +1,7 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.ivr.IVR;
@@ -11,7 +9,6 @@ import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

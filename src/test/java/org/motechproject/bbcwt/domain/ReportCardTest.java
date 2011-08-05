@@ -1,18 +1,11 @@
 package org.motechproject.bbcwt.domain;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.StringUtils;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwt.util.UUIDUtil;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.AllOf.allOf;
 import static org.motechproject.bbcwt.matcher.ReportCardMatcher.hasResponse;
 
 public class ReportCardTest {

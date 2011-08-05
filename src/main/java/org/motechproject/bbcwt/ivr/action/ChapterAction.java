@@ -4,7 +4,6 @@ package org.motechproject.bbcwt.ivr.action;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
-import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
