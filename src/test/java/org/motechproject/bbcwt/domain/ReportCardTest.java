@@ -13,6 +13,7 @@ import org.motechproject.bbcwt.util.UUIDUtil;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.motechproject.bbcwt.matcher.ReportCardMatcher.hasResponse;
 
 public class ReportCardTest {
     private Chapter chapter;
@@ -54,32 +55,5 @@ public class ReportCardTest {
 
         assertThat(reportCard, hasResponse(newResponse));
         assertThat(reportCard, not(hasResponse(oldResponse)));
-    }
-
-
-    private Matcher<ReportCard> hasResponse(final ReportCard.HealthWorkerResponseToQuestion expectedResponseToBePresent) {
-        return new BaseMatcher<ReportCard>() {
-            @Override
-            public boolean matches(Object item) {
-                if(item instanceof ReportCard){
-                    ReportCard reportCard = (ReportCard) item;
-                    return CollectionUtils.exists(reportCard.getHealthWorkerResponseToQuestions(), new Predicate() {
-                        @Override
-                        public boolean evaluate(Object o) {
-                            ReportCard.HealthWorkerResponseToQuestion someResponse = (ReportCard.HealthWorkerResponseToQuestion)o;
-                            return StringUtils.equals(expectedResponseToBePresent.getChapterId(), someResponse.getChapterId()) &&
-                                   StringUtils.equals(expectedResponseToBePresent.getQuestionId(), someResponse.getQuestionId()) &&
-                                   (expectedResponseToBePresent.getResponse() == someResponse.getResponse()) ;
-                        }
-                    });
-                }
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Response for question : " + expectedResponseToBePresent.getQuestionId() + " in chapter " + expectedResponseToBePresent.getChapterId() + " with response " + expectedResponseToBePresent.getResponse() + " is not present.");
-            }
-        };
     }
 }

@@ -3,10 +3,12 @@ package org.motechproject.bbcwt.domain;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@TypeDiscriminator("doc.documentType == 'ReportCard'")
 public class ReportCard extends BaseCouchEntity {
     private String healthWorkerId;
     private List<HealthWorkerResponseToQuestion> healthWorkerResponseToQuestions = new ArrayList<HealthWorkerResponseToQuestion>();
@@ -18,7 +20,7 @@ public class ReportCard extends BaseCouchEntity {
         this.healthWorkerId = healthWorkerId;
     }
 
-    public void recordResponse(final Chapter chapter, final Question question, int response) {
+    public HealthWorkerResponseToQuestion recordResponse(final Chapter chapter, final Question question, int response) {
         HealthWorkerResponseToQuestion responseToQuestion = (HealthWorkerResponseToQuestion)CollectionUtils.find(healthWorkerResponseToQuestions, new Predicate() {
             @Override
             public boolean evaluate(Object o) {
@@ -33,6 +35,7 @@ public class ReportCard extends BaseCouchEntity {
         }
         responseToQuestion.setResponse(response);
         responseToQuestion.setCorrect(response == question.getCorrectOption());
+        return responseToQuestion;
     }
 
     public String getHealthWorkerId() {
