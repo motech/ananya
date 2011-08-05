@@ -14,7 +14,6 @@ public class Question extends BaseCouchEntity {
     private String incorrectAnswerExplanationLocation;
 
     public Question() {
-        this(0, null, null, -1, null, null);
     }
 
     public Question(int number, String questionLocation, String optionsLocation, int correctOption, String correctAnswerExplanationLocation, String incorrectAnswerExplanationLocation) {

@@ -11,7 +11,6 @@ import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
-import org.motechproject.bbcwt.util.DateUtil;
 
 import java.util.Date;
 
@@ -48,7 +47,7 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
         chapter.addLesson(currentLesson);
         chapter.addLesson(lesson3);
 
-        currentMilestone = new Milestone("unique-id-for-" + callerId, chapter.getId(), currentLesson.getId(), new Date());
+        currentMilestone = new Milestone("unique-id-for-" + callerId, chapter.getId(), currentLesson.getId(), null, new Date());
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);
         when(milestonesRepository.markLastMilestoneFinish(callerId)).thenReturn(currentMilestone);

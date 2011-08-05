@@ -1,11 +1,9 @@
 package org.motechproject.bbcwt.repository;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.bbcwt.domain.Chapter;
-import org.motechproject.bbcwt.domain.HealthWorker;
-import org.motechproject.bbcwt.domain.Lesson;
-import org.motechproject.bbcwt.domain.Milestone;
+import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,27 +22,46 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
     @Mock
     private DateUtil dateProvider;
 
-    @Test
-    public void shouldGiveBackMilestoneForHealthWorker() {
+    private HealthWorker healthWorker;
+    private Chapter chapter;
+    private Lesson lesson1;
+    private Lesson lesson2;
+    private Question question1;
+    private Question question2;
+
+    @Before
+    public void setup() {
         String callerId = "9989989980";
 
-        HealthWorker healthWorker = new HealthWorker(callerId);
+        healthWorker = new HealthWorker(callerId);
         healthWorkersRepository.add(healthWorker);
         markForDeletion(healthWorker);
 
-        Chapter chapter = new Chapter(1);
-        Lesson lesson = new Lesson(1, "http://somewhere/lesson");
-        chapter.addLesson(lesson);
+        chapter = new Chapter(1);
+        lesson1 = new Lesson(1, "http://somewhere/lesson");
+        lesson2 = new Lesson(2, "http://somewhere/lesson/2");
+        chapter.addLesson(lesson1);
+        chapter.addLesson(lesson2);
+
+        question1 = new Question(1, null, null, -1, null, null);
+        question2 = new Question(2, null, null, -1, null, null);
+        chapter.addQuestion(question1);
+        chapter.addQuestion(question2);
+
         chaptersRespository.add(chapter);
         markForDeletion(chapter);
+    }
+
+    @Test
+    public void shouldGiveBackMilestoneForHealthWorker() {
 
         Date currentDate = new Date();
-        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), currentDate);
+        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson1.getId(), null, currentDate);
         milestonesRepository.add(milestone);
         milestonesRepository.add(milestone);
         markForDeletion(milestone);
 
-        Milestone noiseMilestone = new Milestone("noiseWorkerId", "somechapterId", "someLessonId", currentDate);
+        Milestone noiseMilestone = new Milestone("noiseWorkerId", "somechapterId", "someLessonId", null, currentDate);
         milestonesRepository.add(noiseMilestone);
         milestonesRepository.add(noiseMilestone);
         markForDeletion(noiseMilestone);
@@ -56,23 +73,8 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
 
     @Test
     public void addingAMilestoneForAUserShouldUpdateAnyExistingMilestoneForTheUser() {
-        HealthWorker healthWorker = new HealthWorker("9989989980");
-
-        healthWorkersRepository.add(healthWorker);
-        markForDeletion(healthWorker);
-
-        Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1");
-        Lesson lesson2 = new Lesson(2, "http://somewhere/lesson/2");
-
-        chapter.addLesson(lesson1);
-        chapter.addLesson(lesson2);
-
-        chaptersRespository.add(chapter);
-        markForDeletion(chapter);
-
         Date currentTime = new Date();
-        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson1.getId(), currentTime);
+        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson1.getId(), null, currentTime);
         milestonesRepository.add(milestone);
         markForDeletion(milestone);
 
@@ -87,18 +89,6 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
 
     @Test
     public void markNewChapterStartShouldCreateAndReturnMilestoneIfNotAlreadyPresent() {
-        HealthWorker healthWorker = new HealthWorker("9989989980");
-
-        healthWorkersRepository.add(healthWorker);
-        markForDeletion(healthWorker);
-
-        Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1");
-        chapter.addLesson(lesson1);
-
-        chaptersRespository.add(chapter);
-        markForDeletion(chapter);
-
         Milestone newMilestone = milestonesRepository.markNewChapterStart(healthWorker.getCallerId(), 1, 1);
         assertNotNull(newMilestone);
 
@@ -118,11 +108,6 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
 
     @Test
     public void markNewChapterStartShouldUpdateAndReturnMilestoneIfAlreadyPresent() {
-        HealthWorker healthWorker = new HealthWorker("9989989980");
-
-        healthWorkersRepository.add(healthWorker);
-        markForDeletion(healthWorker);
-
         Chapter chapter1 = new Chapter(1);
         Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1");
         chapter1.addLesson(lesson1);
@@ -154,24 +139,38 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void markNewChapterStartShouldNullifyTheQuestionIdInMilestone() {
+        milestonesRepository.markNewQuestionStart(healthWorker.getCallerId(), chapter.getNumber(), question1.getNumber());
+
+        Milestone updatedMilestoneReturned = milestonesRepository.markNewChapterStart(healthWorker.getCallerId(), chapter.getNumber(), lesson1.getNumber());
+        markForDeletion(updatedMilestoneReturned);
+
+        Milestone updatedMilestoneFromDB = milestonesRepository.findByHealthWorker(healthWorker);
+        assertNull(updatedMilestoneFromDB.getQuestionId());
+    }
+
+    @Test
+    public void markNewQuestionStartShouldUpdateAndReturnMilestone() {
+        Milestone questionStartMilestone = milestonesRepository.markNewQuestionStart(healthWorker.getCallerId(), chapter.getNumber(), question1.getNumber());
+        assertNotNull(questionStartMilestone);
+
+        Milestone questionStartMilestoneFromDB = milestonesRepository.findByHealthWorker(healthWorker);
+        markForDeletion(questionStartMilestoneFromDB);
+
+        assertNotNull(questionStartMilestoneFromDB);
+
+        assertEquals(questionStartMilestoneFromDB.getHealthWorkerId(), healthWorker.getId());
+        assertEquals(questionStartMilestoneFromDB.getChapterId(), chapter.getId());
+        assertEquals(questionStartMilestoneFromDB.getLessonId(), null);
+        assertEquals(questionStartMilestoneFromDB.getQuestionId(), question1.getId());
+        assertNotNull(questionStartMilestoneFromDB.getStartDate());
+        assertNull(questionStartMilestoneFromDB.getEndDate());
+    }
+
+    @Test
     public void markLastMilestoneFinishShouldSetTheEndDateOfExistingMilestone(){
-        HealthWorker healthWorker = new HealthWorker("9989989980");
-
-        healthWorkersRepository.add(healthWorker);
-        markForDeletion(healthWorker);
-
-        Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1");
-        Lesson lesson2 = new Lesson(2, "http://somewhere/lesson/2");
-
-        chapter.addLesson(lesson1);
-        chapter.addLesson(lesson2);
-
-        chaptersRespository.add(chapter);
-        markForDeletion(chapter);
-
         Date currentTime = new Date();
-        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson1.getId(), currentTime);
+        Milestone milestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson1.getId(), null, currentTime);
         milestonesRepository.add(milestone);
         markForDeletion(milestone);
 

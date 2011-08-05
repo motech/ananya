@@ -10,6 +10,7 @@ public class Milestone extends BaseCouchEntity {
     private String healthWorkerId;
     private String chapterId;
     private String lessonId;
+    private String questionId;
     private Date startDate;
     private Date endDate;
 
@@ -22,7 +23,7 @@ public class Milestone extends BaseCouchEntity {
 
     }
 
-    public Milestone(String healthWorkerId, String chapterId, String lessonId, Date startDate) {
+    public Milestone(String healthWorkerId, String chapterId, String lessonId, String questionId, Date startDate) {
         this.healthWorkerId = healthWorkerId;
         this.chapterId = chapterId;
         this.lessonId = lessonId;
@@ -67,6 +68,14 @@ public class Milestone extends BaseCouchEntity {
 
     public void setHealthWorkerId(String healthWorkerId) {
         this.healthWorkerId = healthWorkerId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 
     @JsonIgnore

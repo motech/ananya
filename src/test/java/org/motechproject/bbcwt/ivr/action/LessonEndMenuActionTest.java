@@ -55,7 +55,7 @@ public class LessonEndMenuActionTest extends BaseActionTest {
         chapter.addLesson(currentLesson);
         chapter.addLesson(lastLesson);
 
-        currentMilestone = new Milestone(healthWorker.getId(), chapter.getId(), currentLesson.getId(), new Date());
+        currentMilestone = new Milestone(healthWorker.getId(), chapter.getId(), currentLesson.getId(), null, new Date());
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);
         when(healthWorkersRepository.findByCallerId(callerId)).thenReturn(healthWorker);

@@ -43,7 +43,7 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
         lesson = new Lesson(1, "http://somewhere/lesson/1");
         chapter.addLesson(lesson);
 
-        lastMilestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), new Date());
+        lastMilestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), null, new Date());
         chapterEndAnswerAction = new ChapterEndAnswerAction(chaptersRespository, milestonesRepository, messages);
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);

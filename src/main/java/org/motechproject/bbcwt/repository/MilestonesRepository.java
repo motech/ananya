@@ -2,10 +2,7 @@ package org.motechproject.bbcwt.repository;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
-import org.motechproject.bbcwt.domain.Chapter;
-import org.motechproject.bbcwt.domain.HealthWorker;
-import org.motechproject.bbcwt.domain.Lesson;
-import org.motechproject.bbcwt.domain.Milestone;
+import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,16 +49,29 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
 
     //TODO: Throw exceptions in case healthworker, chapter or lessonNumber passed are not found.
     public Milestone markNewChapterStart(String healthWorkerCallerId, int chapterNumber, int lessonNumber) {
-        HealthWorker healthWorker = healthWorkers.findByCallerId(healthWorkerCallerId);
         Chapter chapter = chapters.findByNumber(chapterNumber);
+        Lesson lesson = chapter.getLessonByNumber(lessonNumber);
+        Milestone milestone = this.findByCallerId(healthWorkerCallerId);
 
-        if(healthWorker == null || chapter == null) {
+        if(milestone == null || chapter == null || lesson == null) {
             return null;
         }
 
-        Lesson lesson = chapter.getLessonByNumber(lessonNumber);
+        milestone.setChapterId(chapter.getId());
+        milestone.setQuestionId(null);
+        milestone.setLessonId(lesson.getId());
+        milestone.setStartDate(dateProvider.getDate());
+        milestone.setEndDate(null);
 
-        if(lesson == null) {
+        this.add(milestone);
+        return milestone;
+    }
+
+    //TODO: Can this be made a CDB View?
+    private Milestone findByCallerId(String healthWorkerCallerId) {
+        HealthWorker healthWorker = healthWorkers.findByCallerId(healthWorkerCallerId);
+
+        if(healthWorker == null) {
             return null;
         }
 
@@ -70,8 +80,21 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
             milestone = new Milestone();
             milestone.setHealthWorkerId(healthWorker.getId());
         }
+        return milestone;
+    }
+
+    public Milestone markNewQuestionStart(String healthWorkerCallerId, int chapterNumber, int questionNumber) {
+        Chapter chapter = chapters.findByNumber(chapterNumber);
+        Question question = chapter.getQuestionByNumber(questionNumber);
+        Milestone milestone = this.findByCallerId(healthWorkerCallerId);
+
+        if(milestone == null || chapter == null || question == null) {
+            return null;
+        }
+
         milestone.setChapterId(chapter.getId());
-        milestone.setLessonId(lesson.getId());
+        milestone.setLessonId(null);
+        milestone.setQuestionId(question.getId());
         milestone.setStartDate(dateProvider.getDate());
         milestone.setEndDate(null);
 
