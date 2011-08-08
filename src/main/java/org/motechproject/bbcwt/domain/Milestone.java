@@ -16,7 +16,6 @@ public class Milestone extends BaseCouchEntity {
 
     private HealthWorker healthWorker;
     private Chapter chapter;
-    private Lesson lesson;
 
     public Milestone()
     {
@@ -102,15 +101,5 @@ public class Milestone extends BaseCouchEntity {
     @JsonIgnore
     public void setChapter(Chapter chapter) {
         this.chapter = chapter;
-    }
-
-    @JsonIgnore
-    public Lesson getLesson() {
-        return lesson;
-    }
-
-    @JsonIgnore
-    public void setLesson(Lesson lesson) {
-        this.lesson = lesson;
     }
 }

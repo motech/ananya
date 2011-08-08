@@ -135,8 +135,6 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
         if(currentMilestone != null) {
             Chapter chapter = chapters.get(currentMilestone.getChapterId());
             currentMilestone.setChapter(chapter);
-
-            currentMilestone.setLesson(chapter.getLessonById(currentMilestone.getLessonId()));
         }
 
         return currentMilestone;
