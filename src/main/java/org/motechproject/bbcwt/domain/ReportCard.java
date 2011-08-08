@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @TypeDiscriminator("doc.documentType == 'ReportCard'")
@@ -21,13 +22,7 @@ public class ReportCard extends BaseCouchEntity {
     }
 
     public HealthWorkerResponseToQuestion recordResponse(final Chapter chapter, final Question question, int response) {
-        HealthWorkerResponseToQuestion responseToQuestion = (HealthWorkerResponseToQuestion)CollectionUtils.find(healthWorkerResponseToQuestions, new Predicate() {
-            @Override
-            public boolean evaluate(Object o) {
-                HealthWorkerResponseToQuestion someResponse = (HealthWorkerResponseToQuestion)o;
-                return StringUtils.equals(chapter.getId(), someResponse.getChapterId()) && StringUtils.equals(question.getId(), someResponse.getQuestionId());
-            }
-        });
+        HealthWorkerResponseToQuestion responseToQuestion = (HealthWorkerResponseToQuestion)CollectionUtils.find(healthWorkerResponseToQuestions, HealthWorkerResponseToQuestion.findByChapterIdAndQuestionId(chapter, question));
 
         if(responseToQuestion == null) {
             responseToQuestion = new HealthWorkerResponseToQuestion(chapter.getId(), question.getId(), response);
@@ -36,6 +31,13 @@ public class ReportCard extends BaseCouchEntity {
         responseToQuestion.setResponse(response);
         responseToQuestion.setCorrect(response == question.getCorrectOption());
         return responseToQuestion;
+    }
+
+    public ScoreSummary scoreEarned(final Chapter chapter) {
+        int correctResponseCount = CollectionUtils.countMatches(healthWorkerResponseToQuestions, HealthWorkerResponseToQuestion.findCorrectResponsesInChapter(chapter));
+        int totalQuestions = chapter.getQuestions().size();
+
+        return new ScoreSummary(correctResponseCount, totalQuestions);
     }
 
     public String getHealthWorkerId() {
@@ -102,6 +104,54 @@ public class ReportCard extends BaseCouchEntity {
 
         public void setCorrect(boolean correct) {
             isCorrect = correct;
+        }
+
+        public static Predicate findByChapterId(final Chapter chapter) {
+            return new Predicate() {
+                @Override
+                public boolean evaluate(Object o) {
+                    HealthWorkerResponseToQuestion someResponse = (HealthWorkerResponseToQuestion) o;
+                    return StringUtils.equals(chapter.getId(), someResponse.getChapterId());
+                }
+            };
+        }
+
+        public static Predicate findByChapterIdAndQuestionId(final Chapter chapter, final Question question) {
+            return new Predicate() {
+                @Override
+                public boolean evaluate(Object o) {
+                    HealthWorkerResponseToQuestion someResponse = (HealthWorkerResponseToQuestion) o;
+                    return StringUtils.equals(chapter.getId(), someResponse.getChapterId()) && StringUtils.equals(question.getId(), someResponse.getQuestionId());
+                }
+            };
+        }
+
+        public static Predicate findCorrectResponsesInChapter(final Chapter chapter) {
+            return new Predicate() {
+                @Override
+                public boolean evaluate(Object o) {
+                    HealthWorkerResponseToQuestion someResponse = (HealthWorkerResponseToQuestion) o;
+                    return StringUtils.equals(chapter.getId(), someResponse.getChapterId()) && someResponse.isCorrect();
+                }
+            };
+        }
+    }
+
+    public static class ScoreSummary {
+        private int maximumMarks;
+        private int scoredMarks;
+
+        public ScoreSummary(int scoredMarks, int maximumMarks) {
+            this.maximumMarks = maximumMarks;
+            this.scoredMarks = scoredMarks;
+        }
+
+        public int getMaximumMarks() {
+            return maximumMarks;
+        }
+
+        public int getScoredMarks() {
+            return scoredMarks;
         }
     }
 }
