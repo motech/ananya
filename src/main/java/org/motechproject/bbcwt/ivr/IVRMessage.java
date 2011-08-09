@@ -18,6 +18,7 @@ public class IVRMessage {
     public static final String END_OF_QUIZ_MESSAGE = "msg.quiz.end";
     public static final String INFORM_SCORE_START = "msg.score.start";
     public static final String INFORM_SCORE_OUTOF = "msg.score.outof";
+    public static final String END_OF_QUIZ_PTIONS = "msg.quiz.end.options";
 
     @Qualifier("ivrProperties")
     @Autowired
