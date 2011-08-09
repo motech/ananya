@@ -70,13 +70,13 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldNavigateToQuestion1IfOptionChosenIs2(){
+    public void shouldNavigateToStartQuizIfOptionChosenIs2(){
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "2");
 
         String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
 
         assertEquals("Should navigate to the the first question after end of chapter.", nextAction,
-                     "forward:/chapter/"+chapter.getNumber()+"/question/1");
+                     "forward:/startQuiz");
     }
 
 }

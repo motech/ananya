@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.ivr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import sun.applet.resources.MsgAppletViewer;
 
 import java.util.Properties;
 

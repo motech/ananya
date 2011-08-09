@@ -52,9 +52,8 @@ public class ChapterEndAnswerAction extends BaseAction{
             return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+lastLesson.getNumber();
         }
         else {
-            //TODO: Will have to handle if there is no quiz.
            if(chosenOption == '2') {
-               return "forward:/chapter/"+currentChapter.getNumber()+"/question/1";
+               return "forward:/startQuiz";
            }
            else {
                ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
