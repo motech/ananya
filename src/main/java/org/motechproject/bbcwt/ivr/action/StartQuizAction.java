@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/repeatLastChapter")
-public class RepeatLastChapterAction extends BaseAction {
+@RequestMapping("/startQuiz")
+public class StartQuizAction extends BaseAction {
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public RepeatLastChapterAction(MilestonesRepository milestonesRepository) {
+    public StartQuizAction(MilestonesRepository milestonesRepository) {
         this.milestonesRepository = milestonesRepository;
     }
 
@@ -33,6 +33,6 @@ public class RepeatLastChapterAction extends BaseAction {
         Chapter currentChapter = currentMilestone.getChapter();
         int currentChapterNumber = currentChapter.getNumber();
 
-        return "forward:/chapter/"+ currentChapterNumber +"/lesson/1";
+        return "forward:/chapter/"+ currentChapterNumber +"/question/1";
     }
 }
