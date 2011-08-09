@@ -20,19 +20,29 @@ public class StartQuizAction extends BaseAction {
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public StartQuizAction(MilestonesRepository milestonesRepository) {
+    public StartQuizAction(MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
+        this.messages = messages;
     }
 
     @Override
-    @RequestMapping(method= RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        String healthWorkerCallerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        String healthWorkerCallerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
 
         Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(healthWorkerCallerId);
         Chapter currentChapter = currentMilestone.getChapter();
-        int currentChapterNumber = currentChapter.getNumber();
 
-        return "forward:/chapter/"+ currentChapterNumber +"/question/1";
+        boolean thereAreQuestionsInCurrentChapter = currentChapter.getQuestions().size() > 0;
+        if (thereAreQuestionsInCurrentChapter) {
+            int currentChapterNumber = currentChapter.getNumber();
+
+            ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.MSG_START_OF_QUIZ));
+            ivrResponseBuilder(request).addPlayText(" " + currentChapterNumber+".");
+
+            return "forward:/chapter/" + currentChapterNumber + "/question/1";
+        } else {
+            return "forward:/startNextChapter";
+        }
     }
 }

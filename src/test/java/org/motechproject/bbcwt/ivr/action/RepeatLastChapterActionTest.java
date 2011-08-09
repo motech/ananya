@@ -42,7 +42,7 @@ public class RepeatLastChapterActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldForwardToNextChapterIfItExists() {
+    public void shouldForwardToFirstLessonInCurrentChapterIfItExists() {
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(healthWorker.getCallerId());
         when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(currentMilestone);
 

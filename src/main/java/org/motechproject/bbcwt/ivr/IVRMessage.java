@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import sun.applet.resources.MsgAppletViewer;
 
 import java.util.Properties;
 
@@ -19,6 +20,7 @@ public class IVRMessage {
     public static final String INFORM_SCORE_START = "msg.score.start";
     public static final String INFORM_SCORE_OUTOF = "msg.score.outof";
     public static final String END_OF_QUIZ_PTIONS = "msg.quiz.end.options";
+    public static final String MSG_START_OF_QUIZ = "msg.start.of.quiz";
 
     @Qualifier("ivrProperties")
     @Autowired
