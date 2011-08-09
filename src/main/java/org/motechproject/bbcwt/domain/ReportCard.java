@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @TypeDiscriminator("doc.documentType == 'ReportCard'")

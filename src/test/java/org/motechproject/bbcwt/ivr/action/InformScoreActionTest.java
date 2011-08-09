@@ -11,9 +11,7 @@ import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class InformScoreActionTest extends BaseActionTest {
     private InformScoreAction informScoreAction;

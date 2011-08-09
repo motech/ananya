@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.ivr.action;
 import org.junit.Test;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;

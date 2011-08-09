@@ -1,11 +1,7 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import org.motechproject.bbcwt.domain.Chapter;
-import org.motechproject.bbcwt.domain.Milestone;
-import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
