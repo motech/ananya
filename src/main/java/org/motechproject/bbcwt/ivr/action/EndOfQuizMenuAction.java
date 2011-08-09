@@ -1,6 +1,7 @@
 package org.motechproject.bbcwt.ivr.action;
 
 
+import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class EndOfQuizMenuAction extends BaseAction {
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.END_OF_QUIZ_PTIONS));
+        request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
         return ivrResponseBuilder(request).create().getXML();
     }
 }
