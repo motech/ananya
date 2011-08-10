@@ -53,6 +53,9 @@ public abstract class BaseActionTest {
 
         when(ivrDtmfBuilder.withPlayText(Matchers.<String>any())).thenReturn(ivrDtmfBuilder);
         when(ivrDtmfBuilder.withPlayAudio(Matchers.<String>any())).thenReturn(ivrDtmfBuilder);
+        when(ivrDtmfBuilder.withMaximumLengthOfResponse(Matchers.<Integer>any())).thenReturn(ivrDtmfBuilder);
+        when(ivrDtmfBuilder.withTimeOutInMillis(Matchers.<Integer>any())).thenReturn(ivrDtmfBuilder);
+
         when(ivrDtmfBuilder.create()).thenReturn(collectDtmf);
 
         when(ivrResponseBuilder.withCollectDtmf(Matchers.<CollectDtmf>any())).thenReturn(ivrResponseBuilder);
