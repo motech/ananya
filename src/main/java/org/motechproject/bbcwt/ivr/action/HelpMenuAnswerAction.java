@@ -34,7 +34,7 @@ public class HelpMenuAnswerAction extends BaseAction {
         }
         else {
            if(chosenOption == '2') {
-               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.IVR_HELP));
+               ivrResponseBuilder(request).addPlayAudio(contentAt(messages.get(IVRMessage.IVR_HELP)));
            }
            else {
                ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
@@ -43,4 +43,7 @@ public class HelpMenuAnswerAction extends BaseAction {
         return "forward:/helpMenu";
     }
 
+    private String contentAt(String path) {
+        return messages.get(IVRMessage.CONTENT_LOCATION).concat(path);
+    }
 }

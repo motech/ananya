@@ -34,14 +34,16 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, IVR.Event.GOT_DTMF.key(), userInput);
 
         String HELP_KEY = IVRMessage.IVR_HELP;
-        String HELP_TEXT = "Some Help.";
+        String HELP_FILE = "HelpMenu.wav";
+        final String CONTENT_LOCATION = "http://localhost/bbcwt/audio/";
 
-        when(messages.get(HELP_KEY)).thenReturn(HELP_TEXT);
+        when(messages.get(IVRMessage.CONTENT_LOCATION)).thenReturn(CONTENT_LOCATION);
+        when(messages.get(HELP_KEY)).thenReturn(HELP_FILE);
 
         String chainedAction = action.handle(ivrRequest, request, response);
 
         verify(messages, atLeastOnce()).get(HELP_KEY);
-        verify(ivrResponseBuilder, atMost(1)).addPlayText(HELP_TEXT);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION.concat(HELP_FILE));
 
         assertEquals("The help menu action should be chained to produce the help menu again.", "forward:/helpMenu", chainedAction);
     }
