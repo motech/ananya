@@ -1,6 +1,7 @@
 package org.motechproject.bbcwt.ivr.action;
 
 
+import com.ozonetel.kookoo.CollectDtmf;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
@@ -25,7 +26,8 @@ public class EndOfQuizMenuAction extends BaseAction {
     @RequestMapping(value="/endOfQuizMenu", method= RequestMethod.GET)
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.END_OF_QUIZ_PTIONS));
+        CollectDtmf endOfQuizDtmf = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.END_OF_QUIZ_OPTIONS)).create();
+        ivrResponseBuilder(request).withCollectDtmf(endOfQuizDtmf);
         request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
         return ivrResponseBuilder(request).create().getXML();
     }

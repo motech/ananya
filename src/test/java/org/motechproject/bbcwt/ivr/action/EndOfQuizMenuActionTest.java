@@ -21,9 +21,11 @@ public class EndOfQuizMenuActionTest extends BaseActionTest {
     @Test
     public void shouldRenderTheEndOfQuizMenu() {
         final String IVR_TO_BE_PLAYED_AFTER_QUIZ = "IVR to be played after quiz.";
-        when(messages.get(IVRMessage.END_OF_QUIZ_PTIONS)).thenReturn(IVR_TO_BE_PLAYED_AFTER_QUIZ);
+        when(messages.get(IVRMessage.END_OF_QUIZ_OPTIONS)).thenReturn(IVR_TO_BE_PLAYED_AFTER_QUIZ);
         endOfQuizMenuAction.handle(new IVRRequest(), request, response);
-        verify(ivrResponseBuilder).addPlayText(IVR_TO_BE_PLAYED_AFTER_QUIZ);
+        verify(ivrDtmfBuilder).withPlayText(IVR_TO_BE_PLAYED_AFTER_QUIZ);
+        verify(ivrDtmfBuilder).create();
+        verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
     }
 
     @Test
