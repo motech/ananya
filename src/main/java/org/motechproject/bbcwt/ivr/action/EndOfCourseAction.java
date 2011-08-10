@@ -24,6 +24,7 @@ public class EndOfCourseAction extends BaseAction {
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.MSG_COURSE_COMPLETION));
+        ivrResponseBuilder(request).withHangUp();
         return ivrResponseBuilder(request).create().getXML();
     }
 }
