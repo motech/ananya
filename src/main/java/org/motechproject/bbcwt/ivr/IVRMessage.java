@@ -25,6 +25,7 @@ public class IVRMessage {
     @Qualifier("ivrProperties")
     @Autowired
     private Properties properties;
+    public static final String CONTENT_LOCATION = "content.location";
 
     public String get(String key) {
         return (String) properties.get(key);

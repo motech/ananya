@@ -24,14 +24,16 @@ public class HelpMenuActionTest extends BaseActionTest {
     public void shouldBuildHelpMenu(){
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, null, null);
 
-        String HELP_OPTION_TEXT ="Please press 1 for Help, 2 for starting Chapters.";
+        final String HELP_OPTION_TEXT ="HelpMenu.wav";
+        final String CONTENT_LOCATION = "http://localhost/bbcwt/audio/";
 
+        when(messages.get(IVRMessage.CONTENT_LOCATION)).thenReturn(CONTENT_LOCATION);
         when(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS)).thenReturn(HELP_OPTION_TEXT);
 
         String endAction = action.handle(ivrRequest,request,response);
 
         verify(messages, times(1)).get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS);
-        verify(ivrDtmfBuilder, times(1)).withPlayText(HELP_OPTION_TEXT);
+        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION.concat(HELP_OPTION_TEXT));
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
         verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
     }
