@@ -57,7 +57,7 @@ public abstract class BaseAction implements IVRAction {
         if(dtmfBuilder == null) {
             dtmfBuilder = new IVRDtmfBuilder();
             dtmfBuilder.withMaximumLengthOfResponse(1);
-            dtmfBuilder.withTimeOutInMillis(60000);
+            dtmfBuilder.withTimeOutInMillis(6000000);
             request.setAttribute(IVR.Attributes.DTMF_BUILDER, dtmfBuilder);
         }
         return dtmfBuilder;

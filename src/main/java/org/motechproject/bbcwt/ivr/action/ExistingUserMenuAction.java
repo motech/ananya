@@ -17,6 +17,6 @@ public class ExistingUserMenuAction extends BaseAction{
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        return ivrResponseBuilder(request).addPlayText("Still building the new user flow.").withHangUp().create().getXML();
+        return ivrResponseBuilder(request).addPlayText("Still building the existing user flow.").withHangUp().create().getXML();
     }
 }
