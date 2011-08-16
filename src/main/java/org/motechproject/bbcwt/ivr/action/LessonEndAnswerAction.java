@@ -50,8 +50,8 @@ public class LessonEndAnswerAction extends BaseAction {
         }
         else {
            if(chosenOption == '2') {
-               int nextLessonNumber = lastLesson.getNumber() + 1;
-               return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ nextLessonNumber;
+               Lesson nextLesson = currentChapter.nextLesson(lastLesson);
+               return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ nextLesson.getNumber();
            }
            else {
                ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));

@@ -52,9 +52,8 @@ public class LessonEndMenuAction extends BaseAction {
         IVRResponseBuilder responseBuilder = ivrResponseBuilder(request);
 
         Lesson lastPlayedLesson = currentChapter.getLessonById(milestone.getLessonId());
-        int nextLessonNumber = lastPlayedLesson.getNumber()+1;
 
-        if(currentChapter.getLessonByNumber(nextLessonNumber) == null){
+        if(currentChapter.nextLesson(lastPlayedLesson) == null){
             IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.END_OF_CHAPTER_MENU));
             responseBuilder.withCollectDtmf(dtmfBuilder.create());
 

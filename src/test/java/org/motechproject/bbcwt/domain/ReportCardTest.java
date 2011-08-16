@@ -85,7 +85,7 @@ public class ReportCardTest {
         reportCard.recordResponse(chapter2, ch2q3, 2);
 
         ReportCard.ScoreSummary ch1ScoreSummary = reportCard.scoreEarned(chapter);
-        assertEquals(ch1ScoreSummary.getMaximumMarks(), 2);
+        assertEquals("Incorrect maximum marks: ", ch1ScoreSummary.getMaximumMarks(), 2);
         assertEquals(ch1ScoreSummary.getScoredMarks(), 2);
 
         ReportCard.ScoreSummary ch2ScoreSummary = reportCard.scoreEarned(chapter2);

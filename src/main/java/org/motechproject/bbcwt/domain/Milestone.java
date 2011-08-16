@@ -102,4 +102,14 @@ public class Milestone extends BaseCouchEntity {
     public void setChapter(Chapter chapter) {
         this.chapter = chapter;
     }
+
+    @JsonIgnore
+    public boolean isAtQuestion() {
+        return questionId!=null;
+    }
+
+    @JsonIgnore
+    public boolean isAtLesson() {
+        return lessonId!=null;
+    }
 }

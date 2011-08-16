@@ -89,4 +89,11 @@ public class Chapter extends BaseCouchEntity {
     public void addQuestion(Question question) {
         questions.add(question);
     }
+
+    public Lesson nextLesson(Lesson lesson) {
+        if(lessons.contains(lesson)) {
+            return this.getLessonByNumber(lesson.getNumber()+1);
+        }
+        return null;
+    }
 }
