@@ -23,7 +23,7 @@ public class EndOfCourseAction extends BaseAction {
     @RequestMapping(method= RequestMethod.GET)
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.MSG_COURSE_COMPLETION));
+        ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.MSG_COURSE_COMPLETION)));
         ivrResponseBuilder(request).withHangUp();
         return ivrResponseBuilder(request).create().getXML();
     }

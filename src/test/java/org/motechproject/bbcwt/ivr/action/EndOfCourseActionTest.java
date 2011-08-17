@@ -17,7 +17,7 @@ public class EndOfCourseActionTest extends BaseActionTest {
 
         endOfCourseAction.handle(new IVRRequest(), request, response);
 
-        verify(ivrResponseBuilder).addPlayText(MSG_COURSE_COMPLETION);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + MSG_COURSE_COMPLETION);
         verify(ivrResponseBuilder).withHangUp();
     }
 }
