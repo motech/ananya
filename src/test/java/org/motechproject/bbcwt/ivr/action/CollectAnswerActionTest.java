@@ -61,12 +61,12 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         when(milestonesRepository.markLastMilestoneFinish(healthWorker.getCallerId())).thenReturn(atQuestion1);
         when(chaptersRespository.get(atQuestion1.getChapterId())).thenReturn(chapterWithThreeQuestions);
-        String invalidInputMessage = "Invalid Input";
+        String invalidInputMessage = "Invalid_Input.wav";
         when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(invalidInputMessage);
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "*1"), request, response);
 
-        verify(ivrResponseBuilder).addPlayText(invalidInputMessage);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
         assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
     }
 
@@ -109,7 +109,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
-        verify(ivrResponseBuilder).addPlayText(question1.getCorrectAnswerExplanationLocation());
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getCorrectAnswerExplanationLocation());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
-        verify(ivrResponseBuilder).addPlayText(question1.getIncorrectAnswerExplanationLocation());
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getIncorrectAnswerExplanationLocation());
     }
 
     @Test

@@ -41,7 +41,7 @@ public abstract class BaseActionTest {
     @Before
     public void baseSetup() {
         initMocks(this);
-        when(messages.get("content.location")).thenReturn(CONTENT_LOCATION);
+        when(messages.get(IVRMessage.CONTENT_LOCATION)).thenReturn(CONTENT_LOCATION);
         setupSession();
         setupIVRBuilders();
     }

@@ -50,7 +50,7 @@ public class CollectAnswerAction extends BaseAction {
         Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
 
         if(!dtmfInputIsValid(chosenOption)) {
-           ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
+           ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
            return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
         }
 
@@ -58,10 +58,10 @@ public class CollectAnswerAction extends BaseAction {
 
 
         if(healthWorkerResponseToQuestion.isCorrect()) {
-            ivrResponseBuilder(request).addPlayText(lastQuestion.getCorrectAnswerExplanationLocation());
+            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lastQuestion.getCorrectAnswerExplanationLocation()));
         }
         else {
-            ivrResponseBuilder(request).addPlayText(lastQuestion.getIncorrectAnswerExplanationLocation());
+            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lastQuestion.getIncorrectAnswerExplanationLocation()));
         }
 
         int nextQuestionNumber = lastQuestion.getNumber() + 1;
