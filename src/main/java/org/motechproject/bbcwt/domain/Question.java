@@ -15,7 +15,7 @@ public class Question extends BaseCouchEntity {
     public Question() {
     }
 
-    public Question(int number, String questionLocation, String optionsLocation, int correctOption, String correctAnswerExplanationLocation, String incorrectAnswerExplanationLocation) {
+    public Question(int number, String questionLocation, int correctOption, String correctAnswerExplanationLocation, String incorrectAnswerExplanationLocation) {
         this.number = number;
         this.questionLocation = questionLocation;
         this.correctOption = correctOption;

@@ -2,7 +2,6 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.ivr.IVR;
@@ -34,9 +33,9 @@ public class InformScoreActionTest extends BaseActionTest {
         healthWorker = new HealthWorker(callerId);
 
         chapter = new Chapter(1);
-        Question question1 = new Question(1, null, null, 1, null, null);
-        Question question2 = new Question(2, null, null, 1, null, null);
-        Question question3 = new Question(3, null, null, 2, null, null);
+        Question question1 = new Question(1, null, 1, null, null);
+        Question question2 = new Question(2, null, 1, null, null);
+        Question question3 = new Question(3, null, 2, null, null);
         chapter.addQuestion(question1);
         chapter.addQuestion(question2);
         chapter.addQuestion(question3);

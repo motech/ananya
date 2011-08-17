@@ -20,8 +20,8 @@ public class ReportCardTest {
 
         chapter = new Chapter(1);
         chapter.setId(UUIDUtil.newUUID());
-        question1 = new Question(1, null, null, 1, null, null);
-        question2 = new Question(2, null, null, 2, null, null);
+        question1 = new Question(1, null, 1, null, null);
+        question2 = new Question(2, null, 2, null, null);
         chapter.addQuestion(question1);
         chapter.addQuestion(question2);
         reportCard = new ReportCard();
@@ -71,9 +71,9 @@ public class ReportCardTest {
     public void scoreEarnedShouldReportScoreForRequestedChapter() {
         Chapter chapter2 = new Chapter(2);
         chapter2.setId(UUIDUtil.newUUID());
-        Question ch2q1 = new Question(1, null, null, 1, null, null);
-        Question ch2q2 = new Question(2, null, null, 1, null, null);
-        Question ch2q3 = new Question(3, null, null, 2, null, null);
+        Question ch2q1 = new Question(1, null, 1, null, null);
+        Question ch2q2 = new Question(2, null, 1, null, null);
+        Question ch2q3 = new Question(3, null, 2, null, null);
         chapter2.addQuestion(ch2q1);
         chapter2.addQuestion(ch2q2);
         chapter2.addQuestion(ch2q3);

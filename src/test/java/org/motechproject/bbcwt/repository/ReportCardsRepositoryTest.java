@@ -32,8 +32,8 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
     @Before
     public void setUp(){
         chapter = new Chapter(1);
-        question1 = new Question(1, null, null, -1, null, null);
-        question2 = new Question(2, null, null, -1, null, null);
+        question1 = new Question(1, null, -1, null, null);
+        question2 = new Question(2, null, -1, null, null);
         chapter.addQuestion(question1);
         chapter.addQuestion(question2);
         chaptersRespository.add(chapter);

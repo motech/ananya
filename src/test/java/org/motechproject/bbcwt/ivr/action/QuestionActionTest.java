@@ -29,7 +29,7 @@ public class QuestionActionTest extends BaseActionTest {
     @Before
     public void setUp(){
         callerId = "9876543210";
-        question = new Question(1, "http://question/1", "http://question/1/options", 1, null, null);
+        question = new Question(1, "http://question/1", 1, null, null);
         chapter = new Chapter(1);
         chapter.addQuestion(question);
 

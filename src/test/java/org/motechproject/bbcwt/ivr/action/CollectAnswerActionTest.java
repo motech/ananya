@@ -37,15 +37,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
         chapterWithThreeQuestions.setId(UUIDUtil.newUUID());
         chapterWithThreeQuestions.addQuestion(new Question(1,
                                                             "http://location/chapter/1/question/1",
-                                                            "http://location/chapter/1/question/1/options", 1,
+                1,
                                                             "http://location/chapter/1/question/1/correct", "http://location/chapter/1/question/1/incorrect"));
         chapterWithThreeQuestions.addQuestion(new Question(2,
                                                             "http://location/chapter/1/question/2",
-                                                            "http://location/chapter/1/question/2/options", 2,
+                2,
                                                             "http://location/chapter/1/question/2/correct", "http://location/chapter/1/question/2/incorrect"));
         chapterWithThreeQuestions.addQuestion(new Question(3,
                                                             "http://location/chapter/1/question/3",
-                                                            "http://location/chapter/1/question/3/options", 2,
+                2,
                                                             "http://location/chapter/1/question/3/correct", "http://location/chapter/1/question/3/incorrect"));
         String callerId = "9989989980";
         healthWorker = new HealthWorker(callerId);
