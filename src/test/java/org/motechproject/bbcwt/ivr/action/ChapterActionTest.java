@@ -50,7 +50,7 @@ public class ChapterActionTest extends BaseActionTest {
         callerId = "9999988888";
 
         chapter = new Chapter(chapterNumber);
-        lesson = new Lesson(lessonNumber, "This is lesson 1.");
+        lesson = new Lesson(lessonNumber, "This is lesson 1.", "http://lesson/1/endMenu");
         chapter.addLesson(lesson);
 
         healthWorker = new HealthWorker(callerId);

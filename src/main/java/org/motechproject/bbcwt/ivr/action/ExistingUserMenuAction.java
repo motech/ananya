@@ -33,7 +33,20 @@ public class ExistingUserMenuAction extends BaseAction{
         final String callerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
         Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
         if(currentMilestone.isAtLesson()) {
+            if(currentMilestone.isAccomplished()) {
 
+            }
+            else {
+
+            }
+        }
+        if(currentMilestone.isAtQuestion()) {
+            if(currentMilestone.isAccomplished()) {
+
+            }
+            else {
+
+            }
         }
         return ivrResponseBuilder(request).addPlayText("Still building the existing user flow.").withHangUp().create().getXML();
     }

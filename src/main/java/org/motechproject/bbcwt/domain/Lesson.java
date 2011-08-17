@@ -9,13 +9,16 @@ public class Lesson extends BaseCouchEntity {
 
     private String location;
 
+    private String endMenuLocation;
+
     public Lesson() {
 
     }
 
-    public Lesson(int number, String location) {
+    public Lesson(int number, String location, String endMenuLocation) {
         this.number = number;
         this.location = location;
+        this.endMenuLocation =  endMenuLocation;
         this.setId(UUIDUtil.newUUID());
     }
 
@@ -33,5 +36,13 @@ public class Lesson extends BaseCouchEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getEndMenuLocation() {
+        return endMenuLocation;
+    }
+
+    public void setEndMenuLocation(String endMenuLocation) {
+        this.endMenuLocation = endMenuLocation;
     }
 }

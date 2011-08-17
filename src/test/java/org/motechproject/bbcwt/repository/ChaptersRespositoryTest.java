@@ -55,8 +55,8 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
 
     @Test
     public void shouldAssociateLessonsWithChapter() {
-        Lesson lesson1 = new Lesson(1, "Lesson1");
-        Lesson lesson2 = new Lesson(2, "Lesson2");
+        Lesson lesson1 = new Lesson(1, "Lesson1", "Lesson1EndMenu");
+        Lesson lesson2 = new Lesson(2, "Lesson2", "Lesson1EndMenu");
 
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);

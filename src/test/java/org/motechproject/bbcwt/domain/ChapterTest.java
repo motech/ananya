@@ -13,8 +13,8 @@ public class ChapterTest {
     @Test
     public void shouldReturnLessonGivenANumber() {
         Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "Lesson1");
-        Lesson lesson2 = new Lesson(2, "Lesson2");
+        Lesson lesson1 = new Lesson(1, "Lesson1", "Lesson1EndMenu");
+        Lesson lesson2 = new Lesson(2, "Lesson2", "Lesson2EndMenu");
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);
 
@@ -43,8 +43,8 @@ public class ChapterTest {
     @Test
     public void shouldReturnNullIfNoLessonWithGivenNumberExists() {
         Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "Lesson1");
-        Lesson lesson2 = new Lesson(2, "Lesson2");
+        Lesson lesson1 = new Lesson(1, "Lesson1", "Lesson1EndMenu");
+        Lesson lesson2 = new Lesson(2, "Lesson2", "Lesson2EndMenu");
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);
 
@@ -80,8 +80,8 @@ public class ChapterTest {
     @Test
     public void getLessonByIdShouldReturnTheLessonWithPassedId() {
         Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "Lesson1");
-        Lesson lesson2 = new Lesson(2, "Lesson2");
+        Lesson lesson1 = new Lesson(1, "Lesson1", "Lesson1EndMenu");
+        Lesson lesson2 = new Lesson(2, "Lesson2", "Lesson2EndMenu");
 
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);
@@ -113,9 +113,9 @@ public class ChapterTest {
     @Test
     public void getLessonByIdShouldReturnNullIfThereIsNoLessonWithPassedId() {
         Chapter chapter = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "Lesson1");
-        Lesson lesson2 = new Lesson(2, "Lesson2");
-        Lesson lessonNotInChapter = new Lesson(3, "Lesson3");
+        Lesson lesson1 = new Lesson(1, "Lesson1", "Lesson1EndMenu");
+        Lesson lesson2 = new Lesson(2, "Lesson2", "Lesson2EndMenu");
+        Lesson lessonNotInChapter = new Lesson(3, "Lesson3", "Lesson3EndMenu");
 
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);
@@ -152,7 +152,7 @@ public class ChapterTest {
     @Test
     public void getLessonByIdShouldReturnNullIfThereAreNoLessons() {
         Chapter chapter = new Chapter(1);
-        Lesson lessonNotInChapter = new Lesson(3, "Lesson3");
+        Lesson lessonNotInChapter = new Lesson(3, "Lesson3", "Lesson3EndMenu");
         String wantedLessonId = lessonNotInChapter.getId();
 
         Lesson obtainedLesson = chapter.getLessonById(wantedLessonId);

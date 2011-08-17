@@ -35,7 +35,7 @@ public class StartQuizActionTest extends BaseActionTest {
     @Test
     public void shouldForwardToFirstQuestionIfItExists() {
         Chapter currentChapter = new Chapter(1);
-        Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1");
+        Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1", "chapter 1 lesson 1 end menu");
         currentChapter.addLesson(ch1l1);
         Question q1l1 = new Question();
         currentChapter.addQuestion(q1l1);
@@ -60,7 +60,7 @@ public class StartQuizActionTest extends BaseActionTest {
     @Test
     public void shouldForwardToNextChapterIfNoQuestionExistInCurrentChapter() {
         Chapter chapterWithNoQuestions = new Chapter(1);
-        Lesson lesson = new Lesson(1, "Lesson 1");
+        Lesson lesson = new Lesson(1, "Lesson 1", "Lesson 1 end menu");
         Milestone currentMilestone = new Milestone(healthWorker.getId(), chapterWithNoQuestions.getId(), lesson.getId(), null, new Date());
         currentMilestone.setChapter(chapterWithNoQuestions);
 

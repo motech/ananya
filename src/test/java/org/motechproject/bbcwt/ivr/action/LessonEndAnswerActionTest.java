@@ -40,9 +40,9 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
 
         chapter = new Chapter(1);
         chapter.setId("ChapterId1");
-        Lesson lesson1 = new Lesson(1, "Lesson 1");
-        currentLesson = new Lesson(2, "Lesson 2");
-        Lesson lesson3 = new Lesson(3, "Lesson 3");
+        Lesson lesson1 = new Lesson(1, "Lesson 1", "Lesson 1 End Menu");
+        currentLesson = new Lesson(2, "Lesson 2", "Lesson 2 End Menu");
+        Lesson lesson3 = new Lesson(3, "Lesson 3", "Lesson 3 End Menu");
         chapter.addLesson(lesson1);
         chapter.addLesson(currentLesson);
         chapter.addLesson(lesson3);

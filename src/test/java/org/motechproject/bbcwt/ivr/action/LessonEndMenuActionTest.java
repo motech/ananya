@@ -48,9 +48,9 @@ public class LessonEndMenuActionTest extends BaseActionTest {
 
         chapter = new Chapter(1);
         chapter.setId("ChapterId1");
-        Lesson lesson1 = new Lesson(1, "Lesson 1");
-        currentLesson = new Lesson(2, "Lesson 2");
-        lastLesson = new Lesson(3, "Lesson 3");
+        Lesson lesson1 = new Lesson(1, "Lesson 1", "http://lessonEndMenu1");
+        currentLesson = new Lesson(2, "Lesson 2", "http://lessonEndMenu2");
+        lastLesson = new Lesson(3, "Lesson 3", "http://lessonEndMenu3");
         chapter.addLesson(lesson1);
         chapter.addLesson(currentLesson);
         chapter.addLesson(lastLesson);

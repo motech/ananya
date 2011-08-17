@@ -37,10 +37,10 @@ public class StartNextChapterActionTest extends BaseActionTest {
         healthWorker = new HealthWorker("9989989998");
 
         chapter1 = new Chapter(1);
-        Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1");
+        Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1", "Chapter 1 lesson 1 end menu");
         chapter1.addLesson(ch1l1);
         chapter2 = new Chapter(2);
-        Lesson ch2l1 = new Lesson(1, "Chapter 2 Lesson 1");
+        Lesson ch2l1 = new Lesson(1, "Chapter 2 Lesson 1", "Chapter 2 Lesson 1 end menu");
         chapter2.addLesson(ch2l1);
 
         currentMilestone = new Milestone(healthWorker.getId(), chapter1.getId(), ch1l1.getId(), null, new Date());

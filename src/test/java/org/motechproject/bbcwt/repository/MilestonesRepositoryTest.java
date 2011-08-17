@@ -38,8 +38,8 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
         markForDeletion(healthWorker);
 
         chapter = new Chapter(1);
-        lesson1 = new Lesson(1, "http://somewhere/lesson");
-        lesson2 = new Lesson(2, "http://somewhere/lesson/2");
+        lesson1 = new Lesson(1, "http://somewhere/lesson", "http://somewhere/lessonEndMenu");
+        lesson2 = new Lesson(2, "http://somewhere/lesson/2", "http://somewhere/lessonEndMenu2");
         chapter.addLesson(lesson1);
         chapter.addLesson(lesson2);
 
@@ -109,13 +109,13 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
     @Test
     public void markNewChapterStartShouldUpdateAndReturnMilestoneIfAlreadyPresent() {
         Chapter chapter1 = new Chapter(1);
-        Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1");
+        Lesson lesson1 = new Lesson(1, "http://somewhere/lesson/1", "http://somewhere/lesson/1/endmenu");
         chapter1.addLesson(lesson1);
         chaptersRespository.add(chapter1);
         markForDeletion(chapter1);
 
         Chapter chapter2 = new Chapter(2);
-        Lesson lesson2 = new Lesson(1, "http://somewhere/lesson/2");
+        Lesson lesson2 = new Lesson(1, "http://somewhere/lesson/2", "http://somwhere/lesson/2/endmenu");
         chapter2.addLesson(lesson2);
         chaptersRespository.add(chapter2);
         markForDeletion(chapter2);

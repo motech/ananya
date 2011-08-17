@@ -39,7 +39,7 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
         healthWorker = new HealthWorker(callerId);
         chapter = new Chapter(1);
         chapter.setId("chapter-1-unique-id");
-        lesson = new Lesson(1, "http://somewhere/lesson/1");
+        lesson = new Lesson(1, "http://somewhere/lesson/1", "http://somwhere/lesson/1/endMenu");
         chapter.addLesson(lesson);
 
         lastMilestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), null, new Date());
