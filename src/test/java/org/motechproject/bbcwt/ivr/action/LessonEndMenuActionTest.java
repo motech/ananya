@@ -48,9 +48,9 @@ public class LessonEndMenuActionTest extends BaseActionTest {
 
         chapter = new Chapter(1);
         chapter.setId("ChapterId1");
-        Lesson lesson1 = new Lesson(1, "Lesson 1", "http://lessonEndMenu1");
-        currentLesson = new Lesson(2, "Lesson 2", "http://lessonEndMenu2");
-        lastLesson = new Lesson(3, "Lesson 3", "http://lessonEndMenu3");
+        Lesson lesson1 = new Lesson(1, "Lesson 1", "lessonEndMenu1");
+        currentLesson = new Lesson(2, "Lesson 2", "lessonEndMenu2");
+        lastLesson = new Lesson(3, "Lesson 3", "lessonEndMenu3");
         chapter.addLesson(lesson1);
         chapter.addLesson(currentLesson);
         chapter.addLesson(lastLesson);
@@ -68,14 +68,9 @@ public class LessonEndMenuActionTest extends BaseActionTest {
     public void shouldBuildEndOfLessonMenu(){
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, null, null);
 
-        String END_LESSON_OPTION_TEXT ="Please press 1 for repeating last lesson, 2 for next lesson.";
-
-        when(messages.get(IVRMessage.END_OF_LESSON_MENU)).thenReturn(END_LESSON_OPTION_TEXT);
-
         String endAction = lessonEndMenuAction.handle(ivrRequest,request,response);
 
-        verify(messages).get(IVRMessage.END_OF_LESSON_MENU);
-        verify(ivrDtmfBuilder, times(1)).withPlayText(END_LESSON_OPTION_TEXT);
+        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION + currentLesson.getEndMenuFileName());
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
         verify(session, times(1)).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndAnswer");
     }
@@ -84,15 +79,11 @@ public class LessonEndMenuActionTest extends BaseActionTest {
     public void shouldBuildEndOfChapterMenu(){
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, null, null);
 
-        String END_CHAPTER_OPTION_TEXT = "Please press 1 for repeating last lesson, and 2 for taking the end of chapter quiz.";
-
         currentMilestone.setLessonId(lastLesson.getId());
-        when(messages.get(IVRMessage.END_OF_CHAPTER_MENU)).thenReturn(END_CHAPTER_OPTION_TEXT);
 
         String endAction = lessonEndMenuAction.handle(ivrRequest,request,response);
 
-        verify(messages).get(IVRMessage.END_OF_CHAPTER_MENU);
-        verify(ivrDtmfBuilder, times(1)).withPlayText(END_CHAPTER_OPTION_TEXT);
+        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION + lastLesson.getEndMenuFileName());
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
         verify(session, times(1)).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapterEndAnswer");
 

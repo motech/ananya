@@ -53,16 +53,13 @@ public class LessonEndMenuAction extends BaseAction {
 
         Lesson lastPlayedLesson = currentChapter.getLessonById(milestone.getLessonId());
 
-        if(currentChapter.nextLesson(lastPlayedLesson) == null){
-            IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.END_OF_CHAPTER_MENU));
-            responseBuilder.withCollectDtmf(dtmfBuilder.create());
+        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(lastPlayedLesson.getEndMenuFileName()));
+        responseBuilder.withCollectDtmf(dtmfBuilder.create());
 
+        if(currentChapter.nextLesson(lastPlayedLesson) == null){
             request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapterEndAnswer");
         }
         else{
-            IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.END_OF_LESSON_MENU));
-            responseBuilder.withCollectDtmf(dtmfBuilder.create());
-
             request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndAnswer");
         }
         LOG.info("Rendering end of lesson menu now.");
