@@ -45,16 +45,11 @@ public class StartQuizActionTest extends BaseActionTest {
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(healthWorker.getCallerId());
         final String MSG_START_OF_QUIZ = "You are about to start quiz for chapter ";
-        when(messages.get(IVRMessage.MSG_START_OF_QUIZ)).thenReturn(MSG_START_OF_QUIZ);
         when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(currentMilestone);
 
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
 
         assertThat(nextAction, is("forward:/chapter/" +currentChapter.getNumber() + "/question/1"));
-
-        InOrder inOrder = inOrder(ivrResponseBuilder);
-        inOrder.verify(ivrResponseBuilder).addPlayText(MSG_START_OF_QUIZ);
-        inOrder.verify(ivrResponseBuilder).addPlayText(" " + currentChapter.getNumber() + ".");
     }
 
     @Test

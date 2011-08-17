@@ -37,9 +37,6 @@ public class StartQuizAction extends BaseAction {
         if (thereAreQuestionsInCurrentChapter) {
             int currentChapterNumber = currentChapter.getNumber();
 
-            ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.MSG_START_OF_QUIZ));
-            ivrResponseBuilder(request).addPlayText(" " + currentChapterNumber+".");
-
             return "forward:/chapter/" + currentChapterNumber + "/question/1";
         } else {
             return "forward:/startNextChapter";

@@ -43,12 +43,13 @@ public class InformScoreAction extends BaseAction {
         ReportCard reportCard = reportCardsRepository.findByHealthWorker(healthWorker);
         ReportCard.ScoreSummary chapterScoreSummary = reportCard.scoreEarned(currentChapter);
 
-        ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.END_OF_QUIZ_MESSAGE));
-        ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INFORM_SCORE_START));
-        ivrResponseBuilder(request).addPlayText(" " + chapterScoreSummary.getScoredMarks()+" ");
-        ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INFORM_SCORE_OUTOF));
-        ivrResponseBuilder(request).addPlayText(" " + chapterScoreSummary.getMaximumMarks()+".");
+        String scoreReportFileName = scoreReportFileName(currentChapter, chapterScoreSummary.getScoredMarks(), chapterScoreSummary.getMaximumMarks());
+        ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(scoreReportFileName));
 
         return "forward:/endOfQuizMenu";
+    }
+
+    protected String scoreReportFileName(Chapter currentChapter, int scoredMarks, int maximumMarks) {
+        return scoredMarks + "_out_of_" + maximumMarks + ".wav";
     }
 }

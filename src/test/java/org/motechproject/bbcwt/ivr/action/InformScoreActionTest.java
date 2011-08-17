@@ -11,6 +11,7 @@ import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class InformScoreActionTest extends BaseActionTest {
@@ -78,11 +79,17 @@ public class InformScoreActionTest extends BaseActionTest {
 
         informScoreAction.handle(new IVRRequest(), request, response);
 
-        InOrder inOrder = inOrder(ivrResponseBuilder);
-        inOrder.verify(ivrResponseBuilder).addPlayText(QUIZ_COMPLETION_MSG);
-        inOrder.verify(ivrResponseBuilder).addPlayText(SCORE_INFORMATION_START);
-        inOrder.verify(ivrResponseBuilder).addPlayText(" " + scoreSummaryForChapter.getScoredMarks() + " ");
-        inOrder.verify(ivrResponseBuilder).addPlayText(SCORE_INFORMATION_OUT_OF);
-        inOrder.verify(ivrResponseBuilder).addPlayText(" " + scoreSummaryForChapter.getMaximumMarks() + ".");
+        final String scoreReportFile = scoreSummaryForChapter.getScoredMarks() + "_out_of_" + scoreSummaryForChapter.getMaximumMarks() + ".wav";
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + scoreReportFile);
+    }
+
+    @Test
+    public void shouldConstructFileNameForPlayingScore() {
+        assertEquals(informScoreAction.scoreReportFileName(null, 0, 4), "0_out_of_4.wav");
+        assertEquals(informScoreAction.scoreReportFileName(null, 1, 4), "1_out_of_4.wav");
+        assertEquals(informScoreAction.scoreReportFileName(null, 2, 4), "2_out_of_4.wav");
+        assertEquals(informScoreAction.scoreReportFileName(null, 3, 4), "3_out_of_4.wav");
+        assertEquals(informScoreAction.scoreReportFileName(null, 4, 4), "4_out_of_4.wav");
     }
 }
