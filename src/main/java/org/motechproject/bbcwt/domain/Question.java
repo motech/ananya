@@ -8,7 +8,6 @@ public class Question extends BaseCouchEntity {
     private int number;
 
     private String questionLocation;
-    private String optionsLocation;
     private int correctOption;
     private String correctAnswerExplanationLocation;
     private String incorrectAnswerExplanationLocation;
@@ -19,7 +18,6 @@ public class Question extends BaseCouchEntity {
     public Question(int number, String questionLocation, String optionsLocation, int correctOption, String correctAnswerExplanationLocation, String incorrectAnswerExplanationLocation) {
         this.number = number;
         this.questionLocation = questionLocation;
-        this.optionsLocation = optionsLocation;
         this.correctOption = correctOption;
         this.correctAnswerExplanationLocation = correctAnswerExplanationLocation;
         this.incorrectAnswerExplanationLocation = incorrectAnswerExplanationLocation;
@@ -40,14 +38,6 @@ public class Question extends BaseCouchEntity {
 
     public void setQuestionLocation(String questionLocation) {
         this.questionLocation = questionLocation;
-    }
-
-    public String getOptionsLocation() {
-        return optionsLocation;
-    }
-
-    public void setOptionsLocation(String optionsLocation) {
-        this.optionsLocation = optionsLocation;
     }
 
     public int getCorrectOption() {
