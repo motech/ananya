@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr.action;
 import com.ozonetel.kookoo.CollectDtmf;
 import com.ozonetel.kookoo.Response;
 import org.apache.log4j.Logger;
+import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
@@ -16,32 +17,6 @@ public abstract class BaseAction implements IVRAction {
     protected static final Logger LOG = Logger.getLogger(BaseAction.class);
     @Autowired
     protected IVRMessage messages;
-
-    protected String responseWith(IVRRequest ivrRequest, String key) {
-        String playText = messages.get(key);
-        Response ivrResponse = new IVRResponseBuilder().withSid(ivrRequest.getSid()).addPlayText(playText).create();
-        return ivrResponse.getXML();
-    }
-
-    protected String hangUpResponseWith(IVRRequest ivrRequest, String key) {
-        String playText = messages.get(key);
-        Response ivrResponse = new IVRResponseBuilder().withSid(ivrRequest.getSid()).addPlayText(playText).withHangUp().create();
-        return ivrResponse.getXML();
-    }
-
-    protected String dtmfResponseWith(IVRRequest ivrRequest, String key) {
-        String playText = messages.get(key);
-        CollectDtmf collectDtmf = new IVRDtmfBuilder().withPlayText(playText).create();
-        Response ivrResponse = new IVRResponseBuilder().withSid(ivrRequest.getSid()).withCollectDtmf(collectDtmf).create();
-        return ivrResponse.getXML();
-    }
-
-    protected String dtmfResponseWithWav(IVRRequest ivrRequest, String key) {
-        String playAudio = messages.get(key);
-        CollectDtmf collectDtmf = new IVRDtmfBuilder().withPlayAudio(playAudio).create();
-        Response ivrResponse = new IVRResponseBuilder().withSid(ivrRequest.getSid()).withCollectDtmf(collectDtmf).create();
-        return ivrResponse.getXML();
-    }
 
     protected IVRResponseBuilder ivrResponseBuilder(HttpServletRequest request) {
         IVRResponseBuilder ivrResponseBuilder = (IVRResponseBuilder)request.getAttribute(IVR.Attributes.RESPONSE_BUILDER);
@@ -61,5 +36,9 @@ public abstract class BaseAction implements IVRAction {
             request.setAttribute(IVR.Attributes.DTMF_BUILDER, dtmfBuilder);
         }
         return dtmfBuilder;
+    }
+
+    protected String absoluteFileLocation(String fileName) {
+        return messages.get(IVRMessage.CONTENT_LOCATION) + fileName;
     }
 }

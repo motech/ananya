@@ -35,10 +35,13 @@ public abstract class BaseActionTest {
     @Mock
     protected Response ivrResponse;
 
+    protected final String CONTENT_LOCATION = "http://localhost/bbcwt/audio/";
+
 
     @Before
     public void baseSetup() {
         initMocks(this);
+        when(messages.get("content.location")).thenReturn(CONTENT_LOCATION);
         setupSession();
         setupIVRBuilders();
     }

@@ -8,6 +8,7 @@ import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
+import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
@@ -77,6 +78,20 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
 
         assertEquals("Should navigate to the the first question after end of chapter.", nextAction,
                      "forward:/startQuiz");
+    }
+
+    @Test
+    public void shouldPlayInvalidInputMessageAndNavigateToLessonEndMenuIfOptionChosenIsInvalid() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "3");
+
+        final String INVALID_INPUT_WAV = "invalid_input.wav";
+        when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(INVALID_INPUT_WAV);
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + INVALID_INPUT_WAV);
+
+        assertEquals("Should navigate to the the lesson end menu.", nextAction,
+                     "forward:/lessonEndMenu");
     }
 
 }

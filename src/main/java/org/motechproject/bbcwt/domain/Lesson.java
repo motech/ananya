@@ -7,18 +7,18 @@ import org.motechproject.bbcwt.util.UUIDUtil;
 public class Lesson extends BaseCouchEntity {
     private int number;
 
-    private String location;
+    private String fileName;
 
-    private String endMenuLocation;
+    private String endMenuFileName;
 
     public Lesson() {
 
     }
 
-    public Lesson(int number, String location, String endMenuLocation) {
+    public Lesson(int number, String fileName, String endMenuFileName) {
         this.number = number;
-        this.location = location;
-        this.endMenuLocation =  endMenuLocation;
+        this.fileName = fileName;
+        this.endMenuFileName =  endMenuFileName;
         this.setId(UUIDUtil.newUUID());
     }
 
@@ -30,19 +30,19 @@ public class Lesson extends BaseCouchEntity {
         this.number = number;
     }
 
-    public String getLocation() {
-        return location;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public String getEndMenuLocation() {
-        return endMenuLocation;
+    public String getEndMenuFileName() {
+        return endMenuFileName;
     }
 
-    public void setEndMenuLocation(String endMenuLocation) {
-        this.endMenuLocation = endMenuLocation;
+    public void setEndMenuFileName(String endMenuFileName) {
+        this.endMenuFileName = endMenuFileName;
     }
 }

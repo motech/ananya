@@ -51,7 +51,7 @@ public class ChapterAction extends BaseAction {
 
         milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
-        ivrResponseBuilder(request).addPlayText(lessonToPlay.getLocation());
+        ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
         return "forward:/lessonEndMenu";
     }
 

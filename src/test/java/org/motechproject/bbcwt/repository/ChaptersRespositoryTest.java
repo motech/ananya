@@ -88,7 +88,7 @@ public class ChaptersRespositoryTest extends SpringIntegrationTest {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("Lesson " + lesson.getId() + ", at location: " + lesson.getLocation() + " is not present.");
+                description.appendText("Lesson " + lesson.getId() + ", at location: " + lesson.getFileName() + " is not present.");
             }
         };
     }

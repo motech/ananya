@@ -56,7 +56,7 @@ public class ChapterEndAnswerAction extends BaseAction{
                return "forward:/startQuiz";
            }
            else {
-               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
+               ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
                return "forward:/lessonEndMenu";
            }
         }

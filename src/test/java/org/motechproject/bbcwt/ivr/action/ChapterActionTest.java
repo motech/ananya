@@ -77,7 +77,7 @@ public class ChapterActionTest extends BaseActionTest {
     {
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
 
-        verify(ivrResponseBuilder).addPlayText(lesson.getLocation());
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + lesson.getFileName());
         assertThat(nextAction, is("forward:/lessonEndMenu"));
     }
 
