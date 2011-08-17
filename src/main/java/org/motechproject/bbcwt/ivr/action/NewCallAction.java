@@ -42,7 +42,7 @@ public class NewCallAction extends BaseAction {
         IVRResponseBuilder ivrResponseBuilder = ivrResponseBuilder(request);
 
         if(healthWorker == null) {
-            ivrResponseBuilder.addPlayText(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE));
+            ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)));
 
             return "forward:/helpMenu";
         }

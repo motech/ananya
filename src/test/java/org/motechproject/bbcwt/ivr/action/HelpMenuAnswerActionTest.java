@@ -59,7 +59,7 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
         String chainedAction = action.handle(ivrRequest, request, response);
 
         verify(messages, atLeastOnce()).get(IVRMessage.INVALID_INPUT);
-        verify(ivrResponseBuilder, atMost(1)).addPlayText(INVALID_IP_MSG);
+        verify(ivrResponseBuilder, atLeastOnce()).addPlayAudio(CONTENT_LOCATION + INVALID_IP_MSG);
 
         assertEquals("The help menu should be played again in case of an invalid input.", "forward:/helpMenu", chainedAction);
     }

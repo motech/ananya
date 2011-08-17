@@ -30,13 +30,14 @@ public class NewCallActionTest extends BaseActionTest {
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", callerId, IVR.Event.NEW_CALL.key(), "Data");
 
         when(healthWorkers.findByCallerId(ivrRequest.getCid())).thenReturn(null);
-        when(messages.get("wc.msg.new.user")).thenReturn("Welcome. This is the first time you are accessing FLW Training course.");
+        final String NEW_USR_MSG = "welcome_new_user.wav";
+        when(messages.get("wc.msg.new.user")).thenReturn(NEW_USR_MSG);
 
         String nextAction = action.handle(ivrRequest, request, response);
 
         verify(session).setAttribute(IVR.Attributes.CALLER_ID, callerId);
         verify(healthWorkers).findByCallerId(ivrRequest.getCid());
-        verify(ivrResponseBuilder).addPlayText("Welcome. This is the first time you are accessing FLW Training course.");
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + NEW_USR_MSG);
 
         assertEquals("The next action chained in case of new user should be helpMenu", "forward:/helpMenu", nextAction);
     }

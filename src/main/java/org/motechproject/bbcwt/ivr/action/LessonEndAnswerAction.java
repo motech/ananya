@@ -54,7 +54,7 @@ public class LessonEndAnswerAction extends BaseAction {
                return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ nextLesson.getNumber();
            }
            else {
-               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
+               ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
                return "forward:/lessonEndMenu";
            }
         }

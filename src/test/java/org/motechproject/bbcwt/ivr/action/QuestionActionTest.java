@@ -45,8 +45,7 @@ public class QuestionActionTest extends BaseActionTest {
         questionAction.get(chapter.getNumber(), question.getNumber(), request, response);
 
         verify(milestonesRepository).markNewQuestionStart(callerId, chapter.getNumber(), question.getNumber());
-        verify(ivrResponseBuilder).addPlayText(question.getQuestionLocation());
-        verify(ivrDtmfBuilder).withPlayText(question.getOptionsLocation());
+        verify(ivrDtmfBuilder).withPlayAudio(CONTENT_LOCATION + question.getOptionsLocation());
         verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
         verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/collectAnswer");
     }

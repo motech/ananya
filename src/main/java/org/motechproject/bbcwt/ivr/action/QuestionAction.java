@@ -41,8 +41,7 @@ public class QuestionAction extends BaseAction {
 
         milestonesRepository.markNewQuestionStart(callerId, chapterNumber, questionNumber);
 
-        ivrResponseBuilder(request).addPlayText(question.getQuestionLocation());
-        CollectDtmf answerDtmf = ivrDtmfBuilder(request).withPlayText(question.getOptionsLocation()).create();
+        CollectDtmf answerDtmf = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(question.getOptionsLocation())).create();
         ivrResponseBuilder(request).withCollectDtmf(answerDtmf);
 
         request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/collectAnswer");
