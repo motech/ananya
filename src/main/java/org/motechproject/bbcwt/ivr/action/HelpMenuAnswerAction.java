@@ -30,20 +30,17 @@ public class HelpMenuAnswerAction extends BaseAction {
         }
 
         if(chosenOption == '1') {
+            //TODO: replace this with something like go to next lesson/chapter
             return "forward:/chapter/1/lesson/1";
         }
         else {
            if(chosenOption == '2') {
-               ivrResponseBuilder(request).addPlayAudio(contentAt(messages.get(IVRMessage.IVR_HELP)));
+               ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
            }
            else {
-               ivrResponseBuilder(request).addPlayText(messages.get(IVRMessage.INVALID_INPUT));
+               ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
            }
         }
         return "forward:/helpMenu";
-    }
-
-    private String contentAt(String path) {
-        return messages.get(IVRMessage.CONTENT_LOCATION).concat(path);
     }
 }
