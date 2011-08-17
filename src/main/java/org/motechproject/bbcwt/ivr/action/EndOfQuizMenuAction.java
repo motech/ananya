@@ -26,7 +26,8 @@ public class EndOfQuizMenuAction extends BaseAction {
     @RequestMapping(value="/endOfQuizMenu", method= RequestMethod.GET)
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        CollectDtmf endOfQuizDtmf = ivrDtmfBuilder(request).withPlayText(messages.get(IVRMessage.END_OF_QUIZ_OPTIONS)).create();
+        //TODO: what is to be played at the end of the quiz is dynamic. Will do for demo, but has to be modified.
+        CollectDtmf endOfQuizDtmf = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.END_OF_QUIZ_OPTIONS))).create();
         ivrResponseBuilder(request).withCollectDtmf(endOfQuizDtmf);
         request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
         return ivrResponseBuilder(request).create().getXML();
