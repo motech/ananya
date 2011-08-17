@@ -70,10 +70,6 @@ public class InformScoreActionTest extends BaseActionTest {
         final String SCORE_INFORMATION_START = "Your score is: ";
         final String SCORE_INFORMATION_OUT_OF = "out of";
 
-        when(messages.get(IVRMessage.END_OF_QUIZ_MESSAGE)).thenReturn(QUIZ_COMPLETION_MSG);
-        when(messages.get(IVRMessage.INFORM_SCORE_START)).thenReturn(SCORE_INFORMATION_START);
-        when(messages.get(IVRMessage.INFORM_SCORE_OUTOF)).thenReturn(SCORE_INFORMATION_OUT_OF);
-
         ReportCard.ScoreSummary scoreSummaryForChapter = reportCard.scoreEarned(chapter);
 
         informScoreAction.handle(new IVRRequest(), request, response);
