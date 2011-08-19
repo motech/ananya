@@ -1,5 +1,6 @@
 package org.motechproject.bbcwt.ivr.builder;
 
+import com.gargoylesoftware.htmlunit.PromptHandler;
 import com.ozonetel.kookoo.CollectDtmf;
 import com.ozonetel.kookoo.Response;
 import org.apache.commons.lang.StringUtils;
@@ -9,10 +10,9 @@ import java.util.List;
 
 public class IVRResponseBuilder {
     private String sid;
-    private List<String> playTexts = new ArrayList<String>();
     private CollectDtmf collectDtmf;
     private boolean isHangUp;
-    private List<String> playAudios = new ArrayList<String>();
+    private List<Prompt> prompts = new ArrayList<Prompt>();
     private String nextUrl;
 
     public IVRResponseBuilder withSid(String sid) {
@@ -22,13 +22,13 @@ public class IVRResponseBuilder {
 
     public IVRResponseBuilder addPlayText(String... playTexts) {
         for (String playText : playTexts)
-            this.playTexts.add(playText);
+            this.prompts.add(new TextPrompt(playText));
         return this;
     }
 
     public IVRResponseBuilder addPlayAudio(String... playAudios) {
         for (String playAudio : playAudios)
-            this.playAudios.add(playAudio);
+            this.prompts.add(new AudioPrompt(playAudio));
         return this;
     }
 
@@ -50,11 +50,39 @@ public class IVRResponseBuilder {
     public Response create() {
         Response response = new Response();
         if (StringUtils.isNotBlank(sid)) response.setSid(sid);
-        for (String playText : playTexts) response.addPlayText(playText);
-        for (String playAudio : playAudios) response.addPlayAudio(playAudio);
+        for (Prompt prompt : prompts) prompt.appendPrompt(response);
         if (StringUtils.isNotBlank(nextUrl)) response.addGotoNEXTURL(this.nextUrl);
         if (collectDtmf != null) response.addCollectDtmf(collectDtmf);
         if (isHangUp) response.addHangup();
         return response;
+    }
+}
+
+interface Prompt {
+    void appendPrompt(Response ivrResponse);
+}
+
+class TextPrompt implements Prompt {
+    private String playText;
+    public TextPrompt(String playText) {
+        this.playText = playText;
+    }
+
+    @Override
+    public void appendPrompt(Response ivrResponse) {
+        ivrResponse.addPlayText(playText);
+    }
+}
+
+class AudioPrompt implements Prompt {
+    private String audioLocation;
+    public AudioPrompt(String audioLocation) {
+        this.audioLocation = audioLocation;
+    }
+
+
+    @Override
+    public void appendPrompt(Response ivrResponse) {
+        ivrResponse.addPlayAudio(audioLocation);
     }
 }
