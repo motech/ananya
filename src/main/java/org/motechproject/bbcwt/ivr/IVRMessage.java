@@ -15,6 +15,9 @@ public class IVRMessage {
     public static final String INVALID_INPUT = "invalid.ivr.input";
     public static final String END_OF_QUIZ_OPTIONS = "msg.quiz.end.options";
     public static final String MSG_COURSE_COMPLETION = "msg.course.completion";
+    public static final String WELCOME_BACK_BETWEEN_LESSONS = "msg.welcome.back.between.lessons";
+    public static final String WELCOME_BACK_BETWEEN_LESSON_AND_QUIZ = "msg.welcome.back.between.lesson.and.quiz";
+    public static final String WELCOME_BACK_BETWEEN_QUIZ_QUESTIONS = "msg.welcome.back.between.quiz.questions";
 
     @Qualifier("ivrProperties")
     @Autowired

@@ -47,7 +47,6 @@ public class NewCallAction extends BaseAction {
             return "forward:/helpMenu";
         }
         else {
-            ivrResponseBuilder.addPlayText(messages.get(IVRMessage.BBCWT_IVR_EXISTING_USER_WC_MESSAGE));
             return "forward:/existingUserMenu";
         }
     }
