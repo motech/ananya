@@ -39,7 +39,7 @@ public class ExistingUserMenuAction extends BaseAction{
 
         if(currentMilestone.isAtLesson()) {
             session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu/responseForLesson");
-            ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(IVRMessage.WELCOME_BACK_BETWEEN_LESSONS));
+            ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_LESSONS)));
         }
 
         if(currentMilestone.isAtQuestion()) {
@@ -58,10 +58,10 @@ public class ExistingUserMenuAction extends BaseAction{
 
             if(stillAnsweringFirstQuestion) {
                 session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu/responseForLessonOrQuiz");
-                ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(IVRMessage.WELCOME_BACK_BETWEEN_LESSON_AND_QUIZ));
+                ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_LESSON_AND_QUIZ)));
             }
             else {
-                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(IVRMessage.WELCOME_BACK_BETWEEN_QUIZ_QUESTIONS));
+                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_QUIZ_QUESTIONS)));
                 return "forward:/chapter/"+ currentChapter.getNumber()+"/question/"+ previousAnsweredQuestion;
             }
         }
