@@ -1,9 +1,6 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import com.ozonetel.kookoo.CollectDtmf;
-import com.ozonetel.kookoo.Response;
 import org.apache.log4j.Logger;
-import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
@@ -15,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class BaseAction implements IVRAction {
     protected static final Logger LOG = Logger.getLogger(BaseAction.class);
+    public static final Character INVALID_INPUT_KEY = ' ';
     @Autowired
     protected IVRMessage messages;
 
@@ -32,7 +30,7 @@ public abstract class BaseAction implements IVRAction {
         if(dtmfBuilder == null) {
             dtmfBuilder = new IVRDtmfBuilder();
             dtmfBuilder.withMaximumLengthOfResponse(1);
-            dtmfBuilder.withTimeOutInMillis(6000000);
+            dtmfBuilder.withTimeOutInMillis(ivrTimeout());
             request.setAttribute(IVR.Attributes.DTMF_BUILDER, dtmfBuilder);
         }
         return dtmfBuilder;
@@ -40,5 +38,15 @@ public abstract class BaseAction implements IVRAction {
 
     protected String absoluteFileLocation(String fileName) {
         return messages.get(IVRMessage.CONTENT_LOCATION) + fileName;
+    }
+
+    protected char ivrInput(IVRRequest ivrRequest) {
+        String input = ivrRequest.getData();
+        return input!=null && input.length() > 0 ? input.charAt(0) : INVALID_INPUT_KEY;
+    }
+
+    protected int ivrTimeout() {
+        String timeout = messages.get("ivr.timeout");
+        return Integer.parseInt(timeout);
     }
 }

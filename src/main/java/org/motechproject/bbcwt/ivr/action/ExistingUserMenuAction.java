@@ -78,7 +78,7 @@ public class ExistingUserMenuAction extends BaseAction{
 
     @RequestMapping(value="/existingUserMenu/responseForLesson", method = RequestMethod.GET)
     public String responseForLesson(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        char chosenOption = dtmfInput(ivrRequest);
+        char chosenOption = ivrInput(ivrRequest);
 
         final HttpSession session = request.getSession();
         final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
@@ -104,7 +104,7 @@ public class ExistingUserMenuAction extends BaseAction{
 
     @RequestMapping(value="/existingUserMenu/responseForLessonOrQuiz", method = RequestMethod.GET)
     public String responseForLessonOrQuiz(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        char chosenOption = dtmfInput(ivrRequest);
+        char chosenOption = ivrInput(ivrRequest);
 
         final HttpSession session = request.getSession();
         final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
@@ -125,15 +125,4 @@ public class ExistingUserMenuAction extends BaseAction{
             }
         }
     }
-
-    private char dtmfInput(IVRRequest ivrRequest) {
-        String dtmfInput = ivrRequest.getData();
-        char chosenOption = ' ';
-
-        if(dtmfInput!=null && dtmfInput.length() > 0) {
-            chosenOption = dtmfInput.charAt(0);
-        }
-        return chosenOption;
-    }
-
 }

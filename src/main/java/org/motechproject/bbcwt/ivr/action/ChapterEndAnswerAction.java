@@ -33,12 +33,7 @@ public class ChapterEndAnswerAction extends BaseAction{
     @Override
     @RequestMapping(method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        String dtmfInput = ivrRequest.getData();
-        char chosenOption = ' ';
-
-        if(dtmfInput!=null && dtmfInput.length() > 0) {
-            chosenOption = dtmfInput.charAt(0);
-        }
+        char chosenOption = ivrInput(ivrRequest);
 
         String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
 
