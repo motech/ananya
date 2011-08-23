@@ -70,6 +70,21 @@ public class CollectAnswerActionTest extends BaseActionTest {
         assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
     }
 
+    @Test
+    public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfAnswerIsNotAValidOption() {
+        Milestone atQuestion1 = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
+
+        when(milestonesRepository.markLastMilestoneFinish(healthWorker.getCallerId())).thenReturn(atQuestion1);
+        when(chaptersRespository.get(atQuestion1.getChapterId())).thenReturn(chapterWithThreeQuestions);
+        String invalidInputMessage = "Invalid_Input.wav";
+        when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(invalidInputMessage);
+
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "4"), request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
+        assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
+    }
+
 
     @Test
     public void shouldSubmitResposeToReportCardRepository() {

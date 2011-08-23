@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/collectAnswer")
@@ -31,6 +33,13 @@ public class CollectAnswerAction extends BaseAction {
         this.milestonesRepository = milestonesRepository;
         this.reportCardsRepository = reportCardsRepository;
         this.messages = messages;
+    }
+
+    private static final Set<Character> VALID_ANSWERS = new HashSet<Character>();
+
+    static {
+        VALID_ANSWERS.add('1');
+        VALID_ANSWERS.add('2');
     }
 
     @Override
@@ -76,7 +85,7 @@ public class CollectAnswerAction extends BaseAction {
     }
 
     private boolean dtmfInputIsValid(char chosenOption) {
-        return Character.isDigit(chosenOption);
+        return VALID_ANSWERS.contains(chosenOption);
     }
 
 }
