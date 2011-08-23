@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class BaseAction implements IVRAction {
     protected static final Logger LOG = Logger.getLogger(BaseAction.class);
-    public static final Character INVALID_INPUT_KEY = ' ';
+    public static final Character NO_INPUT = ' ';
     @Autowired
     protected IVRMessage messages;
 
@@ -42,7 +42,7 @@ public abstract class BaseAction implements IVRAction {
 
     protected char ivrInput(IVRRequest ivrRequest) {
         String input = ivrRequest.getData();
-        return input!=null && input.length() > 0 ? input.charAt(0) : INVALID_INPUT_KEY;
+        return input!=null && input.length() > 0 ? input.charAt(0) : NO_INPUT;
     }
 
     protected int ivrTimeout() {

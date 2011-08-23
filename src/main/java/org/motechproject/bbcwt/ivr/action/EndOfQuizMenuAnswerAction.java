@@ -22,7 +22,6 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
         INPUT_FORWARD_MAP.put('1', "forward:/startQuiz");
         INPUT_FORWARD_MAP.put('2', "forward:/startNextChapter");
         INPUT_FORWARD_MAP.put('3', "forward:/repeatLastChapter");
-        INPUT_FORWARD_MAP.put(INVALID_INPUT_KEY, "forward:/endOfQuizMenu");
     }
 
     @Autowired
@@ -36,12 +35,12 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
         char ivrInput = ivrInput(ivrRequest);
         if(inputInvalid(ivrInput)) {
             ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
-            ivrInput = INVALID_INPUT_KEY;
+            return "forward:/endOfQuizMenu";
         }
         return INPUT_FORWARD_MAP.get(ivrInput);
     }
 
     private boolean inputInvalid(char chosenOption) {
-        return !INPUT_FORWARD_MAP.containsKey(chosenOption) || (chosenOption == INVALID_INPUT_KEY);
+        return !INPUT_FORWARD_MAP.containsKey(chosenOption);
     }
 }
