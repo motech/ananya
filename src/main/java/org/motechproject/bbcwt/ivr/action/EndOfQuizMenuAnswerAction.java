@@ -34,7 +34,9 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         char ivrInput = ivrInput(ivrRequest);
         if(inputInvalid(ivrInput)) {
-            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+            if(ivrInput != NO_INPUT) {
+                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+            }
             return "forward:/endOfQuizMenu";
         }
         return INPUT_FORWARD_MAP.get(ivrInput);

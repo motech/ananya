@@ -96,7 +96,9 @@ public class ExistingUserMenuAction extends BaseAction{
                 return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ prevLessonNumber;
             }
             else {
-                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+                if(chosenOption != NO_INPUT) {
+                    ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+                }
                 return "forward:/existingUserMenu";
             }
         }
@@ -120,7 +122,9 @@ public class ExistingUserMenuAction extends BaseAction{
                 return "forward:/startQuiz";
             }
             else {
-                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+                if(chosenOption != NO_INPUT) {
+                    ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+                }
                 return "forward:/existingUserMenu";
             }
         }

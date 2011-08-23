@@ -44,9 +44,11 @@ public class CollectAnswerAction extends BaseAction {
         Chapter currentChapter = chaptersRespository.get(milestone.getChapterId());
         Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
 
-        if(!dtmfInputIsValid(chosenOption)) {
-           ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
-           return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
+        if (!dtmfInputIsValid(chosenOption)) {
+            if (chosenOption != NO_INPUT) {
+                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+            }
+            return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
         }
 
         ReportCard.HealthWorkerResponseToQuestion healthWorkerResponseToQuestion = reportCardsRepository.addUserResponse(callerId, currentChapter.getNumber(), lastQuestion.getNumber(), Character.getNumericValue(chosenOption));

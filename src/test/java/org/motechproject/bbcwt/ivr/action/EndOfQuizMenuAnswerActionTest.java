@@ -48,10 +48,7 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
 
     @Test
     public void shouldForwardUserToEndOfQuizMenuIfNoInputIsPressed() {
-        final String INVALID_INPUT = "invalid input";
-        when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(INVALID_INPUT);
         String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, ""), request, response);
-        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + INVALID_INPUT);
         assertThat(nextAction, is("forward:/endOfQuizMenu"));
     }
 }
