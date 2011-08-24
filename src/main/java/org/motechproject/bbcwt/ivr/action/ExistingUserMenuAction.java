@@ -45,12 +45,12 @@ public class ExistingUserMenuAction extends BaseAction{
 
             if(chapterNumber == 1 && lessonNumber == 1) {
                 ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_RESUME_CHAPTER_1_LESSON_1)));
-                return "forward:/helpMenuAnswer";
+                session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
             }
             else {
                 if(chapterNumber == 2 && lessonNumber == 1) {
                     ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_RESUME_CHAPTER_2_LESSON_1)));
-                    return "forward:/endOfQuizMenuAnswer";
+                    session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
                 }
                 else {
                     session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu/responseForLesson");
