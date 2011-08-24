@@ -18,6 +18,8 @@ public class IVRMessage {
     public static final String WELCOME_BACK_BETWEEN_LESSONS = "msg.welcome.back.between.lessons";
     public static final String WELCOME_BACK_BETWEEN_LESSON_AND_QUIZ = "msg.welcome.back.between.lesson.and.quiz";
     public static final String WELCOME_BACK_BETWEEN_QUIZ_QUESTIONS = "msg.welcome.back.between.quiz.questions";
+    public static final String WELCOME_BACK_RESUME_CHAPTER_1_LESSON_1 = "msg.welcome.back.ch1lesson1.resume";
+    public static final String WELCOME_BACK_RESUME_CHAPTER_2_LESSON_1 = "msg.welcome.back.ch2lesson1.resume";
 
     @Qualifier("ivrProperties")
     @Autowired
