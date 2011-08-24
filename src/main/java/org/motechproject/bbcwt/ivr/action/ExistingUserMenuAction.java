@@ -49,6 +49,9 @@ public class ExistingUserMenuAction extends BaseAction{
             }
             else {
                 if(chapterNumber == 2 && lessonNumber == 1) {
+                    recedeMilestoneToPreviousChapterLastQuestion(callerId);
+
+
                     ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_RESUME_CHAPTER_2_LESSON_1)));
                     session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
                 }
@@ -83,6 +86,12 @@ public class ExistingUserMenuAction extends BaseAction{
         }
 
         return "forward:/existingUserMenu/returnForIVR";
+    }
+
+    private void recedeMilestoneToPreviousChapterLastQuestion(String callerId) {
+        //Needed to change milestone here, since the endOfQuizMenuAnswer will require this.
+        milestonesRepository.markNewQuestionStart(callerId, 1, 4);
+        milestonesRepository.markLastMilestoneFinish(callerId);
     }
 
     @RequestMapping(value="/existingUserMenu/returnForIVR", method = RequestMethod.GET)

@@ -15,7 +15,7 @@ public class AllAudioListingController extends HttpServlet {
         int count = 1;
         for(Object path : getServletContext().getResourcePaths("/audio/")) {
             ivrResponseBuilder.addPlayText("Playing audio no: " + count++);
-            ivrResponseBuilder.addPlayAudio("http://115.112.237.59/bbcwt" + path);
+            ivrResponseBuilder.addPlayAudio("http://119.82.102.200/bbcwt" + path);
         }
         ivrResponseBuilder.withHangUp();
         resp.setContentType("text/xml");
