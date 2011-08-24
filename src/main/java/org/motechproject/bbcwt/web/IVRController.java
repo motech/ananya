@@ -1,5 +1,6 @@
 package org.motechproject.bbcwt.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
@@ -25,6 +26,12 @@ public class IVRController {
         HttpSession session = request.getSession(false);
 
         LOG.info("Interaction for: " + ivrRequest.getCid());
+
+        String event = request.getParameter("event");
+        if(StringUtils.equals(event, "Hangup")) {
+            session.invalidate();
+            return null;
+        }
 
         if(session == null) {
             LOG.info("There is no session, new call, forwarding.");
