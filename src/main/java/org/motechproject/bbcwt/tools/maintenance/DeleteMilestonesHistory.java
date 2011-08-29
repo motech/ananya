@@ -18,18 +18,28 @@ public class DeleteMilestonesHistory {
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
 
+        String number = System.getProperty("dialed.in.number");
         CouchDbConnector db = context.getBean(CouchDbConnector.class);
 
         HealthWorkersRepository healthWorkers = context.getBean(HealthWorkersRepository.class);
         MilestonesRepository milestones = context.getBean(MilestonesRepository.class);
 
-        List<BulkDeleteDocument> docsToDelete = new ArrayList<BulkDeleteDocument>();
-        for(Milestone eachMilestone : milestones.getAll()) {
-            HealthWorker healthWorker = healthWorkers.get(eachMilestone.getHealthWorkerId());
-            docsToDelete.add(BulkDeleteDocument.of(healthWorker));
-            docsToDelete.add(BulkDeleteDocument.of(eachMilestone));
+        if(number == null) {
+            List<BulkDeleteDocument> docsToDelete = new ArrayList<BulkDeleteDocument>();
+            for(Milestone eachMilestone : milestones.getAll()) {
+                HealthWorker healthWorker = healthWorkers.get(eachMilestone.getHealthWorkerId());
+                docsToDelete.add(BulkDeleteDocument.of(healthWorker));
+                docsToDelete.add(BulkDeleteDocument.of(eachMilestone));
+            }
+            db.executeBulk(docsToDelete);
         }
-
-        db.executeBulk(docsToDelete);
+        else {
+            HealthWorker healthWorker = healthWorkers.findByCallerId(number);
+            if(healthWorker != null) {
+                Milestone milestone = milestones.findByHealthWorker(healthWorker);
+                milestones.remove(milestone);
+            }
+            healthWorkers.remove(healthWorker);
+        }
     }
 }
