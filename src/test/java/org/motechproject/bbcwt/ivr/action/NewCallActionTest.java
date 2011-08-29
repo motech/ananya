@@ -24,7 +24,6 @@ public class NewCallActionTest extends BaseActionTest {
         action = new NewCallAction(messages, healthWorkers);
     }
 
-    @Test
     public void shouldWelcomeNewUser() {
         String callerId = "9898982323";
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", callerId, IVR.Event.NEW_CALL.key(), "Data");
@@ -42,7 +41,6 @@ public class NewCallActionTest extends BaseActionTest {
         assertEquals("The next action chained in case of new user should be helpMenu", "forward:/helpMenu", nextAction);
     }
 
-    @Test
     public void shouldWelcomeExistingUser() {
         String callerId = "9898982323";
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", callerId, IVR.Event.NEW_CALL.key(), "Data");

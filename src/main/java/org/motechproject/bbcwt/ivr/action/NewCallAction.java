@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ public class NewCallAction extends BaseAction {
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         LOG.info("Handling new call.");
 
@@ -44,10 +46,11 @@ public class NewCallAction extends BaseAction {
         if(healthWorker == null) {
             ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)));
 
-            return "forward:/helpMenu";
+            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenu");
         }
         else {
-            return "forward:/existingUserMenu";
+            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu");
         }
+        return ivrResponseBuilder.create().getXML();
     }
 }
