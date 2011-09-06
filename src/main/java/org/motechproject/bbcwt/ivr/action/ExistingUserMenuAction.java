@@ -35,123 +35,47 @@ public class ExistingUserMenuAction extends BaseAction{
         final HttpSession session = request.getSession();
         final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
 
-        Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
-
+        final Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
         final Chapter currentChapter = currentMilestone.getChapter();
+        final int currentChapterNumber = currentChapter.getNumber();
 
         if(currentMilestone.isAtLesson()) {
-            int chapterNumber = currentChapter.getNumber();
-            int lessonNumber = currentChapter.getLessonById(currentMilestone.getLessonId()).getNumber();
+            final Lesson lastPlayedLesson = currentChapter.getLessonById(currentMilestone.getLessonId());
+            final int lessonNumber = lastPlayedLesson.getNumber();
 
-            if(chapterNumber == 1 && lessonNumber == 1) {
-                ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_RESUME_CHAPTER_1_LESSON_1)));
-                session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
-            }
-            else {
-                if(chapterNumber == 2 && lessonNumber == 1) {
-                    recedeMilestoneToPreviousChapterLastQuestion(callerId);
+            int lessonNumberToNavigateTo;
 
-
-                    ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_RESUME_CHAPTER_2_LESSON_1)));
-                    session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/endOfQuizMenuAnswer");
-                }
-                else {
-                    session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu/responseForLesson");
-                    ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_LESSONS)));
-                }
-            }
-        }
-
-        if(currentMilestone.isAtQuestion()) {
-            Question currentQuestion = currentChapter.getQuestionById(currentMilestone.getQuestionId());
-
-            int previousAnsweredQuestion;
             if(currentMilestone.isAccomplished()) {
-                previousAnsweredQuestion = currentQuestion.getNumber();
-            }
-            else {
-                previousAnsweredQuestion = currentQuestion.getNumber()-1;
-            }
+                final boolean lessonPlayedIsTheLastInTheChapter = (currentChapter.nextLesson(lastPlayedLesson) == null);
 
-            final boolean stillAnsweringFirstQuestion = previousAnsweredQuestion < 1;
-
-            if(stillAnsweringFirstQuestion) {
-                session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu/responseForLessonOrQuiz");
-                ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_LESSON_AND_QUIZ)));
+                if(lessonPlayedIsTheLastInTheChapter){
+                    return "forward:/startQuiz";
+                } else {
+                    lessonNumberToNavigateTo = lessonNumber+1;
+                }
+            } else {
+                lessonNumberToNavigateTo = lessonNumber;
             }
-            else {
-                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.WELCOME_BACK_BETWEEN_QUIZ_QUESTIONS)));
-                return "forward:/chapter/"+ currentChapter.getNumber()+"/question/"+ previousAnsweredQuestion;
-            }
+            return "forward:/chapter/" + currentChapterNumber + "/lesson/" + lessonNumberToNavigateTo;
         }
 
-        return "forward:/existingUserMenu/returnForIVR";
-    }
+        else {
+            final Question lastPlayedQuestion = currentChapter.getQuestionById(currentMilestone.getQuestionId());
+            final int lastPlayedQuestionNumber = lastPlayedQuestion.getNumber();
 
-    private void recedeMilestoneToPreviousChapterLastQuestion(String callerId) {
-        //Needed to change milestone here, since the endOfQuizMenuAnswer will require this.
-        milestonesRepository.markNewQuestionStart(callerId, 1, 4);
-        milestonesRepository.markLastMilestoneFinish(callerId);
-    }
+            int questionNumberToNavigateTo;
+            if(currentMilestone.isAccomplished()) {
+                final boolean questionPlayedIsTheLastInTheChapter = (currentChapter.nextQuestion(lastPlayedQuestion) == null);
 
-    @RequestMapping(value="/existingUserMenu/returnForIVR", method = RequestMethod.GET)
-    @ResponseBody
-    public String returnForIVR(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        ivrResponseBuilder(request).withCollectDtmf(ivrDtmfBuilder(request).create());
-        return ivrResponseBuilder(request).create().getXML();
-    }
-
-    @RequestMapping(value="/existingUserMenu/responseForLesson", method = RequestMethod.GET)
-    public String responseForLesson(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        char chosenOption = ivrInput(ivrRequest);
-
-        final HttpSession session = request.getSession();
-        final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
-
-        Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
-        final Chapter currentChapter = currentMilestone.getChapter();
-        Lesson currentLesson = currentChapter.getLessonById(currentMilestone.getLessonId());
-
-        if(chosenOption == '1') {
-            return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ currentLesson.getNumber();
-        } else {
-            if(chosenOption == '2') {
-                int prevLessonNumber = currentLesson.getNumber() - 1;
-                prevLessonNumber = prevLessonNumber>0?prevLessonNumber:1;
-                return "forward:/chapter/"+currentChapter.getNumber()+"/lesson/"+ prevLessonNumber;
-            }
-            else {
-                if(chosenOption != NO_INPUT) {
-                    ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+                if(questionPlayedIsTheLastInTheChapter) {
+                    return "forward:/informScore";
+                } else {
+                    questionNumberToNavigateTo = lastPlayedQuestionNumber + 1;
                 }
-                return "forward:/existingUserMenu";
+            } else {
+                questionNumberToNavigateTo = lastPlayedQuestionNumber;
             }
-        }
-    }
-
-    @RequestMapping(value="/existingUserMenu/responseForLessonOrQuiz", method = RequestMethod.GET)
-    public String responseForLessonOrQuiz(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        char chosenOption = ivrInput(ivrRequest);
-
-        final HttpSession session = request.getSession();
-        final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
-
-        Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
-        final Chapter currentChapter = currentMilestone.getChapter();
-
-        if(chosenOption == '1') {
-            int lastLessonNumber = currentChapter.getLessons().size();
-            return "forward:/chapter/" + currentChapter.getNumber() + "/lesson/" + lastLessonNumber;
-        } else {
-            if(chosenOption == '2') {
-                return "forward:/startQuiz";
-            }
-            else {
-                if(chosenOption != NO_INPUT) {
-                    ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
-                }
-                return "forward:/existingUserMenu";
-            }
+            return "forward:/chapter/"+ currentChapter.getNumber()+"/question/"+ questionNumberToNavigateTo;
         }
     }
 }

@@ -96,4 +96,11 @@ public class Chapter extends BaseCouchEntity {
         }
         return null;
     }
+
+    public Question nextQuestion(Question question) {
+        if(questions.contains(question)) {
+            return this.getQuestionByNumber(question.getNumber() + 1);
+        }
+        return null;
+    }
 }

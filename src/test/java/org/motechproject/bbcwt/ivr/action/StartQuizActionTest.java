@@ -15,6 +15,7 @@ import java.util.Date;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class StartQuizActionTest extends BaseActionTest {
@@ -33,7 +34,7 @@ public class StartQuizActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldForwardToFirstQuestionIfItExists() {
+    public void shouldSetNextInteractionToFirstQuestionIfItExists() {
         Chapter currentChapter = new Chapter(1);
         Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1", "chapter 1 lesson 1 end menu");
         currentChapter.addLesson(ch1l1);
@@ -44,16 +45,36 @@ public class StartQuizActionTest extends BaseActionTest {
         currentMilestone.setChapter(currentChapter);
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(healthWorker.getCallerId());
-        final String MSG_START_OF_QUIZ = "You are about to start quiz for chapter ";
         when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(currentMilestone);
 
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
 
-        assertThat(nextAction, is("forward:/chapter/" +currentChapter.getNumber() + "/question/1"));
+        verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapter/" +currentChapter.getNumber() + "/question/1");
     }
 
     @Test
-    public void shouldForwardToNextChapterIfNoQuestionExistInCurrentChapter() {
+    public void shouldPlayQuizHeaderIfFirstQuestionExists() {
+        Chapter currentChapter = new Chapter(1);
+        Lesson ch1l1 = new Lesson(1, "Chapter 1 Lesson 1", "chapter 1 lesson 1 end menu");
+        currentChapter.addLesson(ch1l1);
+        Question q1l1 = new Question();
+        currentChapter.addQuestion(q1l1);
+
+        Milestone currentMilestone = new Milestone(healthWorker.getId(), currentChapter.getId(), ch1l1.getId(), null, new Date());
+        currentMilestone.setChapter(currentChapter);
+
+        when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(healthWorker.getCallerId());
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(currentMilestone);
+        final String QUIZ_HEADER_AUDIO = "quiz_header.wav";
+        when(messages.get(IVRMessage.QUIZ_HEADER)).thenReturn(QUIZ_HEADER_AUDIO);
+
+        String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(QUIZ_HEADER_AUDIO);
+    }
+
+    @Test
+    public void shouldSetInteractionToNextChapterIfNoQuestionExistInCurrentChapter() {
         Chapter chapterWithNoQuestions = new Chapter(1);
         Lesson lesson = new Lesson(1, "Lesson 1", "Lesson 1 end menu");
         Milestone currentMilestone = new Milestone(healthWorker.getId(), chapterWithNoQuestions.getId(), lesson.getId(), null, new Date());
@@ -63,7 +84,7 @@ public class StartQuizActionTest extends BaseActionTest {
         when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(currentMilestone);
 
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
-        assertThat(nextAction, is("forward:/startNextChapter"));
+        verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/startNextChapter");
     }
 
 }
