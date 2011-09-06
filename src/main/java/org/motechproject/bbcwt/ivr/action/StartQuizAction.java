@@ -42,7 +42,7 @@ public class StartQuizAction extends BaseAction {
         if (thereAreQuestionsInCurrentChapter) {
             int currentChapterNumber = currentChapter.getNumber();
             //TODO: The following has to be figured out from DB, since every chapter will have a different QUIZ HEADER
-            ivrResponseBuilder(request).addPlayAudio(messages.get(IVRMessage.QUIZ_HEADER));
+            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER)));
             session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapter/" + currentChapterNumber + "/question/1");
         } else {
             session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/startNextChapter");

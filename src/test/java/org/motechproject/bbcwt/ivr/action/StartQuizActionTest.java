@@ -70,7 +70,7 @@ public class StartQuizActionTest extends BaseActionTest {
 
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
 
-        verify(ivrResponseBuilder).addPlayAudio(QUIZ_HEADER_AUDIO);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + QUIZ_HEADER_AUDIO);
     }
 
     @Test
