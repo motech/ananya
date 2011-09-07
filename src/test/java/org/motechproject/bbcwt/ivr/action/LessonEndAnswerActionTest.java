@@ -9,14 +9,11 @@ import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class LessonEndAnswerActionTest extends BaseActionTest {
@@ -24,12 +21,10 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
     private LessonEndAnswerAction lessonEndAnswerAction;
 
     @Mock
-    private ChaptersRespository chaptersRespository;
-    @Mock
     private MilestonesRepository milestonesRepository;
 
     private String callerId;
-    private Milestone currentMilestone;
+    private Milestone currentMilestoneWithLinkedReferences;
     private HealthWorker healthWorker;
     private Chapter chapter;
     private Lesson currentLesson;
@@ -47,22 +42,14 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
         chapter.addLesson(currentLesson);
         chapter.addLesson(lesson3);
 
-        currentMilestone = new Milestone("unique-id-for-" + callerId, chapter.getId(), currentLesson.getId(), null, new Date());
+        currentMilestoneWithLinkedReferences = new Milestone("unique-id-for-" + callerId, chapter.getId(), currentLesson.getId(), null, new Date());
+        currentMilestoneWithLinkedReferences.setChapter(chapter);
+        currentMilestoneWithLinkedReferences.setHealthWorker(healthWorker);
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);
-        when(milestonesRepository.markLastMilestoneFinish(callerId)).thenReturn(currentMilestone);
-        when(chaptersRespository.get(currentMilestone.getChapterId())).thenReturn(chapter);
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(callerId)).thenReturn(currentMilestoneWithLinkedReferences);
 
-        lessonEndAnswerAction = new LessonEndAnswerAction(chaptersRespository, milestonesRepository, messages);
-    }
-
-    @Test
-    public void shouldSetTheEndDateInTheMilestone() {
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
-
-        lessonEndAnswerAction.handle(ivrRequest, request, response);
-
-        verify(milestonesRepository, times(1)).markLastMilestoneFinish(callerId);
+        lessonEndAnswerAction = new LessonEndAnswerAction(milestonesRepository, messages);
     }
 
     @Test

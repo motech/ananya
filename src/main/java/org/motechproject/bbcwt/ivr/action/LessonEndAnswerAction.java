@@ -19,12 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/lessonEndAnswer")
 public class LessonEndAnswerAction extends BaseAction {
-    private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public LessonEndAnswerAction(ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages) {
-        this.chaptersRespository = chaptersRespository;
+    public LessonEndAnswerAction(MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.messages = messages;
     }
@@ -35,9 +33,9 @@ public class LessonEndAnswerAction extends BaseAction {
         char chosenOption = ivrInput(ivrRequest);
 
         String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
-        Milestone milestone = milestonesRepository.markLastMilestoneFinish(callerId);
+        Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
 
-        Chapter currentChapter = chaptersRespository.get(milestone.getChapterId());
+        Chapter currentChapter = milestone.getChapter();
         Lesson lastLesson = currentChapter.getLessonById(milestone.getLessonId());
 
         if(chosenOption == '1') {

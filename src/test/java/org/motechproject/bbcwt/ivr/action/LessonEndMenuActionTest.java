@@ -88,4 +88,13 @@ public class LessonEndMenuActionTest extends BaseActionTest {
         verify(session, times(1)).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapterEndAnswer");
 
     }
+
+    @Test
+    public void shouldMarkLastMilestoneAsCompleted() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
+
+        lessonEndMenuAction.handle(ivrRequest, request, response);
+
+        verify(milestonesRepository).markLastMilestoneFinish(callerId);
+    }
 }

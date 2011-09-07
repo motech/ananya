@@ -21,8 +21,8 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class ChapterActionTest extends BaseActionTest {
-    private ChapterAction chapterAction;
+public class LessonActionTest extends BaseActionTest {
+    private LessonAction chapterAction;
 
     @Mock
     private MilestonesRepository milestonesRepository;
@@ -43,7 +43,7 @@ public class ChapterActionTest extends BaseActionTest {
     @Before
     public void setup()
     {
-        chapterAction = new ChapterAction(healthWorkersRepository, chaptersRespository, milestonesRepository, dateUtil, messages);
+        chapterAction = new LessonAction(healthWorkersRepository, chaptersRespository, milestonesRepository, dateUtil, messages);
 
         chapterNumber = 1;
         lessonNumber = 2;
@@ -78,7 +78,12 @@ public class ChapterActionTest extends BaseActionTest {
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + lesson.getFileName());
-        assertThat(nextAction, is("forward:/lessonEndMenu"));
+    }
+
+    @Test
+    public void shouldSetTheNextInteractionToLessonEndMenu() {
+        String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
+        verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndMenu");
     }
 
     @Test

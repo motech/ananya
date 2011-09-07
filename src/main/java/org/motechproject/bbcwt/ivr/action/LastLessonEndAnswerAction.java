@@ -18,14 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/chapterEndAnswer")
-public class ChapterEndAnswerAction extends BaseAction{
+public class LastLessonEndAnswerAction extends BaseAction{
 
-    private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public ChapterEndAnswerAction(ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages) {
-        this.chaptersRespository = chaptersRespository;
+    public LastLessonEndAnswerAction(MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.messages = messages;
     }
@@ -37,10 +35,9 @@ public class ChapterEndAnswerAction extends BaseAction{
 
         String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
 
-        //TODO: Marking of the last milestone finish is being done at lesson end answer action as well, any way to remove this duplication?
-        Milestone milestone = milestonesRepository.markLastMilestoneFinish(callerId);
+        Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
 
-        Chapter currentChapter = chaptersRespository.get(milestone.getChapterId());
+        Chapter currentChapter = milestone.getChapter();
         Lesson lastLesson = currentChapter.getLessonById(milestone.getLessonId());
 
         if(chosenOption == '1') {
@@ -58,5 +55,4 @@ public class ChapterEndAnswerAction extends BaseAction{
            }
         }
     }
-
 }

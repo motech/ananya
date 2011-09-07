@@ -10,7 +10,6 @@ import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
 import java.util.Date;
@@ -19,12 +18,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class ChapterEndAnswerActionTest extends BaseActionTest {
+public class LastLessonEndAnswerActionTest extends BaseActionTest {
 
-    private ChapterEndAnswerAction chapterEndAnswerAction;
+    private LastLessonEndAnswerAction chapterEndAnswerAction;
 
-    @Mock
-    private ChaptersRespository chaptersRespository;
     @Mock
     private MilestonesRepository milestonesRepository;
 
@@ -32,7 +29,7 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
     private HealthWorker healthWorker;
     private Chapter chapter;
     private Lesson lesson;
-    private Milestone lastMilestone;
+    private Milestone lastMilestoneWithLinkedReferences;
 
     @Before
     public void setUp() {
@@ -43,12 +40,14 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
         lesson = new Lesson(1, "http://somewhere/lesson/1", "http://somwhere/lesson/1/endMenu");
         chapter.addLesson(lesson);
 
-        lastMilestone = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), null, new Date());
-        chapterEndAnswerAction = new ChapterEndAnswerAction(chaptersRespository, milestonesRepository, messages);
+        lastMilestoneWithLinkedReferences = new Milestone(healthWorker.getId(), chapter.getId(), lesson.getId(), null, new Date());
+        lastMilestoneWithLinkedReferences.setChapter(chapter);
+        lastMilestoneWithLinkedReferences.setHealthWorker(healthWorker);
+
+        chapterEndAnswerAction = new LastLessonEndAnswerAction(milestonesRepository, messages);
 
         when(session.getAttribute(IVR.Attributes.CALLER_ID)).thenReturn(callerId);
-        when(milestonesRepository.markLastMilestoneFinish(callerId)).thenReturn(lastMilestone);
-        when(chaptersRespository.get(lastMilestone.getChapterId())).thenReturn(chapter);
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(callerId)).thenReturn(lastMilestoneWithLinkedReferences);
     }
 
     @Test
@@ -58,16 +57,7 @@ public class ChapterEndAnswerActionTest extends BaseActionTest {
         String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
 
         assertEquals("Should navigate to the last lesson heard from the current chapter", nextAction,
-                     "forward:/chapter/"+chapter.getNumber()+"/lesson/"+lesson.getNumber());
-    }
-
-    @Test
-    public void shouldMarkLastMilestoneAsCompleted() {
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
-
-        chapterEndAnswerAction.handle(ivrRequest, request, response);
-
-        verify(milestonesRepository).markLastMilestoneFinish(callerId);
+                "forward:/chapter/" + chapter.getNumber() + "/lesson/" + lesson.getNumber());
     }
 
     @Test

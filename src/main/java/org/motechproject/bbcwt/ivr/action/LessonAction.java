@@ -16,19 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
-public class ChapterAction extends BaseAction {
+public class LessonAction extends BaseAction {
     private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private HealthWorkersRepository healthWorkersRepository;
     private DateUtil dateUtil;
 
     @Autowired
-    public ChapterAction(HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, DateUtil dateUtil, IVRMessage messages)  {
+    public LessonAction(HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, DateUtil dateUtil, IVRMessage messages)  {
         this.healthWorkersRepository = healthWorkersRepository;
         this.chaptersRespository = chaptersRespository;
         this.milestonesRepository = milestonesRepository;
@@ -37,11 +39,13 @@ public class ChapterAction extends BaseAction {
     }
 
     @RequestMapping(value="/chapter/{chapterNumber}/lesson/{lessonNumber}", method= RequestMethod.GET)
+    @ResponseBody
     public String get(@PathVariable("chapterNumber") int chapterNumber, @PathVariable("lessonNumber") int lessonNumber, HttpServletRequest request, HttpServletResponse response) {
         Chapter chapter = chaptersRespository.findByNumber(chapterNumber);
         Lesson lessonToPlay = chapter.getLessonByNumber(lessonNumber);
 
-        String callerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        final HttpSession session = request.getSession();
+        String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
 
         HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);
 
@@ -52,7 +56,8 @@ public class ChapterAction extends BaseAction {
         milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
         ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
-        return "forward:/lessonEndMenu";
+        session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndMenu");
+        return ivrResponseBuilder(request).create().getXML();
     }
 
     private HealthWorker registerNewHealthWorker(String callerId) {
