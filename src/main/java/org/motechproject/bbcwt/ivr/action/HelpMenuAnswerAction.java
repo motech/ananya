@@ -27,7 +27,7 @@ public class HelpMenuAnswerAction extends BaseAction {
     @Autowired
     public HelpMenuAnswerAction(IVRMessage messages) {
         this.messages = messages;
-        this.invalidKeyPressResponseAction = new InvalidKeyPressResponseAction(messages);
+        this.invalidKeyPressResponseAction = new InvalidKeyPressResponseAction();
         initializeKeyPressActionMap();
     }
 
@@ -35,7 +35,7 @@ public class HelpMenuAnswerAction extends BaseAction {
         keyPressActionMap = new HashMap(3);
         keyPressActionMap.put('1', new Key1ResponseAction());
         keyPressActionMap.put('2', new Key2ResponseAction());
-        keyPressActionMap.put(NO_INPUT, new NoKeyPressResponseAction(messages));
+        keyPressActionMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 
     @Override
@@ -81,11 +81,9 @@ public class HelpMenuAnswerAction extends BaseAction {
     }
 
     class NoKeyPressResponseAction implements KeyPressResponseAction {
-        private IVRMessage messages;
         private int allowedNumberOfNoInputs;
 
-        public NoKeyPressResponseAction(IVRMessage messages) {
-            this.messages = messages;
+        public NoKeyPressResponseAction() {
             this.allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
         }
 
@@ -104,11 +102,9 @@ public class HelpMenuAnswerAction extends BaseAction {
     }
 
     class InvalidKeyPressResponseAction implements KeyPressResponseAction {
-        private IVRMessage messages;
         private int allowedNumberOfInvalidInputs;
 
-        public InvalidKeyPressResponseAction(IVRMessage messages) {
-            this.messages = messages;
+        public InvalidKeyPressResponseAction() {
             this.allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
         }
 

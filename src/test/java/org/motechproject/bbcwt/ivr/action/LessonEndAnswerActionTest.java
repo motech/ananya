@@ -14,6 +14,7 @@ import org.motechproject.bbcwt.repository.MilestonesRepository;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class LessonEndAnswerActionTest extends BaseActionTest {
@@ -54,25 +55,94 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
 
     @Test
     public void shouldNavigateToTheLastChapterIfUserAnswers1() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
 
         String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
         assertEquals(nextAction, "forward:/chapter/"+chapter.getNumber()+"/lesson/"+currentLesson.getNumber());
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldNavigateToTheNextChapterIfUserAnswers2() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "2");
 
         String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
         assertEquals(nextAction, "forward:/chapter/"+chapter.getNumber()+"/lesson/"+ (currentLesson.getNumber()+1) );
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldNavigateToTheEndLessonMenuIfUserAnswerIsInvalid() {
+        int invalidInputCountBeforeThisInput = 1;
+        setInvalidInputCountBeforeThisInputAs(1);
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "4");
 
         String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
         assertEquals(nextAction, "forward:/lessonEndMenu");
+        verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
+    }
+
+    @Test
+    public void shouldNavigateToNextLessonIfUserInputsInvalidKeysForMoreThanPermissibleTimes() {
+        setInvalidInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_INVALID_INPUT));
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "4");
+
+        String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals(nextAction, "forward:/chapter/"+chapter.getNumber()+"/lesson/"+ (currentLesson.getNumber()+1));
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    @Test
+    public void shouldNavigateToTheEndLessonMenuIfThereIsNoUserInput() {
+        int noInputCountBeforeThisInput = 1;
+        setNoInputCountBeforeThisInputAs(noInputCountBeforeThisInput);
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "");
+
+        String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals(nextAction, "forward:/lessonEndMenu");
+        verifyNoInputCountHasBeenIncremented(noInputCountBeforeThisInput);
+    }
+
+    @Test
+    public void shoudNavigateToNextLessonIfUserDoesNotGiveInputForMoreThanPermissibleTimes() {
+        int noInputCountBeforeThisInput = Integer.parseInt(ALLOWED_NUMBER_OF_NO_INPUT);
+        setNoInputCountBeforeThisInputAs(noInputCountBeforeThisInput);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "");
+
+        String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals(nextAction, "forward:/chapter/"+chapter.getNumber()+"/lesson/"+ (currentLesson.getNumber()+1));
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    private void setInvalidInputCountBeforeThisInputAs(int invalidInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.INVALID_INPUT_COUNT)).thenReturn(invalidInputCountBeforeThisInput);
+    }
+
+    private void setNoInputCountBeforeThisInputAs(int noInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.NO_INPUT_COUNT)).thenReturn(noInputCountBeforeThisInput);
+    }
+
+    private void verifyInvalidAndNoInputCountsAreReset() {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, 0);
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, 0);
+    }
+
+    private void verifyInvalidInputCountHasBeenIncremented(int invalidInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, invalidInputCountBeforeThisInput+1);
+    }
+
+    private void verifyNoInputCountHasBeenIncremented(int noInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, noInputCountBeforeThisInput+1);
     }
 }
