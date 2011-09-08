@@ -63,6 +63,8 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     private class StartQuizHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.resetInvalidInputCount();
+            ivrContext.resetNoInputCount();
             return "forward:/startQuiz";
         }
     }
@@ -70,6 +72,8 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     private class StartNextChapterHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.resetInvalidInputCount();
+            ivrContext.resetNoInputCount();
             return "forward:/startNextChapter";
         }
     }
@@ -77,6 +81,8 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     private class RepeatLastChapterHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.resetInvalidInputCount();
+            ivrContext.resetNoInputCount();
             return "forward:/repeatLastChapter";
         }
     }
@@ -84,6 +90,15 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     private class NoInputHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.incrementNoInputCount();
+            int allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
+
+            if(ivrContext.getNoInputCount() > allowedNumberOfNoInputs) {
+                ivrContext.resetNoInputCount();
+                ivrContext.resetInvalidInputCount();
+                return "forward:/startNextChapter";
+            }
+
             return "forward:/endOfQuizMenu";
         }
     }
@@ -91,6 +106,15 @@ public class EndOfQuizMenuAnswerAction extends BaseAction {
     private class InvalidInputHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.incrementInvalidInputCount();
+            int allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
+
+            if(ivrContext.getInvalidInputCount() > allowedNumberOfInvalidInputs) {
+                ivrContext.resetNoInputCount();
+                ivrContext.resetInvalidInputCount();
+                return "forward:/startNextChapter";
+            }
+
             ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
             return "forward:/endOfQuizMenu";
         }
