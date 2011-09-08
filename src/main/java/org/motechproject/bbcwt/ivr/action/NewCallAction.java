@@ -49,7 +49,7 @@ public class NewCallAction extends BaseAction {
             session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenu");
         }
         else {
-            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/existingUserMenu");
+            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, ExistingUserAction.EXISTING_USER_HANDLER);
         }
         return ivrResponseBuilder.create().getXML();
     }

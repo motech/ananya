@@ -22,6 +22,8 @@ public class IVRMessage {
     public static final String WELCOME_BACK_RESUME_CHAPTER_2_LESSON_1 = "msg.welcome.back.ch2lesson1.resume";
     public static final String CONTENT_LOCATION = "content.location";
     public static final String QUIZ_HEADER = "quiz.header";
+    public static final String ALLOWED_NUMBER_OF_NO_INPUTS = "allowed.number.of.no.inputs";
+    public static final String ALLOWED_NUMBER_OF_INVALID_INPUTS = "allowed.number.of.invalid.inputs";
 
     @Qualifier("ivrProperties")
     @Autowired

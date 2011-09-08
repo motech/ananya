@@ -12,25 +12,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class ExistingUserMenuAction extends BaseAction{
+public class ExistingUserAction extends BaseAction{
 
+    public static final String EXISTING_USER_HANDLER = "/existingUserHandler";
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public ExistingUserMenuAction(MilestonesRepository milestonesRepository, IVRMessage messages) {
+    public ExistingUserAction(MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.messages = messages;
     }
 
     @Override
-    @RequestMapping(value="/existingUserMenu", method = RequestMethod.GET)
+    @RequestMapping(value=EXISTING_USER_HANDLER, method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         final HttpSession session = request.getSession();
         final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);

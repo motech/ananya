@@ -37,6 +37,8 @@ public abstract class BaseActionTest {
 
     protected final String CONTENT_LOCATION = "http://localhost/bbcwt/audio/";
 
+    public static final String ALLOWED_NUMBER_OF_NO_INPUT = "3";
+    public static final String ALLOWED_NUMBER_OF_INVALID_INPUT = "2";
 
     @Before
     public void baseSetup() {
@@ -44,6 +46,12 @@ public abstract class BaseActionTest {
         when(messages.get(IVRMessage.CONTENT_LOCATION)).thenReturn(CONTENT_LOCATION);
         setupSession();
         setupIVRBuilders();
+        setupMessages();
+    }
+
+    private void setupMessages() {
+        when(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS)).thenReturn(ALLOWED_NUMBER_OF_INVALID_INPUT);
+        when(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS)).thenReturn(ALLOWED_NUMBER_OF_NO_INPUT);
     }
 
     public void setupSession() {
