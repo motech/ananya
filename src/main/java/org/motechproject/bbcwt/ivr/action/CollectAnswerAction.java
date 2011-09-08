@@ -4,9 +4,11 @@ import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.domain.ReportCard;
-import org.motechproject.bbcwt.ivr.IVR;
+import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
+import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
@@ -17,75 +19,118 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashSet;
-import java.util.Set;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/collectAnswer")
 public class CollectAnswerAction extends BaseAction {
-    private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private ReportCardsRepository reportCardsRepository;
 
+    private Map<Character, KeyPressHandler> keyPressHandlerMap;
+    private KeyPressHandler invalidKeyPressResponseAction;
+
     @Autowired
-    public CollectAnswerAction(ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, IVRMessage messages) {
-        this.chaptersRespository = chaptersRespository;
+    public CollectAnswerAction(MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.reportCardsRepository = reportCardsRepository;
         this.messages = messages;
+        invalidKeyPressResponseAction = new InvalidInputHandler();
+        intializeKeyPressHandlerMap();
     }
 
-    private static final Set<Character> VALID_ANSWERS = new HashSet<Character>();
-
-    static {
-        VALID_ANSWERS.add('1');
-        VALID_ANSWERS.add('2');
+    private void intializeKeyPressHandlerMap() {
+        keyPressHandlerMap = new HashMap<Character, KeyPressHandler>();
+        keyPressHandlerMap.put('1', new ValidAnswerHandler());
+        keyPressHandlerMap.put('2', new ValidAnswerHandler());
+        keyPressHandlerMap.put(NO_INPUT, new NoInputHandler());
     }
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+
+        IVRContext.SessionAndIVRContextSynchronizer synchronizer = new IVRContext.SessionAndIVRContextSynchronizer();
+        IVRContext ivrContext = synchronizer.buildIVRContext(session);
+
         char chosenOption = ivrInput(ivrRequest);
+        KeyPressHandler keyPressResponseAction = determineActionToExecute(chosenOption);
 
-        String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
-        Milestone milestone = milestonesRepository.markLastMilestoneFinish(callerId);
+        String forward = keyPressResponseAction.execute(chosenOption, ivrContext, ivrResponseBuilder(request));
 
-        Chapter currentChapter = chaptersRespository.get(milestone.getChapterId());
-        Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
+        synchronizer.synchronizeSessionWithIVRContext(session, ivrContext);
 
-        if (!dtmfInputIsValid(chosenOption)) {
-            if (chosenOption != NO_INPUT) {
-                ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
-            }
-            return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
-        }
+        return forward;
+    }
 
-        ReportCard.HealthWorkerResponseToQuestion healthWorkerResponseToQuestion = reportCardsRepository.addUserResponse(callerId, currentChapter.getNumber(), lastQuestion.getNumber(), Character.getNumericValue(chosenOption));
-
-
-        if(healthWorkerResponseToQuestion.isCorrect()) {
-            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lastQuestion.getCorrectAnswerExplanationLocation()));
-        }
-        else {
-            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lastQuestion.getIncorrectAnswerExplanationLocation()));
-        }
-
-        int nextQuestionNumber = lastQuestion.getNumber() + 1;
-        if(currentChapter.getQuestionByNumber(nextQuestionNumber) == null){
-            return "forward:/informScore";
-        }
-        else{
-            return forwardToQuestion(currentChapter.getNumber(), nextQuestionNumber);
-        }
-
+    private KeyPressHandler determineActionToExecute(char chosenOption) {
+        KeyPressHandler responseAction = keyPressHandlerMap.get(chosenOption);
+        return responseAction!=null?responseAction: invalidKeyPressResponseAction;
     }
 
     private String forwardToQuestion(int chapterNumber, int questionNumber) {
         return "forward:/chapter/"+chapterNumber+"/question/"+ questionNumber;
     }
 
-    private boolean dtmfInputIsValid(char chosenOption) {
-        return VALID_ANSWERS.contains(chosenOption);
+    private class ValidAnswerHandler implements KeyPressHandler {
+        @Override
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            String callerId = ivrContext.getCallerId();
+
+            milestonesRepository.markLastMilestoneFinish(callerId);
+
+            Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
+            Chapter currentChapter = milestone.getChapter();
+            Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
+
+            ReportCard.HealthWorkerResponseToQuestion healthWorkerResponseToQuestion = reportCardsRepository.addUserResponse(callerId, currentChapter.getNumber(), lastQuestion.getNumber(), Character.getNumericValue(keyPressed));
+
+            if(healthWorkerResponseToQuestion.isCorrect()) {
+                ivrResponseBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getCorrectAnswerExplanationLocation()));
+            }
+            else {
+                ivrResponseBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getIncorrectAnswerExplanationLocation()));
+            }
+
+            int nextQuestionNumber = lastQuestion.getNumber() + 1;
+
+            if(currentChapter.getQuestionByNumber(nextQuestionNumber) == null){
+                return "forward:/informScore";
+            }
+            else{
+                return forwardToQuestion(currentChapter.getNumber(), nextQuestionNumber);
+            }
+        }
     }
 
+    private class NoInputHandler implements KeyPressHandler {
+        @Override
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            String callerId = ivrContext.getCallerId();
+            Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
+
+            Chapter currentChapter = milestone.getChapter();
+            Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
+
+            return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
+        }
+    }
+
+    private class InvalidInputHandler implements KeyPressHandler {
+        @Override
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            String callerId = ivrContext.getCallerId();
+            Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
+
+            Chapter currentChapter = milestone.getChapter();
+            Question lastQuestion = currentChapter.getQuestionById(milestone.getQuestionId());
+
+            ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
+
+            return forwardToQuestion(currentChapter.getNumber(), lastQuestion.getNumber());
+        }
+    }
 }
