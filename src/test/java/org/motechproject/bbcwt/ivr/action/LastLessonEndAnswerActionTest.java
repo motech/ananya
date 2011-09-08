@@ -52,26 +52,36 @@ public class LastLessonEndAnswerActionTest extends BaseActionTest {
 
     @Test
     public void shouldNavigateUserToLastLessonHeardIfOptionChosenIs1() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "1");
 
         String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
 
         assertEquals("Should navigate to the last lesson heard from the current chapter", nextAction,
                 "forward:/chapter/" + chapter.getNumber() + "/lesson/" + lesson.getNumber());
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldNavigateToStartQuizIfOptionChosenIs2(){
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "2");
 
         String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
 
         assertEquals("Should navigate to the the first question after end of chapter.", nextAction,
                      "forward:/startQuiz");
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldPlayInvalidInputMessageAndNavigateToLessonEndMenuIfOptionChosenIsInvalid() {
+        int invalidInputCountBeforeThisInput = 1;
+        setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
         IVRRequest ivrRequest = new IVRRequest(null, null, null, "3");
 
         final String INVALID_INPUT_WAV = "invalid_input.wav";
@@ -82,6 +92,66 @@ public class LastLessonEndAnswerActionTest extends BaseActionTest {
 
         assertEquals("Should navigate to the the lesson end menu.", nextAction,
                      "forward:/lessonEndMenu");
+        verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
     }
 
+    @Test
+    public void shouldForwardToNextChapterIfInvalidInputIsGivenMoreThanPermissibleNumberOfTimes() {
+        setInvalidInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_INVALID_INPUT));
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "3");
+
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals("Should navigate to the next chapter.", nextAction,
+                     "forward:/startNextChapter");
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    @Test
+    public void shouldNavigateToLessonEndMenuIfNoInputIsGiven() {
+        int noInputCountBeforeThisInput = 1;
+        setNoInputCountBeforeThisInputAs(noInputCountBeforeThisInput);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "");
+
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals("Should navigate to the the lesson end menu.", nextAction,
+                     "forward:/lessonEndMenu");
+        verifyNoInputCountHasBeenIncremented(noInputCountBeforeThisInput);
+    }
+
+    @Test
+    public void shouldForwardToNextChapterIfNoInputIsGivenMoreThanPermissibleNumberOfTimes() {
+        setNoInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_NO_INPUT));
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "");
+
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+
+        assertEquals("Should navigate to the next chapter.", nextAction,
+                     "forward:/startNextChapter");
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    private void setInvalidInputCountBeforeThisInputAs(int invalidInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.INVALID_INPUT_COUNT)).thenReturn(invalidInputCountBeforeThisInput);
+    }
+
+    private void setNoInputCountBeforeThisInputAs(int noInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.NO_INPUT_COUNT)).thenReturn(noInputCountBeforeThisInput);
+    }
+
+    private void verifyInvalidAndNoInputCountsAreReset() {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, 0);
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, 0);
+    }
+
+    private void verifyInvalidInputCountHasBeenIncremented(int invalidInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, invalidInputCountBeforeThisInput+1);
+    }
+
+    private void verifyNoInputCountHasBeenIncremented(int noInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, noInputCountBeforeThisInput+1);
+    }
 }
