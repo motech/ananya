@@ -9,7 +9,6 @@ import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +96,9 @@ public class CollectAnswerAction extends BaseAction {
 
             int nextQuestionNumber = lastQuestion.getNumber() + 1;
 
+            ivrContext.resetNoInputCount();
+            ivrContext.resetInvalidInputCount();
+
             if(currentChapter.getQuestionByNumber(nextQuestionNumber) == null){
                 return "forward:/informScore";
             }
@@ -109,6 +111,15 @@ public class CollectAnswerAction extends BaseAction {
     private class NoInputHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.incrementNoInputCount();
+            int allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
+
+            if(ivrContext.getNoInputCount() > allowedNumberOfNoInputs) {
+                ivrContext.resetNoInputCount();
+                ivrContext.resetInvalidInputCount();
+                return "forward:/startNextChapter";
+            }
+
             String callerId = ivrContext.getCallerId();
             Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
 
@@ -122,6 +133,15 @@ public class CollectAnswerAction extends BaseAction {
     private class InvalidInputHandler implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+            ivrContext.incrementInvalidInputCount();
+            int allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
+
+            if(ivrContext.getInvalidInputCount() > allowedNumberOfInvalidInputs) {
+                ivrContext.resetNoInputCount();
+                ivrContext.resetInvalidInputCount();
+                return "forward:/startNextChapter";
+            }
+
             String callerId = ivrContext.getCallerId();
             Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
 

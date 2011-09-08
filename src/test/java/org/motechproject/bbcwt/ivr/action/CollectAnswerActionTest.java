@@ -55,7 +55,10 @@ public class CollectAnswerActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfInputIsNotValid() {
+    public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfInputIsNotNumeric() {
+        final int invalidInputCountBeforeThisInput = 1;
+        setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
+
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
 
@@ -68,10 +71,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
         assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
         verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
     }
 
     @Test
     public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfAnswerIsNotAValidOption() {
+        final int invalidInputCountBeforeThisInput = 1;
+        setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
+
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
 
@@ -84,10 +92,65 @@ public class CollectAnswerActionTest extends BaseActionTest {
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
         assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
         verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
+    }
+
+    @Test
+    public void shouldSkipQuizAndProceedToNextChapterIfInvalidInputsAreGivenMoreThanPermissibleNumberOfTimes() {
+        setInvalidInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_INVALID_INPUT));
+
+        Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
+        atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
+
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(atQuestion1WithLinkedRefs);
+
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "*1"), request, response);
+
+        assertEquals("In case invalid inputs are given more than permissible number of times, skip quiz taking user to the next chapter", "forward:/startNextChapter", nextAction);
+
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    @Test
+    public void shouldForwardToPreviousQuestionIfAnswerIsNotGiven() {
+        int noInputCountBeforeThisInput = 1;
+        setNoInputCountBeforeThisInputAs(1);
+
+        Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
+        atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
+
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(atQuestion1WithLinkedRefs);
+
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""), request, response);
+
+        assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
+        verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyNoInputCountHasBeenIncremented(noInputCountBeforeThisInput);
+    }
+
+    @Test
+    public void shouldSkipQuizAndProceedToNextChapterIfNoInputsAreGivenMoreThanPermissibleNumberOfTimes() {
+        setNoInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_NO_INPUT));
+
+        Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, chapterWithThreeQuestions.getQuestionByNumber(1).getId(), new Date());
+        atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
+
+        when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(atQuestion1WithLinkedRefs);
+
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""), request, response);
+
+        assertEquals("If no inputs are given more than permissible number of times, then skip quiz and proceed to next chapter.", "forward:/startNextChapter", nextAction);
+
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldSubmitResposeToReportCardRepository() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         Question question1 = chapterWithThreeQuestions.getQuestionByNumber(1);
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, question1.getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
@@ -105,10 +168,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         verify(reportCardsRepository).addUserResponse(healthWorker.getCallerId(), chapterWithThreeQuestions.getNumber(), question1.getNumber(), keyedResponse);
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldPlayCorrectAnswerExplanationIfTheAnswerIsCorrect() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         Question question1 = chapterWithThreeQuestions.getQuestionByNumber(1);
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, question1.getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
@@ -128,10 +196,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getCorrectAnswerExplanationLocation());
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldPlayIncorrectAnswerExplanationIfTheAnswerIsIncorrect() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         Question question1 = chapterWithThreeQuestions.getQuestionByNumber(1);
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, question1.getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
@@ -150,10 +223,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getIncorrectAnswerExplanationLocation());
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldForwardToNextQuestionIfThereAreMoreQuestions() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         Question question1 = chapterWithThreeQuestions.getQuestionByNumber(1);
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, question1.getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
@@ -172,10 +250,15 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         assertEquals("Should forward to play next question if there are more questions.", "forward:/chapter/1/question/2", nextAction);
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidAndNoInputCountsAreReset();
     }
 
     @Test
     public void shouldForwardToScoreReportingIfTheResponseIsForLastQuestion() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
         Question lastQuestion = chapterWithThreeQuestions.getQuestionByNumber(3);
         Milestone atQuestion1WithLinkedRefs = new Milestone(healthWorker.getId(), chapterWithThreeQuestions.getId(), null, lastQuestion.getId(), new Date());
         atQuestion1WithLinkedRefs.setChapter(chapterWithThreeQuestions);
@@ -194,5 +277,28 @@ public class CollectAnswerActionTest extends BaseActionTest {
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
         assertEquals("Should forward to score reporting action if there are no more questions.", "forward:/informScore", nextAction);
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
+
+        verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    private void setInvalidInputCountBeforeThisInputAs(int invalidInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.INVALID_INPUT_COUNT)).thenReturn(invalidInputCountBeforeThisInput);
+    }
+
+    private void setNoInputCountBeforeThisInputAs(int noInputCountBeforeThisInput) {
+        when(session.getAttribute(IVR.Attributes.NO_INPUT_COUNT)).thenReturn(noInputCountBeforeThisInput);
+    }
+
+    private void verifyInvalidAndNoInputCountsAreReset() {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, 0);
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, 0);
+    }
+
+    private void verifyInvalidInputCountHasBeenIncremented(int invalidInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, invalidInputCountBeforeThisInput+1);
+    }
+
+    private void verifyNoInputCountHasBeenIncremented(int noInputCountBeforeThisInput) {
+        verify(session).setAttribute(IVR.Attributes.NO_INPUT_COUNT, noInputCountBeforeThisInput+1);
     }
 }
