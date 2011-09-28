@@ -2,63 +2,33 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
-import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/helpMenuAnswer")
-public class HelpMenuAnswerAction extends BaseAction {
-
-    private Map<Character, KeyPressHandler> keyPressActionMap;
-    private InvalidKeyPressResponseAction invalidKeyPressResponseAction;
-
+public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     @Autowired
     public HelpMenuAnswerAction(IVRMessage messages) {
-        this.messages = messages;
-        this.invalidKeyPressResponseAction = new InvalidKeyPressResponseAction();
-        initializeKeyPressActionMap();
-    }
-
-    private void initializeKeyPressActionMap() {
-        keyPressActionMap = new HashMap(3);
-        keyPressActionMap.put('1', new Key1ResponseAction());
-        keyPressActionMap.put('2', new Key2ResponseAction());
-        keyPressActionMap.put(NO_INPUT, new NoKeyPressResponseAction());
+        super(messages);
     }
 
     @Override
-    @RequestMapping(method = RequestMethod.GET)
-    public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-
-        IVRContext.SessionAndIVRContextSynchronizer synchronizer = new IVRContext.SessionAndIVRContextSynchronizer();
-        IVRContext ivrContext = synchronizer.buildIVRContext(session);
-
-        char chosenOption = ivrInput(ivrRequest);
-        KeyPressHandler keyPressResponseAction = determineActionToExecute(chosenOption);
-
-        String forward = keyPressResponseAction.execute(chosenOption, ivrContext, ivrResponseBuilder(request));
-
-        synchronizer.synchronizeSessionWithIVRContext(session, ivrContext);
-
-        return forward;
+    protected KeyPressHandler invalidInputHandler() {
+        return new InvalidKeyPressResponseAction();
     }
 
-    private KeyPressHandler determineActionToExecute(char chosenOption) {
-        KeyPressHandler responseAction = keyPressActionMap.get(chosenOption);
-        return responseAction!=null?responseAction: invalidKeyPressResponseAction;
+    @Override
+    protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
+        keyPressHandlerMap.put('1', new Key1ResponseAction());
+        keyPressHandlerMap.put('2', new Key2ResponseAction());
+        keyPressHandlerMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 
     class Key1ResponseAction implements KeyPressHandler {
