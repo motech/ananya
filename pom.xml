@@ -235,6 +235,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
@@ -552,7 +557,7 @@
                     <printSummary>true</printSummary>
                     <excludes>
                         <exclude>**/*_Roo_*</exclude>
-                        <exclude>**/functional/**/*.java</exclude>
+                        <exclude>**/bbcwtfunctional/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
