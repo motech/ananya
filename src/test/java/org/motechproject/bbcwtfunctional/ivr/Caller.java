@@ -9,6 +9,7 @@ import org.motechproject.bbcwtfunctional.framework.MotechWebClient;
 import org.motechproject.bbcwtfunctional.testdata.ivrreponse.IVRResponse;
 import org.motechproject.bbcwtfunctional.testdata.ivrrequest.CallInfo;
 import org.motechproject.bbcwtfunctional.testdata.ivrrequest.NoCallInfo;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
 
@@ -56,7 +57,7 @@ public class Caller extends FunctionalTestObject {
 
         if(StringUtils.isNotEmpty(data)) {
             url.append(
-                    String.format("data=%s&", data)
+                    String.format("data=%s&", HtmlUtils.htmlEscape(data))
             );
         }
 
@@ -71,6 +72,11 @@ public class Caller extends FunctionalTestObject {
     public IVRResponse continueWithoutInteraction() {
         String completeUrl = urlFor(sid, null, null, null);
         return invoke(completeUrl);
+    }
+
+    public void hangup() {
+        String completeUrl = urlFor("Hangup", null);
+        webClient.getPage(completeUrl);
     }
 
     private IVRResponse invoke(String completeUrl) {

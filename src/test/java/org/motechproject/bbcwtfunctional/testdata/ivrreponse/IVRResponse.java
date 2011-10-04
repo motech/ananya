@@ -33,6 +33,9 @@ public class IVRResponse {
     }
 
     public boolean audioPlayed(String... audios) {
+        if(playAudios == null) {
+            return false;
+        }
         for (String audioResource : audios) {
             boolean found = false;
             for (String audioUrl : playAudios) {

@@ -1,27 +1,40 @@
 package org.motechproject.bbcwtfunctional.test.ivr;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwtfunctional.framework.MotechWebClient;
 import org.motechproject.bbcwtfunctional.ivr.Caller;
 import org.motechproject.bbcwtfunctional.testdata.ivrreponse.IVRResponse;
 
 import java.io.IOException;
+import java.util.Random;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class NewCallTest {
+
+    private Random random;
+    private Caller caller;
+
+    @Before
+    public void setup() {
+        random = new Random();
+        caller = new Caller("123", random.nextInt() + "", new MotechWebClient());
+    }
+
+    @After
+    public void teardown() {
+        caller.hangup();
+    }
+
     @Test
     public void newCallFlow() throws IOException {
-        Caller caller = new Caller("123", "9998880000", new MotechWebClient());
         IVRResponse response = caller.call();
 
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
-
-//        response = caller.enter("2");
-//
-//        assertTrue(response.audioPlayed("0003_main_menu_help"));
-//        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
         response = caller.enter("2");
 
@@ -113,5 +126,64 @@ public class NewCallTest {
         response = caller.continueWithoutInteraction();
 
         assertTrue(response.audioPlayed("0032_congarts_and_tease"));
+    }
+
+    @Test
+    public void repeatWelcomePrompt() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("1");
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+    }
+
+    @Test
+    public void userDoesNotKeyInAnyInputAtWelcomePrompt() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("");
+
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("");
+
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("");
+
+        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
+    }
+
+    @Test
+    public void userKeysInInvalidInputsAtWelcomePrompt() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("*");
+        assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+
+        response = caller.enter("");
+        assertFalse(response.audioPlayed("0000_error_in_pressing_number"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("9");
+
+        assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("3");
+
+        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
     }
 }
