@@ -6,11 +6,11 @@ import com.gargoylesoftware.htmlunit.WebClient;
 
 import java.io.IOException;
 
-public class MyWebClient {
+public class MotechWebClient {
 
     private WebClient webClient = new WebClient();
 
-    public MyWebClient() {
+    public MotechWebClient() {
         webClient.getCookieManager().setCookiesEnabled(true);
         webClient.setCssErrorHandler(new SilentCssErrorHandler());
     }
