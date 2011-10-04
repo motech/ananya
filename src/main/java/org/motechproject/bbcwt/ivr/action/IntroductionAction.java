@@ -15,23 +15,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/helpMenu")
-public class HelpMenuAction extends BaseAction {
+@RequestMapping(IntroductionAction.LOCATION)
+public class IntroductionAction extends BaseAction {
+    public static final String LOCATION = "/introduction";
 
     @Autowired
-    public HelpMenuAction(IVRMessage messages) {
+    public IntroductionAction(IVRMessage messages) {
         this.messages = messages;
     }
 
     @Override
     @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        LOG.info("In here to render help menu...");
-        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS)));
-        IVRResponseBuilder responseBuilder = ivrResponseBuilder(request).withCollectDtmf(dtmfBuilder.create());
-        request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/helpMenuAnswer");
-        LOG.info("Rendering help menu now.");
-        return responseBuilder.create().getXML();
+        IVRResponseBuilder responseBuilder= ivrResponseBuilder(request);
+        responseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)));
+        return "forward:" + PostIntroductionMenuAction.LOCATION;
     }
 }

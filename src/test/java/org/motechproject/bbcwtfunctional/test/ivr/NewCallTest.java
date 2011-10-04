@@ -12,21 +12,18 @@ import static org.junit.Assert.assertTrue;
 public class NewCallTest {
     @Test
     public void newCallFlow() throws IOException {
-        Caller caller = new Caller("123", "9980930495", new MotechWebClient());
+        Caller caller = new Caller("123", "9998880000", new MotechWebClient());
         IVRResponse response = caller.call();
 
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
-
-        response = caller.continueWithoutInteraction();
-
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+//        response = caller.enter("2");
+//
+//        assertTrue(response.audioPlayed("0003_main_menu_help"));
+//        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
         response = caller.enter("2");
-
-        assertTrue(response.audioPlayed("0003_main_menu_help"));
-        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
-
-        response = caller.enter("1");
 
         assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
 

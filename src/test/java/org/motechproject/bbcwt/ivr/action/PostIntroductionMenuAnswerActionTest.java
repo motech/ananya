@@ -6,55 +6,43 @@ import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 
-import java.text.StringCharacterIterator;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class HelpMenuAnswerActionTest extends BaseActionTest {
-    private HelpMenuAnswerAction action;
+public class PostIntroductionMenuAnswerActionTest extends BaseActionTest {
+    private PostIntroductionMenuAnswerAction action;
 
     @Before
     public void setUp() {
-        action = new HelpMenuAnswerAction(messages);
+        action = new PostIntroductionMenuAnswerAction(messages);
     }
 
     @Test
-    public void shouldPlayLessonWhenOptionChosenIs1() {
-        setInvalidInputCountBeforeThisInputAs(1);
-        setNoInputCountBeforeThisInputAs(1);
-
-        String userInput = "1";
-        IVRRequest ivrRequest = new IVRRequest("unique-call-id", "9999988888", IVR.Event.GOT_DTMF.key(), userInput);
-
-        String chainedAction = action.handle(ivrRequest, request, response);
-
-        assertEquals("The help menu answer action should be chained to chapter to play the chapter.", "forward:/chapter/1/lesson/1", chainedAction);
-        verifyInvalidAndNoInputCountsAreReset();
-    }
-
-    @Test
-    public void shouldPlayHelpWhenOptionChosenIs2() {
+    public void shouldPlayLessonWhenOptionChosenIs2() {
         setInvalidInputCountBeforeThisInputAs(1);
         setNoInputCountBeforeThisInputAs(1);
 
         String userInput = "2";
-        IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, IVR.Event.GOT_DTMF.key(), userInput);
-
-        String HELP_KEY = IVRMessage.IVR_HELP;
-        String HELP_FILE = "HelpMenu.wav";
-        final String CONTENT_LOCATION = "http://localhost/bbcwt/audio/";
-
-        when(messages.get(IVRMessage.CONTENT_LOCATION)).thenReturn(CONTENT_LOCATION);
-        when(messages.get(HELP_KEY)).thenReturn(HELP_FILE);
+        IVRRequest ivrRequest = new IVRRequest("unique-call-id", "9999988888", IVR.Event.GOT_DTMF.key(), userInput);
 
         String chainedAction = action.handle(ivrRequest, request, response);
 
-        verify(messages, atLeastOnce()).get(HELP_KEY);
-        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION.concat(HELP_FILE));
+        assertEquals("The action should be chained to chapter to play the chapter.", "forward:/chapter/1/lesson/1", chainedAction);
+        verifyInvalidAndNoInputCountsAreReset();
+    }
 
-        assertEquals("The help menu action should be chained to produce the help menu again.", "forward:/helpMenu", chainedAction);
+    @Test
+    public void shouldPlayIntroductionBackWhenOptionChosenIs1() {
+        setInvalidInputCountBeforeThisInputAs(1);
+        setNoInputCountBeforeThisInputAs(1);
+
+        String userInput = "1";
+        IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, IVR.Event.GOT_DTMF.key(), userInput);
+
+        String chainedAction = action.handle(ivrRequest, request, response);
+
+        assertEquals("The action should be chained to produce the help menu again.", "forward:/introduction", chainedAction);
 
         verifyInvalidAndNoInputCountsAreReset();
     }
@@ -75,7 +63,7 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
         verify(messages, atLeastOnce()).get(IVRMessage.INVALID_INPUT);
         verify(ivrResponseBuilder, atLeastOnce()).addPlayAudio(CONTENT_LOCATION + INVALID_IP_MSG);
 
-        assertEquals("The help menu should be played again in case of an invalid input.", "forward:/helpMenu", chainedAction);
+        assertEquals("The introduction should be played again in case of an invalid input.", "forward:/postIntroductionMenu", chainedAction);
         verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
     }
 
@@ -101,7 +89,7 @@ public class HelpMenuAnswerActionTest extends BaseActionTest {
 
         String chainedAction = action.handle(ivrRequest, request, response);
 
-        assertEquals("The help menu should be played again in case of an invalid input.", "forward:/helpMenu", chainedAction);
+        assertEquals("The introduction should be played again in case of an invalid input.", "forward:/postIntroductionMenu", chainedAction);
         verifyNoInputCountHasBeenIncremented(noInputCountBeforeThisInput);
     }
 

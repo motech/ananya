@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/helpMenuAnswer")
-public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
+@RequestMapping(PostIntroductionMenuAnswerAction.LOCATION)
+public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandler {
+    public static final String LOCATION = "/postIntroductionMenuAnswerAction";
 
     @Autowired
-    public HelpMenuAnswerAction(IVRMessage messages) {
+    public PostIntroductionMenuAnswerAction(IVRMessage messages) {
         super(messages);
     }
 
@@ -26,12 +27,12 @@ public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     @Override
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
-        keyPressHandlerMap.put('1', new Key1ResponseAction());
-        keyPressHandlerMap.put('2', new Key2ResponseAction());
+        keyPressHandlerMap.put('1', new RepeatIntroduction());
+        keyPressHandlerMap.put('2', new StartChapterAction());
         keyPressHandlerMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 
-    class Key1ResponseAction implements KeyPressHandler {
+    class StartChapterAction implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
             ivrContext.resetInvalidInputCount();
@@ -40,13 +41,12 @@ public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
         }
     }
 
-    class Key2ResponseAction implements KeyPressHandler {
+    class RepeatIntroduction implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
-            ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
-            return "forward:/helpMenu";
+            return "forward:" + IntroductionAction.LOCATION;
         }
     }
 
@@ -67,7 +67,7 @@ public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
                 return "forward:/chapter/1/lesson/1";
             }
 
-            return "forward:/helpMenu";
+            return "forward:" + PostIntroductionMenuAction.LOCATION;
         }
     }
 
@@ -89,7 +89,7 @@ public class HelpMenuAnswerAction extends AbstractPromptAnswerHandler {
             }
 
             ivrResponseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
-            return "forward:/helpMenu";
+            return "forward:" + PostIntroductionMenuAction.LOCATION;
         }
     }
 }

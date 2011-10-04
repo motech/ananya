@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class ExistingUserAction extends BaseAction{
 
-    public static final String EXISTING_USER_HANDLER = "/existingUserHandler";
+    public static final String LOCATION = "/existingUserHandler";
     private MilestonesRepository milestonesRepository;
 
     @Autowired
@@ -30,7 +30,7 @@ public class ExistingUserAction extends BaseAction{
     }
 
     @Override
-    @RequestMapping(value=EXISTING_USER_HANDLER, method = RequestMethod.GET)
+    @RequestMapping(value= LOCATION, method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         final HttpSession session = request.getSession();
         final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
