@@ -9,9 +9,9 @@ import org.motechproject.bbcwtfunctional.framework.MotechWebClient;
 import org.motechproject.bbcwtfunctional.testdata.ivrreponse.IVRResponse;
 import org.motechproject.bbcwtfunctional.testdata.ivrrequest.CallInfo;
 import org.motechproject.bbcwtfunctional.testdata.ivrrequest.NoCallInfo;
-import org.springframework.web.util.HtmlUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 public class Caller extends FunctionalTestObject {
     private String sid;
@@ -57,7 +57,7 @@ public class Caller extends FunctionalTestObject {
 
         if(StringUtils.isNotEmpty(data)) {
             url.append(
-                    String.format("data=%s&", HtmlUtils.htmlEscape(data))
+                    String.format("data=%s&", URLEncoder.encode(data))
             );
         }
 
