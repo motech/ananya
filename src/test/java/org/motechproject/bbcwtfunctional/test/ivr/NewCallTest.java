@@ -177,6 +177,7 @@ public class NewCallTest {
         assertFalse(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
+        //TODO: Why cannot I give #?
         response = caller.enter("9");
 
         assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
@@ -185,5 +186,30 @@ public class NewCallTest {
         response = caller.enter("3");
 
         assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
+    }
+
+    @Test
+    public void userAsksForHelpInBetweenLessons() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
+
+        response = caller.enter("*");
+
+        assertTrue("Hitting any key while a lesson is being played should take user to help.",
+                response.audioPlayed("0003_main_menu_help"));
+        assertTrue("And after playing help, the lesson being played should restart.",
+                response.promptPlayed("0004_chapter_1_lesson_1"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue("If user does not press any key while a lesson is being played, " +
+                "which means he did not request help, lesson prompt should be played.",
+                response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
     }
 }
