@@ -3,11 +3,13 @@ package org.motechproject.bbcwt.ivr.action;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
+import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
@@ -75,6 +77,25 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
 
         assertEquals(nextAction, "forward:/chapter/"+chapter.getNumber()+"/lesson/"+ (currentLesson.getNumber()+1) );
         verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    @Test
+    public void shouldPlayHelpIfUserResponseIsAsterisk() {
+        final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
+        when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+        String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
+    }
+
+    @Test
+    public void afterHelpShouldForwardToLessonEndMenu() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+        String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
+        assertEquals(nextAction, "forward:/lessonEndMenu");
     }
 
     @Test

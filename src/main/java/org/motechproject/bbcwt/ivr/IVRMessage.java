@@ -26,4 +26,8 @@ public class IVRMessage {
     public String get(String key) {
         return (String) properties.get(key);
     }
+
+    public String absoluteFileLocation(String file) {
+        return get(IVRMessage.CONTENT_LOCATION) + file;
+    }
 }

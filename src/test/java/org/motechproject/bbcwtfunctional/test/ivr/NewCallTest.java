@@ -189,7 +189,7 @@ public class NewCallTest {
     }
 
     @Test
-    public void userAsksForHelpInBetweenLessons() throws Exception {
+    public void userAsksForHelpWhileALessonIsBeingPlayed() throws Exception {
         IVRResponse response = caller.call();
 
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
@@ -211,5 +211,26 @@ public class NewCallTest {
         assertTrue("If user does not press any key while a lesson is being played, " +
                 "which means he did not request help, lesson prompt should be played.",
                 response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
+    }
+
+    @Test
+    public void userAsksForHelpWhileALessonEndMenuIsBeingPlayed() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
+
+        response = caller.enter("*");
+
+        assertTrue(response.audioPlayed("0003_main_menu_help"));
+        assertTrue(response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
     }
 }

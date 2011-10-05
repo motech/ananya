@@ -6,6 +6,7 @@ import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,13 @@ public class LessonEndAnswerAction extends AbstractPromptAnswerHandler {
 
     @Override
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
-        keyPressHandlerMap.put('1', new Key1ResponseAction());
-        keyPressHandlerMap.put('2', new Key2ResponseAction());
+        keyPressHandlerMap.put('1', new RestartPreviousLessonAction());
+        keyPressHandlerMap.put('2', new StartNextLessonAction());
+        keyPressHandlerMap.put('*', new PlayHelpAction(messages, "forward:/lessonEndMenu"));
         keyPressHandlerMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 
-    class Key1ResponseAction implements KeyPressHandler {
+    class RestartPreviousLessonAction implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
             Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(ivrContext.getCallerId());
@@ -52,7 +54,7 @@ public class LessonEndAnswerAction extends AbstractPromptAnswerHandler {
         }
     }
 
-    class Key2ResponseAction implements KeyPressHandler {
+    class StartNextLessonAction implements KeyPressHandler {
         @Override
         public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
             Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(ivrContext.getCallerId());
