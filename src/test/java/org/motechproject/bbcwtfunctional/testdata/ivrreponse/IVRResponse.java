@@ -3,10 +3,8 @@ package org.motechproject.bbcwtfunctional.testdata.ivrreponse;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @XStreamAlias("response")
@@ -28,8 +26,12 @@ public class IVRResponse {
         return hangup != null;
     }
 
-    public boolean collectDtmf() {
+    public boolean collectedDtmf() {
         return collectdtmf != null;
+    }
+
+    public CollectDtmf collectDtmf() {
+        return collectdtmf;
     }
 
     public boolean audioPlayed(String... audios) {
@@ -50,11 +52,11 @@ public class IVRResponse {
     }
 
     public boolean promptPlayed(String... audios) {
-        return collectDtmf() && collectdtmf.hasAudio(audios);
+        return collectedDtmf() && collectdtmf.hasAudio(audios);
     }
 
     public String promptPlayed() {
-        if (collectDtmf()) {
+        if (collectedDtmf()) {
             return collectdtmf.playAudio();
         }
         return "";

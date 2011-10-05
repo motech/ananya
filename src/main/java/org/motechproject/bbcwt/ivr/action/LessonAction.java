@@ -59,6 +59,7 @@ public class LessonAction extends BaseAction {
         milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
         final IVRDtmfBuilder collectDtmf = ivrDtmfBuilder(request);
+        collectDtmf.withTimeOutInMillis(1);
         collectDtmf.withPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
         ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
         session.setAttribute(IVR.Attributes.PREV_INTERACTION, request.getServletPath());

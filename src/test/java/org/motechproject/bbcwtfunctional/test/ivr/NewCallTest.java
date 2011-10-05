@@ -177,7 +177,7 @@ public class NewCallTest {
         assertFalse(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
-        //TODO: Why cannot I give #?
+        //TODO: Why cannot I give #? # is not being sent properly to the server...
         response = caller.enter("9");
 
         assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
@@ -198,7 +198,7 @@ public class NewCallTest {
         response = caller.enter("2");
 
         assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
-
+        assertTrue("Timeout should be 1 millisecond, if the help is in lesson.", response.collectDtmf().hasTimeOut(1));
         response = caller.enter("*");
 
         assertTrue("Hitting any key while a lesson is being played should take user to help.",
