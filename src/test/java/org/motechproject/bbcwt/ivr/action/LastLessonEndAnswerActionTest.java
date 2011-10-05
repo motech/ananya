@@ -79,6 +79,25 @@ public class LastLessonEndAnswerActionTest extends BaseActionTest {
     }
 
     @Test
+    public void shouldPlayHelpIfUserResponseIsAsterisk() {
+        final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
+        when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
+    }
+
+    @Test
+    public void afterHelpShouldForwardToLessonEndMenu() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+        String nextAction = chapterEndAnswerAction.handle(ivrRequest, request, response);
+        assertEquals(nextAction, "forward:/lessonEndMenu");
+    }
+
+    @Test
     public void shouldPlayInvalidInputMessageAndNavigateToLessonEndMenuIfOptionChosenIsInvalid() {
         int invalidInputCountBeforeThisInput = 1;
         setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
