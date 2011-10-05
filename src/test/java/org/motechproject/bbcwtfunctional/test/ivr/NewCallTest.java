@@ -38,7 +38,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
 
         response = caller.continueWithoutInteraction();
 
@@ -46,7 +46,7 @@ public class NewCallTest {
 
         response = caller.enter("1");
 
-        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
 
         response = caller.continueWithoutInteraction();
 
@@ -54,7 +54,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.audioPlayed("0006_chapter_1_lesson_2"));
+        assertTrue(response.promptPlayed("0006_chapter_1_lesson_2"));
 
         response = caller.continueWithoutInteraction();
 
@@ -62,7 +62,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.audioPlayed("0008_chapter_1_lesson_3"));
+        assertTrue(response.promptPlayed("0008_chapter_1_lesson_3"));
 
         response = caller.continueWithoutInteraction();
 
@@ -70,7 +70,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.audioPlayed("0010_chapter_1_lesson_4"));
+        assertTrue(response.promptPlayed("0010_chapter_1_lesson_4"));
 
         response = caller.continueWithoutInteraction();
 
@@ -78,7 +78,7 @@ public class NewCallTest {
 
         response = caller.enter("1");
 
-        assertTrue(response.audioPlayed("0010_chapter_1_lesson_4"));
+        assertTrue(response.promptPlayed("0010_chapter_1_lesson_4"));
 
         response = caller.continueWithoutInteraction();
 
@@ -117,7 +117,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.audioPlayed("0030_chapter_2_lesson_1"));
+        assertTrue(response.promptPlayed("0030_chapter_2_lesson_1"));
         response = caller.continueWithoutInteraction();
 
         assertTrue(response.promptPlayed("0031_chapter_2_lesson_1_option_prompt"));
@@ -158,7 +158,7 @@ public class NewCallTest {
 
         response = caller.enter("");
 
-        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
     }
 
     @Test
@@ -184,6 +184,6 @@ public class NewCallTest {
 
         response = caller.enter("3");
 
-        assertTrue(response.audioPlayed("0004_chapter_1_lesson_1"));
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
     }
 }

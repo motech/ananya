@@ -7,6 +7,7 @@ import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class LessonAction extends BaseAction {
+    public static final String LOCATION = "/chapter/{chapterNumber}/lesson/{lessonNumber}";
+    public static final String HELP_HANDLER = "/helpHandler";
     private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private HealthWorkersRepository healthWorkersRepository;
@@ -38,7 +41,7 @@ public class LessonAction extends BaseAction {
         this.dateUtil = dateUtil;
     }
 
-    @RequestMapping(value="/chapter/{chapterNumber}/lesson/{lessonNumber}", method= RequestMethod.GET)
+    @RequestMapping(value= LessonAction.LOCATION, method= RequestMethod.GET)
     @ResponseBody
     public String get(@PathVariable("chapterNumber") int chapterNumber, @PathVariable("lessonNumber") int lessonNumber, HttpServletRequest request, HttpServletResponse response) {
         Chapter chapter = chaptersRespository.findByNumber(chapterNumber);
@@ -55,9 +58,30 @@ public class LessonAction extends BaseAction {
 
         milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
-        ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
-        session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndMenu");
+        final IVRDtmfBuilder collectDtmf = ivrDtmfBuilder(request);
+        collectDtmf.withPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
+        ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
+        session.setAttribute(IVR.Attributes.PREV_INTERACTION, request.getServletPath());
+        session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
         return ivrResponseBuilder(request).create().getXML();
+    }
+
+    @RequestMapping(value = LessonAction.LOCATION + LessonAction.HELP_HANDLER, method = RequestMethod.GET)
+    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        if(ivrRequest.hasNoData()) {
+            return "forward:" + nextInteraction();
+        } else {
+            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
+            return "forward:" + request.getSession().getAttribute(IVR.Attributes.PREV_INTERACTION);
+        }
+    }
+
+    protected String nextInteraction() {
+        return "/lessonEndMenu";
+    }
+
+    protected String helpInteractionLocation(HttpServletRequest request) {
+        return request.getServletPath().concat(HELP_HANDLER);
     }
 
     private HealthWorker registerNewHealthWorker(String callerId) {
@@ -69,6 +93,6 @@ public class LessonAction extends BaseAction {
 
     @Override
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 }
