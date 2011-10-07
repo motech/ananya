@@ -33,7 +33,7 @@ public class ExistingUserAction extends BaseAction{
     @RequestMapping(value= LOCATION, method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         final HttpSession session = request.getSession();
-        final String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
+        final String callerId = healthWorkerCallerIdFromSession(session);
 
         final Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
         final Chapter currentChapter = currentMilestone.getChapter();

@@ -103,4 +103,8 @@ public class Chapter extends BaseCouchEntity {
         }
         return null;
     }
+
+    public boolean hasQuestions() {
+        return questions.size() > 0;
+    }
 }

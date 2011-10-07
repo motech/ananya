@@ -24,9 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-public class LessonAction extends BaseAction {
+public class LessonAction extends HelpEnabledAction {
     public static final String LOCATION = "/chapter/{chapterNumber}/lesson/{lessonNumber}";
-    public static final String HELP_HANDLER = "/helpHandler";
     private ChaptersRespository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private HealthWorkersRepository healthWorkersRepository;
@@ -48,7 +47,7 @@ public class LessonAction extends BaseAction {
         Lesson lessonToPlay = chapter.getLessonByNumber(lessonNumber);
 
         final HttpSession session = request.getSession();
-        String callerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
+        String callerId = healthWorkerCallerIdFromSession(session);
 
         HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);
 
@@ -62,27 +61,9 @@ public class LessonAction extends BaseAction {
         collectDtmf.withTimeOutInMillis(1);
         collectDtmf.withPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
         ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
-        session.setAttribute(IVR.Attributes.PREV_INTERACTION, request.getServletPath());
+        session.setAttribute(IVR.Attributes.PREV_INTERACTION, servletPath(request));
         session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
         return ivrResponseBuilder(request).create().getXML();
-    }
-
-    @RequestMapping(value = LessonAction.LOCATION + LessonAction.HELP_HANDLER, method = RequestMethod.GET)
-    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        if(ivrRequest.hasNoData()) {
-            return "forward:" + nextInteraction();
-        } else {
-            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
-            return "forward:" + request.getSession().getAttribute(IVR.Attributes.PREV_INTERACTION);
-        }
-    }
-
-    protected String nextInteraction() {
-        return "/lessonEndMenu";
-    }
-
-    protected String helpInteractionLocation(HttpServletRequest request) {
-        return request.getServletPath().concat(HELP_HANDLER);
     }
 
     private HealthWorker registerNewHealthWorker(String callerId) {
@@ -90,6 +71,16 @@ public class LessonAction extends BaseAction {
         healthWorker = new HealthWorker(callerId);
         healthWorkersRepository.add(healthWorker);
         return healthWorker;
+    }
+
+
+    @RequestMapping(value = LessonAction.LOCATION + HelpEnabledAction.HELP_HANDLER, method = RequestMethod.GET)
+    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        return super.helpHandler(ivrRequest, request, response);
+    }
+
+    protected String nextInteraction() {
+        return "/lessonEndMenu";
     }
 
     @Override

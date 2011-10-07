@@ -33,7 +33,7 @@ public class InformScoreAction extends BaseAction {
     @Override
     @RequestMapping(value="/informScore", method= RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        String callerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        String callerId = healthWorkerCallerIdFromSession(request.getSession());
 
         Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(callerId);
 

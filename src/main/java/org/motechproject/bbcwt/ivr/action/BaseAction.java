@@ -9,6 +9,7 @@ import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public abstract class BaseAction implements IVRAction {
     protected static final Logger LOG = Logger.getLogger(BaseAction.class);
@@ -48,5 +49,9 @@ public abstract class BaseAction implements IVRAction {
     protected int ivrTimeout() {
         String timeout = messages.get("ivr.timeout");
         return Integer.parseInt(timeout);
+    }
+
+    protected String healthWorkerCallerIdFromSession(HttpSession session) {
+        return (String) session.getAttribute(IVR.Attributes.CALLER_ID);
     }
 }

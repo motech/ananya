@@ -26,7 +26,7 @@ public class RepeatLastChapterAction extends BaseAction {
     @Override
     @RequestMapping(method= RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        String healthWorkerCallerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        String healthWorkerCallerId = healthWorkerCallerIdFromSession(request.getSession());
 
         Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(healthWorkerCallerId);
         Chapter currentChapter = currentMilestone.getChapter();

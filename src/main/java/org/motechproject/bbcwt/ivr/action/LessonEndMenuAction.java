@@ -43,7 +43,7 @@ public class LessonEndMenuAction extends BaseAction {
 
         LOG.info("In here to render end of lesson menu...");
 
-        String callerId = (String) request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        String callerId = healthWorkerCallerIdFromSession(request.getSession());
         milestonesRepository.markLastMilestoneFinish(callerId);
 
         HealthWorker healthWorker = healthWorkersRepository.findByCallerId(callerId);

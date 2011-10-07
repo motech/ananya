@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/startQuiz")
-public class StartQuizAction extends BaseAction {
+public class StartQuizAction extends HelpEnabledAction {
     private MilestonesRepository milestonesRepository;
 
     @Autowired
@@ -32,14 +32,11 @@ public class StartQuizAction extends BaseAction {
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         final HttpSession session = request.getSession();
-        String healthWorkerCallerId = (String) session.getAttribute(IVR.Attributes.CALLER_ID);
+        String healthWorkerCallerId = healthWorkerCallerIdFromSession(session);
 
-        Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(healthWorkerCallerId);
-        Chapter currentChapter = currentMilestone.getChapter();
+        Chapter currentChapter = currentChapter(healthWorkerCallerId);
 
-        boolean thereAreQuestionsInCurrentChapter = currentChapter.getQuestions().size() > 0;
-
-        if (thereAreQuestionsInCurrentChapter) {
+        if (currentChapter.hasQuestions()) {
             int currentChapterNumber = currentChapter.getNumber();
             //TODO: The following has to be figured out from DB, since every chapter will have a different QUIZ HEADER
             ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER)));
@@ -48,5 +45,15 @@ public class StartQuizAction extends BaseAction {
             session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/startNextChapter");
         }
         return ivrResponseBuilder(request).create().getXML();
+    }
+
+    private Chapter currentChapter(String healthWorkerCallerId) {
+        Milestone currentMilestone = milestonesRepository.currentMilestoneWithLinkedReferences(healthWorkerCallerId);
+        return currentMilestone.getChapter();
+    }
+
+    @Override
+    protected String nextInteraction() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

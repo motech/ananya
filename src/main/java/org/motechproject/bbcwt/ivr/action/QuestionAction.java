@@ -37,7 +37,7 @@ public class QuestionAction extends BaseAction {
         Chapter chapter = chaptersRespository.findByNumber(chapterNumber);
         Question question = chapter.getQuestionByNumber(questionNumber);
 
-        String callerId = (String)request.getSession().getAttribute(IVR.Attributes.CALLER_ID);
+        String callerId = healthWorkerCallerIdFromSession(request.getSession());
 
         milestonesRepository.markNewQuestionStart(callerId, chapterNumber, questionNumber);
 
