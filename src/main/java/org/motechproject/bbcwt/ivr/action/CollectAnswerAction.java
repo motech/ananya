@@ -7,6 +7,7 @@ import org.motechproject.bbcwt.domain.ReportCard;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
@@ -34,6 +35,7 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
         final ValidAnswerHandler validAnswerHandler = new ValidAnswerHandler();
         keyPressHandlerMap.put('1', validAnswerHandler);
         keyPressHandlerMap.put('2', validAnswerHandler);
+        keyPressHandlerMap.put('%', new PlayHelpAction(messages, "forward:"+ExistingUserAction.LOCATION));
         keyPressHandlerMap.put(NO_INPUT, new NoInputHandler());
     }
 

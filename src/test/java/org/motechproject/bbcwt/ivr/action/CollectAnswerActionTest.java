@@ -66,7 +66,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
         String invalidInputMessage = "Invalid_Input.wav";
         when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(invalidInputMessage);
 
-        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "*1"), request, response);
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "#1"), request, response);
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
         assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
@@ -97,6 +97,17 @@ public class CollectAnswerActionTest extends BaseActionTest {
     }
 
     @Test
+    public void shouldPlayHelpAndForwardToExistingUserActionIfHelpIsRequested() {
+        final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
+        when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
+
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "%"), request, response);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
+        assertEquals("forward:/existingUserHandler", nextAction);
+    }
+
+    @Test
     public void shouldSkipQuizAndProceedToNextChapterIfInvalidInputsAreGivenMoreThanPermissibleNumberOfTimes() {
         setInvalidInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_INVALID_INPUT));
 
@@ -105,7 +116,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         when(milestonesRepository.currentMilestoneWithLinkedReferences(healthWorker.getCallerId())).thenReturn(atQuestion1WithLinkedRefs);
 
-        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "*1"), request, response);
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "#1"), request, response);
 
         assertEquals("In case invalid inputs are given more than permissible number of times, skip quiz taking user to the next chapter", "forward:/startNextChapter", nextAction);
 

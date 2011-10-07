@@ -318,11 +318,6 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0011_chapter_1_lesson_4_option_prompt"));
 
-        response = caller.enter("%");
-
-        assertTrue(response.audioPlayed("0003_main_menu_help"));
-        assertTrue(response.promptPlayed("0011_chapter_1_lesson_4_option_prompt"));
-
         response = caller.enter("2");
 
         assertTrue(response.promptPlayed("0012_a_chapter_1_quiz_start_header"));
@@ -340,5 +335,59 @@ public class NewCallTest {
         response = caller.continueWithoutInteraction();
 
         assertTrue("Then if user proceeds, should ask the question", response.promptPlayed("0012_b_chapter_1_q_1"));
+    }
+
+    @Test
+    public void userAsksForHelpWhenAQuestionIsBeingPlayed() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0006_chapter_1_lesson_2"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0007_chapter_1_lesson_2_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0008_chapter_1_lesson_3"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0009_chapter_1_lesson_3_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0010_chapter_1_lesson_4"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0011_chapter_1_lesson_4_option_prompt"));
+
+        response = caller.enter("2");
+
+        assertTrue(response.promptPlayed("0012_a_chapter_1_quiz_start_header"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
+
+        response = caller.enter("%");
+
+        assertTrue("Help should be played if * is pressed during question.", response.audioPlayed("003_main_menu_help"));
+        assertTrue("Followed by the question again.", response.promptPlayed("0012_b_chapter_1_q_1"));
+
     }
 }
