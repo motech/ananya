@@ -57,10 +57,10 @@ public class LessonAction extends HelpEnabledAction {
 
         milestonesRepository.markNewChapterStart(callerId, chapterNumber, lessonNumber);
 
-        final IVRDtmfBuilder collectDtmf = ivrDtmfBuilder(request);
-        collectDtmf.withTimeOutInMillis(1);
-        collectDtmf.addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
-        ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
+        final IVRDtmfBuilder ivrDtmfBuilder = ivrDtmfBuilder(request);
+        ivrDtmfBuilder.withTimeOutInMillis(1);
+        ivrDtmfBuilder.addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
+        ivrResponseBuilder(request).withCollectDtmf(ivrDtmfBuilder.create());
         session.setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, servletPath(request));
         session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
         return ivrResponseBuilder(request).create().getXML();

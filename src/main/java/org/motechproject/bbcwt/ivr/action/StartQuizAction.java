@@ -41,7 +41,7 @@ public class StartQuizAction extends HelpEnabledAction {
         if (currentChapter.hasQuestions()) {
             int currentChapterNumber = currentChapter.getNumber();
             //TODO: The following has to be figured out from DB, since every chapter will have a different QUIZ HEADER
-            CollectDtmf collectDtmf = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER))).create();
+            CollectDtmf collectDtmf = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER))).withTimeOutInMillis(1).create();
             ivrResponseBuilder(request).withCollectDtmf(collectDtmf);
         }
         session.setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, servletPath(request));
