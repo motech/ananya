@@ -75,11 +75,12 @@ public class LessonAction extends HelpEnabledAction {
 
 
     @RequestMapping(value = LessonAction.LOCATION + HelpEnabledAction.HELP_HANDLER, method = RequestMethod.GET)
+    @Override
     public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         return super.helpHandler(ivrRequest, request, response);
     }
 
-    protected String nextInteraction() {
+    protected String nextInteraction(HttpServletRequest request) {
         return "/lessonEndMenu";
     }
 

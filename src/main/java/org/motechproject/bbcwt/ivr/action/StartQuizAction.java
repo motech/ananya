@@ -1,5 +1,6 @@
 package org.motechproject.bbcwt.ivr.action;
 
+import com.ozonetel.kookoo.CollectDtmf;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
@@ -17,8 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/startQuiz")
+@RequestMapping(StartQuizAction.LOCATION)
 public class StartQuizAction extends HelpEnabledAction {
+    public static final String LOCATION = "/startQuiz";
     private MilestonesRepository milestonesRepository;
 
     @Autowired
@@ -39,12 +41,19 @@ public class StartQuizAction extends HelpEnabledAction {
         if (currentChapter.hasQuestions()) {
             int currentChapterNumber = currentChapter.getNumber();
             //TODO: The following has to be figured out from DB, since every chapter will have a different QUIZ HEADER
-            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER)));
-            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapter/" + currentChapterNumber + "/question/1");
-        } else {
-            session.setAttribute(IVR.Attributes.NEXT_INTERACTION, "/startNextChapter");
+            CollectDtmf collectDtmf = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER))).create();
+            ivrResponseBuilder(request).withCollectDtmf(collectDtmf);
         }
+        session.setAttribute(IVR.Attributes.PREV_INTERACTION, servletPath(request));
+        session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
+
         return ivrResponseBuilder(request).create().getXML();
+    }
+
+    @RequestMapping(value = HelpEnabledAction.HELP_HANDLER, method = RequestMethod.GET)
+    @Override
+    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        return super.helpHandler(ivrRequest, request, response);
     }
 
     private Chapter currentChapter(String healthWorkerCallerId) {
@@ -53,7 +62,17 @@ public class StartQuizAction extends HelpEnabledAction {
     }
 
     @Override
-    protected String nextInteraction() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    protected String nextInteraction(HttpServletRequest request) {
+        final HttpSession session = request.getSession();
+        String healthWorkerCallerId = healthWorkerCallerIdFromSession(session);
+
+        Chapter currentChapter = currentChapter(healthWorkerCallerId);
+
+        if (currentChapter.hasQuestions()) {
+            int currentChapterNumber = currentChapter.getNumber();
+            return "/chapter/" + currentChapterNumber + "/question/1";
+        } else {
+            return "/startNextChapter";
+        }
     }
 }
