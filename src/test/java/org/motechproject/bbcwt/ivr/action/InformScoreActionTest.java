@@ -12,9 +12,11 @@ import org.motechproject.bbcwt.repository.ReportCardsRepository;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class InformScoreActionTest extends BaseActionTest {
     private InformScoreAction informScoreAction;
+    public static final String INFORM_SCORE_LOCATION = "/informScore";
 
     @Mock
     private MilestonesRepository milestonesRepository;
@@ -54,6 +56,8 @@ public class InformScoreActionTest extends BaseActionTest {
         when(milestonesRepository.currentMilestoneWithLinkedReferences(callerId)).thenReturn(inLastQuestion);
         when(reportCardsRepository.findByHealthWorker(healthWorker)).thenReturn(reportCard);
 
+        when(request.getServletPath()).thenReturn(INFORM_SCORE_LOCATION);
+
         informScoreAction = new InformScoreAction(milestonesRepository, reportCardsRepository, messages);
     }
 
@@ -76,7 +80,9 @@ public class InformScoreActionTest extends BaseActionTest {
 
         final String scoreReportFile = scoreSummaryForChapter.getScoredMarks() + "_out_of_" + scoreSummaryForChapter.getMaximumMarks() + ".wav";
 
-        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + scoreReportFile);
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + scoreReportFile);
+        verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
+        verify(ivrDtmfBuilder).withTimeOutInMillis(1);
     }
 
     @Test
@@ -86,5 +92,31 @@ public class InformScoreActionTest extends BaseActionTest {
         assertEquals(informScoreAction.scoreReportFileName(null, 2, 4), "2_out_of_4.wav");
         assertEquals(informScoreAction.scoreReportFileName(null, 3, 4), "3_out_of_4.wav");
         assertEquals(informScoreAction.scoreReportFileName(null, 4, 4), "4_out_of_4.wav");
+    }
+
+    @Test
+    public void whileAssemblingScoreShouldSetNextInteractionToHelpInOrderToEnableHelp() {
+        informScoreAction.handle(new IVRRequest(null, null, null, null), request, response);
+        verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, INFORM_SCORE_LOCATION + HelpEnabledAction.HELP_HANDLER);
+    }
+
+    @Test
+    public void shouldPlayHelpAudioIfRequestedByPressingAnyKeyWhenScoreIsBeingInformed() {
+        final String HELP_AUDIO = "ivr_help.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(HELP_AUDIO);
+        String nextAction = informScoreAction.helpHandler(new IVRRequest(null, null, null, "%"), request, response);
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + HELP_AUDIO);
+    }
+
+    @Test
+    public void afterPlayingHelpShouldForwardToInformScoreAgain() {
+        String nextAction = informScoreAction.helpHandler(new IVRRequest(null, null, null, "%"), request, response);
+        assertEquals("Should forward to inform score again after playing help.", "forward:/informScore", nextAction);
+    }
+
+    @Test
+    public void ifHelpIsNotRequestShouldForwardToEndOfQuizMenu() {
+        String nextAction = informScoreAction.helpHandler(new IVRRequest(null, null, null, null), request, response);
+        assertEquals("Should forward to end of quiz menu, if there is no help requested.", "forward:/endOfQuizMenu", nextAction);
     }
 }
