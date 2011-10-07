@@ -7,6 +7,7 @@ import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
 import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class LastLessonEndAnswerAction extends AbstractPromptAnswerHandler {
 
     private class Key1ResponseAction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             Milestone milestone = milestonesRepository.currentMilestoneWithLinkedReferences(ivrContext.getCallerId());
 
             Chapter currentChapter = milestone.getChapter();
@@ -57,7 +58,7 @@ public class LastLessonEndAnswerAction extends AbstractPromptAnswerHandler {
 
     private class Key2ResponseAction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:/startQuiz";
@@ -66,7 +67,7 @@ public class LastLessonEndAnswerAction extends AbstractPromptAnswerHandler {
 
     private class NoKeyPressResponseAction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementNoInputCount();
             int allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
 
@@ -82,7 +83,7 @@ public class LastLessonEndAnswerAction extends AbstractPromptAnswerHandler {
 
     private class InvalidKeyPressResponseAction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementInvalidInputCount();
             int allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
 

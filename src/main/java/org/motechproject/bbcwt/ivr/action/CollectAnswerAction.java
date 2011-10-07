@@ -1,20 +1,29 @@
 package org.motechproject.bbcwt.ivr.action;
 
+import com.ozonetel.kookoo.CollectDtmf;
+import com.ozonetel.kookoo.Response;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.domain.ReportCard;
+import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
+import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
 import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Controller
@@ -29,6 +38,28 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
         super(messages);
         this.milestonesRepository = milestonesRepository;
         this.reportCardsRepository = reportCardsRepository;
+    }
+
+    @Override
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        String toForwardAfterHelp = super.handle(ivrRequest, request, response);
+        request.getSession().setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, toForwardAfterHelp);
+
+        CollectDtmf collectDtmf = ivrDtmfBuilder(request).withTimeOutInMillis(1).create();
+        Response ivrResponse = ivrResponseBuilder(request).withCollectDtmf(collectDtmf).create();
+
+        request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, "/collectAnswer/helpHandler");
+        return ivrResponse.getXML();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/helpHandler")
+    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
+        if(!ivrRequest.hasNoData()) {
+            ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
+        }
+        return (String)request.getSession().getAttribute(IVR.Attributes.NAVIGATION_POST_HELP);
     }
 
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
@@ -50,7 +81,7 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
 
     private class ValidAnswerHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             String callerId = ivrContext.getCallerId();
 
             milestonesRepository.markLastMilestoneFinish(callerId);
@@ -62,10 +93,10 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
             ReportCard.HealthWorkerResponseToQuestion healthWorkerResponseToQuestion = reportCardsRepository.addUserResponse(callerId, currentChapter.getNumber(), lastQuestion.getNumber(), Character.getNumericValue(keyPressed));
 
             if(healthWorkerResponseToQuestion.isCorrect()) {
-                ivrResponseBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getCorrectAnswerExplanationLocation()));
+                ivrDtmfBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getCorrectAnswerExplanationLocation()));
             }
             else {
-                ivrResponseBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getIncorrectAnswerExplanationLocation()));
+                ivrDtmfBuilder.addPlayAudio(absoluteFileLocation(lastQuestion.getIncorrectAnswerExplanationLocation()));
             }
 
             int nextQuestionNumber = lastQuestion.getNumber() + 1;
@@ -84,7 +115,7 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
 
     private class NoInputHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementNoInputCount();
             int allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
 
@@ -106,7 +137,7 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
 
     private class InvalidInputHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementInvalidInputCount();
             int allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
 

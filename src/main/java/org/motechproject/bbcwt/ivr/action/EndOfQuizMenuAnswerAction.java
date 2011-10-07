@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr.action;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     private class StartQuizHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:/startQuiz";
@@ -42,7 +43,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     private class StartNextChapterHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:/startNextChapter";
@@ -51,7 +52,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     private class RepeatLastChapterHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:/repeatLastChapter";
@@ -60,7 +61,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     private class NoInputHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementNoInputCount();
             int allowedNumberOfNoInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
 
@@ -76,7 +77,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
 
     private class InvalidInputHandler implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementInvalidInputCount();
             int allowedNumberOfInvalidInputs = Integer.parseInt(messages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
 

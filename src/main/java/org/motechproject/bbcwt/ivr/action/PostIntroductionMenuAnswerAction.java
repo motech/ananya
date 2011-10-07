@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr.action;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandle
 
     class StartChapterAction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:/chapter/1/lesson/1";
@@ -43,7 +44,7 @@ public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandle
 
     class RepeatIntroduction implements KeyPressHandler {
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.resetInvalidInputCount();
             ivrContext.resetNoInputCount();
             return "forward:" + IntroductionAction.LOCATION;
@@ -58,7 +59,7 @@ public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandle
         }
 
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementNoInputCount();
 
             if(ivrContext.getNoInputCount() > allowedNumberOfNoInputs) {
@@ -79,7 +80,7 @@ public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandle
         }
 
         @Override
-        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder) {
+        public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
             ivrContext.incrementInvalidInputCount();
 
             if(ivrContext.getInvalidInputCount() > allowedNumberOfInvalidInputs) {

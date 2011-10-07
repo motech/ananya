@@ -34,7 +34,7 @@ public abstract class AbstractPromptAnswerHandler extends BaseAction {
         char chosenOption = ivrInput(ivrRequest);
         KeyPressHandler keyPressResponseAction = determineActionToExecute(chosenOption);
 
-        String forward = keyPressResponseAction.execute(chosenOption, ivrContext, ivrResponseBuilder(request));
+        String forward = keyPressResponseAction.execute(chosenOption, ivrContext, ivrResponseBuilder(request), ivrDtmfBuilder(request));
 
         synchronizer.synchronizeSessionWithIVRContext(session, ivrContext);
 

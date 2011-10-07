@@ -7,14 +7,12 @@ import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 import org.motechproject.bbcwt.util.UUIDUtil;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -55,7 +53,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfInputIsNotNumeric() {
+    public void shouldPlayInvalidInputAndSetPostHelpInteractionToPreviousQuestionIfInputIsNotNumeric() {
         final int invalidInputCountBeforeThisInput = 1;
         setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
 
@@ -69,14 +67,19 @@ public class CollectAnswerActionTest extends BaseActionTest {
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "#1"), request, response);
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
-        assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/chapter/1/question/1");
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
         verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
 
         verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
     }
 
+    private void verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled() {
+        verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/collectAnswer/helpHandler");
+    }
+
     @Test
-    public void shouldPlayInvalidInputAndForwardToPreviousQuestionIfAnswerIsNotAValidOption() {
+    public void shouldPlayInvalidInputAndSetPostHelpInteractionToPreviousQuestionIfAnswerIsNotAValidOption() {
         final int invalidInputCountBeforeThisInput = 1;
         setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
 
@@ -89,22 +92,25 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "4"), request, response);
 
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + invalidInputMessage);
-        assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/chapter/1/question/1");
         verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
 
         verifyInvalidInputCountHasBeenIncremented(invalidInputCountBeforeThisInput);
     }
 
     @Test
-    public void shouldPlayHelpAndForwardToExistingUserActionIfHelpIsRequested() {
+    public void shouldPlayHelpAndSetPostHelpInteractionToExistingUserActionIfHelpIsRequested() {
         final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
         when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
         when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "%"), request, response);
+
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
-        assertEquals("forward:/existingUserHandler", nextAction);
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/existingUserHandler");
     }
 
     @Test
@@ -118,8 +124,8 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "#1"), request, response);
 
-        assertEquals("In case invalid inputs are given more than permissible number of times, skip quiz taking user to the next chapter", "forward:/startNextChapter", nextAction);
-
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/startNextChapter");
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -135,7 +141,8 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""), request, response);
 
-        assertEquals("If non-digit is pressed as response, user should be forwarded to the previous question.", "forward:/chapter/1/question/1", nextAction);
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/chapter/1/question/1");
         verify(milestonesRepository, never()).markLastMilestoneFinish(healthWorker.getCallerId());
 
         verifyNoInputCountHasBeenIncremented(noInputCountBeforeThisInput);
@@ -152,8 +159,8 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""), request, response);
 
-        assertEquals("If no inputs are given more than permissible number of times, then skip quiz and proceed to next chapter.", "forward:/startNextChapter", nextAction);
-
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/startNextChapter");
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -177,9 +184,9 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
         verify(reportCardsRepository).addUserResponse(healthWorker.getCallerId(), chapterWithThreeQuestions.getNumber(), question1.getNumber(), keyedResponse);
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
-
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -205,9 +212,9 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
-        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getCorrectAnswerExplanationLocation());
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + question1.getCorrectAnswerExplanationLocation());
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
-
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -232,9 +239,9 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
-        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + question1.getIncorrectAnswerExplanationLocation());
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + question1.getIncorrectAnswerExplanationLocation());
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
-
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -259,9 +266,9 @@ public class CollectAnswerActionTest extends BaseActionTest {
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
 
-        assertEquals("Should forward to play next question if there are more questions.", "forward:/chapter/1/question/2", nextAction);
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/chapter/1/question/2");
         verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
-
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -286,9 +293,10 @@ public class CollectAnswerActionTest extends BaseActionTest {
                 lastQuestion.getNumber(), keyedResponse)).thenReturn(correctResponse);
 
         String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, ""+keyedResponse), request, response);
-        assertEquals("Should forward to score reporting action if there are no more questions.", "forward:/informScore", nextAction);
-        verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
 
+        verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, "forward:/informScore");
+        verify(milestonesRepository).markLastMilestoneFinish(healthWorker.getCallerId());
         verifyInvalidAndNoInputCountsAreReset();
     }
 
