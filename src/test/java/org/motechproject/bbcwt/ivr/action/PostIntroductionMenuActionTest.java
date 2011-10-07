@@ -27,7 +27,7 @@ public class PostIntroductionMenuActionTest extends BaseActionTest {
         action.handle(ivrRequest,request,response);
 
         verify(messages, times(1)).get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS);
-        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION + POST_INTRO_NAVIGATION_OPTIONS);
+        verify(ivrDtmfBuilder, times(1)).addPlayAudio(CONTENT_LOCATION + POST_INTRO_NAVIGATION_OPTIONS);
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
     }
 

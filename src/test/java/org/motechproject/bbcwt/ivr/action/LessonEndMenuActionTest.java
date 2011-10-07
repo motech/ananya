@@ -8,7 +8,6 @@ import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
-import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
@@ -70,7 +69,7 @@ public class LessonEndMenuActionTest extends BaseActionTest {
 
         String endAction = lessonEndMenuAction.handle(ivrRequest,request,response);
 
-        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION + currentLesson.getEndMenuFileName());
+        verify(ivrDtmfBuilder, times(1)).addPlayAudio(CONTENT_LOCATION + currentLesson.getEndMenuFileName());
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
         verify(session, times(1)).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/lessonEndAnswer");
     }
@@ -83,7 +82,7 @@ public class LessonEndMenuActionTest extends BaseActionTest {
 
         String endAction = lessonEndMenuAction.handle(ivrRequest,request,response);
 
-        verify(ivrDtmfBuilder, times(1)).withPlayAudio(CONTENT_LOCATION + lastLesson.getEndMenuFileName());
+        verify(ivrDtmfBuilder, times(1)).addPlayAudio(CONTENT_LOCATION + lastLesson.getEndMenuFileName());
         verify(ivrResponseBuilder, times(1)).withCollectDtmf(collectDtmf);
         verify(session, times(1)).setAttribute(IVR.Attributes.NEXT_INTERACTION, "/chapterEndAnswer");
 

@@ -3,19 +3,25 @@ package org.motechproject.bbcwt.ivr.builder;
 import com.ozonetel.kookoo.CollectDtmf;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IVRDtmfBuilder {
     private String playText;
     private String playAudio;
     private Integer timeOutInMillis;
     private Integer maxLengthOfResponse;
+    private List<Prompt> prompts = new ArrayList<Prompt>(3);
 
-    public IVRDtmfBuilder withPlayText(String playText) {
-        this.playText = playText;
+    public IVRDtmfBuilder addPlayText(String... playTexts) {
+        for (String playText : playTexts)
+            this.prompts.add(new TextPrompt(playText));
         return this;
     }
 
-    public IVRDtmfBuilder withPlayAudio(String playAudio) {
-        this.playAudio = playAudio;
+    public IVRDtmfBuilder addPlayAudio(String... playAudios) {
+        for (String playAudio : playAudios)
+            this.prompts.add(new AudioPrompt(playAudio));
         return this;
     }
 
@@ -31,8 +37,7 @@ public class IVRDtmfBuilder {
 
     public CollectDtmf create() {
         CollectDtmf collectDtmf = new CollectDtmf();
-        if (StringUtils.isNotBlank(playText)) collectDtmf.addPlayText(playText);
-        if (StringUtils.isNotBlank(playAudio)) collectDtmf.addPlayAudio(playAudio);
+        for (Prompt prompt : prompts) prompt.appendPrompt(collectDtmf);
         if (timeOutInMillis != null) collectDtmf.setTimeOut(timeOutInMillis);
         if (maxLengthOfResponse != null) collectDtmf.setMaxDigits(maxLengthOfResponse);
         return collectDtmf;

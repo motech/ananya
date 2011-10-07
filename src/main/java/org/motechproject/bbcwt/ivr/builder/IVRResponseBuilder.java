@@ -1,6 +1,5 @@
 package org.motechproject.bbcwt.ivr.builder;
 
-import com.gargoylesoftware.htmlunit.PromptHandler;
 import com.ozonetel.kookoo.CollectDtmf;
 import com.ozonetel.kookoo.Response;
 import org.apache.commons.lang.StringUtils;
@@ -50,7 +49,7 @@ public class IVRResponseBuilder {
     public Response create() {
         Response response = new Response();
         if (StringUtils.isNotBlank(sid)) response.setSid(sid);
-        for (Prompt prompt : prompts) prompt.appendPrompt(response);
+        for (Prompt prompt : prompts) prompt.appendMessage(response);
         if (StringUtils.isNotBlank(nextUrl)) response.addGotoNEXTURL(this.nextUrl);
         if (collectDtmf != null) response.addCollectDtmf(collectDtmf);
         if (isHangUp) response.addHangup();
@@ -59,7 +58,8 @@ public class IVRResponseBuilder {
 }
 
 interface Prompt {
-    void appendPrompt(Response ivrResponse);
+    void appendMessage(Response ivrResponse);
+    void appendPrompt(CollectDtmf collectDtmf);
 }
 
 class TextPrompt implements Prompt {
@@ -69,8 +69,13 @@ class TextPrompt implements Prompt {
     }
 
     @Override
-    public void appendPrompt(Response ivrResponse) {
+    public void appendMessage(Response ivrResponse) {
         ivrResponse.addPlayText(playText);
+    }
+
+    @Override
+    public void appendPrompt(CollectDtmf collectDtmf) {
+        collectDtmf.addPlayText(playText);
     }
 }
 
@@ -82,7 +87,12 @@ class AudioPrompt implements Prompt {
 
 
     @Override
-    public void appendPrompt(Response ivrResponse) {
+    public void appendMessage(Response ivrResponse) {
         ivrResponse.addPlayAudio(audioLocation);
+    }
+
+    @Override
+    public void appendPrompt(CollectDtmf collectDtmf) {
+        collectDtmf.addPlayAudio(audioLocation);
     }
 }

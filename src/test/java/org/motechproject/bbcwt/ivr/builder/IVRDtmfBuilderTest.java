@@ -18,19 +18,13 @@ public class IVRDtmfBuilderTest {
 
     @Test
     public void shouldAddPlayTextOnlyIfItIsNotEmpty() {
-        CollectDtmf collectDtmf = builder.withPlayText("nova").create();
+        CollectDtmf collectDtmf = builder.addPlayText("nova").create();
         assertTrue(collectDtmf.getXML().contains("nova"));
-
-        collectDtmf = builder.withPlayText("").create();
-        assertFalse(collectDtmf.getXML().contains("nova"));
     }
 
     @Test
     public void shouldAddPlayAudioOnlyIfItIsNotEmpty() {
-        CollectDtmf collectDtmf = builder.withPlayAudio("nova").create();
+        CollectDtmf collectDtmf = builder.addPlayAudio("nova").create();
         assertTrue(collectDtmf.getXML().contains("nova"));
-
-        collectDtmf = builder.withPlayAudio("").create();
-        assertFalse(collectDtmf.getXML().contains("nova"));
     }
 }

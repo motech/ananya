@@ -54,7 +54,7 @@ public class LessonEndMenuAction extends BaseAction {
 
         Lesson lastPlayedLesson = currentChapter.getLessonById(milestone.getLessonId());
 
-        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(lastPlayedLesson.getEndMenuFileName()));
+        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(lastPlayedLesson.getEndMenuFileName()));
         responseBuilder.withCollectDtmf(dtmfBuilder.create());
 
         if(currentChapter.nextLesson(lastPlayedLesson) == null){

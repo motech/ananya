@@ -2,7 +2,6 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.ivr.IVR;
@@ -15,7 +14,6 @@ import java.util.Date;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -55,7 +53,7 @@ public class StartQuizActionTest extends BaseActionTest {
 
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
 
-        verify(ivrDtmfBuilder).withPlayAudio(CONTENT_LOCATION + QUIZ_HEADER_AUDIO);
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + QUIZ_HEADER_AUDIO);
         verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
     }
 
@@ -97,7 +95,7 @@ public class StartQuizActionTest extends BaseActionTest {
 
         String nextAction = startQuizAction.helpHandler(new IVRRequest(), request, response);
 
-        assertEquals(nextAction, "forward:/chapter/" +currentChapter.getNumber() + "/question/1");
+        assertEquals(nextAction, "forward:/chapter/" + currentChapter.getNumber() + "/question/1");
     }
 
     @Test

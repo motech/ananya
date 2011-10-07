@@ -29,7 +29,7 @@ public class PostIntroductionMenuAction extends BaseAction {
     @ResponseBody
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         IVRResponseBuilder responseBuilder= ivrResponseBuilder(request);
-        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).withPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS)));
+        IVRDtmfBuilder dtmfBuilder = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_OPTIONS)));
         responseBuilder.withCollectDtmf(dtmfBuilder.create());
         request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, PostIntroductionMenuAnswerAction.LOCATION);
         return responseBuilder.create().getXML();

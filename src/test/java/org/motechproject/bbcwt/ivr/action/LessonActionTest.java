@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.ivr.action;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Lesson;
@@ -16,7 +15,6 @@ import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.util.DateUtil;
 
-import javax.xml.stream.Location;
 import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
@@ -86,7 +84,7 @@ public class LessonActionTest extends BaseActionTest {
     {
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
 
-        verify(ivrDtmfBuilder).withPlayAudio(CONTENT_LOCATION + lesson.getFileName());
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + lesson.getFileName());
         verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
     }
 

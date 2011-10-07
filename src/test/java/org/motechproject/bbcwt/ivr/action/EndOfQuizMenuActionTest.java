@@ -23,7 +23,7 @@ public class EndOfQuizMenuActionTest extends BaseActionTest {
         final String IVR_TO_BE_PLAYED_AFTER_QUIZ = "options.wav";
         when(messages.get(IVRMessage.END_OF_QUIZ_OPTIONS)).thenReturn(IVR_TO_BE_PLAYED_AFTER_QUIZ);
         endOfQuizMenuAction.handle(new IVRRequest(), request, response);
-        verify(ivrDtmfBuilder).withPlayAudio(CONTENT_LOCATION + IVR_TO_BE_PLAYED_AFTER_QUIZ);
+        verify(ivrDtmfBuilder).addPlayAudio(CONTENT_LOCATION + IVR_TO_BE_PLAYED_AFTER_QUIZ);
         verify(ivrDtmfBuilder).create();
         verify(ivrResponseBuilder).withCollectDtmf(collectDtmf);
     }

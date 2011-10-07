@@ -59,7 +59,7 @@ public class LessonAction extends HelpEnabledAction {
 
         final IVRDtmfBuilder collectDtmf = ivrDtmfBuilder(request);
         collectDtmf.withTimeOutInMillis(1);
-        collectDtmf.withPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
+        collectDtmf.addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
         ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
         session.setAttribute(IVR.Attributes.PREV_INTERACTION, servletPath(request));
         session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
