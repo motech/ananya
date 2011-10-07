@@ -97,7 +97,7 @@ public class LessonActionTest extends BaseActionTest {
     @Test
     public void shouldSetThePreviousInteractionToCurrentLocationWhenRenderingLesson() {
         String nextAction = chapterAction.get(chapterNumber, lessonNumber, request, response);
-        verify(session).setAttribute(IVR.Attributes.PREV_INTERACTION, LOCATION_OF_CURRENT_HANDLER);
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, LOCATION_OF_CURRENT_HANDLER);
     }
     @Test
     public void shouldSetTheMilestone(){
@@ -123,7 +123,7 @@ public class LessonActionTest extends BaseActionTest {
     @Test
     public void shouldForwardToPreviousLocationAfterPlayingHelp() {
         final String LOCATION_FROM_WHERE_HELP_WAS_REQUESTED = "/locationFromWhereHelpWasRequested";
-        when(session.getAttribute(IVR.Attributes.PREV_INTERACTION)).thenReturn(LOCATION_FROM_WHERE_HELP_WAS_REQUESTED);
+        when(session.getAttribute(IVR.Attributes.NAVIGATION_POST_HELP)).thenReturn(LOCATION_FROM_WHERE_HELP_WAS_REQUESTED);
         String nextAction = chapterAction.helpHandler(new IVRRequest(null, null, null, "*"), request, response);
         assertEquals("Should navigate to previous action after help is played.", nextAction, "forward:" + LOCATION_FROM_WHERE_HELP_WAS_REQUESTED);
     }

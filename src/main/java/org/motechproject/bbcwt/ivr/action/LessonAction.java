@@ -61,7 +61,7 @@ public class LessonAction extends HelpEnabledAction {
         collectDtmf.withTimeOutInMillis(1);
         collectDtmf.addPlayAudio(absoluteFileLocation(lessonToPlay.getFileName()));
         ivrResponseBuilder(request).withCollectDtmf(collectDtmf.create());
-        session.setAttribute(IVR.Attributes.PREV_INTERACTION, servletPath(request));
+        session.setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, servletPath(request));
         session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
         return ivrResponseBuilder(request).create().getXML();
     }
@@ -80,7 +80,13 @@ public class LessonAction extends HelpEnabledAction {
         return super.helpHandler(ivrRequest, request, response);
     }
 
-    protected String nextInteraction(HttpServletRequest request) {
+    @Override
+    protected String postHelpInteraction(HttpServletRequest request) {
+        return (String)request.getSession().getAttribute(IVR.Attributes.NAVIGATION_POST_HELP);
+    }
+
+    @Override
+    protected String interactionWhenNoHelpIsRequested(HttpServletRequest request) {
         return "/lessonEndMenu";
     }
 

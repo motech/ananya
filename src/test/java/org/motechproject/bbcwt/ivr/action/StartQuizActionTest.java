@@ -76,7 +76,7 @@ public class StartQuizActionTest extends BaseActionTest {
         String nextAction = startQuizAction.handle(new IVRRequest(), request, response);
 
         verify(session).setAttribute(IVR.Attributes.NEXT_INTERACTION, LOCATION_OF_CURRENT_HANDLER + "/helpHandler");
-        verify(session).setAttribute(IVR.Attributes.PREV_INTERACTION, LOCATION_OF_CURRENT_HANDLER);
+        verify(session).setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, LOCATION_OF_CURRENT_HANDLER);
     }
 
     @Test

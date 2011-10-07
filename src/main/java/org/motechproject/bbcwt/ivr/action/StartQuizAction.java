@@ -44,7 +44,7 @@ public class StartQuizAction extends HelpEnabledAction {
             CollectDtmf collectDtmf = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.QUIZ_HEADER))).create();
             ivrResponseBuilder(request).withCollectDtmf(collectDtmf);
         }
-        session.setAttribute(IVR.Attributes.PREV_INTERACTION, servletPath(request));
+        session.setAttribute(IVR.Attributes.NAVIGATION_POST_HELP, servletPath(request));
         session.setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
 
         return ivrResponseBuilder(request).create().getXML();
@@ -62,7 +62,7 @@ public class StartQuizAction extends HelpEnabledAction {
     }
 
     @Override
-    protected String nextInteraction(HttpServletRequest request) {
+    protected String interactionWhenNoHelpIsRequested(HttpServletRequest request) {
         final HttpSession session = request.getSession();
         String healthWorkerCallerId = healthWorkerCallerIdFromSession(session);
 
@@ -74,5 +74,10 @@ public class StartQuizAction extends HelpEnabledAction {
         } else {
             return "/startNextChapter";
         }
+    }
+
+    @Override
+    protected String postHelpInteraction(HttpServletRequest request) {
+        return (String)request.getSession().getAttribute(IVR.Attributes.NAVIGATION_POST_HELP);
     }
 }

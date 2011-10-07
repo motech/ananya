@@ -35,7 +35,7 @@ public class IVR {
 
     public static class Attributes {
         public static final String CALLER_ID = "caller_id";
-        public static final String PREV_INTERACTION = "prev_interaction";
+        public static final String NAVIGATION_POST_HELP = "navigation_post_help";
         public static final String NEXT_INTERACTION = "next_interaction";
         public static final String DTMF_BUILDER = "dtmf_builder";
         public static final String RESPONSE_BUILDER = "ivr_response_builder";

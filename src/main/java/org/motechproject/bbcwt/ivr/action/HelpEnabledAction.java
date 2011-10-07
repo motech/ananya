@@ -1,6 +1,5 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 
@@ -12,14 +11,17 @@ public abstract class HelpEnabledAction extends BaseAction {
 
     public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         if(ivrRequest.hasNoData()) {
-            return "forward:" + nextInteraction(request);
+            return "forward:" + interactionWhenNoHelpIsRequested(request);
         } else {
             ivrResponseBuilder(request).addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
-            return "forward:" + request.getSession().getAttribute(IVR.Attributes.PREV_INTERACTION);
+            return "forward:" + postHelpInteraction(request);
         }
     }
 
-    protected abstract String nextInteraction(HttpServletRequest request);
+
+    protected abstract String postHelpInteraction(HttpServletRequest request);
+
+    protected abstract String interactionWhenNoHelpIsRequested(HttpServletRequest request);
 
     protected String helpInteractionLocation(HttpServletRequest request) {
         return servletPath(request).concat(HELP_HANDLER);
