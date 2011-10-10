@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr.action;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
         keyPressHandlerMap.put('1', new StartQuizHandler());
         keyPressHandlerMap.put('2', new StartNextChapterHandler());
         keyPressHandlerMap.put('3', new RepeatLastChapterHandler());
+        keyPressHandlerMap.put('%', new PlayHelpAction(messages, "forward:/endOfQuizMenu"));
         keyPressHandlerMap.put(NO_INPUT, new NoInputHandler());
     }
 

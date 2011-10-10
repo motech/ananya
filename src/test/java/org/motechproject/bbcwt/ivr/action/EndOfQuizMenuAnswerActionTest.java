@@ -49,6 +49,28 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
     }
 
     @Test
+    public void shouldPlayHelpIfRequested() {
+        final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
+        when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+
+        String nextAction = endOfQuizMenuAnswerAction.handle(ivrRequest, request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
+    }
+
+    @Test
+    public void shouldFowardToEndOfQuizMenuAfterHelpHasBeenPlayed() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+
+        String nextAction = endOfQuizMenuAnswerAction.handle(ivrRequest, request, response);
+
+        assertThat(nextAction, is("forward:/endOfQuizMenu"));
+    }
+
+    @Test
     public void shouldForwardUserToEndOfQuizMenuIfInvalidInputIsPressed() {
         final int invalidInputCountBeforeThisInput = 1;
         setInvalidInputCountBeforeThisInputAs(invalidInputCountBeforeThisInput);
