@@ -39,6 +39,12 @@ public class ChapterSeed extends Seed {
         chapter1.addQuestion(question3);
         chapter1.addQuestion(question4);
 
+        chapter1.setGoodScoreSummary("Badhai ho acha khele aap. Panchwa hissa Parivaar niyojan zaroori hai yaad rakhe.");
+        chapter1.setBelowParScoreSummary("Panchwa hissa Parivaar niyojan zaroori hai hamesha yaad rakhe.");
+
+        chapter1.setCourseSummaryPrompt("0034_ch_5_summary.wav");
+        chapter1.setCertificateAndCourseSummaryPrompt("0035_ch_5_mini_certificate_and_summary.wav");
+
         chapters.add(chapter1);
 
         Chapter chapter2 = new Chapter(2);

@@ -10,6 +10,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class ChapterTest {
+
+    public static final String BELOW_PAR_SCORE_SUMMARY = "This is below par score summary";
+    public static final String GOOD_SCORE_SUMMARY = "This is good score summary";
+    public static final String CERTIFICATE_AND_COURSE_SUMMARY_PROMPT = "Want certificate and course summary?";
+    public static final String JUST_COURSE_SUMMARY_PROMPT = "No certificate, but do you want just course summary prompt ?";
+
     @Test
     public void shouldReturnLessonGivenANumber() {
         Chapter chapter = new Chapter(1);
@@ -158,5 +164,41 @@ public class ChapterTest {
         Lesson obtainedLesson = chapter.getLessonById(wantedLessonId);
 
         assertNull(obtainedLesson);
+    }
+
+    @Test
+    public void shouldReturnGoodScoreSummaryWhenScoreIsGood() {
+        Chapter chapter = new Chapter(1);
+        chapter.setBelowParScoreSummary(BELOW_PAR_SCORE_SUMMARY);
+        chapter.setGoodScoreSummary(GOOD_SCORE_SUMMARY);
+        final int someGoodScore = 3;
+        assertThat(chapter.getSummaryForScore(someGoodScore), is(GOOD_SCORE_SUMMARY));
+    }
+
+    @Test
+    public void shouldReturnBelowParScoreSummaryWhenScoreIsNotGood() {
+        Chapter chapter = new Chapter(1);
+        chapter.setBelowParScoreSummary(BELOW_PAR_SCORE_SUMMARY);
+        chapter.setGoodScoreSummary(GOOD_SCORE_SUMMARY);
+        final int someBadScore = 2;
+        assertThat(chapter.getSummaryForScore(someBadScore), is(BELOW_PAR_SCORE_SUMMARY));
+    }
+
+    @Test
+    public void shouldReturnCertificateAndSummaryPromptWhenScoreIsGood() {
+        Chapter chapter = new Chapter(1);
+        chapter.setCertificateAndCourseSummaryPrompt(CERTIFICATE_AND_COURSE_SUMMARY_PROMPT);
+        chapter.setCourseSummaryPrompt(JUST_COURSE_SUMMARY_PROMPT);
+        final int someGoodScore = 3;
+        assertThat(chapter.getCourseSummaryPromptForScore(someGoodScore), is(CERTIFICATE_AND_COURSE_SUMMARY_PROMPT));
+    }
+
+    @Test
+    public void shouldReturnJustCourseSummaryPromptWhenScoreIsNotGood() {
+        Chapter chapter = new Chapter(1);
+        chapter.setCertificateAndCourseSummaryPrompt(CERTIFICATE_AND_COURSE_SUMMARY_PROMPT);
+        chapter.setCourseSummaryPrompt(JUST_COURSE_SUMMARY_PROMPT);
+        final int someBadScore = 2;
+        assertThat(chapter.getCourseSummaryPromptForScore(someBadScore), is(JUST_COURSE_SUMMARY_PROMPT));
     }
 }

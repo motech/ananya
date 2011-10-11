@@ -14,6 +14,12 @@ public class Chapter extends BaseCouchEntity {
 
     private List<Lesson> lessons = new ArrayList<Lesson>();
     private List<Question> questions = new ArrayList<Question>();
+    private String goodScoreSummary;
+    private String belowParScoreSummary;
+    private String certificateAndCourseSummaryPrompt;
+    private String courseSummaryPrompt;
+
+    private static final int GOOD_SCORE = 3;
 
     public Chapter() {
     }
@@ -107,4 +113,49 @@ public class Chapter extends BaseCouchEntity {
     public boolean hasQuestions() {
         return questions.size() > 0;
     }
+
+    public String getGoodScoreSummary() {
+        return goodScoreSummary;
+    }
+
+    public void setGoodScoreSummary(String summary) {
+        this.goodScoreSummary = summary;
+    }
+
+    public void setBelowParScoreSummary(String belowParScoreSummary) {
+        this.belowParScoreSummary = belowParScoreSummary;
+    }
+
+    public void setCourseSummaryPrompt(String courseSummaryPrompt) {
+        this.courseSummaryPrompt = courseSummaryPrompt;
+    }
+
+    public void setCertificateAndCourseSummaryPrompt(String certificateAndCourseSummaryPrompt) {
+        this.certificateAndCourseSummaryPrompt = certificateAndCourseSummaryPrompt;
+    }
+
+    public String getBelowParScoreSummary() {
+        return belowParScoreSummary;
+    }
+
+    public String getCertificateAndCourseSummaryPrompt() {
+        return certificateAndCourseSummaryPrompt;
+    }
+
+    public String getCourseSummaryPrompt() {
+        return courseSummaryPrompt;
+    }
+
+    public String getSummaryForScore(int score) {
+        return isGoodScore(score)?getGoodScoreSummary():getBelowParScoreSummary();
+    }
+
+    public String getCourseSummaryPromptForScore(int score) {
+        return isGoodScore(score)?getCertificateAndCourseSummaryPrompt():getCourseSummaryPrompt();
+    }
+
+    private boolean isGoodScore(int score) {
+        return score >= GOOD_SCORE;
+    }
+
 }
