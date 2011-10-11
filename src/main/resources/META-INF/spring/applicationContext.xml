@@ -16,7 +16,7 @@
     <context:component-scan base-package="org.motechproject.bbcwt">
     </context:component-scan>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:applicationPlatformCommon.xml"/>
 
     <aop:aspectj-autoproxy/>
 

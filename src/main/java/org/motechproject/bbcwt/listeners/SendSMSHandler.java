@@ -4,10 +4,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
-import org.motechproject.bbcwt.ivr.EventKeys;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.model.MotechEvent;
-import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,6 @@ public class SendSMSHandler {
 
     private HttpClient httpClient = new HttpClient();
 
-    @MotechListener(subjects = EventKeys.SEND_SMS)
     public void sendSMS(MotechEvent motechEvent) {
         final Map<String,Object> parameters = motechEvent.getParameters();
 
