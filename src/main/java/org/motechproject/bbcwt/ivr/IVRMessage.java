@@ -18,6 +18,8 @@ public class IVRMessage {
     public static final String QUIZ_HEADER = "quiz.header";
     public static final String ALLOWED_NUMBER_OF_NO_INPUTS = "allowed.number.of.no.inputs";
     public static final String ALLOWED_NUMBER_OF_INVALID_INPUTS = "allowed.number.of.invalid.inputs";
+    public static final String KOOKOO_OUTBOUND_SMS_URL = "kookoo.outbound.sms.url";
+    public static final String KOOKOO_API_KEY = "kookoo.api.key";
 
     @Qualifier("ivrProperties")
     @Autowired

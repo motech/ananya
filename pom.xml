@@ -79,6 +79,38 @@
                                     <goal>run</goal>
                                 </goals>
                             </execution>
+                            <execution>
+                                <id>start-activemq</id>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <target name="start.activemq">
+                                        <condition property="script.interpreter" value="bash" else="cmd">
+                                            <os family="unix"/>
+                                        </condition>
+                                        <condition property="script.switch" value="/c" else="">
+                                            <not>
+                                                <os family="unix"/>
+                                            </not>
+                                        </condition>
+                                        <condition property="script.suffix" value="sh" else="bat">
+                                            <os family="unix"/>
+                                        </condition>
+                                        <condition property="activemq.home" value="${activemq.unix.home}"
+                                                   else="${activemq.windows.home}">
+                                            <os family="unix"/>
+                                        </condition>
+
+                                        <echo message="Waiting for ActiveMQ to start on ${os.name}"/>
+                                        <exec executable="${script.interpreter}" dir="${activemq.home}" spawn="true">
+                                            <arg line="${script.switch} ${activemq.home}/bin/activemq.${script.suffix}"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+
                         </executions>
                     </plugin>
                     <plugin>
@@ -526,6 +558,11 @@
             <groupId>com.googlecode.lambdaj</groupId>
             <artifactId>lambdaj</artifactId>
             <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-api</artifactId>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>

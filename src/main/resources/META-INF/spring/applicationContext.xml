@@ -16,6 +16,8 @@
     <context:component-scan base-package="org.motechproject.bbcwt">
     </context:component-scan>
 
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+
     <aop:aspectj-autoproxy/>
 
     <bean id="bbcwtCouchDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
