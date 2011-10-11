@@ -36,7 +36,7 @@ public class LessonEndAnswerAction extends AbstractPromptAnswerHandler {
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
         keyPressHandlerMap.put('1', new RestartPreviousLessonAction());
         keyPressHandlerMap.put('2', new StartNextLessonAction());
-        keyPressHandlerMap.put('%', new PlayHelpAction(messages, "forward:/lessonEndMenu"));
+        keyPressHandlerMap.put('*', new PlayHelpAction(messages, "forward:/lessonEndMenu"));
         keyPressHandlerMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 

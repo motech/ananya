@@ -54,7 +54,7 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
         when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
         when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
 
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
 
         String nextAction = endOfQuizMenuAnswerAction.handle(ivrRequest, request, response);
 
@@ -63,7 +63,7 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
 
     @Test
     public void shouldFowardToEndOfQuizMenuAfterHelpHasBeenPlayed() {
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
 
         String nextAction = endOfQuizMenuAnswerAction.handle(ivrRequest, request, response);
 
@@ -78,7 +78,7 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
         final String INVALID_INPUT = "invalid input";
         when(messages.get(IVRMessage.INVALID_INPUT)).thenReturn(INVALID_INPUT);
 
-        String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "*"), request, response);
+        String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "#"), request, response);
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + INVALID_INPUT);
         assertThat(nextAction, is("forward:/endOfQuizMenu"));
@@ -90,7 +90,7 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
     public void shouldForwardUserToNextChapterIfInvalidInputIsPressedMoreThanPermissibleTimes() {
         setInvalidInputCountBeforeThisInputAs(Integer.parseInt(ALLOWED_NUMBER_OF_INVALID_INPUT));
 
-        String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "*"), request, response);
+        String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "#"), request, response);
 
         assertThat(nextAction, is("forward:/startNextChapter"));
 

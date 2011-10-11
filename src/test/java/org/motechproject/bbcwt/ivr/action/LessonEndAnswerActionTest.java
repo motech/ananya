@@ -85,7 +85,7 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
         when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
         when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
 
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
         String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
 
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
@@ -93,7 +93,7 @@ public class LessonEndAnswerActionTest extends BaseActionTest {
 
     @Test
     public void afterHelpShouldForwardToLessonEndMenu() {
-        IVRRequest ivrRequest = new IVRRequest(null, null, null, "%");
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
         String nextAction = lessonEndAnswerAction.handle(ivrRequest, request, response);
         assertEquals(nextAction, "forward:/lessonEndMenu");
     }

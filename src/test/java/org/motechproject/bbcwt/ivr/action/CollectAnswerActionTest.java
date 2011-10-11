@@ -106,7 +106,7 @@ public class CollectAnswerActionTest extends BaseActionTest {
         when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
         when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
 
-        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "%"), request, response);
+        String nextAction = collectAnswerAction.handle(new IVRRequest(null, null, null, "*"), request, response);
 
         verifyThatEveryActionIsForwardingToHelpHandlerSoThatHelpIsEnabled();
         verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);

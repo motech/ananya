@@ -25,7 +25,7 @@ public class EndOfQuizMenuAnswerAction extends AbstractPromptAnswerHandler {
         keyPressHandlerMap.put('1', new StartQuizHandler());
         keyPressHandlerMap.put('2', new StartNextChapterHandler());
         keyPressHandlerMap.put('3', new RepeatLastChapterHandler());
-        keyPressHandlerMap.put('%', new PlayHelpAction(messages, "forward:/endOfQuizMenu"));
+        keyPressHandlerMap.put('*', new PlayHelpAction(messages, "forward:/endOfQuizMenu"));
         keyPressHandlerMap.put(NO_INPUT, new NoInputHandler());
     }
 

@@ -181,7 +181,7 @@ public class NewCallTest {
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
         assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
@@ -212,7 +212,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
         assertTrue("Timeout should be 1 millisecond, if the help is in lesson.", response.collectDtmf().hasTimeOut(1));
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("Hitting any key while a lesson is being played should take user to help.",
                 response.audioPlayed("0003_main_menu_help"));
@@ -241,7 +241,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue(response.audioPlayed("0003_main_menu_help"));
         assertTrue(response.promptPlayed("0005_chapter_1_lesson_1_option_prompt"));
@@ -286,7 +286,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0011_chapter_1_lesson_4_option_prompt"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue(response.audioPlayed("0003_main_menu_help"));
         assertTrue(response.promptPlayed("0011_chapter_1_lesson_4_option_prompt"));
@@ -397,7 +397,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("Help should be played if * is pressed during question.", response.audioPlayed("003_main_menu_help"));
 
@@ -453,7 +453,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("Help should be played if * is pressed during question.", response.audioPlayed("003_main_menu_help"));
 
@@ -465,7 +465,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0013_chapter_1_quiz_q_1_correct_answer"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("If help is requested it should be played.", response.audioPlayed("003_main_menu_help"));
 
@@ -567,7 +567,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("3_out_of_4"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("Help should be played", response.audioPlayed("003_main_menu_help"));
 
@@ -677,7 +677,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0029_chapter_1_end_option_prompt"));
 
-        response = caller.enter("%");
+        response = caller.enter("*");
 
         assertTrue("If help is requested it should be played.", response.audioPlayed("003_main_menu_help"));
 

@@ -66,7 +66,7 @@ public class CollectAnswerAction extends AbstractPromptAnswerHandler {
         final ValidAnswerHandler validAnswerHandler = new ValidAnswerHandler();
         keyPressHandlerMap.put('1', validAnswerHandler);
         keyPressHandlerMap.put('2', validAnswerHandler);
-        keyPressHandlerMap.put('%', new PlayHelpAction(messages, "forward:"+ExistingUserAction.LOCATION));
+        keyPressHandlerMap.put('*', new PlayHelpAction(messages, "forward:"+ExistingUserAction.LOCATION));
         keyPressHandlerMap.put(NO_INPUT, new NoInputHandler());
     }
 
