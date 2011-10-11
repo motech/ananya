@@ -16,6 +16,8 @@ public class PlayHelpAction implements KeyPressHandler {
 
     @Override
     public String execute(Character keyPressed, IVRContext ivrContext, IVRResponseBuilder ivrResponseBuilder, IVRDtmfBuilder ivrDtmfBuilder) {
+        ivrContext.resetInvalidInputCount();
+        ivrContext.resetNoInputCount();
         ivrResponseBuilder.addPlayAudio(messages.absoluteFileLocation(messages.get(IVRMessage.IVR_HELP)));
         return forwardTo;
     }

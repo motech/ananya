@@ -100,7 +100,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0015_chapter_1_quiz_q_2"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0017_chapter_1_quiz_q_2_wrong_answer"));
 
@@ -108,7 +108,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0018_chapter_1_quiz_q_3"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0019_chapter_1_quiz_q_3_correct_answer"));
 
@@ -116,13 +116,21 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0021_chapter_1_quiz_q_4"));
 
-        response = caller.enter("1");
+        response = caller.enter("2");
 
         assertTrue(response.promptPlayed("0022_chapter_1-quiz_q_4_correct_answer"));
 
         response = caller.continueWithoutInteraction();
 
         assertTrue(response.promptPlayed("3_out_of_4"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0035_ch_5_mini_certificate_and_summary"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0035_ch_5_mini_certificate_and_summary"));
 
         response = caller.continueWithoutInteraction();
 
@@ -543,7 +551,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0015_chapter_1_quiz_q_2"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0017_chapter_1_quiz_q_2_wrong_answer"));
 
@@ -553,7 +561,7 @@ public class NewCallTest {
 
         response = caller.enter("2");
 
-        assertTrue(response.promptPlayed("0019_chapter_1_quiz_q_3_correct_answer"));
+        assertTrue(response.promptPlayed("0020_chapter_1_quiz_q_3_wrong_answer"));
 
         response = caller.continueWithoutInteraction();
 
@@ -561,21 +569,21 @@ public class NewCallTest {
 
         response = caller.enter("1");
 
-        assertTrue(response.promptPlayed("0022_chapter_1-quiz_q_4_correct_answer"));
+        assertTrue(response.promptPlayed("0023_chapter_1_quiz_q_4_wrong_answer"));
 
         response = caller.continueWithoutInteraction();
 
-        assertTrue(response.promptPlayed("3_out_of_4"));
+        assertTrue(response.promptPlayed("1_out_of_4"));
 
         response = caller.enter("*");
 
         assertTrue("Help should be played", response.audioPlayed("003_main_menu_help"));
 
-        assertTrue("And then user should be taken to inform score again.", response.promptPlayed("3_out_of_4"));
+        assertTrue("And then user should be taken to inform score again.", response.promptPlayed("1_out_of_4"));
 
         response = caller.continueWithoutInteraction();
 
-        assertTrue("After that if user does not choose to hear help, chapter end option prompt should be played.", response.promptPlayed("0029_chapter_1_end_option_prompt"));
+        assertTrue("After that if user does not choose to hear help, chapter end option prompt should be played.", response.promptPlayed("0034_ch_5_summary"));
     }
 
     @Test
@@ -649,7 +657,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0015_chapter_1_quiz_q_2"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0017_chapter_1_quiz_q_2_wrong_answer"));
 
@@ -657,7 +665,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0018_chapter_1_quiz_q_3"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0019_chapter_1_quiz_q_3_correct_answer"));
 
@@ -665,13 +673,21 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0021_chapter_1_quiz_q_4"));
 
-        response = caller.enter("1");
+        response = caller.enter("2");
 
         assertTrue(response.promptPlayed("0022_chapter_1-quiz_q_4_correct_answer"));
 
         response = caller.continueWithoutInteraction();
 
         assertTrue(response.promptPlayed("3_out_of_4"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0035_ch_5_mini_certificate_and_summary"));
+
+        response = caller.continueWithoutInteraction();
+
+        assertTrue(response.promptPlayed("0035_ch_5_mini_certificate_and_summary"));
 
         response = caller.continueWithoutInteraction();
 

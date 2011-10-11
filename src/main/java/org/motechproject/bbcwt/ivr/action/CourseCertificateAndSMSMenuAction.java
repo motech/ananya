@@ -9,7 +9,9 @@ import org.motechproject.bbcwt.domain.ReportCard;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
+import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping(value="/informScore")
-public class InformScoreAction extends HelpEnabledAction {
+@RequestMapping(value= CourseCertificateAndSMSMenuAction.LOCATION)
+public class CourseCertificateAndSMSMenuAction extends BaseAction {
+
+    public static final String LOCATION = "/certificateAndSMSMenu";
     private MilestonesRepository milestonesRepository;
     private ReportCardsRepository reportCardsRepository;
 
     @Autowired
-    public InformScoreAction(MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, IVRMessage messages) {
+    public CourseCertificateAndSMSMenuAction(MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.reportCardsRepository = reportCardsRepository;
         this.messages = messages;
@@ -46,35 +50,14 @@ public class InformScoreAction extends HelpEnabledAction {
         Chapter currentChapter = milestone.getChapter();
 
         ReportCard reportCard = reportCardsRepository.findByHealthWorker(healthWorker);
-        ReportCard.ScoreSummary chapterScoreSummary = reportCard.scoreEarned(currentChapter);
+        int score = reportCard.scoreEarned(currentChapter).getScoredMarks();
+        final String promptToBePlayed = currentChapter.getCourseSummaryPromptForScore(score);
+        final IVRDtmfBuilder ivrDtmfBuilder = ivrDtmfBuilder(request);
+        ivrDtmfBuilder.addPlayAudio(absoluteFileLocation(promptToBePlayed));
+        final IVRResponseBuilder ivrResponseBuilder = ivrResponseBuilder(request);
+        ivrResponseBuilder.withCollectDtmf(ivrDtmfBuilder.create());
 
-        String scoreReportFileName = scoreReportFileName(currentChapter, chapterScoreSummary.getScoredMarks(), chapterScoreSummary.getMaximumMarks());
-
-        CollectDtmf collectDtmf = ivrDtmfBuilder(request).addPlayAudio(absoluteFileLocation(scoreReportFileName)).withTimeOutInMillis(1).create();
-        IVRResponseBuilder ivrResponseBuilder = ivrResponseBuilder(request).withCollectDtmf(collectDtmf);
-
-        request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, helpInteractionLocation(request));
-
+        request.getSession().setAttribute(IVR.Attributes.NEXT_INTERACTION, CourseCertificateAndSMSMenuAnswerAction.LOCATION);
         return ivrResponseBuilder.create().getXML();
-    }
-
-    @Override
-    @RequestMapping(method=RequestMethod.GET, value= HelpEnabledAction.HELP_HANDLER)
-    public String helpHandler(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
-        return super.helpHandler(ivrRequest, request, response);
-    }
-
-    protected String scoreReportFileName(Chapter currentChapter, int scoredMarks, int maximumMarks) {
-        return scoredMarks + "_out_of_" + maximumMarks + ".wav";
-    }
-
-    @Override
-    protected String postHelpInteraction(HttpServletRequest request) {
-        return "/informScore";
-    }
-
-    @Override
-    protected String interactionWhenNoHelpIsRequested(HttpServletRequest request) {
-        return CourseCertificateAndSMSMenuAction.LOCATION;
     }
 }

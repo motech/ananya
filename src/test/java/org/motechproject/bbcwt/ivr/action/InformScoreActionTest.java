@@ -115,8 +115,8 @@ public class InformScoreActionTest extends BaseActionTest {
     }
 
     @Test
-    public void ifHelpIsNotRequestShouldForwardToEndOfQuizMenu() {
+    public void ifHelpIsNotRequestShouldForwardToCertificateAndSMSMenu() {
         String nextAction = informScoreAction.helpHandler(new IVRRequest(null, null, null, null), request, response);
-        assertEquals("Should forward to end of quiz menu, if there is no help requested.", "forward:/endOfQuizMenu", nextAction);
+        assertEquals("Should forward to end of quiz menu, if there is no help requested.", "forward:/certificateAndSMSMenu", nextAction);
     }
 }
