@@ -92,7 +92,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0013_chapter_1_quiz_q_1_correct_answer"));
 
@@ -469,7 +469,7 @@ public class NewCallTest {
 
         assertTrue("Followed by the question again.", response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0013_chapter_1_quiz_q_1_correct_answer"));
 
@@ -543,7 +543,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0013_chapter_1_quiz_q_1_correct_answer"));
 
@@ -649,7 +649,7 @@ public class NewCallTest {
 
         assertTrue(response.promptPlayed("0012_b_chapter_1_q_1"));
 
-        response = caller.enter("2");
+        response = caller.enter("1");
 
         assertTrue(response.promptPlayed("0013_chapter_1_quiz_q_1_correct_answer"));
 

@@ -29,7 +29,7 @@ public class ChapterSeed extends Seed {
 
         final String commonOptionsLocation = "Press 1 if your answer is yes, 2 if the answer is no.";
 
-        Question question1 = new Question(1, "0012_b_chapter_1_q_1.wav", 2, "0013_chapter_1_quiz_q_1_correct_answer.wav", "0014_chapter_1_quiz_q_1_wrong_answer.wav");
+        Question question1 = new Question(1, "0012_b_chapter_1_q_1.wav", 1, "0013_chapter_1_quiz_q_1_correct_answer.wav", "0014_chapter_1_quiz_q_1_wrong_answer.wav");
         Question question2 = new Question(2, "0015_chapter_1_quiz_q_2.wav", 2, "0016_chapter_1_quiz_q_2_correct_answer.wav", "0017_chapter_1_quiz_q_2_wrong_answer.wav");
         Question question3 = new Question(3, "0018_chapter_1_quiz_q_3.wav", 1, "0019_chapter_1_quiz_q_3_correct_answer.wav", "0020_chapter_1_quiz_q_3_wrong_answer.wav");
         Question question4 = new Question(4, "0021_chapter_1_quiz_q_4.wav", 2, "0022_chapter_1-quiz_q_4_correct_answer.wav", "0023_chapter_1_quiz_q_4_wrong_answer.wav");
