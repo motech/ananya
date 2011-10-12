@@ -28,6 +28,7 @@ public class SendSMSHandler {
         final Map<String,Object> parameters = motechEvent.getParameters();
 
         String number = (String) parameters.get("number");
+        number = removeLeadingZeroFromPhoneNumber(number);
         String sms = (String) parameters.get("text");
 
         LOG.info(String.format("Sending message: %s to number: %s.", sms, number));
@@ -44,5 +45,12 @@ public class SendSMSHandler {
         } catch(IOException ioe) {
             LOG.error("Sending message failed", ioe);
         }
+    }
+
+    private String removeLeadingZeroFromPhoneNumber(String number) {
+        if(number.startsWith("0")) {
+            return number.substring(1);
+        }
+        return number;
     }
 }
