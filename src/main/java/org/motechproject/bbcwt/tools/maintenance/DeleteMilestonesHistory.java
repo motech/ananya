@@ -19,7 +19,7 @@ public class DeleteMilestonesHistory {
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
 
         String number = System.getProperty("dialed.in.number");
-        CouchDbConnector db = context.getBean(CouchDbConnector.class);
+        CouchDbConnector db = context.getBean("bbcwtDbConnector", CouchDbConnector.class);
 
         HealthWorkersRepository healthWorkers = context.getBean(HealthWorkersRepository.class);
         MilestonesRepository milestones = context.getBean(MilestonesRepository.class);
