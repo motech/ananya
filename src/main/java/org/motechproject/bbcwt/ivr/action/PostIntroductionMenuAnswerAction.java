@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.ivr.action;
 import org.motechproject.bbcwt.ivr.IVRContext;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
+import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class PostIntroductionMenuAnswerAction extends AbstractPromptAnswerHandle
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
         keyPressHandlerMap.put('1', new RepeatIntroduction());
         keyPressHandlerMap.put('2', new StartChapterAction());
+        keyPressHandlerMap.put('*', new PlayHelpAction(messages, "forward:" + PostIntroductionMenuAction.LOCATION));
         keyPressHandlerMap.put(NO_INPUT, new NoKeyPressResponseAction());
     }
 

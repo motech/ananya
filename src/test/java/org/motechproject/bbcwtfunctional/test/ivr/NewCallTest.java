@@ -189,7 +189,7 @@ public class NewCallTest {
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
-        response = caller.enter("*");
+        response = caller.enter("#");
         assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
@@ -198,13 +198,29 @@ public class NewCallTest {
         assertFalse(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
-        //TODO: Why cannot I give #? # is not being sent properly to the server...
-        response = caller.enter("9");
+        response = caller.enter("#");
 
         assertTrue(response.audioPlayed("0000_error_in_pressing_number"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 
         response = caller.enter("3");
+
+        assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
+    }
+
+    @Test
+    public void userAsksForHelpAtWelcomePrompt() throws Exception {
+        IVRResponse response = caller.call();
+
+        assertTrue(response.audioPlayed("0001_welcome_new_user"));
+        assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
+
+        response = caller.enter("*");
+        assertTrue("Help should be played when user requests for it at welcome prompt", response.audioPlayed("0003_main_menu_help"));
+        assertTrue("Followed by the welcome prompt again", response.promptPlayed("0002_start_course_option_prompt"));
+
+
+        response = caller.enter("2");
 
         assertTrue(response.promptPlayed("0004_chapter_1_lesson_1"));
     }

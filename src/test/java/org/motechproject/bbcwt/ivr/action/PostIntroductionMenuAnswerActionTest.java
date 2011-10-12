@@ -2,11 +2,14 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -103,6 +106,28 @@ public class PostIntroductionMenuAnswerActionTest extends BaseActionTest {
 
         assertEquals("If no input is chosen for more than allowed times, then forward to lesson", "forward:/chapter/1/lesson/1", chainedAction);
         verifyInvalidAndNoInputCountsAreReset();
+    }
+
+    @Test
+    public void shouldPlayHelpWhenRequested() {
+        final String IVR_HELP_AUDIO = "ivr_help_audio.wav";
+        when(messages.get(IVRMessage.IVR_HELP)).thenReturn(IVR_HELP_AUDIO);
+        when(messages.absoluteFileLocation(IVR_HELP_AUDIO)).thenReturn(CONTENT_LOCATION + IVR_HELP_AUDIO);
+
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+
+        String nextAction = action.handle(ivrRequest, request, response);
+
+        verify(ivrResponseBuilder).addPlayAudio(CONTENT_LOCATION + IVR_HELP_AUDIO);
+    }
+
+    @Test
+    public void shouldForwardToPostIntroductionMenuAfterHelpIsPlayed() {
+        IVRRequest ivrRequest = new IVRRequest(null, null, null, "*");
+
+        String nextAction = action.handle(ivrRequest, request, response);
+
+        assertThat(nextAction, is("forward:/postIntroductionMenu"));
     }
 
     private void setInvalidInputCountBeforeThisInputAs(int invalidInputCountBeforeThisInput) {
