@@ -22,11 +22,11 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
     }
 
     @Test
-    public void shouldForwardUserToQuizIfOptionPressedIs1() {
+    public void shouldForwardUserToPreviousChapterIfOptionPressedIs1() {
         setInvalidInputCountBeforeThisInputAs(1);
         setNoInputCountBeforeThisInputAs(1);
         String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "1"), request, response);
-        assertThat(nextAction, is("forward:/startQuiz"));
+        assertThat(nextAction, is("forward:/repeatLastChapter"));
         verifyInvalidAndNoInputCountsAreReset();
     }
 
@@ -36,15 +36,6 @@ public class EndOfQuizMenuAnswerActionTest extends BaseActionTest {
         setNoInputCountBeforeThisInputAs(1);
         String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "2"), request, response);
         assertThat(nextAction, is("forward:/startNextChapter"));
-        verifyInvalidAndNoInputCountsAreReset();
-    }
-
-    @Test
-    public void shouldForwardUserToLastChapterIfOptionPressedIs3() {
-        setInvalidInputCountBeforeThisInputAs(1);
-        setNoInputCountBeforeThisInputAs(1);
-        String nextAction = endOfQuizMenuAnswerAction.handle(new IVRRequest(null, null, null, "3"), request, response);
-        assertThat(nextAction, is("forward:/repeatLastChapter"));
         verifyInvalidAndNoInputCountsAreReset();
     }
 
