@@ -25,12 +25,14 @@ public class IntroductionActionTest extends BaseActionTest {
     public void shouldBuildIntroductionMenu(){
         IVRRequest ivrRequest = new IVRRequest("unique-call-id", null, null, null);
 
+        final String BLANK_AUDIO_FILE = "blank_audio_file.wav";
         final String COURSE_INTRO_AUDIO = "course_introduction.wav";
-
+        when(messages.get(IVRMessage.BLANK_AUDIO_FILE)).thenReturn(BLANK_AUDIO_FILE);
         when(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)).thenReturn(COURSE_INTRO_AUDIO);
 
         String chainedAction = action.handle(ivrRequest,request,response);
 
+        verify(ivrResponseBuilder, times(1)).addPlayAudio(CONTENT_LOCATION + BLANK_AUDIO_FILE);
         verify(ivrResponseBuilder, times(1)).addPlayAudio(CONTENT_LOCATION + COURSE_INTRO_AUDIO);
         assertEquals("The next action chained should be PostIntroductionMenuAction", chainedAction, "forward:/postIntroductionMenu");
     }

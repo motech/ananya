@@ -28,6 +28,7 @@ public class IntroductionAction extends BaseAction {
     @RequestMapping(method = RequestMethod.GET)
     public String handle(IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         IVRResponseBuilder responseBuilder= ivrResponseBuilder(request);
+        responseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BLANK_AUDIO_FILE)));
         responseBuilder.addPlayAudio(absoluteFileLocation(messages.get(IVRMessage.BBCWT_IVR_NEW_USER_WC_MESSAGE)));
         return "forward:" + PostIntroductionMenuAction.LOCATION;
     }

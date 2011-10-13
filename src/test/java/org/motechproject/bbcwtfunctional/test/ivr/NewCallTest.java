@@ -33,6 +33,7 @@ public class NewCallTest {
     public void newCallFlow() throws IOException {
         IVRResponse response = caller.call();
 
+        assertTrue(response.audioPlayed("0000_b_dead_space_1pt5_sec"));
         assertTrue(response.audioPlayed("0001_welcome_new_user"));
         assertTrue(response.promptPlayed("0002_start_course_option_prompt"));
 

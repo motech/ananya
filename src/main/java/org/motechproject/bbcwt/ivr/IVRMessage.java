@@ -20,6 +20,7 @@ public class IVRMessage {
     public static final String ALLOWED_NUMBER_OF_INVALID_INPUTS = "allowed.number.of.invalid.inputs";
     public static final String KOOKOO_OUTBOUND_SMS_URL = "kookoo.outbound.sms.url";
     public static final String KOOKOO_API_KEY = "kookoo.api.key";
+    public static final String BLANK_AUDIO_FILE = "blank.audio.filler";
 
     @Qualifier("ivrProperties")
     @Autowired
