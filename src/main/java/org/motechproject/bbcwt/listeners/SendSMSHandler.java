@@ -40,8 +40,9 @@ public class SendSMSHandler {
                 new NameValuePair("phone_no", number)
         });
         try {
-            httpClient.executeMethod(getMethod);
-            LOG.info("The message has been sent.");
+            int responseCode = httpClient.executeMethod(getMethod);
+            String response = getMethod.getResponseBodyAsString();
+            LOG.info(String.format("The message to:\n%s has been sent with\nresponsecode: %d\nresponse: %s", number, responseCode, response));
         } catch(IOException ioe) {
             LOG.error("Sending message failed", ioe);
         }
