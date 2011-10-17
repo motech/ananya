@@ -28,30 +28,31 @@ public class SendSMSHandler {
         final Map<String,Object> parameters = motechEvent.getParameters();
 
         String number = (String) parameters.get("number");
-        number = removeLeadingZeroFromPhoneNumber(number);
+        String validNumber = last10DigitsOfNumber(number);
         String sms = (String) parameters.get("text");
 
-        LOG.info(String.format("Sending message: %s to number: %s.", sms, number));
+        LOG.info(String.format("Sending message: %s to validNumber: %s.", sms, validNumber));
 
         GetMethod getMethod = new GetMethod(properties.get(IVRMessage.KOOKOO_OUTBOUND_SMS_URL).toString());
         getMethod.setQueryString(new NameValuePair[]{
                 new NameValuePair("api_key", properties.get(IVRMessage.KOOKOO_API_KEY).toString()),
                 new NameValuePair("message", sms),
-                new NameValuePair("phone_no", number)
+                new NameValuePair("phone_no", validNumber)
         });
         try {
             int responseCode = httpClient.executeMethod(getMethod);
             String response = getMethod.getResponseBodyAsString();
-            LOG.info(String.format("The message to:\n%s has been sent with\nresponsecode: %d\nresponse: %s", number, responseCode, response));
+            LOG.info(String.format("The message to:\n%s has been sent with\nresponsecode: %d\nresponse: %s", validNumber, responseCode, response));
         } catch(IOException ioe) {
             LOG.error("Sending message failed", ioe);
         }
     }
 
-    private String removeLeadingZeroFromPhoneNumber(String number) {
-        if(number.startsWith("0")) {
-            return number.substring(1);
+    protected  String last10DigitsOfNumber(String number) {
+        int length = number.length();
+        if(length < 10) {
+            return number;
         }
-        return number;
+        return number.substring(length-10, length);
     }
 }
