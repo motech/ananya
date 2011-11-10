@@ -25,15 +25,17 @@ public class Node extends BaseCouchEntity {
         this.data = new HashMap<String, Object>(20);
     }
 
-    public void addChild(Node child){
+    public Node addChild(Node child){
         children.add(child);
+        return this;
     }
 
-    public void put(String key, Object value) {
+    public Node put(String key, Object value) {
         data.put(key, value);
+        return this;
     }
 
-    public String name() {
+    public String getName() {
         return this.name;
     }
 

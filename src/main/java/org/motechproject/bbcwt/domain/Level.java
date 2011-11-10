@@ -9,10 +9,9 @@ public class Level {
     private String menu;
     private List<Chapter> chapters = new ArrayList<Chapter>(10);
 
-    public Level(int number, String menu, List<Chapter> chapters) {
+    public Level(int number, String menu) {
         this.number = number;
         this.menu = menu;
-        this.chapters = chapters;
     }
 
     public int number() {
@@ -27,7 +26,8 @@ public class Level {
         return Collections.unmodifiableList(chapters);
     }
 
-    public void addChapter(Chapter chapter) {
+    public Level addChapter(Chapter chapter) {
         this.chapters.add(chapter);
+        return this;
     }
 }

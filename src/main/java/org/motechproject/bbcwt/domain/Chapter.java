@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.domain;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class Chapter extends BaseCouchEntity {
     private String belowParScoreSummary;
     private String certificateAndCourseSummaryPrompt;
     private String courseSummaryPrompt;
+    @JsonProperty
+    private String menu;
 
     private static final int GOOD_SCORE = 3;
 
@@ -32,12 +35,14 @@ public class Chapter extends BaseCouchEntity {
         return number;
     }
 
-    public void setNumber(int number) {
+    public Chapter setNumber(int number) {
         this.number = number;
+        return this;
     }
 
-    public void addLesson(Lesson lesson) {
+    public Chapter addLesson(Lesson lesson) {
         lessons.add(lesson);
+        return this;
     }
 
     public List<Lesson> getLessons() {
@@ -92,8 +97,9 @@ public class Chapter extends BaseCouchEntity {
         });
     }
 
-    public void addQuestion(Question question) {
+    public Chapter addQuestion(Question question) {
         questions.add(question);
+        return this;
     }
 
     public Lesson nextLesson(Lesson lesson) {
@@ -158,4 +164,12 @@ public class Chapter extends BaseCouchEntity {
         return score >= GOOD_SCORE;
     }
 
+    public String menu() {
+        return menu;
+    }
+
+    public Chapter setMenu(String menu) {
+        this.menu = menu;
+        return this;
+    }
 }

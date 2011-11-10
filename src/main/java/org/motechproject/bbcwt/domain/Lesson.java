@@ -26,16 +26,18 @@ public class Lesson extends BaseCouchEntity {
         return number;
     }
 
-    public void setNumber(int number) {
+    public Lesson setNumber(int number) {
         this.number = number;
+        return this;
     }
 
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
+    public Lesson setFileName(String fileName) {
         this.fileName = fileName;
+        return this;
     }
 
     public String getEndMenuFileName() {
