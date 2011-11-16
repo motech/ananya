@@ -18,11 +18,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class LevelSelection implements IVRAction {
     private static final Logger LOGGER = Logger.getLogger(LevelSelection.class);
-    private JobAidContentService jobAidContentService;
-    private PlayLevel playLevel;
-    private IVRMessage messages;
 
     @Autowired
+    private JobAidContentService jobAidContentService;
+    @Autowired
+    private PlayLevel playLevel;
+    @Autowired
+    private IVRMessage messages;
+
+    public LevelSelection() {
+
+    }
+
     public LevelSelection(JobAidContentService jobAidContentService, PlayLevel playLevel, IVRMessage messages) {
         this.jobAidContentService = jobAidContentService;
         this.playLevel = playLevel;

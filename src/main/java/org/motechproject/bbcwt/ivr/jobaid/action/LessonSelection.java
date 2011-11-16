@@ -19,11 +19,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class LessonSelection implements IVRAction {
     private static final Logger LOGGER = Logger.getLogger(ChapterSelection.class);
-    private JobAidContentService jobAidContentService;
-    private PlayLesson playLesson;
-    private IVRMessage messages;
 
     @Autowired
+    private JobAidContentService jobAidContentService;
+    @Autowired
+    private PlayLesson playLesson;
+    @Autowired
+    private IVRMessage messages;
+
+    public LessonSelection() {
+
+    }
+
     public LessonSelection(JobAidContentService jobAidContentService, PlayLesson playLesson, IVRMessage ivrMessage) {
         this.jobAidContentService = jobAidContentService;
         this.playLesson = playLesson;

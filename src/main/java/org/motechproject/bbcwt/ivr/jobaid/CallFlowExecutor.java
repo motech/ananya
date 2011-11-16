@@ -18,7 +18,7 @@ public class CallFlowExecutor {
     private IVRMessage ivrMessages;
 
     @Autowired
-    public CallFlowExecutor(@Qualifier("welcome") IVRAction action, IVRMessage ivrMessages) {
+    public CallFlowExecutor(@Qualifier("playWelcome") IVRAction action, IVRMessage ivrMessages) {
         this.startAction = action;
         this.ivrMessages = ivrMessages;
     }

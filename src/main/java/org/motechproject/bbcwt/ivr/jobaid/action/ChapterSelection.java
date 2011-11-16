@@ -20,11 +20,18 @@ import org.springframework.stereotype.Component;
 public class ChapterSelection implements IVRAction {
 
     private static final Logger LOGGER = Logger.getLogger(ChapterSelection.class);
-    private JobAidContentService jobAidContentService;
-    private PlayChapter playChapter;
-    private IVRMessage messages;
 
     @Autowired
+    private JobAidContentService jobAidContentService;
+    @Autowired
+    private PlayChapter playChapter;
+    @Autowired
+    private IVRMessage messages;
+
+    public ChapterSelection() {
+
+    }
+
     public ChapterSelection(JobAidContentService jobAidContentService, PlayChapter playChapter, IVRMessage messages) {
         this.jobAidContentService = jobAidContentService;
         this.playChapter = playChapter;

@@ -17,11 +17,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlayWelcome implements IVRAction {
     private static final Logger LOGGER = Logger.getLogger(PlayWelcome.class);
-    private JobAidContentService jobAidContentService;
-    private LevelSelection levelSelection;
-    private IVRMessage messages;
 
     @Autowired
+    private JobAidContentService jobAidContentService;
+    @Autowired
+    private LevelSelection levelSelection;
+    @Autowired
+    private IVRMessage messages;
+
+    public PlayWelcome() {
+
+    }
+
     public PlayWelcome(JobAidContentService jobAidContentService, LevelSelection levelSelection, IVRMessage messages) {
         this.jobAidContentService = jobAidContentService;
         this.levelSelection = levelSelection;
