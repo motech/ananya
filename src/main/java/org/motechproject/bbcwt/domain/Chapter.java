@@ -21,6 +21,8 @@ public class Chapter extends BaseCouchEntity {
     private String courseSummaryPrompt;
     @JsonProperty
     private String menu;
+    @JsonProperty
+    private String title;
 
     private static final int GOOD_SCORE = 3;
 
@@ -170,6 +172,15 @@ public class Chapter extends BaseCouchEntity {
 
     public Chapter setMenu(String menu) {
         this.menu = menu;
+        return this;
+    }
+
+    public String title() {
+        return title;
+    }
+
+    public Chapter setTitle(String title) {
+        this.title = title;
         return this;
     }
 }

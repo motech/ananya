@@ -69,6 +69,7 @@ public class TreeToJobAidCourse {
             Map<String, Object> chapterData = nodeToTransform.data();
             chapter.setNumber((Integer)chapterData.get("number"));
             chapter.setMenu((String)chapterData.get("menu"));
+            chapter.setTitle((String)chapterData.get("title"));
 
             levelInWhichChapterIsToBeAdded.addChapter(chapter);
 
@@ -86,6 +87,7 @@ public class TreeToJobAidCourse {
 
             Map<String, Object> levelData = nodeToTransform.data();
             Level level = new Level((Integer)levelData.get("number"), (String)levelData.get("menu"));
+            level.setIntroduction((String)levelData.get("introduction"));
 
             jobAidCourseToWhichTheLevelIsToBeAdded.addLevel(level);
             return level;

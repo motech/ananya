@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Level {
     private int number;
+    private String introduction;
     private String menu;
     private List<Chapter> chapters = new ArrayList<Chapter>(10);
 
@@ -28,6 +29,15 @@ public class Level {
 
     public Level addChapter(Chapter chapter) {
         this.chapters.add(chapter);
+        return this;
+    }
+
+    public String introduction() {
+        return introduction;
+    }
+
+    public Level setIntroduction(String introduction) {
+        this.introduction = introduction;
         return this;
     }
 }

@@ -1,5 +1,7 @@
 package org.motechproject.bbcwt.ivr;
 
+import org.motechproject.bbcwt.ivr.jobaid.IVRAction;
+
 import javax.servlet.http.HttpSession;
 
 public class IVRContext {
@@ -7,6 +9,9 @@ public class IVRContext {
     private String nextInteraction;
     private int invalidInputCount;
     private int noInputCount;
+
+    private IVRAction currentIVRAction;
+    private Object flowSpecificState;
 
     public String getCallerId() {
         return callerId;
@@ -56,6 +61,22 @@ public class IVRContext {
         noInputCount ++;
     }
 
+    public void setCurrentIVRAction(IVRAction currentIVRAction) {
+        this.currentIVRAction = currentIVRAction;
+    }
+
+    public IVRAction currentIVRAction() {
+        return this.currentIVRAction;
+    }
+
+    public Object flowSpecificState() {
+        return flowSpecificState;
+    }
+
+    public void setFlowSpecificState(Object flowSpecificState) {
+        this.flowSpecificState = flowSpecificState;
+    }
+
     public static class SessionAndIVRContextSynchronizer {
         public void synchronizeSessionWithIVRContext(HttpSession session, IVRContext context) {
             session.setAttribute(IVR.Attributes.CALLER_ID, context.getCallerId());
@@ -65,6 +86,10 @@ public class IVRContext {
             session.setAttribute(IVR.Attributes.INVALID_INPUT_COUNT, context.getInvalidInputCount());
 
             session.setAttribute(IVR.Attributes.NO_INPUT_COUNT, context.getNoInputCount());
+
+            session.setAttribute(IVR.Attributes.CURRENT_IVR_ACTION, context.currentIVRAction());
+
+            session.setAttribute(IVR.Attributes.FLOW_SPECIFIC_STATE, context.flowSpecificState());
         }
 
         public IVRContext buildIVRContext(HttpSession session) {
@@ -79,6 +104,9 @@ public class IVRContext {
 
             final Integer noInputCount = (Integer) session.getAttribute(IVR.Attributes.NO_INPUT_COUNT);
             ivrContext.setNoInputCount(noInputCount == null ? 0 : noInputCount);
+
+            ivrContext.setCurrentIVRAction((IVRAction)session.getAttribute(IVR.Attributes.CURRENT_IVR_ACTION));
+            ivrContext.setFlowSpecificState(session.getAttribute(IVR.Attributes.FLOW_SPECIFIC_STATE));
 
             return ivrContext;
         }

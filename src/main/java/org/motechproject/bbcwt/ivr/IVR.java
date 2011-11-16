@@ -41,5 +41,7 @@ public class IVR {
         public static final String RESPONSE_BUILDER = "ivr_response_builder";
         public static final String INVALID_INPUT_COUNT = "invalid_input_count";
         public static final String NO_INPUT_COUNT = "no_input_count";
+        public static final String CURRENT_IVR_ACTION = "current_ivr_action";
+        public static final String FLOW_SPECIFIC_STATE = "flow_specific_state";
     }
 }

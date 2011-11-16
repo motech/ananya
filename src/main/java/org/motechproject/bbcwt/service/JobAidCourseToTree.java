@@ -24,6 +24,7 @@ public class JobAidCourseToTree {
     private Node transformLevel(Level level) {
         Node levelNode = new Node(level.number()+"");
 
+        levelNode.put("introduction", level.introduction());
         levelNode.put("menu", level.menu());
         levelNode.put("number", level.number());
 
@@ -39,7 +40,7 @@ public class JobAidCourseToTree {
 
         chapterNode.put("menu", chapter.menu());
         chapterNode.put("number", chapter.getNumber());
-
+        chapterNode.put("title", chapter.title());
         for(Lesson lesson: chapter.getLessons()) {
             chapterNode.addChild(transformLesson(lesson)) ;
         }

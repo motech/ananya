@@ -12,6 +12,7 @@ public class IVRDtmfBuilder {
     private Integer timeOutInMillis;
     private Integer maxLengthOfResponse;
     private List<Prompt> prompts = new ArrayList<Prompt>(3);
+    private boolean withNoPrompts;
 
     public IVRDtmfBuilder addPlayText(String... playTexts) {
         for (String playText : playTexts)
@@ -22,6 +23,11 @@ public class IVRDtmfBuilder {
     public IVRDtmfBuilder addPlayAudio(String... playAudios) {
         for (String playAudio : playAudios)
             this.prompts.add(new AudioPrompt(playAudio));
+        return this;
+    }
+
+    public IVRDtmfBuilder withNoPrompts() {
+        this.withNoPrompts = true;
         return this;
     }
 
@@ -40,7 +46,10 @@ public class IVRDtmfBuilder {
         for (Prompt prompt : prompts) prompt.appendPrompt(collectDtmf);
         if (timeOutInMillis != null) collectDtmf.setTimeOut(timeOutInMillis);
         if (maxLengthOfResponse != null) collectDtmf.setMaxDigits(maxLengthOfResponse);
-        return collectDtmf;
+        if(prompts.size() > 0 || withNoPrompts) {
+            return collectDtmf;
+        }
+        return null;
     }
 
 }
