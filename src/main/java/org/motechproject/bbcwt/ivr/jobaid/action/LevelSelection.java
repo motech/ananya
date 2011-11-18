@@ -72,7 +72,7 @@ public class LevelSelection extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         int levelRequested = Integer.parseInt(request.getData());
         ((JobAidFlowState)context.flowSpecificState()).setLevel(levelRequested);
         return playLevel;

@@ -12,5 +12,5 @@ public interface IVRAction {
 
     CallFlowExecutor.ProcessStatus validateInput(IVRContext context, IVRRequest request);
 
-    IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request);
+    IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder);
 }

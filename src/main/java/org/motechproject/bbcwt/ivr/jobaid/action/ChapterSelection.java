@@ -74,7 +74,7 @@ public class ChapterSelection extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         int chapterRequested = Integer.parseInt(request.getData());
         ((JobAidFlowState)context.flowSpecificState()).setChapter(chapterRequested);
         return playChapter;

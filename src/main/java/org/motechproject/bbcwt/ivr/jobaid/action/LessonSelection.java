@@ -73,7 +73,7 @@ public class LessonSelection extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         int lessonRequested = Integer.parseInt(request.getData());
         ((JobAidFlowState)context.flowSpecificState()).setLesson(lessonRequested);
         return playLesson;

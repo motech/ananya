@@ -45,7 +45,7 @@ public class PlayLevel extends JobAidAction {
             responseBuilder.addPlayAudio(levelIntroduction);
         }
         else {
-            LOGGER.info(String.format("There is no introduction for level %%d.", enteredLevel));
+            LOGGER.info(String.format("There is no introduction for level %d.", enteredLevel));
         }
     }
 
@@ -60,11 +60,12 @@ public class PlayLevel extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         int enteredLevel = currentLevelNumber(context);
         Level level = currentLevel(context);
         if(!level.hasChapters()) {
             LOGGER.info(String.format("There are no chapters in the level: %d, hence going back to the level menu.", enteredLevel));
+            responseBuilder.addPlayAudio(messages.absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
             return levelSelection;
         }
         return chapterSelection;

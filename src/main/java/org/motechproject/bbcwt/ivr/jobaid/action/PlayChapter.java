@@ -45,7 +45,7 @@ public class PlayChapter extends JobAidAction {
             responseBuilder.addPlayAudio(chapterTitle);
         }
         else {
-            LOGGER.info(String.format("There is no title for chapter %%d in level %d.", currentChapterNumber(context), currentLevelNumber(context)));
+            LOGGER.info(String.format("There is no title for chapter %d in level %d.", currentChapterNumber(context), currentLevelNumber(context)));
         }
     }
 
@@ -60,10 +60,11 @@ public class PlayChapter extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         Chapter chapter = currentChapter(context);
         if(!chapter.hasLessons()) {
             LOGGER.info(String.format("There are no lessons in chapter: %d in the level: %d, hence going back to the chapter menu.", currentChapterNumber(context), currentLevelNumber(context)));
+            responseBuilder.addPlayAudio(messages.absoluteFileLocation(messages.get(IVRMessage.INVALID_INPUT)));
             return chapterSelection;
         }
         return lessonSelection;

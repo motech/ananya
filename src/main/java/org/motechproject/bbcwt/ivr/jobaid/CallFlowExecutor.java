@@ -37,7 +37,9 @@ public class CallFlowExecutor {
 
             context.resetInvalidInputCount();
             context.resetNoInputCount();
-            context.setCallerId(request.getCid());
+            if(request.getCid()!=null) {
+                context.setCallerId(request.getCid());
+            }
             context.setFlowSpecificState(new JobAidFlowState());
 
             startAction.processRequest(context, request, responseBuilder);
@@ -46,9 +48,9 @@ public class CallFlowExecutor {
             context.setCurrentIVRAction(startAction);
         }
         else {
-           if(userHasHangedUp(request)) {
+           if(userHasHungUpOrCallIsDisconnected(request)) {
                LOGGER.info("User has hung up.");
-                return null;
+               return null;
            }
            else {
                actionUnderExecution = context.currentIVRAction();
@@ -73,8 +75,9 @@ public class CallFlowExecutor {
         return responseBuilder;
     }
 
-    private boolean userHasHangedUp(IVRRequest request) {
-        return "hangup".equalsIgnoreCase(request.getEvent());
+    private boolean userHasHungUpOrCallIsDisconnected(IVRRequest request) {
+        final String event = request.getEvent();
+        return "hangup".equalsIgnoreCase(event) || "disconnect".equalsIgnoreCase(event);
     }
 
     private boolean userRequestedToStartAllOverAgain(IVRRequest request) {
@@ -102,7 +105,7 @@ public class CallFlowExecutor {
                                                   IVRResponseBuilder responseBuilder,
                                                   IVRDtmfBuilder dtmfBuilder, IVRMessage ivrMessages) {
                 LOGGER.info("Continuing with input processing...");
-                IVRAction nextAction = actionUnderExecution.processAndForwardToNextState(context, request);
+                IVRAction nextAction = actionUnderExecution.processAndForwardToNextState(context, request, responseBuilder);
 
                 context.resetInvalidInputCount();
                 context.resetNoInputCount();

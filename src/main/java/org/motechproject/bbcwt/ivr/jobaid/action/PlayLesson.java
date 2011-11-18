@@ -54,7 +54,7 @@ public class PlayLesson extends JobAidAction {
     }
 
     @Override
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         LOGGER.info("Trying to determine which menu is to be played.");
 
         Lesson currentLesson = currentLesson(context);

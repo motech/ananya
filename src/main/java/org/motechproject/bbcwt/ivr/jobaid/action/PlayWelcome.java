@@ -11,7 +11,6 @@ import org.motechproject.bbcwt.ivr.jobaid.CallFlowExecutor;
 import org.motechproject.bbcwt.ivr.jobaid.IVRAction;
 import org.motechproject.bbcwt.service.JobAidContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,7 +46,7 @@ public class PlayWelcome extends JobAidAction {
         return CallFlowExecutor.ProcessStatus.OK;
     }
 
-    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
+    public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         return levelSelection;
     }
 }

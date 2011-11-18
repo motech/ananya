@@ -28,7 +28,7 @@ public class JobAidController {
         this.callFlowExecutor = callFlowExecutor;
     }
 
-    @RequestMapping(value = "reply", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String reply(@ModelAttribute IVRRequest ivrRequest, HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -40,8 +40,14 @@ public class JobAidController {
 
         synchronizer.synchronizeSessionWithIVRContext(session, ivrContext);
 
-        final String responseXML = responseBuilder == null ? "" : responseBuilder.create().getXML();
-        LOG.info("Returning response: " + responseXML);
-        return responseXML;
+        if(responseBuilder == null) {
+            LOG.info("Invalidating session and returning a blank string.");
+            session.invalidate();
+            return "";
+        } else {
+            final String responseXML = responseBuilder.create().getXML();
+            LOG.info("Returning response: \n" + responseXML);
+            return responseXML;
+        }
     }
 }
