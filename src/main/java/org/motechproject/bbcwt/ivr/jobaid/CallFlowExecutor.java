@@ -24,20 +24,25 @@ public class CallFlowExecutor {
     }
 
     public IVRResponseBuilder execute(IVRContext context, IVRRequest request) {
-        LOGGER.info("CallerID: " + context.getCallerId() + ", with SessionID: " + request.getSid() + " with Event: " + request.getEvent() + " and data: " + request.getData());
+        LOGGER.info("CallerID: " + context.getCallerId() + "/" + request.getCid() + ", with SessionID: " + request.getSid() + " with Event: " + request.getEvent() + " and data: " + request.getData());
 
         IVRResponseBuilder responseBuilder = new IVRResponseBuilder();
         IVRDtmfBuilder dtmfBuilder = new IVRDtmfBuilder();
         dtmfBuilder.withTimeOutInMillis(8000);
 
-        IVRAction actionUnderExecution = null, actionToExecute;
+        IVRAction actionUnderExecution = null;
 
         if(newCall(request) || userRequestedToStartAllOverAgain(request)) {
             LOGGER.info(String.format("Starting user call flow with the new action: %s", startAction));
+
+            context.resetInvalidInputCount();
+            context.resetNoInputCount();
+            context.setCallerId(request.getCid());
+            context.setFlowSpecificState(new JobAidFlowState());
+
             startAction.processRequest(context, request, responseBuilder);
             startAction.playPrompt(context, request, dtmfBuilder);
 
-            context.setFlowSpecificState(new JobAidFlowState());
             context.setCurrentIVRAction(startAction);
         }
         else {
@@ -122,11 +127,15 @@ public class CallFlowExecutor {
 
                 int allowedNumberOfNoInputs = Integer.parseInt(ivrMessages.get(IVRMessage.ALLOWED_NUMBER_OF_NO_INPUTS));
 
+                LOGGER.info(String.format("No input received for %d times", context.getNoInputCount()));
+
                 if(context.getNoInputCount() > allowedNumberOfNoInputs) {
+                    LOGGER.info("Exceeded max number of allowed no inputs, exiting.");
                     responseBuilder.withHangUp();
                     return;
                 }
 
+                LOGGER.info("Giving user a chance to retry.");
                 actionUnderExecution.playPrompt(context, request, dtmfBuilder);
             }
         },
@@ -138,15 +147,19 @@ public class CallFlowExecutor {
                                                   IVRRequest request,
                                                   IVRResponseBuilder responseBuilder,
                                                   IVRDtmfBuilder dtmfBuilder, IVRMessage ivrMessages) {
-                context.incrementNoInputCount();
+                context.incrementInvalidInputCount();
 
                 int allowedNumberOfInvalidInputs = Integer.parseInt(ivrMessages.get(IVRMessage.ALLOWED_NUMBER_OF_INVALID_INPUTS));
 
+                LOGGER.info(String.format("Invalid input received for %d times", context.getInvalidInputCount()));
+
                 if(context.getInvalidInputCount() > allowedNumberOfInvalidInputs) {
+                    LOGGER.info("Exceeded max number of allowed invalid inputs, exiting.");
                     responseBuilder.withHangUp();
                     return;
                 }
 
+                LOGGER.info("Giving user a chance to retry.");
                 responseBuilder.addPlayAudio(ivrMessages.absoluteFileLocation(ivrMessages.get(IVRMessage.INVALID_INPUT)));
                 actionUnderExecution.playPrompt(context, request, dtmfBuilder);
             }

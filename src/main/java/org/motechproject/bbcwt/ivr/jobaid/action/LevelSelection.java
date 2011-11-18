@@ -16,11 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LevelSelection implements IVRAction {
+public class LevelSelection extends JobAidAction {
     private static final Logger LOGGER = Logger.getLogger(LevelSelection.class);
 
-    @Autowired
-    private JobAidContentService jobAidContentService;
     @Autowired
     private PlayLevel playLevel;
     @Autowired
@@ -31,7 +29,7 @@ public class LevelSelection implements IVRAction {
     }
 
     public LevelSelection(JobAidContentService jobAidContentService, PlayLevel playLevel, IVRMessage messages) {
-        this.jobAidContentService = jobAidContentService;
+        super(jobAidContentService);
         this.playLevel = playLevel;
         this.messages = messages;
     }
@@ -43,7 +41,7 @@ public class LevelSelection implements IVRAction {
 
     @Override
     public void playPrompt(IVRContext context, IVRRequest request, IVRDtmfBuilder dtmfBuilder) {
-        JobAidCourse course = jobAidContentService.getCourse("JobAidCourse");
+        JobAidCourse course = currentCourse();
         final String levelMenu = messages.absoluteFileLocation("jobAid/" + course.menu());
         LOGGER.info(String.format("Playing level menu: %s", levelMenu));
         dtmfBuilder.addPlayAudio(levelMenu);
@@ -63,7 +61,7 @@ public class LevelSelection implements IVRAction {
         }
 
         int levelRequested = Integer.parseInt(request.getData());
-        int noOfLevels = jobAidContentService.getCourse("JobAidCourse").levels().size();
+        int noOfLevels = currentCourse().numberOfLevels();
 
         if(levelRequested < 0 || levelRequested > noOfLevels) {
             LOGGER.info(String.format("Level Requested: %d should be less than Number of Available Levels: %d", levelRequested, noOfLevels));

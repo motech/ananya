@@ -8,6 +8,7 @@
 		<constructor-arg>
 			<list>
                 <ref bean="chapterSeed"/>
+                <ref bean="jobAidSeed"/>
 			</list>
 		</constructor-arg>
 	</bean>

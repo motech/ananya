@@ -183,4 +183,12 @@ public class Chapter extends BaseCouchEntity {
         this.title = title;
         return this;
     }
+
+    public boolean hasLessons() {
+        return lessons.size() > 0;
+    }
+
+    public int numberOfLessons() {
+        return lessons.size();
+    }
 }

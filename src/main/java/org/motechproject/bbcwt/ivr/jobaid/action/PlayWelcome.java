@@ -15,11 +15,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PlayWelcome implements IVRAction {
+public class PlayWelcome extends JobAidAction {
     private static final Logger LOGGER = Logger.getLogger(PlayWelcome.class);
 
-    @Autowired
-    private JobAidContentService jobAidContentService;
     @Autowired
     private LevelSelection levelSelection;
     @Autowired
@@ -30,13 +28,13 @@ public class PlayWelcome implements IVRAction {
     }
 
     public PlayWelcome(JobAidContentService jobAidContentService, LevelSelection levelSelection, IVRMessage messages) {
-        this.jobAidContentService = jobAidContentService;
+        super(jobAidContentService);
         this.levelSelection = levelSelection;
         this.messages = messages;
     }
 
     public void processRequest(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder){
-        JobAidCourse jobAidCourse = jobAidContentService.getCourse("JobAidCourse");
+        JobAidCourse jobAidCourse = currentCourse();
         final String welcomeMsg = messages.absoluteFileLocation("jobAid/" + jobAidCourse.introduction());
         LOGGER.info(String.format("Assembling the welcome message %s", welcomeMsg));
         responseBuilder.addPlayAudio(welcomeMsg);
@@ -51,11 +49,6 @@ public class PlayWelcome implements IVRAction {
 
     public IVRAction processAndForwardToNextState(IVRContext context, IVRRequest request) {
         return levelSelection;
-    }
-
-    @Override
-    public String toString() {
-        return "Job Aid Welcome Action";    //To change body of overridden methods use File | Settings | File Templates.
     }
 }
 

@@ -11,6 +11,7 @@ public class JobAidContentService {
     private JobAidCourseToTree courseToTree;
     private TreeToJobAidCourse treeToJobAidCourse;
     private NodeRepository nodeRepository;
+    private JobAidCourse courseCache;
 
     @Autowired
     public JobAidContentService(JobAidCourseToTree courseToTree, TreeToJobAidCourse treeToJobAidCourse, NodeRepository nodeRepository) {
@@ -20,12 +21,16 @@ public class JobAidContentService {
     }
 
     public void addCourse(JobAidCourse course) {
+        courseCache = course;
         Node courseAsTree = courseToTree.transform(course);
         nodeRepository.add(courseAsTree);
     }
 
     public JobAidCourse getCourse(String courseName) {
+        if(courseCache!=null) {
+            return courseCache;
+        }
         Node courseAsTree = nodeRepository.findByName(courseName);
-        return treeToJobAidCourse.transform(courseAsTree);
+        return courseCache = treeToJobAidCourse.transform(courseAsTree);
     }
 }
