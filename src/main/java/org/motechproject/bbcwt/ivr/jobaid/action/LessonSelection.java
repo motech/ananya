@@ -43,9 +43,9 @@ public class LessonSelection extends JobAidAction {
     public void playPrompt(IVRContext context, IVRRequest request, IVRDtmfBuilder dtmfBuilder) {
         Chapter chapter = currentChapter(context);
         final String chapterMenu = messages.absoluteFileLocation("jobAid/" + chapter.menu());
-        assembleReturnToStartOption(messages, dtmfBuilder);
         LOGGER.info(String.format("Playing chapter menu: %s", chapterMenu));
         dtmfBuilder.addPlayAudio(chapterMenu);
+        assembleReturnToStartOption(messages, dtmfBuilder);
         dtmfBuilder.withMaximumLengthOfResponse(1);
 
     }

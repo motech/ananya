@@ -45,9 +45,9 @@ public class ChapterSelection extends JobAidAction {
         Level level = currentLevel(context);
 
         final String chapterMenu = messages.absoluteFileLocation("jobAid/" + level.menu());
-        assembleReturnToStartOption(messages, dtmfBuilder);
         LOGGER.info(String.format("Playing chapterMenu menu: %s", chapterMenu));
         dtmfBuilder.addPlayAudio(chapterMenu);
+        assembleReturnToStartOption(messages, dtmfBuilder);
         dtmfBuilder.withMaximumLengthOfResponse(1);
     }
 
