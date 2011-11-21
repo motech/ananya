@@ -21,6 +21,7 @@ public class IVRMessage {
     public static final String KOOKOO_OUTBOUND_SMS_URL = "kookoo.outbound.sms.url";
     public static final String KOOKOO_API_KEY = "kookoo.api.key";
     public static final String BLANK_AUDIO_FILE = "blank.audio.filler";
+    public static final String RETURN_TO_START_IN_JOBAID_OPTION = "return.to.start.in.jobaid.option";
 
     @Qualifier("ivrProperties")
     @Autowired

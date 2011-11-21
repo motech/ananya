@@ -5,6 +5,8 @@ import org.motechproject.bbcwt.domain.JobAidCourse;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Level;
 import org.motechproject.bbcwt.ivr.IVRContext;
+import org.motechproject.bbcwt.ivr.IVRMessage;
+import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.jobaid.IVRAction;
 import org.motechproject.bbcwt.ivr.jobaid.JobAidFlowState;
 import org.motechproject.bbcwt.service.JobAidContentService;
@@ -58,5 +60,9 @@ public abstract class JobAidAction implements IVRAction {
     @Override
     public String toString() {
         return this.getClass().getSimpleName();
+    }
+
+    protected void assembleReturnToStartOption(IVRMessage messages, IVRDtmfBuilder dtmfBuilder) {
+        dtmfBuilder.addPlayAudio(messages.absoluteFileLocation("jobAid/" + messages.get(IVRMessage.RETURN_TO_START_IN_JOBAID_OPTION)));
     }
 }
