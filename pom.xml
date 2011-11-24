@@ -537,6 +537,21 @@
             <artifactId>motech-platform-common</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-api</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-sms-api</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-sms-kookoo</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

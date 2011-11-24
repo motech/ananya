@@ -1,22 +1,16 @@
 package org.motechproject.bbcwt.ivr.action;
 
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.bbcwt.domain.*;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.listeners.SendSMSHandler;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.sms.api.service.SMSService;
 import org.powermock.api.mockito.PowerMockito;
-
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -32,7 +26,7 @@ public class CourseCertificateAndSMSMenuAnswerActionTest extends BaseActionTest 
     @Mock
     private ReportCardsRepository reportCardsRepository;
     @Mock
-    private SendSMSHandler sendSMSHandler;
+    private SMSService smsService;
 
     private CourseCertificateAndSMSMenuAnswerAction courseCertificateAndSMSMenuAnswerAction;
     private String callerId;
@@ -70,7 +64,7 @@ public class CourseCertificateAndSMSMenuAnswerActionTest extends BaseActionTest 
         PowerMockito.when(milestonesRepository.currentMilestoneWithLinkedReferences(callerId)).thenReturn(inLastQuestion);
         PowerMockito.when(reportCardsRepository.findByHealthWorker(healthWorker)).thenReturn(reportCard);
 
-        courseCertificateAndSMSMenuAnswerAction = new CourseCertificateAndSMSMenuAnswerAction(milestonesRepository, reportCardsRepository, sendSMSHandler, messages);
+        courseCertificateAndSMSMenuAnswerAction = new CourseCertificateAndSMSMenuAnswerAction(milestonesRepository, reportCardsRepository, smsService, messages);
     }
 
     @Test
@@ -79,17 +73,7 @@ public class CourseCertificateAndSMSMenuAnswerActionTest extends BaseActionTest 
         setNoInputCountBeforeThisInputAs(0);
         String nextAction = courseCertificateAndSMSMenuAnswerAction.handle(new IVRRequest(null, null, null, "9"), request, response);
 
-        verify(sendSMSHandler).sendSMS(argThat(new ArgumentMatcher<MotechEvent>() {
-            @Override
-            public boolean matches(Object o) {
-                if(!o.getClass().equals(MotechEvent.class)) {
-                    return false;
-                }
-                Map<String, Object> parameters = ((MotechEvent)o).getParameters();
-                return callerId.equals(parameters.get("number")) &&
-                BELOW_PAR_SCORE_SUMMARY.equals(parameters.get("text"));
-            }
-        }));
+        verify(smsService).sendSMS(argThat(is(callerId)), argThat(is(BELOW_PAR_SCORE_SUMMARY)));
         assertThat(nextAction, is("forward:/endOfQuizMenu"));
         verifyInvalidAndNoInputCountsAreReset();
     }

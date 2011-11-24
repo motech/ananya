@@ -10,32 +10,29 @@ import org.motechproject.bbcwt.ivr.action.inputhandler.KeyPressHandler;
 import org.motechproject.bbcwt.ivr.action.inputhandler.PlayHelpAction;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
-import org.motechproject.bbcwt.listeners.SendSMSHandler;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.sms.api.service.SMSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping(CourseCertificateAndSMSMenuAnswerAction.LOCATION)
 public class CourseCertificateAndSMSMenuAnswerAction extends AbstractPromptAnswerHandler {
     public static final String LOCATION = "/certificateAndSMSMenuAnswer";
-    private SendSMSHandler sendSMSHandler;
+    private SMSService smsService;
     private MilestonesRepository milestonesRepository;
     private ReportCardsRepository reportCardsRepository;
 
     @Autowired
-    public CourseCertificateAndSMSMenuAnswerAction(MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, SendSMSHandler sendSMSHandler, IVRMessage messages) {
+    public CourseCertificateAndSMSMenuAnswerAction(MilestonesRepository milestonesRepository, ReportCardsRepository reportCardsRepository, SMSService smsService, IVRMessage messages) {
         super(messages);
         this.milestonesRepository = milestonesRepository;
         this.reportCardsRepository = reportCardsRepository;
-        this.sendSMSHandler = sendSMSHandler;
+        this.smsService = smsService;
     }
 
     protected void intializeKeyPressHandlerMap(final Map<Character, KeyPressHandler> keyPressHandlerMap) {
@@ -95,12 +92,7 @@ public class CourseCertificateAndSMSMenuAnswerAction extends AbstractPromptAnswe
             ReportCard reportCard = reportCardsRepository.findByHealthWorker(healthWorker);
             int score = reportCard.scoreEarned(currentChapter).getScoredMarks();
 
-            final Map parameters = new HashMap(2);
-            parameters.put("number", callerId);
-            parameters.put("text", currentChapter.getSummaryForScore(score));
-            MotechEvent event = new MotechEvent("SendSMS", parameters);
-
-            sendSMSHandler.sendSMS(event);
+            smsService.sendSMS(callerId, currentChapter.getSummaryForScore(score));
 
             return "forward:" + EndOfQuizMenuAction.LOCATION;
         }

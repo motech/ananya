@@ -13,10 +13,13 @@
     <util:properties id="ivrProperties" location="classpath:/ivr.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
-    <context:component-scan base-package="org.motechproject.bbcwt">
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+
+    <context:component-scan base-package="org.motechproject">
     </context:component-scan>
 
-    <import resource="classpath:applicationPlatformCommon.xml"/>
+    <import resource="classpath:integrationCommon.xml"/>
+    <import resource="classpath:outboundEventChannelAdapter.xml"/>
 
     <aop:aspectj-autoproxy/>
 
