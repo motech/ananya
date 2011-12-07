@@ -12,6 +12,7 @@ public class IVRContext {
 
     private IVRAction currentIVRAction;
     private Object flowSpecificState;
+    private Boolean firstInteractionInCall;
 
     public String getCallerId() {
         return callerId;
@@ -77,6 +78,14 @@ public class IVRContext {
         this.flowSpecificState = flowSpecificState;
     }
 
+    public void setFirstInteractionInCall(Boolean firstInteractionInCall) {
+        this.firstInteractionInCall = firstInteractionInCall;
+    }
+
+    public Boolean firstInteractionInCall() {
+        return this.firstInteractionInCall;
+    }
+
     public static class SessionAndIVRContextSynchronizer {
         public void synchronizeSessionWithIVRContext(HttpSession session, IVRContext context) {
             session.setAttribute(IVR.Attributes.CALLER_ID, context.getCallerId());
@@ -90,6 +99,8 @@ public class IVRContext {
             session.setAttribute(IVR.Attributes.CURRENT_IVR_ACTION, context.currentIVRAction());
 
             session.setAttribute(IVR.Attributes.FLOW_SPECIFIC_STATE, context.flowSpecificState());
+
+            session.setAttribute(IVR.Attributes.FIRST_INTERACTION_IN_CALL, context.firstInteractionInCall());
         }
 
         public IVRContext buildIVRContext(HttpSession session) {
@@ -107,6 +118,7 @@ public class IVRContext {
 
             ivrContext.setCurrentIVRAction((IVRAction)session.getAttribute(IVR.Attributes.CURRENT_IVR_ACTION));
             ivrContext.setFlowSpecificState(session.getAttribute(IVR.Attributes.FLOW_SPECIFIC_STATE));
+            ivrContext.setFirstInteractionInCall((Boolean)session.getAttribute(IVR.Attributes.FIRST_INTERACTION_IN_CALL));
 
             return ivrContext;
         }

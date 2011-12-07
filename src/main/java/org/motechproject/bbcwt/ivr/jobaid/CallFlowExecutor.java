@@ -32,6 +32,8 @@ public class CallFlowExecutor {
 
         IVRAction actionUnderExecution = null;
 
+        context.setFirstInteractionInCall(context.currentIVRAction() == null);
+
         if(newCall(request) || userRequestedToStartAllOverAgain(request)) {
             LOGGER.info(String.format("Starting user call flow with the new action: %s", startAction));
 
@@ -41,7 +43,6 @@ public class CallFlowExecutor {
                 context.setCallerId(request.getCid());
             }
             context.setFlowSpecificState(new JobAidFlowState());
-
             startAction.processRequest(context, request, responseBuilder);
             startAction.playPrompt(context, request, dtmfBuilder);
 

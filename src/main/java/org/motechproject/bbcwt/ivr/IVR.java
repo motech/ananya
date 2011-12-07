@@ -43,5 +43,6 @@ public class IVR {
         public static final String NO_INPUT_COUNT = "no_input_count";
         public static final String CURRENT_IVR_ACTION = "current_ivr_action";
         public static final String FLOW_SPECIFIC_STATE = "flow_specific_state";
+        public static final String FIRST_INTERACTION_IN_CALL = "first_interaction_in_call";
     }
 }
