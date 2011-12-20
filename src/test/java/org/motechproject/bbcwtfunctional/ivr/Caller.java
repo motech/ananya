@@ -35,7 +35,7 @@ public class Caller extends FunctionalTestObject {
         StringBuffer url = new StringBuffer();
         url.append(
                 String.format(
-                        "http://localhost:%s/bbcwt/ivr/reply?", System.getProperty("jetty.port", "8080")));
+                        "http://localhost:%s/ananya/ivr/reply?", System.getProperty("jetty.port", "8080")));
 
         if(StringUtils.isNotEmpty(sid)) {
             url.append(
