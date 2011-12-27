@@ -2,7 +2,6 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
