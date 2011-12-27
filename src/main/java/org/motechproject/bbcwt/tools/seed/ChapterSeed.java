@@ -14,7 +14,7 @@ public class ChapterSeed {
     private ChaptersRepository chapters;
 
     @Seed(priority = 0)
-    protected void load() {
+    public void load() {
         Chapter chapter1 = new Chapter(1);
 
         Lesson lesson1Ch1 = new Lesson(1, "0004_chapter_1_lesson_1.wav", "0005_chapter_1_lesson_1_option_prompt.wav");

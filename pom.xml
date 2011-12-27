@@ -62,8 +62,7 @@
                             </execution>
                             <execution>
                                 <id>load-seed-data-in-Db</id>
-                                <!--<phase>pre-integration-test</phase>-->
-                                <phase>test-compile</phase>
+                                <phase>pre-integration-test</phase>
                                 <configuration>
                                     <target>
                                         <echo message="Seed data loading: START"/>
@@ -188,31 +187,31 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>central</id>-->
-            <!--<url>http://repo1.maven.org/maven2</url>-->
-            <!--<name>Repository for dependencies</name>-->
-            <!--<snapshots>-->
-                <!--<enabled>true</enabled>-->
-            <!--</snapshots>-->
-        <!--</repository>-->
-        <!--<repository>-->
-            <!--<id>spring-maven-release</id>-->
-            <!--<name>Spring Maven Release Repository</name>-->
-            <!--<url>http://maven.springframework.org/release</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-            <!--<id>spring-maven-milestone</id>-->
-            <!--<name>Spring Maven Milestone Repository</name>-->
-            <!--<url>http://maven.springframework.org/milestone</url>-->
-        <!--</repository>-->
-        <!--<repository>-->
-            <!--<id>motech.nexus</id>-->
-            <!--<name>Motech Snapshots Repository</name>-->
-            <!--<url>http://nexus.motechproject.org/content/repositories/snapshots</url>-->
-        <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2</url>
+            <name>Repository for dependencies</name>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+        <repository>
+            <id>motech.nexus</id>
+            <name>Motech Snapshots Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -551,21 +550,16 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-common</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-api</artifactId>
-            <version>0.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-sms-kookoo</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>

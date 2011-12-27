@@ -15,7 +15,7 @@ public class JobAidSeed{
     private JobAidContentService jobAidContentService;
 
     @Seed(priority = 0)
-    protected void load() {
+    public void load() {
         Lesson lvl2ch5lsn1 = new Lesson().setNumber(1).setFileName("chapter_5_lesson_1.wav");
         Lesson lvl2ch5lsn2 = new Lesson().setNumber(2).setFileName("chapter_5_lesson_2.wav");
         Lesson lvl2ch5lsn3 = new Lesson().setNumber(3).setFileName("chapter_5_lesson_3.wav");
