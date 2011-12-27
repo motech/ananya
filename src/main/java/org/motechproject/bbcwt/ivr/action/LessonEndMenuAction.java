@@ -9,7 +9,7 @@ import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/lessonEndMenu")
 public class LessonEndMenuAction extends BaseAction {
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private HealthWorkersRepository healthWorkersRepository;
 
     @Autowired
-    public LessonEndMenuAction(HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages) {
+    public LessonEndMenuAction(HealthWorkersRepository healthWorkersRepository, ChaptersRepository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages) {
         this.healthWorkersRepository = healthWorkersRepository;
         this.chaptersRespository = chaptersRespository;
         this.milestonesRepository = milestonesRepository;

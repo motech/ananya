@@ -7,7 +7,7 @@ import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,11 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class QuestionAction extends BaseAction {
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     private MilestonesRepository milestonesRepository;
 
     @Autowired
-    public QuestionAction(ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages)  {
+    public QuestionAction(ChaptersRepository chaptersRespository, MilestonesRepository milestonesRepository, IVRMessage messages)  {
         this.chaptersRespository = chaptersRespository;
         this.milestonesRepository = milestonesRepository;
         this.messages = messages;

@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
     private HealthWorkersRepository healthWorkers;
-    private ChaptersRespository chapters;
+    private ChaptersRepository chapters;
     private DateUtil dateProvider;
 
     @Autowired
-    public MilestonesRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkers, ChaptersRespository chapters, DateUtil dateProvider) {
+    public MilestonesRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkers, ChaptersRepository chapters, DateUtil dateProvider) {
         super(Milestone.class, db);
         this.healthWorkers = healthWorkers;
         this.chapters = chapters;

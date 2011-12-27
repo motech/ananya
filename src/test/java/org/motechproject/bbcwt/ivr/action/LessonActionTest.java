@@ -10,7 +10,7 @@ import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.matcher.HealthWorkerCallerIdMatcher;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.util.DateUtil;
@@ -32,7 +32,7 @@ public class LessonActionTest extends BaseActionTest {
     @Mock
     private MilestonesRepository milestonesRepository;
     @Mock
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     @Mock
     private HealthWorkersRepository healthWorkersRepository;
     @Mock

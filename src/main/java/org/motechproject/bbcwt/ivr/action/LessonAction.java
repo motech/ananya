@@ -8,7 +8,7 @@ import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.util.DateUtil;
@@ -26,13 +26,13 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class LessonAction extends HelpEnabledAction {
     public static final String LOCATION = "/chapter/{chapterNumber}/lesson/{lessonNumber}";
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     private MilestonesRepository milestonesRepository;
     private HealthWorkersRepository healthWorkersRepository;
     private DateUtil dateUtil;
 
     @Autowired
-    public LessonAction(HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository, MilestonesRepository milestonesRepository, DateUtil dateUtil, IVRMessage messages)  {
+    public LessonAction(HealthWorkersRepository healthWorkersRepository, ChaptersRepository chaptersRespository, MilestonesRepository milestonesRepository, DateUtil dateUtil, IVRMessage messages)  {
         this.healthWorkersRepository = healthWorkersRepository;
         this.chaptersRespository = chaptersRespository;
         this.milestonesRepository = milestonesRepository;

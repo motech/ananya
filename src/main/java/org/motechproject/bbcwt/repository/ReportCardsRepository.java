@@ -15,11 +15,11 @@ import java.util.List;
 @Repository
 public class ReportCardsRepository extends AbstractCouchRepository<ReportCard> {
     private HealthWorkersRepository healthWorkersRepository;
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
 
     @Autowired
-    public ReportCardsRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository, ChaptersRespository chaptersRespository) {
+    public ReportCardsRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository, ChaptersRepository chaptersRespository) {
         super(ReportCard.class, db);
         this.healthWorkersRepository = healthWorkersRepository;
         this.chaptersRespository = chaptersRespository;

@@ -2,10 +2,9 @@ package org.motechproject.bbcwt.ivr.action;
 
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Milestone;
-import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,10 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/startNextChapter")
 public class StartNextChapterAction extends BaseAction {
     private MilestonesRepository milestonesRepository;
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
     @Autowired
-    public StartNextChapterAction(MilestonesRepository milestonesRepository, ChaptersRespository chaptersRespository, IVRMessage messages) {
+    public StartNextChapterAction(MilestonesRepository milestonesRepository, ChaptersRepository chaptersRespository, IVRMessage messages) {
         this.milestonesRepository = milestonesRepository;
         this.chaptersRespository = chaptersRespository;
         this.messages = messages;

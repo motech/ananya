@@ -9,7 +9,7 @@ import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ public class StartNextChapterActionTest extends BaseActionTest {
     @Mock
     private MilestonesRepository milestonesRepository;
     @Mock
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
     private HealthWorker healthWorker;
     private Chapter chapter1;

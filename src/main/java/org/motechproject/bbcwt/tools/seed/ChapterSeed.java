@@ -3,17 +3,17 @@ package org.motechproject.bbcwt.tools.seed;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Question;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
+import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
-public class ChapterSeed extends Seed {
+@Component
+public class ChapterSeed {
     @Autowired
-    private ChaptersRespository chapters;
+    private ChaptersRepository chapters;
 
-
-    @Override
+    @Seed(priority = 0)
     protected void load() {
         Chapter chapter1 = new Chapter(1);
 

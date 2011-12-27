@@ -18,7 +18,7 @@ public class ReportCardsRepositoryTest extends SpringIntegrationTest{
     @Autowired
     private HealthWorkersRepository healthWorkersRepository;
     @Autowired
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
     private Chapter chapter;
     private Question question1;

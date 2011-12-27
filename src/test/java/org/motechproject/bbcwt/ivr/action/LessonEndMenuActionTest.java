@@ -9,7 +9,7 @@ import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Milestone;
 import org.motechproject.bbcwt.ivr.IVR;
 import org.motechproject.bbcwt.ivr.IVRRequest;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.HealthWorkersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
@@ -23,7 +23,7 @@ public class LessonEndMenuActionTest extends BaseActionTest {
     private LessonEndMenuAction lessonEndMenuAction;
 
     @Mock
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     @Mock
     private MilestonesRepository milestonesRepository;
     @Mock

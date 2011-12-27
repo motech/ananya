@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class ChaptersRespositoryTest extends SpringIntegrationTest {
     @Autowired
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
     private Chapter chapter;
 

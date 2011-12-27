@@ -4,14 +4,5 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     <import resource="classpath*:META-INF/spring/applicationContext.xml"/>
 
-	<bean id="seedLoader" class="org.motechproject.bbcwt.tools.seed.SeedLoader">
-		<constructor-arg>
-			<list>
-                <ref bean="chapterSeed"/>
-                <ref bean="jobAidSeed"/>
-			</list>
-		</constructor-arg>
-	</bean>
-
     <bean id="couchDB" class="org.motechproject.bbcwt.tools.CouchDB"/>
 </beans>

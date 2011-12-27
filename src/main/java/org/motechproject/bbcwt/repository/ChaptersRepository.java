@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ChaptersRespository extends AbstractCouchRepository<Chapter> {
+public class ChaptersRepository extends AbstractCouchRepository<Chapter> {
 
     @Autowired
-    protected ChaptersRespository(@Qualifier("bbcwtDbConnector") CouchDbConnector db) {
+    protected ChaptersRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db) {
         super(Chapter.class, db);
     }
 

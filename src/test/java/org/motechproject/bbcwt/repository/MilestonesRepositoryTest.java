@@ -18,7 +18,7 @@ public class MilestonesRepositoryTest extends SpringIntegrationTest {
     @Autowired
     private HealthWorkersRepository healthWorkersRepository;
     @Autowired
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
     @Mock
     private DateUtil dateProvider;
 

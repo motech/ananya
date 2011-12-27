@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.ivr.IVR;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
+import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 
 import static org.mockito.Matchers.anyInt;
@@ -19,7 +19,7 @@ public class QuestionActionTest extends BaseActionTest {
     private MilestonesRepository milestonesRepository;
 
     @Mock
-    private ChaptersRespository chaptersRespository;
+    private ChaptersRepository chaptersRespository;
 
     private QuestionAction questionAction;
     private Chapter chapter;

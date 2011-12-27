@@ -1,7 +1,6 @@
 package org.motechproject.bbcwt.ivr.action;
 
 
-import com.ozonetel.kookoo.CollectDtmf;
 import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.HealthWorker;
 import org.motechproject.bbcwt.domain.Milestone;
@@ -11,7 +10,6 @@ import org.motechproject.bbcwt.ivr.IVRMessage;
 import org.motechproject.bbcwt.ivr.IVRRequest;
 import org.motechproject.bbcwt.ivr.builder.IVRDtmfBuilder;
 import org.motechproject.bbcwt.ivr.builder.IVRResponseBuilder;
-import org.motechproject.bbcwt.repository.ChaptersRespository;
 import org.motechproject.bbcwt.repository.MilestonesRepository;
 import org.motechproject.bbcwt.repository.ReportCardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
