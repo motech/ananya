@@ -29,7 +29,7 @@
         </constructor-arg>
     </bean>
     <bean id="bbcwtDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
-        <constructor-arg value="bbcwt"/>
+        <constructor-arg value="ananya"/>
         <constructor-arg ref="bbcwtCouchDbInstance"/>
     </bean>
 
