@@ -11,4 +11,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private String name;
 
+    public FrontLineWorker() {
+    }
+
+    public FrontLineWorker(String name) {
+        this.name = name;
+    }
+
+    public String name() {
+        return name;
+    }
 }
