@@ -18,7 +18,7 @@
     <import resource="classpath:integrationCommon.xml"/>
     <import resource="classpath:applicationPlatformCommon.xml"/>
 
-    <bean id="eventRelay" class="org.motechproject.event.ClientEventRelay" />
+    <bean id="eventRelay" class="org.motechproject.event.ClientEventRelay"/>
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
@@ -27,6 +27,19 @@
     <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".vm"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="toolboxConfigLocation" value="toolbox.xml"/>
+        <property name="contentType" value="text/html; charset=utf-8"/>
+    </bean>
+
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/views"/>
+        <property name="configLocation" value="velocity.properties"/>
     </bean>
 
 </beans>
