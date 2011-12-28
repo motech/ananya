@@ -11,12 +11,6 @@
     <artifactId>ananya-web</artifactId>
     <packaging>war</packaging>
     <name>Ananya Web</name>
-    <properties>
-        <spring.version>3.0.5.RELEASE</spring.version>
-        <slf4j.version>1.6.1</slf4j.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-security.version>3.0.5.RELEASE</spring-security.version>
-    </properties>
 
     <build>
         <plugins>
@@ -104,67 +98,12 @@
     </build>
 
     <dependencies>
-        <!-- General dependencies for standard applications -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.4.9</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.4.9</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>net.sf.flexjson</groupId>
-            <artifactId>flexjson</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -202,31 +141,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>4.1.0.Final</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-impl</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -272,22 +186,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-js-resources</artifactId>
-            <version>2.2.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-digester</groupId>
-            <artifactId>commons-digester</artifactId>
-            <version>2.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.1</version>
@@ -319,22 +217,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-core</artifactId>
-            <version>2.2.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tiles</groupId>
-            <artifactId>tiles-jsp</artifactId>
-            <version>2.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -369,41 +251,21 @@
             <version>${spring-security.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.ektorp</groupId>
-            <artifactId>org.ektorp</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ektorp</groupId>
-            <artifactId>org.ektorp.spring</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium</artifactId>
             <version>2.0a7</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
             <version>2.0a7</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jasypt</groupId>
-            <artifactId>jasypt</artifactId>
-            <version>1.7</version>
-            <scope>compile</scope>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>com.ozonetel.kookoo</groupId>
@@ -417,30 +279,11 @@
             <version>3.1</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.lambdaj</groupId>
-            <artifactId>lambdaj</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
-            <version>0.6-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-server-api</artifactId>
-            <version>0.6-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-api</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-seed</artifactId>
-            <version>0.3-SNAPSHOT</version>
-        </dependency>
+
 
     </dependencies>
 
