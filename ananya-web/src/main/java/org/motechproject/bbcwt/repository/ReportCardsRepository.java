@@ -19,7 +19,7 @@ public class ReportCardsRepository extends AbstractCouchRepository<ReportCard> {
 
 
     @Autowired
-    public ReportCardsRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository, ChaptersRepository chaptersRespository) {
+    public ReportCardsRepository(@Qualifier("ananyaDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkersRepository, ChaptersRepository chaptersRespository) {
         super(ReportCard.class, db);
         this.healthWorkersRepository = healthWorkersRepository;
         this.chaptersRespository = chaptersRespository;

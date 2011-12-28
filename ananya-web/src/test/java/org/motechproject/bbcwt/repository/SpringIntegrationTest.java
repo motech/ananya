@@ -16,9 +16,9 @@ import java.util.ArrayList;
 @ContextConfiguration("classpath:testApplicationContext.xml")
 public abstract class SpringIntegrationTest {
 
-    @Qualifier("bbcwtDbConnector")
+    @Qualifier("ananyaDbConnector")
     @Autowired
-	protected CouchDbConnector bbcwtDbConnector;
+	protected CouchDbConnector ananyaDbConnector;
 
 	protected ArrayList<BulkDeleteDocument> toDelete;
 
@@ -29,7 +29,7 @@ public abstract class SpringIntegrationTest {
 
 	@After
 	public void after() {
-		bbcwtDbConnector.executeBulk(toDelete);
+		ananyaDbConnector.executeBulk(toDelete);
 	}
 	
 	protected void markForDeletion(Object document) {

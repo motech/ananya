@@ -13,7 +13,7 @@ import java.util.List;
 public class ChaptersRepository extends AbstractCouchRepository<Chapter> {
 
     @Autowired
-    protected ChaptersRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db) {
+    protected ChaptersRepository(@Qualifier("ananyaDbConnector") CouchDbConnector db) {
         super(Chapter.class, db);
     }
 

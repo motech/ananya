@@ -8,7 +8,6 @@ public class HealthWorker extends BaseCouchEntity {
     private String callerId;
 
     public HealthWorker() {
-
     }
 
     public HealthWorker(String callerId) {

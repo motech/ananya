@@ -23,14 +23,14 @@
 
     <aop:aspectj-autoproxy/>
 
-    <bean id="bbcwtCouchDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+    <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
         </constructor-arg>
     </bean>
-    <bean id="bbcwtDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+    <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
-        <constructor-arg ref="bbcwtCouchDbInstance"/>
+        <constructor-arg ref="ananyaDbInstance"/>
     </bean>
 
 </beans>

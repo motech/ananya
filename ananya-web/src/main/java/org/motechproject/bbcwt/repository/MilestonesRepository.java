@@ -17,7 +17,7 @@ public class MilestonesRepository extends AbstractCouchRepository<Milestone> {
     private DateUtil dateProvider;
 
     @Autowired
-    public MilestonesRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkers, ChaptersRepository chapters, DateUtil dateProvider) {
+    public MilestonesRepository(@Qualifier("ananyaDbConnector") CouchDbConnector db, HealthWorkersRepository healthWorkers, ChaptersRepository chapters, DateUtil dateProvider) {
         super(Milestone.class, db);
         this.healthWorkers = healthWorkers;
         this.chapters = chapters;

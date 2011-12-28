@@ -10,7 +10,7 @@ public class CouchDB {
     private CouchDbInstance couchDbInstance;
 
     @Autowired
-    @Qualifier("bbcwtDbConnector")
+    @Qualifier("ananyaDbConnector")
     private CouchDbConnector dbConnector;
 
     public void recreate() {

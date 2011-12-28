@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class HealthWorkersRepository extends AbstractCouchRepository<HealthWorker> {
     @Autowired
-    public HealthWorkersRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector db) {
+    public HealthWorkersRepository(@Qualifier("ananyaDbConnector") CouchDbConnector db) {
         super(HealthWorker.class, db);
     }
 

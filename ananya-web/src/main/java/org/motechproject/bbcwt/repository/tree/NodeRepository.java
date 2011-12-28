@@ -14,7 +14,7 @@ import java.util.List;
 public class NodeRepository extends AbstractCouchRepository<Node> {
 
     @Autowired
-    public NodeRepository(@Qualifier("bbcwtDbConnector") CouchDbConnector dbCouchDbConnector) {
+    public NodeRepository(@Qualifier("ananyaDbConnector") CouchDbConnector dbCouchDbConnector) {
         super(Node.class, dbCouchDbConnector);
     }
 
