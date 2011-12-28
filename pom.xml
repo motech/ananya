@@ -22,7 +22,7 @@
             <id>motech.nexus</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
-            <uniqueVersion>true</uniqueVersion>
+            <!--<uniqueVersion>true</uniqueVersion>-->
         </snapshotRepository>
     </distributionManagement>
 
