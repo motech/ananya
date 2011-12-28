@@ -19,14 +19,15 @@
     <import resource="classpath:applicationPlatformCommon.xml"/>
 
     <bean id="eventRelay" class="org.motechproject.event.ClientEventRelay"/>
-    <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+
+    <bean id="ananyaflwDB" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
         </constructor-arg>
     </bean>
-    <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+    <bean id="ananyaflwDBConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
-        <constructor-arg ref="ananyaDbInstance"/>
+        <constructor-arg ref="ananyaflwDB"/>
     </bean>
 
     <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
 
     @Autowired
-    protected AllFrontLineWorkers(@Qualifier("ananyaDbConnector") CouchDbConnector db) {
+    protected AllFrontLineWorkers(@Qualifier("ananyaflwDBConnector") CouchDbConnector db) {
         super(FrontLineWorker.class, db);
     }
 }
