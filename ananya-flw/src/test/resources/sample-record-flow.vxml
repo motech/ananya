@@ -13,7 +13,6 @@
                 <rule id="root" scope="public">
                     <one-of>
                         <item>#</item>
-                        <!--recording ends when user presses #-->
                     </one-of>
                 </rule>
             </grammar>

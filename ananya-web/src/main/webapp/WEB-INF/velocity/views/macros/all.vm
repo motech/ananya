@@ -1,0 +1,43 @@
+#macro(vxmlHeader)
+    <?xml version="1.0" encoding="UTF-8"?>
+    <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+#end
+
+#macro(formHeader $welcomewav)
+    <block>
+        <audio src="$welcomewav"/>
+    </block>
+#end
+
+#macro(record $field $askwav $confirmwav $noinputwav)
+    <record name="$field" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+        <grammar mode="dtmf" version="1.0" root="root">
+            <rule id="root" scope="public">
+                <one-of>
+                    <item>#</item>
+                </one-of>
+            </rule>
+        </grammar>
+        <prompt timeout="5s">
+            <audio src="$askwav"/>
+        </prompt>
+        <noinput>
+            <prompt>
+                <audio src="$noinputwav"/>
+            </prompt>
+        </noinput>
+        <filled>
+            <prompt>
+                <audio src="$confirmwav"/>
+                <audio expr="$field"/>
+            </prompt>
+        </filled>
+    </record>
+#end
+
+
+#macro(vxmlFooter)
+    </vxml>
+#end

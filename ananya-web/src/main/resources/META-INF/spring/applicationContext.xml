@@ -9,18 +9,15 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <context:property-placeholder location="classpath*:META-INF/spring/*.properties"/>
+    <context:property-placeholder
+            location="classpath*:META-INF/spring/bbcwt.properties, classpath*:/activemq.properties"/>
     <util:properties id="ivrProperties" location="classpath:/ivr.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
+    <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
-    <context:component-scan base-package="org.motechproject">
-    </context:component-scan>
-
-    <import resource="classpath:integrationCommon.xml"/>
-    <import resource="classpath:outboundEventChannelAdapter.xml"/>
-
+    <context:component-scan base-package="org.motechproject"/>
     <aop:aspectj-autoproxy/>
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
