@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteMilestonesHistory {
-    public static final String APPLICATION_CONTEXT_XML = "META-INF/spring/applicationContext-tools.xml";
+    public static final String APPLICATION_CONTEXT_XML = "META-INF/spring/applicationContext.xml";
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);

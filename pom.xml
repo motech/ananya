@@ -11,11 +11,15 @@
         <module>ananya-web</module>
     </modules>
     <name>Ananya</name>
+
     <properties>
         <spring.version>3.0.5.RELEASE</spring.version>
         <slf4j.version>1.6.1</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-security.version>3.0.5.RELEASE</spring-security.version>
+        <db.server>localhost</db.server>
+        <db.name>ananya</db.name>
+        <db.port>5984</db.port>
     </properties>
 
     <distributionManagement>
@@ -101,6 +105,32 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.5</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>drop DB</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Dropping DB: START"/>
+                                <exec executable="curl">
+                                    <arg value="-s"/>
+                                    <arg value="-S"/>
+                                    <arg value="-X"/>
+                                    <arg value="DELETE"/>
+                                    <arg value="http://${db.server}:${db.port}/${db.name}"/>
+                                </exec>
+                                <echo message="Dropping DB: END"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -271,4 +301,5 @@
             <version>2.5</version>
         </dependency>
     </dependencies>
+
 </project>

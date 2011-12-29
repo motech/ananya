@@ -4,10 +4,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
-@TypeDiscriminator("doc.type === 'FrontLineWorker'")
+@TypeDiscriminator("doc.documentType === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
-    private String type = "FrontLineWorker";
+    private String documentType = "FrontLineWorker";
     @JsonProperty
     private String name;
 
