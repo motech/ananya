@@ -8,14 +8,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @Scope(value = "prototype")
-public class FLWController {
+public class RegistrationController {
 
-    private static final String PAGE = "some";
+    private static final String REGISTRATION_VXML = "register-flw";
 
-    @RequestMapping(method = {RequestMethod.GET}, value = "/status")
-    public ModelAndView callFlow() {
-       return new ModelAndView(PAGE);
+    @RequestMapping(method = {RequestMethod.GET}, value = "vxml/register/")
+    public ModelAndView vxmlForRegistration() {
+       return new ModelAndView(REGISTRATION_VXML);
     }
 
-
+    
 }

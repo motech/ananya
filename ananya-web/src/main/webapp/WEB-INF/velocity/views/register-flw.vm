@@ -1,10 +1,11 @@
 #vxmlHeader()
 <form id="register_flw">
-    #formHeader()
+    #formHeader("./welcome.wav")
+    #recordMSISDN()
     #record("name","./pls_say_name.wav","./we_heard_as.wav","./no_input.wav")
     #record("district","./pls_say_district.wav","./we_heard_as.wav","./no_input.wav")
     #record("block","./pls_say_block.wav","./we_heard_as.wav","./no_input.wav")
     #record("village","./pls_say_village.wav","./we_heard_as.wav","./no_input.wav")
-    <submit next="http://server:port/ananya/flw" enctype="multipart/form-data"  method="post" namelist="name district block village"/>
+    <submit next="http://server:port/ananya/flw" enctype="multipart/form-data"  method="post" namelist="msisdn name district block village"/>
 </form>
 #vxmlFooter()

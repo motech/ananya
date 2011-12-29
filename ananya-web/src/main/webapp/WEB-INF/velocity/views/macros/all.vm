@@ -11,6 +11,10 @@
     </block>
 #end
 
+#macro(recordMSISDN)
+    <var name ="msisdn" expr="session.callerid"/>
+#end
+
 #macro(record $field $askwav $confirmwav $noinputwav)
     <record name="$field" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
         <grammar mode="dtmf" version="1.0" root="root">
