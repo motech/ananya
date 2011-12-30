@@ -14,11 +14,24 @@ public class AllFrontLineWorkersTest extends FLWSpringIntegrationTest {
 
     @Test
     public void shouldAddAndRetrieveRecord() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("name");
+        String msisdn = "9901";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn);
         allFrontLineWorkers.add(frontLineWorker);
 
         markForDeletion(frontLineWorker);
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        assertEquals("name", frontLineWorkers.get(0).name());
+        assertEquals(msisdn, frontLineWorkers.get(0).msisdn());
+    }
+
+    @Test
+    public void shouldRetrieveFrontLineWorkerByMSISDN() {
+        String msisdn = "9901";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn);
+        allFrontLineWorkers.add(frontLineWorker);
+
+        markForDeletion(frontLineWorker);
+
+        FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        assertEquals(msisdn, dbFrontLineWorker.msisdn());
     }
 }

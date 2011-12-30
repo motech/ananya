@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+<form id="register_flw">
+    <block>
+    <audio src="./welcome.wav"/>
+</block>
+    <var name ="msisdn" expr="session.callerid"/>
+    <record name="name" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+    <grammar mode="dtmf" version="1.0" root="root">
+
+        <rule id="root" scope="public">
+            <one-of>
+                <item>#</item>
+            </one-of>
+        </rule>
+    </grammar>
+    <prompt timeout="5s">
+        <audio src="./pls_say_name.wav"/>
+
+    </prompt>
+    <noinput>
+        <prompt>
+            <audio src="./no_input.wav"/>
+        </prompt>
+    </noinput>
+    <filled>
+        <prompt>
+            <audio src="./we_heard_as.wav"/>
+
+            <audio expr="name"/>
+        </prompt>
+    </filled>
+</record>
+    <record name="district" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+    <grammar mode="dtmf" version="1.0" root="root">
+        <rule id="root" scope="public">
+            <one-of>
+                <item>#</item>
+
+            </one-of>
+        </rule>
+    </grammar>
+    <prompt timeout="5s">
+        <audio src="./pls_say_district.wav"/>
+    </prompt>
+    <noinput>
+        <prompt>
+            <audio src="./no_input.wav"/>
+
+        </prompt>
+    </noinput>
+    <filled>
+        <prompt>
+            <audio src="./we_heard_as.wav"/>
+            <audio expr="district"/>
+        </prompt>
+    </filled>
+</record>
+
+    <record name="block" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+    <grammar mode="dtmf" version="1.0" root="root">
+        <rule id="root" scope="public">
+            <one-of>
+                <item>#</item>
+            </one-of>
+        </rule>
+    </grammar>
+
+    <prompt timeout="5s">
+        <audio src="./pls_say_block.wav"/>
+    </prompt>
+    <noinput>
+        <prompt>
+            <audio src="./no_input.wav"/>
+        </prompt>
+    </noinput>
+    <filled>
+
+        <prompt>
+            <audio src="./we_heard_as.wav"/>
+            <audio expr="block"/>
+        </prompt>
+    </filled>
+</record>
+    <record name="village" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+    <grammar mode="dtmf" version="1.0" root="root">
+        <rule id="root" scope="public">
+
+            <one-of>
+                <item>#</item>
+            </one-of>
+        </rule>
+    </grammar>
+    <prompt timeout="5s">
+        <audio src="./pls_say_village.wav"/>
+    </prompt>
+
+    <noinput>
+        <prompt>
+            <audio src="./no_input.wav"/>
+        </prompt>
+    </noinput>
+    <filled>
+        <prompt>
+            <audio src="./we_heard_as.wav"/>
+            <audio expr="village"/>
+
+        </prompt>
+    </filled>
+</record>
+<submit next="http://server:port/ananya/flw" enctype="multipart/form-data"  method="post" namelist="msisdn name district block village"/>
+</form>
+</vxml>
