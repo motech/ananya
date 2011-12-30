@@ -10,9 +10,10 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
     <context:property-placeholder
-            location="classpath*:META-INF/spring/bbcwt.properties, classpath*:/activemq.properties"/>
+            location="classpath*:/activemq.properties"/>
     <util:properties id="ivrProperties" location="classpath:/ivr.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
+    <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>

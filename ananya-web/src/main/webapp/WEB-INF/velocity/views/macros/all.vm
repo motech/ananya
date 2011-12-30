@@ -31,7 +31,7 @@
             </rule>
         </grammar>
         <prompt timeout="$bundle.flw.registration.timeout">
-            <audio src="$askwav"/>
+            <audio src="$askwav"/>    
         </prompt>
         <noinput>
             <prompt>
