@@ -1,8 +1,8 @@
 #macro(vxmlHeader)
-    <?xml version="1.0" encoding="UTF-8"?>
-    <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 #end
 
 #macro(formHeader $welcomewav)
@@ -12,19 +12,25 @@
 #end
 
 #macro(recordMSISDN)
-    <var name ="msisdn" expr="session.callerid"/>
+    <var name="msisdn" expr="session.callerid"/>
 #end
 
 #macro(record $field $askwav $confirmwav $noinputwav)
-    <record name="$field" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+    <record name="$field"
+            beep="$bundle.flw.registration.beep"
+            maxtime="$bundle.flw.registration.max.record.time"
+            finalsilence="$bundle.flw.registration.finalsilence"
+            dtmfterm="$bundle.flw.registration.dtmfterm"
+            type="$bundle.flw.registration.record.audio.type">
+
         <grammar mode="dtmf" version="1.0" root="root">
             <rule id="root" scope="public">
                 <one-of>
-                    <item>#</item>
+                    <item>$bundle.flw.registration.record.stop</item>
                 </one-of>
             </rule>
         </grammar>
-        <prompt timeout="5s">
+        <prompt timeout="$bundle.flw.registration.timeout">
             <audio src="$askwav"/>
         </prompt>
         <noinput>
@@ -43,5 +49,5 @@
 
 
 #macro(vxmlFooter)
-    </vxml>
+</vxml>
 #end

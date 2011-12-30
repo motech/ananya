@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <toolbox>
     <tool scope="application">
-        <key>resourcebundle</key>
+        <key>bundle</key>
         <class>org.apache.velocity.tools.generic.ResourceTool</class>
-        <parameter name="bundles" value="bundles/"/>
+        <parameter name="bundles" value="bundles/vxmlbundle"/>
     </tool>
 </toolbox>
