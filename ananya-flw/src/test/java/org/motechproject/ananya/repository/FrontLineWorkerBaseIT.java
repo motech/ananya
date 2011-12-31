@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-flw.xml")
-public abstract class FLWSpringIntegrationTest {
+public abstract class FrontLineWorkerBaseIT {
 
     @Qualifier("ananyaDbConnector")
     @Autowired

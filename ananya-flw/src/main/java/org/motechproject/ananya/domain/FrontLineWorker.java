@@ -13,7 +13,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private String msisdn;
     @JsonProperty
-    private FLWStatus status;
+    private FrontLineWorkerStatus status;
 
     public FrontLineWorker() {
     }
@@ -26,12 +26,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn;
     }
 
-    public FrontLineWorker status(FLWStatus status) {
+    public FrontLineWorker status(FrontLineWorkerStatus status) {
         this.status = status;
         return this;
     }
 
-    public FLWStatus status() {
+    public FrontLineWorkerStatus status() {
         return status;
     }
 
@@ -40,7 +40,4 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this;
     }
 
-    public String getMsisdn() {
-        return msisdn;
-    }
 }

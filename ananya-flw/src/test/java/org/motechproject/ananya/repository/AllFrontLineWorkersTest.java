@@ -8,7 +8,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class AllFrontLineWorkersTest extends FLWSpringIntegrationTest {
+public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 
