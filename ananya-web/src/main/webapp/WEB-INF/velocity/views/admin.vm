@@ -1,8 +1,10 @@
 <html>
 <title>Ananya Test</title>
+
 <body>
 
 <h3>FLW Recording</h3>
+
 <div>
     <form action="." method="post">
         <label for="msisdn">msisdn:</label>
@@ -12,11 +14,11 @@
 </div>
 <div>
     #if(!$waves.isEmpty())
-    <audio controls="controls">
         #foreach($wav in $waves)
-            <source src="$wav"/>
+            <audio controls="controls">
+                <source src="$wav.getName()"/>
+            </audio>
         #end
-    </audio>
     #end
 </div>
 

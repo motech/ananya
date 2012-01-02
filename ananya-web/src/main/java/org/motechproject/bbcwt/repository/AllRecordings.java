@@ -16,7 +16,7 @@ public class AllRecordings {
     public void store(String msisdn, List<FileItem> fileItems, String path) {
         for (FileItem fileItem : fileItems) {
             if (fileItem.isFormField()) continue;
-            File savedFile = new File(path + msisdn + "_" + fileItem.getFieldName() + ".wav");
+            File savedFile = new File(path + "/" + msisdn + "_" + fileItem.getFieldName() + ".wav");
             try {
                 savedFile.createNewFile();
                 fileItem.write(savedFile);
