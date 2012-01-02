@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
+import org.motechproject.bbcwt.repository.AllRecordings;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,11 +24,13 @@ public class RegistrationControllerTest {
     private HttpServletRequest request;
     @Mock
     private HttpServletResponse response;
+    @Mock
+    private AllRecordings allRecordings;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new RegistrationController(flwService);
+        controller = new RegistrationController(flwService, allRecordings);
     }
 
     @Test

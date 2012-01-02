@@ -1,4 +1,4 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.bbcwt.repository;
 
 import org.apache.commons.fileupload.FileItem;
 import org.slf4j.Logger;
@@ -9,14 +9,14 @@ import java.io.File;
 import java.util.List;
 
 @Repository
-public class AllRecordedContent {
+public class AllRecordings {
 
-    private static Logger log = LoggerFactory.getLogger(AllRecordedContent.class);
+    private static Logger log = LoggerFactory.getLogger(AllRecordings.class);
 
-    public void add(String msisdn, List<FileItem> fileItems) {
+    public void store(String msisdn, List<FileItem> fileItems, String path) {
         for (FileItem fileItem : fileItems) {
             if (fileItem.isFormField()) continue;
-            File savedFile = new File(msisdn + "_" + fileItem.getFieldName() + ".wav");
+            File savedFile = new File(path + msisdn + "_" + fileItem.getFieldName() + ".wav");
             try {
                 savedFile.createNewFile();
                 fileItem.write(savedFile);
@@ -26,4 +26,6 @@ public class AllRecordedContent {
             }
         }
     }
+
+
 }

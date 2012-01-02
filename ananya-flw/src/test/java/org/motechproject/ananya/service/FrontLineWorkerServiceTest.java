@@ -1,19 +1,14 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.fileupload.FileItem;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllRecordedContent;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -23,13 +18,11 @@ public class FrontLineWorkerServiceTest {
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
     private AllFrontLineWorkers allFrontLineWorkers;
-    @Mock
-    private AllRecordedContent allRecordedContent;
-
+   
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, allRecordedContent);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers);
     }
 
     @Test
@@ -51,17 +44,13 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldExtractCallerIdAndSaveRecordedFiles() {
-        FileItem item = mock(FileItem.class);
-        when(item.getFieldName()).thenReturn("msisdn");
-        when(item.isFormField()).thenReturn(true);
-        when(item.getString()).thenReturn("msisdn");
-        List<FileItem> items = Arrays.asList(item);
+    public void shouldExtractCallerIdAndSaveRecordedFilesAndSaveNewWorker() {
+        frontLineWorkerService.createNew("msisdn");
 
-        String msisdn = frontLineWorkerService.createNew(items);
-        assertEquals("msisdn", msisdn);
-
-        verify(allRecordedContent).add("msisdn", items);
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).add(captor.capture());
+        FrontLineWorker captured = captor.getValue();
+        assertEquals("msisdn",captured.msisdn());
     }
 
 }
