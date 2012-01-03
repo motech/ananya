@@ -111,6 +111,10 @@
                     <jsSrcDir>
                          ${project.basedir}/src/main/webapp/js
                     </jsSrcDir>
+                    <specIncludes>
+                        <include>**/*_mother.js</include>
+                        <include>**/*_spec.js</include>
+                    </specIncludes>
                     <jsTestSrcDir>
                           ${project.basedir}/src/test/js
                     </jsTestSrcDir>
