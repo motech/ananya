@@ -31,7 +31,7 @@
                     <printSummary>true</printSummary>
                     <excludes>
                         <exclude>**/*_Roo_*</exclude>
-                        <exclude>**/bbcwtfunctional/**/*.java</exclude>
+                        <exclude>**/ananyafunctional/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
