@@ -15,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Enumeration;
 import java.util.List;
 
 @Controller
@@ -28,8 +25,8 @@ public class RegistrationController {
     private static final String registration_vxml = "register-flw";
     private static final String registration_done_vxml = "register-done-flw";
     private static final String menu_vxml = "top-menu";
-    private static final String xml = "text/xml";
-    private static final String MSISDN_PARAM = "msisdn";
+    private static final String msisdn_param = "msisdn";
+    private static final String callerid_param = "session.callerid";
 
     private FrontLineWorkerService frontLineWorkerService;
     private AllRecordings allRecordings;
@@ -41,28 +38,20 @@ public class RegistrationController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/flw/vxml/")
-    public ModelAndView callFlow(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        print(session.getAttributeNames());
-        print(request.getParameterNames());
-        String msisdn = request.getParameter("msisdn");
-        response.setContentType(xml);
+    public ModelAndView callFlow(HttpServletRequest request) {
+        String msisdn = request.getParameter(callerid_param);
+        log.info("msisdn of caller: " + msisdn);
         String vxml = frontLineWorkerService.getStatus(msisdn).isRegistered() ? menu_vxml : registration_vxml;
         return new ModelAndView(vxml);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
-        print(session.getAttributeNames());
-        print(request.getParameterNames());
-
         ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
         List items = upload.parseRequest(request);
 
         String msisdn = getMsisdn(items);
         frontLineWorkerService.createNew(msisdn);
-
         String path = request.getSession().getServletContext().getRealPath("/recordings/");
         allRecordings.store(msisdn, items, path);
 
@@ -71,15 +60,9 @@ public class RegistrationController {
 
     private String getMsisdn(List<FileItem> items) {
         for (FileItem item : items)
-            if (item.isFormField() && item.getFieldName().equals(MSISDN_PARAM))
+            if (item.isFormField() && item.getFieldName().equals(msisdn_param))
                 return item.getString();
         return null;
-    }
-
-    private void print(Enumeration items) {
-        while (items.hasMoreElements()) {
-            log.info(items.nextElement().toString());
-        }
     }
 
 }

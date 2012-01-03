@@ -13,7 +13,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private String msisdn;
     @JsonProperty
-    private FrontLineWorkerStatus status;
+    private FrontLineWorkerStatus status = FrontLineWorkerStatus.UNREGISTERED;
 
     public FrontLineWorker() {
     }

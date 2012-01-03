@@ -6,6 +6,6 @@ public enum FrontLineWorkerStatus {
     PENDING_REGISTRATION;
 
     public boolean isRegistered() {
-        return this.equals(REGISTERED);
+        return this.equals(REGISTERED) || this.equals(PENDING_REGISTRATION);
     }
 }

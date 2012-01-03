@@ -9,6 +9,7 @@ import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -51,6 +52,7 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker captured = captor.getValue();
         assertEquals("msisdn",captured.msisdn());
+        assertTrue(captured.status().equals(FrontLineWorkerStatus.PENDING_REGISTRATION));
     }
 
 }

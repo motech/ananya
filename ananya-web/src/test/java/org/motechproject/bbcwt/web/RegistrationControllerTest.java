@@ -35,24 +35,22 @@ public class RegistrationControllerTest {
 
     @Test
     public void shouldReturnRegistrationCallFlowIfFLWIsNotRegistered() {
-        when(request.getParameter("msisdn")).thenReturn("991");
+        when(request.getParameter("session.callerid")).thenReturn("991");
         when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.UNREGISTERED);
 
-        ModelAndView modelAndView = controller.callFlow(request, response);
+        ModelAndView modelAndView = controller.callFlow(request);
 
         assertEquals("register-flw", modelAndView.getViewName());
-        verify(response).setContentType("text/xml");
     }
 
     @Test
     public void shouldReturnChoiceCallFlowIfFLWIsRegistered() {
-        when(request.getParameter("msisdn")).thenReturn("991");
+        when(request.getParameter("session.callerid")).thenReturn("991");
         when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.REGISTERED);
 
-        ModelAndView modelAndView = controller.callFlow(request, response);
+        ModelAndView modelAndView = controller.callFlow(request);
 
         assertEquals("top-menu", modelAndView.getViewName());
-        verify(response).setContentType("text/xml");
     }
 
 }

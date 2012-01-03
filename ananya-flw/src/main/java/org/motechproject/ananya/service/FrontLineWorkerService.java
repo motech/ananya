@@ -3,11 +3,15 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FrontLineWorkerService {
+    private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
+
     private AllFrontLineWorkers allFrontLineWorkers;
 
     @Autowired
@@ -21,7 +25,7 @@ public class FrontLineWorkerService {
     }
 
     public String createNew(String msisdn) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn).status(FrontLineWorkerStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
     }
