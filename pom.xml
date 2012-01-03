@@ -78,6 +78,11 @@
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>jasmine-js-bdd</id>
+            <name>Jasmine JavaScript BDD Repository</name>
+            <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <build>

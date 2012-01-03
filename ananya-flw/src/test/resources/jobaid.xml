@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+    <script>
+        <![CDATA[
+        var course = {
+            "introduction" : "Welcome to the Job Aid Course. This will help you in your duties.",
+            "menu" : "Please select a level",
+            "levels" :[
+                {
+                    "introduction" : "Level 1",
+                    "menu" : "Please select a chapter in level 1",
+                    "chapters" :[
+                        {
+                                "introduction" : "Level 1 Chapter 1",
+                                "menu" : "Please select a lesson in level 1  chapter 1",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 1 level 1"},
+                                    {"content" : "This is lesson 2 in chapter 1 level 1"},
+                                    {"content" : "This is lesson 3 in chapter 1 level 1"},
+                                    {"content" : "This is lesson 4 in chapter 1 level 1"}
+                                ]
+                        },
+                        {
+                                "introduction" : "Level 1 Chapter 2",
+                                "menu" : "Please select a lesson in level 1  chapter 2",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 2 level 1"},
+                                    {"content" : "This is lesson 2 in chapter 2 level 1"},
+                                    {"content" : "This is lesson 3 in chapter 2 level 1"},
+                                    {"content" : "This is lesson 4 in chapter 2 level 1"}
+                                ]
+                        },
+                        {
+                                "introduction" : "Level 1 Chapter 3",
+                                "menu" : "Please select a lesson in level 1  chapter 3",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 3 level 1"},
+                                    {"content" : "This is lesson 2 in chapter 3 level 1"},
+                                    {"content" : "This is lesson 3 in chapter 3 level 1"},
+                                    {"content" : "This is lesson 4 in chapter 3 level 1"}
+                                ]
+                        },
+                    ]},
+                {
+                    "introduction" : "Level 2",
+                    "menu" : "Please select a chapter in level 2",
+                    "chapters" :[
+                        {
+                                "introduction" : "Level 2 Chapter 1",
+                                "menu" : "Please select a lesson in level 2  chapter 1",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 1 level 2"},
+                                    {"content" : "This is lesson 2 in chapter 1 level 2"},
+                                    {"content" : "This is lesson 3 in chapter 1 level 2"},
+                                    {"content" : "This is lesson 4 in chapter 1 level 2"}
+                                ]
+                        },
+                        {
+                                "introduction" : "Level 2 Chapter 2",
+                                "menu" : "Please select a lesson in level 2 chapter 2",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 2 level 2"},
+                                    {"content" : "This is lesson 2 in chapter 2 level 2"},
+                                    {"content" : "This is lesson 3 in chapter 2 level 2"},
+                                    {"content" : "This is lesson 4 in chapter 2 level 2"}
+                                ]
+                        },
+                        {
+                                "introduction" : "Level 2 Chapter 3",
+                                "menu" : "Please select a lesson in level 2  chapter 3",
+                                "lessons" : [
+                                    {"content" : "This is lesson 1 in chapter 3 level 2"},
+                                    {"content" : "This is lesson 2 in chapter 3 level 2"},
+                                    {"content" : "This is lesson 3 in chapter 3 level 2"},
+                                    {"content" : "This is lesson 4 in chapter 3 level 2"}
+                                ]
+                        },
+                    ]}
+            ]
+        };
+
+        var MAX_NO_INPUTS = 3;
+        var MAX_INVALID_INPUTS = 3;
+        var GREETING = "./Hello.wav";
+        ]]>
+    </script>
+
+    <script>
+        <![CDATA[
+        var levelSelected = 0;
+        var time_out=10;
+        var next_item = "level_intro";
+        var levels = [0,1,2,3];
+
+        var PromptContext = function() {
+
+            this.incrementNoInputCount = function() {
+                this.noInputCount++;
+            }
+
+            this.incrementInvalidInputCount = function() {
+                this.invalidInputCount++;
+            }
+
+            this.hasExceededMaxNoInputs = function() {
+                return this.noInputCount > MAX_NO_INPUTS;
+            }
+
+            this.hasExceededMaxInvalidInputs = function() {
+                return this.invalidInputCount > MAX_INVALID_INPUTS;
+            }
+
+            this.reset = function() {
+                this.noInputCount = 0;
+                this.invalidInputCount = 0;
+                this.tempToControlValidation = 0;
+            }
+
+            this.isValidInput = function(input) {
+                return input < 4;
+            }
+
+            this.reset();
+        };
+
+        var promptContext = new PromptContext();
+        ]]>
+    </script>
+
+    <!--Should see if the property setting can be configuration driven, or if this could be set as a session variable-->
+    <property name="timeout" value="3s"/>
+
+    <form id="genericLevel">
+        <block name="introduction">
+           <audio src="./audio/welcome.wav"/>
+        </block>
+
+        <!--TODO: The next level selection should be played only in case there is next level.-->
+        <field name="nextLevelSelection" >
+            <prompt>
+                <audio expr="GREETING"/>
+                <!--<audio expr=""/>-->
+            </prompt>
+
+            <!--TODO: Should also specify the length of the dtmf input.-->
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+              </grammar>
+
+
+            <noinput>
+                <goto nextitem="noInputAction"/>
+            </noinput>
+
+            <filled>
+                <!--TODO: Need to put in validation-->
+                <if cond="promptContext.isValidInput(nextLevelSelection)">
+                    <script>
+                        promptContext.reset();
+                    </script>
+                    You entered  <value expr="nextLevelSelection"/> and navigating to next level.
+                    <goto next="#genericLevel"/>
+                    <else/>
+                    <goto nextitem="invalidInputAction"/>
+                </if>
+
+            </filled>
+        </field>
+
+        <block name="noInputAction">
+            <script>
+                promptContext.incrementNoInputCount();
+            </script>
+            <if cond="promptContext.hasExceededMaxNoInputs()">
+                Continuing with disconnect since did not hear from you for too long.
+                <disconnect/>
+            <else/>
+                Did not hear from you for <value expr="promptContext.noInputCount"/> times.
+            </if>
+            <reprompt/>
+        </block>
+
+        <block name="invalidInputAction">
+            <script>
+                promptContext.incrementInvalidInputCount();
+            </script>
+            <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                Continuing with disconnect since got invalid inputs for too many times.
+                <disconnect/>
+            <else/>
+                Did not enter correct input for <value expr="promptContext.invalidInputCount"/> times.
+            </if>
+            <goto nextitem="nextLevelSelection"/>
+        </block>
+    </form>
+
+</vxml>
+
+
+
+

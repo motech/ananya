@@ -1,0 +1,36 @@
+function buildLinksWithSiblingsAndParents(node) {
+    var nodesByLevel = new Array();
+    linkWithParentAndGroupNodesByLevel(node, node, 0, nodesByLevel);
+    linkNodesWithSiblingOnRight(nodesByLevel);
+}
+
+function linkWithParentAndGroupNodesByLevel(node, parentNode, level, nodesByLevel) {
+    //Grouping by level
+    if(!nodesByLevel[level]) {
+        nodesByLevel[level] = new Array();
+    }
+
+    var currentLength = nodesByLevel[level].length;
+    nodesByLevel[level][currentLength] = node;
+
+    //linking to parent
+    node.parent = parentNode;
+
+    for(var i = 0; i < node.children.length; i++) {
+        linkWithParentAndGroupNodesByLevel(node.children[i], node, level+1, nodesByLevel);
+    }
+}
+
+function linkNodesWithSiblingOnRight(nodesByLevel) {
+    var levels = nodesByLevel.length;
+
+    for(var thisLevel = 0; thisLevel < levels ; thisLevel++) {
+        var nodesInThisLevel = nodesByLevel[thisLevel];
+        var indexOfLastNode = nodesInThisLevel.length-1;
+        for(var i=0; i<indexOfLastNode; i++) {
+            nodesInThisLevel[i].siblingOnRight = nodesInThisLevel[i+1];
+        }
+        nodesInThisLevel[indexOfLastNode].siblingOnRight = nodesInThisLevel[indexOfLastNode];
+    }
+}
+
