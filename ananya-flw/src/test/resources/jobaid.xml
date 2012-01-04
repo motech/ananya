@@ -2,146 +2,42 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <!-- TODO: How do we handle if any of the following fetches fail? -->
+    <script src="./js/metadata.js"/>
+    <script src="./js/course_data.js"/>
+
+    <script src="./js/course.js"/>
+    <script src="./js/call_context.js"/>
     <script>
         <![CDATA[
-        var course = {
-            "introduction" : "Welcome to the Job Aid Course. This will help you in your duties.",
-            "menu" : "Please select a level",
-            "levels" :[
-                {
-                    "introduction" : "Level 1",
-                    "menu" : "Please select a chapter in level 1",
-                    "chapters" :[
-                        {
-                                "introduction" : "Level 1 Chapter 1",
-                                "menu" : "Please select a lesson in level 1  chapter 1",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 1 level 1"},
-                                    {"content" : "This is lesson 2 in chapter 1 level 1"},
-                                    {"content" : "This is lesson 3 in chapter 1 level 1"},
-                                    {"content" : "This is lesson 4 in chapter 1 level 1"}
-                                ]
-                        },
-                        {
-                                "introduction" : "Level 1 Chapter 2",
-                                "menu" : "Please select a lesson in level 1  chapter 2",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 2 level 1"},
-                                    {"content" : "This is lesson 2 in chapter 2 level 1"},
-                                    {"content" : "This is lesson 3 in chapter 2 level 1"},
-                                    {"content" : "This is lesson 4 in chapter 2 level 1"}
-                                ]
-                        },
-                        {
-                                "introduction" : "Level 1 Chapter 3",
-                                "menu" : "Please select a lesson in level 1  chapter 3",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 3 level 1"},
-                                    {"content" : "This is lesson 2 in chapter 3 level 1"},
-                                    {"content" : "This is lesson 3 in chapter 3 level 1"},
-                                    {"content" : "This is lesson 4 in chapter 3 level 1"}
-                                ]
-                        },
-                    ]},
-                {
-                    "introduction" : "Level 2",
-                    "menu" : "Please select a chapter in level 2",
-                    "chapters" :[
-                        {
-                                "introduction" : "Level 2 Chapter 1",
-                                "menu" : "Please select a lesson in level 2  chapter 1",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 1 level 2"},
-                                    {"content" : "This is lesson 2 in chapter 1 level 2"},
-                                    {"content" : "This is lesson 3 in chapter 1 level 2"},
-                                    {"content" : "This is lesson 4 in chapter 1 level 2"}
-                                ]
-                        },
-                        {
-                                "introduction" : "Level 2 Chapter 2",
-                                "menu" : "Please select a lesson in level 2 chapter 2",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 2 level 2"},
-                                    {"content" : "This is lesson 2 in chapter 2 level 2"},
-                                    {"content" : "This is lesson 3 in chapter 2 level 2"},
-                                    {"content" : "This is lesson 4 in chapter 2 level 2"}
-                                ]
-                        },
-                        {
-                                "introduction" : "Level 2 Chapter 3",
-                                "menu" : "Please select a lesson in level 2  chapter 3",
-                                "lessons" : [
-                                    {"content" : "This is lesson 1 in chapter 3 level 2"},
-                                    {"content" : "This is lesson 2 in chapter 3 level 2"},
-                                    {"content" : "This is lesson 3 in chapter 3 level 2"},
-                                    {"content" : "This is lesson 4 in chapter 3 level 2"}
-                                ]
-                        },
-                    ]}
-            ]
-        };
-
-        var MAX_NO_INPUTS = 3;
-        var MAX_INVALID_INPUTS = 3;
-        var GREETING = "./Hello.wav";
+            var callContext = new CallContext(courseData, metaData);
         ]]>
     </script>
-
-    <script>
-        <![CDATA[
-        var levelSelected = 0;
-        var time_out=10;
-        var next_item = "level_intro";
-        var levels = [0,1,2,3];
-
-        var PromptContext = function() {
-
-            this.incrementNoInputCount = function() {
-                this.noInputCount++;
-            }
-
-            this.incrementInvalidInputCount = function() {
-                this.invalidInputCount++;
-            }
-
-            this.hasExceededMaxNoInputs = function() {
-                return this.noInputCount > MAX_NO_INPUTS;
-            }
-
-            this.hasExceededMaxInvalidInputs = function() {
-                return this.invalidInputCount > MAX_INVALID_INPUTS;
-            }
-
-            this.reset = function() {
-                this.noInputCount = 0;
-                this.invalidInputCount = 0;
-                this.tempToControlValidation = 0;
-            }
-
-            this.isValidInput = function(input) {
-                return input < 4;
-            }
-
-            this.reset();
-        };
-
-        var promptContext = new PromptContext();
-        ]]>
-    </script>
-
     <!--Should see if the property setting can be configuration driven, or if this could be set as a session variable-->
     <property name="timeout" value="3s"/>
 
+    <form id="controller">
+        <script>
+            callContext.resetPromptCounts();
+        </script>
+        <block>
+            <if cond="callContext.isAtALesson()">
+                <goto next="#lesson"/>
+            <else/>
+                <goto next="#genericLevel"/>
+            </if>
+        </block>
+    </form>
+
     <form id="genericLevel">
         <block name="introduction">
-           <audio src="./audio/welcome.wav"/>
+           <audio expr="callContext.currentInteractionIntroduction()"/>
         </block>
 
-        <!--TODO: The next level selection should be played only in case there is next level.-->
         <field name="nextLevelSelection" >
             <prompt>
-                <audio expr="GREETING"/>
-                <!--<audio expr=""/>-->
+                <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
 
             <!--TODO: Should also specify the length of the dtmf input.-->
@@ -164,53 +60,58 @@
                 </rule>
               </grammar>
 
-
             <noinput>
                 <goto nextitem="noInputAction"/>
             </noinput>
 
             <filled>
-                <!--TODO: Need to put in validation-->
-                <if cond="promptContext.isValidInput(nextLevelSelection)">
+                <if cond="callContext.isValidChild(nextLevelSelection)">
                     <script>
-                        promptContext.reset();
+                        callContext.goToChild(nextLevelSelection);
                     </script>
-                    You entered  <value expr="nextLevelSelection"/> and navigating to next level.
-                    <goto next="#genericLevel"/>
-                    <else/>
+                    <goto next="#controller"/>
+                <else/>
                     <goto nextitem="invalidInputAction"/>
                 </if>
-
             </filled>
         </field>
 
         <block name="noInputAction">
             <script>
-                promptContext.incrementNoInputCount();
+                callContext.incrementNoInputCount();
             </script>
-            <if cond="promptContext.hasExceededMaxNoInputs()">
+            <if cond="callContext.hasExceededMaxNoInputs()">
                 Continuing with disconnect since did not hear from you for too long.
                 <disconnect/>
             <else/>
-                Did not hear from you for <value expr="promptContext.noInputCount"/> times.
+                Did not hear from you for <value expr="callContext.noInputCount"/> times.
             </if>
             <reprompt/>
         </block>
 
         <block name="invalidInputAction">
             <script>
-                promptContext.incrementInvalidInputCount();
+                callContext.incrementInvalidInputCount();
             </script>
-            <if cond="promptContext.hasExceededMaxInvalidInputs()">
+            <if cond="callContext.hasExceededMaxInvalidInputs()">
                 Continuing with disconnect since got invalid inputs for too many times.
                 <disconnect/>
             <else/>
-                Did not enter correct input for <value expr="promptContext.invalidInputCount"/> times.
+                Did not enter correct input for <value expr="callContext.invalidInputCount"/> times.
             </if>
             <goto nextitem="nextLevelSelection"/>
         </block>
     </form>
 
+    <form id="lesson">
+        <block>
+            <audio expr="callContext.currentInteractionLesson()"/>
+            <script>
+                callContext.lessonFinished();
+            </script>
+            <goto next="#controller"/>
+        </block>
+    </form>
 </vxml>
 
 

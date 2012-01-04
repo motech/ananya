@@ -1,9 +1,11 @@
 describe("Call Context", function() {
     var course, callContext;
+    var audioFileBase = "./js/";
 
     beforeEach(function() {
+        var metadata = {"audioFileBase": audioFileBase};
         course = courseWithTwoLessonsInEveryChapter();
-        callContext = new CallContext(course);
+        callContext = new CallContext(course, metadata);
     });
 
     it("when initialized should have course as the current interaction.", function() {
@@ -78,5 +80,35 @@ describe("Call Context", function() {
         callContext.lessonFinished();
 
         expect(callContext.currentInteraction).toEqual(level2_chapter2);
+    });
+
+    it("should be able to recognize whether a current interaction is a lesson", function () {
+        expect(callContext.isAtALesson()).toEqual(false);
+        callContext.goToChild(1);
+        expect(callContext.isAtALesson()).toEqual(false);
+        callContext.goToChild(1);
+        expect(callContext.isAtALesson()).toEqual(false);
+        callContext.goToChild(1);
+        expect(callContext.isAtALesson()).toEqual(true);
+    });
+    
+    it("should return the introduction for the current interaction", function () {
+        expect(callContext.currentInteractionIntroduction()).toEqual("./js/Introduction.wav");
+        callContext.goToChild(1);
+        expect(callContext.currentInteractionIntroduction()).toEqual("./js/IntroductionLevel1.wav");
+    });
+
+    it("should return the menu for the current interaction", function () {
+        expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevels.wav");
+        callContext.goToChild(1);
+        expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevel1Chapters.wav");
+    });
+
+    it("should return the lesson for the current interaction", function () {
+        var levelNeeded = 1;
+        var chapterNeeded = 1;
+        var lessonNeeded = 1;
+        callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
+        expect(callContext.currentInteractionLesson()).toEqual("./js/chapter_1_lesson_1.wav");
     });
 });
