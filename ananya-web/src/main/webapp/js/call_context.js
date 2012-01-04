@@ -1,6 +1,5 @@
 var CallContext = function(course, metadata) {
     this.init = function(course, metadata) {
-        //TODO: should we be validating course and metadata somehow?
         Course.buildLinks(course);
         this.course = course;
         this.currentInteraction = course;
@@ -10,10 +9,9 @@ var CallContext = function(course, metadata) {
     this.handleInput = function(input) {
         if(input == 0) {
             this.currentInteraction = course;
+            return;
         }
-        else {
-            this.goToChild(input);
-        }
+        this.goToChild(input);
     };
 
     this.goToChild = function(childNumber) {
@@ -50,29 +48,10 @@ var CallContext = function(course, metadata) {
         return this.metadata.audioFileBase;
     };
 
-    this.incrementNoInputCount = function() {
-        this.noInputCount++;
-    }
-
-    this.incrementInvalidInputCount = function() {
-        this.invalidInputCount++;
-    }
-
-    this.hasExceededMaxNoInputs = function() {
-        //TODO: get the count from metadata
-        return this.noInputCount > 3;
-    }
-
-    this.hasExceededMaxInvalidInputs = function() {
-        //TODO: get the count from metadata
-        return this.invalidInputCount > 3;
-    }
-
     this.resetPromptCounts = function() {
         this.noInputCount = 0;
         this.invalidInputCount = 0;
-        this.tempToControlValidation = 0;
     }
 
     this.init(course, metadata);
-}
+};

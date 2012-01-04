@@ -9,9 +9,11 @@
 
     <script src="./js/course.js"/>
     <script src="./js/call_context.js"/>
+    <script src="./js/prompt_context.js"/>
     <script>
         <![CDATA[
             var callContext = new CallContext(courseData, metaData);
+            var promptContext = new PromptContext(metaData);
         ]]>
     </script>
     <!--Should see if the property setting can be configuration driven, or if this could be set as a session variable-->
@@ -19,7 +21,7 @@
 
     <form id="controller">
         <script>
-            callContext.resetPromptCounts();
+            promptContext.resetCounts();
         </script>
         <block>
             <if cond="callContext.isAtALesson()">
@@ -77,27 +79,26 @@
 
         <block name="noInputAction">
             <script>
-                callContext.incrementNoInputCount();
+                promptContext.gotNoInput();
             </script>
-            <if cond="callContext.hasExceededMaxNoInputs()">
-                <audio expr="metaData.noInputDisconnectAudio"/>
+            <if cond="promptContext.hasExceededMaxNoInputs()">
+                <audio expr="promptContext.audioForNoInputDisconnect()"/>
                 <disconnect/>
             <else/>
-                Going to play: <value expr="metaData.noInputRetryAudio"/>.
-                <audio expr="metaData.noInputRetryAudio"/>
+                <audio expr="promptContext.audioForNoInputRetry()"/>
                 <reprompt/>
             </if>
         </block>
 
         <block name="invalidInputAction">
             <script>
-                callContext.incrementInvalidInputCount();
+                promptContext.gotInvalidInput();
             </script>
-            <if cond="callContext.hasExceededMaxInvalidInputs()">
-                <audio expr="metaData.invalidInputDisconnectAudio"/>
+            <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                <audio expr="promptContext.audioForInvalidInputDisconnect()"/>
                 <disconnect/>
             <else/>
-                <audio expr="metaData.invalidInputRetryAudio"/>
+                <audio expr="promptContext.audioForInvalidInputRetry()"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
         </block>
