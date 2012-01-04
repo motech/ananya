@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <form id="register_flw">
+        <block>
+            Welcome to FLW
+        </block>
+        <!--RECORD NAME-->
+        <record name="record_name_msg" beep="true" maxtime="10s" finalsilence="4000ms" dtmfterm="true" type="audio/x-wav">
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <prompt timeout="5s">
+                please say your name
+            </prompt>
+
+            <noinput>
+                <prompt>
+                    say something
+                </prompt>
+            </noinput>
+        </record>
+        <filled>
+            <prompt>
+               we heard it as <audio expr="record_name_msg"/>
+            </prompt>
+        </filled>
+    </form>
+</vxml>
+

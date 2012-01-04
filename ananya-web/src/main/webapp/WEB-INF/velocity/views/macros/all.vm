@@ -5,9 +5,9 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 #end
 
-#macro(formHeader $welcomewav)
+#macro(playwav $wav)
     <block>
-        <audio src="$welcomewav"/>
+        <audio src="$wav"/>
     </block>
 #end
 
