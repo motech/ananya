@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.bbcwt.repository.AllRecordings;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,9 +39,11 @@ public class RegistrationControllerTest {
         when(request.getParameter("session.callerid")).thenReturn("991");
         when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.UNREGISTERED);
 
-        ModelAndView modelAndView = controller.callFlow(request);
+        ModelAndView modelAndView = controller.getLandingPage(request);
 
-        assertEquals("register-flw", modelAndView.getViewName());
+        ModelMap modelMap = modelAndView.getModelMap();
+        assertEquals("/vxml/register/",modelMap.get("rendering_Page")) ;
+        assertEquals("callerLandingPage", modelAndView.getViewName());
     }
 
     @Test
@@ -48,10 +51,11 @@ public class RegistrationControllerTest {
         when(request.getParameter("session.callerid")).thenReturn("991");
         when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.REGISTERED);
 
-        ModelAndView modelAndView = controller.callFlow(request);
+        ModelAndView modelAndView = controller.getLandingPage(request);
 
-        assertEquals("top-menu", modelAndView.getViewName());
+        ModelMap modelMap = modelAndView.getModelMap();
+        assertEquals("/vxml/menu/",modelMap.get("rendering_Page")) ;
+        assertEquals("callerLandingPage", modelAndView.getViewName());
     }
-
 }
     

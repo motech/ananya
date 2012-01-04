@@ -1,0 +1,7 @@
+#vxmlHeader()
+<form id="landing_Page">
+<block>
+<goto next=$rendering_Page/>
+</block>
+</form>
+#vxmlFooter()

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,7 @@ public class RegistrationController {
 
     private static final String registration_vxml = "register-flw";
     private static final String registration_done_vxml = "register-done-flw";
+    private static final String caller_landing_vxml = "callerLandingPage";
     private static final String menu_vxml = "top-menu";
     private static final String msisdn_param = "msisdn";
     private static final String callerid_param = "session.callerid";
@@ -37,13 +39,26 @@ public class RegistrationController {
         this.allRecordings = allRecordings;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/flw/vxml/")
-    public ModelAndView callFlow(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.GET, value = "/vxml/landing/")
+    public ModelAndView getLandingPage(HttpServletRequest request) {
         String msisdn = request.getParameter(callerid_param);
         log.info("msisdn of caller: " + msisdn);
-        String vxml = frontLineWorkerService.getStatus(msisdn).isRegistered() ? menu_vxml : registration_vxml;
-        return new ModelAndView(vxml);
+        String vxml = frontLineWorkerService.getStatus(msisdn).isRegistered() ? "/vxml/menu/": "/vxml/register/";
+        return new ModelAndView(caller_landing_vxml).addObject("rendering_Page", vxml);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/vxml/register/")
+    public ModelAndView getRegisterPage(HttpServletResponse response){
+        response.setHeader("Expires", "Tue, 20 Mar 2012 04:00:25 GMT");
+        response.setHeader("Cache-Control","max-age=60, public");
+        return new ModelAndView(registration_vxml);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/vxml/menu/")
+    public ModelAndView getMenuPage(HttpServletResponse response){
+        return new ModelAndView(menu_vxml);
+    }
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
