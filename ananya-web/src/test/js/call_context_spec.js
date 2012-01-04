@@ -134,4 +134,14 @@ describe("Call Context", function() {
 
         expect(callContext.currentInteraction).toEqual(expectedLessonAfterNavigation);
     });
+
+    it("should not play the introduction audio of the course root, when 0 is input", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 2;
+        callContext.goToChild(levelNeeded).goToChild(chapterNeeded);
+
+        callContext.handleInput(0);
+
+        expect(callContext.shouldPlayNextIntroduction()).toEqual(false);
+    });
 });

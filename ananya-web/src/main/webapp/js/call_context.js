@@ -4,10 +4,12 @@ var CallContext = function(course, metadata) {
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
+        this.shouldPlayNextIntroduction = true;
     };
 
     this.handleInput = function(input) {
         if(input == 0) {
+            this.shouldPlayNextIntroduction = false;
             this.currentInteraction = course;
             return;
         }
