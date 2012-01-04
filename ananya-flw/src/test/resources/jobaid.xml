@@ -40,7 +40,6 @@
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
 
-            <!--TODO: Should also specify the length of the dtmf input.-->
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">
                     <one-of>
@@ -65,9 +64,9 @@
             </noinput>
 
             <filled>
-                <if cond="callContext.isValidChild(nextLevelSelection)">
+                <if cond="callContext.isValidInput(nextLevelSelection)">
                     <script>
-                        callContext.goToChild(nextLevelSelection);
+                        callContext.handleInput(nextLevelSelection);
                     </script>
                     <goto next="#controller"/>
                 <else/>
@@ -81,12 +80,13 @@
                 callContext.incrementNoInputCount();
             </script>
             <if cond="callContext.hasExceededMaxNoInputs()">
-                Continuing with disconnect since did not hear from you for too long.
+                <audio expr="metaData.noInputDisconnectAudio"/>
                 <disconnect/>
             <else/>
-                Did not hear from you for <value expr="callContext.noInputCount"/> times.
+                Going to play: <value expr="metaData.noInputRetryAudio"/>.
+                <audio expr="metaData.noInputRetryAudio"/>
+                <reprompt/>
             </if>
-            <reprompt/>
         </block>
 
         <block name="invalidInputAction">
@@ -94,12 +94,12 @@
                 callContext.incrementInvalidInputCount();
             </script>
             <if cond="callContext.hasExceededMaxInvalidInputs()">
-                Continuing with disconnect since got invalid inputs for too many times.
+                <audio expr="metaData.invalidInputDisconnectAudio"/>
                 <disconnect/>
             <else/>
-                Did not enter correct input for <value expr="callContext.invalidInputCount"/> times.
+                <audio expr="metaData.invalidInputRetryAudio"/>
+                <goto nextitem="nextLevelSelection"/>
             </if>
-            <goto nextitem="nextLevelSelection"/>
         </block>
     </form>
 

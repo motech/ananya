@@ -21,12 +21,12 @@ describe("Call Context", function() {
         expect(callContext.currentInteraction).toEqual(level1);
     });
 
-    it("should say that level requested is invalid if the requested index is outside range.", function() {
-        expect(callContext.isValidChild(0)).toEqual(false);
-        expect(callContext.isValidChild(-1)).toEqual(false);
-        expect(callContext.isValidChild(1)).toEqual(true);
-        expect(callContext.isValidChild(2)).toEqual(true);
-        expect(callContext.isValidChild(3)).toEqual(false);
+    it("should say that level requested is valid if zero or a child with that number exists.", function() {
+        expect(callContext.isValidInput(0)).toEqual(true);
+        expect(callContext.isValidInput(-1)).toEqual(false);
+        expect(callContext.isValidInput(1)).toEqual(true);
+        expect(callContext.isValidInput(2)).toEqual(true);
+        expect(callContext.isValidInput(3)).toEqual(false);
     });
 
     it("when lesson is finished, should set the current interaction to parent of the next lesson.", function() {
@@ -110,5 +110,28 @@ describe("Call Context", function() {
         var lessonNeeded = 1;
         callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
         expect(callContext.currentInteractionLesson()).toEqual("./js/chapter_1_lesson_1.wav");
+    });
+
+    it("should navigate to course node when handleInput is called with 0", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 2;
+
+        callContext.goToChild(levelNeeded).goToChild(chapterNeeded);
+
+        callContext.handleInput(0);
+
+        expect(callContext.currentInteraction).toEqual(course);
+    });
+
+    it("should navigate to the child number passed when handleInput is called with non-zero number", function(){
+        var levelNeeded = 1;
+        var chapterNeeded = 1;
+        callContext.goToChild(levelNeeded).goToChild(chapterNeeded);
+
+        var expectedLessonAfterNavigation = callContext.currentInteraction.children[1];
+
+        callContext.handleInput(2);
+
+        expect(callContext.currentInteraction).toEqual(expectedLessonAfterNavigation);
     });
 });
