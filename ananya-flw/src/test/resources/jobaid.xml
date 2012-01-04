@@ -18,6 +18,8 @@
     </script>
     <!--Should see if the property setting can be configuration driven, or if this could be set as a session variable-->
     <property name="timeout" value="3s"/>
+    <property name="bargein" value="false"/>
+    <property name="inputmodes" value="dtmf"/>
 
     <form id="controller">
         <script>
@@ -38,7 +40,7 @@
         </block>
 
         <field name="nextLevelSelection" >
-            <prompt>
+            <prompt bargein="true">
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
 
@@ -114,7 +116,3 @@
         </block>
     </form>
 </vxml>
-
-
-
-
