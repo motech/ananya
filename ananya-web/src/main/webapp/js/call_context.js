@@ -4,28 +4,29 @@ var CallContext = function(course, metadata) {
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
+        this.shouldPlayNextIntroduction = true;
     };
 
     this.handleInput = function(input) {
         if(input == 0) {
+            this.shouldPlayNextIntroduction = false;
             this.currentInteraction = course;
-            return;
+            return this;
         }
-        this.goToChild(input);
-    };
-
-    this.goToChild = function(childNumber) {
-        this.currentInteraction = this.currentInteraction.children[childNumber - 1];
+        this.shouldPlayNextIntroduction = true;
+        this.currentInteraction = this.currentInteraction.children[input - 1];
         return this;
-    };
-
-    this.isValidInput = function(childNumber) {
-        return 0 <= childNumber && childNumber <= this.currentInteraction.children.length;
     };
 
     this.lessonFinished = function() {
+        this.shouldPlayNextIntroduction = false;
         this.currentInteraction = this.currentInteraction.siblingOnRight.parent;
         return this;
+    };
+
+
+    this.isValidInput = function(childNumber) {
+        return 0 <= childNumber && childNumber <= this.currentInteraction.children.length;
     };
 
     this.isAtALesson = function() {

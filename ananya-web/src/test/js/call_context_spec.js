@@ -12,11 +12,11 @@ describe("Call Context", function() {
         expect(callContext.currentInteraction).toEqual(course);
     });
 
-    it("when the current interaction is course and goToChild is called, current interaction should be set to level requested.", function() {
+    it("when the current interaction is course and handleInput is called, current interaction should be set to level requested.", function() {
         var childNumber = 1;
         var level1 = course.children[0];
 
-        callContext.goToChild(childNumber);
+        callContext.handleInput(childNumber);
 
         expect(callContext.currentInteraction).toEqual(level1);
     });
@@ -30,9 +30,9 @@ describe("Call Context", function() {
     });
 
     it("when lesson is finished, should set the current interaction to parent of the next lesson.", function() {
-        callContext.goToChild(1).goToChild(1);
+        callContext.handleInput(1).handleInput(1);
         var chapter1 = callContext.currentInteraction;
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         var lesson1 = callContext.currentInteraction;
 
         callContext.lessonFinished();
@@ -48,7 +48,7 @@ describe("Call Context", function() {
         var chapterNeeded = 1;
         var lessonNeeded = 2;
 
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
         callContext.lessonFinished();
 
         expect(callContext.currentInteraction).toEqual(chapter2);
@@ -62,7 +62,7 @@ describe("Call Context", function() {
         var chapterNeeded = 2;
         var lessonNeeded = 2;
 
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
         callContext.lessonFinished();
 
         expect(callContext.currentInteraction).toEqual(level2_chapter1);
@@ -76,7 +76,7 @@ describe("Call Context", function() {
         var chapterNeeded = 2;
         var lessonNeeded = 2;
 
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
         callContext.lessonFinished();
 
         expect(callContext.currentInteraction).toEqual(level2_chapter2);
@@ -84,23 +84,23 @@ describe("Call Context", function() {
 
     it("should be able to recognize whether a current interaction is a lesson", function () {
         expect(callContext.isAtALesson()).toEqual(false);
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         expect(callContext.isAtALesson()).toEqual(false);
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         expect(callContext.isAtALesson()).toEqual(false);
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         expect(callContext.isAtALesson()).toEqual(true);
     });
     
     it("should return the introduction for the current interaction", function () {
         expect(callContext.currentInteractionIntroduction()).toEqual("./js/Introduction.wav");
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         expect(callContext.currentInteractionIntroduction()).toEqual("./js/IntroductionLevel1.wav");
     });
 
     it("should return the menu for the current interaction", function () {
         expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevels.wav");
-        callContext.goToChild(1);
+        callContext.handleInput(1);
         expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevel1Chapters.wav");
     });
 
@@ -108,7 +108,7 @@ describe("Call Context", function() {
         var levelNeeded = 1;
         var chapterNeeded = 1;
         var lessonNeeded = 1;
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded).goToChild(lessonNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
         expect(callContext.currentInteractionLesson()).toEqual("./js/chapter_1_lesson_1.wav");
     });
 
@@ -116,7 +116,7 @@ describe("Call Context", function() {
         var levelNeeded = 2;
         var chapterNeeded = 2;
 
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded);
 
         callContext.handleInput(0);
 
@@ -126,12 +126,48 @@ describe("Call Context", function() {
     it("should navigate to the child number passed when handleInput is called with non-zero number", function(){
         var levelNeeded = 1;
         var chapterNeeded = 1;
-        callContext.goToChild(levelNeeded).goToChild(chapterNeeded);
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded);
 
         var expectedLessonAfterNavigation = callContext.currentInteraction.children[1];
 
         callContext.handleInput(2);
 
         expect(callContext.currentInteraction).toEqual(expectedLessonAfterNavigation);
+    });
+
+    it("should play the introduction audio of the course root when app is initialized.", function() {
+        expect(callContext.shouldPlayNextIntroduction).toEqual(true);
+    });
+
+    it("should not play the introduction audio of the course root, when 0 is input", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 2;
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded);
+
+        callContext.handleInput(0);
+
+        expect(callContext.shouldPlayNextIntroduction).toEqual(false);
+    });
+
+    it("should not play the introduction audio of the chapter after playing lesson", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 2;
+        var lessonNeeded = 1;
+
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
+        callContext.lessonFinished();
+
+        expect(callContext.shouldPlayNextIntroduction).toEqual(false);
+    });
+
+    it("should play the introduction of a chapter if being accessed from level", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 2;
+
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded);
+        callContext.handleInput(0);
+        callContext.handleInput(2).handleInput(2);
+
+        expect(callContext.shouldPlayNextIntroduction).toEqual(true);
     });
 });
