@@ -1,5 +1,7 @@
 package org.motechproject.bbcwt.repository.tree;
 
+import org.apache.activemq.transport.tcp.ExceededMaximumConnectionsException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +42,8 @@ public class NodeRepositoryTest extends SpringIntegrationTest {
 
         rN1.addChild(rN1N1);
         rN1.addChild(rN1N2);
+
+        nodeRepository.add(root);
     }
 
     @After
@@ -49,8 +53,6 @@ public class NodeRepositoryTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveTree() {
-        nodeRepository.add(root);
-
         assertThat(root.getId(), is(notNullValue()));
         Node rootNodeFromDB = nodeRepository.get(root.getId());
         assertThat(rootNodeFromDB, isSameAsNodeRepresentedBy(root));
@@ -58,10 +60,16 @@ public class NodeRepositoryTest extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnTreeByName() {
-        nodeRepository.add(root);
-
         Node treeFromDB = nodeRepository.findByName(COURSE_NAME);
 
         assertThat(treeFromDB, isSameAsNodeRepresentedBy(root));
+    }
+
+    @Test
+    public void shouldReturnTreeAsJson() throws Exception {
+        String treeAsJson = nodeRepository.nodeAsJson(COURSE_NAME);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Node tree = objectMapper.readValue(treeAsJson, Node.class);
+        assertThat(tree, isSameAsNodeRepresentedBy(root));
     }
 }
