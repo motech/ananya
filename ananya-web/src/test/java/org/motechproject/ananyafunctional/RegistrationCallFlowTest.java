@@ -24,7 +24,6 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetARegistrationVxmlForAUnRegisteredFLW() throws Exception {
-
         MyWebClient myWebClient = new MyWebClient();
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/register/?session.callerid=321");
 

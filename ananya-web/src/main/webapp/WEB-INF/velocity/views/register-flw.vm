@@ -7,6 +7,8 @@
     #record("block",$bundle.flw.registration.say.block,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.block)
     #record("village",$bundle.flw.registration.say.village,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.village)
     #playwav($bundle.flw.registration.complete)
-    <block><submit next="$bundle.flw.registration.submit.url" enctype="multipart/form-data"  method="post" namelist="msisdn name district block village"/></block>
+    <block>
+        <data src="$bundle.flw.registration.submit.url" enctype="multipart/form-data"  method="post" namelist="msisdn name district block village"/>
+    </block>
 </form>
 #vxmlFooter()
