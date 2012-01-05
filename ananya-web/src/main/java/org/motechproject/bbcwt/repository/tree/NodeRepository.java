@@ -1,5 +1,6 @@
 package org.motechproject.bbcwt.repository.tree;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
 import org.motechproject.bbcwt.domain.tree.Node;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.List;
 
 @Repository
@@ -25,5 +27,9 @@ public class NodeRepository extends AbstractCouchRepository<Node> {
             return trees.get(0);
         }
         return null;
+    }
+
+    public String nodeAsJson(String treeName) throws IOException {
+        return new ObjectMapper().writeValueAsString(findByName(treeName));
     }
 }

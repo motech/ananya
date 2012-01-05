@@ -4,8 +4,8 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
     <!-- TODO: How do we handle if any of the following fetches fail? -->
-    <script src="./js/metadata.js"/>
-    <script src="./js/course_data.js"/>
+    <script src="./dynamic/js/metadata.js"/>
+    <script src="./dynamic/js/course_data.js"/>
 
     <script src="./js/course.js"/>
     <script src="./js/call_context.js"/>
