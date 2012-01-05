@@ -49,8 +49,6 @@ public class RegistrationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/register/")
     public ModelAndView getRegisterPage(HttpServletResponse response){
-        response.setHeader("Expires", "Tue, 20 Mar 2012 04:00:25 GMT");
-        response.setHeader("Cache-Control","max-age=60, public");
         return new ModelAndView(registration_vxml);
     }
 

@@ -30,16 +30,16 @@
                 </one-of>
             </rule>
         </grammar>
-        <prompt timeout="$bundle.flw.registration.timeout">
+        <prompt timeout="$bundle.flw.registration.timeout" bargein="false">
             <audio src="$askwav"/>    
         </prompt>
         <noinput>
-            <prompt>
+            <prompt bargein="false">
                 <audio src="$noinputwav"/>
             </prompt>
         </noinput>
         <filled>
-            <prompt>
+            <prompt bargein="false">
                 <audio src="$confirmwav"/>
                 <audio expr="$field"/>
             </prompt>
@@ -47,37 +47,7 @@
     </record>
 #end
 
-#macro(recordtts $field $asktext $confirmtext $noinputtext)
-    <record name="$field"
-            beep="$bundle.flw.registration.beep"
-            maxtime="$bundle.flw.registration.max.record.time"
-            finalsilence="$bundle.flw.registration.finalsilence"
-            dtmfterm="$bundle.flw.registration.dtmfterm"
-            type="$bundle.flw.registration.record.audio.type">
 
-        <grammar mode="dtmf" version="1.0" root="root">
-            <rule id="root" scope="public">
-                <one-of>
-                    <item>$bundle.flw.registration.record.stop</item>
-                </one-of>
-            </rule>
-        </grammar>
-        <prompt timeout="$bundle.flw.registration.timeout">
-            $asktext
-        </prompt>
-        <noinput>
-            <prompt>
-                $noinputtext
-            </prompt>
-        </noinput>
-        <filled>
-            <prompt>
-                $confirmtext
-                <audio expr="$field"/>
-            </prompt>
-        </filled>
-    </record>
-#end
 
 
 #macro(vxmlFooter)
