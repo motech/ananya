@@ -61,7 +61,7 @@ public class RegistrationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-        ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory());
+        ServletFileUpload upload = getUploader();
         List items = upload.parseRequest(request);
 
         String msisdn = getMsisdn(items);
@@ -70,6 +70,10 @@ public class RegistrationController {
         allRecordings.store(msisdn, items, path);
 
         return new ModelAndView(REGISTRATION_DONE_VXML);
+    }
+
+    protected ServletFileUpload getUploader() {
+        return new ServletFileUpload(new DiskFileItemFactory());
     }
 
     private String getCallerId(HttpServletRequest request) {
