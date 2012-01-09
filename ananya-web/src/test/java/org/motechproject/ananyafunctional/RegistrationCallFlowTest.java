@@ -38,6 +38,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
     public void shouldGetLandingPageWithRegistrationUrlForUnregisteredFLW() throws Exception {
         MyWebClient myWebClient = new MyWebClient();
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/landing/?session.callerid=123");
+
         NodeList read = (NodeList) callFlow.read("/vxml/form/block/goto", XPathConstants.NODESET);
         assertEquals("/ananya/vxml/register/", read.item(0).getAttributes().item(0).getTextContent());
     }
@@ -48,7 +49,9 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
         FrontLineWorker flw = new FrontLineWorker("123").status(FrontLineWorkerStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
+
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/landing/?session.callerid=123");
+
         NodeList read = (NodeList) callFlow.read("/vxml/form/block/goto", XPathConstants.NODESET);
         assertEquals("/ananya/vxml/menu/", read.item(0).getAttributes().item(0).getTextContent());
     }

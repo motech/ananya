@@ -15,10 +15,15 @@
         <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>
         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" p:paramName="lang"/>
         <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-            <property name="cacheSeconds" value="0"/>
+            <property name="cacheSeconds" value="120"/>
             <property name="useExpiresHeader" value="true"/>
             <property name="useCacheControlHeader" value="true"/>
             <property name="useCacheControlNoStore" value="true"/>
+            <property name="cacheMappings">
+                <props>
+                    <prop key="/vxml/landing/">0</prop>
+                </props>
+            </property>
         </bean>
     </mvc:interceptors>
 
