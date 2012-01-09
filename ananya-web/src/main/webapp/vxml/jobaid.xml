@@ -42,11 +42,10 @@
         <field name="nextLevelSelection" >
             <prompt bargein="true">
                 <audio expr="callContext.currentInteractionMenu()"/>
-                <if cond="!callContext.isAtCourseRoot()">
-                    <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
-                </if>
             </prompt>
-
+            <prompt bargein="true" cond="!callContext.isAtCourseRoot()">
+                <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
+            </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">
                     <one-of>

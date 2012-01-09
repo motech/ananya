@@ -23,7 +23,6 @@ var CallContext = function(course, metadata) {
         var chapterContainingCurrentLesson = this.currentInteraction.parent;
 
         this.shouldPlayNextIntroduction = (chapterContainingCurrentLesson != nextChapterWhoseMenuIsToBePlayed);
-
         this.currentInteraction = nextChapterWhoseMenuIsToBePlayed;
 
         return this;
