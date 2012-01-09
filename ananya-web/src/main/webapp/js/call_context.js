@@ -19,8 +19,13 @@ var CallContext = function(course, metadata) {
     };
 
     this.lessonFinished = function() {
-        this.shouldPlayNextIntroduction = false;
-        this.currentInteraction = this.currentInteraction.siblingOnRight.parent;
+        var nextChapterWhoseMenuIsToBePlayed = this.currentInteraction.siblingOnRight.parent;
+        var chapterContainingCurrentLesson = this.currentInteraction.parent;
+
+        this.shouldPlayNextIntroduction = (chapterContainingCurrentLesson != nextChapterWhoseMenuIsToBePlayed);
+
+        this.currentInteraction = nextChapterWhoseMenuIsToBePlayed;
+
         return this;
     };
 
@@ -31,6 +36,10 @@ var CallContext = function(course, metadata) {
 
     this.isAtALesson = function() {
         return this.currentInteraction.data.lesson ? true : false;
+    };
+
+    this.isAtCourseRoot = function() {
+        return this.currentInteraction == this.course;
     };
 
     this.currentInteractionIntroduction = function() {

@@ -160,6 +160,17 @@ describe("Call Context", function() {
         expect(callContext.shouldPlayNextIntroduction).toEqual(false);
     });
 
+    it("should play the introduction audio of the next chapter if it is different from the chapter of the finished lesson", function () {
+        var levelNeeded = 2;
+        var chapterNeeded = 1;
+        var lastLessonOfChapter = 2;
+
+        callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lastLessonOfChapter);
+        callContext.lessonFinished();
+
+        expect(callContext.shouldPlayNextIntroduction).toEqual(true);
+    });
+
     it("should play the introduction of a chapter if being accessed from level", function () {
         var levelNeeded = 2;
         var chapterNeeded = 2;
@@ -169,5 +180,14 @@ describe("Call Context", function() {
         callContext.handleInput(2).handleInput(2);
 
         expect(callContext.shouldPlayNextIntroduction).toEqual(true);
+    });
+
+    it("should know when current interaction is course root", function() {
+        expect(callContext.isAtCourseRoot()).toEqual(true);
+        callContext.handleInput(1);
+        expect(callContext.isAtCourseRoot()).toEqual(false);
+        callContext.handleInput(0);
+        expect(callContext.isAtCourseRoot()).toEqual(true);
+
     });
 });

@@ -41,5 +41,9 @@ var PromptContext = function (metadata) {
         return this.metadata.audioFileBase + this.metadata.noInputDisconnectAudio;
     };
 
+    this.audioForOptionToGoToTopLevel = function() {
+        return this.metadata.audioFileBase + this.metadata.optionToGoToTopLevelAudio;
+    };
+
     this.init(metadata);
 };
