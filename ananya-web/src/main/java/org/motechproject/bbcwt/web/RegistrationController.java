@@ -74,8 +74,10 @@ public class RegistrationController {
 
     private String getCallerId(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Object msisdn = session.getAttribute(SESSION_CALLERID_PARAM);
-        if (msisdn != null) return (String) msisdn;
+        if (session != null) {
+            Object msisdn = session.getAttribute(SESSION_CALLERID_PARAM);
+            if (msisdn != null) return (String) msisdn;
+        }
         return request.getParameter(CALLERID_PARAM);
     }
 
