@@ -89,19 +89,19 @@ public class JobAidCourseToTreeTest {
         Node lvl3ch5lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl3ch5lsn1.wav");
         Node lvl3ch5lsn2Node = new Node("2").put("number", 2).put("lesson", "lvl3ch5lsn2.wav");
 
-        Node lvl1ch1Node = new Node("1").put("number", 1).put("menu", "Chapter1Menu.wav").put("title", "Title 1")
+        Node lvl1ch1Node = new Node("1").put("number", 1).put("menu", "Chapter1Menu.wav").put("introduction", "Title 1")
                                 .addChild(lvl1ch1lsn1Node).addChild(lvl1ch1lsn2Node).addChild(lvl1ch1lsn3Node);
 
-        Node lvl1ch2Node = new Node("2").put("number", 2).put("menu", "Chapter2Menu.wav").put("title", "Title 2")
+        Node lvl1ch2Node = new Node("2").put("number", 2).put("menu", "Chapter2Menu.wav").put("introduction", "Title 2")
                                 .addChild(lvl1ch2lsn1Node).addChild(lvl1ch2lsn2Node);
 
-        Node lvl2ch3Node = new Node("3").put("number", 3).put("menu", "Chapter3Menu.wav").put("title", "Title 3")
+        Node lvl2ch3Node = new Node("3").put("number", 3).put("menu", "Chapter3Menu.wav").put("introduction", "Title 3")
                                 .addChild(lvl2ch3lsn1Node);
 
-        Node lvl3ch4Node = new Node("4").put("number", 4).put("menu", "Chapter4Menu.wav").put("title", "Title 4")
+        Node lvl3ch4Node = new Node("4").put("number", 4).put("menu", "Chapter4Menu.wav").put("introduction", "Title 4")
                                 .addChild(lvl3ch4lsn1Node);
 
-        Node lvl3ch5Node = new Node("5").put("number", 5).put("menu", "Chapter5Menu.wav").put("title", "Title 5")
+        Node lvl3ch5Node = new Node("5").put("number", 5).put("menu", "Chapter5Menu.wav").put("introduction", "Title 5")
                                 .addChild(lvl3ch5lsn1Node).addChild(lvl3ch5lsn2Node);
 
         Node lvl1Node = new Node("1").put("number", 1).put("menu", "Level1Menu.wav")

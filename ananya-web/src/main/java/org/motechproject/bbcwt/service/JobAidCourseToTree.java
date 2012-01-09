@@ -38,9 +38,9 @@ public class JobAidCourseToTree {
     private Node transformChapter(Chapter chapter) {
         Node chapterNode = new Node(chapter.getNumber()+"");
 
+        chapterNode.put("introduction", chapter.title());
         chapterNode.put("menu", chapter.menu());
         chapterNode.put("number", chapter.getNumber());
-        chapterNode.put("title", chapter.title());
         for(Lesson lesson: chapter.getLessons()) {
             chapterNode.addChild(transformLesson(lesson)) ;
         }
