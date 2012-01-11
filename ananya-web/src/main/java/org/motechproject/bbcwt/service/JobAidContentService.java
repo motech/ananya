@@ -23,7 +23,8 @@ public class JobAidContentService {
     public void addCourse(JobAidCourse course) {
         courseCache = course;
         Node courseAsTree = courseToTree.transform(course);
-        allNodes.add(courseAsTree);
+
+        allNodes.addNodeWithDescendants(courseAsTree);
     }
 
     public JobAidCourse getCourse(String courseName) {

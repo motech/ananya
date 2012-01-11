@@ -57,4 +57,9 @@ public class Node extends MotechBaseDataObject {
     public List<Node> children() {
         return Collections.unmodifiableList(this.children);
     }
+
+    public Node setParentId(String nodeId) {
+        this.parentId = nodeId;
+        return this;
+    }
 }

@@ -3,7 +3,6 @@ package org.motechproject.bbcwt.repository.tree;
 import com.google.gson.Gson;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
-import org.ektorp.support.View;
 import org.motechproject.bbcwt.domain.tree.Node;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +59,19 @@ public class AllNodes extends MotechBaseRepository<Node> {
         Node node = findByName(treeName);
         Gson gson = new Gson();
         return gson.toJson(node);
+    }
+
+    public void addNodeWithDescendants(Node rootNode) {
+        recursivelyAddNodeWithDescendants(rootNode);
+    }
+
+    private void recursivelyAddNodeWithDescendants(Node node) {
+        add(node);
+        final String nodeId = node.getId();
+        final List<Node> children = node.children();
+        for(Node childNode : children){
+            childNode.setParentId(nodeId);
+            recursivelyAddNodeWithDescendants(childNode);
+        }
     }
 }
