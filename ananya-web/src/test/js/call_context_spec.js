@@ -194,7 +194,7 @@ describe("Call Context", function() {
     it("should go to level1-chapter2 for shortcode 12.", function () {
         var level1 = course.children[0];
         var level1_chapter2 = level1.children[1];
-        callContext.navigate("12")
+        callContext.navigateTo("12")
         expect(callContext.currentInteraction).toEqual(level1_chapter2);
     });
 
@@ -203,12 +203,12 @@ describe("Call Context", function() {
         var level2_chapter1 = level2.children[0];
         var level2_chapter1_lesson2 = level2_chapter1.children[1];
 
-        callContext.navigate("212")
+        callContext.navigateTo("212")
         expect(callContext.currentInteraction).toEqual(level2_chapter1_lesson2);
     });
 
     it("should go to course root for no shortcode", function () {
-        callContext.navigate("")
+        callContext.navigateTo("")
         expect(callContext.currentInteraction).toEqual(course);
     });
 });

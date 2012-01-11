@@ -7,7 +7,7 @@ var CallContext = function(course, metadata) {
         this.shouldPlayNextIntroduction = true;
     };
 
-    this.navigate = function(shortCode){
+    this.navigateTo = function(shortCode){
         for(var i=0; i< shortCode.length; i++){
             this.handleInput(shortCode.charAt(i));
         }
