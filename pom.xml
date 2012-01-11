@@ -61,6 +61,11 @@
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>motech.thirdparty</id>
+            <name>Motech Third Party Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/thirdparty</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
