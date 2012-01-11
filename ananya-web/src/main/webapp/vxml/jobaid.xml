@@ -14,9 +14,12 @@
         <![CDATA[
             var callContext = new CallContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
-        ]]>
+            var shortCode = new ShortCode().getCode(metadata.baseNumber,session.connection.local.uri)
+            callContext.navigateTo(shortCode);
+          ]]>
     </script>
 
+    
     <property name="timeout" value="8s"/>
     <property name="bargein" value="false"/>
     <property name="inputmodes" value="dtmf"/>

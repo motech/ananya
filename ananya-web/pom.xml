@@ -159,7 +159,7 @@
                         ${project.basedir}/src/test/js
                     </jsTestSrcDir>
                 </configuration>
-            </plugin>
+            </plugin> 
         </plugins>
     </build>
 

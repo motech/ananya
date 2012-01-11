@@ -7,6 +7,12 @@ var CallContext = function(course, metadata) {
         this.shouldPlayNextIntroduction = true;
     };
 
+    this.navigate = function(shortCode){
+        for(var i=0; i< shortCode.length; i++){
+            this.handleInput(shortCode.charAt(i));
+        }
+    };
+
     this.handleInput = function(input) {
         if(input == 0) {
             this.shouldPlayNextIntroduction = false;

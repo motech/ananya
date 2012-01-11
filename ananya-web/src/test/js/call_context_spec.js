@@ -91,7 +91,7 @@ describe("Call Context", function() {
         callContext.handleInput(1);
         expect(callContext.isAtALesson()).toEqual(true);
     });
-    
+
     it("should return the introduction for the current interaction", function () {
         expect(callContext.currentInteractionIntroduction()).toEqual("./js/Introduction.wav");
         callContext.handleInput(1);
@@ -123,7 +123,7 @@ describe("Call Context", function() {
         expect(callContext.currentInteraction).toEqual(course);
     });
 
-    it("should navigate to the child number passed when handleInput is called with non-zero number", function(){
+    it("should navigate to the child number passed when handleInput is called with non-zero number", function() {
         var levelNeeded = 1;
         var chapterNeeded = 1;
         callContext.handleInput(levelNeeded).handleInput(chapterNeeded);
@@ -189,5 +189,21 @@ describe("Call Context", function() {
         callContext.handleInput(0);
         expect(callContext.isAtCourseRoot()).toEqual(true);
 
+    });
+
+    it("should go to level1-chapter2 for shortcode 12.", function () {
+        var level1 = course.children[0];
+        var level1_chapter2 = level1.children[1];
+        callContext.navigate("12")
+        expect(callContext.currentInteraction).toEqual(level1_chapter2);
+    });
+
+    it("should go to level2-chapter1-lesson2 for shortcode 212.", function () {
+        var level2 = course.children[1];
+        var level2_chapter1 = level2.children[0];
+        var level2_chapter1_lesson2 = level2_chapter1.children[1];
+
+        callContext.navigate("212")
+        expect(callContext.currentInteraction).toEqual(level2_chapter1_lesson2);
     });
 });
