@@ -26,7 +26,7 @@ public class JobAidCourseToTree {
 
         levelNode.put("introduction", level.introduction());
         levelNode.put("menu", level.menu());
-        levelNode.put("number", level.number());
+        levelNode.put("number", level.number()+"");
 
         for(Chapter chapter : level.chapters()) {
             levelNode.addChild(transformChapter(chapter));
@@ -40,7 +40,7 @@ public class JobAidCourseToTree {
 
         chapterNode.put("introduction", chapter.title());
         chapterNode.put("menu", chapter.menu());
-        chapterNode.put("number", chapter.getNumber());
+        chapterNode.put("number", chapter.getNumber()+"");
         for(Lesson lesson: chapter.getLessons()) {
             chapterNode.addChild(transformLesson(lesson)) ;
         }
@@ -51,7 +51,7 @@ public class JobAidCourseToTree {
     private Node transformLesson(Lesson lesson) {
         Node lessonNode = new Node(lesson.getNumber()+"");
 
-        lessonNode.put("number", lesson.getNumber());
+        lessonNode.put("number", lesson.getNumber()+"");
         lessonNode.put("lesson", lesson.getFileName());
         return lessonNode;
     }

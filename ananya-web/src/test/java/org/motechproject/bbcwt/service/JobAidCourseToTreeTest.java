@@ -74,41 +74,41 @@ public class JobAidCourseToTreeTest {
     }
 
     private Node tree() {
-        Node lvl1ch1lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl1ch1lsn1.wav");
-        Node lvl1ch1lsn2Node = new Node("2").put("number", 2).put("lesson", "lvl1ch1lsn2.wav");
-        Node lvl1ch1lsn3Node = new Node("3").put("number", 3).put("lesson", "lvl1ch1lsn3.wav");
+        Node lvl1ch1lsn1Node = new Node("1").put("number", "1").put("lesson", "lvl1ch1lsn1.wav");
+        Node lvl1ch1lsn2Node = new Node("2").put("number", "2").put("lesson", "lvl1ch1lsn2.wav");
+        Node lvl1ch1lsn3Node = new Node("3").put("number", "3").put("lesson", "lvl1ch1lsn3.wav");
 
-        Node lvl1ch2lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl1ch2lsn1.wav");
-        Node lvl1ch2lsn2Node = new Node("2").put("number", 2).put("lesson", "lvl1ch2lsn2.wav");
+        Node lvl1ch2lsn1Node = new Node("1").put("number", "1").put("lesson", "lvl1ch2lsn1.wav");
+        Node lvl1ch2lsn2Node = new Node("2").put("number", "2").put("lesson", "lvl1ch2lsn2.wav");
 
 
-        Node lvl2ch3lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl2ch3lsn1.wav");
+        Node lvl2ch3lsn1Node = new Node("1").put("number", "1").put("lesson", "lvl2ch3lsn1.wav");
 
-        Node lvl3ch4lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl3ch4lsn1.wav");
+        Node lvl3ch4lsn1Node = new Node("1").put("number", "1").put("lesson", "lvl3ch4lsn1.wav");
 
-        Node lvl3ch5lsn1Node = new Node("1").put("number", 1).put("lesson", "lvl3ch5lsn1.wav");
-        Node lvl3ch5lsn2Node = new Node("2").put("number", 2).put("lesson", "lvl3ch5lsn2.wav");
+        Node lvl3ch5lsn1Node = new Node("1").put("number", "1").put("lesson", "lvl3ch5lsn1.wav");
+        Node lvl3ch5lsn2Node = new Node("2").put("number", "2").put("lesson", "lvl3ch5lsn2.wav");
 
-        Node lvl1ch1Node = new Node("1").put("number", 1).put("menu", "Chapter1Menu.wav").put("introduction", "Title 1")
+        Node lvl1ch1Node = new Node("1").put("number", "1").put("menu", "Chapter1Menu.wav").put("introduction", "Title 1")
                                 .addChild(lvl1ch1lsn1Node).addChild(lvl1ch1lsn2Node).addChild(lvl1ch1lsn3Node);
 
-        Node lvl1ch2Node = new Node("2").put("number", 2).put("menu", "Chapter2Menu.wav").put("introduction", "Title 2")
+        Node lvl1ch2Node = new Node("2").put("number", "2").put("menu", "Chapter2Menu.wav").put("introduction", "Title 2")
                                 .addChild(lvl1ch2lsn1Node).addChild(lvl1ch2lsn2Node);
 
-        Node lvl2ch3Node = new Node("3").put("number", 3).put("menu", "Chapter3Menu.wav").put("introduction", "Title 3")
+        Node lvl2ch3Node = new Node("3").put("number", "3").put("menu", "Chapter3Menu.wav").put("introduction", "Title 3")
                                 .addChild(lvl2ch3lsn1Node);
 
-        Node lvl3ch4Node = new Node("4").put("number", 4).put("menu", "Chapter4Menu.wav").put("introduction", "Title 4")
+        Node lvl3ch4Node = new Node("4").put("number", "4").put("menu", "Chapter4Menu.wav").put("introduction", "Title 4")
                                 .addChild(lvl3ch4lsn1Node);
 
-        Node lvl3ch5Node = new Node("5").put("number", 5).put("menu", "Chapter5Menu.wav").put("introduction", "Title 5")
+        Node lvl3ch5Node = new Node("5").put("number", "5").put("menu", "Chapter5Menu.wav").put("introduction", "Title 5")
                                 .addChild(lvl3ch5lsn1Node).addChild(lvl3ch5lsn2Node);
 
-        Node lvl1Node = new Node("1").put("number", 1).put("menu", "Level1Menu.wav")
+        Node lvl1Node = new Node("1").put("number", "1").put("menu", "Level1Menu.wav")
                                 .addChild(lvl1ch1Node).addChild(lvl1ch2Node).put("introduction", "Level 1");
-        Node lvl2Node = new Node("2").put("number", 2).put("menu", "Level2Menu.wav")
+        Node lvl2Node = new Node("2").put("number", "2").put("menu", "Level2Menu.wav")
                                 .addChild(lvl2ch3Node).put("introduction", "Level 2");
-        Node lvl3Node = new Node("3").put("number", 3).put("menu", "Level3Menu.wav")
+        Node lvl3Node = new Node("3").put("number", "3").put("menu", "Level3Menu.wav")
                                 .addChild(lvl3ch4Node).addChild(lvl3ch5Node).put("introduction", "Level 3");
 
         Node courseNode = new Node("JobAidCourse")
