@@ -20,7 +20,7 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
 
         markForDeletion(frontLineWorker);
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        assertEquals(msisdn, frontLineWorkers.get(0).msisdn());
+        assertEquals(msisdn, frontLineWorkers.get(0).getMsisdn());
     }
 
     @Test
@@ -32,6 +32,6 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
         markForDeletion(frontLineWorker);
 
         FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        assertEquals(msisdn, dbFrontLineWorker.msisdn());
+        assertEquals(msisdn, dbFrontLineWorker.getMsisdn());
     }
 }

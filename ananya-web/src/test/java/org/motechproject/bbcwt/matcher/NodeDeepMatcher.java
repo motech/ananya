@@ -9,11 +9,11 @@ import org.motechproject.bbcwt.domain.tree.Node;
 import java.util.List;
 
 public class NodeDeepMatcher extends BaseMatcher<Node> {
-    private Node actualNode;
+    private Node expectedNode;
     private String description;
 
-    public NodeDeepMatcher(Node actualNode) {
-        this.actualNode = actualNode;
+    public NodeDeepMatcher(Node expectedNode) {
+        this.expectedNode = expectedNode;
     }
 
     @Override
@@ -24,37 +24,36 @@ public class NodeDeepMatcher extends BaseMatcher<Node> {
     @Override
     public boolean matches(Object otherNode) {
         if (otherNode instanceof Node) {
-            Node nodeToCompare = (Node) otherNode;
-            return compareRecursively(actualNode, nodeToCompare);
+            Node nodeUnderTest = (Node) otherNode;
+            return compareRecursively(expectedNode, nodeUnderTest);
         }
         return false;
     }
 
-    private boolean compareRecursively(Node actualNode, Node expectedNode) {
-        if (!StringUtils.equals(actualNode.getName(), expectedNode.getName())) {
-            this.description = String.format("Node getName did not match, actual: %s, expected: %s", actualNode.getName(), expectedNode.getName());
+    private boolean compareRecursively(Node expectedNode, Node nodeUnderTest) {
+        if (!StringUtils.equals(expectedNode.getName(), nodeUnderTest.getName())) {
+            this.description = String.format("Node getName did not match, expected: %s, actual: %s", expectedNode.getName(), nodeUnderTest.getName());
             return false;
         }
 
-        if (!actualNode.data().equals(expectedNode.data())) {
-            this.description = String.format("Node %s does not contain same data in actual and expected. \nActual: %s\nExpected: %s", actualNode.getName(), actualNode.data(), expectedNode.data());
+        if (!expectedNode.data().keySet().equals(nodeUnderTest.data().keySet())) {
+            this.description = String.format("Node %s does not contain same data in actual and expected. \nExpected: %s\nActual: %s", expectedNode.getName(), expectedNode.data(), nodeUnderTest.data());
             return false;
         }
 
-        List<Node> childrenInActualNode = actualNode.children();
-        List<Node> childrenInNodeToCompare = expectedNode.children();
+        List<Node> childrenInExpectedNode = expectedNode.children();
+        List<Node> childrenInActualNode = nodeUnderTest.children();
 
-        int actualNoOfChildren = childrenInActualNode.size(), expectedNumberOfChildren = childrenInNodeToCompare.size();
+        int expectedNumberOfChildren = childrenInExpectedNode.size(), actualNumberOfChildren = childrenInActualNode.size();
 
-        if (actualNoOfChildren != expectedNumberOfChildren) {
-            this.description = String.format("Number of children in node %s does not match. Actual: %d, Expected: %d", actualNode.getName(), actualNoOfChildren, expectedNumberOfChildren);
+        if (expectedNumberOfChildren != actualNumberOfChildren) {
+            this.description = String.format("Number of children in node %s does not match. Expected: %d, Actual: %d", expectedNode.getName(), expectedNumberOfChildren, actualNumberOfChildren);
             return false;
         }
 
-        for (int i = 0; i < actualNoOfChildren; i++) {
+        for (int i = 0; i < expectedNumberOfChildren; i++) {
             boolean lastNodesComparedAreEqual =
-                    compareRecursively(childrenInActualNode.get(i), childrenInNodeToCompare.get(i)
-                    );
+                    compareRecursively(childrenInExpectedNode.get(i), childrenInActualNode.get(i));
             if (!lastNodesComparedAreEqual) {
                 return false;
             }
@@ -62,8 +61,8 @@ public class NodeDeepMatcher extends BaseMatcher<Node> {
         return true;
     }
 
-    public static Matcher<Node> isSameAsNodeRepresentedBy(final Node actualNode) {
-        return new NodeDeepMatcher(actualNode);
+    public static Matcher<Node> isSameAsNodeRepresentedBy(final Node expectedNode) {
+        return new NodeDeepMatcher(expectedNode);
     }
 
 }

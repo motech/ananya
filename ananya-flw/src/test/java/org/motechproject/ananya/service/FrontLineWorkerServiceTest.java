@@ -51,7 +51,7 @@ public class FrontLineWorkerServiceTest {
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker captured = captor.getValue();
-        assertEquals("msisdn",captured.msisdn());
+        assertEquals("msisdn",captured.getMsisdn());
         assertTrue(captured.status().equals(FrontLineWorkerStatus.PENDING_REGISTRATION));
     }
 

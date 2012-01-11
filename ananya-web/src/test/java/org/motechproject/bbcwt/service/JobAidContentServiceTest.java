@@ -7,13 +7,13 @@ import org.motechproject.bbcwt.domain.Chapter;
 import org.motechproject.bbcwt.domain.JobAidCourse;
 import org.motechproject.bbcwt.domain.Lesson;
 import org.motechproject.bbcwt.domain.Level;
-import org.motechproject.bbcwt.repository.tree.NodeRepository;
+import org.motechproject.bbcwt.repository.tree.AllNodes;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class JobAidContentServiceTest {
     @Mock
-    private NodeRepository nodeRepository;
+    private AllNodes allNodes;
 
     @Before
     public void setup() {

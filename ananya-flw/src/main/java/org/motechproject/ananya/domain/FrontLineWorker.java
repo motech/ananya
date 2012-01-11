@@ -6,8 +6,6 @@ import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
-    @JsonProperty("type")
-    private String type = "FrontLineWorker";
     @JsonProperty
     private String name;
     @JsonProperty
@@ -22,7 +20,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = msisdn;
     }
 
-    public String msisdn() {
+    public String getMsisdn() {
         return msisdn;
     }
 

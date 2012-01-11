@@ -2,7 +2,7 @@ package org.motechproject.bbcwt.service;
 
 import org.motechproject.bbcwt.domain.JobAidCourse;
 import org.motechproject.bbcwt.domain.tree.Node;
-import org.motechproject.bbcwt.repository.tree.NodeRepository;
+import org.motechproject.bbcwt.repository.tree.AllNodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,27 +10,27 @@ import org.springframework.stereotype.Service;
 public class JobAidContentService {
     private JobAidCourseToTree courseToTree;
     private TreeToJobAidCourse treeToJobAidCourse;
-    private NodeRepository nodeRepository;
+    private AllNodes allNodes;
     private JobAidCourse courseCache;
 
     @Autowired
-    public JobAidContentService(JobAidCourseToTree courseToTree, TreeToJobAidCourse treeToJobAidCourse, NodeRepository nodeRepository) {
+    public JobAidContentService(JobAidCourseToTree courseToTree, TreeToJobAidCourse treeToJobAidCourse, AllNodes allNodes) {
         this.courseToTree = courseToTree;
         this.treeToJobAidCourse = treeToJobAidCourse;
-        this.nodeRepository = nodeRepository;
+        this.allNodes = allNodes;
     }
 
     public void addCourse(JobAidCourse course) {
         courseCache = course;
         Node courseAsTree = courseToTree.transform(course);
-        nodeRepository.add(courseAsTree);
+        allNodes.add(courseAsTree);
     }
 
     public JobAidCourse getCourse(String courseName) {
         if(courseCache!=null) {
             return courseCache;
         }
-        Node courseAsTree = nodeRepository.findByName(courseName);
+        Node courseAsTree = allNodes.findByName(courseName);
         return courseCache = treeToJobAidCourse.transform(courseAsTree);
     }
 }

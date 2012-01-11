@@ -1,19 +1,25 @@
 package org.motechproject.bbcwt.domain.tree;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.motechproject.bbcwt.domain.BaseCouchEntity;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechBaseDataObject;
 
 import java.util.*;
 
-@TypeDiscriminator("doc.documentType == 'Node'")
-public class Node extends BaseCouchEntity {
+@TypeDiscriminator("doc.type == 'Node'")
+public class Node extends MotechBaseDataObject {
+//    @JsonProperty
+//    private String documentType = "Node";
+
     @JsonProperty
     private String name;
-    @JsonProperty
     private List<Node> children;
     @JsonProperty
     private Map<String, Object> data;
+    @JsonProperty
+    private String parentId;
 
     public Node() {
         this(null);
@@ -21,12 +27,13 @@ public class Node extends BaseCouchEntity {
 
     public Node(String name) {
         this.name = name;
-        this.children = new ArrayList<Node>(10);
-        this.data = new HashMap<String, Object>(20);
+        this.children = new ArrayList<Node>();
+        this.data = new HashMap<String, Object>();
     }
 
-    public Node addChild(Node child){
+    public Node addChild(Node child) {
         children.add(child);
+        child.parentId = getId();
         return this;
     }
 
@@ -37,6 +44,10 @@ public class Node extends BaseCouchEntity {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getParentId() {
+        return parentId;
     }
 
     public Map<String, Object> data() {

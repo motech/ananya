@@ -1,9 +1,8 @@
 package org.motechproject.bbcwt.web;
 
-import org.motechproject.bbcwt.repository.tree.NodeRepository;
+import org.motechproject.bbcwt.repository.tree.AllNodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value="/dynamic/js")
 public class DynamicJSHandler {
 
-    private NodeRepository nodeRepository;
+    private AllNodes allNodes;
 
     @Autowired
-    public  DynamicJSHandler(NodeRepository nodeRepository) {
-        this.nodeRepository = nodeRepository;
+    public  DynamicJSHandler(AllNodes allNodes) {
+        this.allNodes = allNodes;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
@@ -32,6 +31,6 @@ public class DynamicJSHandler {
     @ResponseBody
     public String serveCourseData(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
-        return "var courseData = " + nodeRepository.nodeAsJson("JobAidCourse") + ";";
+        return String.format("var courseData = %s;", allNodes.nodeAsJson("JobAidCourse"));
     }
 }
