@@ -47,8 +47,8 @@ public class TreeToJobAidCourse {
             Chapter chapterInWhichLessonIsToBeAdded = (Chapter)parentDomainObj;
 
             Lesson lesson = new Lesson();
-            Map<String, Object> lessonData = nodeToTransform.data();
-            lesson.setNumber((Integer)lessonData.get("number"));
+            Map<String, String> lessonData = nodeToTransform.data();
+            lesson.setNumber(Integer.parseInt(lessonData.get("number")));
             lesson.setFileName((String)lessonData.get("lesson"));
 
             chapterInWhichLessonIsToBeAdded.addLesson(lesson);
@@ -66,8 +66,8 @@ public class TreeToJobAidCourse {
             Level levelInWhichChapterIsToBeAdded = (Level)parentDomainObj;
 
             Chapter chapter = new Chapter();
-            Map<String, Object> chapterData = nodeToTransform.data();
-            chapter.setNumber((Integer)chapterData.get("number"));
+            Map<String, String> chapterData = nodeToTransform.data();
+            chapter.setNumber(Integer.parseInt(chapterData.get("number")));
             chapter.setMenu((String)chapterData.get("menu"));
             chapter.setTitle((String)chapterData.get("introduction"));
 
@@ -85,8 +85,8 @@ public class TreeToJobAidCourse {
             }
             JobAidCourse jobAidCourseToWhichTheLevelIsToBeAdded = (JobAidCourse)parentDomainObj;
 
-            Map<String, Object> levelData = nodeToTransform.data();
-            Level level = new Level((Integer)levelData.get("number"), (String)levelData.get("menu"));
+            Map<String, String> levelData = nodeToTransform.data();
+            Level level = new Level(Integer.parseInt(levelData.get("number")), (String)levelData.get("menu"));
             level.setIntroduction((String)levelData.get("introduction"));
 
             jobAidCourseToWhichTheLevelIsToBeAdded.addLevel(level);
@@ -97,7 +97,7 @@ public class TreeToJobAidCourse {
     private static class NodeToJobAidCourse implements NodeToDomainTransformer {
         @Override
         public Object transform(Object parentDomainObj, Node nodeToTransform) {
-            Map<String, Object> jobAidCourseData = nodeToTransform.data();
+            Map<String, String> jobAidCourseData = nodeToTransform.data();
 
             JobAidCourse jobAidCourse = new JobAidCourse(nodeToTransform.getName(),
                                                     (String)jobAidCourseData.get("introduction"),

@@ -17,7 +17,7 @@ public class Node extends MotechBaseDataObject {
     private String name;
     private List<Node> children;
     @JsonProperty
-    private Map<String, Object> data;
+    private Map<String, String> data;
     @JsonProperty
     private String parentId;
 
@@ -28,7 +28,7 @@ public class Node extends MotechBaseDataObject {
     public Node(String name) {
         this.name = name;
         this.children = new ArrayList<Node>();
-        this.data = new HashMap<String, Object>();
+        this.data = new HashMap<String, String>();
     }
 
     public Node addChild(Node child) {
@@ -37,7 +37,7 @@ public class Node extends MotechBaseDataObject {
         return this;
     }
 
-    public Node put(String key, Object value) {
+    public Node put(String key, String value) {
         data.put(key, value);
         return this;
     }
@@ -50,7 +50,7 @@ public class Node extends MotechBaseDataObject {
         return parentId;
     }
 
-    public Map<String, Object> data() {
+    public Map<String, String> data() {
         return Collections.unmodifiableMap(this.data);
     }
 
