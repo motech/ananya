@@ -206,4 +206,9 @@ describe("Call Context", function() {
         callContext.navigate("212")
         expect(callContext.currentInteraction).toEqual(level2_chapter1_lesson2);
     });
+
+    it("should go to course root for no shortcode", function () {
+        callContext.navigate("")
+        expect(callContext.currentInteraction).toEqual(course);
+    });
 });
