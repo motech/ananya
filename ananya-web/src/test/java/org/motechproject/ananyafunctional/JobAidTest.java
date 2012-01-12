@@ -110,7 +110,7 @@ public class JobAidTest {
     }
 
     private void startIVR(Caller caller) throws URISyntaxException {
-        new IVR(new URI("http://localhost:9979/ananya/vxml/jobaid.xml")).at("5771101").getsCallFrom(caller);
+        new IVR(new URI("http://localhost:9979/ananya/vxml/jobaid.xml")).verbose().at("5771101").getsCallFrom(caller);
     }
 
     private void goToLessonOneInChapterOneOfLevelOne(Caller caller) {
