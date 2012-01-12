@@ -283,12 +283,8 @@
             <artifactId>motech-sms-api</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.voice-unit</groupId>
-            <artifactId>voice-unit</artifactId>
-            <version>0.1</version>
-            <scope>test</scope>
-        </dependency>
+
+
     </dependencies>
 
 </project>
