@@ -19,7 +19,6 @@
           ]]>
     </script>
 
-    
     <property name="timeout" value="8s"/>
     <property name="bargein" value="false"/>
     <property name="inputmodes" value="dtmf"/>

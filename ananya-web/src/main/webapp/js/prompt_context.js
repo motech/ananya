@@ -44,11 +44,6 @@ var PromptContext = function (metadata) {
     this.audioForOptionToGoToTopLevel = function() {
         return this.metadata.audioFileBase + this.metadata.optionToGoToTopLevelAudio;
     };
-    
-
-    this.getCode = function(baseNumber, phoneNumber) {
-        return phoneNumber.replace(baseNumber, '');
-    };
 
     this.init(metadata);
 };
@@ -57,6 +52,6 @@ var PromptContext = function (metadata) {
 var ShortCode = function () {
 
     this.getCode = function(baseNumber, phoneNumber) {
-        return phoneNumber.replace(baseNumber, '');
+        return(phoneNumber.search(baseNumber) == 0) ? phoneNumber.replace(baseNumber, '') : '';
     };
 };

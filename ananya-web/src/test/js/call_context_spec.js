@@ -211,4 +211,14 @@ describe("Call Context", function() {
         callContext.navigateTo("")
         expect(callContext.currentInteraction).toEqual(course);
     });
-});
+
+    it("should go to last valid level for invalid shortcode and stop moving after encountering the invalid level", function () {
+        var level1 = course.children[0];
+        var level1_chapter2 = level1.children[1];
+        callContext.navigateTo("1252")
+        expect(callContext.currentInteraction).toEqual(level1_chapter2);
+
+    });
+
+
+})

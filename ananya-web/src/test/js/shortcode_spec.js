@@ -9,7 +9,12 @@ describe("Short Code", function () {
         expect(shortCode.getCode("1234","123456")).toEqual("56");
         expect(shortCode.getCode("1234","12341234")).toEqual("1234");
         expect(shortCode.getCode("1234","1234")).toEqual("");
-        expect(shortCode.getCode("1234","12")).toEqual("12");
+    });
+
+    it("should return basenumber for invalid number", function(){
+        expect(shortCode.getCode("1234","12")).toEqual("");
+        expect(shortCode.getCode("1234","551234")).toEqual("");
+        expect(shortCode.getCode("1234","55234")).toEqual("");
     });
 
 });
