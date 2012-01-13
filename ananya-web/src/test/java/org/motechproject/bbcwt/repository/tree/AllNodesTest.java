@@ -1,23 +1,35 @@
 package org.motechproject.bbcwt.repository.tree;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.bbcwt.domain.tree.Node;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
+import org.motechproject.cmslite.api.model.StringContent;
+import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.motechproject.dao.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.motechproject.bbcwt.matcher.NodeDeepMatcher.isSameAsNodeRepresentedBy;
 
 public class AllNodesTest extends SpringIntegrationTest {
     @Autowired
     private AllNodes allNodes;
+    @Autowired
+    private AllStringContents allStringContents;
     private Node root;
     private final static String COURSE_NAME = "Job Aid Course" + System.currentTimeMillis();
 
@@ -51,6 +63,7 @@ public class AllNodesTest extends SpringIntegrationTest {
     @After
     public void tearDown() {
         allNodes.removeAll();
+        allStringContents.removeAll();
     }
 
     @Test
@@ -121,7 +134,152 @@ public class AllNodesTest extends SpringIntegrationTest {
 
         Node level2Chapter2FromDb = allNodes.findByName(LEVEL_2_CHAP_2);
         assertThat(level2Chapter2FromDb, isSameAsNodeRepresentedBy(level2Chapter2));
-        assertEquals(level2Chapter2FromDb.getParentId(),level2.getId());
+        assertEquals(level2Chapter2FromDb.getParentId(), level2.getId());
 
+    }
+
+    @Test
+    public void shouldSaveContentOnSavingNode() {
+        long randomizeData = System.currentTimeMillis();
+        final String COURSE = "JobAid" + randomizeData;
+        final String courseIntroContentName = "courseIntro";
+        final String courseMenuContentName = "courseMenu";
+        final String levelContentName = "levelIntro";
+        final String language = "hindi";
+        final String chapterContentName = "chapterIntro";
+        final StringContent courseIntro = new StringContent(language, courseIntroContentName, "intro_value");
+        final StringContent courseMenu = new StringContent(language, courseMenuContentName, "menu_value");
+        final StringContent levelContent = new StringContent(language, levelContentName, "intro_value");
+        final StringContent chapterContent = new StringContent(language, chapterContentName, "chapterInto_value");
+
+        final String LEVEL_1 = "level1" + randomizeData;
+        final String LEVEL_2 = "level2" + randomizeData;
+        final String LEVEL_1_CHAP_1 = "1chap1" + randomizeData;
+        final String LEVEL_1_CHAP_2 = "1chap2" + randomizeData;
+        final String LEVEL_2_CHAP_1 = "2chap1" + randomizeData;
+        final String LEVEL_2_CHAP_2 = "2chap2" + randomizeData;
+
+        final Node course = new Node(COURSE);
+        course.addContent(courseIntro);
+        course.addContent(courseMenu);
+        final Node level1 = new Node(LEVEL_1);
+        level1.addContent(levelContent);
+        final Node level2 = new Node(LEVEL_2);
+        final Node level1Chapter1 = new Node(LEVEL_1_CHAP_1);
+        final Node level1Chapter2 = new Node(LEVEL_1_CHAP_2);
+        final Node level2Chapter1 = new Node(LEVEL_2_CHAP_1);
+        final Node level2Chapter2 = new Node(LEVEL_2_CHAP_2);
+        level2Chapter2.addContent(chapterContent);
+
+        course.addChild(level1);
+        course.addChild(level2);
+        level1.addChild(level1Chapter1);
+        level1.addChild(level1Chapter2);
+        level2.addChild(level2Chapter1);
+        level2.addChild(level2Chapter2);
+
+        allNodes.addNodeWithDescendants(course);
+
+        assertNotNull(courseIntro.getId());
+        assertNotNull(courseMenu.getId());
+        assertNotNull(levelContent.getId());
+        assertNotNull(chapterContent.getId());
+
+        assertThat(allStringContents.getContent(language, courseIntroContentName).getValue(), is(courseIntro.getValue()));
+        assertThat(allStringContents.getContent(language, courseMenuContentName).getValue(), is(courseMenu.getValue()));
+        assertThat(allStringContents.getContent(language, levelContentName).getValue(), is(levelContent.getValue()));
+        assertThat(allStringContents.getContent(language, chapterContentName).getValue(), is(chapterContent.getValue()));
+
+        Node courseFromDb = allNodes.findByName(COURSE);
+        Node level1FromDb = allNodes.findByName(LEVEL_1);
+        Node level2Chapter2FromDb = allNodes.findByName(LEVEL_2_CHAP_2);
+
+        assertThat(courseFromDb.contentIds(), hasItems(courseIntro.getId(), courseMenu.getId()));
+        assertThat(level1FromDb.contentIds(), hasItems(levelContent.getId()));
+        assertThat(level2Chapter2FromDb.contentIds(), hasItems(chapterContent.getId()));
+    }
+
+    @Test
+    public void shouldPopulateContentInNodesWhileFindingByName(){
+        long randomizeData = System.currentTimeMillis();
+
+        final String COURSE = "JobAid" + randomizeData;
+        final String courseIntroContentName = "courseIntro";
+        final String courseMenuContentName = "courseMenu";
+        final String levelContentName = "levelIntro";
+        final String language = "hindi";
+        final String chapterContentName = "chapterIntro";
+
+        final StringContent courseIntro = new StringContent(language, courseIntroContentName, "intro_value");
+        final StringContent courseMenu = new StringContent(language, courseMenuContentName, "menu_value");
+        final StringContent levelContent = new StringContent(language, levelContentName, "intro_value");
+        final StringContent chapterContent = new StringContent(language, chapterContentName, "chapterInto_value");
+
+        final String LEVEL_1 = "level1" + randomizeData;
+        final String LEVEL_2 = "level2" + randomizeData;
+        final String LEVEL_1_CHAP_1 = "1chap1" + randomizeData;
+        final String LEVEL_1_CHAP_2 = "1chap2" + randomizeData;
+        final String LEVEL_2_CHAP_1 = "2chap1" + randomizeData;
+        final String LEVEL_2_CHAP_2 = "2chap2" + randomizeData;
+
+        final Node course = new Node(COURSE);
+        course.addContent(courseIntro);
+        course.addContent(courseMenu);
+        final Node level1 = new Node(LEVEL_1);
+        level1.addContent(levelContent);
+        final Node level2 = new Node(LEVEL_2);
+        final Node level1Chapter1 = new Node(LEVEL_1_CHAP_1);
+        final Node level1Chapter2 = new Node(LEVEL_1_CHAP_2);
+        final Node level2Chapter1 = new Node(LEVEL_2_CHAP_1);
+        final Node level2Chapter2 = new Node(LEVEL_2_CHAP_2);
+        level2Chapter2.addContent(chapterContent);
+
+        course.addChild(level1);
+        course.addChild(level2);
+        level1.addChild(level1Chapter1);
+        level1.addChild(level1Chapter2);
+        level2.addChild(level2Chapter1);
+        level2.addChild(level2Chapter2);
+
+        allNodes.addNodeWithDescendants(course);
+
+        final Node courseFromDB = allNodes.findByName(COURSE);
+        final Node level1FromCourse = courseFromDB.children().get(0);
+        final Node level2Chapter2FromCourse = courseFromDB.children().get(1).children().get(1);
+
+        final List<StringContent> courseContents = courseFromDB.contents();
+        final List<StringContent> level1Contents = level1FromCourse.contents();
+        final List<StringContent> level2Chap2Contents = level2Chapter2FromCourse.contents();
+
+        Assert.assertThat(courseContents, hasItem(new StringContentMatcher(allStringContents.getContent(language, courseIntroContentName))));
+        Assert.assertThat(courseContents, hasItem(new StringContentMatcher(allStringContents.getContent(language, courseMenuContentName))));
+        Assert.assertThat(level1Contents, hasItem(new StringContentMatcher(allStringContents.getContent(language, levelContentName))));
+        Assert.assertThat(level2Chap2Contents, hasItem(new StringContentMatcher(allStringContents.getContent(language, chapterContentName))));
+    }
+
+    public static class StringContentMatcher extends BaseMatcher<StringContent> {
+        private StringContent expected;
+        private StringContent actual;
+
+        public StringContentMatcher(StringContent expected) {
+
+            this.expected = expected;
+        }
+
+        @Override
+        public boolean matches(Object actualToCheck) {
+            if (actualToCheck instanceof StringContent) {
+                actual = (StringContent) actualToCheck;
+                return expected.getName().equals(actual.getName()) && expected.getLanguage().equals(expected.getLanguage()) && expected.getValue().equals(expected.getValue());
+            }
+            return false;
+        }
+
+        @Override
+        public void describeTo(Description
+                                       description) {
+            description.appendText(String.format("Expected StringContent is: [%s, %s, %s]\n", expected.getName(), expected.getLanguage(), expected.getValue()));
+            description.appendText(String.format("and Actual StringContent is: [%s, %s, %s]\n", actual.getName(), actual.getLanguage(), actual.getValue()));
+        }
     }
 }

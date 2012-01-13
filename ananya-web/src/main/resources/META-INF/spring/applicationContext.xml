@@ -17,6 +17,7 @@
 
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:applicationCmsLiteApi.xml"/>
 
     <context:component-scan base-package="org.motechproject"/>
     <aop:aspectj-autoproxy/>

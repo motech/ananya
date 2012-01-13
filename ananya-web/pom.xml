@@ -283,8 +283,11 @@
             <artifactId>motech-sms-api</artifactId>
             <version>0.3-SNAPSHOT</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-cmslite-api</artifactId>
+            <version>0.7-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

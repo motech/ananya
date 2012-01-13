@@ -4,8 +4,9 @@ describe("Build Links With Siblings And Parents", function() {
 
         Course.buildLinks(courseFromCouchDB);
 
-        expect(courseFromCouchDB.data.introduction).toEqual("Introduction.wav");
-        expect(courseFromCouchDB.data.menu).toEqual("MenuLevels.wav");
+        expect(courseFromCouchDB.name).toEqual("JobAidCourse");
+        expect(courseFromCouchDB.data.type).toEqual("Level");
+        expect(courseFromCouchDB.contents.length).toEqual(2);
         expect(courseFromCouchDB.children.length).toEqual(1);
 
         var level1 = courseFromCouchDB.children[0];

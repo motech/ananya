@@ -1,217 +1,357 @@
-function courseWithOneLesson() {
+function courseWithOneLesson(){
     return {
-            //Course Starts
-            "data":
+         "name":"JobAidCourse",
+         "contents": [
             {
-                "introduction" : "Introduction.wav",
-                "menu" : "MenuLevels.wav"
+              "name" : "menu",
+              "value" :"MenuLevels.wav",
+              "language" : "hindi"
             },
-            //Levels
-            "children" :
-            [
-                //Level 1
-                {
-                    "data" :
-                    {
-                        "introduction" : "IntroductionLevel1.wav",
-                        "menu" : "MenuLevel1Chapters.wav",
-                    },
-                    //Chapters
-                    "children" :
-                    [
-                        //Chapter 1
+            {
+              "name" : "introduction",
+              "value" : "Introduction.wav",
+              "language" : "hindi"
+             }
+         ],
+         "data" : {
+             "type" :  "Level"
+         },
+         "children":[
+            {
+               "name":"Level 1",
+               "data":{
+                  "number":1,
+                  "type": "Level"
+               },
+               "contents" : [
+                  {
+                      "name" : "menu",
+                      "value" : "MenuLevel1Chapters.wav",
+                      "language" : "hindi"
+                  },
+                  {
+                      "name" : "introduction",
+                      "value" :"IntroductionLevel1.wav",
+                      "language" : "hindi"
+                  }
+               ],
+               "children":[
+                  {
+                     "name":"Level 1 Chapter 1",
+                     "data":{
+                        "number":"1",
+                        "type":"Chapter"
+                     },
+                     "contents": [
+                          {
+                              "name" : "menu",
+                              "value" : "MenuLevel1Chapter1Lessons.wav",
+                              "language" : "hindi"
+                          },
+                          {
+                              "name" : "introduction",
+                              "value" :"IntroductionLevel1Chapter1.wav",
+                              "language" : "hindi"
+                          }
+                     ],
+                     "children":[
                         {
-                            "data" :
-                            {
-                                "introduction" : "IntroductionLevel1Chapter1.wav",
-                                "menu" : "MenuLevel1Chapter1Lessons.wav",
-                            },
-                            //Lessons
-                            "children" :
-                            [
-                                //lesson 1
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_1_lesson_1.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                }
-                            ]
+                           "name":"Level 1 Chapter 1 Lesson 1",
+                           "data":{
+                              "number":"1",
+                              "type":"Lesson"
+                           },
+                           "contents" : [
+                              {
+                                  "name" : "lesson",
+                                  "value" : "chapter_1_lesson_1.wav",
+                                  "language" : "hindi"
+                              }
+                           ],
+                           "children" : [
+                           ]
                         }
-                    ]
-                }
-            ]
-            //Course Ends
+                     ]
+                  }
+               ]
+            }
+         ]
     };
 }
 
 function courseWithTwoLessonsInEveryChapter() {
     return {
-            // Course Starts
-            "data":
+        "name": "JobAidCourse",
+        "contents": [
             {
-                "introduction" : "Introduction.wav",
-                "menu" : "MenuLevels.wav"
+                "name": "menu",
+                "value": "MenuLevels.wav",
+                "language": "hindi"
             },
-            // Levels
-            "children" :
-            [
-                // Level 1
-                {
-                    "data" :
-                    {
-                        "introduction" : "IntroductionLevel1.wav",
-                        "menu" : "MenuLevel1Chapters.wav",
-                    },
-                    //Chapters
-                    "children" :
-                    [
-                        //Chapter 1
-                        {
-                            "data" :
-                            {
-                                "introduction" : "IntroductionLevel1Chapter1.wav",
-                                "menu" : "MenuLevel1Chapter1Lessons.wav",
-                            },
-                            //Lessons
-                            "children" :
-                            [
-                                // Lesson 1
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_1_lesson_1.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                },
-                                // Lesson 2
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_1_lesson_2.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                }
-                            ]
-                        },
-                        // Chapter 2
-                        {
-                            "data" :
-                            {
-                                "introduction" : "IntroductionLevel1Chapter2.wav",
-                                "menu" : "MenuLevel1Chapter2Lessons.wav",
-                            },
-                            //Lessons
-                            "children" :
-                            [
-                                // Lesson 1
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_2_lesson_1.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                },
-                                // Lesson 2
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_2_lesson_2.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                }
-                            ]
-                        }
-                    ]
+            {
+                "name": "introduction",
+                "value": "Introduction.wav",
+                "language": "hindi"
+            }
+        ],
+        "data": {
+            "type": "Level"
+        },
+        "children": [
+            {
+                "name": "Level 1",
+                "data": {
+                    "number": 1,
+                    "type": "Level"
                 },
-                // Level 2
-                {
-                    "data" :
+                "contents": [
                     {
-                        "introduction" : "IntroductionLevel2.wav",
-                        "menu" : "MenuLevel2Chapters.wav",
+                        "name": "menu",
+                        "value": "MenuLevel1Chapters.wav",
+                        "language": "hindi"
                     },
-                    //Chapters
-                    "children" :
-                    [
-                        //Chapter 1
-                        {
-                            "data" :
-                            {
-                                "introduction" : "IntroductionLevel2Chapter1.wav",
-                                "menu" : "MenuLevel2Chapter1Lessons.wav",
-                            },
-                            //Lessons
-                            "children" :
-                            [
-                                // Lesson 1
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_1_lesson_1.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                },
-                                // Lesson 2
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_1_lesson_2.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                }
-                            ]
+                    {
+                        "name": "introduction",
+                        "value": "IntroductionLevel1.wav",
+                        "language": "hindi"
+                    }
+                ],
+                "children": [
+                    {
+                        "name": "Level 1 Chapter 1",
+                        "data": {
+                            "number": "1",
+                            "type": "Chapter"
                         },
-                        // Chapter 2
-                        {
-                            "data" :
+                        "contents": [
                             {
-                                "introduction" : "IntroductionLevel2Chapter2.wav",
-                                "menu" : "MenuLevel2Chapter2Lessons.wav",
+                                "name": "menu",
+                                "value": "MenuLevel1Chapter1Lessons.wav",
+                                "language": "hindi"
                             },
-                            //Lessons
-                            "children" :
-                            [
-                                // Lesson 1
-                                {
-                                    "data" :
-                                    {
-                                        "lesson": "chapter_2_lesson_1.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
+                            {
+                                "name": "introduction",
+                                "value": "IntroductionLevel1Chapter1.wav",
+                                "language": "hindi"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "name": "Level 1 Chapter 1 Lesson 1",
+                                "data": {
+                                    "number": "1",
+                                    "type": "Lesson"
                                 },
-                                // Lesson 2
-                                {
-                                    "data" :
+                                "contents": [
                                     {
-                                        "lesson": "chapter_2_lesson_2.wav",
-                                    },
-                                    "children" :
-                                    [
-                                    ],
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-            //Course Ends
+                                        "name": "lesson",
+                                        "value": "chapter_1_lesson_1.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            },
+                            {
+                                "name": "Level 1 Chapter 1 Lesson 2",
+                                "data": {
+                                    "number": "2",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_1_lesson_2.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Level 1 Chapter 2",
+                        "data": {
+                            "number": "1",
+                            "type": "Chapter"
+                        },
+                        "contents": [
+                            {
+                                "name": "menu",
+                                "value": "MenuLevel1Chapter2Lessons.wav",
+                                "language": "hindi"
+                            },
+                            {
+                                "name": "introduction",
+                                "value": "IntroductionLevel1Chapter2.wav",
+                                "language": "hindi"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "name": "Level 1 Chapter 2 Lesson 1",
+                                "data": {
+                                    "number": "1",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_2_lesson_1.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            },
+                            {
+                                "name": "Level 1 Chapter 2 Lesson 2",
+                                "data": {
+                                    "number": "2",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_2_lesson_2.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Level 2",
+                "data": {
+                    "number": "2",
+                    "type": "Level"
+                },
+                "contents": [
+                    {
+                        "name": "menu",
+                        "value": "MenuLevel2Chapters.wav",
+                        "language": "hindi"
+                    },
+                    {
+                        "name": "introduction",
+                        "value": "IntroductionLevel2.wav",
+                        "language": "hindi"
+                    }
+                ],
+                "children": [
+                    {
+                        "name": "Level 2 Chapter 1",
+                        "data": {
+                            "number": "1",
+                            "type": "Level"
+                        },
+                        "contents": [
+                            {
+                                "name": "menu",
+                                "value": "MenuLevel2Chapter1Lessons.wav",
+                                "language": "hindi"
+                            },
+                            {
+                                "name": "introduction",
+                                "value": "IntroductionLevel2Chapter1.wav",
+                                "language": "hindi"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "name": "Level 2 Chapter 1 Lesson 1",
+                                "data": {
+                                    "number": "1",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_1_lesson_1.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            },
+                            {
+                                "name": "Level 2 Chapter 1 Lesson 2",
+                                "data": {
+                                    "number": 2,
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_1_lesson_2.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Level 2 Chapter 2",
+                        "data": {
+                            "number": "2",
+                            "type": "Level"
+                        },
+                        "contents": [
+                            {
+                                "name": "menu",
+                                "value": "MenuLevel2Chapter2Lessons.wav",
+                                "language": "hindi"
+                            },
+                            {
+                                "name": "introduction",
+                                "value": "IntroductionLevel2Chapter2.wav",
+                                "language": "hindi"
+                            }
+                        ],
+                        "children": [
+                            {
+                                "name": "Level 2 Chapter 2 Lesson 1",
+                                "data": {
+                                    "number": "1",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_2_lesson_1.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                 "children" : [
+                                 ],
+                            },
+                            {
+                                "name": "Level 2 Chapter 2 Lesson 2",
+                                "data": {
+                                    "number": "2",
+                                    "type": "Lesson"
+                                },
+                                "contents": [
+                                    {
+                                        "name": "lesson",
+                                        "value": "chapter_2_lesson_2.wav",
+                                        "language": "hindi"
+                                    }
+                                ],
+                                "children" : [
+                                ],
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
     };
 }

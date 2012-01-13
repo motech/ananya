@@ -4,22 +4,26 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.motechproject.bbcwt.domain.BaseCouchEntity;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.cmslite.api.model.Content;
+import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.model.MotechBaseDataObject;
 
 import java.util.*;
 
 @TypeDiscriminator("doc.type == 'Node'")
 public class Node extends MotechBaseDataObject {
-//    @JsonProperty
-//    private String documentType = "Node";
 
     @JsonProperty
     private String name;
-    private List<Node> children;
     @JsonProperty
     private Map<String, String> data;
     @JsonProperty
     private String parentId;
+    @JsonProperty
+    private List<String> contentIds;
+
+    private List<Node> children;
+    private List<StringContent> contents;
 
     public Node() {
         this(null);
@@ -29,12 +33,32 @@ public class Node extends MotechBaseDataObject {
         this.name = name;
         this.children = new ArrayList<Node>();
         this.data = new HashMap<String, String>();
+        this.contents = new ArrayList<StringContent>();
+        this.contentIds = new ArrayList<String>();
     }
 
     public Node addChild(Node child) {
         children.add(child);
         child.parentId = getId();
         return this;
+    }
+
+    public Node addContent(StringContent content) {
+        contents.add(content);
+        return this;
+    }
+
+    public List<StringContent> contents() {
+        return Collections.unmodifiableList(contents);
+    }
+
+    public Node addContentId(String contentId) {
+        contentIds.add(contentId);
+        return this;
+    }
+
+    public List<String> contentIds() {
+        return Collections.unmodifiableList(contentIds);
     }
 
     public Node put(String key, String value) {
