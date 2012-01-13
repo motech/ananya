@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 public class JobAidSeed{
     @Autowired
     private AllNodes allNodes;
-    @Seed(priority = 0)
 
+    @Seed(priority = 0)
     public void load() {
         MotechJsonReader jsonReader = new MotechJsonReader();
         Node jobAid = (Node)jsonReader.readFromFile("/seed/jobaid.json", Node.class);
