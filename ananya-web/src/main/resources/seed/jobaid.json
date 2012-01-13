@@ -65,10 +65,11 @@
                             "name" : "lesson",
                             "value" : "jobAid/level_1_chapter_1_lesson_1.wav",
                             "language" : "hindi"
-                        },
-                         "children" : [
-                         ],
-                     ]
+                        }
+                     ],
+                      "children" : [
+                      ]
+
                   },
                   {
                      "name":"Level 1 Chapter 1 Lesson 2",
@@ -84,7 +85,7 @@
                         }
                      ],
                       "children" : [
-                      ],
+                      ]
                   }
                ]
             },
