@@ -27,10 +27,17 @@ public class DynamicJSHandler {
         return new ModelAndView("metadata");
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/course_data.js")
+    @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data.js")
     @ResponseBody
-    public String serveCourseData(HttpServletResponse response) throws Exception {
+    public String serveJobAidCourseData(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
         return String.format("var courseData = %s;", allNodes.nodeAsJson("JobAidCourse"));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/certification_course_data.js")
+    @ResponseBody
+    public String serveCertificationCourseData(HttpServletResponse response) throws Exception {
+        response.setContentType("application/javascript");
+        return String.format("var courseData = %s;", allNodes.nodeAsJson("CertificationCourse"));
     }
 }

@@ -1,10 +1,6 @@
 package org.motechproject.bbcwt.tools.seed;
 
-import org.motechproject.bbcwt.domain.Chapter;
-import org.motechproject.bbcwt.domain.Lesson;
-import org.motechproject.bbcwt.domain.Question;
 import org.motechproject.bbcwt.domain.tree.Node;
-import org.motechproject.bbcwt.repository.ChaptersRepository;
 import org.motechproject.bbcwt.repository.tree.AllNodes;
 import org.motechproject.dao.MotechJsonReader;
 import org.motechproject.deliverytools.seed.Seed;
@@ -13,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CertificationCourseSeed {
-    @Autowired
-    private ChaptersRepository chapters;
     @Autowired
     private AllNodes allNodes;
 

@@ -14,7 +14,6 @@ var CallContext = function(course, metadata) {
         }
     };
 
-
     this.handleInput = function(input) {
         if (input == 0) {
             this.shouldPlayNextIntroduction = false;
@@ -79,5 +78,6 @@ var CallContext = function(course, metadata) {
         }
         return undefined;
     };
+
     this.init(course, metadata);
 };

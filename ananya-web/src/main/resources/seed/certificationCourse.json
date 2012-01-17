@@ -51,7 +51,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "0005_chapter_1_lesson_1_option_prompt.wav",
                             "language": "hindi"
                         }
@@ -70,7 +70,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "0007_chapter_1_lesson_2_option_prompt.wav",
                             "language": "hindi"
                         }
@@ -89,7 +89,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "0009_chapter_1_lesson_3_option_prompt.wav",
                             "language": "hindi"
                         }
@@ -108,7 +108,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "0011_chapter_1_lesson_4_option_prompt.wav",
                             "language": "hindi"
                         }
@@ -247,7 +247,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "0031_chapter_2_lesson_1_option_prompt.wav",
                             "language": "hindi"
                         }
@@ -266,7 +266,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_2_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -285,7 +285,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_2_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -304,7 +304,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_2_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -443,7 +443,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_3_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -462,7 +462,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_3_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -481,7 +481,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_3_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -500,7 +500,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_3_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -639,7 +639,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_4_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -658,7 +658,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_4_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -677,7 +677,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_4_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -696,7 +696,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_4_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -835,7 +835,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_5_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -854,7 +854,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_5_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -873,7 +873,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_5_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -892,7 +892,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_5_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -1031,7 +1031,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_6_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -1050,7 +1050,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_6_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -1069,7 +1069,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_6_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -1088,7 +1088,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_6_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -1227,7 +1227,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_7_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -1246,7 +1246,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_7_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -1265,7 +1265,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_7_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -1284,7 +1284,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_7_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -1423,7 +1423,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_8_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -1442,7 +1442,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_8_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -1461,7 +1461,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_8_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -1480,7 +1480,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_8_lesson_4_prompt.wav",
                             "language": "hindi"
                         }
@@ -1619,7 +1619,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_9_lesson_1_prompt.wav",
                             "language": "hindi"
                         }
@@ -1638,7 +1638,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_9_lesson_2_prompt.wav",
                             "language": "hindi"
                         }
@@ -1657,7 +1657,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_9_lesson_3_prompt.wav",
                             "language": "hindi"
                         }
@@ -1676,7 +1676,7 @@
                             "language": "hindi"
                         },
                         {
-                            "name": "prompt",
+                            "name": "menu",
                             "value": "chapter_9_lesson_4_prompt.wav",
                             "language": "hindi"
                         }

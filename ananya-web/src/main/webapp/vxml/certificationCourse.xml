@@ -3,19 +3,16 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
-    <!-- TODO: How do we handle if any of the following fetches fail? -->
     <script src="../dynamic/js/metadata.js"/>
-    <script src="../dynamic/js/jobaid_course_data.js"/>
+    <script src="../dynamic/js/certification_course_data.js"/>
 
     <script src="../js/course.js"/>
-    <script src="../js/call_context.js"/>
+    <script src="../js/certification_call_context.js"/>
     <script src="../js/prompt_context.js"/>
     <script>
         <![CDATA[
-            var callContext = new CallContext(courseData, metaData);
+            var callContext = new CertificationCallContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
-            var shortCode = new ShortCode().getCode(metaData.baseNumber,session.connection.local.uri)
-            callContext.navigateTo(shortCode);
           ]]>
     </script>
 
@@ -28,20 +25,24 @@
             promptContext.resetCounts();
         </script>
         <block>
-            <if cond="callContext.isAtALesson()">
+            <if cond="callContext.isAtCourseRoot()">
+                <goto next="#welcomeMessage"/>
+            <elseif cond="callContext.isAtLesson()"/>
                 <goto next="#lesson"/>
-            <else/>
-                <goto next="#genericLevel"/>
+            <elseif cond="callContext.isAtQuizHeader()"/>
+                <goto next="#quizHeader"/>
+            <elseif cond="callContext.isAtQuizQuestion()"/>
+                <goto next="#quizQuestion"/>
             </if>
         </block>
     </form>
 
-    <form id="genericLevel">
-        <block name="introduction" cond="callContext.shouldPlayNextIntroduction">
-           <audio expr="callContext.currentInteractionIntroduction()"/>
+    <form id="lesson">
+        <block>
+            <audio expr="callContext.currentInteractionLesson()"/>
         </block>
 
-        <field name="nextLevelSelection" >
+        <field name="repeatOrGoToNextLessonSelection">
             <prompt bargein="true">
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
@@ -65,16 +66,18 @@
                         <item>#</item>
                     </one-of>
                 </rule>
-              </grammar>
+            </grammar>
 
             <noinput>
                 <goto nextitem="noInputAction"/>
             </noinput>
 
             <filled>
-                <if cond="callContext.isValidInput(nextLevelSelection)">
+                <if cond="repeatOrGoToNextLessonSelection == 1">
+                    <goto next="#controller"/>
+                <elseif cond="repeatOrGoToNextLessonSelection == 2"/>
                     <script>
-                        callContext.handleInput(nextLevelSelection);
+                        callContext.lessonFinished();
                     </script>
                     <goto next="#controller"/>
                 <else/>
@@ -91,9 +94,9 @@
                 <audio expr="promptContext.audioForNoInputDisconnect()"/>
                 <disconnect/>
             <else/>
-                <clear/>    
+                <clear/>
                 <audio expr="promptContext.audioForNoInputRetry()"/>
-                <goto nextitem="nextLevelSelection"/>
+                <goto nextitem="repeatOrGoToNextLessonSelection"/>
             </if>
         </block>
 
@@ -106,16 +109,16 @@
                 <disconnect/>
             <else/>
                 <audio expr="promptContext.audioForInvalidInputRetry()"/>
-                <goto nextitem="nextLevelSelection"/>
+                <goto nextitem="repeatOrGoToNextLessonSelection"/>
             </if>
         </block>
     </form>
 
-    <form id="lesson">
+    <form id="quizHeader">
         <block>
-            <audio expr="callContext.currentInteractionLesson()"/>
+            <audio expr="callContext.currentInteractionQuizHeader()"/>
             <script>
-                callContext.lessonFinished();
+                callContext.quizHeaderFinished();
             </script>
             <goto next="#controller"/>
         </block>
