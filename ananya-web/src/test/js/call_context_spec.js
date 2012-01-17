@@ -4,7 +4,7 @@ describe("Call Context", function() {
 
     beforeEach(function() {
         var metadata = {"audioFileBase": audioFileBase};
-        course = courseWithTwoLessonsInEveryChapter();
+        course = jobAidCourseWithTwoLessonsInEveryChapter();
         callContext = new CallContext(course, metadata);
     });
 
@@ -219,6 +219,4 @@ describe("Call Context", function() {
         expect(callContext.currentInteraction).toEqual(level1_chapter2);
 
     });
-
-
 })

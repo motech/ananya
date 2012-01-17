@@ -1,4 +1,4 @@
-function courseWithOneLesson(){
+function jobAidCourseWithOneLesson(){
     return {
          "name":"JobAidCourse",
          "contents": [
@@ -79,7 +79,7 @@ function courseWithOneLesson(){
     };
 }
 
-function courseWithTwoLessonsInEveryChapter() {
+function jobAidCourseWithTwoLessonsInEveryChapter() {
     return {
         "name": "JobAidCourse",
         "contents": [

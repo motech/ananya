@@ -1,17 +1,19 @@
-var CertificationCallContext = function(course, metadata) {
+var CertificationCourseContext = function(course, metadata) {
     this.init = function(course, metadata) {
         Course.buildLinks(course);
         this.course = course;
-        this.currentInteraction = course.children[0].children[0];
+        this.currentInteraction = course;
         this.metadata = metadata;
+
+        this.hasFinishedChapter = false;
     };
 
     this.isAtCourseRoot = function() {
-        return false;
+        return this.currentInteraction == course;
     };
 
     this.isAtLesson = function() {
-        return true;
+        return this.currentInteraction.data.type == "lesson";
     };
 
     this.currentInteractionLesson = function() {
@@ -22,8 +24,14 @@ var CertificationCallContext = function(course, metadata) {
         return this.findAudio("menu");
     };
 
-    this.lessonFinished = function() {
-        this.currentInteraction = this.currentInteraction.siblingOnRight;
+    this.lessonOrQuizFinished = function() {
+        var isAtLastQuizOfChapter = this.currentInteraction.parent != this.currentInteraction.siblingOnRight.parent;
+        if (isAtLastQuizOfChapter) {
+            this.hasFinishedChapter = true;
+        }
+        else {
+            this.currentInteraction = this.currentInteraction.siblingOnRight;
+        }
     };
 
     this.findContentByName = function(contentName) {

@@ -7,12 +7,15 @@
     <script src="../dynamic/js/certification_course_data.js"/>
 
     <script src="../js/course.js"/>
-    <script src="../js/certification_call_context.js"/>
+    <script src="../js/certification_course_context.js"/>
     <script src="../js/prompt_context.js"/>
     <script>
         <![CDATA[
-            var callContext = new CertificationCallContext(courseData, metaData);
+            var callContext = new CertificationCourseContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
+
+            // Just for now.
+            callContext.currentInteraction = callContext.currentInteraction.children[0].children[0];
           ]]>
     </script>
 
@@ -25,7 +28,9 @@
             promptContext.resetCounts();
         </script>
         <block>
-            <if cond="callContext.isAtCourseRoot()">
+            <if cond="callContext.hasFinishedChapter">
+                <goto next="#tellScore"/>
+            <elseif cond="callContext.isAtCourseRoot()"/>
                 <goto next="#welcomeMessage"/>
             <elseif cond="callContext.isAtLesson()"/>
                 <goto next="#lesson"/>
@@ -77,7 +82,7 @@
                     <goto next="#controller"/>
                 <elseif cond="repeatOrGoToNextLessonSelection == 2"/>
                     <script>
-                        callContext.lessonFinished();
+                        callContext.lessonOrQuizFinished();
                     </script>
                     <goto next="#controller"/>
                 <else/>
