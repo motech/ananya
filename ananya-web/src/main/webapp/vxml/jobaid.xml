@@ -20,7 +20,7 @@
     </script>
 
     <property name="timeout" value="8s"/>
-    <property name="bargein" value="false"/>
+    <property name="bargein" value="true"/>
     <property name="inputmodes" value="dtmf"/>
 
     <form id="controller">
@@ -30,7 +30,7 @@
         <block>
             <if cond="callContext.isAtALesson()">
                 <goto next="#lesson"/>
-            <else/>
+                <else/>
                 <goto next="#genericLevel"/>
             </if>
         </block>
@@ -38,14 +38,16 @@
 
     <form id="genericLevel">
         <block name="introduction" cond="callContext.shouldPlayNextIntroduction">
-           <audio expr="callContext.currentInteractionIntroduction()"/>
+            <prompt bargein="false">
+                <audio expr="callContext.currentInteractionIntroduction()"/>
+            </prompt>
         </block>
 
-        <field name="nextLevelSelection" >
-            <prompt bargein="true">
+        <field name="nextLevelSelection">
+            <prompt>
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
-            <prompt bargein="true" cond="!callContext.isAtCourseRoot()">
+            <prompt cond="!callContext.isAtCourseRoot()">
                 <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
@@ -65,7 +67,7 @@
                         <item>#</item>
                     </one-of>
                 </rule>
-              </grammar>
+            </grammar>
 
             <noinput>
                 <goto nextitem="noInputAction"/>
@@ -77,7 +79,7 @@
                         callContext.handleInput(nextLevelSelection);
                     </script>
                     <goto next="#controller"/>
-                <else/>
+                    <else/>
                     <goto nextitem="invalidInputAction"/>
                 </if>
             </filled>
@@ -90,8 +92,8 @@
             <if cond="promptContext.hasExceededMaxNoInputs()">
                 <audio expr="promptContext.audioForNoInputDisconnect()"/>
                 <disconnect/>
-            <else/>
-                <clear/>    
+                <else/>
+                <clear/>
                 <audio expr="promptContext.audioForNoInputRetry()"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
@@ -104,7 +106,7 @@
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <audio expr="promptContext.audioForInvalidInputDisconnect()"/>
                 <disconnect/>
-            <else/>
+                <else/>
                 <audio expr="promptContext.audioForInvalidInputRetry()"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
@@ -113,7 +115,9 @@
 
     <form id="lesson">
         <block>
-            <audio expr="callContext.currentInteractionLesson()"/>
+            <prompt bargein="false">
+                <audio expr="callContext.currentInteractionLesson()"/>
+            </prompt>
             <script>
                 callContext.lessonFinished();
             </script>
