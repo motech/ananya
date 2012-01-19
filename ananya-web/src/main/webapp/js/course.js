@@ -4,7 +4,7 @@ var Course = function () {
 Course.buildLinks = function(node) {
     var nodesByLevel = new Array();
 
-    var linkWithParentAndGroupNodesByLevel = function(node, parentNode, level, nodesByLevel) {
+    var linkWithParentAndGroupNodesByLevel = function(node, parentNode, level, myIndexAmongSiblings, nodesByLevel) {
         //Grouping by level
         if(!nodesByLevel[level]) {
             nodesByLevel[level] = new Array();
@@ -15,9 +15,10 @@ Course.buildLinks = function(node) {
 
         //linking to parent
         node.parent = parentNode;
+        node.positionIndex = myIndexAmongSiblings;
 
         for(var i = 0; i < node.children.length; i++) {
-            linkWithParentAndGroupNodesByLevel(node.children[i], node, level+1, nodesByLevel);
+            linkWithParentAndGroupNodesByLevel(node.children[i], node, level+1, i, nodesByLevel);
         }
     };
 
@@ -34,6 +35,6 @@ Course.buildLinks = function(node) {
         }
     };
 
-    linkWithParentAndGroupNodesByLevel(node, node, 0, nodesByLevel);
+    linkWithParentAndGroupNodesByLevel(node, node, 0, 0, nodesByLevel);
     linkNodesWithSiblingOnRight(nodesByLevel);
 };

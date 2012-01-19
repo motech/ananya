@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.AllRecordings;
+import org.motechproject.bbcwt.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -29,8 +29,6 @@ public class RegistrationController {
     private static final String MENU_VXML = "top-menu";
 
     private static final String MSISDN_PARAM = "msisdn";
-    private static final String CALLERID_PARAM = "session.callerid";
-    private static final String SESSION_CALLERID_PARAM = "session.connection.remote.uri";
 
     private FrontLineWorkerService frontLineWorkerService;
     private AllRecordings allRecordings;
@@ -43,7 +41,7 @@ public class RegistrationController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/landing/")
     public ModelAndView getLandingPage(HttpServletRequest request) {
-        String msisdn = getCallerId(request);
+        String msisdn = SessionUtil.getCallerId(request);
         log.info("msisdn of caller: " + msisdn);
         String vxml = frontLineWorkerService.getStatus(msisdn).isRegistered() ? "/vxml/menu/" : "/vxml/register/";
         return new ModelAndView(LANDING_VXML).addObject("rendering_Page", vxml);
@@ -74,15 +72,6 @@ public class RegistrationController {
 
     protected ServletFileUpload getUploader() {
         return new ServletFileUpload(new DiskFileItemFactory());
-    }
-
-    private String getCallerId(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        if (session != null) {
-            Object msisdn = session.getAttribute(SESSION_CALLERID_PARAM);
-            if (msisdn != null) return (String) msisdn;
-        }
-        return request.getParameter(CALLERID_PARAM);
     }
 
     private String getMsisdn(List<FileItem> items) {

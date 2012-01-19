@@ -98,4 +98,36 @@ describe("Build Links With Siblings And Parents", function() {
         expect(chapter_2_quiz_1.siblingOnRight).toEqual(chapter_2_quiz_2);
         expect(chapter_2_quiz_2.siblingOnRight).toEqual(chapter_2_quiz_2);
     });
+
+    it("should assign every node an index based on its position among siblings", function() {
+        var courseFromCouchDB = certificationCourseWithTwoLessonsInEveryChapter();
+
+        Course.buildLinks(courseFromCouchDB);
+
+        var chapter_1 = courseFromCouchDB.children[0];
+        var chapter_1_lesson_1 = chapter_1.children[0];
+        var chapter_1_lesson_2 = chapter_1.children[1];
+        var chapter_1_quiz_1 = chapter_1.children[2];
+        var chapter_1_quiz_2 = chapter_1.children[3];
+
+        var chapter_2 = courseFromCouchDB.children[1];
+        var chapter_2_lesson_1 = chapter_2.children[0];
+        var chapter_2_lesson_2 = chapter_2.children[1];
+        var chapter_2_quiz_1 = chapter_2.children[2];
+        var chapter_2_quiz_2 = chapter_2.children[3];
+
+        expect(courseFromCouchDB.positionIndex).toEqual(0);
+        expect(chapter_1.positionIndex).toEqual(0);
+        expect(chapter_2.positionIndex).toEqual(1);
+
+        expect(chapter_1_lesson_1.positionIndex).toEqual(0);
+        expect(chapter_1_lesson_2.positionIndex).toEqual(1);
+        expect(chapter_1_quiz_1.positionIndex).toEqual(2);
+        expect(chapter_1_quiz_2.positionIndex).toEqual(3);
+
+        expect(chapter_2_lesson_1.positionIndex).toEqual(0);
+        expect(chapter_2_lesson_2.positionIndex).toEqual(1);
+        expect(chapter_2_quiz_1.positionIndex).toEqual(2);
+        expect(chapter_2_quiz_2.positionIndex).toEqual(3);
+    });
 });

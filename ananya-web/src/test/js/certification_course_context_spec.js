@@ -147,4 +147,36 @@ describe("Certification Course Context", function() {
          var lesson_1_in_chapter_1 = course.children[0].children[0];
          expect(context.currentInteraction).toEqual(lesson_1_in_chapter_1);
     });
+
+    it("should set bookmark to lesson 2 after lesson 1 is played ", function() {
+        var lesson_1_in_chapter_1 = course.children[0].children[0];
+        var bookmark_for_lesson_2 = {"type" : "lesson", "chapterIndex" : "0" , "lessonIndex" : "1"};
+
+        context.currentInteraction = lesson_1_in_chapter_1;
+        context.lessonOrQuizFinished();
+
+        context.addAfterLessonBookmark();
+
+        expect(context.bookmark).toEqual(bookmark_for_lesson_2);
+    });
+
+    it("should set bookmark to quiz header after last lesson is played ", function() {
+        var lesson_2_in_chapter_1 = course.children[0].children[1];
+        var bookmark_for_quizHeader = {"type" : "quizHeader", "chapterIndex" : "0"};
+
+        context.currentInteraction = lesson_2_in_chapter_1;
+        context.lessonOrQuizFinished();
+
+        context.addAfterLessonBookmark();
+
+        expect(context.bookmark).toEqual(bookmark_for_quizHeader);
+    });
+
+    it("should set bookmark to chapter 1 lesson 1 after welcome message is played", function() {
+        var bookmark_for_lesson_1 = {"type" : "lesson", "chapterIndex" : "0" , "lessonIndex" : "0"};
+
+        context.addAfterWelcomeMessageBookmark();
+
+        expect(context.bookmark).toEqual(bookmark_for_lesson_1);
+    });
 })

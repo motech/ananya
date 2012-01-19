@@ -11,6 +11,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private String msisdn;
     @JsonProperty
+    private BookMark bookmark;
+    @JsonProperty
     private FrontLineWorkerStatus status = FrontLineWorkerStatus.UNREGISTERED;
 
     public FrontLineWorker() {
@@ -22,6 +24,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public String getMsisdn() {
         return msisdn;
+    }
+
+    public BookMark getBookmark() {
+        return bookmark;
     }
 
     public FrontLineWorker status(FrontLineWorkerStatus status) {
@@ -38,4 +44,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this;
     }
 
+    public void addBookMark(BookMark bookMark) {
+        this.bookmark = bookMark;
+    }
 }

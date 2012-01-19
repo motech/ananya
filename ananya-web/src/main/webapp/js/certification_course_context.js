@@ -4,6 +4,7 @@ var CertificationCourseContext = function(course, metadata) {
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
+        this.bookmark = null;
 
         this.hasFinishedLastQuizOfChapter = false;
         this.hasFinishedLastLessonOfChapter = false;
@@ -76,6 +77,30 @@ var CertificationCourseContext = function(course, metadata) {
             this.currentInteraction = this.currentInteraction.siblingOnRight;
         }
     };
+
+    this.addAfterLessonBookmark = function() {
+        if (this.hasFinishedLastLessonOfChapter) {
+            this.bookmark = {
+                "type" : "quizHeader",
+                "chapterIndex" : "" + this.currentInteraction.parent.positionIndex
+            };
+        }
+        else {
+            this.bookmark = this.lessonBookmark();
+        }
+    }
+
+    this.addAfterWelcomeMessageBookmark = function(){
+        this.bookmark = this.lessonBookmark();
+    }
+    
+    this.lessonBookmark = function() {
+        return {
+            "type" : "lesson",
+            "chapterIndex" : "" + this.currentInteraction.parent.positionIndex ,
+            "lessonIndex" : "" + this.currentInteraction.positionIndex
+        };
+    }
 
     this.findContentByName = function(interactionToUse, contentName) {
         var contents = interactionToUse.contents;

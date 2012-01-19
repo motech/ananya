@@ -25,6 +25,14 @@
             promptContext.resetCounts();
         </script>
         <block>
+            <if cond="callContext.bookmark != null">
+                <assign name="bookmark" expr="callContext.bookmark"/>
+                <data srcexpr="metaData.addBookmarkUrl" method="post" namelist="bookmark session.connection.remote.uri"/>
+                <script>
+                    callContext.bookmark = null;
+                </script>
+            </if>
+
             <if cond="callContext.chapterFinished()">
                 <goto next="#tellScore"/>
             <!--<elseif cond="callContext.isAtQuizHeader()"/>-->
@@ -54,6 +62,7 @@
             <if cond="promptContext.getInputFromUser() == 2">
                 <script>
                     callContext.welcomeFinished();
+                    callContext.addAfterWelcomeMessageBookmark();
                 </script>
             </if>
             <goto next="#controller"/>
@@ -75,6 +84,7 @@
             <if cond="promptContext.getInputFromUser() == 2">
                 <script>
                     callContext.lessonOrQuizFinished();
+                    callContext.addAfterLessonBookmark();
                 </script>
             </if>
             <goto next="#controller"/>
@@ -94,12 +104,12 @@
     <form id="tellScore">
         <block>
             <script>
+                callContext.currentInteraction = callContext.currentInteraction.parent; // TODO: Remove this, once quiz is done.
                 promptContext.setupForReadingInputFromUser('scorePromptFinished', [1, 2]);
             </script>
             <goto next="#captureInputWithReprompt"/>
         </block>
     </form>
-
     <form id="scorePromptFinished">
         <block>
             <if cond="promptContext.getInputFromUser() == 1">

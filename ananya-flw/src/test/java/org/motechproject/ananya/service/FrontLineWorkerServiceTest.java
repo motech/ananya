@@ -55,4 +55,15 @@ public class FrontLineWorkerServiceTest {
         assertTrue(captured.status().equals(FrontLineWorkerStatus.PENDING_REGISTRATION));
     }
 
+    @Test
+    public void shouldGetFrontLineWorkerWithGivenCallerId() {
+        String msisdn = "123";
+        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(expectedFrontLineWorker);
+
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(msisdn);
+
+        assertEquals(expectedFrontLineWorker, frontLineWorker);
+    }
+
 }

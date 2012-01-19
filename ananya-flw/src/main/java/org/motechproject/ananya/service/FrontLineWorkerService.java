@@ -20,7 +20,7 @@ public class FrontLineWorkerService {
     }
 
     public FrontLineWorkerStatus getStatus(String msisdn) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         return frontLineWorker != null ? frontLineWorker.status() : FrontLineWorkerStatus.UNREGISTERED;
     }
 
@@ -30,4 +30,11 @@ public class FrontLineWorkerService {
         return msisdn;
     }
 
+    public FrontLineWorker getFrontLineWorker(String msisdn) {
+        return allFrontLineWorkers.findByMsisdn(msisdn);
+    }
+
+    public void save(FrontLineWorker frontLineWorker) {
+        allFrontLineWorkers.update(frontLineWorker);
+    }
 }
