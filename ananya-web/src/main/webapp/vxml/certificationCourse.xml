@@ -13,14 +13,11 @@
         <![CDATA[
             var callContext = new CertificationCourseContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
-
-            // Just for now.
-            callContext.currentInteraction = callContext.currentInteraction.children[0].children[0];
           ]]>
     </script>
 
     <property name="timeout" value="8s"/>
-    <property name="bargein" value="false"/>
+    <property name="bargein" value="true"/>
     <property name="inputmodes" value="dtmf"/>
 
     <form id="controller">
@@ -28,26 +25,98 @@
             promptContext.resetCounts();
         </script>
         <block>
-            <if cond="callContext.hasFinishedChapter">
+            <if cond="callContext.chapterFinished()">
                 <goto next="#tellScore"/>
+            <!--<elseif cond="callContext.isAtQuizHeader()"/>-->
+                <!--<goto next="#quizHeader"/>-->
             <elseif cond="callContext.isAtCourseRoot()"/>
                 <goto next="#welcomeMessage"/>
             <elseif cond="callContext.isAtLesson()"/>
                 <goto next="#lesson"/>
-            <elseif cond="callContext.isAtQuizHeader()"/>
-                <goto next="#quizHeader"/>
             <elseif cond="callContext.isAtQuizQuestion()"/>
                 <goto next="#quizQuestion"/>
             </if>
         </block>
     </form>
 
+    <!-- Welcome -->
+    <form id="welcomeMessage">
+        <block>
+            <audio expr="callContext.courseWelcomeMessage()"/>
+            <script>
+                promptContext.setupForReadingInputFromUser('welcomePromptFinished', [1, 2]);
+            </script>
+            <goto next="#captureInputWithReprompt"/>
+        </block>
+    </form>
+    <form id="welcomePromptFinished">
+        <block>
+            <if cond="promptContext.getInputFromUser() == 2">
+                <script>
+                    callContext.welcomeFinished();
+                </script>
+            </if>
+            <goto next="#controller"/>
+        </block>
+    </form>
+    <!-- End of welcome. -->
+
     <form id="lesson">
         <block>
             <audio expr="callContext.currentInteractionLesson()"/>
+            <script>
+                promptContext.setupForReadingInputFromUser('lessonPromptFinished', [1, 2]);
+            </script>
+            <goto next="#captureInputWithReprompt"/>
         </block>
+    </form>
+    <form id="lessonPromptFinished">
+        <block>
+            <if cond="promptContext.getInputFromUser() == 2">
+                <script>
+                    callContext.lessonOrQuizFinished();
+                </script>
+            </if>
+            <goto next="#controller"/>
+        </block>
+    </form>
 
-        <field name="repeatOrGoToNextLessonSelection">
+    <form id="quizHeader">
+        <block>
+            <audio expr="callContext.currentInteractionQuizHeader()"/>
+            <script>
+                callContext.quizHeaderFinished();
+            </script>
+            <goto next="#controller"/>
+        </block>
+    </form>
+
+    <form id="tellScore">
+        <block>
+            <script>
+                promptContext.setupForReadingInputFromUser('scorePromptFinished', [1, 2]);
+            </script>
+            <goto next="#captureInputWithReprompt"/>
+        </block>
+    </form>
+
+    <form id="scorePromptFinished">
+        <block>
+            <if cond="promptContext.getInputFromUser() == 1">
+                <script>
+                    callContext.restartChapter();
+                </script>
+            <elseif cond="promptContext.getInputFromUser() == 2"/>
+                <script>
+                    callContext.scoreReportFinished();
+                </script>
+            </if>
+            <goto next="#controller"/>
+        </block>
+    </form>
+
+    <form id="captureInputWithReprompt">
+        <field name="inputFromUser">
             <prompt bargein="true">
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
@@ -78,13 +147,11 @@
             </noinput>
 
             <filled>
-                <if cond="repeatOrGoToNextLessonSelection == 1">
-                    <goto next="#controller"/>
-                <elseif cond="repeatOrGoToNextLessonSelection == 2"/>
+                <if cond="promptContext.inputEnteredIsValid(inputFromUser)">
                     <script>
-                        callContext.lessonOrQuizFinished();
+                        promptContext.setInputFromUser(inputFromUser);
                     </script>
-                    <goto next="#controller"/>
+                    <goto expr="'#' + promptContext.formToProceedTo()"/>
                 <else/>
                     <goto nextitem="invalidInputAction"/>
                 </if>
@@ -98,10 +165,10 @@
             <if cond="promptContext.hasExceededMaxNoInputs()">
                 <audio expr="promptContext.audioForNoInputDisconnect()"/>
                 <disconnect/>
-            <else/>
+                <else/>
                 <clear/>
                 <audio expr="promptContext.audioForNoInputRetry()"/>
-                <goto nextitem="repeatOrGoToNextLessonSelection"/>
+                <goto nextitem="inputFromUser"/>
             </if>
         </block>
 
@@ -112,20 +179,10 @@
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <audio expr="promptContext.audioForInvalidInputDisconnect()"/>
                 <disconnect/>
-            <else/>
+                <else/>
                 <audio expr="promptContext.audioForInvalidInputRetry()"/>
-                <goto nextitem="repeatOrGoToNextLessonSelection"/>
+                <goto nextitem="inputFromUser"/>
             </if>
-        </block>
-    </form>
-
-    <form id="quizHeader">
-        <block>
-            <audio expr="callContext.currentInteractionQuizHeader()"/>
-            <script>
-                callContext.quizHeaderFinished();
-            </script>
-            <goto next="#controller"/>
         </block>
     </form>
 </vxml>

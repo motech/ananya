@@ -51,4 +51,27 @@ describe("Prompt context", function () {
     it("should provide the URLs for the audio files for the top-level menu option", function() {
         expect(promptContext.audioForOptionToGoToTopLevel()).toEqual("./audio/option.to.go.to.top.level.wav")
     });
+
+    it("should validate input from user based on setUp", function() {
+        var validInputs = [1, 2];
+
+        promptContext.setupForReadingInputFromUser("welcomePromptFinished", validInputs);
+
+        expect(promptContext.inputEnteredIsValid(1)).toEqual(true);
+        expect(promptContext.inputEnteredIsValid(2)).toEqual(true);
+        expect(promptContext.inputEnteredIsValid(3)).toEqual(false);
+        expect(promptContext.inputEnteredIsValid(0)).toEqual(false);
+    });
+
+    it("should provide form to go to after validation", function() {
+        promptContext.setupForReadingInputFromUser("welcomePromptFinished", [1, 2]);
+
+        expect(promptContext.formToProceedTo()).toEqual("welcomePromptFinished");
+    });
+
+    it("should set input from user", function() {
+        promptContext.setInputFromUser(2);
+
+        expect(promptContext.getInputFromUser()).toEqual(2);
+    });
 });

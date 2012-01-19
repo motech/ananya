@@ -28,6 +28,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_1_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_1_goodScore.wav",
                     "language": "hindi"
@@ -35,6 +40,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_1_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_1_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -224,6 +234,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_2_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_2_goodScore.wav",
                     "language": "hindi"
@@ -231,6 +246,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_2_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_2_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -420,6 +440,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_3_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_3_goodScore.wav",
                     "language": "hindi"
@@ -427,6 +452,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_3_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_3_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -616,6 +646,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_4_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_4_goodScore.wav",
                     "language": "hindi"
@@ -623,6 +658,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_4_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_4_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -812,6 +852,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_5_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_5_goodScore.wav",
                     "language": "hindi"
@@ -819,6 +864,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_5_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_5_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -1008,6 +1058,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_6_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_6_goodScore.wav",
                     "language": "hindi"
@@ -1015,6 +1070,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_6_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_6_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -1204,6 +1264,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_7_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_7_goodScore.wav",
                     "language": "hindi"
@@ -1211,6 +1276,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_7_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_7_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -1400,6 +1470,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_8_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_8_goodScore.wav",
                     "language": "hindi"
@@ -1407,6 +1482,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_8_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_8_quizHeader.wav",
                     "language": "hindi"
                 }
             ],
@@ -1596,6 +1676,11 @@
             },
             "contents": [
                 {
+                    "name": "menu",
+                    "value": "chapter_9_menu.wav",
+                    "language": "hindi"
+                },
+                {
                     "name": "goodScoreSummary",
                     "value": "chapter_9_goodScore.wav",
                     "language": "hindi"
@@ -1603,6 +1688,11 @@
                 {
                     "name": "badScoreSummary",
                     "value": "chapter_9_badScore.wav",
+                    "language": "hindi"
+                },
+                {
+                    "name": "quizHeader",
+                    "value": "chapter_9_quizHeader.wav",
                     "language": "hindi"
                 }
             ],

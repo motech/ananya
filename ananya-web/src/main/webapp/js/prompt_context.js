@@ -2,6 +2,9 @@ var PromptContext = function (metadata) {
     this.init = function(metadata) {
         this.metadata = metadata;
         this.resetCounts();
+        this.validInputs = [];
+        this.inputFromUser = null;
+        this.formToGoToAfterValidInput = null;
     };
 
     this.gotInvalidInput = function() {
@@ -44,6 +47,31 @@ var PromptContext = function (metadata) {
     this.audioForOptionToGoToTopLevel = function() {
         return this.metadata.audioFileBase + this.metadata.optionToGoToTopLevelAudio;
     };
+
+    this.inputEnteredIsValid = function(input) {
+        for(var i = 0; i < this.validInputs.length; i++){
+           if(input == this.validInputs[i])
+            return true;
+        }
+        return false;
+    };
+
+    this.setupForReadingInputFromUser = function(formToGoToAfterValidInput, validInputs) {
+        this.validInputs = validInputs;
+        this.formToGoToAfterValidInput = formToGoToAfterValidInput;
+    };
+
+    this.formToProceedTo = function() {
+        return this.formToGoToAfterValidInput;
+    };
+
+    this.setInputFromUser = function(input) {
+        this.inputFromUser = input;
+    }
+
+    this.getInputFromUser = function() {
+        return this.inputFromUser;
+    }
 
     this.init(metadata);
 };

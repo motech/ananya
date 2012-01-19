@@ -31,8 +31,16 @@ describe("Certification Course Context", function() {
         expect(context.currentInteractionLesson()).toEqual("./audio/chapter_2_lesson_2.wav");
     });
 
+    it("should get the quiz header URI for current chapter", function() {
+        context.currentInteraction = course.children[1].children[1];
+        expect(context.currentInteractionQuizHeader()).toEqual("./audio/chapter_2_quizHeader.wav");
+    });
+
     it("should get the menu content URI for the current interaction", function() {
         expect(context.currentInteractionMenu()).toEqual("./audio/MenuCourse.wav");
+
+        context.currentInteraction = course.children[1];
+        expect(context.currentInteractionMenu()).toEqual("./audio/chapter_2_menu.wav");
 
         context.currentInteraction = course.children[1].children[1];
         expect(context.currentInteractionMenu()).toEqual("./audio/chapter_2_lesson_2_menu.wav");
@@ -58,34 +66,85 @@ describe("Certification Course Context", function() {
         expect(context.currentInteraction).toEqual(quiz_1_in_chapter_1);
     });
 
-    it("should stay at the last quiz of a chapter, after it is finished", function() {
+    it("should move up to chapter, after last quiz of chapter is finished", function() {
         var quiz_2_in_chapter_1 = course.children[0].children[3];
+        var chapter_1 = course.children[0];
         context.currentInteraction = quiz_2_in_chapter_1;
 
         context.lessonOrQuizFinished();
 
-        expect(context.currentInteraction).toEqual(quiz_2_in_chapter_1);
+        expect(context.currentInteraction).toEqual(chapter_1)
     });
 
-    it("should set the finishedWithChapter flag after the last quiz of a chapter is finished", function() {
+    it("should set the hasFinishedLastQuizOfChapter flag after the last quiz of a chapter is finished", function() {
         var quiz_2_in_chapter_1 = course.children[0].children[3];
+
         context.currentInteraction = quiz_2_in_chapter_1;
 
-        expect(context.hasFinishedChapter).toEqual(false)
+        expect(context.hasFinishedLastQuizOfChapter).toEqual(false)
 
         context.lessonOrQuizFinished();
 
-        expect(context.hasFinishedChapter).toEqual(true)
+        expect(context.hasFinishedLastQuizOfChapter).toEqual(true)
+
     });
 
-    it("should not set the finishedWithChapter flag after a non-last quiz of a chapter is finished", function() {
+    it("should not set the hasFinishedLastQuizOfChapter flag after a non-last quiz of a chapter is finished", function() {
         var quiz_1_in_chapter_1 = course.children[0].children[2];
         context.currentInteraction = quiz_1_in_chapter_1;
 
-        expect(context.hasFinishedChapter).toEqual(false)
+        expect(context.hasFinishedLastQuizOfChapter).toEqual(false)
 
         context.lessonOrQuizFinished();
 
-        expect(context.hasFinishedChapter).toEqual(false)
+        expect(context.hasFinishedLastQuizOfChapter).toEqual(false)
+    });
+
+    it("should set the hasFinishedLastLessonOfChapter flag after a last lesson of chapter is finished", function() {
+        var lesson_2_in_chapter_1 = course.children[0].children[1];
+        context.currentInteraction = lesson_2_in_chapter_1;
+
+        expect(context.hasFinishedLastLessonOfChapter).toEqual(false);
+
+        context.lessonOrQuizFinished();
+
+        expect(context.hasFinishedLastLessonOfChapter).toEqual(true);
+    });
+
+    it("should know if at a quiz header based on hasFinishedLastLessonOfChapter flag", function() {
+        expect(context.isAtQuizHeader()).toEqual(false);
+
+        context.hasFinishedLastLessonOfChapter = true;
+
+        expect(context.isAtQuizHeader()).toEqual(true);
+    });
+
+
+    it("should go to first chapter after welcome message played", function() {
+        var lesson_1_in_chapter_1 = course.children[0].children[0];
+
+        context.welcomeFinished();
+
+        expect(context.currentInteraction).toEqual(lesson_1_in_chapter_1);
+    });
+
+    it("should be able to go to first lesson of next chapter after score report finished", function() {
+         var chapter_1 = course.children[0];
+         context.currentInteraction = chapter_1;
+
+         context.scoreReportFinished();
+
+         var lesson_1_in_chapter_2 = course.children[1].children[0];
+         expect(context.currentInteraction).toEqual(lesson_1_in_chapter_2);
+    });
+
+    it("should be able to restart chapter after the score report finished ", function() {
+         var chapter_1 = course.children[0];
+         context.currentInteraction = chapter_1;
+
+         context.restartChapter();
+
+         var lesson_1_in_chapter_1 = course.children[0].children[0];
+         expect(context.currentInteraction).toEqual(lesson_1_in_chapter_1);
     });
 })

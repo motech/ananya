@@ -29,6 +29,11 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                 },
                 "contents": [
                     {
+                        "name": "menu",
+                        "value": "chapter_1_menu.wav",
+                        "language": "hindi"
+                    },
+                    {
                         "name": "goodScoreSummary",
                         "value": "chapter_1_goodScore.wav",
                         "language": "hindi"
@@ -36,6 +41,11 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                     {
                         "name": "badScoreSummary",
                         "value": "chapter_1_badScore.wav",
+                        "language": "hindi"
+                    },
+                    {
+                        "name": "quizHeader",
+                        "value": "chapter_1_quizHeader.wav",
                         "language": "hindi"
                     }
                 ],
@@ -137,6 +147,11 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                 },
                 "contents": [
                     {
+                        "name": "menu",
+                        "value": "chapter_2_menu.wav",
+                        "language": "hindi"
+                    },
+                    {
                         "name": "goodScoreSummary",
                         "value": "chapter_2_goodScore.wav",
                         "language": "hindi"
@@ -144,6 +159,11 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                     {
                         "name": "badScoreSummary",
                         "value": "chapter_2_badScore.wav",
+                        "language": "hindi"
+                    },
+                    {
+                        "name": "quizHeader",
+                        "value": "chapter_2_quizHeader.wav",
                         "language": "hindi"
                     }
                 ],
