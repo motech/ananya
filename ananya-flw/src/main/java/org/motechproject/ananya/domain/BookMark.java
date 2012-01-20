@@ -47,4 +47,16 @@ public class BookMark {
     public String toString() {
         return "BookMark{type='" + type + '\'' + ", chapterIndex='" + chapterIndex + '\'' + ", lessonIndex='" + lessonIndex + '\'' + '}';
     }
+
+    public String type() {
+        return type;
+    }
+
+    public String chapterIndex() {
+        return chapterIndex;
+    }
+
+    public String lessonIndex() {
+        return lessonIndex;
+    }
 }

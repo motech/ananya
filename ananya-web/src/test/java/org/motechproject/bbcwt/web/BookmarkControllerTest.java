@@ -1,7 +1,5 @@
 package org.motechproject.bbcwt.web;
 
-import com.thoughtworks.selenium.SeleneseTestBase;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -12,6 +10,7 @@ import org.motechproject.ananya.service.FrontLineWorkerService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -44,6 +43,49 @@ public class BookmarkControllerTest {
 
         bookmarkController.addBookMark(request);
 
-        Assert.assertEquals(frontLineWorker.getBookmark(),new BookMark("lesson","0","1"));
+        assertEquals(frontLineWorker.getBookmark(), new BookMark("lesson", "0", "1"));
+    }
+
+    @Test
+    public void shouldRetrieveBookmarkWhenItExists() {
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
+
+        FrontLineWorker workerWithBookmark = new FrontLineWorker();
+        workerWithBookmark.addBookMark(new BookMark("lesson", "0", "1"));
+
+        when(flwService.getFrontLineWorker("123")).thenReturn(workerWithBookmark);
+
+        String expectedBookmark = "<bookmark><type>lesson</type><chapterIndex>0</chapterIndex><lessonIndex>1</lessonIndex></bookmark>";
+        String actualBookmark = bookmarkController.getBookmark(request);
+
+        assertEquals(expectedBookmark, actualBookmark);
+    }
+
+    @Test
+    public void shouldReturnAnEmptyBookmarkTagWhenThereIsNoBookmarkForAValidUser() {
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
+
+        FrontLineWorker workerWithoutBookmark = new FrontLineWorker();
+        when(flwService.getFrontLineWorker("123")).thenReturn(workerWithoutBookmark);
+
+        String expectedBookmark = "<bookmark/>";
+        String actualBookmark = bookmarkController.getBookmark(request);
+
+        assertEquals(expectedBookmark, actualBookmark);
+    }
+
+    @Test
+    public void shouldReturnAnEmptyBookmarkTagForAnInvalidUser() {
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
+
+        when(flwService.getFrontLineWorker("123")).thenReturn(null);
+
+        String expectedBookmark = "<bookmark/>";
+        String actualBookmark = bookmarkController.getBookmark(request);
+
+        assertEquals(expectedBookmark, actualBookmark);
     }
 }

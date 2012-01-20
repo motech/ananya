@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 
 @Controller
 public class BookmarkController {
@@ -26,9 +27,24 @@ public class BookmarkController {
     public String addBookMark(HttpServletRequest request) {
         String callerId = SessionUtil.getCallerId(request);
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(callerId);
+
         BookMark bookMark = new BookMark(request.getParameter("bookmark.type"), request.getParameter("bookmark.chapterIndex"), request.getParameter("bookmark.lessonIndex"));
         frontLineWorker.addBookMark(bookMark);
         frontLineWorkerService.save(frontLineWorker);
-        return "Ouch!";
+
+        return "</done>";
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/bookmark/get")
+    @ResponseBody
+    public String getBookmark(HttpServletRequest request) {
+        FrontLineWorker worker = frontLineWorkerService.getFrontLineWorker(SessionUtil.getCallerId(request));
+        if (worker == null || worker.getBookmark() == null) {
+            return "<bookmark/>";
+        }
+
+        BookMark bookmark = worker.getBookmark();
+        return MessageFormat.format("<bookmark><type>{0}</type><chapterIndex>{1}</chapterIndex><lessonIndex>{2}</lessonIndex></bookmark>",
+                bookmark.type(), bookmark.chapterIndex(), bookmark.lessonIndex());
     }
 }
