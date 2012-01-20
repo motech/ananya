@@ -25,35 +25,13 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
     @Test
     public void shouldGetARegistrationVxmlForAUnRegisteredFLW() throws Exception {
         MyWebClient myWebClient = new MyWebClient();
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/register/?session.callerid=321");
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/register/");
 
         for (String record : asList("name", "district", "block", "village"))
             assertOnRecordElement(callFlow, record);
 
         NodeList read = (NodeList) callFlow.read("/vxml/form/var[@name='msisdn']", XPathConstants.NODESET);
         assertEquals("session.callerid", read.item(0).getAttributes().item(0).getTextContent());
-    }
-
-    @Test
-    public void shouldGetLandingPageWithRegistrationUrlForUnregisteredFLW() throws Exception {
-        MyWebClient myWebClient = new MyWebClient();
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/landing/?session.callerid=123");
-
-        NodeList read = (NodeList) callFlow.read("/vxml/form/block/goto", XPathConstants.NODESET);
-        assertEquals("/ananya/vxml/register/", read.item(0).getAttributes().item(0).getTextContent());
-    }
-
-    @Test
-    public void shouldGetLandingPageWithMenuUrlForRegisteredFLW() throws Exception {
-        MyWebClient myWebClient = new MyWebClient();
-        FrontLineWorker flw = new FrontLineWorker("123").status(FrontLineWorkerStatus.REGISTERED);
-        allFrontLineWorkers.add(flw);
-        markForDeletion(flw);
-
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/landing/?session.callerid=123");
-
-        NodeList read = (NodeList) callFlow.read("/vxml/form/block/goto", XPathConstants.NODESET);
-        assertEquals("/ananya/vxml/menu/", read.item(0).getAttributes().item(0).getTextContent());
     }
 
     private void assertOnRecordElement(CallFlow callFlow, String param) throws XPathExpressionException {

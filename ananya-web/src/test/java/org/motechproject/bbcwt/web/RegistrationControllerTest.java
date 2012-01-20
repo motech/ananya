@@ -46,44 +46,6 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void shouldReturnRegistrationCallFlowIfFLWIsNotRegistered() {
-        when(request.getSession()).thenReturn(session);
-        when(request.getParameter("session.callerid")).thenReturn("991");
-        when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.UNREGISTERED);
-
-        ModelAndView modelAndView = controller.getLandingPage(request);
-
-        ModelMap modelMap = modelAndView.getModelMap();
-        assertEquals("/vxml/register/", modelMap.get("rendering_Page"));
-        assertEquals("caller-landing-page", modelAndView.getViewName());
-    }
-
-    @Test
-    public void shouldReturnChoiceCallFlowIfFLWIsRegistered() {
-        when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("session.connection.remote.uri")).thenReturn("991");
-        when(flwService.getStatus("991")).thenReturn(FrontLineWorkerStatus.REGISTERED);
-
-        ModelAndView modelAndView = controller.getLandingPage(request);
-
-        ModelMap modelMap = modelAndView.getModelMap();
-        assertEquals("/vxml/menu/", modelMap.get("rendering_Page"));
-        assertEquals("caller-landing-page", modelAndView.getViewName());
-    }
-
-    @Test
-    public void shouldReturnRegistrationPage() {
-        ModelAndView modelAndView = controller.getRegisterPage();
-        assertEquals("register-flw", modelAndView.getViewName());
-    }
-
-    @Test
-    public void shouldReturnMenuPage() {
-        ModelAndView modelAndView = controller.getMenuPage();
-        assertEquals("top-menu", modelAndView.getViewName());
-    }
-
-    @Test
     public void shouldCaptureRecordWavFilesAndRegisterFLW() throws Exception {
         String msisdn = "123";
         String path = "/path";

@@ -5,7 +5,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.AllRecordings;
-import org.motechproject.bbcwt.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,6 @@ import java.util.List;
 public class RegistrationController {
     private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
-    private static final String REGISTRATION_VXML = "register-flw";
-    private static final String REGISTRATION_DONE_VXML = "register-done-flw";
-    private static final String LANDING_VXML = "caller-landing-page";
-    private static final String MENU_VXML = "top-menu";
-
-    private static final String MSISDN_PARAM = "msisdn";
-
     private FrontLineWorkerService frontLineWorkerService;
     private AllRecordings allRecordings;
 
@@ -39,26 +31,9 @@ public class RegistrationController {
         this.allRecordings = allRecordings;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/landing/")
-    public ModelAndView getLandingPage(HttpServletRequest request) {
-        String msisdn = SessionUtil.getCallerId(request);
-        log.info("msisdn of caller: " + msisdn);
-        String vxml = isCallerRegistered(msisdn) ? "/vxml/menu/" : "/vxml/register/";
-        return new ModelAndView(LANDING_VXML).addObject("rendering_Page", vxml);
-    }
-
-    public boolean isCallerRegistered(String msisdn) {
-        return frontLineWorkerService.getStatus(msisdn).isRegistered();
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/register/")
-    public ModelAndView getRegisterPage() {
-        return new ModelAndView(REGISTRATION_VXML);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/menu/")
-    public ModelAndView getMenuPage() {
-        return new ModelAndView(MENU_VXML);
+    @RequestMapping(value = "/vxml/register")
+    public ModelAndView getCallFlow(){
+        return new ModelAndView("register-flw");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
@@ -71,7 +46,8 @@ public class RegistrationController {
         String path = request.getSession().getServletContext().getRealPath("/recordings/");
         allRecordings.store(msisdn, items, path);
 
-        return new ModelAndView(REGISTRATION_DONE_VXML);
+        log.info("Registered new FLW:"+msisdn);
+        return new ModelAndView("register-done-flw");
     }
 
     protected ServletFileUpload getUploader() {
@@ -80,7 +56,7 @@ public class RegistrationController {
 
     private String getMsisdn(List<FileItem> items) {
         for (FileItem item : items)
-            if (item.isFormField() && item.getFieldName().equals(MSISDN_PARAM))
+            if (item.isFormField() && item.getFieldName().equals("msisdn"))
                 return item.getString();
         return null;
     }

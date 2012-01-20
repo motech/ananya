@@ -32,22 +32,22 @@ public class MyWebClient {
         Page page = webClient.getPage(url);
         return new CallFlow(page.getWebResponse().getContentAsString());
     }
-    
-public static class PostParam{
-    public String name;
-    public String value;
 
-    public PostParam(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
+    public static class PostParam {
+        public String name;
+        public String value;
 
-    public static PostParam param(String name, String value) {
-        return new PostParam(name, value);
-    }
+        public PostParam(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
 
-    public NameValuePair toNameValuePair() {
-        return new NameValuePair(name, value);
+        public static PostParam param(String name, String value) {
+            return new PostParam(name, value);
+        }
+
+        public NameValuePair toNameValuePair() {
+            return new NameValuePair(name, value);
+        }
     }
-}
 }
