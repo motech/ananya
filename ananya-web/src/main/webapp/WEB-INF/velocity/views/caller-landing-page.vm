@@ -1,7 +1,0 @@
-#vxmlHeader()
-<form id="landing_Page">
-<block>
-<goto next="/ananya$rendering_Page"/>
-</block>
-</form>
-#vxmlFooter()

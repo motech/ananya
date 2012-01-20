@@ -1,0 +1,11 @@
+#vxmlHeader()
+<script src="caller_status.js"/>
+<form id="landing_Page">
+<block>
+<if cond="!callerData.isRegistered">
+    <goto next="/vxml/register"/>
+</if>
+<goto next="$renderingPage"/>
+</block>
+</form>
+#vxmlFooter()
