@@ -1,6 +1,5 @@
 package org.motechproject.ananyafunctional;
 
-import com.gargoylesoftware.htmlunit.Page;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.domain.BookMark;
@@ -29,7 +28,7 @@ public class BookMarkTest extends SpringIntegrationTest {
         PostParam bookmarkType = param("bookmark.type", "lesson");
         PostParam bookmarkChapterIndex = param("bookmark.chapterIndex", "0");
         PostParam bookmarkLessonIndex = param("bookmark.lessonIndex", "1");
-        PostParam callerId = param("session.callerid", "999");
+        PostParam callerId = param("callerId", "999");
         new MyWebClient().post("http://localhost:9979/ananya/bookmark/add", bookmarkType, bookmarkChapterIndex, bookmarkLessonIndex, callerId);
 
         markForDeletion(allFrontLineWorkers.findByMsisdn("999"));

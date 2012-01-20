@@ -2,7 +2,6 @@ package org.motechproject.bbcwt.web;
 
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.bbcwt.repository.tree.AllNodes;
-import org.motechproject.bbcwt.util.SessionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,7 @@ public class DynamicJSHandler {
 
     @RequestMapping(method = RequestMethod.GET, value = "/caller_data.js")
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String msisdn = SessionUtil.getCallerId(request);
+        String msisdn = request.getParameter("callerId");
 
         boolean callerRegistered = registrationController.isCallerRegistered(msisdn);
         BookMark bookmark = bookmarkController.getBookmark(msisdn);

@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.bbcwt.util.SessionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +21,7 @@ public class BookmarkControllerTest {
     private HttpServletRequest request;
     @Mock
     private HttpSession session;
-    
+
     private BookmarkController bookmarkController;
 
     @Before
@@ -34,7 +33,7 @@ public class BookmarkControllerTest {
     @Test
     public void shouldAddBookmark() {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
+        when(request.getParameter("callerId")).thenReturn("123");
         when(request.getParameter("bookmark.type")).thenReturn("lesson");
         when(request.getParameter("bookmark.chapterIndex")).thenReturn("0");
         when(request.getParameter("bookmark.lessonIndex")).thenReturn("1");
@@ -50,7 +49,6 @@ public class BookmarkControllerTest {
     @Test
     public void shouldRetrieveBookmarkWhenItExists() {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
 
         FrontLineWorker workerWithBookmark = new FrontLineWorker();
         BookMark bookMark = new BookMark("lesson", "0", "1");
@@ -66,12 +64,11 @@ public class BookmarkControllerTest {
     @Test
     public void shouldReturnAnEmptyBookmarkTagWhenThereIsNoBookmarkForAValidUser() {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
 
         FrontLineWorker workerWithoutBookmark = new FrontLineWorker();
         when(flwService.getFrontLineWorker("123")).thenReturn(workerWithoutBookmark);
 
-        BookMark actualBookmark = bookmarkController.getBookmark(SessionUtil.getCallerId(request));
+        BookMark actualBookmark = bookmarkController.getBookmark("123");
 
         assertEquals(null, actualBookmark);
     }
@@ -79,11 +76,10 @@ public class BookmarkControllerTest {
     @Test
     public void shouldReturnAnEmptyBookmarkTagForAnInvalidUser() {
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
 
         when(flwService.getFrontLineWorker("123")).thenReturn(null);
 
-        BookMark actualBookmark = bookmarkController.getBookmark(SessionUtil.getCallerId(request));
+        BookMark actualBookmark = bookmarkController.getBookmark("123");
 
         assertEquals(null, actualBookmark);
     }

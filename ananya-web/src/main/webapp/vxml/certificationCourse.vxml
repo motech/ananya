@@ -30,7 +30,8 @@
         <block>
             <if cond="callContext.shouldSaveBookmark()">
                 <assign name="bookmark" expr="callContext.bookmark"/>
-                <data srcexpr="metaData.addBookmarkUrl" method="post" namelist="bookmark session.connection.remote.uri"/>
+                <assign name="callerId" expr="session.connection.remote.uri"/>
+                <data srcexpr="metaData.addBookmarkUrl" method="post" namelist="bookmark callerId"/>
                 <script>
                     callContext.bookmark = null;
                 </script>
