@@ -11,8 +11,9 @@ public class LandingController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing/")
     public ModelAndView getLandingPage(@PathVariable String entry) {
-        String nextFlow = entry.equals("jobaid")?"/vxml/jobaid.vxml":"/vxml/certificationCourse.vxml";
-        return new ModelAndView("landing").addObject("nextFlow", nextFlow);
+        String nextFlow = entry.equals("jobaid") ? "/vxml/jobaid.vxml" : "/vxml/certificationCourse.vxml";
+        return new ModelAndView("landing").addObject("nextFlow", nextFlow).addObject("entry", entry);
     }
 
 }
+    

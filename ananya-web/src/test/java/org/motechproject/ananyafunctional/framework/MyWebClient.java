@@ -29,6 +29,7 @@ public class MyWebClient {
     }
 
     public CallFlow getCallFlow(String url) throws IOException {
+        webClient.setJavaScriptEnabled(false);
         Page page = webClient.getPage(url);
         return new CallFlow(page.getWebResponse().getContentAsString());
     }

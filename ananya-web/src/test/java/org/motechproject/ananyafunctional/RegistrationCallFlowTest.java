@@ -1,11 +1,9 @@
 package org.motechproject.ananyafunctional;
 
 import org.junit.Test;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
@@ -16,9 +14,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class RegistrationCallFlowTest extends SpringIntegrationTest {
-
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
 
     @Test
     public void shouldGetARegistrationVxmlForAUnRegisteredFLW() throws Exception {
