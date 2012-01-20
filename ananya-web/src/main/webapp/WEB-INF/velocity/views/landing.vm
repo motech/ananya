@@ -3,9 +3,10 @@
 <form id="landing_page">
     <block>
         <if cond="!callerData.isRegistered">
-            <goto next="/vxml/register"/>
+            <goto next="/vxml/$entry/register"/>
+        <else/>
+            <goto next="$nextFlow"/>
         </if>
-        <goto next="$renderingPage"/>
     </block>
 </form>
 #vxmlFooter()

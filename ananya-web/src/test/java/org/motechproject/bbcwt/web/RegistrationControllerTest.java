@@ -5,10 +5,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.AllRecordings;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
@@ -43,6 +41,22 @@ public class RegistrationControllerTest {
     public void setUp() {
         initMocks(this);
         controller = new RegistrationController(flwService, allRecordings);
+    }
+
+    @Test
+    public void shouldRegistrationVxmlWithLinkToJobAidIfEntryIsJobAidNumber(){
+        ModelAndView modelAndView = controller.getCallFlow("jobaid");
+        assertEquals("register-flw", modelAndView.getViewName());
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("/vxml/jobaid.vxml",nextFlow);
+    }
+
+     @Test
+    public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber(){
+        ModelAndView modelAndView = controller.getCallFlow("certificationCourse");
+        assertEquals("register-flw", modelAndView.getViewName());
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("/vxml/certificationCourse.vxml",nextFlow);
     }
 
     @Test
