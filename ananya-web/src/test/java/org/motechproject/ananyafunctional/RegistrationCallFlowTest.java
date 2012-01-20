@@ -1,8 +1,6 @@
 package org.motechproject.ananyafunctional;
 
 import org.junit.Test;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
@@ -25,13 +23,14 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
     @Test
     public void shouldGetARegistrationVxmlForAUnRegisteredFLW() throws Exception {
         MyWebClient myWebClient = new MyWebClient();
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/register/");
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/register/");
 
         for (String record : asList("name", "district", "block", "village"))
             assertOnRecordElement(callFlow, record);
 
         NodeList read = (NodeList) callFlow.read("/vxml/form/var[@name='msisdn']", XPathConstants.NODESET);
         assertEquals("session.callerid", read.item(0).getAttributes().item(0).getTextContent());
+        assertEquals("/vxml/jobaid.vxml", callFlow.read("/vxml/form/block/goto/@next", XPathConstants.STRING));
     }
 
     private void assertOnRecordElement(CallFlow callFlow, String param) throws XPathExpressionException {

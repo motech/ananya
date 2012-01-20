@@ -9,7 +9,7 @@
     <block>
         <data src="$bundle.flw.registration.submit.url" enctype="multipart/form-data" method="post" namelist="msisdn name district block village"/>
         #playwav($bundle.flw.registration.complete)
-        <goto next="/ananya/vxml/menu/"/>
+        <goto next="$nextFlow"/>
     </block>
 </form>
 #vxmlFooter()

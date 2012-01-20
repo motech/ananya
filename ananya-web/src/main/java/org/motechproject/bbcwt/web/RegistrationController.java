@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,9 +32,10 @@ public class RegistrationController {
         this.allRecordings = allRecordings;
     }
 
-    @RequestMapping(value = "/vxml/register")
-    public ModelAndView getCallFlow(){
-        return new ModelAndView("register-flw");
+    @RequestMapping(value = "/vxml/{entry}/register")
+    public ModelAndView getCallFlow(@PathVariable String entry) {
+        String nextFlow = entry.equals("jobaid") ? "/vxml/jobaid.vxml" : "/vxml/certificationCourse.vxml";
+        return new ModelAndView("register-flw").addObject("nextFlow", nextFlow);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
@@ -46,7 +48,7 @@ public class RegistrationController {
         String path = request.getSession().getServletContext().getRealPath("/recordings/");
         allRecordings.store(msisdn, items, path);
 
-        log.info("Registered new FLW:"+msisdn);
+        log.info("Registered new FLW:" + msisdn);
         return new ModelAndView("register-done-flw");
     }
 

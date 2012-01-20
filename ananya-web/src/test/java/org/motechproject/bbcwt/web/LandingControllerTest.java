@@ -24,15 +24,15 @@ public class LandingControllerTest {
 
     @Test
     public void shouldPopulateRenderingPageToJobAidForJobAidCallFlow(){
-        ModelAndView modelAndView = landingController.getLandingPage(request, "jobaid");
-        String renderingPage = (String) modelAndView.getModel().get("renderingPage");
-        assertEquals("/vxml/jobaid.vxml",renderingPage);
+        ModelAndView modelAndView = landingController.getLandingPage("jobaid");
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("/vxml/jobaid.vxml",nextFlow);
     }
 
     @Test
     public void shouldPopulateRenderingPageToCertificationCourseForCourseCallFlow(){
-        ModelAndView modelAndView = landingController.getLandingPage(request, "certificationCourse");
-        String renderingPage = (String) modelAndView.getModel().get("renderingPage");
-        assertEquals("/vxml/certificationCourse.vxml",renderingPage);
+        ModelAndView modelAndView = landingController.getLandingPage("certificationCourse");
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("/vxml/certificationCourse.vxml",nextFlow);
     }
 }

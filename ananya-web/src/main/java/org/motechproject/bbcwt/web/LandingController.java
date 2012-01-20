@@ -6,16 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Controller
 public class LandingController {
-    private static final String LANDING_VXML = "landing";
 
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/{callFlow}/landing/")
-    public ModelAndView getLandingPage(HttpServletRequest request, @PathVariable String callFlow) {
-        String renderingPage = callFlow.equals("jobaid")?"/vxml/jobaid.vxml":"/vxml/certificationCourse.vxml";
-        return new ModelAndView(LANDING_VXML).addObject("renderingPage", renderingPage);
+    @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing/")
+    public ModelAndView getLandingPage(@PathVariable String entry) {
+        String nextFlow = entry.equals("jobaid")?"/vxml/jobaid.vxml":"/vxml/certificationCourse.vxml";
+        return new ModelAndView("landing").addObject("nextFlow", nextFlow);
     }
 
 }
