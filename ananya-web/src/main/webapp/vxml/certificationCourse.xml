@@ -5,6 +5,7 @@
 
     <script src="../dynamic/js/metadata.js"/>
     <script src="../dynamic/js/certification_course_data.js"/>
+    <script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>
 
     <script src="../js/course.js"/>
     <script src="../js/certification_course_context.js"/>
@@ -13,6 +14,8 @@
         <![CDATA[
             var callContext = new CertificationCourseContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
+
+            callContext.navigateToBookmark(callerData.bookmark);
           ]]>
     </script>
 
@@ -25,7 +28,7 @@
             promptContext.resetCounts();
         </script>
         <block>
-            <if cond="callContext.bookmark != null">
+            <if cond="callContext.shouldSaveBookmark()">
                 <assign name="bookmark" expr="callContext.bookmark"/>
                 <data srcexpr="metaData.addBookmarkUrl" method="post" namelist="bookmark session.connection.remote.uri"/>
                 <script>

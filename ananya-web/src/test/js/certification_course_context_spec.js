@@ -8,6 +8,25 @@ describe("Certification Course Context", function() {
         context = new CertificationCourseContext(course, metadata);
     });
 
+    it("should navigate to lesson if lesson bookmark exists", function() {
+        var bookmark_for_lesson_2_chapter_2 = {"type" : "lesson", "chapterIndex" : "1" , "lessonIndex" : "1"};
+
+        context.navigateToBookmark(bookmark_for_lesson_2_chapter_2);
+
+        expect(context.currentInteraction).toEqual(course.children[1].children[1]);
+    });
+
+    it("should not navigate from currentInteraction if bookmark does not exist", function() {
+        var emptyBookmark = {};
+
+        context.navigateToBookmark(emptyBookmark);
+        expect(context.currentInteraction).toEqual(course);
+
+        context.currentInteraction = course.children[1];
+        context.navigateToBookmark(emptyBookmark);
+        expect(context.currentInteraction).toEqual(course.children[1]);
+    });
+
     it("when initialized should have course as the current interaction.", function() {
         expect(context.currentInteraction).toEqual(course);
     });
