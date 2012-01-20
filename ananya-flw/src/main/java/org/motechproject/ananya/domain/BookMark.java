@@ -48,15 +48,15 @@ public class BookMark {
         return "BookMark{type='" + type + '\'' + ", chapterIndex='" + chapterIndex + '\'' + ", lessonIndex='" + lessonIndex + '\'' + '}';
     }
 
-    public String type() {
+    public String getType() {
         return type;
     }
 
-    public String chapterIndex() {
+    public String getChapterIndex() {
         return chapterIndex;
     }
 
-    public String lessonIndex() {
+    public String getLessonIndex() {
         return lessonIndex;
     }
 }

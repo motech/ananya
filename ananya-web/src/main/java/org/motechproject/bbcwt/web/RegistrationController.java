@@ -43,8 +43,12 @@ public class RegistrationController {
     public ModelAndView getLandingPage(HttpServletRequest request) {
         String msisdn = SessionUtil.getCallerId(request);
         log.info("msisdn of caller: " + msisdn);
-        String vxml = frontLineWorkerService.getStatus(msisdn).isRegistered() ? "/vxml/menu/" : "/vxml/register/";
+        String vxml = isCallerRegistered(msisdn) ? "/vxml/menu/" : "/vxml/register/";
         return new ModelAndView(LANDING_VXML).addObject("rendering_Page", vxml);
+    }
+
+    public boolean isCallerRegistered(String msisdn) {
+        return frontLineWorkerService.getStatus(msisdn).isRegistered();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/register/")

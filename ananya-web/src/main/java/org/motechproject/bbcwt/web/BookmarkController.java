@@ -35,16 +35,11 @@ public class BookmarkController {
         return "</done>";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/bookmark/get")
-    @ResponseBody
-    public String getBookmark(HttpServletRequest request) {
-        FrontLineWorker worker = frontLineWorkerService.getFrontLineWorker(SessionUtil.getCallerId(request));
+    public BookMark getBookmark(String callerId) {
+        FrontLineWorker worker = frontLineWorkerService.getFrontLineWorker(callerId);
         if (worker == null || worker.getBookmark() == null) {
-            return "<bookmark/>";
+            return null;
         }
-
-        BookMark bookmark = worker.getBookmark();
-        return MessageFormat.format("<bookmark><type>{0}</type><chapterIndex>{1}</chapterIndex><lessonIndex>{2}</lessonIndex></bookmark>",
-                bookmark.type(), bookmark.chapterIndex(), bookmark.lessonIndex());
+        return worker.getBookmark();
     }
 }

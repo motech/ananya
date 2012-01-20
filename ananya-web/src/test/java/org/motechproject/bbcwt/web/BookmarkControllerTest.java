@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.bbcwt.util.SessionUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,14 +53,14 @@ public class BookmarkControllerTest {
         when(session.getAttribute("session.connection.remote.uri")).thenReturn("123");
 
         FrontLineWorker workerWithBookmark = new FrontLineWorker();
-        workerWithBookmark.addBookMark(new BookMark("lesson", "0", "1"));
+        BookMark bookMark = new BookMark("lesson", "0", "1");
+        workerWithBookmark.addBookMark(bookMark);
 
         when(flwService.getFrontLineWorker("123")).thenReturn(workerWithBookmark);
 
-        String expectedBookmark = "<bookmark><type>lesson</type><chapterIndex>0</chapterIndex><lessonIndex>1</lessonIndex></bookmark>";
-        String actualBookmark = bookmarkController.getBookmark(request);
+        BookMark actualBookmark = bookmarkController.getBookmark("123");
 
-        assertEquals(expectedBookmark, actualBookmark);
+        assertEquals(bookMark, actualBookmark);
     }
 
     @Test
@@ -70,10 +71,9 @@ public class BookmarkControllerTest {
         FrontLineWorker workerWithoutBookmark = new FrontLineWorker();
         when(flwService.getFrontLineWorker("123")).thenReturn(workerWithoutBookmark);
 
-        String expectedBookmark = "<bookmark/>";
-        String actualBookmark = bookmarkController.getBookmark(request);
+        BookMark actualBookmark = bookmarkController.getBookmark(SessionUtil.getCallerId(request));
 
-        assertEquals(expectedBookmark, actualBookmark);
+        assertEquals(null, actualBookmark);
     }
 
     @Test
@@ -83,9 +83,8 @@ public class BookmarkControllerTest {
 
         when(flwService.getFrontLineWorker("123")).thenReturn(null);
 
-        String expectedBookmark = "<bookmark/>";
-        String actualBookmark = bookmarkController.getBookmark(request);
+        BookMark actualBookmark = bookmarkController.getBookmark(SessionUtil.getCallerId(request));
 
-        assertEquals(expectedBookmark, actualBookmark);
+        assertEquals(null, actualBookmark);
     }
 }

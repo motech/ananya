@@ -35,19 +35,4 @@ public class BookMarkTest extends SpringIntegrationTest {
         markForDeletion(allFrontLineWorkers.findByMsisdn("999"));
         Assert.assertEquals(allFrontLineWorkers.findByMsisdn("999").getBookmark(), new BookMark("lesson", "0", "1"));
     }
-
-    @Test
-    public void shouldRetrieveABookmarkAssociatedWithAFLW() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("111").status(FrontLineWorkerStatus.REGISTERED);
-        flw.addBookMark(new BookMark("lesson", "1", "2"));
-        allFrontLineWorkers.add(flw);
-        markForDeletion(flw);
-
-        Page bookmark = new MyWebClient().getPage("http://localhost:9979/ananya/bookmark/get?session.callerid=111");
-
-        String expectedBookmark = "<bookmark><type>lesson</type><chapterIndex>1</chapterIndex><lessonIndex>2</lessonIndex></bookmark>";
-        String actualBookmark = bookmark.getWebResponse().getContentAsString();
-
-        Assert.assertEquals(expectedBookmark, actualBookmark);
-    }
 }
