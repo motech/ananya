@@ -15,7 +15,7 @@ import java.io.IOException;
 import static org.motechproject.ananyafunctional.framework.MyWebClient.PostParam;
 import static org.motechproject.ananyafunctional.framework.MyWebClient.PostParam.param;
 
-public class BookMarkTest extends SpringIntegrationTest {
+public class BookMarkCreationTest extends SpringIntegrationTest {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 

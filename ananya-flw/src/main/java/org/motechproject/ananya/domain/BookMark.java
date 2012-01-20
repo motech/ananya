@@ -2,6 +2,8 @@ package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.text.MessageFormat;
+
 public class BookMark {
     @JsonProperty
     private String type;
@@ -58,5 +60,14 @@ public class BookMark {
 
     public String getLessonIndex() {
         return lessonIndex;
+    }
+
+    public String asJson() {
+        String typeAndChapter = MessageFormat.format("\"type\" : \"{0}\" , \"chapterIndex\" : \"{1}\"", type, chapterIndex);
+
+        if (lessonIndex != null) {
+            return MessageFormat.format("'{'{0} , \"lessonIndex\" : \"{1}\"'}'", typeAndChapter, lessonIndex);
+        }
+        return MessageFormat.format("'{'{0}'}'", typeAndChapter);
     }
 }

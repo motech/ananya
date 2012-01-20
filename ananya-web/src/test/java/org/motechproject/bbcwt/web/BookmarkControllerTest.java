@@ -70,7 +70,7 @@ public class BookmarkControllerTest {
 
         BookMark actualBookmark = bookmarkController.getBookmark("123");
 
-        assertEquals(null, actualBookmark);
+        assertEquals(new EmptyBookmark(), actualBookmark);
     }
 
     @Test
@@ -81,6 +81,6 @@ public class BookmarkControllerTest {
 
         BookMark actualBookmark = bookmarkController.getBookmark("123");
 
-        assertEquals(null, actualBookmark);
+        assertEquals(new EmptyBookmark(), actualBookmark);
     }
 }

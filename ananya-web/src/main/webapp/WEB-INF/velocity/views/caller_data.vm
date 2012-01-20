@@ -1,10 +1,4 @@
 var callerData = {
    "isRegistered" : "${isCallerRegistered}",
-   "bookmark" : {
-       #if(${bookmark})
-           "type" : "${bookmark.type}",
-           "chapterIndex" : "${bookmark.chapterIndex}",
-           "lessonIndex" : "${bookmark.lessonIndex}"
-       #end
-   }
+   "bookmark" : ${bookmark}
 };

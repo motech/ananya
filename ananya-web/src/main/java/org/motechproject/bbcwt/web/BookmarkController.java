@@ -36,7 +36,7 @@ public class BookmarkController {
     public BookMark getBookmark(String callerId) {
         FrontLineWorker worker = frontLineWorkerService.getFrontLineWorker(callerId);
         if (worker == null || worker.getBookmark() == null) {
-            return null;
+            return new EmptyBookmark();
         }
         return worker.getBookmark();
     }

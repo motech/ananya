@@ -55,6 +55,6 @@ public class DynamicJSHandler {
         BookMark bookmark = bookmarkController.getBookmark(msisdn);
 
         response.setContentType("application/javascript");
-        return new ModelAndView("caller_data").addObject("bookmark", bookmark).addObject("isCallerRegistered", callerRegistered);
+        return new ModelAndView("caller_data").addObject("bookmark", bookmark.asJson()).addObject("isCallerRegistered", callerRegistered);
     }
 }
