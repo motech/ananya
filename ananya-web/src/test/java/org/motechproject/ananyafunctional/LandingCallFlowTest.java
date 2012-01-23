@@ -28,5 +28,11 @@ public class LandingCallFlowTest extends SpringIntegrationTest {
         assertEquals("/vxml/jobaid.vxml", links.item(1).getAttributes().item(0).getTextContent());
     }
 
-
+    @Test
+    public void shouldGetLandingPageWithLinksToCourseIfEntryIsThroughCourseNumber() throws Exception {
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificationcourse/landing/");
+        NodeList links = (NodeList) callFlow.read("/vxml/form/block/if/goto", XPathConstants.NODESET);
+        assertEquals("/vxml/certificationcourse/register", links.item(0).getAttributes().item(0).getTextContent());
+        assertEquals("/vxml/certificationCourse.vxml", links.item(1).getAttributes().item(0).getTextContent());
+    }
 }
