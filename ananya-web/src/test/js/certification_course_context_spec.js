@@ -1,3 +1,4 @@
+
 describe("Certification Course Context", function() {
     var course, context;
     var audioFileBase = "./audio/";
@@ -45,6 +46,13 @@ describe("Certification Course Context", function() {
         expect(context.isAtLesson()).toEqual(true);
     });
 
+    it("should know when it is at a quiz", function() {
+        expect(context.isAtQuizQuestion()).toEqual(false);
+
+        context.currentInteraction = course.children[0].children[2];
+        expect(context.isAtQuizQuestion()).toEqual(true);
+    });
+
     it("should get the lesson content URI for current lesson", function() {
         context.currentInteraction = course.children[1].children[1];
         expect(context.currentInteractionLesson()).toEqual("./audio/chapter_2_lesson_2.wav");
@@ -53,6 +61,11 @@ describe("Certification Course Context", function() {
     it("should get the quiz header URI for current chapter", function() {
         context.currentInteraction = course.children[1].children[1];
         expect(context.currentInteractionQuizHeader()).toEqual("./audio/chapter_2_quizHeader.wav");
+    });
+
+    it("should get the quiz question URI for current chapter", function() {
+        context.currentInteraction = course.children[0].children[2];
+        expect(context.currentInteractionQuizQuestion()).toEqual("./audio/chapter_1_quiz_1.wav");
     });
 
     it("should get the menu content URI for the current interaction", function() {
@@ -197,5 +210,17 @@ describe("Certification Course Context", function() {
         context.addAfterWelcomeMessageBookmark();
 
         expect(context.bookmark).toEqual(bookmark_for_lesson_1);
+    });
+
+    it("should play correct answer explanation if the response for a question is correct", function() {
+        var quiz_1_in_chapter_2 = course.children[1].children[2];
+        context.currentInteraction = quiz_1_in_chapter_2;
+        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_1_correct.wav");
+    });
+
+    it("should play wrong answer explanation if the response for a question is incorrect", function() {
+        var quiz_2_in_chapter_2 = course.children[1].children[3];
+        context.currentInteraction = quiz_2_in_chapter_2;
+        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_2_wrong.wav");
     });
 })

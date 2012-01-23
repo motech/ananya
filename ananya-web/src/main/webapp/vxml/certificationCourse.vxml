@@ -39,8 +39,8 @@
 
             <if cond="callContext.chapterFinished()">
                 <goto next="#tellScore"/>
-            <!--<elseif cond="callContext.isAtQuizHeader()"/>-->
-                <!--<goto next="#quizHeader"/>-->
+            <elseif cond="callContext.isAtQuizHeader()"/>
+                <goto next="#quizHeader"/>
             <elseif cond="callContext.isAtCourseRoot()"/>
                 <goto next="#welcomeMessage"/>
             <elseif cond="callContext.isAtLesson()"/>
@@ -105,10 +105,29 @@
         </block>
     </form>
 
+    <form id="quizQuestion">
+         <block>
+            <audio expr="callContext.currentInteractionQuizQuestion()"/>
+                <script>
+                    promptContext.setupForReadingInputFromUser('quizPromptFinished', [1, 2]);
+                </script>
+            <goto next="#captureInputWithReprompt"/>
+         </block>
+    </form>
+
+    <form id="quizPromptFinished">
+        <block>
+            <audio expr="callContext.evaluateAndReturnAnswerExplanation(promptContext.getInputFromUser())"/>
+            <script>
+                callContext.lessonOrQuizFinished();
+            </script>
+            <goto next="#controller"/>
+        </block>
+    </form>
+
     <form id="tellScore">
         <block>
             <script>
-                callContext.currentInteraction = callContext.currentInteraction.parent; // TODO: Remove this, once quiz is done.
                 promptContext.setupForReadingInputFromUser('scorePromptFinished', [1, 2]);
             </script>
             <goto next="#captureInputWithReprompt"/>
@@ -131,11 +150,8 @@
 
     <form id="captureInputWithReprompt">
         <field name="inputFromUser">
-            <prompt bargein="true">
+            <prompt bargein="true" cond="!callContext.isAtQuizQuestion()">
                 <audio expr="callContext.currentInteractionMenu()"/>
-            </prompt>
-            <prompt bargein="true" cond="!callContext.isAtCourseRoot()">
-                <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">

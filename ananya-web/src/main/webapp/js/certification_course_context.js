@@ -45,11 +45,15 @@ var CertificationCourseContext = function(course, metadata) {
     };
 
     this.chapterFinished = function() {
-        return this.hasFinishedLastLessonOfChapter; //TODO: change to last quiz of chapter
+        return this.hasFinishedLastQuizOfChapter;
     };
 
     this.isAtLesson = function() {
         return this.currentInteraction.data.type == "lesson";
+    };
+
+    this.isAtQuizQuestion = function() {
+        return this.currentInteraction.data.type == "quiz";
     };
 
     this.courseWelcomeMessage = function() {
@@ -62,6 +66,10 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.currentInteractionQuizHeader = function() {
         return this.findAudio(this.currentInteraction.parent, "quizHeader");
+    };
+
+    this.currentInteractionQuizQuestion = function() {
+        return this.findAudio(this.currentInteraction, "question");
     };
 
     this.currentInteractionMenu = function() {
@@ -110,6 +118,13 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.shouldSaveBookmark = function() {
         return this.bookmark != null && this.metadata.shouldSaveBookmark == "true";
+    };
+
+    this.evaluateAndReturnAnswerExplanation = function(input) {
+        if(this.currentInteraction.data.correctAnswer == input) {
+            return this.findAudio(this.currentInteraction, "correct");
+        }
+        return this.findAudio(this.currentInteraction, "incorrect");
     };
 
     this.findContentByName = function(interactionToUse, contentName) {

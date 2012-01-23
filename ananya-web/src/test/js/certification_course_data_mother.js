@@ -207,27 +207,7 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                         "children": []
                     },
                     {
-                        "contents": [
-                            {
-                                "name": "question",
-                                "value": "chapter_1_quiz_1.wav",
-                                "language": "hindi"
-                            },
-                            {
-                                "name": "correct",
-                                "value": "chapter_1_quiz_1_correct.wav",
-                                "language": "hindi"
-                            },
-                            {
-                                "name": "incorrect",
-                                "value": "chapter_1_quiz_1_wrong.wav",
-                                "language": "hindi"
-                            }
-                        ],
-                        "children": []
-                    },
-                    {
-                        "name": "Chapter 1 Quiz 2",
+                        "name": "Chapter 2 Quiz 1",
                         "data": {
                             "type": "quiz",
                             "correctAnswer": "2"
@@ -235,17 +215,42 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                         "contents": [
                             {
                                 "name": "question",
-                                "value": "chapter_1_quiz_2.wav",
+                                "value": "chapter_2_quiz_1.wav",
                                 "language": "hindi"
                             },
                             {
                                 "name": "correct",
-                                "value": "chapter_1_quiz_2_correct.wav",
+                                "value": "chapter_2_quiz_1_correct.wav",
                                 "language": "hindi"
                             },
                             {
                                 "name": "incorrect",
-                                "value": "chapter_1_quiz_2_wrong.wav",
+                                "value": "chapter_2_quiz_1_wrong.wav",
+                                "language": "hindi"
+                            }
+                        ],
+                        "children": []
+                    },
+                    {
+                        "name": "Chapter 2 Quiz 2",
+                        "data": {
+                            "type": "quiz",
+                            "correctAnswer": "1"
+                        },
+                        "contents": [
+                            {
+                                "name": "question",
+                                "value": "chapter_2_quiz_2.wav",
+                                "language": "hindi"
+                            },
+                            {
+                                "name": "correct",
+                                "value": "chapter_2_quiz_2_correct.wav",
+                                "language": "hindi"
+                            },
+                            {
+                                "name": "incorrect",
+                                "value": "chapter_2_quiz_2_wrong.wav",
                                 "language": "hindi"
                             }
                         ],
