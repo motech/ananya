@@ -80,6 +80,7 @@ var CertificationCourseContext = function(course, metadata) {
         var isAtLastLessonOfChapter = this.isAtLesson() && this.currentInteraction.siblingOnRight.data.type == "quiz";
         if(isAtLastLessonOfChapter){
             this.hasFinishedLastLessonOfChapter = true;
+            this.quizResponses = new Array();
         }
         var lastChildOfMyParent =  this.currentInteraction.parent.children[this.currentInteraction.parent.children.length-1];
         var isAtLastQuizOfChapter = lastChildOfMyParent == this.currentInteraction;
@@ -122,10 +123,25 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.evaluateAndReturnAnswerExplanation = function(input) {
         if(this.currentInteraction.data.correctAnswer == input) {
+            this.quizResponses[this.quizResponses.length] = this.scoreReport(input, true);
             return this.findAudio(this.currentInteraction, "correct");
         }
+        this.quizResponses[this.quizResponses.length] = this.scoreReport(input,false);
         return this.findAudio(this.currentInteraction, "incorrect");
     };
+
+//    this.calculateScoreForCurrentChapter = function() {
+//
+//    }
+
+    this.scoreReport = function(response,result){
+        return {
+            "chapterIndex" : "" + this.currentInteraction.parent.positionIndex,
+            "questionIndex" : "" + this.currentInteraction.positionIndex,
+            "response" : response,
+            "result" : result
+        };
+    }
 
     this.findContentByName = function(interactionToUse, contentName) {
         var contents = interactionToUse.contents;

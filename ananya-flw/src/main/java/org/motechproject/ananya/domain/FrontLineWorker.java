@@ -4,6 +4,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
+import java.util.List;
+
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
@@ -12,6 +14,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String msisdn;
     @JsonProperty
     private BookMark bookmark;
+
+    @JsonProperty
+    private ReportCard reportCard = new ReportCard();
+
     @JsonProperty
     private FrontLineWorkerStatus status = FrontLineWorkerStatus.UNREGISTERED;
 
@@ -26,7 +32,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn;
     }
 
-    public BookMark getBookmark() {
+    public BookMark bookMark() {
         return bookmark;
     }
 
@@ -37,6 +43,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorkerStatus status() {
         return status;
+    }
+
+    public ReportCard reportCard() {
+        return reportCard;
     }
 
     public FrontLineWorker name(String name) {

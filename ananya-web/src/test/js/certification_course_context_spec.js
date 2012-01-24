@@ -204,6 +204,19 @@ describe("Certification Course Context", function() {
         expect(context.bookmark).toEqual(bookmark_for_quizHeader);
     });
 
+    it("should initialize an empty array to capture quiz responses after last lesson is played", function() {
+        var lesson_2_in_chapter_1 = course.children[0].children[1];
+        var bookmark_for_quizHeader = {"type" : "quizHeader", "chapterIndex" : "0"};
+
+        context.currentInteraction = lesson_2_in_chapter_1;
+
+        context.quizResponses = null;
+
+        context.lessonOrQuizFinished();
+
+        expect(context.quizResponses.length).toEqual(0);
+    });
+
     it("should set bookmark to chapter 1 lesson 1 after welcome message is played", function() {
         var bookmark_for_lesson_1 = {"type" : "lesson", "chapterIndex" : "0" , "lessonIndex" : "0"};
 
@@ -213,14 +226,67 @@ describe("Certification Course Context", function() {
     });
 
     it("should play correct answer explanation if the response for a question is correct", function() {
+        context.quizResponses = new Array();
         var quiz_1_in_chapter_2 = course.children[1].children[2];
         context.currentInteraction = quiz_1_in_chapter_2;
         expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_1_correct.wav");
     });
 
     it("should play wrong answer explanation if the response for a question is incorrect", function() {
+        context.quizResponses = new Array();
         var quiz_2_in_chapter_2 = course.children[1].children[3];
         context.currentInteraction = quiz_2_in_chapter_2;
         expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_2_wrong.wav");
     });
-})
+    
+    it("should append the quiz responses one question at a time.", function() {
+        context.quizResponses = new Array();
+
+        var quiz_1_in_chapter_2 = course.children[1].children[2];
+        context.currentInteraction = quiz_1_in_chapter_2;
+        context.evaluateAndReturnAnswerExplanation(2);
+
+        expect(context.quizResponses.length).toEqual(1);
+        assertQuizResponse(context.quizResponses[0], {
+                                                         "chapterIndex" : "1",
+                                                         "questionIndex" : "2",
+                                                         "response" : 2,
+                                                         "result" : true
+                                                     });
+
+        var quiz_2_in_chapter_2 = course.children[1].children[3];
+        context.currentInteraction = quiz_2_in_chapter_2;
+        context.evaluateAndReturnAnswerExplanation(2);
+
+        expect(context.quizResponses.length).toEqual(2);
+        assertQuizResponse(context.quizResponses[1], {
+                                                         "chapterIndex" : "1",
+                                                         "questionIndex" : "3",
+                                                         "response" : 2,
+                                                         "result" : false
+                                                     });
+    });
+
+//    it("should calculate score for the current chapter", function() {
+//        context.quizResponses = new Array();
+//
+//        var quiz_1_in_chapter_2 = course.children[1].children[2];
+//        context.currentInteraction = quiz_1_in_chapter_2;
+//
+//        context.evaluateAndReturnAnswerExplanation(2);
+//
+//        context.lessonOrQuizFinished();
+//
+//        context.evaluateAndReturnAnswerExplanation(2);
+//
+//        context.lessonOrQuizFinished();
+//
+//        expect(context.currentChapterScore).toEqual(1);
+//    });
+});
+
+var assertQuizResponse = function(actual, expected) {
+    for(var key in expected) {
+        expect(actual[key]).toEqual(expected[key]);
+    }
+}

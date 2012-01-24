@@ -6,10 +6,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
+import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.ReportCardTest;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -66,4 +70,17 @@ public class FrontLineWorkerServiceTest {
         assertEquals(expectedFrontLineWorker, frontLineWorker);
     }
 
+    @Test
+    public void shouldAddScoreToAFrontLineWorker() {
+        String msisdn = "123";
+        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(expectedFrontLineWorker);
+
+        ReportCard.Score score = new ReportCard.Score("1", "2", true);
+        
+        frontLineWorkerService.addScore(msisdn, score);
+        
+        assertThat(expectedFrontLineWorker.reportCard().scores(), hasItems(new ReportCardTest.ScoreMatcher(score)));
+        verify(allFrontLineWorkers).update(expectedFrontLineWorker);
+    }
 }

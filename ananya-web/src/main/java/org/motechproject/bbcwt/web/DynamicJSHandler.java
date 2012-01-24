@@ -17,13 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 public class DynamicJSHandler {
 
     private AllNodes allNodes;
-    private BookmarkController bookmarkController;
+    private CallerDataController callerDataController;
     private RegistrationController registrationController;
 
     @Autowired
-    public DynamicJSHandler(AllNodes allNodes, BookmarkController bookmarkController, RegistrationController registrationController) {
+    public DynamicJSHandler(AllNodes allNodes, CallerDataController callerDataController, RegistrationController registrationController) {
         this.allNodes = allNodes;
-        this.bookmarkController = bookmarkController;
+        this.callerDataController = callerDataController;
         this.registrationController = registrationController;
     }
 
@@ -52,7 +52,7 @@ public class DynamicJSHandler {
         String msisdn = request.getParameter("callerId");
 
         boolean callerRegistered = registrationController.isCallerRegistered(msisdn);
-        BookMark bookmark = bookmarkController.getBookmark(msisdn);
+        BookMark bookmark = callerDataController.getBookmark(msisdn);
 
         response.setContentType("application/javascript");
         return new ModelAndView("caller_data").addObject("bookmark", bookmark.asJson()).addObject("isCallerRegistered", callerRegistered);

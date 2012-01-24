@@ -1,7 +1,9 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.FrontLineWorkerStatus;
+import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,19 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.findByMsisdn(msisdn);
     }
 
+    public void addBookMark(String callerId, BookMark bookMark){
+        FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+        frontLineWorker.addBookMark(bookMark);
+        save(frontLineWorker);
+    }
+
     public void save(FrontLineWorker frontLineWorker) {
         allFrontLineWorkers.update(frontLineWorker);
+    }
+
+    public void addScore(String callerId, ReportCard.Score score) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+        frontLineWorker.reportCard().addScore(score);
+        save(frontLineWorker);
     }
 }

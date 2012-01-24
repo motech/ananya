@@ -32,6 +32,6 @@ public class BookMarkCreationTest extends SpringIntegrationTest {
         new MyWebClient().post("http://localhost:9979/ananya/bookmark/add", bookmarkType, bookmarkChapterIndex, bookmarkLessonIndex, callerId);
 
         markForDeletion(allFrontLineWorkers.findByMsisdn("999"));
-        Assert.assertEquals(allFrontLineWorkers.findByMsisdn("999").getBookmark(), new BookMark("lesson", "0", "1"));
+        Assert.assertEquals(allFrontLineWorkers.findByMsisdn("999").bookMark(), new BookMark("lesson", "0", "1"));
     }
 }
