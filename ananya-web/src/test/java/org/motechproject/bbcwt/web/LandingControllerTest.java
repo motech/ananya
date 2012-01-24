@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class LandingControllerTest {
 
@@ -17,22 +18,27 @@ public class LandingControllerTest {
     private HttpServletRequest request;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
         landingController = new LandingController();
+        when(request.getContextPath()).thenReturn("/ananya");
     }
 
     @Test
-    public void shouldPopulateRenderingPageToJobAidForJobAidCallFlow(){
-        ModelAndView modelAndView = landingController.getLandingPage("jobaid");
+    public void shouldPopulateRenderingPageToJobAidForJobAidCallFlow() {
+        ModelAndView modelAndView = landingController.getLandingPage(request, "jobaid");
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/vxml/jobaid.vxml",nextFlow);
+        String registerFlow = (String) modelAndView.getModel().get("registerFlow");
+        assertEquals("/ananya/vxml/jobaid.vxml", nextFlow);
+        assertEquals("/ananya/vxml/jobaid/register", registerFlow);
     }
 
     @Test
-    public void shouldPopulateRenderingPageToCertificationCourseForCourseCallFlow(){
-        ModelAndView modelAndView = landingController.getLandingPage("certificationCourse");
+    public void shouldPopulateRenderingPageToCertificationCourseForCourseCallFlow() {
+        ModelAndView modelAndView = landingController.getLandingPage(request, "certificationCourse");
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/vxml/certificationCourse.vxml",nextFlow);
+        String registerFlow = (String) modelAndView.getModel().get("registerFlow");
+        assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
+        assertEquals("/ananya/vxml/certificationCourse/register", registerFlow);
     }
 }

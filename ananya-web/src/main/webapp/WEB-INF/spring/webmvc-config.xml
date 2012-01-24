@@ -21,7 +21,7 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/vxml/landing/">0</prop>
+                    <prop key="/vxml/*/landing/">0</prop>
                     <prop key="/dynamic/js/caller_data.js*">0</prop>
                 </props>
             </property>

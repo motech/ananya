@@ -45,19 +45,21 @@ public class RegistrationControllerTest {
 
     @Test
     public void shouldRegistrationVxmlWithLinkToJobAidIfEntryIsJobAidNumber(){
-        ModelAndView modelAndView = controller.getCallFlow("jobaid");
+        when(request.getContextPath()).thenReturn("/ananya");
+        ModelAndView modelAndView = controller.getCallFlow(request, "jobaid");
         assertEquals("register-flw", modelAndView.getViewName());
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/vxml/jobaid.vxml",nextFlow);
+        assertEquals("/ananya/vxml/jobaid.vxml",nextFlow);
     }
 
      @Test
-    public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber(){
-        ModelAndView modelAndView = controller.getCallFlow("certificationCourse");
-        assertEquals("register-flw", modelAndView.getViewName());
-        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/vxml/certificationCourse.vxml",nextFlow);
-    }
+     public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber() {
+         when(request.getContextPath()).thenReturn("/ananya");
+         ModelAndView modelAndView = controller.getCallFlow(request, "certificationCourse");
+         assertEquals("register-flw", modelAndView.getViewName());
+         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+         assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
+     }
 
     @Test
     public void shouldCaptureRecordWavFilesAndRegisterFLW() throws Exception {

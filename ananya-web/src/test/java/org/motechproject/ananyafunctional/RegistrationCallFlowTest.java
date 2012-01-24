@@ -25,7 +25,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
 
         NodeList read = (NodeList) callFlow.read("/vxml/form/var[@name='msisdn']", XPathConstants.NODESET);
         assertEquals("session.callerid", read.item(0).getAttributes().item(0).getTextContent());
-        assertEquals("/vxml/jobaid.vxml", callFlow.read("/vxml/form/block/goto/@next", XPathConstants.STRING));
+        assertEquals("/ananya/vxml/jobaid.vxml", callFlow.read("/vxml/form/block/goto/@next", XPathConstants.STRING));
     }
 
     private void assertOnRecordElement(CallFlow callFlow, String param) throws XPathExpressionException {

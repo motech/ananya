@@ -33,8 +33,9 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/vxml/{entry}/register")
-    public ModelAndView getCallFlow(@PathVariable String entry) {
-        String nextFlow = entry.equals("jobaid") ? "/vxml/jobaid.vxml" : "/vxml/certificationCourse.vxml";
+    public ModelAndView getCallFlow(HttpServletRequest request, @PathVariable String entry) {
+        String contextPath = request.getContextPath();
+        String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificationCourse.vxml";
         return new ModelAndView("register-flw").addObject("nextFlow", nextFlow);
     }
 

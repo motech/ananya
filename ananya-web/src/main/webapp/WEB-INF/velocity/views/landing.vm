@@ -1,11 +1,11 @@
 #vxmlHeader()
-<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>
+<script srcexpr="'dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>
 <form id="landing_page">
     <block>
-        <if cond="!callerData.isRegistered">
-            <goto next="/vxml/$entry/register"/>
-        <else/>
+        <if cond="callerData.isRegistered">
             <goto next="$nextFlow"/>
+        <else/>
+            <goto next="$registerFlow"/>
         </if>
     </block>
 </form>
