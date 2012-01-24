@@ -10,7 +10,7 @@
           ]]>
         </script>
 
-        <record id="recordName" cond="which_record=='recordName'"
+        <record id="recordName" cond="which_record =='recordName'"
                 name="name"
                 beep="true"
                 maxtime="10s"

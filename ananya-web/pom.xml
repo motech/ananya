@@ -286,7 +286,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
