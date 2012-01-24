@@ -2,15 +2,21 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script>
+        <![CDATA[
+            var Tracker = function(){
+                this.nameNotRecorded = true;
+                this.villageNotRecorded = true;
+		};
+	   var tracker = new Tracker();
+          ]]>
+    </script>
+
     <form id="register_flw">
 
-        <script>
-            <![CDATA[
-            var which_record = 'recordName';
-          ]]>
-        </script>
-
-        <record id="recordName" cond="which_record =='recordName'"
+        <record id="recordName"
+                cond="tracker.nameNotRecorded"
                 name="name"
                 beep="true"
                 maxtime="10s"
@@ -30,12 +36,12 @@
             </prompt>
             <noinput>
                 <prompt bargein="false">
-                    please try and say something
+                    did not hear name. please say your name again.
                 </prompt>
             </noinput>
         </record>
 
-        <field name="confirmName" type="boolean">
+        <field name="confirmName" type="boolean" cond="tracker.nameNotRecorded">
             <prompt bargein="false">we heard it as
                 <audio expr="name"/>.
                 please press 1 to repeat
@@ -53,20 +59,21 @@
                     <goto next="#register_flw"/>
                     <else/>
                     <script>
-                        which_record = 'recordVillage';
+                        <![CDATA[ tracker.nameNotRecorded = false ]]>
                     </script>
                 </if>
             </filled>
         </field>
 
-
         <record id="recordVillage"
-                name="name"
+                cond="tracker.villageNotRecorded"
+                name="village"
                 beep="true"
                 maxtime="10s"
                 finalsilence="4000ms"
                 dtmfterm="true"
-                type="audio/x-wav">
+                type="audio/x-wav"
+                >
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root" scope="public">
                     <one-of>
@@ -79,14 +86,14 @@
             </prompt>
             <noinput>
                 <prompt bargein="false">
-                    please try and say something
+                    did not hear village. please say you village again.
                 </prompt>
             </noinput>
         </record>
 
-        <field name="confirmVillage" type="boolean">
+        <field name="confirmVillage" type="boolean" cond="tracker.villageNotRecorded">
             <prompt bargein="false">we heard it as
-                <audio expr="name"/>.
+                <audio expr="village"/>.
                 please press 1 to repeat
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
@@ -100,9 +107,12 @@
                 <prompt>you have pressed 1</prompt>
                 <if cond="confirmVillage">
                     <goto next="#register_flw"/>
+                    <else/>
+                    <script>
+                        <![CDATA[ tracker.villageNotRecorded = false ]]>
+                    </script>
                 </if>
             </filled>
         </field>
-
     </form>
 </vxml>
