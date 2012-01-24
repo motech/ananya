@@ -14,9 +14,12 @@ public class LandingController {
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing/")
     public ModelAndView getLandingPage(HttpServletRequest request, @PathVariable String entry) {
         String contextPath = request.getContextPath();
+
+        String callerData = "'" + contextPath + "/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri";
         String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificationCourse.vxml";
         String registerFlow = contextPath + "/vxml/" + entry + "/register";
-        return new ModelAndView("landing").addObject("nextFlow", nextFlow).addObject("registerFlow", registerFlow);
+
+        return new ModelAndView("landing").addObject("nextFlow", nextFlow).addObject("registerFlow", registerFlow).addObject("callerData", callerData);
     }
 
 }

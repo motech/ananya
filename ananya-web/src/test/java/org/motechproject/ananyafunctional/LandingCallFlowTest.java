@@ -22,17 +22,23 @@ public class LandingCallFlowTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetLandingPageWithLinksToJobAidIfEntryIsThroughJobAidNumber() throws Exception {
+
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/landing/");
+
         NodeList links = (NodeList) callFlow.read("/vxml/form/block/if/goto", XPathConstants.NODESET);
         assertEquals("/ananya/vxml/jobaid.vxml", links.item(0).getAttributes().item(0).getTextContent());
         assertEquals("/ananya/vxml/jobaid/register", links.item(1).getAttributes().item(0).getTextContent());
+        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.read("/vxml/script/@srcexpr", XPathConstants.STRING));
     }
 
     @Test
     public void shouldGetLandingPageWithLinksToCourseIfEntryIsThroughCourseNumber() throws Exception {
+
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificationcourse/landing/");
+
         NodeList links = (NodeList) callFlow.read("/vxml/form/block/if/goto", XPathConstants.NODESET);
         assertEquals("/ananya/vxml/certificationCourse.vxml", links.item(0).getAttributes().item(0).getTextContent());
         assertEquals("/ananya/vxml/certificationcourse/register", links.item(1).getAttributes().item(0).getTextContent());
+        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.read("/vxml/script/@srcexpr", XPathConstants.STRING));
     }
 }
