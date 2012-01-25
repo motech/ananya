@@ -17,7 +17,7 @@ public class ReportCardTest {
         Boolean result  = true;
         ReportCard.Score score1 = new ReportCard.Score(chapterIndex, questionIndex, result);
         reportCard.addScore(score1);
-        assertThat(reportCard.scores(), hasItems(new ScoreMatcher(score1)));
+        assertThat(reportCard.scores(), hasItems(score1));
     }
 
     @Test
@@ -31,26 +31,7 @@ public class ReportCardTest {
         reportCard.addScore(newScoreForChap1Que4);
 
         assertThat(reportCard.scores().size(), is(1));
-        assertThat(reportCard.scores(), hasItems(new ScoreMatcher(newScoreForChap1Que4)));
+        assertThat(reportCard.scores(), hasItems(newScoreForChap1Que4));
     }
 
-    public static class ScoreMatcher extends BaseMatcher<ReportCard.Score> {
-        private ReportCard.Score actualScore;
-        private ReportCard.Score expectedScore;
-
-        public ScoreMatcher(ReportCard.Score expectedScore) {
-            this.expectedScore = expectedScore;
-        }
-
-        @Override
-        public boolean matches(Object o) {
-            actualScore = (ReportCard.Score)o;
-            return actualScore.chapterIndex().equals(this.expectedScore.chapterIndex()) && actualScore.questionIndex().equals(this.expectedScore.questionIndex()) && actualScore.result() == expectedScore.result();
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText(String.format("Expected chapterIndex, questionIndex, result: %s, %s, %s but Got: %s, %s, %s", expectedScore.chapterIndex(), expectedScore.questionIndex(), expectedScore.result(), actualScore.chapterIndex(), actualScore.questionIndex(), actualScore.result()));
-        }
-    }
 }

@@ -33,6 +33,10 @@ public class ReportCard {
         @JsonProperty
         private boolean result;
 
+        public Score() {
+
+        }
+
         public Score(String chapterIndex, String questionIndex, Boolean result) {
             this.chapterIndex = chapterIndex;
             this.questionIndex = questionIndex;
@@ -59,6 +63,30 @@ public class ReportCard {
                     return score.chapterIndex().equals(chapterIndex) && score.questionIndex().equals(questionIndex);
                 }
             };
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Score score = (Score) o;
+
+            if (result != score.result) return false;
+            if (chapterIndex != null ? !chapterIndex.equals(score.chapterIndex) : score.chapterIndex != null)
+                return false;
+            if (questionIndex != null ? !questionIndex.equals(score.questionIndex) : score.questionIndex != null)
+                return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result1 = chapterIndex != null ? chapterIndex.hashCode() : 0;
+            result1 = 31 * result1 + (questionIndex != null ? questionIndex.hashCode() : 0);
+            result1 = 31 * result1 + (result ? 1 : 0);
+            return result1;
         }
     }
 

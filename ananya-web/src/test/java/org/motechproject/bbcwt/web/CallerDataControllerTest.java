@@ -83,4 +83,18 @@ public class CallerDataControllerTest {
 
         assertEquals(new EmptyBookmark(), actualBookmark);
     }
+
+    @Test
+    public void shouldAddScore() {
+        when(request.getSession()).thenReturn(session);
+        when(request.getParameter("callerId")).thenReturn("123");
+        when(request.getParameter("quizResponse.chapterIndex")).thenReturn("0");
+        when(request.getParameter("quizResponse.questionIndex")).thenReturn("5");
+        when(request.getParameter("quizResponse.result")).thenReturn("true");
+
+        ReportCard.Score expectedScore = new ReportCard.Score("0","5",true);
+        callerDataController.addScore(request);
+        
+        verify(flwService).addScore(argThat(is("123")),argThat(is(expectedScore)));
+    }
 }

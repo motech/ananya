@@ -43,11 +43,12 @@ public class CallerDataController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/score/add")
     @ResponseBody
-    public String addScore(@RequestParam String callerId,
-                           @RequestParam String chapterIndex,
-                           @RequestParam String questionIndex,
-                           @RequestParam boolean result,
-                           HttpServletRequest request) {
+    public String addScore(HttpServletRequest request) {
+        String callerId = request.getParameter("callerId");
+        String chapterIndex = request.getParameter("quizResponse.chapterIndex");
+        String questionIndex = request.getParameter("quizResponse.questionIndex");
+        boolean result = Boolean.parseBoolean(request.getParameter("quizResponse.result"));
+
         ReportCard.Score score = new ReportCard.Score(chapterIndex, questionIndex, result);
         frontLineWorkerService.addScore(callerId, score);
         return null;

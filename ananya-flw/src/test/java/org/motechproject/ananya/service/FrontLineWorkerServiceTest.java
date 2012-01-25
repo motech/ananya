@@ -80,7 +80,7 @@ public class FrontLineWorkerServiceTest {
         
         frontLineWorkerService.addScore(msisdn, score);
         
-        assertThat(expectedFrontLineWorker.reportCard().scores(), hasItems(new ReportCardTest.ScoreMatcher(score)));
+        assertThat(expectedFrontLineWorker.reportCard().scores(), hasItems(score));
         verify(allFrontLineWorkers).update(expectedFrontLineWorker);
     }
 }
