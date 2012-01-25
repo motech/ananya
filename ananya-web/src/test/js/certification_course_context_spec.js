@@ -204,19 +204,6 @@ describe("Certification Course Context", function() {
         expect(context.bookmark).toEqual(bookmark_for_quizHeader);
     });
 
-    it("should initialize an empty array to capture quiz responses after last lesson is played", function() {
-        var lesson_2_in_chapter_1 = course.children[0].children[1];
-        var bookmark_for_quizHeader = {"type" : "quizHeader", "chapterIndex" : "0"};
-
-        context.currentInteraction = lesson_2_in_chapter_1;
-
-        context.quizResponses = null;
-
-        context.lessonOrQuizFinished();
-
-        expect(context.quizResponses.length).toEqual(0);
-    });
-
     it("should set bookmark to chapter 1 lesson 1 after welcome message is played", function() {
         var bookmark_for_lesson_1 = {"type" : "lesson", "chapterIndex" : "0" , "lessonIndex" : "0"};
 
@@ -265,6 +252,11 @@ describe("Certification Course Context", function() {
                                                          "response" : 2,
                                                          "result" : false
                                                      });
+    });
+
+    it("should initialize an empty array for quiz responses at start", function() {
+//        expect(context.quizResponses).toBeDefined();
+        expect(context.quizResponses.length).toEqual(0);
     });
 
 //    it("should calculate score for the current chapter", function() {

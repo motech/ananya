@@ -53,10 +53,6 @@ public class RegistrationController {
         return new ModelAndView("register-done-flw");
     }
 
-    public boolean isCallerRegistered(String msisdn) {
-        return frontLineWorkerService.getStatus(msisdn).isRegistered();
-    }
-
     protected ServletFileUpload getUploader() {
         return new ServletFileUpload(new DiskFileItemFactory());
     }

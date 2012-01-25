@@ -47,44 +47,6 @@ public class CallerDataControllerTest {
     }
 
     @Test
-    public void shouldRetrieveBookmarkWhenItExists() {
-        when(request.getSession()).thenReturn(session);
-
-        FrontLineWorker workerWithBookmark = new FrontLineWorker();
-        BookMark bookMark = new BookMark("lesson", "0", "1");
-        workerWithBookmark.addBookMark(bookMark);
-
-        when(flwService.getFrontLineWorker("123")).thenReturn(workerWithBookmark);
-
-        BookMark actualBookmark = callerDataController.getBookmark("123");
-
-        assertEquals(bookMark, actualBookmark);
-    }
-
-    @Test
-    public void shouldReturnAnEmptyBookmarkTagWhenThereIsNoBookmarkForAValidUser() {
-        when(request.getSession()).thenReturn(session);
-
-        FrontLineWorker workerWithoutBookmark = new FrontLineWorker();
-        when(flwService.getFrontLineWorker("123")).thenReturn(workerWithoutBookmark);
-
-        BookMark actualBookmark = callerDataController.getBookmark("123");
-
-        assertEquals(new EmptyBookmark(), actualBookmark);
-    }
-
-    @Test
-    public void shouldReturnAnEmptyBookmarkTagForAnInvalidUser() {
-        when(request.getSession()).thenReturn(session);
-
-        when(flwService.getFrontLineWorker("123")).thenReturn(null);
-
-        BookMark actualBookmark = callerDataController.getBookmark("123");
-
-        assertEquals(new EmptyBookmark(), actualBookmark);
-    }
-
-    @Test
     public void shouldAddScore() {
         when(request.getSession()).thenReturn(session);
         when(request.getParameter("callerId")).thenReturn("123");

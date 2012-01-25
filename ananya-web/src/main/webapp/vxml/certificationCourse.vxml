@@ -32,15 +32,14 @@
                 <assign name="bookmark" expr="callContext.bookmark"/>
                 <assign name="callerId" expr="session.connection.remote.uri"/>
                 <data srcexpr="metaData.addBookmarkUrl" method="post" namelist="bookmark callerId"/>
-
-                <assign name="quizResponse" expr="callContext.quizResponses[callContext.quizResponses.length-1]"/>
-                <data srcexpr="metaData.updateScoreUrl" method="post" namelist="quizResponse"/>
-
                 <script>
                     callContext.bookmark = null;
                 </script>
             </if>
-
+             <if cond="callContext.quizResponses.length > 0"> //TODO: remove when Queue is built
+                    <assign name="quizResponse" expr="callContext.quizResponses[callContext.quizResponses.length-1]"/>
+                    <data srcexpr="metaData.updateScoreUrl" method="post" namelist="callerId quizResponse"/>
+             </if>
             <if cond="callContext.chapterFinished()">
                 <goto next="#tellScore"/>
             <elseif cond="callContext.isAtQuizHeader()"/>
@@ -130,13 +129,11 @@
 
     <form id="tellScore">
         <block>
-            <!--<assign name="quizResponses" expr="callContext.quizResponses"/>
-            <assign name="callerId" expr="session.connection.remote.uri"/>
-            <data srcexpr="metaData.recordQuizResponsesUrl" method="post" namelist="quizResponses callerId"/>-->
-            <script>
-
-            </script>
-            <goto next="#captureInputWithReprompt"/>
+            <audio expr="callContext.currentInteractionQuizHeader()"/>
+                <script>
+                    callContext.quizHeaderFinished();
+                </script>
+            <goto next="#controller"/>
         </block>
     </form>
 

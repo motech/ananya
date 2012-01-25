@@ -5,7 +5,7 @@ var CertificationCourseContext = function(course, metadata) {
         this.currentInteraction = course;
         this.metadata = metadata;
         this.bookmark = null;
-
+        this.quizResponses = new Array();
         this.hasFinishedLastQuizOfChapter = false;
         this.hasFinishedLastLessonOfChapter = false;
     };
@@ -80,7 +80,6 @@ var CertificationCourseContext = function(course, metadata) {
         var isAtLastLessonOfChapter = this.isAtLesson() && this.currentInteraction.siblingOnRight.data.type == "quiz";
         if(isAtLastLessonOfChapter){
             this.hasFinishedLastLessonOfChapter = true;
-            this.quizResponses = new Array();
         }
         var lastChildOfMyParent =  this.currentInteraction.parent.children[this.currentInteraction.parent.children.length-1];
         var isAtLastQuizOfChapter = lastChildOfMyParent == this.currentInteraction;
@@ -129,10 +128,6 @@ var CertificationCourseContext = function(course, metadata) {
         this.quizResponses[this.quizResponses.length] = this.scoreReport(input,false);
         return this.findAudio(this.currentInteraction, "incorrect");
     };
-
-//    this.calculateScoreForCurrentChapter = function() {
-//
-//    }
 
     this.scoreReport = function(response,result){
         return {

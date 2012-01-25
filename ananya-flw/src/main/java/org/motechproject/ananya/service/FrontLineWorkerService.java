@@ -1,9 +1,6 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
-import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +21,10 @@ public class FrontLineWorkerService {
     public FrontLineWorkerStatus getStatus(String msisdn) {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         return frontLineWorker != null ? frontLineWorker.status() : FrontLineWorkerStatus.UNREGISTERED;
+    }
+
+    public boolean isCallerRegistered(String msisdn) {
+        return getStatus(msisdn).isRegistered();
     }
 
     public String createNew(String msisdn) {
@@ -50,5 +51,10 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
         frontLineWorker.reportCard().addScore(score);
         save(frontLineWorker);
+    }
+
+    public BookMark getBookmark(String msisdn) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        return frontLineWorker == null ? new EmptyBookmark() : frontLineWorker.bookMark();
     }
 }

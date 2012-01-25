@@ -4,16 +4,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
-import org.motechproject.ananya.domain.ReportCard;
-import org.motechproject.ananya.domain.ReportCardTest;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -82,5 +81,44 @@ public class FrontLineWorkerServiceTest {
         
         assertThat(expectedFrontLineWorker.reportCard().scores(), hasItems(score));
         verify(allFrontLineWorkers).update(expectedFrontLineWorker);
+    }
+    
+    @Test
+    public void shouldTellThatUserIsRegisteredBasedOnStatus() {
+        String registeredMsisdn = "123";
+        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn);
+        registeredFrontLineWorker.status(FrontLineWorkerStatus.REGISTERED);
+        when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+        
+        assertThat(frontLineWorkerService.isCallerRegistered(registeredMsisdn), is(true));
+    }
+
+    @Test
+    public void shouldTellThatUserIsUnRegisteredBasedOnStatus() {
+        String registeredMsisdn = "123";
+        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn);
+        registeredFrontLineWorker.status(FrontLineWorkerStatus.UNREGISTERED);
+        when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+
+        assertThat(frontLineWorkerService.isCallerRegistered(registeredMsisdn), is(false));
+    }
+
+    @Test
+    public void shouldReturnEmptyBookmarkIfFrontLineWorkerDoesNotExist() {
+        String msisdn = "999";
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
+        
+        assertThat(frontLineWorkerService.getBookmark(msisdn) , is(EmptyBookmark.class));
+    }
+
+    @Test
+    public void shouldReturnBookmarkOfFrontLineWorker() {
+        String msisdn = "999";
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        BookMark bookMark = new BookMark("leson", "0", "2");
+        frontLineWorker.addBookMark(bookMark);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+
+        assertThat(frontLineWorkerService.getBookmark(msisdn) , is(bookMark));
     }
 }

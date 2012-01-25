@@ -58,13 +58,17 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
     private String callerDataFor(final boolean isRegistered, final String typeOfBookmark, final int chapter, final int lesson) {
         return "var callerData = {\n" +
                 "    \"isRegistered\" : \"" + isRegistered + "\",\n" +
-                "    \"bookmark\" : {\"type\" : \"" + typeOfBookmark + "\" , \"chapterIndex\" : \"" + chapter + "\" , \"lessonIndex\" : \"" + lesson + "\"}\n" +
+                "    \"bookmark\" : {\"type\" : \"" + typeOfBookmark + "\" , \"chapterIndex\" : \"" + chapter + "\" , \"lessonIndex\" : \"" + lesson + "\"},\n" +
+                "    \"scoresByChapter\" : {\n" +
+                "}\n" +
                 "};";
     }
     private String callerDataWithoutBookmarkFor(final boolean isRegistered) {
         return "var callerData = {\n" +
                 "    \"isRegistered\" : \"" + isRegistered + "\",\n" +
-                "    \"bookmark\" : {}\n" +
+                "    \"bookmark\" : {},\n" +
+                "    \"scoresByChapter\" : {\n" +
+                "}\n" +
                 "};";
     }
 

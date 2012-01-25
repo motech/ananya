@@ -1,6 +1,7 @@
 package org.motechproject.bbcwt.web;
 
 import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.tree.AllNodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,20 +12,21 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/dynamic/js")
 public class DynamicJSHandler {
 
     private AllNodes allNodes;
-    private CallerDataController callerDataController;
-    private RegistrationController registrationController;
+    private FrontLineWorkerService frontLineWorkerService;
 
     @Autowired
-    public DynamicJSHandler(AllNodes allNodes, CallerDataController callerDataController, RegistrationController registrationController) {
+    public DynamicJSHandler(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService) {
         this.allNodes = allNodes;
-        this.callerDataController = callerDataController;
-        this.registrationController = registrationController;
+        this.frontLineWorkerService = frontLineWorkerService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
@@ -51,10 +53,11 @@ public class DynamicJSHandler {
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
 
-        boolean callerRegistered = registrationController.isCallerRegistered(msisdn);
-        BookMark bookmark = callerDataController.getBookmark(msisdn);
+        boolean callerRegistered = frontLineWorkerService.isCallerRegistered(msisdn);
+        BookMark bookmark = frontLineWorkerService.getBookmark(msisdn);
 
         response.setContentType("application/javascript");
-        return new ModelAndView("caller_data").addObject("bookmark", bookmark.asJson()).addObject("isCallerRegistered", callerRegistered);
+        Map<String, String> scoresByChapter = null;
+        return new ModelAndView("caller_data").addObject("bookmark", bookmark.asJson()).addObject("isCallerRegistered", callerRegistered).addObject("scoresByChapter", scoresByChapter);
     }
 }

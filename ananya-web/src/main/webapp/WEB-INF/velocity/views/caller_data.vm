@@ -1,4 +1,9 @@
 var callerData = {
    "isRegistered" : "${isCallerRegistered}",
-   "bookmark" : ${bookmark}
+   "bookmark" : ${bookmark},
+   "scoresByChapter" : {
+       #foreach($entry in $scoresByChapter.entrySet())
+        "$entry.key" : "$entry.value",
+       #end
+   }
 };

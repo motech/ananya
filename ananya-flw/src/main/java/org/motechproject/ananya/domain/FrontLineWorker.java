@@ -33,7 +33,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public BookMark bookMark() {
-        return bookmark;
+        return bookmark!=null?bookmark:new EmptyBookmark();
     }
 
     public FrontLineWorker status(FrontLineWorkerStatus status) {

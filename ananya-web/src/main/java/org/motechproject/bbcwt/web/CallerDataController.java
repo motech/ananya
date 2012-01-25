@@ -33,14 +33,6 @@ public class CallerDataController {
         return "</done>";
     }
 
-    public BookMark getBookmark(String callerId) {
-        FrontLineWorker worker = frontLineWorkerService.getFrontLineWorker(callerId);
-        if (worker == null || worker.bookMark() == null) {
-            return new EmptyBookmark();
-        }
-        return worker.bookMark();
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/score/add")
     @ResponseBody
     public String addScore(HttpServletRequest request) {
