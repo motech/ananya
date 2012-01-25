@@ -1,14 +1,46 @@
 #vxmlHeader()
 <form id="register_flw">
-    #playwav($bundle.flw.registration.welcome)
-    #recordMSISDN()
-    #record("name",$bundle.flw.registration.say.name,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.name)
-    #record("district",$bundle.flw.registration.say.district,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.district)
-    #record("block",$bundle.flw.registration.say.block,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.block)
-    #record("village",$bundle.flw.registration.say.village,$bundle.flw.registration.confirm.recording,$bundle.flw.registration.no.input.for.village)
+
+    #var("nameNotRecorded","true")
+    #var("blockNotRecorded","true")
+    #var("districtNotRecorded","true")
+    #var("panchayatNotRecorded","true")
+
     <block>
-        <data src="$bundle.flw.registration.submit.url" enctype="multipart/form-data" method="post" namelist="msisdn name district block village"/>
-        #playwav($bundle.flw.registration.complete)
+        #playwav($bundle.register.jobaid.welcome)
+        #playwav($bundle.register.jobaid.detail)
+        #playwav($bundle.register.jobaid.need.to.register)
+    </block>
+
+    #record("name",
+        $bundle.register.name.say,
+        $bundle.register.name.pb,
+        $bundle.register.name.noinput,
+        $bundle.register.name.repeat)
+
+    #record("district",
+        $bundle.register.district.say,
+        $bundle.register.district.pb,
+        $bundle.register.district.noinput,
+        $bundle.register.district.repeat)
+
+    #record("block",
+        $bundle.register.block.say,
+        $bundle.register.block.pb,
+        $bundle.register.block.noinput,
+        $bundle.register.block.repeat)
+
+    #record("panchayat",
+        $bundle.register.panchayat.say,
+        $bundle.register.panchayat.pb,
+        $bundle.register.panchayat.noinput,
+        $bundle.register.panchayat.repeat)
+
+    <block>
+        <data src="$bundle.register.submit.url"
+              enctype="multipart/form-data" method="post"
+              namelist="session.connection.local.uri name district block village"/>
+        #playwav($bundle.register.complete)
         <goto next="$nextFlow"/>
     </block>
 </form>

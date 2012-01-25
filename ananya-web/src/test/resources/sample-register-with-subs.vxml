@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script>
+        <![CDATA[
+            var Tracker = function(){
+                this.nameNotRecorded = true;
+                this.villageNotRecorded = true;
+		};
+	   var tracker = new Tracker();
+          ]]>
+    </script>
+
+    <form id="register_flw">
+
+        <record id="recordName"
+                cond="tracker.nameNotRecorded"
+                name="name"
+                beep="true"
+                maxtime="10s"
+                finalsilence="4000ms"
+                dtmfterm="true"
+                type="audio/x-wav"
+                >
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <prompt timeout="5s" bargein="false">
+                please say your name
+            </prompt>
+            <noinput>
+                <prompt bargein="false">
+                    did not hear name. please say your name again.
+                </prompt>
+            </noinput>
+        </record>
+        <subdialog src="#sub" name="s1" cond="tracker.nameNotRecorded">
+            <param name="recordVar" expr="name"/>
+        </subdialog>
+
+        <block>
+            <if cond="1==1" >
+                <script>
+                    <![CDATA[ tracker.nameNotRecorded = false ]]>
+                </script>
+                <prompt>name not recorded set to <value expr="tracker.nameNotRecorded"/>></prompt>
+            </if>
+        </block>
+
+        <record id="recordVillage"
+                cond="tracker.villageNotRecorded"
+                name="village"
+                beep="true"
+                maxtime="10s"
+                finalsilence="4000ms"
+                dtmfterm="true"
+                type="audio/x-wav"
+                >
+
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <prompt timeout="5s" bargein="false">
+                please say your village
+            </prompt>
+            <noinput>
+                <prompt bargein="false">
+                    did not hear name. please say your village again.
+                </prompt>
+            </noinput>
+        </record>
+
+        <subdialog src="#sub" name="s2" cond="tracker.villageNotRecorded">
+            <param name="recordVar" expr="village"/>
+        </subdialog>
+    </form>
+
+    <form id="sub">
+        <var name="recordVar"/>
+        <var name="setit" expr="false"/>
+       <field name="confirmName" type="boolean" cond="tracker.nameNotRecorded">
+            <prompt bargein="false">we heard it as
+                <audio expr="name"/>.
+                please press 1 to repeat
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <prompt>you have pressed 1</prompt>
+                <if cond="confirmName">
+                    <goto next="#register_flw"/>
+                    <else/>
+                    <script>
+                        <![CDATA[ tracker.nameNotRecorded = false ]]>
+                    </script>
+                </if>
+            </filled>
+        </field>
+    </form>
+</vxml>
+

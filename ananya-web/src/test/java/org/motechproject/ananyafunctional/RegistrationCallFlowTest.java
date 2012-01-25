@@ -24,7 +24,6 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
             assertOnRecordElement(callFlow, record);
 
         NodeList read = (NodeList) callFlow.read("/vxml/form/var[@name='msisdn']", XPathConstants.NODESET);
-        assertEquals("session.callerid", read.item(0).getAttributes().item(0).getTextContent());
         assertEquals("/ananya/vxml/jobaid.vxml", callFlow.read("/vxml/form/block/goto/@next", XPathConstants.STRING));
     }
 
