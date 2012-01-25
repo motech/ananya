@@ -1,12 +1,19 @@
 package org.motechproject.ananya.domain;
 
+import ch.lambdaj.group.Group;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
+
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.group.Groups.by;
+import static ch.lambdaj.group.Groups.group;
 
 public class ReportCard {
     @JsonProperty
@@ -23,6 +30,20 @@ public class ReportCard {
 
     public List<Score> scores() {
         return Collections.unmodifiableList(scores);
+    }
+
+    public Map<String, Integer> scoresByChapterIndex() {
+        Map<String, Integer> scoresByChapterIndex = new HashMap();
+
+        Group<Score> groupByChapterIndex = group(scores(), by(on(Score.class).chapterIndex()));
+        for(String chapterIndex : groupByChapterIndex.keySet())
+        {
+            final List<ReportCard.Score> scoresForChapterIndex = groupByChapterIndex.find(chapterIndex);
+            List<ReportCard.Score> correctAnswers = filter(new CorrectAnswerMatcher(), scoresForChapterIndex);
+            scoresByChapterIndex.put(chapterIndex, correctAnswers.size());
+        }
+        
+        return scoresByChapterIndex;
     }
 
     public static class Score {
@@ -91,6 +112,17 @@ public class ReportCard {
     }
 
 
+    private class CorrectAnswerMatcher extends BaseMatcher<Score>{
+        @Override
+        public void describeTo(Description description) {
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            Score scoreToMatch = (Score)o;
+            return scoreToMatch.result();
+        }
+    }
 }
 
 
