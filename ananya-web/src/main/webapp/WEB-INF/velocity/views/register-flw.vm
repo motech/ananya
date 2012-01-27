@@ -42,7 +42,7 @@
 
     <block>
         <data src="$bundle.register.submit.url" enctype="multipart/form-data" method="post"
-              namelist="session.connection.local.uri designation name district block village"/>
+              namelist="session.connection.local.uri designation name district block panchayat"/>
         #play($bundle.register.complete)
         <goto next="$nextFlow"/>
     </block>

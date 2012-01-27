@@ -1,15 +1,13 @@
 package org.motechproject.ananyafunctional.framework;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 import java.io.StringReader;
 
 public class CallFlow {
@@ -28,7 +26,6 @@ public class CallFlow {
             InputSource is = new InputSource();
             is.setCharacterStream(new StringReader(vxml));
             this.doc = db.parse(is);
-
             xPath = XPathFactory.newInstance().newXPath();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -38,6 +35,16 @@ public class CallFlow {
     public Object read(String expression, QName returnType) throws XPathExpressionException {
         XPathExpression xPathExpression = xPath.compile(expression);
         return xPathExpression.evaluate(doc, returnType);
+    }
+
+    public NodeList readNode(String expression) throws XPathExpressionException {
+        XPathExpression xPathExpression = xPath.compile(expression);
+        return (NodeList) xPathExpression.evaluate(doc, XPathConstants.NODESET);
+    }
+
+    public String readString(String expression) throws XPathExpressionException {
+        XPathExpression xPathExpression = xPath.compile(expression);
+        return (String) xPathExpression.evaluate(doc, XPathConstants.STRING);
     }
 
     public String vxml() {
