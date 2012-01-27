@@ -7,10 +7,14 @@
     #var("panchayatNotRecorded","true")
 
     <block>
-        #playwav($bundle.register.jobaid.welcome)
-        #playwav($bundle.register.jobaid.detail)
-        #playwav($bundle.register.jobaid.need.to.register)
+        #play($bundle.register.jobaid.welcome)
+        #play($bundle.register.jobaid.detail)
+        #play($bundle.register.jobaid.need.to.register)
     </block>
+
+    #dtmfField("designation",
+        $bundle.register.designation.say,
+        [1,2,3])
 
     #record("name",
         $bundle.register.name.say,
@@ -37,10 +41,9 @@
         $bundle.register.panchayat.repeat)
 
     <block>
-        <data src="$bundle.register.submit.url"
-              enctype="multipart/form-data" method="post"
-              namelist="session.connection.local.uri name district block village"/>
-        #playwav($bundle.register.complete)
+        <data src="$bundle.register.submit.url" enctype="multipart/form-data" method="post"
+              namelist="session.connection.local.uri designation name district block village"/>
+        #play($bundle.register.complete)
         <goto next="$nextFlow"/>
     </block>
 </form>

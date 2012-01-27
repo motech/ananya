@@ -9,7 +9,7 @@
     <var name="$name" expr="$expr"/>
 #end
 
-#macro(playwav $wav)
+#macro(play $wav)
     <audio src="$wav"/>
 #end
 
@@ -58,6 +58,26 @@
                 <assign name="${field}NotRecorded" expr="false"/>
             </if>
         </filled>
+    </field>
+#end
+
+#macro(dtmfField $field $askWav $keys)
+    <field name="$field">
+        <prompt>
+            <audio src="$askWav"/>
+        </prompt>
+        <grammar mode="dtmf" version="1.0" root="root">
+            <rule id="root">
+                <one-of>
+                    #foreach ($key in $keys)
+                        <item>$key</item>
+                    #end
+                </one-of>
+            </rule>
+        </grammar>
+        <noinput>
+            <audio src="$askWav"/>
+        </noinput>
     </field>
 #end
 
