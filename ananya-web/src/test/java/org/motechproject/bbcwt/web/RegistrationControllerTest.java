@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.AllRecordings;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -44,49 +46,70 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void shouldRegistrationVxmlWithLinkToJobAidIfEntryIsJobAidNumber(){
+    public void shouldRegistrationVxmlWithLinkToJobAidIfEntryIsJobAidNumber() {
         when(request.getContextPath()).thenReturn("/ananya");
+
         ModelAndView modelAndView = controller.getCallFlow(request, "jobaid");
+
         assertEquals("register-flw", modelAndView.getViewName());
-        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/ananya/vxml/jobaid.vxml",nextFlow);
+        assertEquals("/ananya/vxml/jobaid.vxml", (String) modelAndView.getModel().get("nextFlow"));
+        assertDesignations(modelAndView);
     }
 
-     @Test
-     public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber() {
-         when(request.getContextPath()).thenReturn("/ananya");
-         ModelAndView modelAndView = controller.getCallFlow(request, "certificationCourse");
-         assertEquals("register-flw", modelAndView.getViewName());
-         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-         assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
-     }
+    @Test
+    public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber() {
+        when(request.getContextPath()).thenReturn("/ananya");
+
+        ModelAndView modelAndView = controller.getCallFlow(request, "certificationCourse");
+
+        assertEquals("register-flw", modelAndView.getViewName());
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
+        assertDesignations(modelAndView);
+    }
 
     @Test
     public void shouldCaptureRecordWavFilesAndRegisterFLW() throws Exception {
         String msisdn = "123";
         String path = "/path";
+
         ServletFileUpload upload = mock(ServletFileUpload.class);
-        FileItem msisdnItem = mock(FileItem.class);
-        FileItem fileItem = mock(FileItem.class);
         ServletContext context = mock(ServletContext.class);
-        List items = Arrays.asList(msisdnItem, fileItem);
+
+        FileItem msisdnItem = mock(FileItem.class);
+        FileItem designationItem = mock(FileItem.class);
+        FileItem fileItem = mock(FileItem.class);
+        List items = Arrays.asList(msisdnItem, fileItem, designationItem);
 
         when(context.getRealPath("/recordings/")).thenReturn(path);
         when(request.getSession()).thenReturn(session);
         when(session.getServletContext()).thenReturn(context);
         when(upload.parseRequest(request)).thenReturn(items);
-        when(msisdnItem.getFieldName()).thenReturn("msisdn");
+
+        when(msisdnItem.getFieldName()).thenReturn("session.connection.remote.uri");
         when(msisdnItem.isFormField()).thenReturn(true);
         when(msisdnItem.getString()).thenReturn(msisdn);
+
+        when(designationItem.getFieldName()).thenReturn("designation");
+        when(designationItem.isFormField()).thenReturn(true);
+        when(designationItem.getString()).thenReturn(Designation.ASHA.name());
 
         RegistrationController controllerSpy = spy(controller);
         doReturn(upload).when(controllerSpy).getUploader();
 
         ModelAndView modelAndView = controllerSpy.registerNew(request);
 
-        verify(flwService).createNew(msisdn, null);
-        verify(allRecordings).store(msisdn,items,path);
-        assertEquals("register-done-flw",modelAndView.getViewName());
+        verify(flwService).createNew(msisdn, Designation.ASHA);
+        verify(allRecordings).store(msisdn, items, path);
+        assertEquals("register-done-flw", modelAndView.getViewName());
+
+    }
+
+    private void assertDesignations(ModelAndView modelAndView) {
+        Map designations = (Map) modelAndView.getModel().get("designations");
+        assertEquals(Designation.ANM.name(), designations.get(1));
+        assertEquals(Designation.ASHA.name(), designations.get(2));
+        assertEquals(Designation.ANGANWADI.name(), designations.get(3));
     }
 
 

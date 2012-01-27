@@ -61,20 +61,14 @@
     </field>
 #end
 
-#macro(dtmfField $field $askWav $keys)
+#macro(dtmfField $field $askWav $map)
     <field name="$field">
         <prompt>
             <audio src="$askWav"/>
         </prompt>
-        <grammar mode="dtmf" version="1.0" root="root">
-            <rule id="root">
-                <one-of>
-                    #foreach ($key in $keys)
-                        <item>$key</item>
-                    #end
-                </one-of>
-            </rule>
-        </grammar>
+        #foreach ($mapEntry in $map.entrySet())\
+            <option dtmf="$mapEntry.key" value="$mapEntry.value"/>
+        #end
         <noinput>
             <audio src="$askWav"/>
         </noinput>

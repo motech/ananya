@@ -14,7 +14,7 @@
 
     #dtmfField("designation",
         $bundle.register.designation.say,
-        [1,2,3])
+        $designations)
 
     #record("name",
         $bundle.register.name.say,

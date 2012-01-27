@@ -3,6 +3,7 @@ package org.motechproject.bbcwt.web;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.bbcwt.repository.AllRecordings;
 import org.slf4j.Logger;
@@ -16,36 +17,51 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Scope(value = "prototype")
 public class RegistrationController {
     private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
-    private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerService flwService;
     private AllRecordings allRecordings;
 
     @Autowired
-    public RegistrationController(FrontLineWorkerService frontLineWorkerService, AllRecordings allRecordings) {
-        this.frontLineWorkerService = frontLineWorkerService;
+    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings) {
+        this.flwService = flwService;
         this.allRecordings = allRecordings;
     }
 
     @RequestMapping(value = "/vxml/{entry}/register")
     public ModelAndView getCallFlow(HttpServletRequest request, @PathVariable String entry) {
+
         String contextPath = request.getContextPath();
         String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificationCourse.vxml";
-        return new ModelAndView("register-flw").addObject("nextFlow", nextFlow);
+
+        Map<Integer, String> designations = new HashMap<Integer, String>();
+        designations.put(1, Designation.ANM.name());
+        designations.put(2, Designation.ASHA.name());
+        designations.put(3, Designation.ANGANWADI.name());
+
+        ModelAndView modelAndView = new ModelAndView("register-flw");
+        modelAndView.addObject("nextFlow", nextFlow);
+        modelAndView.addObject("designations", designations);
+        return modelAndView;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
+
         ServletFileUpload upload = getUploader();
         List items = upload.parseRequest(request);
 
-        String msisdn = getMsisdn(items);
-        frontLineWorkerService.createNew(msisdn, null);
+        String msisdn = getField(items, "session.connection.remote.uri");
+        String designation = getField(items, "designation");
+
+        flwService.createNew(msisdn, Designation.valueOf(designation));
         String path = request.getSession().getServletContext().getRealPath("/recordings/");
         allRecordings.store(msisdn, items, path);
 
@@ -57,9 +73,9 @@ public class RegistrationController {
         return new ServletFileUpload(new DiskFileItemFactory());
     }
 
-    private String getMsisdn(List<FileItem> items) {
+    private String getField(List<FileItem> items, String key) {
         for (FileItem item : items)
-            if (item.isFormField() && item.getFieldName().equals("msisdn"))
+            if (item.isFormField() && item.getFieldName().equals(key))
                 return item.getString();
         return null;
     }

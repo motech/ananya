@@ -2,6 +2,7 @@ package org.motechproject.ananyafunctional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
@@ -71,11 +72,9 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
         assertNotNull(callFlow.readNode(designation));
         assertNotNull(callFlow.readNode(designation + "/prompt"));
 
-        assertEquals("dtmf", callFlow.readString(designation + "/grammar/@mode"));
-        NodeList options = callFlow.readNode(designation + "/grammar/rule/one-of/item");
-        assertEquals("1", options.item(0).getTextContent());
-        assertEquals("2", options.item(1).getTextContent());
-        assertEquals("3", options.item(2).getTextContent());
+        assertEquals(Designation.ANM.name(), callFlow.readString(designation + "/option[@dtmf=1]/@value"));
+        assertEquals(Designation.ASHA.name(), callFlow.readString(designation + "/option[@dtmf=2]/@value"));
+        assertEquals(Designation.ANGANWADI.name(), callFlow.readString(designation + "/option[@dtmf=3]/@value"));
     }
 
 }
