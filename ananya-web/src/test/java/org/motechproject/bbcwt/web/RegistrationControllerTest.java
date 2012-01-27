@@ -84,7 +84,7 @@ public class RegistrationControllerTest {
 
         ModelAndView modelAndView = controllerSpy.registerNew(request);
 
-        verify(flwService).createNew(msisdn);
+        verify(flwService).createNew(msisdn, null);
         verify(allRecordings).store(msisdn,items,path);
         assertEquals("register-done-flw",modelAndView.getViewName());
     }

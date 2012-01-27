@@ -12,7 +12,6 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -32,36 +31,36 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldVerifyIfAUserIsRegisteredForAGivenMSISDN() {
         String msisdn = "91998654410";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn);
-        frontLineWorker.status(FrontLineWorkerStatus.REGISTERED).name("cher");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM);
+        frontLineWorker.status(RegistrationStatus.REGISTERED).name("cher");
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-        FrontLineWorkerStatus status = frontLineWorkerService.getStatus(msisdn);
-        assertEquals(FrontLineWorkerStatus.REGISTERED, status);
+        RegistrationStatus status = frontLineWorkerService.getStatus(msisdn);
+        assertEquals(RegistrationStatus.REGISTERED, status);
     }
 
     @Test
     public void shouldVerifyIfAUserIsUnRegisteredForAGivenMSISDN() {
         String msisdn = "91998654410";
-        FrontLineWorkerStatus status = frontLineWorkerService.getStatus(msisdn);
-        assertEquals(FrontLineWorkerStatus.UNREGISTERED, status);
+        RegistrationStatus status = frontLineWorkerService.getStatus(msisdn);
+        assertEquals(RegistrationStatus.UNREGISTERED, status);
     }
 
     @Test
     public void shouldExtractCallerIdAndSaveRecordedFilesAndSaveNewWorker() {
-        frontLineWorkerService.createNew("msisdn");
+        frontLineWorkerService.createNew("msisdn", Designation.ASHA);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker captured = captor.getValue();
         assertEquals("msisdn",captured.getMsisdn());
-        assertTrue(captured.status().equals(FrontLineWorkerStatus.PENDING_REGISTRATION));
+        assertTrue(captured.status().equals(RegistrationStatus.PENDING_REGISTRATION));
     }
 
     @Test
     public void shouldGetFrontLineWorkerWithGivenCallerId() {
         String msisdn = "123";
-        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn);
+        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn, Designation.ANM);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(expectedFrontLineWorker);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(msisdn);
@@ -72,7 +71,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldAddScoreToAFrontLineWorker() {
         String msisdn = "123";
-        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn);
+        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker(msisdn, Designation.ANM);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(expectedFrontLineWorker);
 
         ReportCard.Score score = new ReportCard.Score("1", "2", true);
@@ -86,8 +85,8 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldTellThatUserIsRegisteredBasedOnStatus() {
         String registeredMsisdn = "123";
-        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn);
-        registeredFrontLineWorker.status(FrontLineWorkerStatus.REGISTERED);
+        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn, Designation.ANM);
+        registeredFrontLineWorker.status(RegistrationStatus.REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
         
         assertThat(frontLineWorkerService.isCallerRegistered(registeredMsisdn), is(true));
@@ -96,8 +95,8 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldTellThatUserIsUnRegisteredBasedOnStatus() {
         String registeredMsisdn = "123";
-        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn);
-        registeredFrontLineWorker.status(FrontLineWorkerStatus.UNREGISTERED);
+        FrontLineWorker registeredFrontLineWorker = new FrontLineWorker(registeredMsisdn, Designation.ANM);
+        registeredFrontLineWorker.status(RegistrationStatus.UNREGISTERED);
         when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
 
         assertThat(frontLineWorkerService.isCallerRegistered(registeredMsisdn), is(false));
@@ -114,7 +113,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldReturnBookmarkOfFrontLineWorker() {
         String msisdn = "999";
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM);
         BookMark bookMark = new BookMark("leson", "0", "2");
         frontLineWorker.addBookMark(bookMark);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);

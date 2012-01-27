@@ -18,17 +18,17 @@ public class FrontLineWorkerService {
         this.allFrontLineWorkers = allFrontLineWorkers;
     }
 
-    public FrontLineWorkerStatus getStatus(String msisdn) {
+    public RegistrationStatus getStatus(String msisdn) {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        return frontLineWorker != null ? frontLineWorker.status() : FrontLineWorkerStatus.UNREGISTERED;
+        return frontLineWorker != null ? frontLineWorker.status() : RegistrationStatus.UNREGISTERED;
     }
 
     public boolean isCallerRegistered(String msisdn) {
         return getStatus(msisdn).isRegistered();
     }
 
-    public String createNew(String msisdn) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn).status(FrontLineWorkerStatus.PENDING_REGISTRATION);
+    public String createNew(String msisdn, Designation designation) {
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation).status(RegistrationStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
     }

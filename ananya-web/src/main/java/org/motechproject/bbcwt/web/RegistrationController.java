@@ -45,7 +45,7 @@ public class RegistrationController {
         List items = upload.parseRequest(request);
 
         String msisdn = getMsisdn(items);
-        frontLineWorkerService.createNew(msisdn);
+        frontLineWorkerService.createNew(msisdn, null);
         String path = request.getSession().getServletContext().getRealPath("/recordings/");
         allRecordings.store(msisdn, items, path);
 

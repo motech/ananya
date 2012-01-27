@@ -1,6 +1,6 @@
 package org.motechproject.ananya.domain;
 
-public enum FrontLineWorkerStatus {
+public enum RegistrationStatus {
     REGISTERED,
     UNREGISTERED,
     PENDING_REGISTRATION;

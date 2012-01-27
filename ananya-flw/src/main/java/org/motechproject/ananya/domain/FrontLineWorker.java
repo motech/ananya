@@ -1,10 +1,9 @@
 package org.motechproject.ananya.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
-
-import java.util.List;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
@@ -19,13 +18,17 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private ReportCard reportCard = new ReportCard();
 
     @JsonProperty
-    private FrontLineWorkerStatus status = FrontLineWorkerStatus.UNREGISTERED;
+    private RegistrationStatus status = RegistrationStatus.UNREGISTERED;
+
+    @JsonProperty
+    private Designation designation;
 
     public FrontLineWorker() {
     }
 
-    public FrontLineWorker(String msisdn) {
+    public FrontLineWorker(String msisdn, Designation designation) {
         this.msisdn = msisdn;
+        this.designation = designation;
     }
 
     public String getMsisdn() {
@@ -33,15 +36,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public BookMark bookMark() {
-        return bookmark!=null?bookmark:new EmptyBookmark();
+        return bookmark != null ? bookmark : new EmptyBookmark();
     }
 
-    public FrontLineWorker status(FrontLineWorkerStatus status) {
+    public FrontLineWorker status(RegistrationStatus status) {
         this.status = status;
         return this;
     }
 
-    public FrontLineWorkerStatus status() {
+    public RegistrationStatus status() {
         return status;
     }
 
@@ -56,5 +59,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void addBookMark(BookMark bookMark) {
         this.bookmark = bookMark;
+    }
+
+    @JsonIgnore
+    public boolean isAnganwadi() {
+        return this.designation.equals(Designation.ANGANWADI);
     }
 }

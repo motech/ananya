@@ -4,18 +4,15 @@ import com.gargoylesoftware.htmlunit.Page;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
@@ -24,7 +21,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999").status(FrontLineWorkerStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("lesson", "0", "2"));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
@@ -37,7 +34,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
     @Test
     public void shouldGetCallerDataWithoutBookmarkDetailsWhenThereIsNoBookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999").status(FrontLineWorkerStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 

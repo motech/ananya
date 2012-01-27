@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 public class FrontLineWorkerTest {
     @Test
     public void shouldReturnEmptyBookmarkIfThereIsNoBookmark() {
-        FrontLineWorker flw = new FrontLineWorker();
+        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI);
         assertNotNull(flw.bookMark());
         assertThat(flw.bookMark(), is(EmptyBookmark.class));
     }

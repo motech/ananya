@@ -3,8 +3,9 @@ package org.motechproject.ananyafunctional;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerStatus;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
@@ -21,7 +22,7 @@ public class BookMarkCreationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldAssociateABookmarkWithAFLW() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999").status(FrontLineWorkerStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
