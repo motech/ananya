@@ -60,11 +60,11 @@ public class RegistrationControllerTest {
     public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber() {
         when(request.getContextPath()).thenReturn("/ananya");
 
-        ModelAndView modelAndView = controller.getCallFlow(request, "certificationCourse");
+        ModelAndView modelAndView = controller.getCallFlow(request, "certificatecourse");
 
         assertEquals("register-flw", modelAndView.getViewName());
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
+        assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
         assertDesignations(modelAndView);
     }
 

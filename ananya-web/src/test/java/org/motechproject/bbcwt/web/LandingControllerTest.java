@@ -27,7 +27,7 @@ public class LandingControllerTest {
     @Test
     public void shouldPopulateRenderingPageToJobAidForJobAidCallFlow() {
 
-        ModelAndView modelAndView = landingController.getLandingPage(request, "jobaid");
+        ModelAndView modelAndView = landingController.forJobAid(request);
 
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
@@ -40,14 +40,14 @@ public class LandingControllerTest {
 
     @Test
     public void shouldPopulateRenderingPageToCertificationCourseForCourseCallFlow() {
-        ModelAndView modelAndView = landingController.getLandingPage(request, "certificationCourse");
+        ModelAndView modelAndView = landingController.forCertificateCourse(request);
 
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
         String callerData = (String) modelAndView.getModel().get("callerData");
 
-        assertEquals("/ananya/vxml/certificationCourse.vxml", nextFlow);
-        assertEquals("/ananya/vxml/certificationCourse/register", registerFlow);
+        assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
+        assertEquals("/ananya/vxml/certificatecourse/register", registerFlow);
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
     }
 }

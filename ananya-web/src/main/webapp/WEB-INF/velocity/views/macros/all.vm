@@ -66,7 +66,7 @@
         <prompt>
             <audio src="$askWav"/>
         </prompt>
-        #foreach ($mapEntry in $map.entrySet())\
+        #foreach ($mapEntry in $map.entrySet())
             <option dtmf="$mapEntry.key" value="$mapEntry.value"/>
         #end
         <noinput>

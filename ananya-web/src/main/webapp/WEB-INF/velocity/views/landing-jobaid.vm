@@ -1,0 +1,12 @@
+#vxmlHeader()
+<script srcexpr="$callerData"/>
+<form id="landing_page">
+    <block>
+        <if cond="callerData.isRegistered == 'true'">
+            <goto next="$nextFlow"/>
+        <else/>
+            <goto next="$registerFlow"/>
+        </if>
+    </block>
+</form>
+#vxmlFooter()

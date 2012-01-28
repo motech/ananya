@@ -39,17 +39,16 @@ public class RegistrationController {
     public ModelAndView getCallFlow(HttpServletRequest request, @PathVariable String entry) {
 
         String contextPath = request.getContextPath();
-        String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificationCourse.vxml";
+        String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificatecourse.vxml";
 
         Map<Integer, String> designations = new HashMap<Integer, String>();
         designations.put(1, Designation.ANM.name());
         designations.put(2, Designation.ASHA.name());
         designations.put(3, Designation.ANGANWADI.name());
 
-        ModelAndView modelAndView = new ModelAndView("register-flw");
-        modelAndView.addObject("nextFlow", nextFlow);
-        modelAndView.addObject("designations", designations);
-        return modelAndView;
+        return new ModelAndView("register-flw")
+                .addObject("nextFlow", nextFlow)
+                .addObject("designations", designations);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
