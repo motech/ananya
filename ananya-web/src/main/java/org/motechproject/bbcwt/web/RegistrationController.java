@@ -46,7 +46,7 @@ public class RegistrationController {
         designations.put(2, Designation.ASHA.name());
         designations.put(3, Designation.ANGANWADI.name());
 
-        return new ModelAndView("register-flw")
+        return new ModelAndView("register")
                 .addObject("nextFlow", nextFlow)
                 .addObject("designations", designations);
     }
@@ -65,7 +65,7 @@ public class RegistrationController {
         allRecordings.store(msisdn, items, path);
 
         log.info("Registered new FLW:" + msisdn);
-        return new ModelAndView("register-done-flw");
+        return new ModelAndView("register-done");
     }
 
     protected ServletFileUpload getUploader() {

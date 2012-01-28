@@ -51,7 +51,7 @@ public class RegistrationControllerTest {
 
         ModelAndView modelAndView = controller.getCallFlow(request, "jobaid");
 
-        assertEquals("register-flw", modelAndView.getViewName());
+        assertEquals("register", modelAndView.getViewName());
         assertEquals("/ananya/vxml/jobaid.vxml", (String) modelAndView.getModel().get("nextFlow"));
         assertDesignations(modelAndView);
     }
@@ -62,7 +62,7 @@ public class RegistrationControllerTest {
 
         ModelAndView modelAndView = controller.getCallFlow(request, "certificatecourse");
 
-        assertEquals("register-flw", modelAndView.getViewName());
+        assertEquals("register", modelAndView.getViewName());
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
         assertDesignations(modelAndView);
@@ -101,7 +101,7 @@ public class RegistrationControllerTest {
 
         verify(flwService).createNew(msisdn, Designation.ASHA);
         verify(allRecordings).store(msisdn, items, path);
-        assertEquals("register-done-flw", modelAndView.getViewName());
+        assertEquals("register-done", modelAndView.getViewName());
 
     }
 
