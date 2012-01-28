@@ -1,18 +1,28 @@
 package org.motechproject.ananyafunctional;
 
 import com.gargoylesoftware.htmlunit.Page;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.BaseMatcher;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
 import org.motechproject.bbcwt.repository.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
@@ -30,6 +40,73 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
         String expectedPageResponse = callerDataFor(true, "lesson", 0, 2);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
+    }
+
+    @Test
+    public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM).status(RegistrationStatus.REGISTERED);
+
+        ReportCard reportCard = flw.reportCard();
+
+        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
+        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
+        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
+
+        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
+        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
+        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
+
+        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
+        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
+        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
+
+        reportCard.addScore(ch1q1score);
+        reportCard.addScore(ch1q2score);
+        reportCard.addScore(ch1q3score);
+
+        reportCard.addScore(ch2q1score);
+        reportCard.addScore(ch2q2score);
+        reportCard.addScore(ch2q3score);
+
+        reportCard.addScore(ch3q1score);
+        reportCard.addScore(ch3q2score);
+        reportCard.addScore(ch3q3score);
+
+        allFrontLineWorkers.add(flw);
+        markForDeletion(flw);
+
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/dynamic/js/caller_data.js?callerId=999");
+
+        String callerDataAssignmentStmt = page.getWebResponse().getContentAsString();
+        String callerDataJson = jsonWithWhichCallerDataVarIsBeingAssigned(callerDataAssignmentStmt);
+        JsonElement root = new JsonParser().parse(callerDataJson);
+        JsonObject scoresByChapterJson = root.getAsJsonObject().get("scoresByChapter").getAsJsonObject();
+        final int noOfChapters = scoresByChapterJson.entrySet().size();
+
+        assertThat(noOfChapters, equalTo(3));
+        assertThat(scoresByChapterJson, hasChapterWithScore("0", 2));
+        assertThat(scoresByChapterJson, hasChapterWithScore("1", 1));
+        assertThat(scoresByChapterJson, hasChapterWithScore("2", 0));
+    }
+
+    private String jsonWithWhichCallerDataVarIsBeingAssigned(String jsonResponse) {
+        return jsonResponse.replace("var callerData = ", "").replace(";", "");
+    }
+
+    private Matcher<JsonObject> hasChapterWithScore(final String chapterIndexToBePresent, final int scoreForChapterToBePreset) {
+        return new BaseMatcher<JsonObject>(){
+
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            public boolean matches(Object o) {
+                JsonObject scoresByChapterJson = (JsonObject) o;
+                final JsonElement scoreJson = scoresByChapterJson.get(chapterIndexToBePresent);
+                return scoreJson == null ? false : (scoreJson.getAsInt() == scoreForChapterToBePreset);
+            }
+        };
     }
 
     @Test

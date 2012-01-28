@@ -2,8 +2,13 @@ var callerData = {
    "isRegistered" : "${isCallerRegistered}",
    "bookmark" : ${bookmark},
    "scoresByChapter" : {
+       #set($chaptersCount = $scoresByChapter.size())
+
        #foreach($entry in $scoresByChapter.entrySet())
-        "$entry.key" : "$entry.value",
+        "$entry.key" : "$entry.value"
+        #if($foreach.count < $chaptersCount)
+            ,
+        #end
        #end
    }
 };

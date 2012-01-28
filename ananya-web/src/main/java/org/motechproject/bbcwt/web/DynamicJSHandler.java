@@ -56,8 +56,9 @@ public class DynamicJSHandler {
         boolean callerRegistered = frontLineWorkerService.isCallerRegistered(msisdn);
         BookMark bookmark = frontLineWorkerService.getBookmark(msisdn);
 
+        Map<String, Integer> scoresByChapter = frontLineWorkerService.scoresByChapter(msisdn);
+
         response.setContentType("application/javascript");
-        Map<String, String> scoresByChapter = null;
         return new ModelAndView("caller_data").addObject("bookmark", bookmark.asJson()).addObject("isCallerRegistered", callerRegistered).addObject("scoresByChapter", scoresByChapter);
     }
 }

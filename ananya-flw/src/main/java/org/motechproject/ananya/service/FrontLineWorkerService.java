@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
@@ -56,5 +59,10 @@ public class FrontLineWorkerService {
     public BookMark getBookmark(String msisdn) {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         return frontLineWorker == null ? new EmptyBookmark() : frontLineWorker.bookMark();
+    }
+
+    public Map<String, Integer> scoresByChapter(String msisdn){
+        final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        return frontLineWorker == null? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
     }
 }
