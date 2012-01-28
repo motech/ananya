@@ -40,7 +40,7 @@ public class PlayChapter extends JobAidAction {
         Chapter chapter = currentChapter(context);
 
         if(chapter.title()!=null) {
-            String chapterTitle = messages.absoluteFileLocation("jobAid/" + chapter.title());
+            String chapterTitle = messages.absoluteFileLocation("jobaid/" + chapter.title());
             LOGGER.info(String.format("Playing title for chapter %d in level %d : %s.", currentChapterNumber(context), currentLevelNumber(context), chapterTitle));
             responseBuilder.addPlayAudio(chapterTitle);
         }

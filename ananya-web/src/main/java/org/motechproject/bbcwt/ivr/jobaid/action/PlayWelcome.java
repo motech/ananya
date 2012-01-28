@@ -35,7 +35,7 @@ public class PlayWelcome extends JobAidAction {
     public void processRequest(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder){
         JobAidCourse jobAidCourse = currentCourse();
         if(context.firstInteractionInCall()) {
-            final String welcomeMsg = messages.absoluteFileLocation("jobAid/" + jobAidCourse.introduction());
+            final String welcomeMsg = messages.absoluteFileLocation("jobaid/" + jobAidCourse.introduction());
             LOGGER.info(String.format("Assembling the welcome message %s", welcomeMsg));
             responseBuilder.addPlayAudio(welcomeMsg);
         }

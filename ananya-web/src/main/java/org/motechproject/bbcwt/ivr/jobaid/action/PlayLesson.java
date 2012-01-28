@@ -37,7 +37,7 @@ public class PlayLesson extends JobAidAction {
     @Override
     public void processRequest(IVRContext context, IVRRequest request, IVRResponseBuilder responseBuilder) {
         Lesson lesson = currentLesson(context);
-        String lessonLocation = messages.absoluteFileLocation("jobAid/" + lesson.getFileName());
+        String lessonLocation = messages.absoluteFileLocation("jobaid/" + lesson.getFileName());
         LOGGER.info(String.format("Playing lesson file: %s for lesson: %d in chapter: %d in level %d.", lessonLocation, currentLessonNumber(context), currentChapterNumber(context), currentLevelNumber(context)));
         responseBuilder.addPlayAudio(lessonLocation);
 

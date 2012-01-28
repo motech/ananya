@@ -40,7 +40,7 @@ public class PlayLevel extends JobAidAction {
         int enteredLevel = currentLevelNumber(context);
         Level level = currentLevel(context);
         if(level.introduction()!=null) {
-            String levelIntroduction = messages.absoluteFileLocation("jobAid/" + level.introduction());
+            String levelIntroduction = messages.absoluteFileLocation("jobaid/" + level.introduction());
             LOGGER.info(String.format("Playing introduction for level %d : %s.", enteredLevel, levelIntroduction));
             responseBuilder.addPlayAudio(levelIntroduction);
         }

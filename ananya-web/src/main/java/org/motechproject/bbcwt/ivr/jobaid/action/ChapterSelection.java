@@ -44,7 +44,7 @@ public class ChapterSelection extends JobAidAction {
     public void playPrompt(IVRContext context, IVRRequest request, IVRDtmfBuilder dtmfBuilder) {
         Level level = currentLevel(context);
 
-        final String chapterMenu = messages.absoluteFileLocation("jobAid/" + level.menu());
+        final String chapterMenu = messages.absoluteFileLocation("jobaid/" + level.menu());
         LOGGER.info(String.format("Playing chapterMenu menu: %s", chapterMenu));
         dtmfBuilder.addPlayAudio(chapterMenu);
         assembleReturnToStartOption(messages, dtmfBuilder);

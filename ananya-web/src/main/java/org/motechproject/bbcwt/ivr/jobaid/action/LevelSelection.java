@@ -42,7 +42,7 @@ public class LevelSelection extends JobAidAction {
     @Override
     public void playPrompt(IVRContext context, IVRRequest request, IVRDtmfBuilder dtmfBuilder) {
         JobAidCourse course = currentCourse();
-        final String levelMenu = messages.absoluteFileLocation("jobAid/" + course.menu());
+        final String levelMenu = messages.absoluteFileLocation("jobaid/" + course.menu());
         LOGGER.info(String.format("Playing level menu: %s", levelMenu));
         dtmfBuilder.addPlayAudio(levelMenu);
         dtmfBuilder.withMaximumLengthOfResponse(1);

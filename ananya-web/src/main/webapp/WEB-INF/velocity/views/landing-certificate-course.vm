@@ -2,9 +2,18 @@
 <script srcexpr="$callerData"/>
 <form id="landing_page">
     <block>
+        
+
+
         <if cond="callerData.isRegistered == 'true'">
             <goto next="$nextFlow"/>
         <else/>
+            <prompt>
+                <audio src="$askWav"/>
+                <audio src="$askWav"/>
+                <audio src="$askWav"/>
+                <audio src="$askWav"/>
+            </prompt>
             <goto next="$registerFlow"/>
         </if>
     </block>

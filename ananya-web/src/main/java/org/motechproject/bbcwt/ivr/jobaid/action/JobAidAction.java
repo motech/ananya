@@ -63,6 +63,6 @@ public abstract class JobAidAction implements IVRAction {
     }
 
     protected void assembleReturnToStartOption(IVRMessage messages, IVRDtmfBuilder dtmfBuilder) {
-        dtmfBuilder.addPlayAudio(messages.absoluteFileLocation("jobAid/" + messages.get(IVRMessage.RETURN_TO_START_IN_JOBAID_OPTION)));
+        dtmfBuilder.addPlayAudio(messages.absoluteFileLocation("jobaid/" + messages.get(IVRMessage.RETURN_TO_START_IN_JOBAID_OPTION)));
     }
 }

@@ -1,14 +1,14 @@
 {
-   "name":"JobAidCourse",
+   "name":"jobaidCourse",
    "contents": [
       {
         "name" : "menu",
-        "value" :"jobAid/nav_0002_level_select.wav",
+        "value" :"jobaid/nav_0002_level_select.wav",
         "language" : "hindi"
       },
       {
         "name" : "introduction",
-        "value" : "jobAid/nav_0001_welcome.wav",
+        "value" : "jobaid/nav_0001_welcome.wav",
         "language" : "hindi"
        }
    ],
@@ -25,12 +25,12 @@
          "contents" : [
             {
                 "name" : "menu",
-                "value" : "jobAid/level_1_menu.wav",
+                "value" : "jobaid/level_1_menu.wav",
                 "language" : "hindi"
             },
             {
                 "name" : "introduction",
-                "value" :"jobAid/level_1_intro.wav",
+                "value" :"jobaid/level_1_intro.wav",
                 "language" : "hindi"
             }
          ],
@@ -44,12 +44,12 @@
                "contents": [
                     {
                         "name" : "menu",
-                        "value" : "jobAid/level_1_chapter_1_menu.wav",
+                        "value" : "jobaid/level_1_chapter_1_menu.wav",
                         "language" : "hindi"
                     },
                     {
                         "name" : "introduction",
-                        "value" :"jobAid/level_1_chapter_1_intro.wav",
+                        "value" :"jobaid/level_1_chapter_1_intro.wav",
                         "language" : "hindi"
                     }
                ],
@@ -63,7 +63,7 @@
                      "contents" : [
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/level_1_chapter_1_lesson_1.wav",
+                            "value" : "jobaid/level_1_chapter_1_lesson_1.wav",
                             "language" : "hindi"
                         }
                      ],
@@ -80,7 +80,7 @@
                      "contents" : [
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/level_1_chapter_1_lesson_2.wav",
+                            "value" : "jobaid/level_1_chapter_1_lesson_2.wav",
                             "language" : "hindi"
                         }
                      ],
@@ -98,12 +98,12 @@
                "contents":[
                     {
                         "name" : "menu",
-                        "value" : "jobAid/level_1_chapter_2_menu.wav",
+                        "value" : "jobaid/level_1_chapter_2_menu.wav",
                         "language" : "hindi"
                     },
                     {
                         "name" : "introduction",
-                        "value" : "jobAid/level_1_chapter_2_intro.wav",
+                        "value" : "jobaid/level_1_chapter_2_intro.wav",
                         "language" : "hindi"
                     }
                ],
@@ -117,7 +117,7 @@
                      "contents":[
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/level_1_chapter_2_lesson_1.wav",
+                            "value" : "jobaid/level_1_chapter_2_lesson_1.wav",
                             "language" : "hindi"
                         }
                      ],
@@ -133,7 +133,7 @@
                      "contents":[
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/level_1_chapter_2_lesson_2.wav",
+                            "value" : "jobaid/level_1_chapter_2_lesson_2.wav",
                             "language" : "hindi"
                         }
                      ],
@@ -153,12 +153,12 @@
          "contents":[
             {
                 "name" : "menu",
-                "value" : "jobAid/nav_0004_chapter_select.wav",
+                "value" : "jobaid/nav_0004_chapter_select.wav",
                 "language" : "hindi"
             },
             {
                 "name" : "introduction",
-                "value" : "jobAid/nav_0003_level_content.wav",
+                "value" : "jobaid/nav_0003_level_content.wav",
                 "language" : "hindi"
             }
          ],
@@ -172,12 +172,12 @@
                 "contents":[
                     {
                         "name" : "menu",
-                        "value" : "jobAid/nav_0006_chapter_01_lesson_select.wav",
+                        "value" : "jobaid/nav_0006_chapter_01_lesson_select.wav",
                         "language" : "hindi"
                     },
                     {
                         "name" : "introduction",
-                        "value" : "jobAid/nav_0005_chapter_01_title.wav",
+                        "value" : "jobaid/nav_0005_chapter_01_title.wav",
                         "language" : "hindi"
                     }
                 ],
@@ -191,7 +191,7 @@
                     "contents":[
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/chapter_5_lesson_1.wav",
+                            "value" : "jobaid/chapter_5_lesson_1.wav",
                             "language" : "hindi"
                         }
                     ],
@@ -207,7 +207,7 @@
                     "contents":[
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/chapter_5_lesson_2.wav",
+                            "value" : "jobaid/chapter_5_lesson_2.wav",
                             "language" : "hindi"
                         }
                     ],
@@ -223,7 +223,7 @@
                      "contents":[
                         {
                             "name" : "lesson",
-                            "value" : "jobAid/chapter_5_lesson_3.wav",
+                            "value" : "jobaid/chapter_5_lesson_3.wav",
                             "language" : "hindi"
                         }
                     ],
@@ -239,7 +239,7 @@
                      "contents":[
                         {
                             "name": "lesson",
-                            "value": "jobAid/chapter_5_lesson_4.wav",
+                            "value": "jobaid/chapter_5_lesson_4.wav",
                             "language": "hindi"
                         }
                     ],
@@ -257,12 +257,12 @@
                "contents":[
                 {
                     "name":"menu",
-                    "value":"jobAid/nav_0008_chapter_02_lesson_select.wav",
+                    "value":"jobaid/nav_0008_chapter_02_lesson_select.wav",
                     "language":"hindi"
                 },
                 {
                     "name":"introduction",
-                    "value":"jobAid/nav_0007_chapter_02_title.wav",
+                    "value":"jobaid/nav_0007_chapter_02_title.wav",
                     "language":"hindi"
                 }
                ],
@@ -276,7 +276,7 @@
                      "contents":[
                         {
                             "name":"lesson",
-                            "value":"jobAid/chapter_6_lesson_1.wav",
+                            "value":"jobaid/chapter_6_lesson_1.wav",
                             "language":"hindi"
                         }
                      ],
@@ -292,7 +292,7 @@
                      "contents":[
                         {
                             "name":"lesson",
-                            "value":"jobAid/chapter_6_lesson_2.wav",
+                            "value":"jobaid/chapter_6_lesson_2.wav",
                             "language":"hindi"
                         }
                      ],
@@ -308,7 +308,7 @@
                      "contents":[
                         {
                             "name":"lesson",
-                            "value":"jobAid/chapter_6_lesson_3.wav",
+                            "value":"jobaid/chapter_6_lesson_3.wav",
                             "language":"hindi"
                         }
                      ],
@@ -324,7 +324,7 @@
                      "contents":[
                         {
                             "name":"lesson",
-                            "value":"jobAid/chapter_6_lesson_4.wav",
+                            "value":"jobaid/chapter_6_lesson_4.wav",
                             "language":"hindi"
                         }
                      ],
