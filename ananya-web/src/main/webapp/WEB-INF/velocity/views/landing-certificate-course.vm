@@ -1,59 +1,35 @@
 #vxmlHeader()
 <script srcexpr="$callerData"/>
-<form id="landing_page">
+<script src="$landingJs"/>
+<script>
+    <![CDATA[
+    var caller = new Caller(callerData);
+    var flow = caller.decideFlow();
+    ]]>
+</script>
+
+<property name="bargein" value="true"/>
+
+<form id="controller">
     <block>
         <prompt>
             <audio src="$bundle.certificate.welcome"></audio>
         </prompt>
-        <if cond="callerData.isRegistered == 'true'">
-            <if cond="callerData.bookmark == '{}'">
-                <subdialog src="#repeat_menu">
-                    <param name="ask" value="$bundle.certificate.options.for.reg"/>
-                    <param name="redirect" value="$nextFlow"/>
-                </subdialog>
-                <else/>
-                <goto next="$nextFlow"/>
-            </if>
-        <else/>
-            <prompt>
-                <subdialog src="#repeat_menu">
-                    <param name="ask" value="$bundle.certificate.options.for.non.reg"/>
-                    <param name="need" value="$bundle.certificate.need.to.register"/>
-                    <param name="redirect" value="$registerFlow"/>
-                </subdialog>
-            </prompt>
-            <goto next="$registerFlow"/>
-        </if>
+        <goto expr="flow"/>
     </block>
 </form>
 
-<form name="repeat_menu">
-    <var name="ask"/>
-    <var name="redirect"/>
-    <field name="repeat">
-        <prompt bargein="false">
-            <audio expr="ask"/>
-            <audio expr="need"/>
-        </prompt>
-        <grammar mode="dtmf" version="1.0" root="root">
-            <rule id="root" scope="public">
-                <one-of>
-                    <item>$bundle.certificate.repeat.option1</item>
-                    <item>$bundle.certificate.repeat.option2</item>
-                </one-of>
-            </rule>
-        </grammar>
-        <filled>
-            <if cond="regContinue == ${bundle.certificate.repeat.option1}">
-                <goto next="#landing_page"/>
-            <elseif cond="regContinue == ${bundle.certificate.repeat.option2}">
-                <goto expr="redirect"/>
-            </if>
-            <return/>
-        </filled>
-        <nomatch>
-            <reprompt/>
-        </nomatch>
-    </field>
+<form id="registered_bookmark_present">
+    <block>
+        <goto next="$nextFlow"/>
+    </block>
+</form>
+
+<form id="registered_bookmark_absent">
+    #repeat([$bundle.certificate.options.for.reg],$nextFlow)
+</form>
+
+<form id="unregistered">
+    #repeat([$bundle.certificate.options.for.non.reg, $bundle.certificate.need.to.register],$regFlow)
 </form>
 #vxmlFooter()

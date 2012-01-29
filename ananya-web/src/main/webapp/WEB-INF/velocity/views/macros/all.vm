@@ -61,7 +61,7 @@
     </field>
 #end
 
-#macro(dtmfField $field $askWav $map)
+#macro(dtmf $field $askWav $map)
     <field name="$field">
         <prompt>
             <audio src="$askWav"/>
@@ -72,6 +72,35 @@
         <noinput>
             <audio src="$askWav"/>
         </noinput>
+    </field>
+#end
+
+
+#macro(repeat $prompts $flow)
+    <field name="repeat">
+        <prompt bargein="false">
+            #foreach($prompt in $prompts)
+                <audio src="$prompt"/>
+            #end
+        </prompt>
+        <grammar mode="dtmf" version="1.0" root="root">
+            <rule id="root" scope="public">
+                <one-of>
+                    <item>$bundle.certificate.repeat.option1</item>
+                    <item>$bundle.certificate.repeat.option2</item>
+                </one-of>
+            </rule>
+        </grammar>
+        <filled>
+            <if cond="repeat == '${bundle.certificate.repeat.option1}'">
+                <goto next="#controller"/>
+                <elseif cond="repeat == '${bundle.certificate.repeat.option2}'"/>
+                <goto next="$flow"/>
+            </if>
+        </filled>
+        <nomatch>
+            <reprompt/>
+        </nomatch>
     </field>
 #end
 

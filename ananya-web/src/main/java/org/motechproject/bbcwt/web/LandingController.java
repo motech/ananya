@@ -33,7 +33,8 @@ public class LandingController {
         return new ModelAndView(view)
                 .addObject("nextFlow", contextPath + nextFlow)
                 .addObject("registerFlow", contextPath + regFlow)
-                .addObject("callerData", "'" + contextPath + "/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri");
+                .addObject("callerData", "'" + contextPath + "/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri")
+                .addObject("landingJs", contextPath + "/js/landing.js");
     }
 
 }

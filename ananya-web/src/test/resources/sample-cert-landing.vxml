@@ -3,15 +3,46 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
-    <script src="http://dl.dropbox.com/u/37661559/sample-callerdata.js"/>
-    <form id="landing_page">
+
+    <script>
+        <![CDATA[
+
+	  var Caller = function(callerData) {
+
+   	 	var callerData = callerData;
+
+    		this.decideFlow = function() {
+        		if (callerData.isRegistered == "false")
+            			return "#unregistered";
+        		else if (callerData.isRegistered == "true" && callerData.bookmark.type)
+            			return "#registered_bookmark_present";
+        		else
+            			return "#registered_bookmark_absent";
+    			};
+		};	
+
+            var callerData = {
+                    "isRegistered" : "true",
+		       "bookmark" : {"type":"AA"},	
+          
+            };
+            var caller = new Caller(callerData);
+            var flow = caller.decideFlow();
+          ]]>
+    </script>
+    <property name="bargein" value="true"/>
+
+    <form id="controller">
         <block>
             <prompt>
-                welcome to certificate course.
+                welcome to certificate course. you will be directed to <value expr="flow"/>
             </prompt>
+            <goto expr="flow"/>
         </block>
+    </form>
 
-        <field name="repeat_reg" cond="callerData.isRegistered == 'true' &amp;&amp; callerData.bookmark == '{}'">
+    <form id="registered_bookmark_absent">
+        <field name="repeat">
             <prompt bargein="false">
                 you are already registered with no bookmarks. please dial 1 to repeat or 2 to continue.
             </prompt>
@@ -24,33 +55,32 @@
                 </rule>
             </grammar>
             <filled>
-                <if cond="repeat_reg == 1">
-                    <goto next="#landing_page"/>
-                    <elseif cond="repeat_reg == 2"/>
+                <if cond="repeat == '1'">
+                    <goto next="#controller"/>
+                    <elseif cond="repeat == '2'"/>
                     <goto next="http://dl.dropbox.com/u/37661559/nextflow.vxml"/>
-                    <else/>
-                    <reprompt/>
                 </if>
             </filled>
             <nomatch>
                 <reprompt/>
             </nomatch>
         </field>
+    </form>
 
-        <block name="registered_bookmark_absent"
-               cond="callerData.isRegistered == 'true' &amp;&amp; callerData.bookmark != '{}'">
-            <prompt bargein="false">
-                you are already registered with bookmarks. we are taking you to course.
-            </prompt>
-            <goto next="http://dl.dropbox.com/u/37661559/nextflow.vxml"/>
-        </block>
+    <form id="registered_bookmark_present">
+	<block>
+        <prompt bargein="false">
+            you are already registered with bookmarks. we are taking you to course.
+        </prompt>
+        <goto next="http://dl.dropbox.com/u/37661559/nextflow.vxml"/>
+	</block>
+    </form>
 
-
-        <field name="repeat_non_reg" cond="callerData.isRegistered == 'false'">
+    <form id="unregistered">
+        <field name="repeat">
             <prompt bargein="false">
                 you are not registered. please dial 1 to repeat or 2 to take you to registration.
             </prompt>
-
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root" scope="public">
                     <one-of>
@@ -60,17 +90,15 @@
                 </rule>
             </grammar>
             <filled>
-                <if cond="repeat_non_reg == '1'">
-                    <goto next="#landing_page"/>
-                <elseif cond="repeat_non_reg == '2'"/>
+                <if cond="repeat == '1'">
+                    <goto next="#controller"/>
+                    <elseif cond="repeat == '2'"/>
                     <goto next="http://dl.dropbox.com/u/37661559/regflow.vxml"/>
-                    <else/>
-                    <reprompt/>
                 </if>
             </filled>
-
+            <nomatch>
+                <reprompt/>
+            </nomatch>
         </field>
-
     </form>
-
 </vxml>

@@ -6,13 +6,7 @@
     #var("districtNotRecorded","true")
     #var("panchayatNotRecorded","true")
 
-    <block>
-        #play($bundle.register.jobaid.welcome)
-        #play($bundle.register.jobaid.detail)
-        #play($bundle.register.jobaid.need.to.register)
-    </block>
-
-    #dtmfField("designation",
+    #dtmf("designation",
         $bundle.register.designation.say,
         $designations)
 

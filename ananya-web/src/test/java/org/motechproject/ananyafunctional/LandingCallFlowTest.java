@@ -1,6 +1,7 @@
 package org.motechproject.ananyafunctional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
@@ -32,6 +33,7 @@ public class LandingCallFlowTest extends SpringIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void shouldGetLandingPageWithLinksToCourseIfEntryIsThroughCourseNumber() throws Exception {
 
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/landing/");

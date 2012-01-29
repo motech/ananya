@@ -37,7 +37,6 @@ public class RegistrationController {
 
     @RequestMapping(value = "/vxml/{entry}/register")
     public ModelAndView getCallFlow(HttpServletRequest request, @PathVariable String entry) {
-
         String contextPath = request.getContextPath();
         String nextFlow = entry.equals("jobaid") ? contextPath + "/vxml/jobaid.vxml" : contextPath + "/vxml/certificatecourse.vxml";
 
@@ -46,14 +45,11 @@ public class RegistrationController {
         designations.put(2, Designation.ASHA.name());
         designations.put(3, Designation.ANGANWADI.name());
 
-        return new ModelAndView("register")
-                .addObject("nextFlow", nextFlow)
-                .addObject("designations", designations);
+        return new ModelAndView("register").addObject("nextFlow", nextFlow).addObject("designations", designations);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-
         ServletFileUpload upload = getUploader();
         List items = upload.parseRequest(request);
 
@@ -61,8 +57,7 @@ public class RegistrationController {
         String designation = getField(items, "designation");
 
         flwService.createNew(msisdn, Designation.valueOf(designation));
-        String path = request.getSession().getServletContext().getRealPath("/recordings/");
-        allRecordings.store(msisdn, items, path);
+        allRecordings.store(msisdn, items, request.getSession().getServletContext().getRealPath("/recordings/"));
 
         log.info("Registered new FLW:" + msisdn);
         return new ModelAndView("register-done");
