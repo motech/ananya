@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
-import org.motechproject.bbcwt.repository.SpringIntegrationTest;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -14,7 +13,7 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-public class RegistrationCallFlowTest extends SpringIntegrationTest {
+public class RegistrationCallFlowTest {
 
     private CallFlow callFlow;
 
@@ -38,7 +37,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
 
     private void assertNonInterActivePrompts() throws XPathExpressionException {
         NodeList list = callFlow.readNode("/vxml/form/block/audio");
-        assertEquals(4, list.getLength());
+        assertEquals(1, list.getLength());
     }
 
     private void assertOnRecord(String param) throws XPathExpressionException {

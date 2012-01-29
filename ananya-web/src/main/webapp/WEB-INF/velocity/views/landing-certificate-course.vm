@@ -30,6 +30,6 @@
 </form>
 
 <form id="unregistered">
-    #repeat([$bundle.certificate.options.for.non.reg, $bundle.certificate.need.to.register],$regFlow)
+    #repeat([$bundle.certificate.options.for.non.reg, $bundle.certificate.need.to.register],$registerFlow)
 </form>
 #vxmlFooter()
