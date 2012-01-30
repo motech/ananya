@@ -24,10 +24,19 @@ public class LandingControllerTest {
         when(request.getContextPath()).thenReturn("/ananya");
     }
 
+
+    @Test
+    public void shouldReturnLandingWithGotoBasedOnEntryPathVariable(){
+        ModelAndView modelAndView = landingController.entryRouter(request, "jobaid");
+        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+        assertEquals("landing",modelAndView.getViewName());
+        assertEquals("/ananya/vxml/jobaid/enter/", nextFlow);
+    }
+
     @Test
     public void shouldPopulateRenderingPageToJobAidForJobAidCallFlow() {
 
-        ModelAndView modelAndView = landingController.forJobAid(request);
+        ModelAndView modelAndView = landingController.enterJobAid(request);
 
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
@@ -38,11 +47,12 @@ public class LandingControllerTest {
         assertEquals("/ananya/vxml/jobaid/register", registerFlow);
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
         assertEquals("/ananya/js/landing.js", landingJs);
+        assertEquals("jobaid-entry",modelAndView.getViewName());
     }
 
     @Test
     public void shouldPopulateRenderingPageToCertificationCourseForCourseCallFlow() {
-        ModelAndView modelAndView = landingController.forCertificateCourse(request);
+        ModelAndView modelAndView = landingController.enterCertificateCourse(request);
 
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
@@ -53,5 +63,6 @@ public class LandingControllerTest {
         assertEquals("/ananya/vxml/certificatecourse/register", registerFlow);
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
         assertEquals("/ananya/js/landing.js", landingJs);
+        assertEquals("certificate-course-entry",modelAndView.getViewName());
     }
 }
