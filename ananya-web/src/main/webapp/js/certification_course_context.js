@@ -10,6 +10,10 @@ var CertificationCourseContext = function(course, metadata) {
         this.hasFinishedLastLessonOfChapter = false;
     };
 
+    this.setScoresByChapter = function(scoresByChapter){
+        this.scoresByChapter = scoresByChapter;
+    };
+
     this.isAtCourseRoot = function() {
         return this.currentInteraction == course;
     };
@@ -127,6 +131,15 @@ var CertificationCourseContext = function(course, metadata) {
         }
         this.quizResponses[this.quizResponses.length] = this.scoreReport(input,false);
         return this.findAudio(this.currentInteraction, "incorrect");
+    };
+
+    this.currentChapterScore = function() {
+    var chapterScore = 0;
+       for(i = 0; i< this.quizResponses.length; i++){
+             if(this.quizResponses[i].result == true)
+                 chapterScore += 1;
+         }
+     return chapterScore;
     };
 
     this.scoreReport = function(response,result){

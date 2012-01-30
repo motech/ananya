@@ -259,22 +259,28 @@ describe("Certification Course Context", function() {
         expect(context.quizResponses.length).toEqual(0);
     });
 
-//    it("should calculate score for the current chapter", function() {
-//        context.quizResponses = new Array();
-//
-//        var quiz_1_in_chapter_2 = course.children[1].children[2];
-//        context.currentInteraction = quiz_1_in_chapter_2;
-//
-//        context.evaluateAndReturnAnswerExplanation(2);
-//
-//        context.lessonOrQuizFinished();
-//
-//        context.evaluateAndReturnAnswerExplanation(2);
-//
-//        context.lessonOrQuizFinished();
-//
-//        expect(context.currentChapterScore).toEqual(1);
-//    });
+    it("should build score report for the current chapter", function() {
+        context.quizResponses = new Array();
+
+        var quiz_1_in_chapter_2 = course.children[1].children[2];
+        context.currentInteraction = quiz_1_in_chapter_2;
+
+        context.evaluateAndReturnAnswerExplanation(2);
+
+        context.lessonOrQuizFinished();
+
+        context.evaluateAndReturnAnswerExplanation(2);
+
+        context.lessonOrQuizFinished();
+
+        expect(context.currentChapterScore()).toEqual(1);
+    });
+
+    it("should assign ScoresByChapter", function() {
+        context.setScoresByChapter({"0":2 ,"1":3 });
+        expect(context.scoresByChapter[0]).toEqual(2);
+        expect(context.scoresByChapter[1]).toEqual(3);
+    });
 });
 
 var assertQuizResponse = function(actual, expected) {

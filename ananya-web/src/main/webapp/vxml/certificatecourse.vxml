@@ -16,6 +16,7 @@
             var promptContext = new PromptContext(metaData);
 
             callContext.navigateToBookmark(callerData.bookmark);
+            callContext.setScoresByChapter(callerData.scoresByChapter);
           ]]>
     </script>
 
@@ -36,8 +37,10 @@
                     callContext.bookmark = null;
                 </script>
             </if>
-             <if cond="callContext.quizResponses.length > 0"> //TODO: remove when Queue is built
+             <if cond="callContext.quizResponses.length > 0">
                     <assign name="quizResponse" expr="callContext.quizResponses[callContext.quizResponses.length-1]"/>
+                    <assign name="callerId" expr="session.connection.remote.uri"/>
+
                     <data srcexpr="metaData.updateScoreUrl" method="post" namelist="callerId quizResponse"/>
              </if>
             <if cond="callContext.chapterFinished()">

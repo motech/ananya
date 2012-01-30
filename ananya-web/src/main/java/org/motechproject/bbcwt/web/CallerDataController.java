@@ -43,6 +43,6 @@ public class CallerDataController {
 
         ReportCard.Score score = new ReportCard.Score(chapterIndex, questionIndex, result);
         frontLineWorkerService.addScore(callerId, score);
-        return null;
+        return "<done/>";
     }
 }
