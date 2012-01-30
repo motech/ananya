@@ -1,10 +1,7 @@
 package org.motechproject.bbcwt.domain.tree;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.motechproject.bbcwt.domain.BaseCouchEntity;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.cmslite.api.model.Content;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.model.MotechBaseDataObject;
 
@@ -27,6 +24,14 @@ public class Node extends MotechBaseDataObject {
 
     public Node() {
         this(null);
+    }
+
+    public Node(String name, Map<String, String> data, List<StringContent> contents, List<Node> children) {
+        this.name = name;
+        this.data = data;
+        this.children = children;
+        this.contents = contents;
+        this.contentIds = new ArrayList<String>();
     }
 
     public Node(String name) {
