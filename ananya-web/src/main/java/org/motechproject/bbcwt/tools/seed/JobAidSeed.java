@@ -23,7 +23,7 @@ public class JobAidSeed {
     }
 
     private Node createJobAidTree() {
-        Node course = courseNode("jobaid", "jobaid/0001_welcome_job_aid.wav", "jobaid/0002_select_level.wav");
+        Node course = courseNode("JobAidCourse", "jobaid/0001_welcome_job_aid.wav", "jobaid/0002_select_level.wav");
         Node level1 = levelNode("level 1", "1", "jobaid/0003_select_chapter_1.1.wav");
         Node level2 = levelNode("level 2", "2", "jobaid/0004_select_chapter_1.2.wav");
         Node level3 = levelNode("level 3", "3", "jobaid/0005_select_chapter_1.3.wav");
