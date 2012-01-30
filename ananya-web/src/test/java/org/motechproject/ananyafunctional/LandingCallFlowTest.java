@@ -41,7 +41,7 @@ public class LandingCallFlowTest {
         assertEquals("/ananya/vxml/jobaid.vxml", links.item(0).getAttributes().item(0).getTextContent());
         assertEquals("/ananya/vxml/jobaid/register", links.item(1).getAttributes().item(0).getTextContent());
 
-        NodeList prompts = callFlow.readNode("/vxml/form/block/if/block/prompt/audio");
+        NodeList prompts = callFlow.readNode("/vxml/form/block/if/audio");
         assertEquals(3, prompts.getLength());
     }
 
