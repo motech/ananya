@@ -2,9 +2,10 @@
 describe("Certification Course Context", function() {
     var course, context;
     var audioFileBase = "./audio/";
+    var certificateCourseLocation = "certificatecourse/";
 
     beforeEach(function() {
-        var metadata = {"audioFileBase": audioFileBase};
+        var metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         context = new CertificationCourseContext(course, metadata);
         context.setScoresByChapter({});
@@ -56,27 +57,27 @@ describe("Certification Course Context", function() {
 
     it("should get the lesson content URI for current lesson", function() {
         context.currentInteraction = course.children[1].children[1];
-        expect(context.currentInteractionLesson()).toEqual("./audio/chapter_2_lesson_2.wav");
+        expect(context.currentInteractionLesson()).toEqual("./audio/certificatecourse/chapter_2_lesson_2.wav");
     });
 
     it("should get the quiz header URI for current chapter", function() {
         context.currentInteraction = course.children[1].children[1];
-        expect(context.currentInteractionQuizHeader()).toEqual("./audio/chapter_2_quizHeader.wav");
+        expect(context.currentInteractionQuizHeader()).toEqual("./audio/certificatecourse/chapter_2_quizHeader.wav");
     });
 
     it("should get the quiz question URI for current chapter", function() {
         context.currentInteraction = course.children[0].children[2];
-        expect(context.currentInteractionQuizQuestion()).toEqual("./audio/chapter_1_quiz_1.wav");
+        expect(context.currentInteractionQuizQuestion()).toEqual("./audio/certificatecourse/chapter_1_quiz_1.wav");
     });
 
     it("should get the menu content URI for the current interaction", function() {
-        expect(context.currentInteractionMenu()).toEqual("./audio/MenuCourse.wav");
+        expect(context.currentInteractionMenu()).toEqual("./audio/certificatecourse/MenuCourse.wav");
 
         context.currentInteraction = course.children[1];
-        expect(context.currentInteractionMenu()).toEqual("./audio/chapter_2_menu.wav");
+        expect(context.currentInteractionMenu()).toEqual("./audio/certificatecourse/chapter_2_menu.wav");
 
         context.currentInteraction = course.children[1].children[1];
-        expect(context.currentInteractionMenu()).toEqual("./audio/chapter_2_lesson_2_menu.wav");
+        expect(context.currentInteractionMenu()).toEqual("./audio/certificatecourse/chapter_2_lesson_2_menu.wav");
     });
 
     it("should go to the next lesson when a lesson is finished", function() {
@@ -165,7 +166,7 @@ describe("Certification Course Context", function() {
          var chapter_1 = course.children[0];
          context.currentInteraction = chapter_1;
 
-         context.scoreReportFinished();
+         context.startNextChapter();
 
          var lesson_1_in_chapter_2 = course.children[1].children[0];
          expect(context.currentInteraction).toEqual(lesson_1_in_chapter_2);
@@ -217,14 +218,14 @@ describe("Certification Course Context", function() {
         context.quizResponses = new Array();
         var quiz_1_in_chapter_2 = course.children[1].children[2];
         context.currentInteraction = quiz_1_in_chapter_2;
-        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_1_correct.wav");
+        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/certificatecourse/chapter_2_quiz_1_correct.wav");
     });
 
     it("should play wrong answer explanation if the response for a question is incorrect", function() {
         context.quizResponses = new Array();
         var quiz_2_in_chapter_2 = course.children[1].children[3];
         context.currentInteraction = quiz_2_in_chapter_2;
-        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/chapter_2_quiz_2_wrong.wav");
+        expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/certificatecourse/chapter_2_quiz_2_wrong.wav");
     });
     
     it("should append the quiz responses one question at a time.", function() {
@@ -316,7 +317,7 @@ describe("Certification Course Context", function() {
         var chapter1 = course.children[0];
         context.currentInteraction = chapter1;
 
-        expect(context.currentChapterScoreAudio()).toEqual("./audio/2_out_of_2.wav");
+        expect(context.currentChapterScoreAudio()).toEqual("./audio/certificatecourse/2_out_of_2.wav");
     });
 });
 

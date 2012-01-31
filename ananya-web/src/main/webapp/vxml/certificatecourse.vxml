@@ -120,6 +120,7 @@
             <goto next="#captureInputWithReprompt"/>
          </block>
     </form>
+
     <form id="quizPromptFinished">
         <block>
             <audio expr="callContext.evaluateAndReturnAnswerExplanation(promptContext.getInputFromUser())"/>
@@ -133,6 +134,7 @@
     <form id="tellScore">
         <block>
             <audio expr="callContext.currentChapterScoreAudio()"/>
+            <goto next="#endOfChapterMenu"/>
         </block>
     </form>
 
@@ -144,6 +146,7 @@
             <goto next="#captureInputWithReprompt"/>
         </block>
     </form>
+
     <form id="endOfChapterMenuPromptFinished">
         <block>
             <if cond="promptContext.getInputFromUser() == 1">
@@ -152,7 +155,7 @@
                 </script>
             <elseif cond="promptContext.getInputFromUser() == 2"/>
                 <script>
-                    callContext.scoreReportFinished();
+                    callContext.startNextChapter();
                 </script>
             </if>
             <goto next="#controller"/>

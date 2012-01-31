@@ -33,7 +33,7 @@ var CertificationCourseContext = function(course, metadata) {
         this.scoresByChapter[this.parentPositionIndex()] = 0;
     };
 
-    this.scoreReportFinished = function() {
+    this.startNextChapter = function() {
         this.hasFinishedLastLessonOfChapter = false;
         this.hasFinishedLastQuizOfChapter = false;
         this.currentInteraction = this.currentInteraction.siblingOnRight.children[0];
@@ -191,7 +191,7 @@ var CertificationCourseContext = function(course, metadata) {
     };
 
     this.audioFileBase = function() {
-        return this.metadata.audioFileBase;
+        return this.metadata.audioFileBase + this.metadata.certificateCourseAudioLocation;
     };
 
     this.init(course, metadata);
