@@ -7,6 +7,7 @@ describe("Certification Course Context", function() {
         var metadata = {"audioFileBase": audioFileBase};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         context = new CertificationCourseContext(course, metadata);
+        context.setScoresByChapter({});
     });
 
     it("should navigate to lesson if lesson bookmark exists", function() {
@@ -255,7 +256,6 @@ describe("Certification Course Context", function() {
     });
 
     it("should initialize an empty array for quiz responses at start", function() {
-//        expect(context.quizResponses).toBeDefined();
         expect(context.quizResponses.length).toEqual(0);
     });
 
@@ -280,6 +280,43 @@ describe("Certification Course Context", function() {
         context.setScoresByChapter({"0":2 ,"1":3 });
         expect(context.scoresByChapter[0]).toEqual(2);
         expect(context.scoresByChapter[1]).toEqual(3);
+    });
+
+    it("should initialize score for a chapter to zero when quiz starts.", function () {
+        context.setScoresByChapter({"0":2});
+        var lesson2InChapter2 = course.children[1].children[1];
+        context.currentInteraction = lesson2InChapter2;
+        context.quizHeaderFinished();
+        expect(context.scoresByChapter[1]).toEqual(0);
+    });
+
+    it("should increment current chapter score if the question is answer correctly", function () {
+        context.setScoresByChapter({"0":2});
+        var lesson2InChapter2 = course.children[1].children[1];
+        context.currentInteraction = lesson2InChapter2;
+        context.lessonOrQuizFinished();
+        context.quizHeaderFinished();
+        context.evaluateAndReturnAnswerExplanation(2);
+
+        expect(context.scoresByChapter[1]).toEqual(1);
+
+        context.lessonOrQuizFinished();
+        context.evaluateAndReturnAnswerExplanation(2);
+        expect(context.scoresByChapter[1]).toEqual(1);
+    });
+
+    it("should return total number of questions in the current chapter", function(){
+        var chapter1 = course.children[0];
+        context.currentInteraction =  chapter1;
+        expect(context.noOfquestionsInCurrentChapter()).toEqual(2);
+    });
+
+    it("should return the score audio file based on chapter score", function() {
+        context.setScoresByChapter({"0":2});
+        var chapter1 = course.children[0];
+        context.currentInteraction = chapter1;
+
+        expect(context.currentChapterScoreAudio()).toEqual("./audio/2_out_of_2.wav");
     });
 });
 

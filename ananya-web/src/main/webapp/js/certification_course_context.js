@@ -30,6 +30,7 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.quizHeaderFinished = function() {
         this.hasFinishedLastLessonOfChapter = false;
+        this.scoresByChapter[this.parentPositionIndex()] = 0;
     };
 
     this.scoreReportFinished = function() {
@@ -100,7 +101,7 @@ var CertificationCourseContext = function(course, metadata) {
         if (this.hasFinishedLastLessonOfChapter) {
             this.bookmark = {
                 "type" : "quizHeader",
-                "chapterIndex" : "" + this.currentInteraction.parent.positionIndex
+                "chapterIndex" : "" + this.parentPositionIndex()
             };
         }
         else {
@@ -115,7 +116,7 @@ var CertificationCourseContext = function(course, metadata) {
     this.lessonBookmark = function() {
         return {
             "type" : "lesson",
-            "chapterIndex" : "" + this.currentInteraction.parent.positionIndex ,
+            "chapterIndex" : "" + this.parentPositionIndex() ,
             "lessonIndex" : "" + this.currentInteraction.positionIndex
         };
     }
@@ -127,6 +128,7 @@ var CertificationCourseContext = function(course, metadata) {
     this.evaluateAndReturnAnswerExplanation = function(input) {
         if(this.currentInteraction.data.correctAnswer == input) {
             this.quizResponses[this.quizResponses.length] = this.scoreReport(input, true);
+            this.scoresByChapter[this.parentPositionIndex()]++;
             return this.findAudio(this.currentInteraction, "correct");
         }
         this.quizResponses[this.quizResponses.length] = this.scoreReport(input,false);
@@ -144,7 +146,7 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.scoreReport = function(response,result){
         return {
-            "chapterIndex" : "" + this.currentInteraction.parent.positionIndex,
+            "chapterIndex" : "" + this.parentPositionIndex(),
             "questionIndex" : "" + this.currentInteraction.positionIndex,
             "response" : response,
             "result" : result
@@ -159,6 +161,29 @@ var CertificationCourseContext = function(course, metadata) {
                 return contents[i];
         }
         return undefined;
+    };
+
+    this.currentChapterScoreAudio = function(){
+        return this.audioFileBase() + this.scoresByChapter[this.currentInteraction.positionIndex] + "_out_of_"+ this.noOfquestionsInCurrentChapter() +".wav";
+    };
+
+    this.noOfquestionsInCurrentChapter = function(){
+        var childrenOfCurrentChapter = this.currentInteraction.children;
+        var noOfChildren = childrenOfCurrentChapter.length;
+
+        var noOfQuestions = 0;
+        for(var i = 0; i < noOfChildren; i++) {
+            var child = childrenOfCurrentChapter[i];
+            if(child.data.type == "quiz") {
+                noOfQuestions++;
+            }
+        }
+        
+        return noOfQuestions;
+    };
+
+    this.parentPositionIndex = function(){
+        return this.currentInteraction.parent.positionIndex;
     };
 
     this.findAudio = function(interactionToUse, contentName) {

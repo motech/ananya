@@ -35,12 +35,12 @@ public class ReportCard {
     public Map<String, Integer> scoresByChapterIndex() {
         Map<String, Integer> scoresByChapterIndex = new HashMap();
 
-        Group<Score> groupByChapterIndex = group(scores(), by(on(Score.class).chapterIndex()));
-        for(String chapterIndex : groupByChapterIndex.keySet())
+        Group<Score> groupByChapter = group(scores(), by(on(Score.class).chapterIndex()));
+        for(String currentChapter : groupByChapter.keySet())
         {
-            final List<ReportCard.Score> scoresForChapterIndex = groupByChapterIndex.find(chapterIndex);
-            List<ReportCard.Score> correctAnswers = filter(new CorrectAnswerMatcher(), scoresForChapterIndex);
-            scoresByChapterIndex.put(chapterIndex, correctAnswers.size());
+            final List<ReportCard.Score> scoresForCurrentChapter = groupByChapter.find(currentChapter);
+            List<ReportCard.Score> correctAnswers = filter(new CorrectAnswerMatcher(), scoresForCurrentChapter);
+            scoresByChapterIndex.put(currentChapter, correctAnswers.size());
         }
         
         return scoresByChapterIndex;

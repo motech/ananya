@@ -132,11 +132,7 @@
 
     <form id="tellScore">
         <block>
-            <audio expr="callContext.currentInteractionQuizHeader()"/>
-                <script>
-                    callContext.quizHeaderFinished();
-                </script>
-            <goto next="#controller"/>
+            <audio expr="callContext.currentChapterScoreAudio()"/>
         </block>
     </form>
 
