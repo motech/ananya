@@ -215,28 +215,27 @@ describe("Certification Course Context", function() {
     });
 
     it("should play correct answer explanation if the response for a question is correct", function() {
-        context.quizResponses = new Array();
         var quiz_1_in_chapter_2 = course.children[1].children[2];
         context.currentInteraction = quiz_1_in_chapter_2;
         expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/certificatecourse/chapter_2_quiz_1_correct.wav");
     });
 
     it("should play wrong answer explanation if the response for a question is incorrect", function() {
-        context.quizResponses = new Array();
         var quiz_2_in_chapter_2 = course.children[1].children[3];
         context.currentInteraction = quiz_2_in_chapter_2;
         expect(context.evaluateAndReturnAnswerExplanation(2)).toEqual("./audio/certificatecourse/chapter_2_quiz_2_wrong.wav");
     });
-    
-    it("should append the quiz responses one question at a time.", function() {
-        context.quizResponses = new Array();
 
+    it("should define a variable to hold quiz responses when initialized", function() {
+        expect(context.quizResponse).toBeDefined();
+    });
+
+    it("should assign the quiz response when a question is answered.", function() {
         var quiz_1_in_chapter_2 = course.children[1].children[2];
         context.currentInteraction = quiz_1_in_chapter_2;
         context.evaluateAndReturnAnswerExplanation(2);
 
-        expect(context.quizResponses.length).toEqual(1);
-        assertQuizResponse(context.quizResponses[0], {
+        assertQuizResponse(context.quizResponse, {
                                                          "chapterIndex" : "1",
                                                          "questionIndex" : "2",
                                                          "response" : 2,
@@ -247,34 +246,12 @@ describe("Certification Course Context", function() {
         context.currentInteraction = quiz_2_in_chapter_2;
         context.evaluateAndReturnAnswerExplanation(2);
 
-        expect(context.quizResponses.length).toEqual(2);
-        assertQuizResponse(context.quizResponses[1], {
+        assertQuizResponse(context.quizResponse, {
                                                          "chapterIndex" : "1",
                                                          "questionIndex" : "3",
                                                          "response" : 2,
                                                          "result" : false
                                                      });
-    });
-
-    it("should initialize an empty array for quiz responses at start", function() {
-        expect(context.quizResponses.length).toEqual(0);
-    });
-
-    it("should build score report for the current chapter", function() {
-        context.quizResponses = new Array();
-
-        var quiz_1_in_chapter_2 = course.children[1].children[2];
-        context.currentInteraction = quiz_1_in_chapter_2;
-
-        context.evaluateAndReturnAnswerExplanation(2);
-
-        context.lessonOrQuizFinished();
-
-        context.evaluateAndReturnAnswerExplanation(2);
-
-        context.lessonOrQuizFinished();
-
-        expect(context.currentChapterScore()).toEqual(1);
     });
 
     it("should assign ScoresByChapter", function() {

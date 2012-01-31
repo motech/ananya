@@ -5,7 +5,7 @@ var CertificationCourseContext = function(course, metadata) {
         this.currentInteraction = course;
         this.metadata = metadata;
         this.bookmark = null;
-        this.quizResponses = new Array();
+        this.quizResponse = null;
         this.hasFinishedLastQuizOfChapter = false;
         this.hasFinishedLastLessonOfChapter = false;
     };
@@ -127,21 +127,12 @@ var CertificationCourseContext = function(course, metadata) {
 
     this.evaluateAndReturnAnswerExplanation = function(input) {
         if(this.currentInteraction.data.correctAnswer == input) {
-            this.quizResponses[this.quizResponses.length] = this.scoreReport(input, true);
+            this.quizResponse = this.scoreReport(input, true);
             this.scoresByChapter[this.parentPositionIndex()]++;
             return this.findAudio(this.currentInteraction, "correct");
         }
-        this.quizResponses[this.quizResponses.length] = this.scoreReport(input,false);
+        this.quizResponse = this.scoreReport(input,false);
         return this.findAudio(this.currentInteraction, "incorrect");
-    };
-
-    this.currentChapterScore = function() {
-    var chapterScore = 0;
-       for(i = 0; i< this.quizResponses.length; i++){
-             if(this.quizResponses[i].result == true)
-                 chapterScore += 1;
-         }
-     return chapterScore;
     };
 
     this.scoreReport = function(response,result){

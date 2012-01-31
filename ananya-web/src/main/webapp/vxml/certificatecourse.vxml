@@ -37,8 +37,8 @@
                     callContext.bookmark = null;
                 </script>
             </if>
-             <if cond="callContext.quizResponses.length > 0">
-                    <assign name="quizResponse" expr="callContext.quizResponses[callContext.quizResponses.length-1]"/>
+             <if cond="callContext.quizResponse!=null">
+                    <assign name="quizResponse" expr="callContext.quizResponse"/>
                     <assign name="callerId" expr="session.connection.remote.uri"/>
 
                     <data srcexpr="metaData.updateScoreUrl" method="post" namelist="callerId quizResponse"/>
