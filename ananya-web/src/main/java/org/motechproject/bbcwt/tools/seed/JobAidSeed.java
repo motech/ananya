@@ -60,25 +60,25 @@ public class JobAidSeed {
             level4.addChild(level);
 
 
-        addLessonsToChapter(level1Chap1, "0001_prep_for_child_birth", "0002_ifa&tt", "0003_planning", "0004_planning&saving");
+        addLessonsToChapter(level1Chap1, "0001_prep_for_child_birth", "0002_ifa_and_tt", "0003_planning", "0004_planning_and_saving");
         addLessonsToChapter(level1Chap2, "0005_inst_delivery", "0006_six_cleans", "0007_emereg_for_mother");
-        addLessonsToChapter(level1Chap3, "0009_cord_care", "0010_thermal_care", "0011_early_initiation_bf", "0012_pnc_visits");
-        addLessonsToChapter(level1Chap4, "0017_need_fp", "0018_spacing&y", "0019_limiting&y", "0020_options_ppfp");
+        addLessonsToChapter(level1Chap3, "0008_handling_newborn", "0009_cord_care", "0010_thermal_care", "0011_early_initiation_bf");
+        addLessonsToChapter(level1Chap4, "0017_need_fp", "0018_spacing_and_y", "0019_limiting_and_y", "0020_options_ppfp");
 
-        addLessonsToChapter(level2Chap1, "0010_thermal_care", "0011_early_initiation_bf", "0012_pnc_visits", "0013_emerg_for_mother_after_child_birth");
-        addLessonsToChapter(level2Chap2, "0008_handling_newborn", "0014_danger_signs_preterm_baby", "0015_kangaroo_care_preterm_baby", "0016_danger_signs_sepsis");
-        addLessonsToChapter(level2Chap3, "0028_exclusive_bf", "0029_howto_bf", "0025_immonization_imp&res", "0026_immunization_doses");
-        addLessonsToChapter(level2Chap4, "0017_need_fp", "0020_options_ppfp", "0035_hand_Washing_risk_perc", "0036_hand_)washing_when&how");
+        addLessonsToChapter(level2Chap1, "0009_cord_care", "0010_thermal_care", "0011_early_initiation_bf", "0012_pnc_visits");
+        addLessonsToChapter(level2Chap2, "0013_emerg_for_mother_after_child_birth", "0014_danger_signs_preterm_baby", "0015_kangaroo_care_preterm_baby", "0016_danger_signs_sepsis");
+        addLessonsToChapter(level2Chap3, "0028_exclusive_bf", "0029_howto_bf", "0025_immonization_imp_and_res", "0026_immunization_doses");
+        addLessonsToChapter(level2Chap4, "0017_need_fp", "0020_options_ppfp", "0035_hand_Washing_risk_perc", "0036_hand_washing_when_and_how");
 
-        addLessonsToChapter(level3Chap1, "0017_need_fp", "0018_spacing&y", "0019_limiting&y", "0020_options_ppfp");
+        addLessonsToChapter(level3Chap1, "0017_need_fp", "0018_spacing_and_y", "0019_limiting_and_y", "0020_options_ppfp");
         addLessonsToChapter(level3Chap2, "0021_tubal_ligation", "0022_iud", "0015_kangaroo_care_preterm_baby", "0016_danger_signs_sepsis");
         addLessonsToChapter(level3Chap3, "0028_exclusive_bf", "0029_howto_bf", "0030_benefits_mother_bf", "0031_comp_feeding");
-        addLessonsToChapter(level3Chap4, "0025_immonization_imp&res", "0026_immunization_doses", "0027_immunization_comp", "0028_exclusive_bf");
+        addLessonsToChapter(level3Chap4, "0025_immonization_imp_and_res", "0026_immunization_doses", "0027_immunization_comp", "0028_exclusive_bf");
 
-        addLessonsToChapter(level4Chap1, "0017_need_fp", "0018_spacing&y", "0019_limiting&y", "0020_options_ppfp");
-        addLessonsToChapter(level4Chap2, "0021_tubal_ligation", "0022_iud", "0023_injectable", "0024_condoms&ocp");
+        addLessonsToChapter(level4Chap1, "0017_need_fp", "0018_spacing_and_y", "0019_limiting_and_y", "0020_options_ppfp");
+        addLessonsToChapter(level4Chap2, "0021_tubal_ligation", "0022_iud", "0023_injectable", "0024_condoms_and_ocp");
         addLessonsToChapter(level4Chap3, "0031_comp_feeding", "0032_active_feeding", "0033_quality_food_hand_washing", "0034_quantity_food_hand_washing");
-        addLessonsToChapter(level4Chap4, "0025_immonization_imp&res", "0027_immunization_comp", "0035_hand_Washing_risk_perc", "0036_hand_)washing_when&how");
+        addLessonsToChapter(level4Chap4, "0025_immonization_imp_and_res", "0027_immunization_comp", "0035_hand_Washing_risk_perc", "0036_hand_washing_when_and_how");
 
         return course;
     }
@@ -122,6 +122,5 @@ public class JobAidSeed {
         List<StringContent> contents = Arrays.asList(new StringContent("hindi", "lesson", detail));
         return new Node(name, data, contents, new ArrayList<Node>());
     }
-
 
 }
