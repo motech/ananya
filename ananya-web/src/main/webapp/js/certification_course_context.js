@@ -164,7 +164,10 @@ var CertificationCourseContext = function(course, metadata) {
     };
 
     this.currentChapterScoreAudio = function(){
-        return this.audioFileBase() + this.scoresByChapter[this.currentInteraction.positionIndex] + "_out_of_"+ this.noOfquestionsInCurrentChapter() +".wav";
+        var chapterNumber = (this.currentInteraction.positionIndex + 1);
+        var currentChapterScore = this.scoresByChapter[this.currentInteraction.positionIndex];
+
+        return this.audioFileBase() + "chapter" + chapterNumber + "_"  + currentChapterScore + "_out_of_"+ this.noOfquestionsInCurrentChapter() +".wav";
     };
 
     this.noOfquestionsInCurrentChapter = function(){

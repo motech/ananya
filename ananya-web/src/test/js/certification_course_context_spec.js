@@ -312,12 +312,12 @@ describe("Certification Course Context", function() {
         expect(context.noOfquestionsInCurrentChapter()).toEqual(2);
     });
 
-    it("should return the score audio file based on chapter score", function() {
+    it("should return the score audio file based on chapter and chapter score", function() {
         context.setScoresByChapter({"0":2});
         var chapter1 = course.children[0];
         context.currentInteraction = chapter1;
 
-        expect(context.currentChapterScoreAudio()).toEqual("./audio/certificatecourse/2_out_of_2.wav");
+        expect(context.currentChapterScoreAudio()).toEqual("./audio/certificatecourse/chapter1_2_out_of_2.wav");
     });
 });
 
