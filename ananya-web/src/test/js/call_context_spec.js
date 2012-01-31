@@ -92,12 +92,6 @@ describe("Call Context", function() {
         expect(callContext.isAtALesson()).toEqual(true);
     });
 
-    it("should return the introduction for the current interaction", function () {
-        expect(callContext.currentInteractionIntroduction()).toEqual("./js/Introduction.wav");
-        callContext.handleInput(1);
-        expect(callContext.currentInteractionIntroduction()).toEqual("./js/IntroductionLevel1.wav");
-    });
-
     it("should return the menu for the current interaction", function () {
         expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevels.wav");
         callContext.handleInput(1);
@@ -218,5 +212,13 @@ describe("Call Context", function() {
         callContext.navigateTo("1252")
         expect(callContext.currentInteraction).toEqual(level1_chapter2);
 
+    });
+
+    it("should play next introduction only if introduction present and current interaction is not last lesson", function(){
+         var level1 = course.children[0];
+         callContext.handleInput(1);
+         expect(callContext.currentInteraction).toEqual(level1);
+
+        expect(callContext.shouldPlayIntroduction()).toEqual(false);
     });
 })

@@ -52,6 +52,10 @@ var CallContext = function(course, metadata) {
         return this.audioFileBase() + this.findContentByName("introduction").value;
     };
 
+    this.shouldPlayIntroduction = function() {
+        return this.findContentByName("introduction") != null && this.shouldPlayNextIntroduction;
+    };
+
     this.currentInteractionMenu = function() {
         return this.audioFileBase() + this.findContentByName("menu").value;
     };
@@ -72,8 +76,8 @@ var CallContext = function(course, metadata) {
     this.findContentByName = function(contentName) {
         var contents = this.currentInteraction.contents
         var contentLength = contents.length
-        for(i = 0; i< contentLength; i++){
-            if(contents[i].name == contentName)
+        for (i = 0; i < contentLength; i++) {
+            if (contents[i].name == contentName)
                 return contents[i];
         }
         return undefined;

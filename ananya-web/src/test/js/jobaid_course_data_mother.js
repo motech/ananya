@@ -28,11 +28,6 @@ function jobAidCourseWithOneLesson(){
                       "name" : "menu",
                       "value" : "MenuLevel1Chapters.wav",
                       "language" : "hindi"
-                  },
-                  {
-                      "name" : "introduction",
-                      "value" :"IntroductionLevel1.wav",
-                      "language" : "hindi"
                   }
                ],
                "children":[
@@ -109,11 +104,6 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                         "name": "menu",
                         "value": "MenuLevel1Chapters.wav",
                         "language": "hindi"
-                    },
-                    {
-                        "name": "introduction",
-                        "value": "IntroductionLevel1.wav",
-                        "language": "hindi"
                     }
                 ],
                 "children": [
@@ -150,7 +140,7 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                     }
                                 ],
                                  "children" : [
-                                 ],
+                                 ]
                             },
                             {
                                 "name": "Level 1 Chapter 1 Lesson 2",
@@ -166,7 +156,7 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                     }
                                 ],
                                  "children" : [
-                                 ],
+                                 ]
                             }
                         ]
                     },
@@ -219,7 +209,7 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                     }
                                 ],
                                  "children" : [
-                                 ],
+                                 ]
                             }
                         ]
                     }
@@ -235,11 +225,6 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                     {
                         "name": "menu",
                         "value": "MenuLevel2Chapters.wav",
-                        "language": "hindi"
-                    },
-                    {
-                        "name": "introduction",
-                        "value": "IntroductionLevel2.wav",
                         "language": "hindi"
                     }
                 ],

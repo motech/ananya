@@ -37,7 +37,7 @@
     </form>
 
     <form id="genericLevel">
-        <block name="introduction" cond="callContext.shouldPlayNextIntroduction">
+        <block name="introduction" cond="callContext.shouldPlayIntroduction()">
             <prompt bargein="false">
                 <audio expr="callContext.currentInteractionIntroduction()"/>
             </prompt>
