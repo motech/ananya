@@ -7,7 +7,8 @@ var CertificateCourseController = function(course, metadata) {
     this.init = function(course, metadata) {
         CertificateCourse.interactions["welcome"] = new WelcomeInteraction(metadata, course);
         CertificateCourse.interactions["startCourseOption"] = new StartCourseOption(metadata, course);
-        
+        CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course);
+        this.promptContext = new PromptContext(metadata);
         this.setInteraction(CertificateCourse.interactions["welcome"]);
     };
 
@@ -33,5 +34,25 @@ var CertificateCourseController = function(course, metadata) {
         this.state = "init";
     };
 
+    this.gotNoInput = function() {
+        this.promptContext.gotNoInput();
+        if(this.promptContext.hasExceededMaxNoInputs())
+        {
+            this.setInteraction(this.interaction.continueWithoutInput());
+        }
+    }
+
+    this.processInput = function(input) {
+        var nextInteraction;
+        if(this.interaction.validateInput(input)) {
+            nextInteraction = this.interaction.processInputAndReturnNextInteraction(input);
+        }
+        else {
+            nextInteraction = new InvalidInputInteraction(this.interaction, metadata);
+        }
+        this.setInteraction(nextInteraction);
+    }
+
     this.init(course, metadata);
 };
+

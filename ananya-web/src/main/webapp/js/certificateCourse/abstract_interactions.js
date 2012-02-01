@@ -48,6 +48,15 @@ AbstractCourseInteraction.prototype.nextInteraction = function() {
         throw "Please extend nextInteraction in your class";
 };
 
+AbstractCourseInteraction.prototype.processInputAndReturnNextInteraction = function() {
+        throw "Please extend processInputAndReturnNextInteraction in your class";
+};
+
+
+AbstractCourseInteraction.prototype.continueWithoutInput = function() {
+        throw "Please extend continueWithoutInput in your class";
+};
+
 AbstractCourseInteraction.prototype.resumeCall = function() {
         throw "Please extend resumeCall in your class";
 };

@@ -7,6 +7,7 @@
     <script src="../dynamic/js/certification_course_data.js"/>
     <!--<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>-->
 
+    <script src="../js/prompt_context.js"/>
     <script src="../js/certificateCourse/abstract_interactions.js"/>
     <script src="../js/certificateCourse/interactions.js"/>
     <script src="../js/certificateCourse/course_state.js"/>
@@ -68,22 +69,27 @@
             </noinput>
 
             <filled>
+                <script>
+                    controller.processInput(inputFromUser);
+                </script>
+                <goto next="#controller"/>
+                <!--<if cond="promptContext.inputEnteredIsValid(inputFromUser)">-->
+                    <!--<script>-->
+                        <!--promptContext.setInputFromUser(inputFromUser);-->
+                    <!--</script>-->
+                    <!--<goto expr="'#' + promptContext.formToProceedTo()"/>-->
+                <!--<else/>-->
+                    <!--<goto nextitem="invalidInputAction"/>-->
+                <!--</if>-->
             </filled>
         </field>
 
         <block name="noInputAction">
             <script>
-                promptContext.gotNoInput();
+                controller.gotNoInput();
             </script>
-            <if cond="promptContext.hasExceededMaxNoInputs()">
-                <audio expr="promptContext.audioForNoInputDisconnect()"/>
-                <disconnect/>
-                <else/>
-                <clear/>
-                <audio expr="promptContext.audioForNoInputRetry()"/>
-                <goto nextitem="inputFromUser"/>
-            </if>
+            <clear/>
+            <goto next="#controller"/>
         </block>
-
     </form>
 </vxml>
