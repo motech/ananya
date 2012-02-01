@@ -7,32 +7,32 @@
     #var("panchayatNotRecorded","true")
 
     #dtmf("designation",
-        $bundle.register.designation.say,
+        "${bundle.audioFileBase}${bundle.register.designation.say}",
         $designations)
 
     #record("name",
-        $bundle.register.name.say,
-        $bundle.register.name.pb,
-        $bundle.register.name.noinput,
-        $bundle.register.name.repeat)
+        "${bundle.audioFileBase}${bundle.register.name.say}",
+        "${bundle.audioFileBase}${bundle.register.name.pb}",
+        "${bundle.audioFileBase}${bundle.register.name.noinput}",
+        "${bundle.audioFileBase}${bundle.register.name.repeat}")
 
     #record("district",
-        $bundle.register.district.say,
-        $bundle.register.district.pb,
-        $bundle.register.district.noinput,
-        $bundle.register.district.repeat)
+        "${bundle.audioFileBase}${bundle.register.district.say}",
+        "${bundle.audioFileBase}${bundle.register.district.pb}",
+        "${bundle.audioFileBase}${bundle.register.district.noinput}",
+        "${bundle.audioFileBase}${bundle.register.district.repeat}")
 
     #record("block",
-        $bundle.register.block.say,
-        $bundle.register.block.pb,
-        $bundle.register.block.noinput,
-        $bundle.register.block.repeat)
+        "${bundle.audioFileBase}${bundle.register.block.say}",
+        "${bundle.audioFileBase}${bundle.register.block.pb}",
+        "${bundle.audioFileBase}${bundle.register.block.noinput}",
+        "${bundle.audioFileBase}${bundle.register.block.repeat}")
 
     #record("panchayat",
-        $bundle.register.panchayat.say,
-        $bundle.register.panchayat.pb,
-        $bundle.register.panchayat.noinput,
-        $bundle.register.panchayat.repeat)
+        "${bundle.audioFileBase}${bundle.register.panchayat.say}",
+        "${bundle.audioFileBase}${bundle.register.panchayat.pb}",
+        "${bundle.audioFileBase}${bundle.register.panchayat.noinput}",
+        "${bundle.audioFileBase}${bundle.register.panchayat.repeat}")
 
     <block>
         <data src="$bundle.register.submit.url"
@@ -40,7 +40,7 @@
               method="post"
               namelist="session.connection.local.uri designation name district block panchayat"/>
 
-        #play($bundle.register.complete)
+        #play("${bundle.audioFileBase}${bundle.register.complete}")
 
         <goto next="$nextFlow"/>
     </block>

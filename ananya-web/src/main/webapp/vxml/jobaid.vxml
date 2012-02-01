@@ -69,10 +69,6 @@
                 </rule>
             </grammar>
 
-            <noinput>
-                <goto nextitem="noInputAction"/>
-            </noinput>
-
             <filled>
                 <if cond="callContext.isValidInput(nextLevelSelection)">
                     <script>
@@ -85,28 +81,13 @@
             </filled>
         </field>
 
-        <block name="noInputAction">
-            <script>
-                promptContext.gotNoInput();
-            </script>
-            <if cond="promptContext.hasExceededMaxNoInputs()">
-                <audio expr="promptContext.audioForNoInputDisconnect()"/>
-                <disconnect/>
-                <else/>
-                <clear/>
-                <audio expr="promptContext.audioForNoInputRetry()"/>
-                <goto nextitem="nextLevelSelection"/>
-            </if>
-        </block>
-
         <block name="invalidInputAction">
             <script>
                 promptContext.gotInvalidInput();
             </script>
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
-                <audio expr="promptContext.audioForInvalidInputDisconnect()"/>
                 <disconnect/>
-                <else/>
+            <else/>
                 <audio expr="promptContext.audioForInvalidInputRetry()"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>

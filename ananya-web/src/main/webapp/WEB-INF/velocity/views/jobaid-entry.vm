@@ -5,9 +5,9 @@
         <if cond="callerData.isRegistered == 'true'">
             <goto next="$nextFlow"/>
             <else/>
-            #play($bundle.jobaid.welcome)
-            #play($bundle.jobaid.detail)
-            #play($bundle.jobaid.need.to.register)
+            #play("${bundle.audioFileBase}${bundle.jobaid.welcome}")
+            #play("${bundle.audioFileBase}${bundle.jobaid.detail}")
+            #play("${bundle.audioFileBase}${bundle.jobaid.need.to.register}")
             <goto next="$registerFlow"/>
         </if>
     </block>
