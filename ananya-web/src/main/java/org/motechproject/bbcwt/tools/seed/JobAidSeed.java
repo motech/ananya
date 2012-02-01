@@ -12,7 +12,6 @@ import java.util.*;
 import static java.util.Arrays.asList;
 
 @Component
-
 public class JobAidSeed {
     @Autowired
     private AllNodes allNodes;
