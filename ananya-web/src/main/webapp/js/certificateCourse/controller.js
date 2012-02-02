@@ -17,6 +17,9 @@ var CertificateCourseController = function(course, metadata) {
     };
 
     this.nextAction = function() {
+        if(this.interaction.disconnect && this.interaction.disconnect()) {
+            return "#disconnect";
+        }
         if(this.interaction.doesTakeInput()) {
             return "#collectInput";
         }
@@ -31,13 +34,13 @@ var CertificateCourseController = function(course, metadata) {
 
     this.setInteraction = function(interaction) {
         this.interaction = interaction;
-        this.state = "init";
     };
 
     this.gotNoInput = function() {
         this.promptContext.gotNoInput();
         if(this.promptContext.hasExceededMaxNoInputs())
         {
+            this.promptContext.resetCounts();
             this.setInteraction(this.interaction.continueWithoutInput());
         }
     }
@@ -45,10 +48,21 @@ var CertificateCourseController = function(course, metadata) {
     this.processInput = function(input) {
         var nextInteraction;
         if(this.interaction.validateInput(input)) {
+            this.promptContext.resetCounts();
             nextInteraction = this.interaction.processInputAndReturnNextInteraction(input);
         }
         else {
-            nextInteraction = new InvalidInputInteraction(this.interaction, metadata);
+            this.promptContext.gotInvalidInput();
+            if(this.promptContext.hasExceededMaxInvalidInputs()) {
+                nextInteraction = {
+                                    disconnect : function() {
+                                                    return true;
+                                                  }
+                                  };
+            }
+            else {
+                nextInteraction = new InvalidInputInteraction(this.interaction, metadata);
+            }
         }
         this.setInteraction(nextInteraction);
     }

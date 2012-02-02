@@ -73,14 +73,6 @@
                     controller.processInput(inputFromUser);
                 </script>
                 <goto next="#controller"/>
-                <!--<if cond="promptContext.inputEnteredIsValid(inputFromUser)">-->
-                    <!--<script>-->
-                        <!--promptContext.setInputFromUser(inputFromUser);-->
-                    <!--</script>-->
-                    <!--<goto expr="'#' + promptContext.formToProceedTo()"/>-->
-                <!--<else/>-->
-                    <!--<goto nextitem="invalidInputAction"/>-->
-                <!--</if>-->
             </filled>
         </field>
 
@@ -90,6 +82,12 @@
             </script>
             <clear/>
             <goto next="#controller"/>
+        </block>
+    </form>
+
+    <form id="disconnect">
+        <block>
+            <disconnect/>
         </block>
     </form>
 </vxml>
