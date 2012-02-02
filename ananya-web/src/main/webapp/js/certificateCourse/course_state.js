@@ -1,20 +1,18 @@
 var CourseState = function() {
-    this.setState = function(chapterIndex, lessonIndex, questionIndex) {
+    this.setState = function(chapterIndex, lessonOrQuestionIndex, type) {
         this.chapterIndex = chapterIndex;
-        this.lessonIndex = lessonIndex;
-        this.questionIndex = questionIndex;
+        this.lessonOrQuestionIndex = lessonOrQuestionIndex;
+        this.type = type;
     };
 
     this.setChapterIndex = function(chapterIndex) {
         this.chapterIndex = chapterIndex;
     };
 
-    this.setLessonIndex = function(lessonIndex) {
-        this.lessonIndex = lessonIndex;
+    this.setLessonOrQuestionIndex = function(lessonOrQuestionIndex) {
+        this.lessonOrQuestionIndex = lessonOrQuestionIndex;
     };
 
-    this.setQuestionIndex = function(questionIndex) {
-        this.questionIndex = questionIndex;
-    };
+    this.setState(null, null, null);
 }
 

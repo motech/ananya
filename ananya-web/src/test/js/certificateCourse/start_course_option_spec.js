@@ -15,13 +15,6 @@ describe("Start course option", function() {
         expect(startCourseOption.playAudio()).toEqual("./audio/certificatecourse/MenuCourse.wav");
     });
 
-//    it("should return start course option as the next interaction", function() {
-//        var startCourseOption = new StartCourseOption(null, null);
-//        CertificateCourse.interactions["startCourseOption"] = startCourseOption;
-//
-//        expect(welcomeInteraction.nextInteraction()).toEqual(startCourseOption);
-//    });
-
     it("should take input", function() {
         expect(startCourseOption.doesTakeInput()).toEqual(true);
     });
@@ -40,9 +33,9 @@ describe("Start course option", function() {
     });
 
     it("should return lesson interaction on receiving input 2", function() {
-        var lessonInteraction = new LessonInteraction(null, null);
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        var startNextChapterInteraction = new StartNextChapter();
+        CertificateCourse.interactions["startNextChapter"] = startNextChapterInteraction;
 
-        expect(startCourseOption.processInputAndReturnNextInteraction(2)).toEqual(lessonInteraction);
+        expect(startCourseOption.processInputAndReturnNextInteraction(2)).toEqual(startNextChapterInteraction);
     });
 });

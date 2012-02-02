@@ -146,4 +146,30 @@ describe("Certificate course controller spec", function() {
         controller.processInput(1);
         expect(controller.interaction.disconnect()).toEqual(true);
     });
+
+    it("should quietly execute current interaction and all subsequent interactions, if current interaction is does not need phone", function() {
+        var phoneInteraction = {
+                                    
+        };
+        var noPhoneInteraction3 = {
+                                    processSilentlyAndReturnNextState : function() {return phoneInteraction;}
+        };
+        var noPhoneInteraction2 = {
+                                    processSilentlyAndReturnNextState : function() {return noPhoneInteraction3;}
+        };
+        var noPhoneInteraction1 = {
+                                    processSilentlyAndReturnNextState : function() {return noPhoneInteraction2;}
+        };
+
+        spyOn(noPhoneInteraction1, "processSilentlyAndReturnNextState").andCallThrough();
+        spyOn(noPhoneInteraction2, "processSilentlyAndReturnNextState").andCallThrough();
+        spyOn(noPhoneInteraction3, "processSilentlyAndReturnNextState").andCallThrough();
+
+        controller.setInteraction(noPhoneInteraction1);
+
+        expect(noPhoneInteraction1.processSilentlyAndReturnNextState).toHaveBeenCalled();
+        expect(noPhoneInteraction2.processSilentlyAndReturnNextState).toHaveBeenCalled();
+        expect(noPhoneInteraction3.processSilentlyAndReturnNextState).toHaveBeenCalled();
+        expect(controller.interaction).toEqual(phoneInteraction);
+    });
 });

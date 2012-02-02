@@ -25,6 +25,7 @@ var AbstractCourseInteraction = function(metadata) {
     this.init(metadata);
 };
 
+//TODO:Rename this to processAndPlayAudio or something of that sort
 AbstractCourseInteraction.prototype.playAudio = function() {
         throw "Please extend playAudio method in your class before starting to call it";
 };

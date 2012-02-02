@@ -5,11 +5,18 @@ CertificateCourse.interactions = new Array();
 
 var CertificateCourseController = function(course, metadata) {
     this.init = function(course, metadata) {
+        this.promptContext = new PromptContext(metadata);
+        this.courseState = new CourseState();
+        this.initializeInteractionsArray(metadata, course, this.courseState);
+        this.setInteraction(CertificateCourse.interactions["welcome"]);
+    };
+
+    this.initializeInteractionsArray = function(metadata, course, courseState) {
         CertificateCourse.interactions["welcome"] = new WelcomeInteraction(metadata, course);
         CertificateCourse.interactions["startCourseOption"] = new StartCourseOption(metadata, course);
+        CertificateCourse.interactions["startNextChapter"] = new StartNextChapter(metadata, course, courseState)
         CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course);
-        this.promptContext = new PromptContext(metadata);
-        this.setInteraction(CertificateCourse.interactions["welcome"]);
+        CertificateCourse.interactions["endOfCourse"] = {};
     };
 
     this.playAudio = function() {
@@ -34,7 +41,14 @@ var CertificateCourseController = function(course, metadata) {
 
     this.setInteraction = function(interaction) {
         this.interaction = interaction;
+        this.quietlyProcessTillAPhoneInteractionIsNeeded();
     };
+
+    this.quietlyProcessTillAPhoneInteractionIsNeeded = function() {
+        while(this.interaction && this.interaction.processSilentlyAndReturnNextState) {
+            this.interaction = this.interaction.processSilentlyAndReturnNextState();
+        }
+    }
 
     this.gotNoInput = function() {
         this.promptContext.gotNoInput();

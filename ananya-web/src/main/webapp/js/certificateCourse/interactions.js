@@ -65,7 +65,7 @@ StartCourseOption.prototype.processInputAndReturnNextInteraction = function(inpu
     if(input == 1) {
         return CertificateCourse.interactions["welcome"];
     }
-    return CertificateCourse.interactions["lesson"];
+    return CertificateCourse.interactions["startNextChapter"];
 }
 
 /*
@@ -110,3 +110,38 @@ InvalidInputInteraction.prototype.doesTakeInput = function() {
 InvalidInputInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;
 }
+
+/*
+    StartNextChapter
+*/
+//TODO: This should extend from something called silent interaction.
+var StartNextChapter = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        this.course = course;
+    }
+
+    this.processSilentlyAndReturnNextState = function() {
+        var nextState;
+        if(courseState.chapterIndex == null) {
+            courseState.setChapterIndex(0);
+            courseState.setLessonOrQuestionIndex(0);
+            nextState = CertificateCourse.interactions["lesson"];
+        }
+        else {
+            var currentChapterIndex = courseState.chapterIndex;
+            var currentLessonOrQuestionIndex = courseState.lessonOrQuestionIndex;
+            var maxChapterIndex = course.children.length-1;
+            if(currentChapterIndex >= maxChapterIndex) {
+               nextState = CertificateCourse.interactions["endOfCourse"];
+            }
+            else {
+                courseState.chapterIndex++;
+                courseState.setLessonOrQuestionIndex(0);
+                nextState = CertificateCourse.interactions["lesson"];
+            }
+        }
+        return nextState;
+    }
+
+    this.init(metadata, course, courseState);
+};
