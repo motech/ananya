@@ -86,6 +86,9 @@
         <noinput>
             <audio src="$askWav"/>
         </noinput>
+        <nomatch>
+            <audio src="$askWav"/>
+        </nomatch>
         <filled>
             <assign name="${field}NotRecorded" expr="false"/>
         </filled>
