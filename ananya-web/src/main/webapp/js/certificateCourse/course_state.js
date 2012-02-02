@@ -14,5 +14,5 @@ var CourseState = function() {
     };
 
     this.setState(null, null, null);
-}
+};
 

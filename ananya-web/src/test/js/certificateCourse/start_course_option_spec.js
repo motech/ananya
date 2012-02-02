@@ -32,10 +32,17 @@ describe("Start course option", function() {
         expect(startCourseOption.processInputAndReturnNextInteraction(1)).toEqual(welcomeInteraction);
     });
 
-    it("should return lesson interaction on receiving input 2", function() {
+    it("should return start next chapter interaction on receiving input 2", function() {
         var startNextChapterInteraction = new StartNextChapter();
         CertificateCourse.interactions["startNextChapter"] = startNextChapterInteraction;
 
         expect(startCourseOption.processInputAndReturnNextInteraction(2)).toEqual(startNextChapterInteraction);
+    });
+
+    it("should return start next chapter interaction on receiving no input", function () {
+        var startNextChapterInteraction = new StartNextChapter();
+        CertificateCourse.interactions["startNextChapter"] = startNextChapterInteraction;
+
+        expect(startCourseOption.continueWithoutInput()).toEqual(startNextChapterInteraction);
     });
 });

@@ -147,7 +147,7 @@ describe("Certificate course controller spec", function() {
         expect(controller.interaction.disconnect()).toEqual(true);
     });
 
-    it("should quietly execute current interaction and all subsequent interactions, if current interaction is does not need phone", function() {
+    it("should quietly execute current interaction and all subsequent interactions, till interaction does not need phone", function() {
         var phoneInteraction = {
                                     
         };

@@ -15,8 +15,9 @@ var CertificateCourseController = function(course, metadata) {
         CertificateCourse.interactions["welcome"] = new WelcomeInteraction(metadata, course);
         CertificateCourse.interactions["startCourseOption"] = new StartCourseOption(metadata, course);
         CertificateCourse.interactions["startNextChapter"] = new StartNextChapter(metadata, course, courseState)
-        CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course);
-        CertificateCourse.interactions["endOfCourse"] = {};
+        CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course, courseState);
+        CertificateCourse.interactions["lessonEndMenu"] = new LessonEndMenuInteraction(metadata, course, courseState);
+        CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
     };
 
     this.playAudio = function() {
