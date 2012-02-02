@@ -1,12 +1,11 @@
 #vxmlHeader()
+#var("nameNotRecorded","true")
+#var("blockNotRecorded","true")
+#var("districtNotRecorded","true")
+#var("panchayatNotRecorded","true")
+#var("designationNotRecorded","true")
 <form id="register_flw">
-
-    #var("nameNotRecorded","true")
-    #var("blockNotRecorded","true")
-    #var("districtNotRecorded","true")
-    #var("panchayatNotRecorded","true")
-
-    #dtmf("designation",
+    #dtmfWithCondition("designation",
         "${bundle.audioFileBase}${bundle.register.designation.say}",
         $designations)
 

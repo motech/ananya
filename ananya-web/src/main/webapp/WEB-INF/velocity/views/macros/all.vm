@@ -42,7 +42,7 @@
         <prompt bargein="false">
             <audio src="$confirmwav"/>
             <audio expr="$field"/>
-            <audio expr="$reRecordwav"/>
+            <audio src="$reRecordwav"/>
         </prompt>
         <grammar mode="dtmf" version="1.0" root="root">
             <rule id="root" scope="public">
@@ -61,7 +61,7 @@
     </field>
 #end
 
-#macro(dtmf $field $askWav $map)
+#macro(dtmf $field $askWav $map $cond)
     <field name="$field">
         <prompt>
             <audio src="$askWav"/>
@@ -72,6 +72,23 @@
         <noinput>
             <audio src="$askWav"/>
         </noinput>
+    </field>
+#end
+
+#macro(dtmfWithCondition $field $askWav $map $cond)
+    <field name="$field" cond="${field}NotRecorded">
+        <prompt>
+            <audio src="$askWav"/>
+        </prompt>
+        #foreach ($mapEntry in $map.entrySet())
+            <option dtmf="$mapEntry.key" value="$mapEntry.value"/>
+        #end
+        <noinput>
+            <audio src="$askWav"/>
+        </noinput>
+        <filled>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </filled>
     </field>
 #end
 
