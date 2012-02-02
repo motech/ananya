@@ -56,6 +56,9 @@
         <noinput>
             <assign name="${field}NotRecorded" expr="false"/>
         </noinput>
+        <nomatch>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </nomatch>
         <filled>
             <if cond="${field}Confirm">
                 <goto next="#register_flw"/>
