@@ -14,6 +14,11 @@
 #end
 
 #macro(record $field $askwav $confirmwav $noinputwav $reRecordwav)
+    <block>
+        <prompt timeout="$bundle.register.timeout" bargein="false" cond="${field}NotRecorded">
+            <audio src="$askwav"/>
+        </prompt>
+    </block>
     <record name="$field"
             cond="${field}NotRecorded"
             beep="$bundle.register.beep"
@@ -29,9 +34,6 @@
                 </one-of>
             </rule>
         </grammar>
-        <prompt timeout="$bundle.register.timeout" bargein="false">
-            <audio src="$askwav"/>
-        </prompt>
         <noinput>
             <prompt bargein="false">
                 <audio src="$noinputwav"/>
@@ -51,6 +53,9 @@
                 </one-of>
             </rule>
         </grammar>
+        <noinput>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </noinput>
         <filled>
             <if cond="${field}Confirm">
                 <goto next="#register_flw"/>
