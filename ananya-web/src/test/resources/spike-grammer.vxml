@@ -4,8 +4,13 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
     <form>
+        <!--<var name="gr" value="123.grxml"/>-->
+        <script>
+            var gr = "123.grxml"
+        </script>
         <field name="name">
-            <grammar src="drink.grxml" type="application/srgs+xml"/>
+            <prompt>say something</prompt>
+            <grammar srcexpr="gr" type="application/srgs+xml"/>
         </field>
     </form>
 </vxml>
