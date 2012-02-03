@@ -30,14 +30,42 @@
     </form>
 
     <form id="playAudio">
-        <block>
+        <field name="audioWithHelp">
             <log expr="'Playing the audio ' + controller.playAudio()"/>
-            <audio expr="controller.playAudio()"/>
-            <script>
-                controller.playingDone();
-            </script>
-            <goto next="#controller"/>
-        </block>
+            <prompt bargein="true" timeout="1ms">
+                <audio expr="controller.playAudio()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    controller.playingDone();
+                </script>
+                <goto next="#controller"/>
+            </noinput>
+            <filled>
+                <script>
+                    controller.requestingHelp();
+                </script>
+                <goto next="#controller"/>
+            </filled>
+        </field>
     </form>
 
     <form id="collectInput">

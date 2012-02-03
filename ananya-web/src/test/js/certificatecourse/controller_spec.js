@@ -147,6 +147,15 @@ describe("Certificate course controller spec", function() {
         expect(controller.interaction.disconnect()).toEqual(true);
     });
 
+    it("for interactions involving input, if help is requested, then interaction should progress to HelpInteraction with interaction to return as current interaction", function() {
+        var interactionInWhichHelpHasBeenRequested = {};
+        controller.setInteraction(interactionInWhichHelpHasBeenRequested);
+
+        controller.processInput('*');
+
+        expect(controller.interaction.interactionToReturnTo).toEqual(interactionInWhichHelpHasBeenRequested);
+    });
+
     it("should quietly execute current interaction and all subsequent interactions, till interaction does not need phone", function() {
         var phoneInteraction = {
                                     
@@ -171,5 +180,14 @@ describe("Certificate course controller spec", function() {
         expect(noPhoneInteraction2.processSilentlyAndReturnNextState).toHaveBeenCalled();
         expect(noPhoneInteraction3.processSilentlyAndReturnNextState).toHaveBeenCalled();
         expect(controller.interaction).toEqual(phoneInteraction);
+    });
+
+    it("if help is requested, then interaction should progress to HelpInteraction with interaction to return as current interaction", function() {
+        var interactionInWhichHelpHasBeenRequested = {};
+        controller.setInteraction(interactionInWhichHelpHasBeenRequested);
+
+        controller.requestingHelp();
+
+        expect(controller.interaction.interactionToReturnTo).toEqual(interactionInWhichHelpHasBeenRequested);
     });
 });
