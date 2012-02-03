@@ -141,43 +141,59 @@ LessonInteraction.prototype.nextInteraction = function() {
     LessonEndMenuInteraction
 */
 
-var LessonEndMenuInteraction = function(metadata, course) {
-    this.init = function(metadata, course) {
+var LessonEndMenuInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata);
         this.course = course;
+        this.courseState = courseState;
     }
 
-    this.init(metadata, course);
+    this.init(metadata, course, courseState);
 };
 
 LessonEndMenuInteraction.prototype = new AbstractCourseInteraction();
 LessonEndMenuInteraction.prototype.constructor = StartCourseOption;
 
 LessonEndMenuInteraction.prototype.doesTakeInput = function() {
-    return false;
+    return true;
 }
 
 LessonEndMenuInteraction.prototype.playAudio = function() {
-    return this.findAudio(this.course, "menu");
+    var chapterIndex = this.courseState.chapterIndex;
+    var lessonIndex = this.courseState.lessonOrQuestionIndex;
+    var currentLesson = this.course.children[chapterIndex].children[lessonIndex];
+    return this.findAudio(currentLesson, "menu");
 };
+
 
 LessonEndMenuInteraction.prototype.validateInput = function(input) {
     return input == '1' || input == '2';
 };
 
 LessonEndMenuInteraction.prototype.continueWithoutInput = function(){
-    return CertificateCourse.interactions["endOfCourse"];
-};
-
-LessonEndMenuInteraction.prototype.nextInteraction = function(){
-    return CertificateCourse.interactions["endOfCourse"];
+    var chapterIndex = this.courseState.chapterIndex;
+    var lessonIndex = this.courseState.lessonOrQuestionIndex;
+    var currentChapter = this.course.children[chapterIndex];
+    var nextInLine = currentChapter.children[lessonIndex+1];
+    if(nextInLine.data.type=="quiz"){
+        return CertificateCourse.interactions["startNextChapter"];
+    }
+    this.courseState.setLessonOrQuestionIndex(lessonIndex+1);
+    return CertificateCourse.interactions["lesson"];
 };
 
 LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = function(input){
-    if(input == 1) {
-        return CertificateCourse.interactions["welcome"];
+    if(input == 2) {
+        var chapterIndex = this.courseState.chapterIndex;
+        var lessonIndex = this.courseState.lessonOrQuestionIndex;
+        var currentChapter = this.course.children[chapterIndex];
+        var nextInLine = currentChapter.children[lessonIndex+1];
+        if(nextInLine.data.type=="quiz"){
+            return CertificateCourse.interactions["startQuiz"];
+        }
+        this.courseState.setLessonOrQuestionIndex(lessonIndex+1);
     }
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions["lesson"];
 }
 
 

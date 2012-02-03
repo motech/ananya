@@ -17,6 +17,7 @@ var CertificateCourseController = function(course, metadata) {
         CertificateCourse.interactions["startNextChapter"] = new StartNextChapter(metadata, course, courseState)
         CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course, courseState);
         CertificateCourse.interactions["lessonEndMenu"] = new LessonEndMenuInteraction(metadata, course, courseState);
+        CertificateCourse.interactions["startQuiz"] = {};
         CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
     };
 
