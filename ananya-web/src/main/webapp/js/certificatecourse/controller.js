@@ -9,8 +9,6 @@ var CertificateCourseController = function(course, metadata) {
         this.courseState = new CourseState();
         this.initializeInteractionsArray(metadata, course, this.courseState);
         this.setInteraction(CertificateCourse.interactions["welcome"]);
-        this.metadata = metadata;
-        this.course = course;
     };
 
     this.initializeInteractionsArray = function(metadata, course, courseState) {
@@ -51,7 +49,7 @@ var CertificateCourseController = function(course, metadata) {
         while(this.interaction && this.interaction.processSilentlyAndReturnNextState) {
             this.interaction = this.interaction.processSilentlyAndReturnNextState();
         }
-    };
+    }
 
     this.gotNoInput = function() {
         this.promptContext.gotNoInput();
@@ -60,37 +58,27 @@ var CertificateCourseController = function(course, metadata) {
             this.promptContext.resetCounts();
             this.setInteraction(this.interaction.continueWithoutInput());
         }
-    };
+    }
 
     this.processInput = function(input) {
         var nextInteraction;
-        if(input == '*') {
-            this.requestingHelp();
+        if(this.interaction.validateInput(input)) {
+            this.promptContext.resetCounts();
+            nextInteraction = this.interaction.processInputAndReturnNextInteraction(input);
         }
         else {
-            if(this.interaction.validateInput(input)) {
-                this.promptContext.resetCounts();
-                nextInteraction = this.interaction.processInputAndReturnNextInteraction(input);
+            this.promptContext.gotInvalidInput();
+            if(this.promptContext.hasExceededMaxInvalidInputs()) {
+                nextInteraction = {
+                                    disconnect : function() {
+                                                    return true;
+                                                  }
+                                  };
             }
             else {
-                this.promptContext.gotInvalidInput();
-                if(this.promptContext.hasExceededMaxInvalidInputs()) {
-                    nextInteraction = {
-                                        disconnect : function() {
-                                                        return true;
-                                                      }
-                                      };
-                }
-                else {
-                    nextInteraction = new InvalidInputInteraction(this.interaction, this.metadata);
-                }
+                nextInteraction = new InvalidInputInteraction(this.interaction, metadata);
             }
-            this.setInteraction(nextInteraction);
         }
-    };
-
-    this.requestingHelp = function() {
-        var nextInteraction = new HelpInteraction(this.interaction, this.metadata, this.course);
         this.setInteraction(nextInteraction);
     }
 

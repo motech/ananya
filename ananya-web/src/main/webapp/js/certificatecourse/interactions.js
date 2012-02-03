@@ -186,7 +186,7 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
 */
 var InvalidInputInteraction = function(interactionToReturnTo, metadata) {
     this.init = function(interactionToReturnTo, metadata) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(null, metadata);
         this.metadata = metadata;
         this.interactionToReturnTo = interactionToReturnTo;
     }
@@ -206,34 +206,5 @@ InvalidInputInteraction.prototype.doesTakeInput = function() {
 };
 
 InvalidInputInteraction.prototype.nextInteraction = function() {
-    return this.interactionToReturnTo;
-};
-
-/*
-    HelpInteraction
-*/
-var HelpInteraction = function(interactionToReturnTo, metadata, course) {
-    this.init = function(interactionToReturnTo, metadata, course) {
-        AbstractCourseInteraction.call(this, metadata);
-        this.metadata = metadata;
-        this.interactionToReturnTo = interactionToReturnTo;
-        this.course = course;
-    }
-
-    this.init(interactionToReturnTo, metadata, course);
-};
-
-HelpInteraction.prototype = new AbstractCourseInteraction();
-HelpInteraction.prototype.constructor = HelpInteraction;
-
-HelpInteraction.prototype.playAudio = function() {
-    return this.findAudio(this.course, "help");
-};
-
-HelpInteraction.prototype.doesTakeInput = function() {
-    return false;
-};
-
-HelpInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;
 };
