@@ -13,10 +13,11 @@
 
         <block><prompt timeout="5s" bargein="false" cond="nameNotRecorded">
             <audio src="http://221.134.198.15/audio/register/0009_name.wav"/>
+            <audio src="http://221.134.198.15/audio/register/beep.wav"/>
         </prompt></block>
         <record name="name"
                 cond="nameNotRecorded"
-                beep="true"
+                beep="false"
                 maxtime="10s"
                 finalsilence="4000ms"
                 dtmfterm="true"
@@ -29,12 +30,15 @@
                     </one-of>
                 </rule>
             </grammar>
+
             <noinput>
                 <prompt bargein="false">
                     <audio src="http://221.134.198.15/audio/register/0009_name.wav"/>
+                    <audio src="http://221.134.198.15/audio/register/beep.wav"/>
                 </prompt>
             </noinput>
         </record>
+
         <field name="nameConfirm" type="boolean" cond="nameNotRecorded">
             <prompt bargein="false">
                 <audio src="http://221.134.198.15/audio/register/0010_name_pb.wav"/>
@@ -52,6 +56,9 @@
                 <assign name="nameNotRecorded" expr="false"/>
 
             </noinput>
+            <nomatch>
+                <assign name="nameNotRecorded" expr="false"/>
+            </nomatch>
             <filled>
                 <if cond="nameConfirm">
                     <goto next="#register_flw"/>
@@ -61,10 +68,9 @@
             </filled>
         </field>
 
-
-        <block>
-        <prompt timeout="5s" bargein="false" cond="districtNotRecorded">
+        <block><prompt timeout="5s" bargein="false" cond="districtNotRecorded">
             <audio src="http://221.134.198.15/audio/register/0012_district.wav"/>
+            <audio src="http://221.134.198.15/audio/register/beep.wav"/>
         </prompt></block>
         <record id = "district" name="district"
                 cond="districtNotRecorded"
@@ -81,12 +87,15 @@
                     </one-of>
                 </rule>
             </grammar>
+
             <noinput>
                 <prompt bargein="false">
                     <audio src="http://221.134.198.15/audio/register/0012_district.wav"/>
+                    <audio src="http://221.134.198.15/audio/register/beep.wav"/>
                 </prompt>
             </noinput>
         </record>
+
         <field name="districtConfirm" type="boolean" cond="districtNotRecorded">
             <prompt bargein="false">
                 <audio src="http://221.134.198.15/audio/register/0013_district_pb.wav"/>
@@ -103,6 +112,9 @@
             <noinput>
                 <assign name="districtNotRecorded" expr="false"/>
             </noinput>
+            <nomatch>
+                <assign name="districtNotRecorded" expr="false"/>
+            </nomatch>
             <filled>
                 <if cond="districtConfirm">
                     <goto next="#register_flw"/>

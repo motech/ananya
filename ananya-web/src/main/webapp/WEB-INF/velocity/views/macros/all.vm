@@ -17,6 +17,7 @@
     <block>
         <prompt timeout="$bundle.register.timeout" bargein="false" cond="${field}NotRecorded">
             <audio src="$askwav"/>
+            <audio src="${bundle.audioFileBase}${bundle.registration.beep.audio}"/>
         </prompt>
     </block>
     <record name="$field"
