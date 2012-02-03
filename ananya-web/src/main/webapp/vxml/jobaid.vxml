@@ -7,8 +7,8 @@
     <script src="../dynamic/js/metadata.js"/>
     <script src="../dynamic/js/jobaid_course_data.js"/>
 
-    <script src="../js/course.js"/>
-    <script src="../js/call_context.js"/>
+    <script src="../js/jobaid/course.js"/>
+    <script src="../js/jobaid/call_context.js"/>
     <script src="../js/prompt_context.js"/>
     <script>
         <![CDATA[
@@ -42,7 +42,6 @@
                 <audio expr="callContext.currentInteractionIntroduction()"/>
             </prompt>
         </block>
-
         <field name="nextLevelSelection">
             <prompt>
                 <audio expr="callContext.currentInteractionMenu()"/>
@@ -68,6 +67,22 @@
                     </one-of>
                 </rule>
             </grammar>
+
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <prompt>
+                        <audio expr="callContext.currentInteractionMenu()"/>
+                    </prompt>
+                    <prompt cond="!callContext.isAtCourseRoot()">
+                        <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
+                    </prompt>
+                </if>
+            </noinput>
 
             <filled>
                 <if cond="callContext.isValidInput(nextLevelSelection)">

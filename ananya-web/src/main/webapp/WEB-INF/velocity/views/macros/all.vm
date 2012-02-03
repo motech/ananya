@@ -14,6 +14,12 @@
 #end
 
 #macro(record $field $askwav $confirmwav $noinputwav $reRecordwav)
+    <block>
+        <prompt timeout="$bundle.register.timeout" bargein="false" cond="${field}NotRecorded">
+            <audio src="$askwav"/>
+            <audio src="${bundle.audioFileBase}${bundle.registration.beep.audio}"/>
+        </prompt>
+    </block>
     <record name="$field"
             cond="${field}NotRecorded"
             beep="$bundle.register.beep"
@@ -29,9 +35,6 @@
                 </one-of>
             </rule>
         </grammar>
-        <prompt timeout="$bundle.register.timeout" bargein="false">
-            <audio src="$askwav"/>
-        </prompt>
         <noinput>
             <prompt bargein="false">
                 <audio src="$noinputwav"/>
@@ -42,7 +45,7 @@
         <prompt bargein="false">
             <audio src="$confirmwav"/>
             <audio expr="$field"/>
-            <audio expr="$reRecordwav"/>
+            <audio src="$reRecordwav"/>
         </prompt>
         <grammar mode="dtmf" version="1.0" root="root">
             <rule id="root" scope="public">
@@ -51,6 +54,12 @@
                 </one-of>
             </rule>
         </grammar>
+        <noinput>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </noinput>
+        <nomatch>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </nomatch>
         <filled>
             <if cond="${field}Confirm">
                 <goto next="#register_flw"/>
@@ -61,7 +70,7 @@
     </field>
 #end
 
-#macro(dtmf $field $askWav $map)
+#macro(dtmf $field $askWav $map $cond)
     <field name="$field">
         <prompt>
             <audio src="$askWav"/>
@@ -72,6 +81,26 @@
         <noinput>
             <audio src="$askWav"/>
         </noinput>
+    </field>
+#end
+
+#macro(dtmfWithCondition $field $askWav $map $cond)
+    <field name="$field" cond="${field}NotRecorded">
+        <prompt>
+            <audio src="$askWav"/>
+        </prompt>
+        #foreach ($mapEntry in $map.entrySet())
+            <option dtmf="$mapEntry.key" value="$mapEntry.value"/>
+        #end
+        <noinput>
+            <audio src="$askWav"/>
+        </noinput>
+        <nomatch>
+            <audio src="$askWav"/>
+        </nomatch>
+        <filled>
+            <assign name="${field}NotRecorded" expr="false"/>
+        </filled>
     </field>
 #end
 

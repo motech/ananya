@@ -84,7 +84,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
         String paramNotRecorded = param + "NotRecorded";
         String field = "/vxml/form/field[@name='" + confirmParam + "']";
 
-        assertEquals("true", callFlow.readString("/vxml/form/var[@name='" + paramNotRecorded + "']/@expr"));
+        assertEquals("true", callFlow.readString("/vxml/var[@name='" + paramNotRecorded + "']/@expr"));
         assertEquals(paramNotRecorded, callFlow.readString(field + "/@cond"));
 
         assertNotNull(callFlow.readNode(field + "/prompt"));
@@ -102,8 +102,10 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest {
         assertNotNull(callFlow.readNode(designation));
         assertNotNull(callFlow.readNode(designation + "/prompt"));
 
+        assertEquals("true", callFlow.readString("/vxml/var[@name='designationNotRecorded']/@expr"));
         assertEquals(Designation.ANM.name(), callFlow.readString(designation + "/option[@dtmf=1]/@value"));
         assertEquals(Designation.ASHA.name(), callFlow.readString(designation + "/option[@dtmf=2]/@value"));
         assertEquals(Designation.ANGANWADI.name(), callFlow.readString(designation + "/option[@dtmf=3]/@value"));
+        assertEquals("false",callFlow.readString(designation + "/filled/assign[@name='designationNotRecorded']/@expr"));
     }
 }

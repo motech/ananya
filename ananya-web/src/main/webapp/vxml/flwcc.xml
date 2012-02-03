@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script src="../dynamic/js/metadata.js"/>
+    <script src="../dynamic/js/certification_course_data.js"/>
+    <!--<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>-->
+
+    <script src="../js/prompt_context.js"/>
+    <script src="../js/certificatecourse/abstract_interactions.js"/>
+    <script src="../js/certificatecourse/interactions.js"/>
+    <script src="../js/certificatecourse/course_state.js"/>
+    <script src="../js/certificatecourse/controller.js"/>
+
+    <script>
+        <![CDATA[
+                var controller = new CertificateCourseController(courseData, metaData);
+          ]]>
+    </script>
+
+    <property name="timeout" value="8s"/>
+    <property name="bargein" value="true"/>
+    <property name="inputmodes" value="dtmf"/>
+
+    <form id="controller">
+        <block>
+            <goto expr="controller.nextAction()"/>
+        </block>
+    </form>
+
+    <form id="playAudio">
+        <field name="audioWithHelp">
+            <log expr="'Playing the audio ' + controller.playAudio()"/>
+            <prompt bargein="true" timeout="1ms">
+                <audio expr="controller.playAudio()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    controller.playingDone();
+                </script>
+                <goto next="#controller"/>
+            </noinput>
+            <filled>
+                <script>
+                    controller.requestingHelp();
+                </script>
+                <goto next="#controller"/>
+            </filled>
+        </field>
+    </form>
+
+    <form id="collectInput">
+        <field name="inputFromUser">
+            <prompt bargein="true">
+                <audio expr="controller.playAudio()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+
+            <noinput>
+                <goto nextitem="noInputAction"/>
+            </noinput>
+
+            <filled>
+                <script>
+                    controller.processInput(inputFromUser);
+                </script>
+                <goto next="#controller"/>
+            </filled>
+        </field>
+
+        <block name="noInputAction">
+            <script>
+                controller.gotNoInput();
+            </script>
+            <clear/>
+            <goto next="#controller"/>
+        </block>
+    </form>
+
+    <form id="disconnect">
+        <block>
+            <disconnect/>
+        </block>
+    </form>
+</vxml>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+    <property name="timeout" value="4s"/>
+    <var name="nameNotRecorded" expr="true"/>
+    <var name="blockNotRecorded" expr="true"/>
+    <var name="districtNotRecorded" expr="true"/>
+    <var name="panchayatNotRecorded" expr="true"/>
+    <var name="designationNotRecorded" expr="true"/>
+
+    <form id="register_flw">
+
+        <block><prompt timeout="5s" bargein="false" cond="nameNotRecorded">
+            <audio src="http://221.134.198.15/audio/register/0009_name.wav"/>
+            <audio src="http://221.134.198.15/audio/register/beep.wav"/>
+        </prompt></block>
+        <record name="name"
+                cond="nameNotRecorded"
+                beep="false"
+                maxtime="10s"
+                finalsilence="4000ms"
+                dtmfterm="true"
+                type="x-wav">
+
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+
+            <noinput>
+                <prompt bargein="false">
+                    <audio src="http://221.134.198.15/audio/register/0009_name.wav"/>
+                    <audio src="http://221.134.198.15/audio/register/beep.wav"/>
+                </prompt>
+            </noinput>
+        </record>
+
+        <field name="nameConfirm" type="boolean" cond="nameNotRecorded">
+            <prompt bargein="false">
+                <audio src="http://221.134.198.15/audio/register/0010_name_pb.wav"/>
+                <audio expr="name"/>
+                <audio src="http://221.134.198.15/audio/register/0011_name_repeat.wav"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <assign name="nameNotRecorded" expr="false"/>
+
+            </noinput>
+            <nomatch>
+                <assign name="nameNotRecorded" expr="false"/>
+            </nomatch>
+            <filled>
+                <if cond="nameConfirm">
+                    <goto next="#register_flw"/>
+                    <else/>
+                    <assign name="nameNotRecorded" expr="false"/>
+                </if>
+            </filled>
+        </field>
+
+        <block><prompt timeout="5s" bargein="false" cond="districtNotRecorded">
+            <audio src="http://221.134.198.15/audio/register/0012_district.wav"/>
+            <audio src="http://221.134.198.15/audio/register/beep.wav"/>
+        </prompt></block>
+        <record id = "district" name="district"
+                cond="districtNotRecorded"
+                beep="true"
+                maxtime="10s"
+                finalsilence="4000ms"
+                dtmfterm="true"
+                type="x-wav">
+
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+
+            <noinput>
+                <prompt bargein="false">
+                    <audio src="http://221.134.198.15/audio/register/0012_district.wav"/>
+                    <audio src="http://221.134.198.15/audio/register/beep.wav"/>
+                </prompt>
+            </noinput>
+        </record>
+
+        <field name="districtConfirm" type="boolean" cond="districtNotRecorded">
+            <prompt bargein="false">
+                <audio src="http://221.134.198.15/audio/register/0013_district_pb.wav"/>
+                <audio expr="district"/>
+                <audio src="http://221.134.198.15/audio/register/0014_district_repeat.wav"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <assign name="districtNotRecorded" expr="false"/>
+            </noinput>
+            <nomatch>
+                <assign name="districtNotRecorded" expr="false"/>
+            </nomatch>
+            <filled>
+                <if cond="districtConfirm">
+                    <goto next="#register_flw"/>
+                    <else/>
+                    <assign name="districtNotRecorded" expr="false"/>
+                </if>
+            </filled>
+        </field>
+
+        <block>
+            <data src="/ananya/flw/register/"
+                  enctype="multipart/form-data"
+                  method="post"
+                  namelist="session.connection.local.uri designation name district block panchayat"/>
+
+            <audio src="http://221.134.198.15/audio/register/0021_regdone.wav"/>
+
+            <goto next="/ananya/vxml/jobaid.vxml"/>
+        </block>
+    </form>
+</vxml>

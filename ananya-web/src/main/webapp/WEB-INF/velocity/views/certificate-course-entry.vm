@@ -33,8 +33,8 @@
 
 <form id="unregistered">
     #repeat([
-        "${bundle.audioFileBase}${bundle.certificate.options.for.non.reg}",
-        "${bundle.audioFileBase}${bundle.certificate.need.to.register}"],
+        "${bundle.audioFileBase}${bundle.certificate.need.to.register}",
+        "${bundle.audioFileBase}${bundle.certificate.options.for.non.reg}"],
         "${registerFlow}")
 </form>
 #vxmlFooter()

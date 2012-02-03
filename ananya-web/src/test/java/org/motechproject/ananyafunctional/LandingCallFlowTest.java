@@ -52,7 +52,7 @@ public class LandingCallFlowTest {
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/enter/");
 
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
-        assertEquals("/ananya/js/landing.js", callFlow.readString("/vxml/script/@src"));
+        assertEquals("/ananya/js/register/caller.js", callFlow.readString("/vxml/script/@src"));
         assertEquals("true", callFlow.readString("/vxml/property[@name='bargein']/@value"));
 
         String controller = "/vxml/form[@id='controller']";
