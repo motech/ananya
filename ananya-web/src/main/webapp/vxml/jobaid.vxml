@@ -7,8 +7,8 @@
     <script src="../dynamic/js/metadata.js"/>
     <script src="../dynamic/js/jobaid_course_data.js"/>
 
-    <script src="../js/course.js"/>
-    <script src="../js/call_context.js"/>
+    <script src="../js/jobaid/course.js"/>
+    <script src="../js/jobaid/call_context.js"/>
     <script src="../js/prompt_context.js"/>
     <script>
         <![CDATA[

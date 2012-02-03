@@ -8,10 +8,10 @@
     <!--<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>-->
 
     <script src="../js/prompt_context.js"/>
-    <script src="../js/certificateCourse/abstract_interactions.js"/>
-    <script src="../js/certificateCourse/interactions.js"/>
-    <script src="../js/certificateCourse/course_state.js"/>
-    <script src="../js/certificateCourse/controller.js"/>
+    <script src="../js/certificatecourse/abstract_interactions.js"/>
+    <script src="../js/certificatecourse/interactions.js"/>
+    <script src="../js/certificatecourse/course_state.js"/>
+    <script src="../js/certificatecourse/controller.js"/>
 
     <script>
         <![CDATA[

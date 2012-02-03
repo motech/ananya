@@ -67,11 +67,11 @@ var PromptContext = function (metadata) {
 
     this.setInputFromUser = function(input) {
         this.inputFromUser = input;
-    }
+    };
 
     this.getInputFromUser = function() {
         return this.inputFromUser;
-    }
+    };
 
     this.init(metadata);
 };
