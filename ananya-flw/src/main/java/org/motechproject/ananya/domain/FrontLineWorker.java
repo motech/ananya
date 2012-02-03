@@ -23,12 +23,20 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Designation designation;
 
+    @JsonProperty
+    private String locationId;
+
     public FrontLineWorker() {
     }
 
-    public FrontLineWorker(String msisdn, Designation designation) {
+    public FrontLineWorker(String msisdn, Designation designation, String locationId) {
         this.msisdn = msisdn;
         this.designation = designation;
+        this.locationId = locationId;
+    }
+
+    public String getLocationId() {
+        return locationId;
     }
 
     public String getMsisdn() {

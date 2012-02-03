@@ -31,7 +31,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234").status(RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("lesson", "0", "2"));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
@@ -44,7 +44,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
     @Test
     public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM, "1234").status(RegistrationStatus.REGISTERED);
 
         ReportCard reportCard = flw.reportCard();
 
@@ -111,7 +111,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest{
 
     @Test
     public void shouldGetCallerDataWithoutBookmarkDetailsWhenThereIsNoBookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234").status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 

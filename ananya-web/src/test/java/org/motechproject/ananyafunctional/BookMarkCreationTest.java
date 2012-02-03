@@ -22,7 +22,7 @@ public class BookMarkCreationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldAssociateABookmarkWithAFLW() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "123").status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 

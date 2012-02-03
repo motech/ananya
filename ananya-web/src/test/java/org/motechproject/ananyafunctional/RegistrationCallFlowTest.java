@@ -1,30 +1,47 @@
 package org.motechproject.ananyafunctional;
 
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananyafunctional.framework.CallFlow;
 import org.motechproject.ananyafunctional.framework.MyWebClient;
+import org.motechproject.bbcwt.repository.SpringIntegrationTest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import java.io.IOException;
+
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.motechproject.ananyafunctional.framework.MyWebClient.PostParam.param;
 
-public class RegistrationCallFlowTest {
+public class RegistrationCallFlowTest extends SpringIntegrationTest {
 
     private CallFlow callFlow;
+    MyWebClient myWebClient;
+    @Autowired
+    private AllFrontLineWorkers allFrontLineWorkers;
+    @Autowired
+    private AllLocations allLocations;
+
 
     @Before
     public void setUp() throws Exception {
-        MyWebClient myWebClient = new MyWebClient();
-        callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/register/");
+        myWebClient = new MyWebClient();
     }
 
     @Test
     public void shouldGetARegistrationVxmlForAUnRegisteredFLW() throws Exception {
+        callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/register/");
         for (String record : asList("name", "district", "block", "panchayat")) {
             assertOnRecord(record);
             assertOnRecordConfirm(record);
@@ -33,6 +50,20 @@ public class RegistrationCallFlowTest {
         assertNonInterActivePrompts();
         assertEquals("/ananya/vxml/jobaid.vxml", callFlow.readString("/vxml/form/block/goto/@next"));
         assertEquals("session.connection.local.uri designation name district block panchayat", callFlow.readString("/vxml/form/block/data/@namelist"));
+    }
+
+    @Test
+    public void shouldRegisterNewFLW() throws IOException {
+        MyWebClient.PostParam designation = param("designation", "ASHA");
+        String panchayatCode = "S01D001B001V001";
+        MyWebClient.PostParam panchayat = param("panchayat", panchayatCode);
+        MyWebClient.PostParam callerId = param("session.connection.remote.uri", "555");
+        new MyWebClient().post("http://localhost:9979/ananya/flw/register/", designation,panchayat ,callerId);
+
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("555");
+        Location location = allLocations.findByExternalId(panchayatCode);
+
+        assertEquals(location.getId(), frontLineWorker.getLocationId());
     }
 
     private void assertNonInterActivePrompts() throws XPathExpressionException {
@@ -75,5 +106,4 @@ public class RegistrationCallFlowTest {
         assertEquals(Designation.ASHA.name(), callFlow.readString(designation + "/option[@dtmf=2]/@value"));
         assertEquals(Designation.ANGANWADI.name(), callFlow.readString(designation + "/option[@dtmf=3]/@value"));
     }
-
 }

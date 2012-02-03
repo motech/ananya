@@ -1,6 +1,7 @@
 package org.motechproject.bbcwt.web;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.motechproject.ananya.domain.Designation;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,18 +51,26 @@ public class RegistrationController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/flw/register/")
+    @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-        ServletFileUpload upload = getUploader();
-        List items = upload.parseRequest(request);
+        String msisdn = request.getParameter("session.connection.remote.uri");
+        String designation = request.getParameter("designation");
+        String panchayatCode = request.getParameter("panchayat");
 
-        String msisdn = getField(items, "session.connection.remote.uri");
-        String designation = getField(items, "designation");
-
-        flwService.createNew(msisdn, Designation.valueOf(designation));
-        allRecordings.store(msisdn, items, request.getSession().getServletContext().getRealPath("/recordings/"));
-
+        StoreFileRecordings(request, msisdn);
+        
+        flwService.createNew(msisdn, Designation.valueOf(designation), panchayatCode);
+        
         log.info("Registered new FLW:" + msisdn);
         return new ModelAndView("register-done");
+    }
+
+    private void StoreFileRecordings(HttpServletRequest request, String msisdn) throws FileUploadException {
+        ServletFileUpload upload = getUploader();
+        if(upload.isMultipartContent(request)) {
+            List items = upload.parseRequest(request);
+            allRecordings.store(msisdn, items, request.getSession().getServletContext().getRealPath("/recordings/"));
+        }
     }
 
     protected ServletFileUpload getUploader() {

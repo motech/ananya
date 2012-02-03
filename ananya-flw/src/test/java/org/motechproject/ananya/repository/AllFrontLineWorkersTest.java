@@ -18,12 +18,14 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     public void shouldAddAndRetrieveRecord() {
         String msisdn = "9901";
         Designation designation = Designation.ANGANWADI;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation);
+        String locationId = "123";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, locationId);
         allFrontLineWorkers.add(frontLineWorker);
 
         markForDeletion(frontLineWorker);
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
         assertEquals(msisdn, frontLineWorkers.get(0).getMsisdn());
+        assertEquals(locationId, frontLineWorkers.get(0).getLocationId());
         assertTrue(frontLineWorkers.get(0).isAnganwadi());
     }
 
@@ -31,7 +33,7 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "9901";
         Designation designation = Designation.ANGANWADI;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, "999");
         allFrontLineWorkers.add(frontLineWorker);
 
         markForDeletion(frontLineWorker);

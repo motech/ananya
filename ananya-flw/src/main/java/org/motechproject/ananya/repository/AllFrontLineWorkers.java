@@ -28,5 +28,4 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         if (workers == null || workers.isEmpty()) return null;
         return workers.get(0);
     }
-
 }

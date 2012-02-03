@@ -72,37 +72,40 @@ public class RegistrationControllerTest {
     public void shouldCaptureRecordWavFilesAndRegisterFLW() throws Exception {
         String msisdn = "123";
         String path = "/path";
+        String village = "S01D001B001V004";
 
         ServletFileUpload upload = mock(ServletFileUpload.class);
         ServletContext context = mock(ServletContext.class);
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getContentType()).thenReturn("multipart/");
 
         FileItem msisdnItem = mock(FileItem.class);
         FileItem designationItem = mock(FileItem.class);
-        FileItem fileItem = mock(FileItem.class);
-        List items = Arrays.asList(msisdnItem, fileItem, designationItem);
+        FileItem panchayatItem = mock(FileItem.class);
+        List items = Arrays.asList(msisdnItem, designationItem, panchayatItem);
 
         when(context.getRealPath("/recordings/")).thenReturn(path);
         when(request.getSession()).thenReturn(session);
         when(session.getServletContext()).thenReturn(context);
         when(upload.parseRequest(request)).thenReturn(items);
 
-        when(msisdnItem.getFieldName()).thenReturn("session.connection.remote.uri");
-        when(msisdnItem.isFormField()).thenReturn(true);
-        when(msisdnItem.getString()).thenReturn(msisdn);
-
-        when(designationItem.getFieldName()).thenReturn("designation");
-        when(designationItem.isFormField()).thenReturn(true);
-        when(designationItem.getString()).thenReturn(Designation.ASHA.name());
+        SetUpExpectationsFor("session.connection.remote.uri", msisdn);
+        SetUpExpectationsFor("designation", Designation.ASHA.name());
+        SetUpExpectationsFor("panchayat", village);
 
         RegistrationController controllerSpy = spy(controller);
         doReturn(upload).when(controllerSpy).getUploader();
 
         ModelAndView modelAndView = controllerSpy.registerNew(request);
 
-        verify(flwService).createNew(msisdn, Designation.ASHA);
+        verify(flwService).createNew(msisdn, Designation.ASHA, village);
         verify(allRecordings).store(msisdn, items, path);
         assertEquals("register-done", modelAndView.getViewName());
 
+    }
+
+    private void SetUpExpectationsFor(String fieldName, String itemName) {
+        when(request.getParameter(fieldName)).thenReturn(itemName);
     }
 
     private void assertDesignations(ModelAndView modelAndView) {

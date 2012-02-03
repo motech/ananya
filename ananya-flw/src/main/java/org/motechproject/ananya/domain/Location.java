@@ -25,4 +25,44 @@ public class Location extends MotechBaseDataObject{
         this.blockName = blockName;
         this.panchayat = panchayat;
     }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public String district() {
+        return district;
+    }
+
+    public String blockName() {
+        return blockName;
+    }
+
+    public String panchayat() {
+        return panchayat;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        if (blockName != null ? !blockName.equals(location.blockName) : location.blockName != null) return false;
+        if (district != null ? !district.equals(location.district) : location.district != null) return false;
+        if (externalId != null ? !externalId.equals(location.externalId) : location.externalId != null) return false;
+        if (panchayat != null ? !panchayat.equals(location.panchayat) : location.panchayat != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = externalId != null ? externalId.hashCode() : 0;
+        result = 31 * result + (district != null ? district.hashCode() : 0);
+        result = 31 * result + (blockName != null ? blockName.hashCode() : 0);
+        result = 31 * result + (panchayat != null ? panchayat.hashCode() : 0);
+        return result;
+    }
 }

@@ -2,6 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
+    private AllLocations allLocations;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations) {
         this.allFrontLineWorkers = allFrontLineWorkers;
+        this.allLocations = allLocations;
     }
 
     public RegistrationStatus getStatus(String msisdn) {
@@ -30,8 +33,9 @@ public class FrontLineWorkerService {
         return getStatus(msisdn).isRegistered();
     }
 
-    public String createNew(String msisdn, Designation designation) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation).status(RegistrationStatus.PENDING_REGISTRATION);
+    public String createNew(String msisdn, Designation designation, String panchayatCode) {
+        Location location = allLocations.findByExternalId(panchayatCode);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId()).status(RegistrationStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
     }
