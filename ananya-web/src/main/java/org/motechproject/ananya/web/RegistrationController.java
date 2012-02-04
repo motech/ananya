@@ -57,7 +57,7 @@ public class RegistrationController {
         String designation = request.getParameter("designation");
         String panchayatCode = request.getParameter("panchayat");
 
-        StoreFileRecordings(request, msisdn);
+        storeFileRecordings(request, msisdn);
         
         flwService.createNew(msisdn, Designation.valueOf(designation), panchayatCode);
         
@@ -65,7 +65,7 @@ public class RegistrationController {
         return new ModelAndView("register-done");
     }
 
-    private void StoreFileRecordings(HttpServletRequest request, String msisdn) throws FileUploadException {
+    private void storeFileRecordings(HttpServletRequest request, String msisdn) throws FileUploadException {
         ServletFileUpload upload = getUploader();
         if(upload.isMultipartContent(request)) {
             List items = upload.parseRequest(request);

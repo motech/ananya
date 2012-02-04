@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script>
+        var Controller = function(){
+        var count = 0;
+        var fields = ["district","block","village"];
+        var records = [];
+
+        this.nextField = function(){
+        return fields[count];
+        };
+
+        this.decideFlow = function(){
+        return "#record_voice_without_recognition";
+        };
+
+        this.assign = function(record){
+        records[count] = record;
+        count++;
+        };
+
+        this.say = function(){
+        return records.length;
+        };
+
+        this.getPrompt = function(field){
+        return "please say aloud for your " +field;
+        };
+
+        this.getConfirmPrompt = function(field){
+        return "we heard it your " +field + " as ";
+        };
+
+        this.getNoInputPrompt = function(field){
+        return "you did not say anything. please say your " +field;
+        };
+
+        this.getRerecordPrompt = function(field){
+        return "please enter 1 if you want to rerecord your " +field;
+        };
+
+        };
+
+        var controller = new Controller();
+    </script>
+
+    <property name="timeout" value="4s"/>
+    <property name="bargein" value="true"/>
+    <property name="beep" value="false"/>
+    <property name="maxtime" value="10s"/>
+    <property name="finalsilence" value="4000ms"/>
+    <property name="dtmfterm" value="true"/>
+
+
+    <form id="controller">
+        <block>
+            <prompt>the number of records is
+                <value expr="controller.say()"/>
+            </prompt>
+            <goto expr="controller.decideFlow()"/>
+        </block>
+    </form>
+
+    <form id="record_voice_without_recognition">
+        <script>
+            var field = controller.nextField();
+        </script>
+        <block>
+            <prompt bargein="false">
+                <value expr="controller.getPrompt(field)"/>
+            </prompt>
+        </block>
+        <record name="record" type="x-wav">
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <prompt bargein="false">
+                    <value src="controller.getNoInputPrompt(field)"/>
+                </prompt>
+            </noinput>
+        </record>
+        <field name="confirm" type="boolean">
+            <prompt bargein="false">
+                <value expr="controller.getConfirmPrompt(field)"/>
+            </prompt>
+            <prompt bargein="false">
+                <audio expr="record"/>
+            </prompt>
+            <prompt bargein="false">
+                <value expr="controller.getRerecordPrompt(field)"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    controller.assign(record);
+                </script>
+                <goto next="#controller"/>
+            </noinput>
+            <filled>
+                <if cond="confirm">
+                    <goto next="#controller"/>
+                </if>
+                <else/>
+                <script>
+                    controller.assign(record);
+                </script>
+                <goto next="#controller"/>
+            </filled>
+        </field>
+
+    </form>
+
+</vxml>
