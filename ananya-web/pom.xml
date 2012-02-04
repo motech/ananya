@@ -31,7 +31,7 @@
                     <printSummary>true</printSummary>
                     <excludes>
                         <exclude>**/*_Roo_*</exclude>
-                        <exclude>**/ananyafunctional/**/*.java</exclude>
+                        <exclude>**/functional/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -129,7 +129,7 @@
                         <configuration>
                             <argLine>-XX:MaxPermSize=1024M</argLine>
                             <includes>
-                                <include>**/ananyafunctional/**/*Test.java</include>
+                                <include>**/functional/**/*Test.java</include>
                             </includes>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         </configuration>

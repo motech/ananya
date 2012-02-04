@@ -47,14 +47,12 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Creates the Spring Container shared by all Servlets and Filters -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <!-- Handles Spring requests -->
     <servlet>
-        <servlet-name>bbcwt</servlet-name>
+        <servlet-name>ananya</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
@@ -64,7 +62,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>bbcwt</servlet-name>
+        <servlet-name>ananya</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
