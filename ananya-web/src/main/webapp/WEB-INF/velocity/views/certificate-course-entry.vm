@@ -3,8 +3,8 @@
 <script src="$landingJs"/>
 <script>
     <![CDATA[
-    var caller = new Caller(callerData);
-    var flow = caller.decideFlow();
+    var controller = new Controller(callerData);
+    var flow = controller.decideFlow();
     ]]>
 </script>
 

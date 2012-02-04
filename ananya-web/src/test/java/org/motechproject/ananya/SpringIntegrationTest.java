@@ -1,4 +1,4 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya;
 
 import org.ektorp.BulkDeleteDocument;
 import org.ektorp.CouchDbConnector;

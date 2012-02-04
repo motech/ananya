@@ -1,13 +1,13 @@
-describe("Caller", function () {
-    var caller;
+describe("Controller for certificate course entry", function () {
+    var controller;
 
     it("should return 'registered_bookmark_present' form for registered caller with bookmark", function() {
         var callerData = {
             "isRegistered" : "true",
             "bookmark" : {"type":"AA"}
         };
-        caller = new Caller(callerData);
-        expect(caller.decideFlow()).toEqual("#registered_bookmark_present");
+        controller = new Controller(callerData);
+        expect(controller.decideFlow()).toEqual("#registered_bookmark_present");
     });
 
 
@@ -16,8 +16,8 @@ describe("Caller", function () {
             "isRegistered" : "true",
             "bookmark" : "{}"
         };
-        caller = new Caller(callerData);
-        expect(caller.decideFlow()).toEqual("#registered_bookmark_absent");
+        controller = new Controller(callerData);
+        expect(controller.decideFlow()).toEqual("#registered_bookmark_absent");
     });
 
 
@@ -25,8 +25,8 @@ describe("Caller", function () {
         var callerData = {
             "isRegistered" : "false"
         };
-        caller = new Caller(callerData);
-        expect(caller.decideFlow()).toEqual("#unregistered");
+        controller = new Controller(callerData);
+        expect(controller.decideFlow()).toEqual("#unregistered");
     });
 
 });

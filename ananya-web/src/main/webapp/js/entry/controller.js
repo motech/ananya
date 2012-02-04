@@ -1,4 +1,4 @@
-var Caller = function(callerData) {
+var Controller = function(callerData) {
 
     var callerData = callerData;
 
