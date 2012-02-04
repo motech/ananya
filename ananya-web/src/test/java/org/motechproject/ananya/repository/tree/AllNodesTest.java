@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ananya.domain.tree.Node;
+import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.repository.SpringIntegrationTest;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;

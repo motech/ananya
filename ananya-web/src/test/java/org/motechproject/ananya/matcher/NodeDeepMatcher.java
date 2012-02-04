@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.motechproject.ananya.domain.tree.Node;
+import org.motechproject.ananya.domain.Node;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.tools.seed;
+package org.motechproject.ananya.seed;
 
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllLocations;

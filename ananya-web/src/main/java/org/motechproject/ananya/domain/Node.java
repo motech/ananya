@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain.tree;
+package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;

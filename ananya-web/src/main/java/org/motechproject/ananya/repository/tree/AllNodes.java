@@ -3,7 +3,7 @@ package org.motechproject.ananya.repository.tree;
 import com.google.gson.Gson;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
-import org.motechproject.ananya.domain.tree.Node;
+import org.motechproject.ananya.domain.Node;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.motechproject.dao.MotechBaseRepository;

@@ -1,6 +1,6 @@
-package org.motechproject.ananya.tools.seed;
+package org.motechproject.ananya.seed;
 
-import org.motechproject.ananya.domain.tree.Node;
+import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.repository.tree.AllNodes;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.deliverytools.seed.Seed;
