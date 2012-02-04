@@ -12,6 +12,7 @@ import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.motechproject.dao.MotechJsonReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ import static org.motechproject.bbcwt.matcher.NodeDeepMatcher.isSameAsNodeRepres
 public class AllNodesTest extends SpringIntegrationTest {
     @Autowired
     private AllNodes allNodes;
+    
+    @Qualifier("allStringContents")
     @Autowired
     private AllStringContents allStringContents;
     private Node root;
