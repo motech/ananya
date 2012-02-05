@@ -4,7 +4,7 @@ describe("Start next chapter interaction", function() {
     var certificateCourseLocation = "certificatecourse/";
 
     beforeEach(function() {
-        metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation};
+        metadata = {"audio.url": audioFileBase, "certificate.audio.url" : certificateCourseLocation};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         CertificateCourse.interactions = new Array();
     });

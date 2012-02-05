@@ -6,7 +6,7 @@ describe("Lesson End Menu Interaction", function() {
     var courseState = new CourseState();
 
     beforeEach(function() {
-        metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation};
+        metadata = {"audio.url": audioFileBase, "certificate.audio.url" : certificateCourseLocation};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         lessonEndMenuInteraction = new LessonEndMenuInteraction(metadata, course, courseState);
         CertificateCourse.interactions = new Array();

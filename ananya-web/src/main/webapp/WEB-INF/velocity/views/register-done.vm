@@ -1,6 +1,5 @@
 #vxmlHeader()
 <block>
     <prompt>Registration done</prompt>
-    <goto next="/ananya/vxml/menu/"/>
 </block>
 #vxmlFooter()

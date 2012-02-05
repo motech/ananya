@@ -3,6 +3,9 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
+    <script src="../dynamic/js/metadata.js"/>
+    <script src="../js/register/controller.js"/>
+
     <script>
         <![CDATA[
         var controller = new RegisterController();
@@ -19,7 +22,7 @@
     <form id="record_designation_form">
         <field name="designation">
             <prompt>
-                <value expr="controller.getPrompt('designation')"/>
+                <audio expr="controller.getPrompt('designation')"/>
             </prompt>
             <option dtmf="1" value="ANM"/>
             <option dtmf="2" value="ASHA"/>
@@ -50,7 +53,7 @@
         </script>
         <block>
             <prompt bargein="false">
-                <value expr="controller.getPrompt(field)"/>
+                <audio expr="controller.getPrompt(field)"/>
             </prompt>
         </block>
         <record name="record" type="x-wav">
@@ -103,13 +106,15 @@
             </filled>
         </field>
         <block name="submit_form">
+            <data srcexpr="controller.submitNameUrl()" enctype="multipart/form-data" method="post"
+                  namelist="session.connection.remote.uri
+                            controller.name()"/>
             <data srcexpr="controller.submitUrl()" enctype="multipart/form-data" method="post"
-              namelist="session.connection.remote.uri
-              controller.designation()
-              controller.name()
-              controller.district()
-              controller.block()
-              controller.panchayat()"/>
+                  namelist="session.connection.remote.uri
+                            controller.designation()
+                            controller.district()
+                            controller.block()
+                            controller.panchayat()"/>
             <goto next="controller.nextFlow(session.connection.local.uri)"/>
         </block>
     </form>

@@ -12,7 +12,7 @@ var PromptContext = function (metadata) {
     };
 
     this.hasExceededMaxInvalidInputs = function() {
-        return this.invalidInputCount > this.metadata.maximumInvalidInputCount;
+        return this.invalidInputCount > this.metadata['maximum.invalid.input.count'];
     };
 
     this.gotNoInput = function() {
@@ -20,7 +20,7 @@ var PromptContext = function (metadata) {
     };
 
     this.hasExceededMaxNoInputs = function() {
-        return this.noInputCount > this.metadata.maximumNoInputCount;
+        return this.noInputCount > this.metadata['maximum.noinput.count'];
     };
 
     this.resetCounts = function() {
@@ -29,23 +29,23 @@ var PromptContext = function (metadata) {
     };
 
     this.audioForInvalidInputRetry = function() {
-        return this.metadata.audioFileBase + this.metadata.invalidInputRetryAudio;
+        return this.audioFileBase() + this.metadata['invalid.input.retry.audio'];
     };
 
     this.audioForInvalidInputDisconnect = function() {
-        return this.metadata.audioFileBase + this.metadata.invalidInputDisconnectAudio;
+        return this.audioFileBase() + this.metadata['invalid.input.disconnect.audio'];
     };
 
     this.audioForNoInputRetry = function() {
-        return this.metadata.audioFileBase + this.metadata.noInputRetryAudio;
+        return this.audioFileBase() + this.metadata['no.input.retry.audio'];
     };
 
     this.audioForNoInputDisconnect = function() {
-        return this.metadata.audioFileBase + this.metadata.noInputDisconnectAudio;
+        return this.audioFileBase() + this.metadata['no.input.disconnect.audio'];
     };
 
     this.audioForOptionToGoToTopLevel = function() {
-        return this.metadata.audioFileBase + this.metadata.optionToGoToTopLevelAudio;
+        return this.audioFileBase() + this.metadata['option.to.top.level.audio'];
     };
 
     this.inputEnteredIsValid = function(input) {
@@ -54,6 +54,10 @@ var PromptContext = function (metadata) {
             return true;
         }
         return false;
+    };
+
+    this.audioFileBase = function() {
+        return this.metadata['audio.url'];
     };
 
     this.setupForReadingInputFromUser = function(formToGoToAfterValidInput, validInputs) {

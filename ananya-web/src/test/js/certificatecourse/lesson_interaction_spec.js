@@ -5,7 +5,7 @@ describe("Lesson interaction", function() {
     var certificateCourseLocation = "certificatecourse/";
 
     beforeEach(function() {
-        metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation};
+        metadata = {"audio.url": audioFileBase, "certificate.audio.url" : certificateCourseLocation};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         courseState = new CourseState();
         courseState.setChapterIndex(1);

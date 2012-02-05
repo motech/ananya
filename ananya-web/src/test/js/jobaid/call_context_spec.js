@@ -1,9 +1,10 @@
 describe("Call Context", function() {
     var course, callContext;
     var audioFileBase = "./js/";
+    var jobaidFileBase = "jobaid/";
 
     beforeEach(function() {
-        var metadata = {"audioFileBase": audioFileBase};
+        var metadata = {"audio.url": audioFileBase, "jobaid.audio.url":jobaidFileBase};
         course = jobAidCourseWithTwoLessonsInEveryChapter();
         callContext = new CallContext(course, metadata);
     });
@@ -93,9 +94,9 @@ describe("Call Context", function() {
     });
 
     it("should return the menu for the current interaction", function () {
-        expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevels.wav");
+        expect(callContext.currentInteractionMenu()).toEqual("./js/jobaid/MenuLevels.wav");
         callContext.handleInput(1);
-        expect(callContext.currentInteractionMenu()).toEqual("./js/MenuLevel1Chapters.wav");
+        expect(callContext.currentInteractionMenu()).toEqual("./js/jobaid/MenuLevel1Chapters.wav");
     });
 
     it("should return the lesson for the current interaction", function () {
@@ -103,7 +104,7 @@ describe("Call Context", function() {
         var chapterNeeded = 1;
         var lessonNeeded = 1;
         callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
-        expect(callContext.currentInteractionLesson()).toEqual("./js/chapter_1_lesson_1.wav");
+        expect(callContext.currentInteractionLesson()).toEqual("./js/jobaid/chapter_1_lesson_1.wav");
     });
 
     it("should navigate to course node when handleInput is called with 0", function () {
@@ -214,10 +215,10 @@ describe("Call Context", function() {
 
     });
 
-    it("should play next introduction only if introduction present and current interaction is not last lesson", function(){
-         var level1 = course.children[0];
-         callContext.handleInput(1);
-         expect(callContext.currentInteraction).toEqual(level1);
+    it("should play next introduction only if introduction present and current interaction is not last lesson", function() {
+        var level1 = course.children[0];
+        callContext.handleInput(1);
+        expect(callContext.currentInteraction).toEqual(level1);
 
         expect(callContext.shouldPlayIntroduction()).toEqual(false);
     });

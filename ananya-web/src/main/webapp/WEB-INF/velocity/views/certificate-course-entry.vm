@@ -12,7 +12,7 @@
 <form id="controller">
     <block>
         <prompt>
-            <audio src="${bundle.audioFileBase}${bundle.certificate.welcome}"></audio>
+            <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
         </prompt>
         <goto expr="controller.decideFlowForCertificateCourse()"/>
     </block>
@@ -26,14 +26,14 @@
 
 <form id="registered_bookmark_absent">
     #repeat(
-        ["${bundle.audioFileBase}${bundle.certificate.options.for.reg}"],
+        ["${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}"],
         $nextFlow)
 </form>
 
 <form id="unregistered">
     #repeat([
-        "${bundle.audioFileBase}${bundle.certificate.need.to.register}",
-        "${bundle.audioFileBase}${bundle.certificate.options.for.non.reg}"],
+        "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}",
+        "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}"],
         "${registerFlow}")
 </form>
 #vxmlFooter()

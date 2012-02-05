@@ -14,7 +14,7 @@
         <![CDATA[
             var callContext = new CallContext(courseData, metaData);
             var promptContext = new PromptContext(metaData);
-            var shortCode = new ShortCode().getCode(metaData.baseNumber,session.connection.local.uri)
+            var shortCode = new ShortCode().getCode(metaData['jobaid.application.number'],session.connection.local.uri)
             callContext.navigateTo(shortCode);
           ]]>
     </script>

@@ -6,7 +6,7 @@ describe("Invalid Interaction", function(){
     var retryAudio = "0000_error_in_pressing_number.wav";
 
     beforeEach(function() {
-        metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation, "invalidInputRetryAudio" : retryAudio};
+        metadata = {"audio.url": audioFileBase, "certificate.audio.url" : certificateCourseLocation, "invalid.input.retry.audio" : retryAudio};
         invalidInteraction = new InvalidInputInteraction(previousInteractionNeedingInput, metadata);
     });
 

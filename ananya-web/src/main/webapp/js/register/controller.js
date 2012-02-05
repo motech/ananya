@@ -1,7 +1,9 @@
-var RegisterController = function() {
+var RegisterController = function(metadata) {
+
+    var metadata = metadata;
     var count = 0;
-    var fields = ["designation", "name", "district", "block", "village"];
     var records = [];
+    var fields = ["designation", "name", "district", "block", "village"];
 
     this.nextField = function() {
         return fields[count];
@@ -12,36 +14,43 @@ var RegisterController = function() {
         count++;
     };
 
-    this.say = function() {
-        return records.length;
-    };
-
-    this.getPrompt = function(field) {
-        return "please say your " + field;
-    };
-
-    this.getConfirmPrompt = function(field) {
-        return "we heard your " + field + " as ";
-    };
-
-    this.getNoInputPrompt = function(field) {
-        return "you did not say anything. please say your " + field;
-    };
-
-    this.getRerecordPrompt = function(field) {
-        return "please enter 1 if you want to rerecord your " + field;
-    };
-
-    this.isVoiceRecognised = function(field) {
-        return field != "name" && field != "designation" && false;
+    this.allCaptured = function() {
+        return count >= fields.length;
     };
 
     this.getGrammar = function(field, record) {
-        return "some.grxml";
+        return metadata["grammar.url"] + metadata["grammar.title." + field] + record + ".grxml";
     };
 
-    this.allCaptured = function() {
-        return count >= fields.length;
+    this.getPrompt = function(field) {
+        return metadata["audio.url"] + metadata["register." + field + ".say"];
+    };
+
+    this.getConfirmPrompt = function(field) {
+        return metadata["audio.url"] + metadata["register." + field + ".confirm"];
+    };
+
+    this.getNoInputPrompt = function(field) {
+        return metadata["audio.url"] + metadata["register." + field + ".noinput"];
+    };
+
+    this.getRerecordPrompt = function(field) {
+        return metadata["audio.url"] + metadata["register." + field + ".rerecord"];
+    };
+
+    this.isVoiceRecognised = function(field) {
+        return field != "name" && field != "designation";
+    };
+
+    this.submitUrl = function() {
+        return metadata["web.url"] + "/flw/register";
+    };
+
+    this.nextFlow = function(calledNumber) {
+        if (metadata["certificatecourse.application.number"] == calledNumber)
+            return metadata["web.url"] + "/vxml/flwcc.vxml";
+        else
+            return metadata["web.url"] + "/vxml/jobaid.vxml";
     };
 
 };

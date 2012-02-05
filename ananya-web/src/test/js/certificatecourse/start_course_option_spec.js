@@ -5,7 +5,7 @@ describe("Start course option", function() {
     var certificateCourseLocation = "certificatecourse/";
 
     beforeEach(function() {
-        metadata = {"audioFileBase": audioFileBase, "certificateCourseAudioLocation" : certificateCourseLocation};
+        metadata = {"audio.url": audioFileBase, "certificate.audio.url" : certificateCourseLocation};
         course = certificationCourseWithTwoLessonsInEveryChapter();
         startCourseOption = new StartCourseOption(metadata, course);
         CertificateCourse.interactions = new Array();

@@ -22,39 +22,39 @@ public class JobAidSeed {
     }
 
     private Node createJobAidTree() {
-        Node course = courseNode("JobAidCourse", "jobaid/0001_welcome_job_aid.wav", "jobaid/0002_select_level.wav");
-        Node level1 = levelNode("level 1", "1", "jobaid/0003_select_chapter_1.1.wav");
-        Node level2 = levelNode("level 2", "2", "jobaid/0004_select_chapter_1.2.wav");
-        Node level3 = levelNode("level 3", "3", "jobaid/0005_select_chapter_1.3.wav");
-        Node level4 = levelNode("level 4", "4", "jobaid/0006_select_chapter_1.4.wav");
+        Node course = courseNode("JobAidCourse", "0001_welcome_job_aid.wav", "0002_select_level.wav");
+        Node level1 = levelNode("level 1", "1", "0003_select_chapter_1.1.wav");
+        Node level2 = levelNode("level 2", "2", "0004_select_chapter_1.2.wav");
+        Node level3 = levelNode("level 3", "3", "0005_select_chapter_1.3.wav");
+        Node level4 = levelNode("level 4", "4", "0006_select_chapter_1.4.wav");
         for (Node level : asList(level1, level2, level3, level4))
             course.addChild(level);
 
-        Node level1Chap1 = chapterNode("Level 1 Chapter 1", "1", "jobaid/0007_lessons_1.1.1.wav", "jobaid/0008_select_lesson_1.1.1.wav");
-        Node level1Chap2 = chapterNode("Level 1 Chapter 2", "2", "jobaid/0009_lessons_1.1.2.wav", "jobaid/0010_select_lesson_1.1.2.wav");
-        Node level1Chap3 = chapterNode("Level 1 Chapter 3", "3", "jobaid/0011_lessons_1.1.3.wav", "jobaid/0012_select_lesson_1.1.3.wav");
-        Node level1Chap4 = chapterNode("Level 1 Chapter 4", "4", "jobaid/0013_lessons_1.1.4.wav", "jobaid/0014_select_lesson_1.1.4.wav");
+        Node level1Chap1 = chapterNode("Level 1 Chapter 1", "1", "0007_lessons_1.1.1.wav", "0008_select_lesson_1.1.1.wav");
+        Node level1Chap2 = chapterNode("Level 1 Chapter 2", "2", "0009_lessons_1.1.2.wav", "0010_select_lesson_1.1.2.wav");
+        Node level1Chap3 = chapterNode("Level 1 Chapter 3", "3", "0011_lessons_1.1.3.wav", "0012_select_lesson_1.1.3.wav");
+        Node level1Chap4 = chapterNode("Level 1 Chapter 4", "4", "0013_lessons_1.1.4.wav", "0014_select_lesson_1.1.4.wav");
         for (Node level : asList(level1Chap1, level1Chap2, level1Chap3, level1Chap4))
             level1.addChild(level);
 
-        Node level2Chap1 = chapterNode("Level 2 Chapter 1", "1", "jobaid/0015_lessons_1.2.1.wav", "jobaid/0016_select_lesson_1.2.1.wav");
-        Node level2Chap2 = chapterNode("Level 2 Chapter 2", "2", "jobaid/0017_lessons_1.2.2.wav", "jobaid/0018_select_lesson_1.2.2.wav");
-        Node level2Chap3 = chapterNode("Level 2 Chapter 3", "3", "jobaid/0019_lessons_1.2.3.wav", "jobaid/0020_select_lesson_1.2.3.wav");
-        Node level2Chap4 = chapterNode("Level 2 Chapter 4", "4", "jobaid/0021_lessons_1.2.4.wav", "jobaid/0022_select_lesson_1.2.4.wav");
+        Node level2Chap1 = chapterNode("Level 2 Chapter 1", "1", "0015_lessons_1.2.1.wav", "0016_select_lesson_1.2.1.wav");
+        Node level2Chap2 = chapterNode("Level 2 Chapter 2", "2", "0017_lessons_1.2.2.wav", "0018_select_lesson_1.2.2.wav");
+        Node level2Chap3 = chapterNode("Level 2 Chapter 3", "3", "0019_lessons_1.2.3.wav", "0020_select_lesson_1.2.3.wav");
+        Node level2Chap4 = chapterNode("Level 2 Chapter 4", "4", "0021_lessons_1.2.4.wav", "0022_select_lesson_1.2.4.wav");
         for (Node level : asList(level2Chap1, level2Chap2, level2Chap3, level2Chap4))
             level2.addChild(level);
 
-        Node level3Chap1 = chapterNode("Level 3 Chapter 1", "1", "jobaid/0023_lessons_1.3.1.wav", "jobaid/0024_select_lesson_1.3.1.wav");
-        Node level3Chap2 = chapterNode("Level 3 Chapter 2", "2", "jobaid/0025_lessons_1.3.2.wav", "jobaid/0026_select_lesson_1.3.2.wav");
-        Node level3Chap3 = chapterNode("Level 3 Chapter 3", "3", "jobaid/0027_lessons_1.3.3.wav", "jobaid/0028_select_lesson_1.3.3.wav");
-        Node level3Chap4 = chapterNode("Level 3 Chapter 4", "4", "jobaid/0029_lessons_1.3.4.wav", "jobaid/0030_select_lesson_1.3.4.wav");
+        Node level3Chap1 = chapterNode("Level 3 Chapter 1", "1", "0023_lessons_1.3.1.wav", "0024_select_lesson_1.3.1.wav");
+        Node level3Chap2 = chapterNode("Level 3 Chapter 2", "2", "0025_lessons_1.3.2.wav", "0026_select_lesson_1.3.2.wav");
+        Node level3Chap3 = chapterNode("Level 3 Chapter 3", "3", "0027_lessons_1.3.3.wav", "0028_select_lesson_1.3.3.wav");
+        Node level3Chap4 = chapterNode("Level 3 Chapter 4", "4", "0029_lessons_1.3.4.wav", "0030_select_lesson_1.3.4.wav");
         for (Node level : asList(level3Chap1, level3Chap2, level3Chap3, level3Chap4))
             level3.addChild(level);
 
-        Node level4Chap1 = chapterNode("Level 4 Chapter 1", "1", "jobaid/0031_lessons_1.4.1.wav", "jobaid/0032_select_lesson_1.4.1.wav");
-        Node level4Chap2 = chapterNode("Level 4 Chapter 2", "2", "jobaid/0033_lessons_1.4.2.wav", "jobaid/0034_select_lesson_1.4.2.wav");
-        Node level4Chap3 = chapterNode("Level 4 Chapter 3", "3", "jobaid/0035_lessons_1.4.3.wav", "jobaid/0036_select_lesson_1.4.3.wav");
-        Node level4Chap4 = chapterNode("Level 4 Chapter 4", "4", "jobaid/0037_lessons_1.4.4.wav", "jobaid/0038_select_lesson_1.4.4.wav");
+        Node level4Chap1 = chapterNode("Level 4 Chapter 1", "1", "0031_lessons_1.4.1.wav", "0032_select_lesson_1.4.1.wav");
+        Node level4Chap2 = chapterNode("Level 4 Chapter 2", "2", "0033_lessons_1.4.2.wav", "0034_select_lesson_1.4.2.wav");
+        Node level4Chap3 = chapterNode("Level 4 Chapter 3", "3", "0035_lessons_1.4.3.wav", "0036_select_lesson_1.4.3.wav");
+        Node level4Chap4 = chapterNode("Level 4 Chapter 4", "4", "0037_lessons_1.4.4.wav", "0038_select_lesson_1.4.4.wav");
         for (Node level : asList(level4Chap1, level4Chap2, level4Chap3, level4Chap4))
             level4.addChild(level);
 
@@ -86,7 +86,7 @@ public class JobAidSeed {
     private void addLessonsToChapter(Node chapter, String... lessons) {
         int i = 1;
         for (String lesson : lessons) {
-            chapter.addChild(lessonNode(chapter.getName() + " Lesson" + i, i + "", "jobaid/" + lesson + ".wav"));
+            chapter.addChild(lessonNode(chapter.getName() + " Lesson" + i, i + "", "" + lesson + ".wav"));
             i++;
         }
     }

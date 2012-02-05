@@ -2,14 +2,14 @@ var AbstractCourseInteraction = function(metadata) {
     this.init = function(metadata) {
         this.metadata = metadata;
         this.interactionDone=false;
-    }
+    };
 
     this.findAudio = function(interactionToUse, contentName) {
         return this.audioFileBase() + this.findContentByName(interactionToUse, contentName).value;
     };
 
     this.audioFileBase = function() {
-        return this.metadata.audioFileBase + this.metadata.certificateCourseAudioLocation;
+       return this.metadata['audio.url']+this.metadata['certificate.audio.url'];
     };
 
     this.findContentByName = function(interactionToUse, contentName) {

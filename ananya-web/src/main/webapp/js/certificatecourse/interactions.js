@@ -214,7 +214,7 @@ InvalidInputInteraction.prototype = new AbstractCourseInteraction();
 InvalidInputInteraction.prototype.constructor = InvalidInputInteraction;
 
 InvalidInputInteraction.prototype.playAudio = function() {
-    return this.metadata.audioFileBase + this.metadata.invalidInputRetryAudio;
+    return this.metadata['audio.url'] + this.metadata['invalid.input.retry.audio'];
 };
 
 InvalidInputInteraction.prototype.doesTakeInput = function() {

@@ -3,14 +3,14 @@ describe("Prompt context", function () {
 
     beforeEach(function() {
         var metadata = {
-            "maximumInvalidInputCount": "2",
-            "maximumNoInputCount": "1",
-            "audioFileBase": "./audio/",
-            "noInputRetryAudio": "error.no.input.retry.wav",
-            "noInputDisconnectAudio": "error.no.input.disconnect.wav",
-            "invalidInputRetryAudio": "error.wrong.input.retry.wav",
-            "invalidInputDisconnectAudio": "error.wrong.input.disconnect.wav",
-            "optionToGoToTopLevelAudio": "option.to.go.to.top.level.wav",
+            "maximum.invalid.input.count": "2",
+            "maximum.noinput.count": "1",
+            "audio.url": "./audio/",
+            "no.input.retry.audio": "error.no.input.retry.wav",
+            "no.input.disconnect.audio": "error.no.input.disconnect.wav",
+            "invalid.input.retry.audio": "error.wrong.input.retry.wav",
+            "invalid.input.disconnect.audio": "error.wrong.input.disconnect.wav",
+            "option.to.top.level.audio": "option.to.go.to.top.level.wav"
         };
         promptContext = new PromptContext(metadata);
     });

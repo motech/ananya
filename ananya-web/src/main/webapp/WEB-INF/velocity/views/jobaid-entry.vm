@@ -15,9 +15,9 @@
 
 <form id="unregistered">
     <block>
-        #play("${bundle.audioFileBase}${bundle.jobaid.welcome}")
-        #play("${bundle.audioFileBase}${bundle.jobaid.detail}")
-        #play("${bundle.audioFileBase}${bundle.jobaid.need.to.register}")
+        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
+        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.detail}")
+        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.need.to.register}")
         <goto next="$registerFlow"/>
     </block>
 </form>

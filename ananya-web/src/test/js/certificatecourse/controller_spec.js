@@ -7,10 +7,10 @@ describe("Certificate course controller spec", function() {
 
     beforeEach(function() {
         metadata = {
-                        "audioFileBase": audioFileBase,
-                        "certificateCourseAudioLocation" : certificateCourseLocation,
-                        "maximumInvalidInputCount" : "2",
-                        "maximumNoInputCount" : "2"
+                        "audio.url": audioFileBase,
+                        "certificate.audio.url" : certificateCourseLocation,
+                        "maximum.invalid.input.count" : "2",
+                        "maximum.noinput.count" : "2"
         };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();

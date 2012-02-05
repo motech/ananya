@@ -65,7 +65,7 @@ var CallContext = function(course, metadata) {
     };
 
     this.audioFileBase = function() {
-        return this.metadata.audioFileBase;
+        return this.metadata['audio.url']+this.metadata['jobaid.audio.url'];
     };
 
     this.resetPromptCounts = function() {
