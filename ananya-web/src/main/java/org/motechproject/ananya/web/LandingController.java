@@ -28,7 +28,7 @@ public class LandingController {
                 request,
                 "jobaid-entry",
                 "/vxml/jobaid.vxml",
-                "/vxml/jobaid/register");
+                "/vxml/register.vxml");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/certificatecourse/enter")
@@ -37,7 +37,7 @@ public class LandingController {
                 request,
                 "certificate-course-entry",
                 "/vxml/certificatecourse.vxml",
-                "/vxml/certificatecourse/register");
+                "/vxml/register.vxml");
     }
 
     private ModelAndView modelAndView(HttpServletRequest request, String view, String nextFlow, String regFlow) {

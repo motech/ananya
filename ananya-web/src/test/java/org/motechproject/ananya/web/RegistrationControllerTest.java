@@ -6,8 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.repository.AllRecordings;
+import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -46,75 +45,48 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void shouldRegistrationVxmlWithLinkToJobAidIfEntryIsJobAidNumber() {
-        when(request.getContextPath()).thenReturn("/ananya");
-
-        ModelAndView modelAndView = controller.getCallFlow(request, "jobaid");
-
-        assertEquals("register", modelAndView.getViewName());
-        assertEquals("/ananya/vxml/jobaid.vxml", (String) modelAndView.getModel().get("nextFlow"));
-        assertDesignations(modelAndView);
-    }
-
-    @Test
-    public void shouldRegistrationVxmlWithLinkToCourseIfEntryIsCertificateCourseNumber() {
-        when(request.getContextPath()).thenReturn("/ananya");
-
-        ModelAndView modelAndView = controller.getCallFlow(request, "certificatecourse");
-
-        assertEquals("register", modelAndView.getViewName());
-        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
-        assertDesignations(modelAndView);
-    }
-
-    @Test
-    public void shouldCaptureRecordWavFilesAndRegisterFLW() throws Exception {
+    public void shouldRegisterFLWWithLocation() throws Exception {
         String msisdn = "123";
-        String path = "/path";
         String village = "S01D001B001V004";
 
-        ServletFileUpload upload = mock(ServletFileUpload.class);
-        ServletContext context = mock(ServletContext.class);
-        when(request.getMethod()).thenReturn("POST");
-        when(request.getContentType()).thenReturn("multipart/");
+        when(request.getParameter("session.connection.remote.uri")).thenReturn(msisdn);
+        when(request.getParameter("designation")).thenReturn(Designation.ASHA.name());
+        when(request.getParameter("panchayat")).thenReturn(village);
 
-        FileItem msisdnItem = mock(FileItem.class);
-        FileItem designationItem = mock(FileItem.class);
-        FileItem panchayatItem = mock(FileItem.class);
-        List items = Arrays.asList(msisdnItem, designationItem, panchayatItem);
-
-        when(context.getRealPath("/recordings/")).thenReturn(path);
-        when(request.getSession()).thenReturn(session);
-        when(session.getServletContext()).thenReturn(context);
-        when(upload.parseRequest(request)).thenReturn(items);
-
-        SetUpExpectationsFor("session.connection.remote.uri", msisdn);
-        SetUpExpectationsFor("designation", Designation.ASHA.name());
-        SetUpExpectationsFor("panchayat", village);
-
-        RegistrationController controllerSpy = spy(controller);
-        doReturn(upload).when(controllerSpy).getUploader();
-
-        ModelAndView modelAndView = controllerSpy.registerNew(request);
+        ModelAndView modelAndView = controller.registerNew(request);
 
         verify(flwService).createNew(msisdn, Designation.ASHA, village);
-        verify(allRecordings).store(msisdn, items, path);
         assertEquals("register-done", modelAndView.getViewName());
 
     }
 
-    private void SetUpExpectationsFor(String fieldName, String itemName) {
-        when(request.getParameter(fieldName)).thenReturn(itemName);
-    }
+    @Test
+    public void shouldRecordFLWName() throws Exception {
+        String msisdn = "123";
+        String path = "/path";
+        ServletFileUpload upload = mock(ServletFileUpload.class);
+        ServletContext context = mock(ServletContext.class);
+        FileItem msisdnItem = mock(FileItem.class);
+        List items = Arrays.asList(msisdnItem);
 
-    private void assertDesignations(ModelAndView modelAndView) {
-        Map designations = (Map) modelAndView.getModel().get("designations");
-        assertEquals(Designation.ANM.name(), designations.get(1));
-        assertEquals(Designation.ASHA.name(), designations.get(2));
-        assertEquals(Designation.ANGANWADI.name(), designations.get(3));
-    }
+        when(request.getSession()).thenReturn(session);
+        when(session.getServletContext()).thenReturn(context);
+        when(context.getRealPath("/recordings/")).thenReturn(path);
+        when(upload.parseRequest(request)).thenReturn(items);
 
+        when(msisdnItem.isFormField()).thenReturn(true);
+        when(msisdnItem.getFieldName()).thenReturn("session.connection.remote.uri");
+        when(msisdnItem.getString()).thenReturn(msisdn);
+
+        RegistrationController controllerSpy = spy(controller);
+        doReturn(upload).when(controllerSpy).getUploader();
+
+        ModelAndView modelAndView = controllerSpy.recordName(request);
+
+        verify(allRecordings).store(msisdn, items, path);
+        assertEquals("register-done", modelAndView.getViewName());
+
+    }
 
 }
         

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_VILLAGES_S01D003B001" tag-format="semantics/1.0">
+	<rule id="ANANYA_VILLAGES_S01D003B001" scope="public">
+		<one-of>
+			<item> चनायन बांध <tag> out.Village = &quot;S01D003B001V008&quot;</tag></item>
+			<item> चनायन बंध <tag> out.Village = &quot;S01D003B001V008&quot;</tag></item>
+			<item> चानयन बांध <tag> out.Village = &quot;S01D003B001V008&quot;</tag></item>
+			<item> चनया बांध <tag> out.Village = &quot;S01D003B001V008&quot;</tag></item>
+			<item> चनयाँ बांध <tag> out.Village = &quot;S01D003B001V008&quot;</tag></item>
+			<item> महना गनी <tag> out.Village = &quot;S01D003B001V017&quot;</tag></item>
+			<item> रतनमाला <tag> out.Village = &quot;S01D003B001V026&quot;</tag></item>
+			<item> सरिसवा <tag> out.Village = &quot;S01D003B001V028&quot;</tag></item>
+			<item> सारिसवा <tag> out.Village = &quot;S01D003B001V028&quot;</tag></item>
+			<item> सरिसावा <tag> out.Village = &quot;S01D003B001V028&quot;</tag></item>
+			<item> सारिसावा <tag> out.Village = &quot;S01D003B001V028&quot;</tag></item>
+			<item> सरीसवा <tag> out.Village = &quot;S01D003B001V028&quot;</tag></item>
+			<item>बरवा सेमराघाट <tag> out.Village = &quot;S01D003B001V006&quot;</tag></item>
+			<item>गढ़वा हरपुर <tag> out.Village = &quot;S01D003B001V011&quot;</tag></item>
+			<item>गढ़वा हरिपुर<tag> out.Village = &quot;S01D003B001V011&quot;</tag></item>
+			<item>गरवा हरपुर<tag> out.Village = &quot;S01D003B001V011&quot;</tag></item>
+			<item>गढ़वा <tag> out.Village = &quot;S01D003B001V011&quot;</tag></item>
+			<item>महोदीपुर <tag> out.Village = &quot;S01D003B001V019&quot;</tag></item>
+			<item>मझौलीया <tag> out.Village = &quot;S01D003B001V021&quot;</tag></item>
+			<item>मझौलिया <tag> out.Village = &quot;S01D003B001V021&quot;</tag></item>
+			<item>मझोलीया <tag> out.Village = &quot;S01D003B001V021&quot;</tag></item>
+			<item>मजोलीया <tag> out.Village = &quot;S01D003B001V021&quot;</tag></item>			
+			<item>डुमरी <tag> out.Village = &quot;S01D003B001V010&quot;</tag></item>
+			<item>डुमरिया <tag> out.Village = &quot;S01D003B001V010&quot;</tag></item>
+			<item>डूमरी <tag> out.Village = &quot;S01D003B001V010&quot;</tag></item>
+			<item>डुमारी <tag> out.Village = &quot;S01D003B001V010&quot;</tag></item>
+			<item>परसा <tag> out.Village = &quot;S01D003B001V023&quot;</tag></item>
+			<item>परशा <tag> out.Village = &quot;S01D003B001V023&quot;</tag></item>
+			<item>पारसा <tag> out.Village = &quot;S01D003B001V023&quot;</tag></item>
+			<item>पर्सा <tag> out.Village = &quot;S01D003B001V023&quot;</tag></item>
+			<item>महनवा रामपुरवा <tag> out.Village = &quot;S01D003B001V018&quot;</tag></item>
+			<item>धोकराहां <tag> out.Village = &quot;S01D003B001V009&quot;</tag></item>
+			<item>बैठनिया भनाचक <tag> out.Village = &quot;S01D003B001V004&quot;</tag></item>
+			<item>बहुअरवा <tag> out.Village = &quot;S01D003B001V003&quot;</tag></item>
+			<item>बहुरवा <tag> out.Village = &quot;S01D003B001V003&quot;</tag></item>
+			<item>भहुरवा <tag> out.Village = &quot;S01D003B001V003&quot;</tag></item>
+			<item>भहुअरवा <tag> out.Village = &quot;S01D003B001V003&quot;</tag></item>
+			<item>बहुअरावा <tag> out.Village = &quot;S01D003B001V003&quot;</tag></item>
+			<item>गुदरा <tag> out.Village = &quot;S01D003B001V012&quot;</tag></item>
+			<item>जौकटीया <tag> out.Village = &quot;S01D003B001V013&quot;</tag></item>
+			<item>बखरीया <tag> out.Village = &quot;S01D003B001V005&quot;</tag></item>
+			<item>रूलही <tag> out.Village = &quot;S01D003B001V027&quot;</tag></item>
+			<item>रूलाही <tag> out.Village = &quot;S01D003B001V027&quot;</tag></item>
+			<item>रूलहि <tag> out.Village = &quot;S01D003B001V027&quot;</tag></item>			
+			<item>राजाभार <tag> out.Village = &quot;S01D003B001V024&quot;</tag></item>
+			<item>करमवा <tag> out.Village = &quot;S01D003B001V014&quot;</tag></item>
+			<item>लाल सरैया <tag> out.Village = &quot;S01D003B001V015&quot;</tag></item>
+			<item>लाल सराय <tag> out.Village = &quot;S01D003B001V015&quot;</tag></item>
+			<item>लालसराय <tag> out.Village = &quot;S01D003B001V015&quot;</tag></item>			
+			<item>रामनगर बंकट <tag> out.Village = &quot;S01D003B001V025&quot;</tag></item>
+			<item>अमवा मझार <tag> out.Village = &quot;S01D003B001V002&quot;</tag></item>
+			<item>मझरीया शेख <tag> out.Village = &quot;S01D003B001V020&quot;</tag></item>		
+			<item>मझहरिया शेख <tag> out.Village = &quot;S01D003B001V020&quot;</tag></item>
+			<item>मजरीया शेख <tag> out.Village = &quot;S01D003B001V020&quot;</tag></item>
+			<item>मझरीया <tag> out.Village = &quot;S01D003B001V020&quot;</tag></item>			
+			<item>अहवर कुडिया <tag> out.Village = &quot;S01D003B001V001&quot;</tag></item>
+			<item>अहवर कुरिया <tag> out.Village = &quot;S01D003B001V001&quot;</tag></item>
+			<item>अवर कुडिया <tag> out.Village = &quot;S01D003B001V001&quot;</tag></item>
+			<item>अवर कुरिया <tag> out.Village = &quot;S01D003B001V001&quot;</tag></item>			
+			<item>माधोपुर <tag> out.Village = &quot;S01D003B001V016&quot;</tag></item>
+			<item>सेनुअरिया <tag> out.Village = &quot;S01D003B001V029&quot;</tag></item>
+			<item>नौतन खुर्द <tag> out.Village = &quot;S01D003B001V022&quot;</tag></item>
+			<item>बिशम्‍भर पुर <tag> out.Village = &quot;S01D003B001V007&quot;</tag></item>
+			<item>बिशम्‍भरपुर <tag> out.Village = &quot;S01D003B001V007&quot;</tag></item>
+			<item>बिसम्‍भर पुर <tag> out.Village = &quot;S01D003B001V007&quot;</tag></item>
+			<item>बिसंभर पुर <tag> out.Village = &quot;S01D003B001V007&quot;</tag></item>
+		</one-of>
+	</rule>
+</grammar>

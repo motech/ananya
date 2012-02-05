@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_S001_DISTRICTS" tag-format="semantics/1.0">
+	<rule id="ANANYA_S001_DISTRICTS" scope="public">
+		<one-of>
+			<item>पटना <tag> out.District = &quot;S01D001&quot;</tag></item>
+			<item>पश्चिमी चम्‍पारण <tag> out.District = &quot;S01D003&quot;</tag></item>
+			<item>वेस्ट चम्‍पारण <tag> out.District = &quot;S01D003&quot;</tag></item>
+			<item>खगरिया <tag> out.District = &quot;S01D002&quot;</tag></item>
+		</one-of>
+	</rule>
+</grammar>

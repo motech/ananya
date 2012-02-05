@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_BLOCKS_S01D002" tag-format="semantics/1.0">
+	<rule id="ANANYA_BLOCKS_S01D002" scope="public">
+		<one-of>
+			<item>मझौलीया <tag> out.Block = &quot;S01D003B001&quot; </tag></item>
+			<item>मझौलिया <tag> out.Block = &quot;S01D003B001&quot;</tag></item>
+			<item>मझोलीया <tag> out.Block = &quot;S01D003B001&quot;</tag></item>
+			<item>मजोलीया <tag> out.Block = &quot;S01D003B001&quot;</tag></item>			
+		</one-of>
+	</rule>
+</grammar>

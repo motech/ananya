@@ -109,7 +109,7 @@
             <data srcexpr="controller.submitNameUrl()" enctype="multipart/form-data" method="post"
                   namelist="session.connection.remote.uri
                             controller.name()"/>
-            <data srcexpr="controller.submitUrl()" enctype="multipart/form-data" method="post"
+            <data srcexpr="controller.submitUrl()" method="post"
                   namelist="session.connection.remote.uri
                             controller.designation()
                             controller.district()

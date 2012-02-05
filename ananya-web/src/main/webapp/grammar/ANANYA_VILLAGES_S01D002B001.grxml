@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_VILLAGES_S01D002B001" tag-format="semantics/1.0">
+	<rule id="ANANYA_VILLAGES_S01D002B001" scope="public">
+		<one-of>
+			<item>अमनी <tag> out.Village = &quot;S01D002B001V001&quot;</tag></item>
+			<item> बलहा <tag> out.Village = &quot;S01D002B001V002&quot;</tag></item>
+			<item> बल्हा <tag> out.Village = &quot;S01D002B001V002&quot;</tag></item>
+			<item> बाल्हा <tag> out.Village = &quot;S01D002B001V002&quot;</tag></item>			
+			<item>सईदपुर <tag> out.Village = &quot;S01D002B001V006&quot;</tag></item>
+			<item>खुटिया <tag> out.Village = &quot;S01D002B001V005&quot;</tag></item>
+			<item>कुटिया <tag> out.Village = &quot;S01D002B001V005&quot;</tag></item>
+			<item>खुठिया <tag> out.Village = &quot;S01D002B001V005&quot;</tag></item>
+			<item>खुठहा <tag> out.Village = &quot;S01D002B001V005&quot;</tag></item>
+			<item>चाखुसैनी <tag> out.Village = &quot;S01D002B001V003&quot;</tag></item>
+			<item>पश्चिमी  ठाठा <tag> out.Village = &quot;S01D002B001V007&quot;</tag></item>
+			<item> पश्चिमी  थाठा <tag> out.Village = &quot;S01D002B001V007&quot;</tag></item>
+			<item> पश्चिमी  ठाटा <tag> out.Village = &quot;S01D002B001V007&quot;</tag></item>
+			<item> वेस्ट ठाठा <tag> out.Village = &quot;S01D002B001V007&quot;</tag></item>
+			<item>पूर्वी ठाठा <tag> out.Village = &quot;S01D002B001V004&quot;</tag></item>
+			<item> पूर्वी  थाठा <tag> out.Village = &quot;S01D002B001V004&quot;</tag></item>
+			<item> पूर्वी  ठाटा <tag> out.Village = &quot;S01D002B001V004&quot;</tag></item>
+			<item> ईस्ट ठाठा <tag> out.Village = &quot;S01D002B001V004&quot;</tag></item>
+		</one-of>
+	</rule>
+</grammar>
