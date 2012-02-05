@@ -1,10 +1,9 @@
 #vxmlHeader()
 <script srcexpr="$callerData"/>
-<script src="$landingJs"/>
+<script src="$entryJs"/>
 <script>
     <![CDATA[
-    var controller = new Controller(callerData);
-    var flow = controller.decideFlow();
+    var controller = new EntryController(callerData);
     ]]>
 </script>
 
@@ -15,7 +14,7 @@
         <prompt>
             <audio src="${bundle.audioFileBase}${bundle.certificate.welcome}"></audio>
         </prompt>
-        <goto expr="flow"/>
+        <goto expr="controller.decideFlowForCertificateCourse()"/>
     </block>
 </form>
 

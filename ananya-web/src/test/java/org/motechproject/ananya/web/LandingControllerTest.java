@@ -41,12 +41,12 @@ public class LandingControllerTest {
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
         String callerData = (String) modelAndView.getModel().get("callerData");
-        String landingJs = (String) modelAndView.getModel().get("landingJs");
+        String entryJs = (String) modelAndView.getModel().get("entryJs");
 
         assertEquals("/ananya/vxml/jobaid.vxml", nextFlow);
         assertEquals("/ananya/vxml/jobaid/register", registerFlow);
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
-        assertEquals("/ananya/js/entry/controller.js", landingJs);
+        assertEquals("/ananya/js/entry/controller.js", entryJs);
         assertEquals("jobaid-entry",modelAndView.getViewName());
     }
 
@@ -57,12 +57,12 @@ public class LandingControllerTest {
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
         String callerData = (String) modelAndView.getModel().get("callerData");
-        String landingJs = (String) modelAndView.getModel().get("landingJs");
+        String entryJs = (String) modelAndView.getModel().get("entryJs");
 
         assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
         assertEquals("/ananya/vxml/certificatecourse/register", registerFlow);
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
-        assertEquals("/ananya/js/entry/controller.js", landingJs);
+        assertEquals("/ananya/js/entry/controller.js", entryJs);
         assertEquals("certificate-course-entry",modelAndView.getViewName());
     }
 }

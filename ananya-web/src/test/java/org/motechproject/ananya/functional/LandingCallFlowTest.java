@@ -34,13 +34,19 @@ public class LandingCallFlowTest {
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/enter/");
 
         assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
+         assertEquals("/ananya/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
 
-        NodeList links = callFlow.readNode("/vxml/form/block/if/goto");
-        assertEquals("/ananya/vxml/jobaid.vxml", links.item(0).getAttributes().item(0).getTextContent());
-        assertEquals("/ananya/vxml/jobaid/register", links.item(1).getAttributes().item(0).getTextContent());
+        String controller = "/vxml/form[@id='controller']";
+        assertEquals("controller.decideFlowForJobAid()", callFlow.readString(controller + "/block/goto/@expr"));
 
-        NodeList prompts = callFlow.readNode("/vxml/form/block/if/audio");
+        String registeredForm = "/vxml/form[@id='registered']";
+        assertEquals("/ananya/vxml/jobaid.vxml",callFlow.readString(registeredForm+"/block/goto/@next"));
+
+        String unregisteredForm = "/vxml/form[@id='unregistered']";
+        assertEquals("/ananya/vxml/jobaid/register",callFlow.readString(unregisteredForm+"/block/goto/@next"));
+        NodeList prompts = callFlow.readNode(unregisteredForm+"/block/audio");
         assertEquals(3, prompts.getLength());
+
     }
 
 
@@ -54,7 +60,7 @@ public class LandingCallFlowTest {
         assertEquals("true", callFlow.readString("/vxml/property[@name='bargein']/@value"));
 
         String controller = "/vxml/form[@id='controller']";
-        assertEquals("flow", callFlow.readString(controller + "/block/goto/@expr"));
+        assertEquals("controller.decideFlowForCertificateCourse()", callFlow.readString(controller + "/block/goto/@expr"));
         assertNotNull(callFlow.readNode(controller + "/block/prompt/audio"));
 
         String registeredWithBookmark = "/vxml/form[@id='registered_bookmark_present']";

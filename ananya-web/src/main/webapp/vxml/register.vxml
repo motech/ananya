@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script>
+        <![CDATA[
+        var controller = new RegisterController();
+         ]]>
+    </script>
+
+    <property name="timeout" value="4s"/>
+    <property name="bargein" value="true"/>
+    <property name="beep" value="false"/>
+    <property name="maxtime" value="10s"/>
+    <property name="finalsilence" value="4000ms"/>
+    <property name="dtmfterm" value="true"/>
+
+    <form id="record_designation_form">
+        <field name="designation">
+            <prompt>
+                <value expr="controller.getPrompt('designation')"/>
+            </prompt>
+            <option dtmf="1" value="ANM"/>
+            <option dtmf="2" value="ASHA"/>
+            <option dtmf="3" value="ANGANWADI"/>
+            <noinput>
+                <value expr="controller.getPrompt('designation')"/>
+            </noinput>
+            <nomatch>
+                <value expr="controller.getPrompt('designation')"/>
+            </nomatch>
+            <filled>
+                <script>
+                    controller.capture(designation);
+                </script>
+                <goto next="#record_form"/>
+            </filled>
+        </field>
+    </form>
+
+    <form id="record_form">
+        <block>
+            <if cond="controller.allCaptured()">
+                <goto nextitem="submit_form"/>
+            </if>
+        </block>
+        <script>
+            var field = controller.nextField();
+        </script>
+        <block>
+            <prompt bargein="false">
+                <value expr="controller.getPrompt(field)"/>
+            </prompt>
+        </block>
+        <record name="record" type="x-wav">
+            <if cond="controller.isVoiceRecognised(field)">
+                <grammar srcexpr="controller.getGrammar(field,record)" type="application/srgs+xml"/>
+                <else/>
+                <grammar mode="dtmf" version="1.0" root="root">
+                    <rule id="root" scope="public">
+                        <one-of>
+                            <item>1</item>
+                        </one-of>
+                    </rule>
+                </grammar>
+            </if>
+            <noinput>
+                <prompt bargein="false">
+                    <value src="controller.getNoInputPrompt(field)"/>
+                </prompt>
+            </noinput>
+        </record>
+
+        <field name="confirm" type="boolean">
+            <prompt bargein="false">
+                <value expr="controller.getConfirmPrompt(field)"/>
+                <audio expr="record"/>
+                <value expr="controller.getRerecordPrompt(field)"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root">
+                <rule id="root" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    controller.capture(record);
+                </script>
+                <goto next="#record_form"/>
+            </noinput>
+            <filled>
+                <if cond="confirm">
+                    <goto next="#record_form"/>
+                </if>
+                <else/>
+                <script>
+                    controller.capture(record);
+                </script>
+                <goto next="#record_form"/>
+            </filled>
+        </field>
+        <block name="submit_form">
+            <data srcexpr="controller.submitUrl()" enctype="multipart/form-data" method="post"
+              namelist="session.connection.remote.uri
+              controller.designation()
+              controller.name()
+              controller.district()
+              controller.block()
+              controller.panchayat()"/>
+            <goto next="controller.nextFlow(session.connection.local.uri)"/>
+        </block>
+    </form>
+</vxml>

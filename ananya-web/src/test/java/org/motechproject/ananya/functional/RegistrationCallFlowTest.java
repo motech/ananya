@@ -44,7 +44,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         assertOnDesignationField();
         assertNonInterActivePrompts();
         assertEquals("/ananya/vxml/jobaid.vxml", callFlow.readString("/vxml/form/block/goto/@next"));
-        assertEquals("session.connection.local.uri designation name district block panchayat", callFlow.readString("/vxml/form/block/data/@namelist"));
+        assertEquals("session.connection.remote.uri designation name district block panchayat", callFlow.readString("/vxml/form/block/data/@namelist"));
     }
 
     @Test

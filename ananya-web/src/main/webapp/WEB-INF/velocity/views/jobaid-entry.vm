@@ -1,15 +1,30 @@
 #vxmlHeader()
 <script srcexpr="$callerData"/>
-<form id="landing_page">
+<script src="$entryJs"/>
+<script>
+    <![CDATA[
+    var controller = new EntryController(callerData);
+    ]]>
+</script>
+
+<form id="controller">
     <block>
-        <if cond="callerData.isRegistered == 'true'">
-            <goto next="$nextFlow"/>
-            <else/>
-            #play("${bundle.audioFileBase}${bundle.jobaid.welcome}")
-            #play("${bundle.audioFileBase}${bundle.jobaid.detail}")
-            #play("${bundle.audioFileBase}${bundle.jobaid.need.to.register}")
-            <goto next="$registerFlow"/>
-        </if>
+        <goto expr="controller.decideFlowForJobAid()"/>
+    </block>
+</form>
+
+<form id="unregistered">
+    <block>
+        #play("${bundle.audioFileBase}${bundle.jobaid.welcome}")
+        #play("${bundle.audioFileBase}${bundle.jobaid.detail}")
+        #play("${bundle.audioFileBase}${bundle.jobaid.need.to.register}")
+        <goto next="$registerFlow"/>
+    </block>
+</form>
+
+<form id="registered">
+    <block>
+        <goto next="$nextFlow"/>
     </block>
 </form>
 #vxmlFooter()

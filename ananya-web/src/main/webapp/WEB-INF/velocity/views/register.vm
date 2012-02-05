@@ -37,7 +37,7 @@
         <data src="$bundle.register.submit.url"
               enctype="multipart/form-data"
               method="post"
-              namelist="session.connection.local.uri designation name district block panchayat"/>
+              namelist="session.connection.remote.uri designation name district block panchayat"/>
 
         #play("${bundle.audioFileBase}${bundle.register.complete}")
 
