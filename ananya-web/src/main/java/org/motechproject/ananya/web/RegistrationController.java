@@ -54,6 +54,7 @@ public class RegistrationController {
 
         String msisdn = getField(items, "session.connection.remote.uri");
         String realPath = request.getSession().getServletContext().getRealPath("/recordings/");
+
         allRecordings.store(msisdn, items, realPath);
 
         log.info("Recorded new FLW name:" + msisdn);

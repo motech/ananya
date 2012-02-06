@@ -5,7 +5,6 @@
 
     <script src="../dynamic/js/metadata.js"/>
     <script src="../js/register/controller.js"/>
-
     <script>
         <![CDATA[
         var controller = new RegisterController();
@@ -14,10 +13,6 @@
 
     <property name="timeout" value="4s"/>
     <property name="bargein" value="true"/>
-    <property name="beep" value="false"/>
-    <property name="maxtime" value="10s"/>
-    <property name="finalsilence" value="4000ms"/>
-    <property name="dtmfterm" value="true"/>
 
     <form id="record_designation_form">
         <field name="designation">
@@ -56,9 +51,9 @@
                 <audio expr="controller.getPrompt(field)"/>
             </prompt>
         </block>
-        <record name="record" type="x-wav">
+        <record name="record" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
             <if cond="controller.isVoiceRecognised(field)">
-                <grammar srcexpr="controller.getGrammar(field,record)" type="application/srgs+xml"/>
+                <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
                 <else/>
                 <grammar mode="dtmf" version="1.0" root="root">
                     <rule id="root" scope="public">
@@ -106,15 +101,17 @@
             </filled>
         </field>
         <block name="submit_form">
+            <script>
+                var name = controller.name();
+                var designation = controller.designation();
+                var district = controller.district();
+                var block = controller.block();
+                var panchayat = controller.panchayat();
+            </script>
             <data srcexpr="controller.submitNameUrl()" enctype="multipart/form-data" method="post"
-                  namelist="session.connection.remote.uri
-                            controller.name()"/>
+                  namelist="session.connection.remote.uri name"/>
             <data srcexpr="controller.submitUrl()" method="post"
-                  namelist="session.connection.remote.uri
-                            controller.designation()
-                            controller.district()
-                            controller.block()
-                            controller.panchayat()"/>
+                  namelist="session.connection.remote.uri designation district block panchayat"/>
             <goto next="controller.nextFlow(session.connection.local.uri)"/>
         </block>
     </form>
