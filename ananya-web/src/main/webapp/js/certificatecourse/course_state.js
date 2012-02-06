@@ -1,8 +1,9 @@
 var CourseState = function() {
-    this.setState = function(chapterIndex, lessonOrQuestionIndex, type) {
+    this.setState = function(chapterIndex, lessonOrQuestionIndex, currentQuestionResponse, interaction) {
         this.chapterIndex = chapterIndex;
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
-        this.type = type;
+        this.currentQuestionResponse = currentQuestionResponse;
+        this.interaction = interaction;
     };
 
     this.setChapterIndex = function(chapterIndex) {
@@ -13,6 +14,9 @@ var CourseState = function() {
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
     };
 
-    this.setState(null, null, null);
+    this.setCurrentQuestionResponse = function(currentQuestionResponse) {
+        this.currentQuestionResponse = currentQuestionResponse;
+    }
+    this.setState(null, null, null, null);
 };
 

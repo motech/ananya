@@ -198,6 +198,131 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
 
 
 /*
+    StartQuizInteraction
+*/
+var StartQuizInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+StartQuizInteraction.prototype = new AbstractCourseInteraction();
+StartQuizInteraction.prototype.constructor = StartQuizInteraction;
+
+StartQuizInteraction.prototype.playAudio = function() {
+    var currentChapter = this.course.children[this.courseState.chapterIndex];
+    return this.findAudio(currentChapter, "quizHeader");
+};
+
+StartQuizInteraction.prototype.doesTakeInput = function() {
+    return false;
+}
+
+StartQuizInteraction.prototype.nextInteraction = function() {
+    this.courseState.setLessonOrQuestionIndex(this.courseState.lessonOrQuestionIndex + 1);
+    return CertificateCourse.interactions["poseQuestion"];
+}
+
+StartQuizInteraction.prototype.bookMark = function() {
+
+}
+
+
+/*
+    PoseQuestionInteraction
+*/
+var PoseQuestionInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+PoseQuestionInteraction.prototype = new AbstractCourseInteraction();
+PoseQuestionInteraction.prototype.constructor = PoseQuestionInteraction;
+
+PoseQuestionInteraction.prototype.doesTakeInput = function() {
+    return true;
+}
+
+PoseQuestionInteraction.prototype.playAudio = function() {
+    var chapterIndex = this.courseState.chapterIndex;
+    var questionIndex = this.courseState.lessonOrQuestionIndex;
+    var currentQuestion = this.course.children[chapterIndex].children[questionIndex];
+    return this.findAudio(currentQuestion, "question");
+};
+
+
+PoseQuestionInteraction.prototype.validateInput = function(input) {
+    return input == '1' || input == '2';
+};
+
+PoseQuestionInteraction.prototype.continueWithoutInput = function(){
+    return CertificateCourse.interactions["startNextChapter"];
+};
+
+PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = function(input){
+    this.courseState.setCurrentQuestionResponse(input);
+    return CertificateCourse.interactions["evaluateQuestionResponse"];
+}
+
+/*
+    EvaluateQuestionResponseInteraction
+*/
+var EvaluateQuestionResponseInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+EvaluateQuestionResponseInteraction.prototype = new AbstractCourseInteraction();
+EvaluateQuestionResponseInteraction.prototype.constructor = EvaluateQuestionResponseInteraction;
+
+//TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
+EvaluateQuestionResponseInteraction.prototype.playAudio = function() {
+    var currentQuestion = this.course.children[this.courseState.chapterIndex].children[this.courseState.lessonOrQuestionIndex];
+    var userResponse = this.courseState.currentQuestionResponse;
+    var contentType = null;
+    if(userResponse == currentQuestion.data.correctAnswer) {
+        contentType = "correct";
+    } else {
+        contentType = "incorrect";
+    }
+    return this.findAudio(currentQuestion, contentType);
+};
+
+EvaluateQuestionResponseInteraction.prototype.doesTakeInput = function() {
+    return false;
+}
+
+EvaluateQuestionResponseInteraction.prototype.nextInteraction = function() {
+    var nextQuestionIndex = this.courseState.lessonOrQuestionIndex + 1;
+    var nextQuestion = this.course.children[this.courseState.chapterIndex].children[nextQuestionIndex];
+
+    if(nextQuestion) {
+        this.courseState.setLessonOrQuestionIndex(nextQuestionIndex);
+        return CertificateCourse.interactions["poseQuestion"];
+    }
+    return CertificateCourse.interactions["reportChapterScore"];
+}
+
+EvaluateQuestionResponseInteraction.prototype.bookMark = function() {
+
+}
+
+
+/*
     InvalidInputInteraction
 */
 var InvalidInputInteraction = function(interactionToReturnTo, metadata) {
