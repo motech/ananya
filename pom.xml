@@ -9,6 +9,7 @@
     <modules>
         <module>ananya-flw</module>
         <module>ananya-web</module>
+        <module>ananya-report</module>
     </modules>
     <name>Ananya</name>
 
