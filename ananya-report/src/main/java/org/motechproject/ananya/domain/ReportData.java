@@ -14,4 +14,16 @@ public class ReportData {
         this.record = record;
         this.time = time;
     }
+
+    public String table() {
+        return table;
+    }
+
+    public Map<String, Object> record() {
+        return record;
+    }
+
+    public DateTime time() {
+        return time;
+    }
 }
