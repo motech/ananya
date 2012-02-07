@@ -29,7 +29,7 @@ describe("Start quiz interaction", function() {
 
     it("should return pose question as the next interaction", function() {
         var poseQuestion = {};
-        CertificateCourse.interactions["poseQuestion"] = poseQuestion;
+        CertificateCourse.interactions[PoseQuestionInteraction.KEY] = poseQuestion;
 
         expect(startQuizInteraction.nextInteraction()).toEqual(poseQuestion);
     });

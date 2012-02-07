@@ -19,7 +19,7 @@ describe("Lesson interaction", function() {
 
     it("should return lesson end menu as the next interaction", function() {
         var lessonEndMenuInteraction = new LessonEndMenuInteraction(null, null);
-        CertificateCourse.interactions["lessonEndMenu"] = lessonEndMenuInteraction;
+        CertificateCourse.interactions[LessonEndMenuInteraction.KEY] = lessonEndMenuInteraction;
 
         expect(lessonInteraction.nextInteraction()).toEqual(lessonEndMenuInteraction);
     });

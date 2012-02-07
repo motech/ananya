@@ -45,9 +45,9 @@ describe("Evaluation question response interaction", function() {
     it("if not at last question, should return next interaction as pose question", function () {
         courseState.setChapterIndex(0);
         courseState.setLessonOrQuestionIndex(2);
-        CertificateCourse.interactions["poseQuestion"] = {};
+        CertificateCourse.interactions[PoseQuestionInteraction.KEY] = {};
 
-        expect(playAnswerExplanationInteraction.nextInteraction()).toEqual(CertificateCourse.interactions["poseQuestion"]);
+        expect(playAnswerExplanationInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[PoseQuestionInteraction.KEY]);
     });
 
     it("if at last question, should not change the state", function () {
@@ -63,9 +63,9 @@ describe("Evaluation question response interaction", function() {
     it("if not at last question, should return next interaction as report chapter scores", function () {
         courseState.setChapterIndex(0);
         courseState.setLessonOrQuestionIndex(3);
-        CertificateCourse.interactions["reportChapterScore"] = {};
+        CertificateCourse.interactions[ReportChapterScoreInteraction.KEY] = {};
 
-        expect(playAnswerExplanationInteraction.nextInteraction()).toEqual(CertificateCourse.interactions["reportChapterScore"]);
+        expect(playAnswerExplanationInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[ReportChapterScoreInteraction.KEY]);
     });
 
     it("should not take any input", function() {

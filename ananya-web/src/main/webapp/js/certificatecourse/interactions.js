@@ -4,12 +4,14 @@
 
 var WelcomeInteraction = function(metadata, course) {
     this.init = function(metadata, course) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, WelcomeInteraction.KEY);
         this.course = course;
     }
 
     this.init(metadata, course);
 };
+
+WelcomeInteraction.KEY = "welcome";
 
 WelcomeInteraction.prototype = new AbstractCourseInteraction();
 WelcomeInteraction.prototype.constructor = WelcomeInteraction;
@@ -23,7 +25,7 @@ WelcomeInteraction.prototype.doesTakeInput = function() {
 }
 
 WelcomeInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["startCourseOption"];
+    return CertificateCourse.interactions[StartCourseOption.KEY];
 }
 
 WelcomeInteraction.prototype.bookMark = function() {
@@ -35,12 +37,14 @@ WelcomeInteraction.prototype.bookMark = function() {
 */
 var StartCourseOption = function(metadata, course) {
     this.init = function(metadata, course) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, StartCourseOption.KEY);
         this.course = course;
     }
 
     this.init(metadata, course);
 };
+
+StartCourseOption.KEY = "startCourseOption";
 
 StartCourseOption.prototype = new AbstractCourseInteraction();
 StartCourseOption.prototype.constructor = StartCourseOption;
@@ -58,14 +62,14 @@ StartCourseOption.prototype.validateInput = function(input) {
 };
 
 StartCourseOption.prototype.continueWithoutInput = function(){
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions[StartNextChapter.KEY];
 }
 
 StartCourseOption.prototype.processInputAndReturnNextInteraction = function(input){
     if(input == 1) {
-        return CertificateCourse.interactions["welcome"];
+        return CertificateCourse.interactions[WelcomeInteraction.KEY];
     }
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions[StartNextChapter.KEY];
 }
 
 /*
@@ -83,7 +87,7 @@ var StartNextChapter = function(metadata, course, courseState) {
         if(this.courseState.chapterIndex == null) {
             this.courseState.setChapterIndex(0);
             this.courseState.setLessonOrQuestionIndex(0);
-            nextState = CertificateCourse.interactions["lesson"];
+            nextState = CertificateCourse.interactions[LessonInteraction.KEY];
         }
         else {
             var currentChapterIndex = this.courseState.chapterIndex;
@@ -95,7 +99,7 @@ var StartNextChapter = function(metadata, course, courseState) {
             else {
                 this.courseState.chapterIndex++;
                 this.courseState.setLessonOrQuestionIndex(0);
-                nextState = CertificateCourse.interactions["lesson"];
+                nextState = CertificateCourse.interactions[LessonInteraction.KEY];
             }
         }
         return nextState;
@@ -104,18 +108,22 @@ var StartNextChapter = function(metadata, course, courseState) {
     this.init(metadata, course, courseState);
 };
 
+StartNextChapter.KEY = "startNextChapter";
+
 /*
     LessonInteraction
 */
 var LessonInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, LessonInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
 
     this.init(metadata, course, courseState);
 };
+
+LessonInteraction.KEY = "lesson";
 
 LessonInteraction.prototype = new AbstractCourseInteraction();
 LessonInteraction.prototype.constructor = LessonInteraction;
@@ -134,7 +142,7 @@ LessonInteraction.prototype.doesTakeInput = function() {
 }
 
 LessonInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["lessonEndMenu"];
+    return CertificateCourse.interactions[LessonEndMenuInteraction.KEY];
 }
 
 /*
@@ -143,13 +151,15 @@ LessonInteraction.prototype.nextInteraction = function() {
 
 var LessonEndMenuInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, LessonEndMenuInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
 
     this.init(metadata, course, courseState);
 };
+
+LessonEndMenuInteraction.KEY = "lessonEndMenu";
 
 LessonEndMenuInteraction.prototype = new AbstractCourseInteraction();
 LessonEndMenuInteraction.prototype.constructor = StartCourseOption;
@@ -176,10 +186,10 @@ LessonEndMenuInteraction.prototype.continueWithoutInput = function(){
     var currentChapter = this.course.children[chapterIndex];
     var nextInLine = currentChapter.children[lessonIndex+1];
     if(nextInLine.data.type=="quiz"){
-        return CertificateCourse.interactions["startNextChapter"];
+        return CertificateCourse.interactions[StartNextChapter.KEY];
     }
     this.courseState.setLessonOrQuestionIndex(lessonIndex+1);
-    return CertificateCourse.interactions["lesson"];
+    return CertificateCourse.interactions[LessonInteraction.KEY];
 };
 
 LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = function(input){
@@ -189,11 +199,11 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
         var currentChapter = this.course.children[chapterIndex];
         var nextInLine = currentChapter.children[lessonIndex+1];
         if(nextInLine.data.type=="quiz"){
-            return CertificateCourse.interactions["startQuiz"];
+            return CertificateCourse.interactions[StartQuizInteraction.KEY];
         }
         this.courseState.setLessonOrQuestionIndex(lessonIndex+1);
     }
-    return CertificateCourse.interactions["lesson"];
+    return CertificateCourse.interactions[LessonInteraction.KEY];
 }
 
 
@@ -202,7 +212,7 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
 */
 var StartQuizInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, StartQuizInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
@@ -210,6 +220,7 @@ var StartQuizInteraction = function(metadata, course, courseState) {
     this.init(metadata, course, courseState);
 };
 
+StartQuizInteraction.KEY = "startQuiz";
 StartQuizInteraction.prototype = new AbstractCourseInteraction();
 StartQuizInteraction.prototype.constructor = StartQuizInteraction;
 
@@ -226,7 +237,7 @@ StartQuizInteraction.prototype.nextInteraction = function() {
     var currentChapter = this.courseState.chapterIndex;
     this.courseState.scoresByChapter[currentChapter] = 0;
     this.courseState.setLessonOrQuestionIndex(this.courseState.lessonOrQuestionIndex + 1);
-    return CertificateCourse.interactions["poseQuestion"];
+    return CertificateCourse.interactions[PoseQuestionInteraction.KEY];
 }
 
 StartQuizInteraction.prototype.bookMark = function() {
@@ -239,7 +250,7 @@ StartQuizInteraction.prototype.bookMark = function() {
 */
 var PoseQuestionInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, PoseQuestionInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
@@ -247,6 +258,7 @@ var PoseQuestionInteraction = function(metadata, course, courseState) {
     this.init(metadata, course, courseState);
 };
 
+PoseQuestionInteraction.KEY = "poseQuestion";
 PoseQuestionInteraction.prototype = new AbstractCourseInteraction();
 PoseQuestionInteraction.prototype.constructor = PoseQuestionInteraction;
 
@@ -267,7 +279,7 @@ PoseQuestionInteraction.prototype.validateInput = function(input) {
 };
 
 PoseQuestionInteraction.prototype.continueWithoutInput = function(){
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions[StartNextChapter.KEY];
 };
 
 //TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
@@ -282,7 +294,7 @@ PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = functio
         this.courseState.scoresByChapter[currentChapterIndex]++;
     }
     
-    return CertificateCourse.interactions["playAnswerExplanation"];
+    return CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY];
 }
 
 /*
@@ -290,7 +302,7 @@ PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = functio
 */
 var PlayAnswerExplanationInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, PlayAnswerExplanationInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
@@ -298,6 +310,7 @@ var PlayAnswerExplanationInteraction = function(metadata, course, courseState) {
     this.init(metadata, course, courseState);
 };
 
+PlayAnswerExplanationInteraction.KEY = "playAnswerExplanation";
 PlayAnswerExplanationInteraction.prototype = new AbstractCourseInteraction();
 PlayAnswerExplanationInteraction.prototype.constructor = PlayAnswerExplanationInteraction;
 
@@ -321,9 +334,9 @@ PlayAnswerExplanationInteraction.prototype.nextInteraction = function() {
 
     if(nextQuestion) {
         this.courseState.setLessonOrQuestionIndex(nextQuestionIndex);
-        return CertificateCourse.interactions["poseQuestion"];
+        return CertificateCourse.interactions[PoseQuestionInteraction.KEY];
     }
-    return CertificateCourse.interactions["reportChapterScore"];
+    return CertificateCourse.interactions[ReportChapterScoreInteraction.KEY];
 }
 
 PlayAnswerExplanationInteraction.prototype.bookMark = function() {
@@ -364,13 +377,14 @@ InvalidInputInteraction.prototype.nextInteraction = function() {
 */
 var ReportChapterScoreInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, ReportChapterScoreInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
 
     this.init(metadata, course, courseState);
 };
+ReportChapterScoreInteraction.KEY = "reportChapterScore";
 
 ReportChapterScoreInteraction.prototype = new AbstractCourseInteraction();
 ReportChapterScoreInteraction.prototype.constructor = ReportChapterScoreInteraction;
@@ -391,7 +405,7 @@ ReportChapterScoreInteraction.prototype.doesTakeInput = function() {
 }
 
 ReportChapterScoreInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["endOfChapterMenu"];
+    return CertificateCourse.interactions[EndOfChapterMenuInteraction.KEY];
 }
 
 ReportChapterScoreInteraction.prototype.bookMark = function() {
@@ -403,7 +417,7 @@ ReportChapterScoreInteraction.prototype.bookMark = function() {
 */
 var EndOfChapterMenuInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata);
+        AbstractCourseInteraction.call(this, metadata, EndOfChapterMenuInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
@@ -411,6 +425,7 @@ var EndOfChapterMenuInteraction = function(metadata, course, courseState) {
     this.init(metadata, course, courseState);
 };
 
+EndOfChapterMenuInteraction.KEY = "endOfChapterMenu";
 EndOfChapterMenuInteraction.prototype = new AbstractCourseInteraction();
 EndOfChapterMenuInteraction.prototype.constructor = EndOfChapterMenuInteraction;
 
@@ -428,13 +443,13 @@ EndOfChapterMenuInteraction.prototype.validateInput = function(input) {
 };
 
 EndOfChapterMenuInteraction.prototype.continueWithoutInput = function(){
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions[StartNextChapter.KEY];
 }
 
 EndOfChapterMenuInteraction.prototype.processInputAndReturnNextInteraction = function(input){
     if(input == 1) {
         this.courseState.lessonOrQuestionIndex = 0;
-        return CertificateCourse.interactions["lesson"];
+        return CertificateCourse.interactions[LessonInteraction.KEY];
     }
-    return CertificateCourse.interactions["startNextChapter"];
+    return CertificateCourse.interactions[StartNextChapter.KEY];
 }

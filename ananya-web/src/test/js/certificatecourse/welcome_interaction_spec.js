@@ -16,7 +16,7 @@ describe("Welcome interaction", function() {
 
     it("should return start course option as the next interaction", function() {
         var startCourseOption = new StartCourseOption(null, null);
-        CertificateCourse.interactions["startCourseOption"] = startCourseOption;
+        CertificateCourse.interactions[StartCourseOption.KEY] = startCourseOption;
 
         expect(welcomeInteraction.nextInteraction()).toEqual(startCourseOption);
     });

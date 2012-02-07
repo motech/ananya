@@ -87,15 +87,15 @@ describe("Pose Question Interaction", function() {
     });
 
     it("should return evaluate response as next interaction", function () {
-        CertificateCourse.interactions["playAnswerExplanation"] = {};
+        CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY] = {};
 
         var userResponse = 1;
-        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions["playAnswerExplanation"]);
+        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY]);
     });
 
     it("should return start next chapter interaction on receiving no input", function () {
         var startNextChapterInteraction = {};
-        CertificateCourse.interactions["startNextChapter"] = startNextChapterInteraction;
+        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapterInteraction;
 
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(0);

@@ -14,7 +14,7 @@ describe("Start next chapter interaction", function() {
         var startNextChapter = new StartNextChapter(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
 
         var nextState = startNextChapter.processSilentlyAndReturnNextState();
 
@@ -30,7 +30,7 @@ describe("Start next chapter interaction", function() {
         var startNextChapter = new StartNextChapter(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
 
         var nextState = startNextChapter.processSilentlyAndReturnNextState();
 

@@ -8,20 +8,20 @@ var CertificateCourseController = function(course, metadata) {
         this.promptContext = new PromptContext(metadata);
         this.courseState = new CourseState();
         this.initializeInteractionsArray(metadata, course, this.courseState);
-        this.setInteraction(CertificateCourse.interactions["welcome"]);
+        this.setInteraction(CertificateCourse.interactions[WelcomeInteraction.KEY]);
     };
 
     this.initializeInteractionsArray = function(metadata, course, courseState) {
-        CertificateCourse.interactions["welcome"] = new WelcomeInteraction(metadata, course);
-        CertificateCourse.interactions["startCourseOption"] = new StartCourseOption(metadata, course);
-        CertificateCourse.interactions["startNextChapter"] = new StartNextChapter(metadata, course, courseState)
-        CertificateCourse.interactions["lesson"] = new LessonInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["lessonEndMenu"] = new LessonEndMenuInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["startQuiz"] = new StartQuizInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["poseQuestion"] = new PoseQuestionInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["playAnswerExplanation"] = new PlayAnswerExplanationInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["reportChapterScore"] = new ReportChapterScoreInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["endOfChapterMenu"] = new EndOfChapterMenuInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[WelcomeInteraction.KEY] = new WelcomeInteraction(metadata, course);
+        CertificateCourse.interactions[StartCourseOption.KEY] = new StartCourseOption(metadata, course);
+        CertificateCourse.interactions[StartNextChapter.KEY] = new StartNextChapter(metadata, course, courseState)
+        CertificateCourse.interactions[LessonInteraction.KEY] = new LessonInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[LessonEndMenuInteraction.KEY] = new LessonEndMenuInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[StartQuizInteraction.KEY] = new StartQuizInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[PoseQuestionInteraction.KEY] = new PoseQuestionInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY] = new PlayAnswerExplanationInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[ReportChapterScoreInteraction.KEY] = new ReportChapterScoreInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[EndOfChapterMenuInteraction.KEY] = new EndOfChapterMenuInteraction(metadata, course, courseState);
         CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
     };
 

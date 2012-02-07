@@ -33,7 +33,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should play current lesson on input of 1", function () {
         var lessonInteraction = {};
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(1);
 
@@ -44,7 +44,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should play next lesson on input of 2, if current lesson is not the last.", function () {
         var lessonInteraction = {};
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(0);
 
@@ -56,7 +56,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should play quiz on input of 2, if current lesson is the last.", function () {
         var startQuiz = {};
-        CertificateCourse.interactions["startQuiz"] = startQuiz;
+        CertificateCourse.interactions[StartQuizInteraction.KEY] = startQuiz;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(1);
 
@@ -66,7 +66,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should return start next lesson interaction on receiving no input, when not at last lesson", function () {
         var lessonInteraction = {};
-        CertificateCourse.interactions["lesson"] = lessonInteraction;
+        CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(0);
 
@@ -77,7 +77,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should return start next chapter interaction on receiving no input without changing the course state, when at last lesson", function () {
         var startNextChapter = {};
-        CertificateCourse.interactions["startNextChapter"] = startNextChapter;
+        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapter;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(1);
 

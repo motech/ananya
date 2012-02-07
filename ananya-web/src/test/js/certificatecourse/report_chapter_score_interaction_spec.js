@@ -28,9 +28,9 @@ describe("Report chapter score interaction", function() {
     it("should return end of chapter menu as next interaction and should not change the course state", function () {
         courseState.setChapterIndex(0);
         courseState.setLessonOrQuestionIndex(2);
-        CertificateCourse.interactions["endOfChapterMenu"] = {};
+        CertificateCourse.interactions[EndOfChapterMenuInteraction.KEY] = {};
 
-        expect(reportChapterScoreInteraction.nextInteraction()).toEqual(CertificateCourse.interactions["endOfChapterMenu"]);
+        expect(reportChapterScoreInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[EndOfChapterMenuInteraction.KEY]);
         expect(courseState.chapterIndex).toEqual(0);
         expect(courseState.lessonOrQuestionIndex).toEqual(2);
     });
