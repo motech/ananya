@@ -397,3 +397,44 @@ ReportChapterScoreInteraction.prototype.nextInteraction = function() {
 ReportChapterScoreInteraction.prototype.bookMark = function() {
 
 }
+
+/*
+    EndOfChapterMenu
+*/
+var EndOfChapterMenuInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+EndOfChapterMenuInteraction.prototype = new AbstractCourseInteraction();
+EndOfChapterMenuInteraction.prototype.constructor = EndOfChapterMenuInteraction;
+
+EndOfChapterMenuInteraction.prototype.doesTakeInput = function() {
+    return true;
+}
+
+EndOfChapterMenuInteraction.prototype.playAudio = function() {
+    var currentChapter = this.course.children[this.courseState.chapterIndex];
+    return this.findAudio(currentChapter, "menu");
+};
+
+EndOfChapterMenuInteraction.prototype.validateInput = function(input) {
+    return input == '1' || input == '2';
+};
+
+EndOfChapterMenuInteraction.prototype.continueWithoutInput = function(){
+    return CertificateCourse.interactions["startNextChapter"];
+}
+
+EndOfChapterMenuInteraction.prototype.processInputAndReturnNextInteraction = function(input){
+    if(input == 1) {
+        this.courseState.lessonOrQuestionIndex = 0;
+        return CertificateCourse.interactions["lesson"];
+    }
+    return CertificateCourse.interactions["startNextChapter"];
+}

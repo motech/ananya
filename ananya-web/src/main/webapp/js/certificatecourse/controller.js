@@ -21,7 +21,7 @@ var CertificateCourseController = function(course, metadata) {
         CertificateCourse.interactions["poseQuestion"] = new PoseQuestionInteraction(metadata, course, courseState);
         CertificateCourse.interactions["playAnswerExplanation"] = new PlayAnswerExplanationInteraction(metadata, course, courseState);
         CertificateCourse.interactions["reportChapterScore"] = new ReportChapterScoreInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["endOfChapterMenu"] = {disconnect:function(){return true;}}
+        CertificateCourse.interactions["endOfChapterMenu"] = new EndOfChapterMenuInteraction(metadata, course, courseState);
         CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
     };
 
