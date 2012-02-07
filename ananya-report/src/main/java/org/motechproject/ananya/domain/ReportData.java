@@ -5,25 +5,22 @@ import org.joda.time.DateTime;
 import java.util.Map;
 
 public class ReportData {
-    private String table;
+    private String bean;
     private Map<String, Object> record;
     private DateTime time;
 
-    public ReportData(String table, Map<String, Object> record, DateTime time) {
-        this.table = table;
+    public ReportData(String bean, Map<String, Object> record, DateTime time) {
+        this.bean = bean;
         this.record = record;
         this.time = time;
     }
 
-    public String table() {
-        return table;
+    public String bean() {
+        return bean;
     }
 
     public Map<String, Object> record() {
         return record;
     }
 
-    public DateTime time() {
-        return time;
-    }
 }
