@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
     <script src="../dynamic/js/metadata.js"/>
     <script src="../js/register/controller.js"/>
     <script>
         <![CDATA[
-        var controller = new RegisterController();
+        var controller = new RegisterController(metaData);
          ]]>
     </script>
 
@@ -39,73 +39,64 @@
 
     <form id="record_form">
         <block>
-            <if cond="controller.allCaptured()">
-                <goto nextitem="submit_form"/>
-            </if>
+           <if cond="controller.allCaptured()">
+               <goto nextitem="submit_form"/>
+           </if>
         </block>
         <script>
-            var field = controller.nextField();
+               var field = controller.nextField();
         </script>
-        <block>
-            <prompt bargein="false">
-                <audio expr="controller.playPrompt(field)"/>
-            </prompt>
-        </block>
-        <record name="record" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
-            <if cond="controller.isVoiceRecognised(field)">
-                <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
-                <else/>
-                <grammar mode="dtmf" version="1.0" root="root">
-                    <rule id="root" scope="public">
-                        <one-of>
-                            <item>1</item>
-                        </one-of>
-                    </rule>
-                </grammar>
-            </if>
-            <noinput>
-                <prompt bargein="false">
-                    <value src="controller.playNoInputPrompt(field)"/>
-                </prompt>
-            </noinput>
-        </record>
 
-        <field name="confirm" type="boolean">
-            <prompt bargein="false">
-                <value expr="controller.playConfirmPrompt(field)"/>
-            </prompt>
-            <if cond="controller.isVoiceRecognised(field)">
-                <audio expr="controller.playBack(record)"/>
-                <else/>
-                <audio expr="record"/>
-            </if>
-            <prompt>
-                <value expr="controller.playRerecordPrompt(field)"/>
-            </prompt>
-            <grammar mode="dtmf" version="1.0" root="root">
-                <rule id="root" scope="public">
-                    <one-of>
-                        <item>1</item>
-                    </one-of>
-                </rule>
-            </grammar>
-            <noinput>
+       <block>
+           <prompt bargein="false">
+               <audio expr="controller.playPrompt(field)"/>
+               <audio src="controller.playBeep()"/>
+           </prompt>
+       </block>
+
+       <block>
+         <if cond="field=='name'">
+            <goto nextitem="nameRecord"/>
+         <else/>
+             <goto nextitem="fieldRecord"/>
+         </if>
+       </block>
+          
+       <field name="confirm" type="boolean">
+          <prompt bargein="false">
+               <audio expr="controller.playConfirmPrompt(field)"/>
+               <audio expr="controller.playBackPrompt(field,((nameRecord != undefined) ? nameRecord : fieldRecord))"/>
+               <audio expr="controller.playRerecordPrompt(field)"/>
+           </prompt>
+           <grammar mode="dtmf" version="1.0" root="root">
+               <rule id="root" scope="public">
+                   <one-of>
+                       <item>1</item>
+                   </one-of>
+               </rule>
+           </grammar>
+           <noinput>
+               <script>
+                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+               </script>
+               <goto next="#record_form"/>
+           </noinput>
+            <nomatch>
                 <script>
-                    controller.capture(record);
-                </script>
-                <goto next="#record_form"/>
-            </noinput>
-            <filled>
-                <if cond="confirm">
-                    <goto next="#record_form"/>
-                    <else/>
-                    <script>
-                        controller.capture(record);
-                    </script>
-                    <goto next="#record_form"/>
-                </if>
-            </filled>
-        </field>
+                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+               </script>
+               <goto next="#record_form"/>
+            </nomatch>
+           <filled>
+               <if cond="confirm=='1'">
+                   <goto next="#record_form"/>
+               </if>
+               <script>
+                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+               </script>
+               <goto next="#record_form"/>
+           </filled>
+       </field>
         <block name="submit_form">
             <script>
                 var name = controller.name();
@@ -120,5 +111,47 @@
                   namelist="session.connection.remote.uri designation district block panchayat"/>
             <goto next="controller.nextFlow(session.connection.local.uri)"/>
         </block>
+       
+      <record name="nameRecord" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
+        <grammar mode="dtmf" version="1.0" root="root">
+              <rule id="root" scope="public">
+                    <one-of>
+                     <item>1</item>
+                    </one-of>
+              </rule>
+        </grammar>
+
+         <noinput>
+             <prompt bargein="false">
+                  <audio expr="controller.playNoInputPrompt(field)"/>
+             </prompt>
+         </noinput>
+      </record>
+        
+        
+        <field name="fieldRecord">
+
+           <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
+
+           <grammar mode="dtmf" version="1.0" root="root">
+               <rule id="root" scope="public">
+                   <one-of>
+                       <item>1</item>
+                   </one-of>
+               </rule>
+           </grammar>
+
+           <noinput>
+               <prompt bargein="false">
+                   <audio expr="controller.playNoInputPrompt(field)"/>
+               </prompt>
+           </noinput>
+            <nomatch>
+               <prompt bargein="false">
+                   <audio expr="controller.playNoInputPrompt(field)"/>
+               </prompt>
+            </nomatch>
+       </field>
+       
     </form>
 </vxml>
