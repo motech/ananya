@@ -1,8 +1,9 @@
 var CourseState = function() {
-    this.setState = function(chapterIndex, lessonOrQuestionIndex, currentQuestionResponse, interaction) {
+    this.setState = function(chapterIndex, lessonOrQuestionIndex, currentQuestionResponse, isAnswerCorrect, interaction) {
         this.chapterIndex = chapterIndex;
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
         this.currentQuestionResponse = currentQuestionResponse;
+        this.isAnswerCorrect = isAnswerCorrect;
         this.interaction = interaction;
     };
 
@@ -17,6 +18,10 @@ var CourseState = function() {
     this.setCurrentQuestionResponse = function(currentQuestionResponse) {
         this.currentQuestionResponse = currentQuestionResponse;
     }
-    this.setState(null, null, null, null);
+
+    this.setAnswerCorrect = function(isAnswerCorrect) {
+        this.isAnswerCorrect = isAnswerCorrect;
+    }
+    this.setState(null, null, null, null, null);
 };
 

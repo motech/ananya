@@ -268,8 +268,14 @@ PoseQuestionInteraction.prototype.continueWithoutInput = function(){
     return CertificateCourse.interactions["startNextChapter"];
 };
 
-PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = function(input){
-    this.courseState.setCurrentQuestionResponse(input);
+//TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
+PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = function(userResponse){
+    var currentQuestion = this.course.children[this.courseState.chapterIndex].children[this.courseState.lessonOrQuestionIndex];
+    var isAnswerCorrect = (userResponse == currentQuestion.data.correctAnswer);
+
+    this.courseState.setCurrentQuestionResponse(userResponse);
+    this.courseState.setAnswerCorrect(isAnswerCorrect);
+
     return CertificateCourse.interactions["evaluateQuestionResponse"];
 }
 
@@ -289,7 +295,6 @@ var EvaluateQuestionResponseInteraction = function(metadata, course, courseState
 EvaluateQuestionResponseInteraction.prototype = new AbstractCourseInteraction();
 EvaluateQuestionResponseInteraction.prototype.constructor = EvaluateQuestionResponseInteraction;
 
-//TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
 EvaluateQuestionResponseInteraction.prototype.playAudio = function() {
     var currentQuestion = this.course.children[this.courseState.chapterIndex].children[this.courseState.lessonOrQuestionIndex];
     var userResponse = this.courseState.currentQuestionResponse;

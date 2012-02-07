@@ -44,6 +44,38 @@ describe("Pose Question Interaction", function() {
         expect(courseState.lessonOrQuestionIndex).toEqual(1);
     });
 
+    it("should evaluate the answer by user to be correct and set that in the state", function () {
+        courseState.setChapterIndex(0);
+        courseState.setLessonOrQuestionIndex(2);
+
+        var correctAnswer = 1;
+        courseState.setCurrentQuestionResponse(correctAnswer);
+        courseState.setAnswerCorrect(null);
+
+        poseQuestionInteraction.processInputAndReturnNextInteraction(correctAnswer);
+
+        expect(courseState.currentQuestionResponse).toEqual(correctAnswer);
+        expect(courseState.chapterIndex).toEqual(0);
+        expect(courseState.lessonOrQuestionIndex).toEqual(2);
+        expect(courseState.isAnswerCorrect).toEqual(true);
+    });
+
+    it("should evaluate the answer by user to be wrong and set that in the state", function () {
+        courseState.setChapterIndex(0);
+        courseState.setLessonOrQuestionIndex(3);
+
+        var inCorrectAnswer = 1;
+        courseState.setCurrentQuestionResponse(inCorrectAnswer);
+        courseState.setAnswerCorrect(null);
+
+        poseQuestionInteraction.processInputAndReturnNextInteraction(inCorrectAnswer);
+
+        expect(courseState.currentQuestionResponse).toEqual(inCorrectAnswer);
+        expect(courseState.chapterIndex).toEqual(0);
+        expect(courseState.lessonOrQuestionIndex).toEqual(3);
+        expect(courseState.isAnswerCorrect).toEqual(false);
+    });
+
     it("should return evaluate response as next interaction", function () {
         CertificateCourse.interactions["evaluateQuestionResponse"] = {};
 
