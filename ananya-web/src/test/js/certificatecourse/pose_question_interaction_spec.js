@@ -77,10 +77,10 @@ describe("Pose Question Interaction", function() {
     });
 
     it("should return evaluate response as next interaction", function () {
-        CertificateCourse.interactions["evaluateQuestionResponse"] = {};
+        CertificateCourse.interactions["playAnswerExplanation"] = {};
 
         var userResponse = 1;
-        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions["evaluateQuestionResponse"]);
+        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions["playAnswerExplanation "]);
     });
 
     it("should return start next chapter interaction on receiving no input", function () {

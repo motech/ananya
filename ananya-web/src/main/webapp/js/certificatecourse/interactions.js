@@ -276,13 +276,13 @@ PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = functio
     this.courseState.setCurrentQuestionResponse(userResponse);
     this.courseState.setAnswerCorrect(isAnswerCorrect);
 
-    return CertificateCourse.interactions["evaluateQuestionResponse"];
+    return CertificateCourse.interactions["playAnswerExplanation"];
 }
 
 /*
-    EvaluateQuestionResponseInteraction
+    PlayAnswerExplanation
 */
-var EvaluateQuestionResponseInteraction = function(metadata, course, courseState) {
+var PlayAnswerExplanationInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata);
         this.course = course;
@@ -292,14 +292,12 @@ var EvaluateQuestionResponseInteraction = function(metadata, course, courseState
     this.init(metadata, course, courseState);
 };
 
-EvaluateQuestionResponseInteraction.prototype = new AbstractCourseInteraction();
-EvaluateQuestionResponseInteraction.prototype.constructor = EvaluateQuestionResponseInteraction;
+PlayAnswerExplanationInteraction.prototype = new AbstractCourseInteraction();
+PlayAnswerExplanationInteraction.prototype.constructor = PlayAnswerExplanationInteraction;
 
-EvaluateQuestionResponseInteraction.prototype.playAudio = function() {
+PlayAnswerExplanationInteraction.prototype.playAudio = function() {
     var currentQuestion = this.course.children[this.courseState.chapterIndex].children[this.courseState.lessonOrQuestionIndex];
-    var userResponse = this.courseState.currentQuestionResponse;
-    var contentType = null;
-    if(userResponse == currentQuestion.data.correctAnswer) {
+    if(this.courseState.isAnswerCorrect) {
         contentType = "correct";
     } else {
         contentType = "incorrect";
@@ -307,11 +305,11 @@ EvaluateQuestionResponseInteraction.prototype.playAudio = function() {
     return this.findAudio(currentQuestion, contentType);
 };
 
-EvaluateQuestionResponseInteraction.prototype.doesTakeInput = function() {
+PlayAnswerExplanationInteraction.prototype.doesTakeInput = function() {
     return false;
 }
 
-EvaluateQuestionResponseInteraction.prototype.nextInteraction = function() {
+PlayAnswerExplanationInteraction.prototype.nextInteraction = function() {
     var nextQuestionIndex = this.courseState.lessonOrQuestionIndex + 1;
     var nextQuestion = this.course.children[this.courseState.chapterIndex].children[nextQuestionIndex];
 
@@ -322,7 +320,7 @@ EvaluateQuestionResponseInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions["reportChapterScore"];
 }
 
-EvaluateQuestionResponseInteraction.prototype.bookMark = function() {
+PlayAnswerExplanationInteraction.prototype.bookMark = function() {
 
 }
 
