@@ -8,15 +8,15 @@ import javax.persistence.*;
 @Table(name = "registration_log")
 public class RegistrationLog {
     @Id
-    @Column(name = "callId")
+    @Column(name = "call_id")
     private String callId;
-    @Column(name = "callerId")
+    @Column(name = "caller_id")
     private String callerId;
-    @Column(name = "calledNumber")
+    @Column(name = "called_number")
     private String calledNumber;
-    @Column(name = "startTime")
+    @Column(name = "start_time")
     private DateTime startTime;
-    @Column(name = "endTime")
+    @Column(name = "end_time")
     private DateTime endTime;
     
     @Column(name = "designation")
@@ -43,7 +43,6 @@ public class RegistrationLog {
     public void setEndTime(DateTime endTime) {
         this.endTime = endTime;
     }
-
 
     public String getCalledNumber() {
         return calledNumber;

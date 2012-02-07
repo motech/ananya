@@ -14,7 +14,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>1.9.5</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>
@@ -127,7 +127,7 @@
                         <id>run-postgres-change-sets</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
-                            <changeLogFile>src/test/resources/sql/base-change-log.xml</changeLogFile>
+                            <changeLogFile>src/test/resources/sql/main-change-log.xml</changeLogFile>
                             <driver>org.postgresql.Driver</driver>
                             <url>jdbc:postgresql://${postgres.server}/${postgres.db}</url>
                             <username>${postgres.user}</username>
