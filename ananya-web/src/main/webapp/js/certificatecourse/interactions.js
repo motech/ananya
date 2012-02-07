@@ -349,7 +349,7 @@ PlayAnswerExplanationInteraction.prototype.bookMark = function() {
 */
 var InvalidInputInteraction = function(interactionToReturnTo, metadata) {
     this.init = function(interactionToReturnTo, metadata) {
-        AbstractCourseInteraction.call(null, metadata);
+        AbstractCourseInteraction.call(null, metadata, interactionToReturnTo.getInteractionKey());
         this.metadata = metadata;
         this.interactionToReturnTo = interactionToReturnTo;
     }

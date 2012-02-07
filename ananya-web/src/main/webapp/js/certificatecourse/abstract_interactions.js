@@ -1,8 +1,8 @@
-var AbstractCourseInteraction = function(metadata, key) {
-    this.init = function(metadata, key) {
+var AbstractCourseInteraction = function(metadata, interactionKey) {
+    this.init = function(metadata, interactionKey) {
         this.metadata = metadata;
         this.interactionDone=false;
-        this.key=key;
+        this.interactionKey=interactionKey;
     };
 
     this.findAudio = function(interactionToUse, contentName) {
@@ -23,7 +23,7 @@ var AbstractCourseInteraction = function(metadata, key) {
         return undefined;
     };
 
-    this.init(metadata, key);
+    this.init(metadata, interactionKey);
 };
 
 //TODO:Rename this to processAndPlayAudio or something of that sort
@@ -67,6 +67,6 @@ AbstractCourseInteraction.prototype.bookMark = function() {
 
 };
 
-AbstractCourseInteraction.prototype.getKey = function() {
-  return this.key;
+AbstractCourseInteraction.prototype.getInteractionKey = function() {
+  return this.interactionKey;
 };
