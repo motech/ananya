@@ -45,8 +45,12 @@ describe("Pose Question Interaction", function() {
     });
 
     it("should evaluate the answer by user to be correct and set that in the state", function () {
-        courseState.setChapterIndex(0);
+        var currentChapterIndex = 0;
+        courseState.setChapterIndex(currentChapterIndex);
         courseState.setLessonOrQuestionIndex(2);
+        var scoreTillNow = 1;
+
+        courseState.scoresByChapter[currentChapterIndex] = scoreTillNow;
 
         var correctAnswer = 1;
         courseState.setCurrentQuestionResponse(correctAnswer);
@@ -58,11 +62,16 @@ describe("Pose Question Interaction", function() {
         expect(courseState.chapterIndex).toEqual(0);
         expect(courseState.lessonOrQuestionIndex).toEqual(2);
         expect(courseState.isAnswerCorrect).toEqual(true);
+        expect(courseState.scoresByChapter[currentChapterIndex]).toEqual(scoreTillNow+1);
     });
 
     it("should evaluate the answer by user to be wrong and set that in the state", function () {
-        courseState.setChapterIndex(0);
+        var currentChapterIndex = 0;
+        courseState.setChapterIndex(currentChapterIndex);
         courseState.setLessonOrQuestionIndex(3);
+        var scoreTillNow = 1;
+
+        courseState.scoresByChapter[currentChapterIndex] = scoreTillNow;
 
         var inCorrectAnswer = 1;
         courseState.setCurrentQuestionResponse(inCorrectAnswer);
@@ -74,6 +83,7 @@ describe("Pose Question Interaction", function() {
         expect(courseState.chapterIndex).toEqual(0);
         expect(courseState.lessonOrQuestionIndex).toEqual(3);
         expect(courseState.isAnswerCorrect).toEqual(false);
+        expect(courseState.scoresByChapter[currentChapterIndex]).toEqual(scoreTillNow);
     });
 
     it("should return evaluate response as next interaction", function () {

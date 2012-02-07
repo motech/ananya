@@ -223,6 +223,8 @@ StartQuizInteraction.prototype.doesTakeInput = function() {
 }
 
 StartQuizInteraction.prototype.nextInteraction = function() {
+    var currentChapter = this.courseState.chapterIndex;
+    this.courseState.scoresByChapter[currentChapter] = 0;
     this.courseState.setLessonOrQuestionIndex(this.courseState.lessonOrQuestionIndex + 1);
     return CertificateCourse.interactions["poseQuestion"];
 }
@@ -270,12 +272,16 @@ PoseQuestionInteraction.prototype.continueWithoutInput = function(){
 
 //TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
 PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = function(userResponse){
-    var currentQuestion = this.course.children[this.courseState.chapterIndex].children[this.courseState.lessonOrQuestionIndex];
+    var currentChapterIndex = this.courseState.chapterIndex;
+    var currentQuestion = this.course.children[currentChapterIndex].children[this.courseState.lessonOrQuestionIndex];
     var isAnswerCorrect = (userResponse == currentQuestion.data.correctAnswer);
 
     this.courseState.setCurrentQuestionResponse(userResponse);
     this.courseState.setAnswerCorrect(isAnswerCorrect);
-
+    if(isAnswerCorrect) {
+        this.courseState.scoresByChapter[currentChapterIndex]++;
+    }
+    
     return CertificateCourse.interactions["playAnswerExplanation"];
 }
 

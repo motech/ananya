@@ -20,6 +20,13 @@ describe("Start quiz interaction", function() {
         expect(startQuizInteraction.doesTakeInput()).toEqual(false);
     });
 
+    it("should set the current chapter's score to zero in scoresByChapter", function() {
+        var currentChapterIndex = 1;
+        courseState.setChapterIndex(currentChapterIndex);
+        startQuizInteraction.nextInteraction();
+        expect(courseState.scoresByChapter[currentChapterIndex]).toEqual(0);
+    });
+
     it("should return pose question as the next interaction", function() {
         var poseQuestion = {};
         CertificateCourse.interactions["poseQuestion"] = poseQuestion;

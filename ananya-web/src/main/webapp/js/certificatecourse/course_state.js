@@ -5,6 +5,7 @@ var CourseState = function() {
         this.currentQuestionResponse = currentQuestionResponse;
         this.isAnswerCorrect = isAnswerCorrect;
         this.interaction = interaction;
+        this.scoresByChapter = {};
     };
 
     this.setChapterIndex = function(chapterIndex) {
@@ -22,6 +23,11 @@ var CourseState = function() {
     this.setAnswerCorrect = function(isAnswerCorrect) {
         this.isAnswerCorrect = isAnswerCorrect;
     }
+
+    this.setScoresByChapter = function(scoresByChapter) {
+        this.scoresByChapter = scoresByChapter;
+    }
+    
     this.setState(null, null, null, null, null);
 };
 
