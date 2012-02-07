@@ -358,3 +358,42 @@ InvalidInputInteraction.prototype.doesTakeInput = function() {
 InvalidInputInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;
 };
+
+/*
+    ReportChapterScore
+*/
+var ReportChapterScoreInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+ReportChapterScoreInteraction.prototype = new AbstractCourseInteraction();
+ReportChapterScoreInteraction.prototype.constructor = ReportChapterScoreInteraction;
+
+//TODO: Figure out the max number of questions on the fly, right now assuming it to be 4.
+ReportChapterScoreInteraction.prototype.playAudio = function() {
+    var currentChapterIndex = this.courseState.chapterIndex;
+    var chapterScore = this.courseState.scoresByChapter[currentChapterIndex];
+    var currentChapterNumber = currentChapterIndex + 1;
+
+    var audioFileName = this.audioFileBase() + "chapter" + currentChapterNumber + "_" + chapterScore + "_out_of_4.wav";
+
+    return audioFileName;
+};
+
+ReportChapterScoreInteraction.prototype.doesTakeInput = function() {
+    return false;
+}
+
+ReportChapterScoreInteraction.prototype.nextInteraction = function() {
+    return CertificateCourse.interactions["endOfChapterMenu"];
+}
+
+ReportChapterScoreInteraction.prototype.bookMark = function() {
+
+}
