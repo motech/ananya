@@ -32,8 +32,12 @@ describe("Certificate course controller spec", function() {
     });
 
     it("should return the interaction's no input interaction if no input count has exceeded max", function () {
-        var interactionWithoutInput = "interactionToProceedWithoutInput";
-        var currentInteraction = { continueWithoutInput : function() {return interactionWithoutInput;} };
+        var interactionWithoutInput = {
+                                        getInteractionKey:function() {return "anotherKey";}
+        };
+        var currentInteraction = { continueWithoutInput : function() {return interactionWithoutInput;},
+                                        getInteractionKey:function() {return "myKey";}
+                                 };
 
         controller.setInteraction(currentInteraction);
 
@@ -46,7 +50,9 @@ describe("Certificate course controller spec", function() {
     });
 
     it("for interactions involving input, if the interaction is progressing to next due to successive no inputs by user, the prompt counts should be reset.", function () {
-        var interactionWithoutInput = "interactionToProceedWithoutInput";
+        var interactionWithoutInput = {
+                                        getInteractionKey:function() {return "anotherKey";}
+        };
         var currentInteraction = {
                                     validateInput : function(input) { return input == 1; },
                                     continueWithoutInput : function() {return interactionWithoutInput;},
@@ -76,7 +82,9 @@ describe("Certificate course controller spec", function() {
     });
 
     it("for interactions involving input, the interaction should progress to the next if input is valid.", function() {
-        var interactionAfterInput = {};
+        var interactionAfterInput = {
+                                        getInteractionKey:function() {return "myKey";}
+        };
         var interactionNeedingInput = {
                                         validateInput : function(input) { return true;},
                                         processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
@@ -89,7 +97,9 @@ describe("Certificate course controller spec", function() {
     });
 
     it("for interactions involving input, the prompt counts should be reset if input is valid", function () {
-        var interactionAfterInput = {};
+        var interactionAfterInput = {
+                                        getInteractionKey:function() {return "myKey";}
+        };
         var interactionAllowingOnly1AsValidInput = {
                                         validateInput : function(input) { return input == 1;},
                                         processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
@@ -154,7 +164,7 @@ describe("Certificate course controller spec", function() {
 
     it("should quietly execute current interaction and all subsequent interactions, till interaction does not need phone", function() {
         var phoneInteraction = {
-                                    
+                                        getInteractionKey:function() {return "myKey";}
         };
         var noPhoneInteraction3 = {
                                     processSilentlyAndReturnNextState : function() {return phoneInteraction;}
@@ -176,5 +186,15 @@ describe("Certificate course controller spec", function() {
         expect(noPhoneInteraction2.processSilentlyAndReturnNextState).toHaveBeenCalled();
         expect(noPhoneInteraction3.processSilentlyAndReturnNextState).toHaveBeenCalled();
         expect(controller.interaction).toEqual(phoneInteraction);
+    });
+
+    it("should set a bookmarkable interaction's key in courseState, when a transition is happening to that interaction", function () {
+        var keyForInteraction = "keyForInteraction";
+        var bookmarkableInteraction = {
+                                         getInteractionKey:function() {return keyForInteraction;}
+                                      };
+        controller.setInteraction(bookmarkableInteraction);
+
+        expect(controller.courseState.interactionKey).toEqual(keyForInteraction);
     });
 });

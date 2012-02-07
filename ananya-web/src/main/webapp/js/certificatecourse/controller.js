@@ -51,10 +51,21 @@ var CertificateCourseController = function(course, metadata) {
     };
 
     this.quietlyProcessTillAPhoneInteractionIsNeeded = function() {
-        while(this.interaction && this.interaction.processSilentlyAndReturnNextState) {
+        while(this.currentInteractionHasToBeProcessedSilently()) {
             this.interaction = this.interaction.processSilentlyAndReturnNextState();
         }
-    }
+        if(this.currentInteractionIsBookMarkable()) {
+            this.courseState.setInteractionKey(this.interaction.getInteractionKey());
+        }
+    };
+
+    this.currentInteractionIsBookMarkable = function() {
+        return this.interaction && this.interaction.getInteractionKey;
+    };
+
+    this.currentInteractionHasToBeProcessedSilently = function() {
+        return this.interaction && this.interaction.processSilentlyAndReturnNextState;
+    };
 
     this.gotNoInput = function() {
         this.promptContext.gotNoInput();
