@@ -12,7 +12,10 @@
     <context:annotation-config/>
     <context:spring-configured/>
     <context:component-scan base-package="org.motechproject"/>
+
     <context:property-placeholder location="classpath:activemq.properties"/>
+    <context:property-placeholder location="classpath:activemq.properties"/>
+
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
     <import resource="classpath:integrationCommon.xml"/>
@@ -26,6 +29,25 @@
     <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
+    </bean>
+
+    <!--<bean id="liquibase" class="liquibase.spring.SpringLiquibase">-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--<property name="changeLog" value="${changeLogFile}"/>-->
+        <!--<property name="contexts" value="${contexts}"/>-->
+    <!--</bean>-->
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="${hibernate.c3p0.max_size}"/>
+        <property name="minPoolSize" value="${hibernate.c3p0.min_size}"/>
+        <property name="checkoutTimeout" value="${hibernate.c3p0.timeout}"/>
+        <property name="maxStatements" value="${hibernate.c3p0.max_statements}"/>
+        <property name="idleConnectionTestPeriod" value="${hibernate.c3p0.idle_test_period}"/>
+        <property name="acquireIncrement" value="${hibernate.c3p0.acquire_increment}"/>
     </bean>
 
 
