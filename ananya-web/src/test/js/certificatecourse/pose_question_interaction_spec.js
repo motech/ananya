@@ -80,7 +80,7 @@ describe("Pose Question Interaction", function() {
         CertificateCourse.interactions["playAnswerExplanation"] = {};
 
         var userResponse = 1;
-        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions["playAnswerExplanation "]);
+        expect(poseQuestionInteraction.processInputAndReturnNextInteraction(userResponse)).toEqual(CertificateCourse.interactions["playAnswerExplanation"]);
     });
 
     it("should return start next chapter interaction on receiving no input", function () {
