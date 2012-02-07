@@ -31,12 +31,6 @@
         <constructor-arg ref="ananyaDbInstance"/>
     </bean>
 
-    <!--<bean id="liquibase" class="liquibase.spring.SpringLiquibase">-->
-        <!--<property name="dataSource" ref="dataSource"/>-->
-        <!--<property name="changeLog" value="${changeLogFile}"/>-->
-        <!--<property name="contexts" value="${contexts}"/>-->
-    <!--</bean>-->
-
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${jdbc.driverClassName}"/>
         <property name="jdbcUrl" value="${jdbc.url}"/>
