@@ -49,7 +49,8 @@ describe("Certificate course controller spec", function() {
         var interactionWithoutInput = "interactionToProceedWithoutInput";
         var currentInteraction = {
                                     validateInput : function(input) { return input == 1; },
-                                    continueWithoutInput : function() {return interactionWithoutInput;}
+                                    continueWithoutInput : function() {return interactionWithoutInput;},
+                                    getInteractionKey:function() {return "myKey";}
                                  };
 
         var invalidInput = 2;
@@ -78,7 +79,8 @@ describe("Certificate course controller spec", function() {
         var interactionAfterInput = {};
         var interactionNeedingInput = {
                                         validateInput : function(input) { return true;},
-                                        processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; }
+                                        processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
+                                        getInteractionKey:function() {return "myKey";}
                                        };
 
         controller.setInteraction(interactionNeedingInput);
@@ -90,7 +92,8 @@ describe("Certificate course controller spec", function() {
         var interactionAfterInput = {};
         var interactionAllowingOnly1AsValidInput = {
                                         validateInput : function(input) { return input == 1;},
-                                        processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; }
+                                        processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
+                                        getInteractionKey:function() {return "myKey";}
                                        };
 
         var validInput = 1, invalidInput = 2;
@@ -122,6 +125,7 @@ describe("Certificate course controller spec", function() {
 
         var interactionNeedingInput = {
                                         validateInput : function(input) { return false;},
+                                        getInteractionKey:function() {return "myKey";}
                                        };
         controller.setInteraction(interactionNeedingInput);
         controller.processInput(1);
@@ -132,6 +136,7 @@ describe("Certificate course controller spec", function() {
     it("for interactions involving input, if the input is not valid for more than allowed number of times, the call should disconnect", function () {
         var interactionNeedingInput = {
                                         validateInput : function(input) { return false;},
+                                        getInteractionKey:function() {return "myKey";}
                                        };
         controller.setInteraction(interactionNeedingInput);
 

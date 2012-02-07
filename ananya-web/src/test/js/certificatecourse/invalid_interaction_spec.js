@@ -1,6 +1,6 @@
 describe("Invalid Interaction", function(){
 
-    var metadata, invalidInteraction, previousInteractionNeedingInput = {};
+    var metadata, invalidInteraction, previousInteractionNeedingInput = {getInteractionKey:function() {return "myKey";}};
     var audioFileBase = "./audio/";
     var certificateCourseLocation = "certificatecourse/";
     var retryAudio = "0000_error_in_pressing_number.wav";
