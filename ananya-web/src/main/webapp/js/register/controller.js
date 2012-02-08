@@ -1,21 +1,20 @@
 var RegisterController = function(metadata) {
-
     var metadata = metadata;
-    var count = 0;
+    var fieldCounter = 0;
     var records = [];
     var fields = ["designation", "name", "district", "block", "panchayat"];
 
     this.nextField = function() {
-        return fields[count];
+        return fields[fieldCounter];
     };
 
     this.capture = function(record) {
-        records[count] = record;
-        count++;
+        records[fieldCounter] = record;
+        fieldCounter++;
     };
 
     this.allCaptured = function() {
-        return count >= fields.length;
+        return fieldCounter >= fields.length;
     };
 
     this.playPrompt = function(field) {
@@ -38,8 +37,8 @@ var RegisterController = function(metadata) {
         return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"];
     };
 
-    this.isNotVoiceRecognised = function(field) {
-        return field != "name" || field != "designation";
+    this.isVoiceRecognised = function(field) {
+        return field != "name" && field != "designation";
     };
 
     this.submitUrl = function() {
@@ -61,7 +60,7 @@ var RegisterController = function(metadata) {
         if (field == 'district')
             return metadata["grammar.url"] + metadata["grammar.title.district"] + ".grxml";
         else
-            return metadata["grammar.url"] + metadata["grammar.title." + field] + records[count - 1] + ".grxml";
+            return metadata["grammar.url"] + metadata["grammar.title." + field] + records[fieldCounter - 1] + ".grxml";
     };
 
     this.playBack = function(record) {
@@ -69,11 +68,11 @@ var RegisterController = function(metadata) {
     };
 
     this.playBackPrompt = function(field,record) {
-        if(this.isNotVoiceRecognised(field))
-            return record;
+        if(this.isVoiceRecognised(field))
+            return this.playBack(record);
         else
-           return this.playBack(record);
-    };
+           return record;
+        };
 
     this.designation = function() {
         return records[0];
@@ -95,5 +94,3 @@ var RegisterController = function(metadata) {
         return records[4];
     };
 };
-
-    

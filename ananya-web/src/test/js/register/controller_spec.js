@@ -51,4 +51,22 @@ describe("Registration Controller", function () {
         expect(controller.playRerecordPrompt("name")).toEqual("/audio/register/rerecord.name.wav");
     });
 
+    it("should play back prompt for fields that are not voice recognised", function() {
+        metadata = {};
+        controller = new RegisterController(metadata);
+        expect(controller.playBackPrompt("name","record")).toEqual("record");
+        expect(controller.playBackPrompt("designation","record")).toEqual("record");
+    });
+
+    it("should play back recorded audio for fields that are voice recognised", function() {
+       metadata = {
+                   "audio.url":"/audio",
+                   "location.audio.url":"/location/",
+               };
+        controller = new RegisterController(metadata);
+        expect(controller.playBackPrompt("district","districtAudio")).toEqual("/audio/location/districtAudio.wav");
+        expect(controller.playBackPrompt("block","blockAudio")).toEqual("/audio/location/blockAudio.wav");
+        expect(controller.playBackPrompt("panchayat","panchayatAudio")).toEqual("/audio/location/panchayatAudio.wav");
+    });
+
 });
