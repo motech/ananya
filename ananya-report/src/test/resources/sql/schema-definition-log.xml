@@ -20,5 +20,17 @@
         </createTable>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="2">
+        <createTable tableName="location_dimension">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="varchar(30)"/>
+            <column name="district" type="varchar(255)"/>
+            <column name="block" type="varchar(255)"/>
+            <column name="panchayat" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>
