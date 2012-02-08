@@ -273,12 +273,6 @@
             <version>1.4</version>
         </dependency>
         <dependency>
-            <groupId>com.ozonetel.kookoo</groupId>
-            <artifactId>kookoo</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.repository.tree;
+package org.motechproject.ananya.repository;
 
 import com.google.gson.Gson;
 import org.ektorp.CouchDbConnector;

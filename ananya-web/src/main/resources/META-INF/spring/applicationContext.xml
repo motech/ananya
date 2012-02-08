@@ -9,15 +9,14 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <context:property-placeholder  location="classpath*:/activemq.properties"/>
-    <util:properties id="ivrProperties" location="classpath:/ivr.properties"/>
+    <context:property-placeholder location="classpath*:*.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 
-    <import resource="classpath:applicationContext-flw.xml"/>
-    <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
+    <import resource="classpath:applicationContext-flw.xml"/>
 
     <context:component-scan base-package="org.motechproject"/>
     <aop:aspectj-autoproxy/>

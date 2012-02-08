@@ -3,7 +3,7 @@ package org.motechproject.ananya.functional;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Node;
-import org.motechproject.ananya.repository.tree.AllNodes;
+import org.motechproject.ananya.repository.AllNodes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
