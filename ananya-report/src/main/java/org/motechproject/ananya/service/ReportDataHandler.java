@@ -6,9 +6,9 @@ import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class ReportDataHandler {
 
     private AllCallLogs allCallLogs;

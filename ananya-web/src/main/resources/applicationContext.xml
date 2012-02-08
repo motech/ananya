@@ -10,6 +10,10 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
     <context:property-placeholder location="classpath*:*.properties"/>
+    <context:component-scan base-package="org.motechproject"/>
+    <context:spring-configured/>
+    <context:annotation-config/>
+
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 
@@ -17,11 +21,6 @@
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
-
-    <context:annotation-config/>
-    <context:spring-configured/>
-    <context:component-scan base-package="org.motechproject"/>
-
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
