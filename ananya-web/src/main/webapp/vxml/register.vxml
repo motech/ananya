@@ -71,7 +71,7 @@
        <field name="confirm" type="boolean">
             <prompt bargein="false">
                <audio expr="controller.playConfirmPrompt(field)"/>
-               <audio expr="controller.playBackPrompt(field,((nameRecord != undefined) ? nameRecord : fieldRecord))"/>
+               <audio expr="controller.playBackPrompt(field,record)"/>
                <audio expr="controller.playRerecordPrompt(field)"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
@@ -83,13 +83,13 @@
             </grammar>
             <noinput>
                <script>
-                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+                   controller.capture(record);
                </script>
                <goto next="#record_form"/>
             </noinput>
             <nomatch>
                 <script>
-                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+                   controller.capture(record);
                </script>
                <goto next="#record_form"/>
             </nomatch>
@@ -98,7 +98,7 @@
                    <goto next="#record_form"/>
                </if>
                <script>
-                   controller.capture(((nameRecord != undefined) ? nameRecord : fieldRecord));
+                   controller.capture(record);
                </script>
                <goto next="#record_form"/>
            </filled>
@@ -138,13 +138,16 @@
                      <prompt bargein="false">
                           <audio expr="controller.playNoInputPrompt(field)"/>
                      </prompt>
+                     <goto nextitem="fieldRecord" />
                  </if>
             </noinput>
+            <filled>
+              <assign name="record" expr="fieldRecord"/>
+            </filled>
         </record>
 
 
         <field name="fieldRecord">
-
             <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
 
             <grammar mode="dtmf" version="1.0" root="root">
@@ -165,6 +168,7 @@
                    <prompt bargein="false">
                        <audio expr="controller.playNoInputPrompt(field)"/>
                    </prompt>
+                   <goto nextitem="fieldRecord" />
                </if>
            </noinput>
             <nomatch>
@@ -177,8 +181,12 @@
                <prompt bargein="false">
                    <audio expr="controller.playNoInputPrompt(field)"/>
                </prompt>
+               <goto nextitem="fieldRecord" />
                </if>
             </nomatch>
+            <filled>
+              <assign name="record" expr="fieldRecord"/>
+            </filled>
        </field>
 
     </form>
