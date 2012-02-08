@@ -2,10 +2,8 @@
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-
-    <display-name>bbcwt</display-name>
-
-    <description>BBCWST FLW training course - mobile call flow</description>
+    <display-name>Ananya</display-name>
+    <description>Ananya</description>
 
 
     <!-- Enable escaping of form submission contents -->
@@ -16,7 +14,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:META-INF/spring/applicationContext*.xml</param-value>
+        <param-value>classpath*:applicationContext.xml</param-value>
     </context-param>
 
     <filter>

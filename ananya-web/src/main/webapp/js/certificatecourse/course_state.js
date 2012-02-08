@@ -1,8 +1,11 @@
 var CourseState = function() {
-    this.setState = function(chapterIndex, lessonOrQuestionIndex, type) {
+    this.setState = function(chapterIndex, lessonOrQuestionIndex, currentQuestionResponse, isAnswerCorrect, interactionKey) {
         this.chapterIndex = chapterIndex;
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
-        this.type = type;
+        this.currentQuestionResponse = currentQuestionResponse;
+        this.isAnswerCorrect = isAnswerCorrect;
+        this.interactionKey = interactionKey;
+        this.scoresByChapter = {};
     };
 
     this.setChapterIndex = function(chapterIndex) {
@@ -13,6 +16,22 @@ var CourseState = function() {
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
     };
 
-    this.setState(null, null, null);
+    this.setCurrentQuestionResponse = function(currentQuestionResponse) {
+        this.currentQuestionResponse = currentQuestionResponse;
+    };
+
+    this.setAnswerCorrect = function(isAnswerCorrect) {
+        this.isAnswerCorrect = isAnswerCorrect;
+    };
+
+    this.setScoresByChapter = function(scoresByChapter) {
+        this.scoresByChapter = scoresByChapter;
+    };
+
+    this.setInteractionKey = function(interactionKey) {
+        this.interactionKey = interactionKey;
+    };
+
+    this.setState(null, null, null, null, null);
 };
 

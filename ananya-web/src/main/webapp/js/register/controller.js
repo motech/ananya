@@ -96,3 +96,4 @@ var RegisterController = function(metadata) {
     };
 };
 
+    

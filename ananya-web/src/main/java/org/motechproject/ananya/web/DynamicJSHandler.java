@@ -1,6 +1,6 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.repository.tree.AllNodes;
+import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

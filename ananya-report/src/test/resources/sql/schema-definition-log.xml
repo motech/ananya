@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet context="setup" author="ThoughtWorks" id="1">
+        <createTable tableName="registration_log">
+            <column name="call_id" type="varchar(64)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="caller_id" type="varchar(10)"/>
+            <column name="called_number" type="varchar(20)"/>
+            <column name="designation" type="varchar(50)"/>
+            <column name="district" type="varchar(255)"/>
+            <column name="block" type="varchar(255)"/>
+            <column name="panchayat" type="varchar(255)"/>
+            <column name="start_time" type="timestamp"/>
+            <column name="end_time" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="2">
+        <createTable tableName="location_dimension">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="varchar(30)"/>
+            <column name="district" type="varchar(255)"/>
+            <column name="block" type="varchar(255)"/>
+            <column name="panchayat" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.repository.tree;
+package org.motechproject.ananya.repository;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Node;
+import org.motechproject.ananya.matcher.NodeDeepMatcher;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.motechproject.dao.MotechJsonReader;
@@ -24,7 +25,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.motechproject.ananya.matcher.NodeDeepMatcher.isSameAsNodeRepresentedBy;
 
 public class AllNodesTest extends SpringIntegrationTest {
     @Autowired
@@ -73,20 +73,20 @@ public class AllNodesTest extends SpringIntegrationTest {
     public void shouldSaveTree() {
         assertThat(root.getId(), is(notNullValue()));
         Node rootNodeFromDB = allNodes.get(root.getId());
-        assertThat(rootNodeFromDB, isSameAsNodeRepresentedBy(root));
+        assertThat(rootNodeFromDB, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
     }
 
     @Test
     public void shouldReturnTreeByName() {
         Node treeFromDB = allNodes.findByName(COURSE_NAME);
-        assertThat(treeFromDB, isSameAsNodeRepresentedBy(root));
+        assertThat(treeFromDB, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
     }
 
     @Test
     public void shouldReturnTreeAsJson() throws Exception {
         String treeAsJson = allNodes.nodeAsJson(COURSE_NAME);
         Node from = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);
-        assertThat(from, isSameAsNodeRepresentedBy(root));
+        assertThat(from, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
     }
 
     @Test
@@ -128,15 +128,15 @@ public class AllNodesTest extends SpringIntegrationTest {
         assertThat(level2Chapter2.getId(), is(notNullValue()));
 
         Node courseFromDb = allNodes.findByName(COURSE);
-        assertThat(courseFromDb, isSameAsNodeRepresentedBy(course));
+        assertThat(courseFromDb, NodeDeepMatcher.isSameAsNodeRepresentedBy(course));
         assertNull(courseFromDb.getParentId());
 
         Node level1FromDb = allNodes.findByName(LEVEL_1);
-        assertThat(level1FromDb, isSameAsNodeRepresentedBy(level1));
+        assertThat(level1FromDb, NodeDeepMatcher.isSameAsNodeRepresentedBy(level1));
         assertEquals(level1FromDb.getParentId(), courseFromDb.getId());
 
         Node level2Chapter2FromDb = allNodes.findByName(LEVEL_2_CHAP_2);
-        assertThat(level2Chapter2FromDb, isSameAsNodeRepresentedBy(level2Chapter2));
+        assertThat(level2Chapter2FromDb, NodeDeepMatcher.isSameAsNodeRepresentedBy(level2Chapter2));
         assertEquals(level2Chapter2FromDb.getParentId(), level2.getId());
 
     }

@@ -1,7 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import org.motechproject.ananya.domain.Node;
-import org.motechproject.ananya.repository.tree.AllNodes;
+import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,6 @@ public class JobAidSeed {
 
         return course;
     }
-
 
     private void addLessonsToChapter(Node chapter, String... lessons) {
         int i = 1;
