@@ -18,8 +18,10 @@
     <import resource="classpath:applicationCmsLiteApi.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
 
+    <context:annotation-config/>
+    <context:spring-configured/>
     <context:component-scan base-package="org.motechproject"/>
-    <aop:aspectj-autoproxy/>
+
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
