@@ -5,7 +5,7 @@ var DataTransferList = function() {
     };
 
     this.add = function(data) {
-        var dataPacket = {};
+        var dataPacket = new Array();
         dataPacket["token"] = this.counter++;
         dataPacket["data"] = data;
         this.transferList[this.transferList.length] = dataPacket;
@@ -14,6 +14,10 @@ var DataTransferList = function() {
     this.drain = function() {
         this.transferList = new Array();
     };
+
+    this.size = function() {
+        return this.transferList.length;
+    }
 
     this.init();
 };
