@@ -45,7 +45,8 @@ var CertificateCourseController = function(course, metadata) {
 
     //TODO: Leaking abstraction. Having just to see if things work.
     this.dataToPost = function() {
-        return this.dataTransferList.transferList;
+        var stringifiedDataToPost = Utility.stringify(this.dataTransferList.transferList);
+        return stringifiedDataToPost;
     }
 
     this.playingDone = function() {

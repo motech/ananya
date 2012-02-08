@@ -5,7 +5,7 @@ var DataTransferList = function() {
     };
 
     this.add = function(data) {
-        var dataPacket = new Array();
+        var dataPacket = new Object();
         dataPacket["token"] = this.counter++;
         dataPacket["data"] = data;
         this.transferList[this.transferList.length] = dataPacket;

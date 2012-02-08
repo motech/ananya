@@ -5,12 +5,14 @@
 
     <script src="../dynamic/js/metadata.js"/>
     <script src="../dynamic/js/certification_course_data.js"/>
+    <script src="../js/utility.js"/>
     <!--<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>-->
 
     <script src="../js/prompt_context.js"/>
     <script src="../js/certificatecourse/abstract_interactions.js"/>
     <script src="../js/certificatecourse/interactions.js"/>
     <script src="../js/certificatecourse/course_state.js"/>
+    <script src="../js/certificatecourse/data_transfer_list.js"/>
     <script src="../js/certificatecourse/controller.js"/>
 
     <script>
@@ -25,6 +27,11 @@
 
     <form id="controller">
         <block>
+            <var name="dataToPost" expr="controller.dataToPost()"/>
+            <log expr="'Data to post is: '"/>
+            <log expr="dataToPost"/>
+
+            <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost"/>
             <goto expr="controller.nextAction()"/>
         </block>
     </form>
