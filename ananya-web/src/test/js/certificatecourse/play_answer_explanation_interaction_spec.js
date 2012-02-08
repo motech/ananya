@@ -71,4 +71,18 @@ describe("Evaluation question response interaction", function() {
     it("should not take any input", function() {
         expect(playAnswerExplanationInteraction.doesTakeInput()).toEqual(false);
     });
+
+    it("should reset the result and the current response to null when moving out of the interaction", function () {
+        //This is required since when we are moving out of this interaction, we are going ahead with the next question, for which there is no user response yet.
+        courseState.setChapterIndex(0);
+        courseState.setLessonOrQuestionIndex(3);
+        var isAnswerCorrect = true;
+        courseState.setAnswerCorrect(isAnswerCorrect);
+        courseState.setCurrentQuestionResponse(1);
+
+        playAnswerExplanationInteraction.nextInteraction();
+
+        expect(courseState.isAnswerCorrect).toEqual(null);
+        expect(courseState.currentQuestionResponse).toEqual(null);
+    });
 });

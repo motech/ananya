@@ -336,6 +336,9 @@ PlayAnswerExplanationInteraction.prototype.nextInteraction = function() {
         this.courseState.setLessonOrQuestionIndex(nextQuestionIndex);
         return CertificateCourse.interactions[PoseQuestionInteraction.KEY];
     }
+
+    this.courseState.setAnswerCorrect(null);
+    this.courseState.setCurrentQuestionResponse(null);
     return CertificateCourse.interactions[ReportChapterScoreInteraction.KEY];
 }
 
