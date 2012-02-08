@@ -32,5 +32,17 @@
         </createTable>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="3">
+        <createTable tableName="time_dimension">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="day" type="smallint"/>
+            <column name="week" type="smallint"/>
+            <column name="month" type="smallint"/>
+            <column name="year" type="smallint"/>
+        </createTable>
+    </changeSet>
+
 
 </databaseChangeLog>
