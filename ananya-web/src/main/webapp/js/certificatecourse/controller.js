@@ -8,9 +8,11 @@ var CertificateCourseController = function(course, metadata) {
         this.promptContext = new PromptContext(metadata);
         this.courseState = new CourseState();
         this.initializeInteractionsArray(metadata, course, this.courseState);
+        this.dataTransferList = new DataTransferList();
         this.setInteraction(CertificateCourse.interactions[WelcomeInteraction.KEY]);
     };
 
+    //TODO: This should be pulled out.
     this.initializeInteractionsArray = function(metadata, course, courseState) {
         CertificateCourse.interactions[WelcomeInteraction.KEY] = new WelcomeInteraction(metadata, course);
         CertificateCourse.interactions[StartCourseOption.KEY] = new StartCourseOption(metadata, course);
@@ -41,6 +43,11 @@ var CertificateCourseController = function(course, metadata) {
         }
     };
 
+    //TODO: Leaking abstraction. Having just to see if things work.
+    this.dataToPost = function() {
+        return this.dataTransferList.transferList;
+    }
+
     this.playingDone = function() {
         this.setInteraction(this.interaction.nextInteraction());
     };
@@ -56,6 +63,7 @@ var CertificateCourseController = function(course, metadata) {
         }
         if(this.currentInteractionIsBookMarkable()) {
             this.courseState.setInteractionKey(this.interaction.getInteractionKey());
+            this.dataTransferList.add(this.courseState.toJson());
         }
     };
 

@@ -32,6 +32,16 @@ var CourseState = function() {
         this.interactionKey = interactionKey;
     };
 
+    this.toJson = function() {
+        return {
+            "chapterIndex" : this.chapterIndex,
+            "lessonOrQuestionIndex" : this.lessonOrQuestionIndex,
+            "questionResponse" : this.currentQuestionResponse,
+            "result" : this.isAnswerCorrect,
+            "interactionKey": this.interactionKey
+        };
+    };
+
     this.setState(null, null, null, null, null);
 };
 

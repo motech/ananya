@@ -25,6 +25,10 @@ describe("Certificate course controller spec", function() {
         expect(controller.promptContext).toBeDefined();
     });
 
+    it("should initialize data transfer list at start", function () {
+        expect(controller.dataTransferList).toBeDefined();
+    });
+
     it("should increment no input count in prompt context if there is no input", function() {
         expect(controller.promptContext.noInputCount).toEqual(0);
         controller.gotNoInput();
@@ -197,4 +201,20 @@ describe("Certificate course controller spec", function() {
 
         expect(controller.courseState.interactionKey).toEqual(keyForInteraction);
     });
+
+    it("whenever switching to an interaction, should add the current state's json to the data transfer list", function() {
+        var phoneInteraction = {
+                                     getInteractionKey:function() {return "myKey";}
+        };
+
+        var jsonState = {"chapterIndex":1, "lessonOrQuestionIndex":5};
+        spyOn(controller.courseState, "toJson").andReturn(jsonState);
+
+        spyOn(controller.dataTransferList, "add");
+
+        controller.setInteraction(phoneInteraction);
+
+        expect(controller.courseState.toJson).toHaveBeenCalled();
+        expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState);
+     });
 });
