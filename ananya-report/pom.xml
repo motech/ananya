@@ -134,6 +134,7 @@
                             <url>jdbc:postgresql://${postgres.server}/${postgres.db}</url>
                             <username>${postgres.user}</username>
                             <password>${postgres.password}</password>
+                            <defaultSchemaName>${postgres.schema}</defaultSchemaName>
                         </configuration>
                         <goals>
                             <goal>update</goal>

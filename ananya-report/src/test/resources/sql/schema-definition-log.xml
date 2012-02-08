@@ -5,7 +5,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet context="setup" author="ThoughtWorks" id="1">
-        <createTable tableName="registration_log">
+        <createTable tableName="registration_log" schemaName="report">
             <column name="call_id" type="varchar(64)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -21,7 +21,7 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="2">
-        <createTable tableName="location_dimension">
+        <createTable tableName="location_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -33,7 +33,7 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="3">
-        <createTable tableName="time_dimension">
+        <createTable tableName="time_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
