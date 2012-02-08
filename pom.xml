@@ -62,6 +62,11 @@
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>javax.transaction</id>
+            <name>Repository for javax transaction API</name>
+            <url>http://mvnrepository.com/artifact/javax.transaction/jta/1.1</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -335,6 +340,11 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 
