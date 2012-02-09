@@ -28,7 +28,7 @@
         </createTable>
     </changeSet>
 
-     <changeSet context="setup" author="ThoughtWorks" id="3">
+    <changeSet context="setup" author="ThoughtWorks" id="3">
         <createTable tableName="front_line_worker_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -41,24 +41,25 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="4">
-       <createTable tableName="registration_measure" schemaName="report">
-           <column name="id" type="serial">
-               <constraints nullable="false" primaryKey="true"/>
-           </column>
-           <column name="location_id" type="smallint"/>
-           <column name="time_id" type="integer"/>
-           <column name="flw_id" type="bigint"/>
-       </createTable>
-   </changeSet>
+        <createTable tableName="registration_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="smallint"/>
+            <column name="time_id" type="integer"/>
+            <column name="flw_id" type="bigint"/>
+        </createTable>
 
-    <createIndex tableName="registration_measure" indexName="idx_registration_measure_location_id">
-        <column name="location_id"/>
-    </createIndex>
-    <createIndex tableName="registration_measure" indexName="idx_registration_measure_time_id">
-        <column name="time_id"/>
-    </createIndex>
-    <createIndex tableName="registration_measure" indexName="idx_registration_measure_flw_id">
-        <column name="flw_id"/>
-    </createIndex>
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_location_id">
+            <column name="location_id"/>
+        </createIndex>
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+    </changeSet>
+
 
 </databaseChangeLog>

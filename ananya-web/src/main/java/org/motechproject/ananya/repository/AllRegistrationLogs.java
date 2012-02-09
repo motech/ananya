@@ -20,7 +20,7 @@ public class AllRegistrationLogs extends MotechBaseRepository<RegistrationLog> {
     }
 
     @GenerateView
-    public RegistrationLog findByLogId(String logId) {
+    public RegistrationLog findById(String logId) {
         ViewQuery viewQuery = createQuery("by_id").key(logId).includeDocs(true);
         List<RegistrationLog> logs = db.queryView(viewQuery, RegistrationLog.class);
         if (logs == null || logs.isEmpty()) return null;
