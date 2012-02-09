@@ -12,7 +12,10 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="annotatedClasses">
             <list>
-                <value>org.motechproject.ananya.domain.log.RegistrationLog</value>
+                <value>org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension</value>
+                <value>org.motechproject.ananya.domain.dimension.LocationDimension</value>
+                <value>org.motechproject.ananya.domain.dimension.TimeDimension</value>
+                <value>org.motechproject.ananya.domain.measure.RegistrationMeasure</value>
             </list>
         </property>
 
@@ -21,6 +24,7 @@
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.default_schema">${hibernate.default_schema}</prop>
             </props>
         </property>
     </bean>

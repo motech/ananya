@@ -18,4 +18,9 @@ public class AllLocationDimensions {
         return locationDimension != null ? locationDimension :
                 new LocationDimension(locationCode, district, block, panchayat);
     }
+
+    public LocationDimension fetchLocationDimensionFromDB(String locationCode) {
+        return (LocationDimension) template.getUniqueResult(
+                LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
+    }
 }

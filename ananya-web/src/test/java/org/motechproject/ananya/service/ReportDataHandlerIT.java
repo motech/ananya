@@ -1,15 +1,22 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeFieldType;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.log.LogData;
 import org.motechproject.ananya.domain.log.LogType;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.AllRegistrationLogs;
-import org.motechproject.ananya.repository.ReportDB;
+import org.motechproject.ananya.domain.log.RegistrationLog;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.*;
 import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,8 +25,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-report.xml")
+@ContextConfiguration("classpath:applicationContext.xml")
 public class ReportDataHandlerIT {
 
     @Autowired
@@ -32,23 +42,66 @@ public class ReportDataHandlerIT {
     private AllLocations allLocations;
     @Autowired
     private ReportDB reportDB;
+    @Autowired
+    private AllLocationDimensions allLocationDimensions;
+    @Autowired
+    private AllTimeDimensions allTimeDimensions;
+    @Autowired
+    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Autowired
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     @Test
     @Ignore
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
 
-        Location location = new Location("S001D002B002V001", "district", "block", "panchayat");
+        String locationCode = "S001D002B002V001";
+        String msisdn = "555";
+
+        Location location = new Location(locationCode, "district", "block", "panchayat");
         allLocations.add(location);
 
-//        allFrontLineWorkers.add(frontLineWorker);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId());
+        frontLineWorker.setName("Name"); frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        allFrontLineWorkers.add(frontLineWorker);
+
+        DateTime dateTime = DateTime.now();
+        RegistrationLog registrationLog = new RegistrationLog(msisdn, "123", dateTime, dateTime.plusMinutes(1), "");
+        allRegistrationLogs.add(registrationLog);
 
 
-        LogData logData = new LogData(LogType.REGISTRATION, "1234");
+        LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
         handler.handleRegistration(event);
+
+        LocationDimension locationDimension = allLocationDimensions.fetchLocationDimensionFromDB(locationCode);
+        TimeDimension timeDimension = allTimeDimensions.fetchTimeDimensionFromDB(dateTime);
+        FrontLineWorkerDimension frontLineWorkerDimension =
+            allFrontLineWorkerDimensions.fetchFrontLineWorkerDimensionFromDB(Long.getLong(msisdn));
+        RegistrationMeasure registrationMeasure =
+                allRegistrationMeasures.fetchRegistrationMeasureFromDB(
+                        frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
+
+        assertEquals(locationDimension.getLocationId(), locationCode);
+        assertEquals(locationDimension.getDistrict(), "district");
+        assertEquals(locationDimension.getBlock(), "block");
+        assertEquals(locationDimension.getPanchayat(), "panchayat");
+
+        assertEquals((int)timeDimension.getDay(), dateTime.get(DateTimeFieldType.dayOfYear()));
+        assertEquals((int)timeDimension.getWeek(), dateTime.get(DateTimeFieldType.weekOfWeekyear()));
+        assertEquals((int)timeDimension.getMonth(), dateTime.get(DateTimeFieldType.monthOfYear()));
+        assertEquals((int)timeDimension.getYear(), dateTime.get(DateTimeFieldType.year()));
+        assertEquals(timeDimension.getDateTime(), dateTime);
+
+        assertEquals(frontLineWorkerDimension.getMsisdn(), msisdn);
+        assertEquals(frontLineWorkerDimension.getOperator(), "");
+        assertEquals(frontLineWorkerDimension.getName(), "Name");
+        assertEquals(frontLineWorkerDimension.getStatus(), RegistrationStatus.REGISTERED.toString());
+
+        assertNotNull(registrationMeasure);
     }
 
 }

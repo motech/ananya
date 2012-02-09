@@ -31,6 +31,16 @@ public class TimeDimension {
     @Column(name = "datetime")
     private DateTime dateTime;
 
+    public TimeDimension() {
+    }
+
+    public DateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public TimeDimension(DateTime time) {
         this(time.get(DateTimeFieldType.dayOfYear()), time.get(DateTimeFieldType.weekOfWeekyear()),

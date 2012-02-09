@@ -16,4 +16,9 @@ public class AllTimeDimensions {
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"dateTime"}, new Object[]{dateTime});
         return timeDimension != null ? timeDimension : new TimeDimension(dateTime);
     }
+
+    public TimeDimension fetchTimeDimensionFromDB(DateTime dateTime) {
+        return (TimeDimension) template.getUniqueResult(
+            TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"dateTime"}, new Object[]{dateTime});
+    }
 }

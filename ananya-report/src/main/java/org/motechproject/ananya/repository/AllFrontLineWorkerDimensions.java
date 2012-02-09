@@ -20,4 +20,9 @@ public class AllFrontLineWorkerDimensions {
         return frontLineWorkerDimensionDimension != null ? frontLineWorkerDimensionDimension :
                 new FrontLineWorkerDimension(msisdn, operator, name, status);
     }
+
+    public FrontLineWorkerDimension fetchFrontLineWorkerDimensionFromDB(Long msisdn) {
+        return (FrontLineWorkerDimension) template.getUniqueResult(
+            FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
+    }
 }

@@ -28,11 +28,4 @@ public class AllLocations extends MotechBaseRepository<Location> {
         return locations.get(0);
     }
 
-    @GenerateView
-    public Location findById(String id) {
-        ViewQuery viewQuery = createQuery("by_id").key(id).includeDocs(true);
-        List<Location> locations = db.queryView(viewQuery, Location.class);
-        if (locations == null || locations.isEmpty()) return null;
-        return locations.get(0);
-    }
 }

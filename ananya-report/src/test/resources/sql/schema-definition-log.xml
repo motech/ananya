@@ -25,6 +25,7 @@
             <column name="week" type="smallint"/>
             <column name="month" type="smallint"/>
             <column name="year" type="smallint"/>
+            <column name="datetime" type="timestamp"/>
         </createTable>
     </changeSet>
 

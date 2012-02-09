@@ -43,9 +43,9 @@ public class TransactionToReportMapper {
     }
 
     public void transformAndPushToReportingDB(LogData logData) {
-        RegistrationLog registrationLog = allRegistrationLogs.findById(logData.getDataId());
+        RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
-        Location location = allLocations.findById(frontLineWorker.getLocationId());
+        Location location = allLocations.get(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension =
                 this.allFrontLineWorkerDimensions.getFrontLineWorkerDimension(Long.getLong(frontLineWorker.getMsisdn()),

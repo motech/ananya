@@ -78,6 +78,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.name;
     }
 
+    public void setStatus(RegistrationStatus status) {
+        this.status = status;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public RegistrationStatus getStatus() {
         return this.status;
     }

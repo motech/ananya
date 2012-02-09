@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "location_dimension")
-@NamedQuery(name = LocationDimension.FIND_BY_LOCATION_ID, query = "select l from LocationDimension l where l.location_id=:location_id")
+@NamedQuery(name = LocationDimension.FIND_BY_LOCATION_ID, query = "select l from LocationDimension l where l.locationId=:location_id")
 public class LocationDimension {
 
     @Id
@@ -25,6 +25,8 @@ public class LocationDimension {
 
     public static final String FIND_BY_LOCATION_ID = "find.by.location.id";
 
+    public LocationDimension() {
+    }
 
     public LocationDimension(String locationId, String district, String block, String panchayat) {
         this.locationId = locationId;
