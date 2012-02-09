@@ -3,8 +3,11 @@ package org.motechproject.ananya.web;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,23 +29,29 @@ public class RegistrationController {
 
     private FrontLineWorkerService flwService;
     private AllRecordings allRecordings;
+    private AllRegistrationLogs allLogs;
 
     @Autowired
-    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings) {
+    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings, AllRegistrationLogs allLogs) {
         this.flwService = flwService;
         this.allRecordings = allRecordings;
+        this.allLogs = allLogs;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/register/")
     @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-        String msisdn = request.getParameter("session.connection.remote.uri");
+        String callerId = request.getParameter("session.connection.remote.uri");
         String designation = request.getParameter("designation");
         String panchayat = request.getParameter("panchayat");
 
-        flwService.createNew(msisdn, Designation.valueOf(designation), panchayat);
+        flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
 
-        log.info("Registered new FLW:" + msisdn);
+        RegistrationLog registrationLog = new RegistrationLog(callerId, "calledNumber", DateTime.now(), DateTime.now(), "operator");
+        registrationLog.designation(designation).panchayat(panchayat);
+        allLogs.add(registrationLog);
+
+        log.info("Registered new FLW:" + callerId);
         return new ModelAndView("register-done");
     }
 
@@ -52,12 +61,12 @@ public class RegistrationController {
         ServletFileUpload upload = getUploader();
         List items = upload.parseRequest(request);
 
-        String msisdn = getField(items, "session.connection.remote.uri");
+        String callerId = getField(items, "session.connection.remote.uri");
         String realPath = request.getSession().getServletContext().getRealPath("/recordings/");
 
-        allRecordings.store(msisdn, items, realPath);
+        allRecordings.store(callerId, items, realPath);
 
-        log.info("Recorded new FLW name:" + msisdn);
+        log.info("Recorded new FLW name:" + callerId);
         return new ModelAndView("register-done");
     }
 

@@ -10,7 +10,7 @@
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
     <context:property-placeholder location="classpath*:*.properties"/>
-    <context:component-scan base-package="org.motechproject"/>
+    <context:component-scan base-package="org.motechproject.ananya"/>
     <context:spring-configured/>
     <context:annotation-config/>
 

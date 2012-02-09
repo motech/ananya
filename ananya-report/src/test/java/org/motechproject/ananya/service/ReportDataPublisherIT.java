@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.ReportData;
@@ -21,7 +20,6 @@ public class ReportDataPublisherIT{
     private ReportDataPublisher publisher;
 
     @Test
-    @Ignore("should not be run in build cycle, meant for end-to-end testing with queues")
     public void shouldPublishReportDataIntoQueue() {
         DateTime startTime = DateTime.now();
         DateTime endTime = DateTime.now();

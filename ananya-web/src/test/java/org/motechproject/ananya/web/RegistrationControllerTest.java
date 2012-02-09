@@ -4,10 +4,14 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
@@ -36,26 +40,36 @@ public class RegistrationControllerTest {
     private AllRecordings allRecordings;
     @Mock
     private HttpSession session;
+    @Mock
+    private AllRegistrationLogs allRegistrationLogs;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new RegistrationController(flwService, allRecordings);
+        controller = new RegistrationController(flwService, allRecordings, allRegistrationLogs);
     }
 
     @Test
     public void shouldRegisterFLWWithLocation() throws Exception {
         String msisdn = "123";
-        String village = "S01D001B001V004";
+        String panchayat = "S01D001B001V004";
 
         when(request.getParameter("session.connection.remote.uri")).thenReturn(msisdn);
         when(request.getParameter("designation")).thenReturn(Designation.ASHA.name());
-        when(request.getParameter("panchayat")).thenReturn(village);
+        when(request.getParameter("panchayat")).thenReturn(panchayat);
 
         ModelAndView modelAndView = controller.registerNew(request);
 
-        verify(flwService).createNew(msisdn, Designation.ASHA, village);
+        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
+
+        verify(flwService).createNew(msisdn, Designation.ASHA, panchayat);
+        verify(allRegistrationLogs).add(captor.capture());
+
+        RegistrationLog captured = captor.getValue();
+
+        assertEquals(msisdn, getFieldValue(captured,"callerId"));
+        assertEquals(panchayat, getFieldValue(captured,"panchayat"));
         assertEquals("register-done", modelAndView.getViewName());
 
     }
@@ -86,6 +100,10 @@ public class RegistrationControllerTest {
         verify(allRecordings).store(msisdn, items, path);
         assertEquals("register-done", modelAndView.getViewName());
 
+    }
+
+    private String getFieldValue(Object o, String field) {
+        return ReflectionTestUtils.getField(o, field).toString();
     }
 
 }
