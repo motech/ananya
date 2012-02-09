@@ -73,4 +73,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public boolean isAnganwadi() {
         return this.designation.equals(Designation.ANGANWADI);
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public RegistrationStatus getStatus() {
+        return this.status;
+    }
 }

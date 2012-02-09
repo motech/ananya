@@ -1,6 +1,6 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.ReportData;
+import org.motechproject.ananya.domain.log.LogData;
 import org.motechproject.context.EventContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ public class ReportDataPublisher {
         this.eventContext = eventContext;
     }
 
-    public void publish(ReportData reportData) {
-        eventContext.send(SEND_REGISTRATION_DATA_KEY,reportData);
+    public void publish(LogData logData) {
+        eventContext.send(SEND_REGISTRATION_DATA_KEY, logData);
     }
 }

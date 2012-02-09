@@ -6,20 +6,25 @@ import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 
 public class BaseLog extends MotechBaseDataObject {
+
     @JsonProperty
     private String callId;
     @JsonProperty
-    private String callerId;
+    protected String callerId;
     @JsonProperty
-    private String calledNumber;
+    protected String calledNumber;
+
     @JsonProperty
-    private DateTime startTime;
+    protected DateTime startTime;
+
     @JsonProperty
-    private DateTime endTime;
-    @JsonProperty
-    private String operator;
+    protected DateTime endTime;
+
     @JsonProperty
     private String token;
+    @JsonProperty
+
+    protected String operator;
 
     public BaseLog() {
     }
@@ -38,17 +43,11 @@ public class BaseLog extends MotechBaseDataObject {
         return callId;
     }
 
-    public String getCallerId() {
-        return callerId;
-    }
 
     public String getCalledNumber() {
         return calledNumber;
     }
 
-    public DateTime getStartTime() {
-        return startTime;
-    }
 
     public DateTime getEndTime() {
         return endTime;
@@ -60,5 +59,13 @@ public class BaseLog extends MotechBaseDataObject {
 
     public String getToken() {
         return token;
+    }
+
+    public String getCallerId() {
+        return this.callerId;
+    }
+
+    public DateTime getStartTime() {
+        return this.startTime;
     }
 }

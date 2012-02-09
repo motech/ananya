@@ -5,22 +5,6 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet context="setup" author="ThoughtWorks" id="1">
-        <createTable tableName="registration_log" schemaName="report">
-            <column name="call_id" type="varchar(64)">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="caller_id" type="varchar(10)"/>
-            <column name="called_number" type="varchar(20)"/>
-            <column name="designation" type="varchar(50)"/>
-            <column name="district" type="varchar(255)"/>
-            <column name="block" type="varchar(255)"/>
-            <column name="panchayat" type="varchar(255)"/>
-            <column name="start_time" type="timestamp"/>
-            <column name="end_time" type="timestamp"/>
-        </createTable>
-    </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks" id="2">
         <createTable tableName="location_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -32,7 +16,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="3">
+    <changeSet context="setup" author="ThoughtWorks" id="2">
         <createTable tableName="time_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -44,5 +28,37 @@
         </createTable>
     </changeSet>
 
+     <changeSet context="setup" author="ThoughtWorks" id="3">
+        <createTable tableName="front_line_worker_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="msisdn" type="bigint"/>
+            <column name="operator" type="varchar(30)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="status" type="varchar(30)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="4">
+       <createTable tableName="registration_measure" schemaName="report">
+           <column name="id" type="serial">
+               <constraints nullable="false" primaryKey="true"/>
+           </column>
+           <column name="location_id" type="smallint"/>
+           <column name="time_id" type="integer"/>
+           <column name="flw_id" type="bigint"/>
+       </createTable>
+   </changeSet>
+
+    <createIndex tableName="registration_measure" indexName="idx_registration_measure_location_id">
+        <column name="location_id"/>
+    </createIndex>
+    <createIndex tableName="registration_measure" indexName="idx_registration_measure_time_id">
+        <column name="time_id"/>
+    </createIndex>
+    <createIndex tableName="registration_measure" indexName="idx_registration_measure_flw_id">
+        <column name="flw_id"/>
+    </createIndex>
 
 </databaseChangeLog>

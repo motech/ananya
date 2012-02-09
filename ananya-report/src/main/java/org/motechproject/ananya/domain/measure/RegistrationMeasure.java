@@ -1,19 +1,28 @@
 package org.motechproject.ananya.domain.measure;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name="registration_measure")
+@Table(name = "registration_measure")
 public class RegistrationMeasure {
 
-    @Column(name="location_id")
-    private Integer locationId;
+    @ManyToOne
+    @JoinColumn(name = "time_id")
+    private TimeDimension timeDimension;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private LocationDimension locationDimension;
+    @ManyToOne
+    @JoinColumn(name = "flw_id")
+    private FrontLineWorkerDimension frontLineWorkerDimension;
 
-    @Column(name="time_id")
-    private Integer timeId;
-
-    @Column(name="flw_id")
-    private Integer flwId;
+    public RegistrationMeasure(FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension, TimeDimension timeDimension) {
+        this.timeDimension = timeDimension;
+        this.locationDimension = locationDimension;
+        this.frontLineWorkerDimension = frontLineWorkerDimension;
+    }
 }

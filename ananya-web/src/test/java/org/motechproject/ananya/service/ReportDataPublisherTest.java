@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.ReportData;
+import org.motechproject.ananya.domain.log.LogType;
+import org.motechproject.ananya.domain.log.LogData;
 import org.motechproject.context.EventContext;
 
 import static junit.framework.Assert.assertEquals;
@@ -27,13 +27,13 @@ public class ReportDataPublisherTest {
 
     @Test
     public void shouldPublishReportDataToEventContext() {
-        ReportData reportData = new ReportData(LogType.CERTIFICATE_COURSE, "123");
+        LogData reportData = new LogData(LogType.CERTIFICATE_COURSE, "123");
 
         reportDataPublisher.publish(reportData);
 
-        ArgumentCaptor<ReportData> captor = ArgumentCaptor.forClass(ReportData.class);
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_DATA_KEY), captor.capture());
-        ReportData captured = captor.getValue();
+        LogData captured = captor.getValue();
         assertEquals(captured, reportData);
 
     }

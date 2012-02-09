@@ -1,24 +1,41 @@
 package org.motechproject.ananya.domain.dimension;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "location_dimension")
-public class Location {
+@NamedQuery(name = LocationDimension.FIND_BY_LOCATION_ID, query = "select l from LocationDimension l where l.location_id=:location_id")
+public class LocationDimension {
+
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     private Integer id;
-    @Column(name="location_id")
+
+    @Column(name = "location_id")
     private String locationId;
+
     @Column(name = "district")
     private String district;
+
     @Column(name = "block")
     private String block;
+
     @Column(name = "panchayat")
     private String panchayat;
+
+    public static final String FIND_BY_LOCATION_ID = "find.by.location.id";
+
+
+    public LocationDimension(String locationId, String district, String block, String panchayat) {
+        this.locationId = locationId;
+        this.district = district;
+        this.block = block;
+        this.panchayat = panchayat;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
 
     public String getLocationId() {
         return locationId;

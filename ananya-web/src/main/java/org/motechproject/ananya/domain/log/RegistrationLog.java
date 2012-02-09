@@ -6,12 +6,16 @@ import org.joda.time.DateTime;
 
 @TypeDiscriminator("doc.type == 'RegistrationLog'")
 public class RegistrationLog extends BaseLog {
+
     @JsonProperty
     private String designation;
+
     @JsonProperty
     private String district;
+
     @JsonProperty
     private String block;
+
     @JsonProperty
     private String panchayat;
 
@@ -31,4 +35,13 @@ public class RegistrationLog extends BaseLog {
         this.panchayat = panchayat;
         return this;
     }
+
+    public Long getMsisdn() {
+        return Long.getLong(this.callerId);
+    }
+
+    public String getOperator() {
+        return this.operator;
+    }
+
 }

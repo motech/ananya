@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.ReportData;
+import org.motechproject.ananya.domain.log.LogType;
+import org.motechproject.ananya.domain.log.LogData;
 import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
@@ -69,14 +69,14 @@ public class RegistrationControllerTest {
         ModelAndView modelAndView = controller.registerNew(request);
 
         ArgumentCaptor<RegistrationLog> logCaptor = ArgumentCaptor.forClass(RegistrationLog.class);
-        ArgumentCaptor<ReportData> reportCaptor = ArgumentCaptor.forClass(ReportData.class);
+        ArgumentCaptor<LogData> reportCaptor = ArgumentCaptor.forClass(LogData.class);
 
         verify(flwService).createNew(callerNo, Designation.ASHA, panchayat);
         verify(allRegistrationLogs).add(logCaptor.capture());
         verify(reportPublisher).publish(reportCaptor.capture());
 
         RegistrationLog capturedLog = logCaptor.getValue();
-        ReportData capturedReport = reportCaptor.getValue();
+        LogData capturedReport = reportCaptor.getValue();
 
         assertEquals(callerNo, getFieldValue(capturedLog,"callerId"));
         assertEquals(calledNo, getFieldValue(capturedLog,"calledNumber"));

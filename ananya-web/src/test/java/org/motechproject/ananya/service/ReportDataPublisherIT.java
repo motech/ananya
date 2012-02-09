@@ -3,8 +3,8 @@ package org.motechproject.ananya.service;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.ReportData;
+import org.motechproject.ananya.domain.log.LogType;
+import org.motechproject.ananya.domain.log.LogData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,7 +21,7 @@ public class ReportDataPublisherIT {
     @Test
     @Ignore
     public void shouldPublishReportDataIntoQueue() {
-        ReportData reportData = new ReportData(LogType.REGISTRATION, "123");
+        LogData reportData = new LogData(LogType.REGISTRATION, "123");
 
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("1", reportData);

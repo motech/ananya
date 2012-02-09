@@ -5,8 +5,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.ReportData;
+import org.motechproject.ananya.domain.log.LogType;
+import org.motechproject.ananya.domain.log.LogData;
 import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
@@ -59,7 +59,7 @@ public class RegistrationController {
         registrationLog.designation(designation).panchayat(panchayat);
         allLogs.add(registrationLog);
 
-        ReportData reportData = new ReportData(LogType.REGISTRATION, registrationLog.getId());
+        LogData reportData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         reportPublisher.publish(reportData);
 
         log.info("Registered new FLW:" + callerId);
