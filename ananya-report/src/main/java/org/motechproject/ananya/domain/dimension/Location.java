@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "location_dimension")
-public class LocationDimension {
+public class Location {
     @Id
     @Column(name="id")
     private Integer id;

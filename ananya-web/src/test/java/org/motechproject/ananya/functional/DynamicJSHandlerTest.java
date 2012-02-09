@@ -26,7 +26,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234").status(RegistrationStatus.REGISTERED);
+       FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234").status(RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("lesson", "0", "2"));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);

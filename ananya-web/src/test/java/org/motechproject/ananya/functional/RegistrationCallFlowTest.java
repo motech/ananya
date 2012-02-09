@@ -17,12 +17,12 @@ import static org.motechproject.ananya.functional.MyWebClient.PostParam.param;
 public class RegistrationCallFlowTest extends SpringIntegrationTest{
 
     private CallFlow callFlow;
-    MyWebClient myWebClient;
+    private MyWebClient myWebClient;
+
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
     private AllLocations allLocations;
-
 
     @Before
     public void setUp() throws Exception {

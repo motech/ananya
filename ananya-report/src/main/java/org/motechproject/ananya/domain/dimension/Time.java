@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "time_dimension")
-public class TimeDimension {
+public class Time {
     @Id
     @Column(name="id")
     private Integer id;

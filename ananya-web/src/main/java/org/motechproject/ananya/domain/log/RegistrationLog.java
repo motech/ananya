@@ -4,7 +4,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 
-
 @TypeDiscriminator("doc.type == 'RegistrationLog'")
 public class RegistrationLog extends BaseLog {
     @JsonProperty

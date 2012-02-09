@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AllCallLogs {
+public class AllRegistrationMeasures {
 
     @Autowired
     private DataAccessTemplate template;
