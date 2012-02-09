@@ -5,10 +5,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.domain.ReportData;
 import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.ReportDataPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +31,36 @@ public class RegistrationController {
     private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
     private FrontLineWorkerService flwService;
+    private ReportDataPublisher reportPublisher;
     private AllRecordings allRecordings;
     private AllRegistrationLogs allLogs;
 
+
     @Autowired
-    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings, AllRegistrationLogs allLogs) {
-        this.flwService = flwService;
-        this.allRecordings = allRecordings;
+    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings,
+                                  AllRegistrationLogs allLogs, ReportDataPublisher reportPublisher) {
         this.allLogs = allLogs;
+        this.allRecordings = allRecordings;
+        this.flwService = flwService;
+        this.reportPublisher = reportPublisher;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/register/")
     @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
         String callerId = request.getParameter("session.connection.remote.uri");
+        String calledNumber = request.getParameter("session.connection.local.uri");
         String designation = request.getParameter("designation");
         String panchayat = request.getParameter("panchayat");
 
         flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
 
-        RegistrationLog registrationLog = new RegistrationLog(callerId, "calledNumber", DateTime.now(), DateTime.now(), "operator");
+        RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
         registrationLog.designation(designation).panchayat(panchayat);
         allLogs.add(registrationLog);
+
+        ReportData reportData = new ReportData(LogType.REGISTRATION, registrationLog.getId());
+        reportPublisher.publish(reportData);
 
         log.info("Registered new FLW:" + callerId);
         return new ModelAndView("register-done");

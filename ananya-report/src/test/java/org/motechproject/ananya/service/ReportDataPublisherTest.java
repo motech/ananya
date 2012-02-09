@@ -1,15 +1,12 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.LogType;
 import org.motechproject.ananya.domain.ReportData;
 import org.motechproject.context.EventContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -30,15 +27,12 @@ public class ReportDataPublisherTest {
 
     @Test
     public void shouldPublishReportDataToEventContext() {
-        String table = "table";
-        Map<String, Object> record = new HashMap<String, Object>();
-        DateTime time = DateTime.now();
-        ReportData reportData = new ReportData(table, record, time);
+        ReportData reportData = new ReportData(LogType.CERTIFICATE_COURSE, "123");
 
         reportDataPublisher.publish(reportData);
 
         ArgumentCaptor<ReportData> captor = ArgumentCaptor.forClass(ReportData.class);
-        verify(eventContext).send(eq(ReportDataPublisher.SEND_REPORT_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_DATA_KEY), captor.capture());
         ReportData captured = captor.getValue();
         assertEquals(captured, reportData);
 

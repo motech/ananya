@@ -5,7 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 
 
-@TypeDiscriminator("doc.type == 'RegistrationCallLog'")
+@TypeDiscriminator("doc.type == 'RegistrationLog'")
 public class RegistrationLog extends BaseLog {
     @JsonProperty
     private String designation;

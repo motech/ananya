@@ -7,10 +7,13 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.domain.ReportData;
 import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.ReportDataPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,34 +45,43 @@ public class RegistrationControllerTest {
     private HttpSession session;
     @Mock
     private AllRegistrationLogs allRegistrationLogs;
+    @Mock
+    private ReportDataPublisher reportPublisher;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new RegistrationController(flwService, allRecordings, allRegistrationLogs);
+        controller = new RegistrationController(flwService, allRecordings, allRegistrationLogs, reportPublisher);
     }
 
     @Test
     public void shouldRegisterFLWWithLocation() throws Exception {
-        String msisdn = "123";
+        String callerNo = "123";
+        String calledNo = "456";
         String panchayat = "S01D001B001V004";
 
-        when(request.getParameter("session.connection.remote.uri")).thenReturn(msisdn);
+        when(request.getParameter("session.connection.remote.uri")).thenReturn(callerNo);
+        when(request.getParameter("session.connection.local.uri")).thenReturn(calledNo);
         when(request.getParameter("designation")).thenReturn(Designation.ASHA.name());
         when(request.getParameter("panchayat")).thenReturn(panchayat);
 
         ModelAndView modelAndView = controller.registerNew(request);
 
-        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
+        ArgumentCaptor<RegistrationLog> logCaptor = ArgumentCaptor.forClass(RegistrationLog.class);
+        ArgumentCaptor<ReportData> reportCaptor = ArgumentCaptor.forClass(ReportData.class);
 
-        verify(flwService).createNew(msisdn, Designation.ASHA, panchayat);
-        verify(allRegistrationLogs).add(captor.capture());
+        verify(flwService).createNew(callerNo, Designation.ASHA, panchayat);
+        verify(allRegistrationLogs).add(logCaptor.capture());
+        verify(reportPublisher).publish(reportCaptor.capture());
 
-        RegistrationLog captured = captor.getValue();
+        RegistrationLog capturedLog = logCaptor.getValue();
+        ReportData capturedReport = reportCaptor.getValue();
 
-        assertEquals(msisdn, getFieldValue(captured,"callerId"));
-        assertEquals(panchayat, getFieldValue(captured,"panchayat"));
+        assertEquals(callerNo, getFieldValue(capturedLog,"callerId"));
+        assertEquals(calledNo, getFieldValue(capturedLog,"calledNumber"));
+        assertEquals(panchayat, getFieldValue(capturedLog,"panchayat"));
+        assertEquals(LogType.REGISTRATION.name(), getFieldValue(capturedReport,"type"));
         assertEquals("register-done", modelAndView.getViewName());
 
     }
