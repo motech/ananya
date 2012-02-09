@@ -28,6 +28,11 @@ public class ReportCard {
         scores.add(score);
     }
 
+    public void clearScoresForChapterIndex(String chapterIndex) {
+        Collection scoresForChapterIndex = CollectionUtils.select(scores, Score.findByChapterId(chapterIndex));
+        scores.removeAll(scoresForChapterIndex);
+    }
+
     public List<Score> scores() {
         return Collections.unmodifiableList(scores);
     }
@@ -82,6 +87,16 @@ public class ReportCard {
                 public boolean evaluate(Object o) {
                     Score score = (Score) o;
                     return score.chapterIndex().equals(chapterIndex) && score.questionIndex().equals(questionIndex);
+                }
+            };
+        }
+
+        public static Predicate findByChapterId(final String chapterIndex) {
+            return new Predicate() {
+                @Override
+                public boolean evaluate(Object o) {
+                    Score score = (Score) o;
+                    return score.chapterIndex().equals(chapterIndex);
                 }
             };
         }
