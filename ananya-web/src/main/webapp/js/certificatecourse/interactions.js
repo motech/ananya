@@ -352,7 +352,7 @@ PlayAnswerExplanationInteraction.prototype.bookMark = function() {
 */
 var InvalidInputInteraction = function(interactionToReturnTo, metadata) {
     this.init = function(interactionToReturnTo, metadata) {
-        AbstractCourseInteraction.call(null, metadata, interactionToReturnTo.getInteractionKey());
+        AbstractCourseInteraction.call(this, metadata, interactionToReturnTo.getInteractionKey());
         this.metadata = metadata;
         this.interactionToReturnTo = interactionToReturnTo;
     }
@@ -370,6 +370,10 @@ InvalidInputInteraction.prototype.playAudio = function() {
 InvalidInputInteraction.prototype.doesTakeInput = function() {
     return false;
 };
+
+//InvalidInputInteraction.prototype.getInteractionKey = function() {
+//    return this.interactionToReturnTo.getInteractionKey();
+//};
 
 InvalidInputInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;

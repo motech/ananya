@@ -43,11 +43,18 @@ var CertificateCourseController = function(course, metadata) {
         }
     };
 
-    //TODO: Leaking abstraction. Having just to see if things work.
     this.dataToPost = function() {
         var stringifiedDataToPost = Utility.stringify(this.dataTransferList.transferList);
         return stringifiedDataToPost;
+    };
+
+    this.anyDataToPost = function() {
+        return this.dataTransferList.size() > 0;
     }
+
+    this.dataPostSuccessful = function() {
+        this.dataTransferList.drain();
+    };
 
     this.playingDone = function() {
         this.setInteraction(this.interaction.nextInteraction());

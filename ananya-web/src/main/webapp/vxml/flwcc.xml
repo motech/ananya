@@ -26,20 +26,46 @@
     <property name="inputmodes" value="dtmf"/>
 
     <form id="controller">
-        <block>
+        <block name="postData" cond="controller.anyDataToPost()">
             <var name="dataToPost" expr="controller.dataToPost()"/>
-            <log expr="'Data to post is: '"/>
-            <log expr="dataToPost"/>
-
             <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost"/>
+            <script>
+                controller.dataPostSuccessful();
+            </script>
+            <log expr="'Data has been posted.'"/>
+        </block>
+        <catch event="error">
+            <!--GOT AN ERROR BUT CONTINUING.-->
+            <goto nextitem="continueInteraction"/>
+        </catch>
+        <block name="continueInteraction">
             <goto expr="controller.nextAction()"/>
         </block>
     </form>
 
     <form id="playAudio">
-        <block>
-            <log expr="'Playing the audio ' + controller.playAudio()"/>
-            <audio expr="controller.playAudio()"/>
+        <field name="dummyField">
+            <prompt timeout="1ms" bargein="true">
+                <audio expr="controller.playAudio()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="dummyGrammar">
+                <rule id="dummyGrammar">
+                    <one-of>
+                        <item>0</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <nomatch>
+                <goto nextitem="audioFinished"/>
+            </nomatch>
+            <noinput>
+                <goto nextitem="audioFinished"/>
+            </noinput>
+            <filled>
+                <goto nextitem="audioFinished"/>
+            </filled>
+        </field>
+        <block name="audioFinished">
             <script>
                 controller.playingDone();
             </script>

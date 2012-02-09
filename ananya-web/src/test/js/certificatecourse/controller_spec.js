@@ -217,4 +217,22 @@ describe("Certificate course controller spec", function() {
         expect(controller.courseState.toJson).toHaveBeenCalled();
         expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState);
      });
+     
+     it("should drain the dataToPost if dataPostIsSuccesful", function () {
+        spyOn(controller.dataTransferList, "drain").andCallThrough();
+        controller.dataPostSuccessful();
+        expect(controller.dataTransferList.drain).toHaveBeenCalled();
+     });
+
+     it("should say if there is any data to post", function () {
+         spyOn(controller.dataTransferList, "size").andReturn(10);
+         expect(controller.anyDataToPost()).toEqual(true);
+     });
+
+     it("should say if there is no data to post", function () {
+         spyOn(controller.dataTransferList, "size").andReturn(0);
+         expect(controller.anyDataToPost()).toEqual(false);
+     });
+
+
 });

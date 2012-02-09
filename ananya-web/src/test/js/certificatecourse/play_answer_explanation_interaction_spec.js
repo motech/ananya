@@ -85,4 +85,8 @@ describe("Evaluation question response interaction", function() {
         expect(courseState.isAnswerCorrect).toEqual(null);
         expect(courseState.currentQuestionResponse).toEqual(null);
     });
+
+    it("should give its own key", function () {
+        expect(playAnswerExplanationInteraction.getInteractionKey()).toEqual("playAnswerExplanation");
+    });
 });

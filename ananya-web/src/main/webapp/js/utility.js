@@ -6,21 +6,19 @@ var Utility = function() {
             case 'number':
             case 'boolean':
             case 'null':
-                return String(value);
+                return value;
             case 'object':
                 if(!value) {
-                    return String(value);
+                    return value;
                 }
 
                 if(value instanceof Array) {
                     var result = "[";
                     for(var i = 0; i < value.length; ++i) {
-                        var ele = value[i];
-                        result += this.stringify(ele) + ',';
+                        result += this.stringify(value[i]) + ',';
                     }
-
-                    result = result.substring(0, result.length - 1) + "]";
-                    //result = this.removeCharAtEnd(result,',') + "]";
+                    result = this.removeCharAtEnd(result,',') + "]";
+                    
                     return result;
                 } else {
                     return this.objectToString(value);
@@ -35,8 +33,7 @@ var Utility = function() {
             result += this.quote(key) + ':';
             result += value + ',';
         }
-        result = result.substring(0, result.length - 1) + "}";
-        //result = this.removeCharAtEnd(result,',') + "}";
+        result = this.removeCharAtEnd(result,',') + "}";
 
         return result;
     }
@@ -45,12 +42,11 @@ var Utility = function() {
         return "\"" + string + "\"";
     }
 
-//    this.removeCharAtEnd = function(value, char) {
-////        value = "" + value;
-////        if((value.length > 0) && (value.charAt(value.length - 1) == char)) {
-////            return value.substring(0, value.length - 1);
-////        }
-//    }
+    this.removeCharAtEnd = function(value, c) {
+        if((value.length > 0) && (value.charAt(value.length - 1) == c)) {
+            return value.substring(0, value.length - 1);
+        }
+    }
 };
 
 var Utility = new Utility();

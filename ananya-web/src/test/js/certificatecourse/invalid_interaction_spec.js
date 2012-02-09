@@ -18,6 +18,11 @@ describe("Invalid Interaction", function(){
         expect(invalidInteraction.nextInteraction()).toEqual(previousInteractionNeedingInput);
     });
 
+    it("should return the previous interaction key when getInteractionKey is invoked", function () {
+        var previousInteractionKey = "myKey";
+        expect(invalidInteraction.getInteractionKey()).toEqual(previousInteractionKey);
+    });
+
     it("should not take any input", function() {
         expect(invalidInteraction.doesTakeInput()).toEqual(false);
     });
