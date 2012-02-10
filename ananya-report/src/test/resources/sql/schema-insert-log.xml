@@ -13,13 +13,5 @@
         </loadData>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="5" >
-        <loadData encoding="UTF-8" file="src/test/resources/data/dimension-time.csv" tableName="time_dimension" schemaName="report">
-            <column name="day" type="STRING"/>
-            <column name="week" type="STRING"/>
-            <column name="month" type="STRING"/>
-            <column name="year" type="STRING"/>
-        </loadData>
-    </changeSet>
 
 </databaseChangeLog>

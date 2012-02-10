@@ -10,19 +10,17 @@ public class AllFrontLineWorkerDimensions {
     @Autowired
     private DataAccessTemplate template;
 
-    public FrontLineWorkerDimension getFrontLineWorkerDimension(
-            Long msisdn, String operator, String name, String status) {
-
-        FrontLineWorkerDimension frontLineWorkerDimensionDimension =
-                (FrontLineWorkerDimension) template.getUniqueResult(
-                FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
-
-        return frontLineWorkerDimensionDimension != null ? frontLineWorkerDimensionDimension :
-                new FrontLineWorkerDimension(msisdn, operator, name, status);
+    public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String name, String status) {
+        FrontLineWorkerDimension dimension = (FrontLineWorkerDimension) template.getUniqueResult(FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
+        if (dimension == null) {
+            dimension = new FrontLineWorkerDimension(msisdn, operator, name, status);
+            template.save(dimension);
+        }
+        return dimension;
     }
 
-    public FrontLineWorkerDimension fetchFrontLineWorkerDimensionFromDB(Long msisdn) {
+    public FrontLineWorkerDimension fetchFor(Long msisdn) {
         return (FrontLineWorkerDimension) template.getUniqueResult(
-            FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
+                FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
     }
 }

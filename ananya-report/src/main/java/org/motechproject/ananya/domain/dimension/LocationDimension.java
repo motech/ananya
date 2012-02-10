@@ -9,6 +9,7 @@ public class LocationDimension {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "location_id")
@@ -37,6 +38,10 @@ public class LocationDimension {
 
     public Integer getId() {
         return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getLocationId() {

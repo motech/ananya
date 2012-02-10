@@ -11,6 +11,7 @@ public class FrontLineWorkerDimension {
 
     @Id
     @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name="msisdn")
@@ -57,5 +58,25 @@ public class FrontLineWorkerDimension {
 
     public Integer getId() {
         return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setMsisdn(Long msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

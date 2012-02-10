@@ -10,16 +10,16 @@ public class AllLocationDimensions {
     @Autowired
     private DataAccessTemplate template;
 
-    public LocationDimension getLocationDimension(String locationCode, String district,
-                                                  String block, String panchayat) {
-        LocationDimension locationDimension = (LocationDimension) template.getUniqueResult(
-                LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
-
-        return locationDimension != null ? locationDimension :
-                new LocationDimension(locationCode, district, block, panchayat);
+    public LocationDimension getOrMakeFor(String locationCode, String district, String block, String panchayat) {
+        LocationDimension dimension = (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
+        if (dimension == null) {
+            dimension = new LocationDimension(locationCode, district, block, panchayat);
+            template.save(dimension);
+        }
+        return dimension;
     }
 
-    public LocationDimension fetchLocationDimensionFromDB(String locationCode) {
+    public LocationDimension fetchFor(String locationCode) {
         return (LocationDimension) template.getUniqueResult(
                 LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
     }

@@ -1,8 +1,6 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeFieldType;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Designation;
@@ -52,7 +50,6 @@ public class ReportDataHandlerIT {
     private AllRegistrationMeasures allRegistrationMeasures;
 
     @Test
-    @Ignore
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
 
         String locationCode = "S001D002B002V001";
@@ -77,24 +74,20 @@ public class ReportDataHandlerIT {
 
         handler.handleRegistration(event);
 
-        LocationDimension locationDimension = allLocationDimensions.fetchLocationDimensionFromDB(locationCode);
-        TimeDimension timeDimension = allTimeDimensions.fetchTimeDimensionFromDB(dateTime);
-        FrontLineWorkerDimension frontLineWorkerDimension =
-            allFrontLineWorkerDimensions.fetchFrontLineWorkerDimensionFromDB(Long.getLong(msisdn));
-        RegistrationMeasure registrationMeasure =
-                allRegistrationMeasures.fetchRegistrationMeasureFromDB(
-                        frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
+        LocationDimension locationDimension = allLocationDimensions.fetchFor(locationCode);
+        TimeDimension timeDimension = allTimeDimensions.fetchFor(dateTime);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
+        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
 
         assertEquals(locationDimension.getLocationId(), locationCode);
         assertEquals(locationDimension.getDistrict(), "district");
         assertEquals(locationDimension.getBlock(), "block");
         assertEquals(locationDimension.getPanchayat(), "panchayat");
 
-        assertEquals((int)timeDimension.getDay(), dateTime.get(DateTimeFieldType.dayOfYear()));
-        assertEquals((int)timeDimension.getWeek(), dateTime.get(DateTimeFieldType.weekOfWeekyear()));
-        assertEquals((int)timeDimension.getMonth(), dateTime.get(DateTimeFieldType.monthOfYear()));
-        assertEquals((int)timeDimension.getYear(), dateTime.get(DateTimeFieldType.year()));
-        assertEquals(timeDimension.getDateTime(), dateTime);
+        assertEquals((int)timeDimension.getDay(), dateTime.getDayOfYear());
+        assertEquals((int)timeDimension.getWeek(), dateTime.getWeekyear());
+        assertEquals((int)timeDimension.getMonth(), dateTime.getMonthOfYear());
+        assertEquals((int)timeDimension.getYear(), dateTime.getYear());
 
         assertEquals(frontLineWorkerDimension.getMsisdn(), msisdn);
         assertEquals(frontLineWorkerDimension.getOperator(), "");

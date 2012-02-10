@@ -1,19 +1,19 @@
 package org.motechproject.ananya.domain.dimension;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeFieldType;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "time_dimension")
-@NamedQuery(name = TimeDimension.FIND_BY_DAY_MONTH_YEAR, query = "select t from TimeDimension t where t.dateTime=:dateTime")
+@NamedQuery(name = TimeDimension.FIND_BY_DAY_MONTH_YEAR, query = "select t from TimeDimension t where t.year=:year and t.month=:month and t.day=:day")
 public class TimeDimension {
 
     public static final String FIND_BY_DAY_MONTH_YEAR = "find.by.day.month.year";
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "day")
@@ -28,35 +28,26 @@ public class TimeDimension {
     @Column(name = "year")
     private Integer year;
 
-    @Column(name = "datetime")
-    private DateTime dateTime;
-
     public TimeDimension() {
     }
 
-    public DateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(DateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
     public TimeDimension(DateTime time) {
-        this(time.get(DateTimeFieldType.dayOfYear()), time.get(DateTimeFieldType.weekOfWeekyear()),
-                time.get(DateTimeFieldType.monthOfYear()), time.get(DateTimeFieldType.year()), time);
+        this(time.getDayOfYear(), time.getWeekOfWeekyear(), time.getMonthOfYear(), time.getYear());
     }
 
-    public TimeDimension(Integer day, Integer week, Integer month, Integer year, DateTime dateTime) {
+    public TimeDimension(Integer day, Integer week, Integer month, Integer year) {
         this.day = day;
         this.week = week;
         this.month = month;
         this.year = year;
-        this.dateTime = dateTime;
     }
 
     public Integer getId() {
-        return this.id;
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getDay() {

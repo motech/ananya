@@ -11,14 +11,18 @@ public class AllTimeDimensions {
     @Autowired
     private DataAccessTemplate template;
 
-    public TimeDimension getTimeDimension(DateTime dateTime) {
+    public TimeDimension getOrMakeFor(DateTime dateTime) {
         TimeDimension timeDimension = (TimeDimension) template.getUniqueResult(
-                TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"dateTime"}, new Object[]{dateTime});
-        return timeDimension != null ? timeDimension : new TimeDimension(dateTime);
+                TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"year", "month", "day"}, new Object[]{dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfYear()});
+        if (timeDimension == null) {
+            timeDimension = new TimeDimension(dateTime);
+            template.save(timeDimension);
+        }
+        return timeDimension;
     }
 
-    public TimeDimension fetchTimeDimensionFromDB(DateTime dateTime) {
+    public TimeDimension fetchFor(DateTime dateTime) {
         return (TimeDimension) template.getUniqueResult(
-            TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"dateTime"}, new Object[]{dateTime});
+                TimeDimension.FIND_BY_DAY_MONTH_YEAR, new String[]{"year", "month", "day"}, new Object[]{dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfYear()});
     }
 }

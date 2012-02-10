@@ -38,7 +38,6 @@ public class TransactionToReportMapper {
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
-
         this.reportDB = reportDB;
     }
 
@@ -47,15 +46,11 @@ public class TransactionToReportMapper {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
         Location location = allLocations.get(frontLineWorker.getLocationId());
 
-        FrontLineWorkerDimension frontLineWorkerDimension =
-                this.allFrontLineWorkerDimensions.getFrontLineWorkerDimension(Long.getLong(frontLineWorker.getMsisdn()),
-                        registrationLog.getOperator(), frontLineWorker.getName(), frontLineWorker.getStatus().toString());
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
+                        Long.valueOf(frontLineWorker.getMsisdn()),registrationLog.getOperator(), frontLineWorker.getName(), frontLineWorker.getStatus().toString());
 
-        LocationDimension locationDimension =
-                this.allLocationDimensions.getLocationDimension(
-                        location.getExternalId(), location.district(), location.blockName(), location.panchayat());
-
-        TimeDimension timeDimension = this.allTimeDimensions.getTimeDimension(registrationLog.getStartTime());
+        LocationDimension locationDimension = allLocationDimensions.getOrMakeFor(location.getExternalId(), location.district(), location.blockName(), location.panchayat());
+        TimeDimension timeDimension = allTimeDimensions.getOrMakeFor(registrationLog.getStartTime());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         reportDB.add(registrationMeasure);
