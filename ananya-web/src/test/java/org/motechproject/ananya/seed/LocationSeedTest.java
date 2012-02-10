@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import org.motechproject.ananya.domain.Location;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
@@ -37,11 +38,13 @@ public class LocationSeedTest {
     public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() 
             throws FileNotFoundException, IOException {
         
-        String fileName = "E:\\code\\ananya\\ananya-web\\src\\test\\resources\\Panchayatvillages_WithCodes.csv";
+        String fileName = ".\\ananya-web\\src\\test\\resources\\Panchayatvillages_WithCodes.csv";
         
         locationSeed.loadFromCsv(fileName);
         
         assertEquals(allLocations.getAll().size(), 56);
+//        Location loc = allLocations.findByExternalId("S01D001");
+//        loc.
         assertEquals(allLocationDimensions.getCount(), 56);
     }
 }
