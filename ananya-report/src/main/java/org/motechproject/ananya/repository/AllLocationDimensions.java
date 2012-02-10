@@ -2,6 +2,7 @@ package org.motechproject.ananya.repository;
 
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,5 +23,23 @@ public class AllLocationDimensions {
     public LocationDimension fetchFor(String locationCode) {
         return (LocationDimension) template.getUniqueResult(
                 LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
+    }
+    
+    public LocationDimension addOrUpdate(LocationDimension locationDimension) {
+        LocationDimension existingLocationDimension = 
+                fetchFor(locationDimension.getLocationId());
+        
+        if (null == existingLocationDimension) {
+            template.save(locationDimension);
+            return locationDimension;
+        }
+        
+        existingLocationDimension.cloneValues(locationDimension);
+        template.update(existingLocationDimension);
+        return existingLocationDimension;
+    }
+    
+    public int getCount() {
+        return DataAccessUtils.intResult(template.find("select count(*) from LocationDimension"));
     }
 }

@@ -27,5 +27,16 @@ public class AllLocations extends MotechBaseRepository<Location> {
         if (locations == null || locations.isEmpty()) return null;
         return locations.get(0);
     }
-
+    
+    public Location addOrUpdate(Location location) {
+        Location existingLocation = findByExternalId(location.getExternalId());
+        if (null == existingLocation) {
+            add(location);
+            return location;
+        }
+        
+        existingLocation.cloneValues(location);
+        update(existingLocation);
+        return existingLocation;
+    }
 }

@@ -42,6 +42,14 @@ public class Location extends MotechBaseDataObject{
         return panchayat;
     }
 
+    public Location cloneValues(Location location) {
+        this.externalId = location.externalId;
+        this.district = location.district;
+        this.blockName = location.blockName;
+        this.panchayat = location.panchayat;
+        return this;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

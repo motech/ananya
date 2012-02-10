@@ -36,6 +36,14 @@ public class LocationDimension {
         this.panchayat = panchayat;
     }
 
+    public LocationDimension cloneValues(LocationDimension locationDimension) {
+        this.locationId = locationDimension.locationId;
+        this.district = locationDimension.district;
+        this.block = locationDimension.block;
+        this.panchayat = locationDimension.panchayat;
+        return this;
+    }
+    
     public Integer getId() {
         return this.id;
     }
