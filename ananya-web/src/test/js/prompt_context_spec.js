@@ -10,7 +10,8 @@ describe("Prompt context", function () {
             "no.input.disconnect.audio": "error.no.input.disconnect.wav",
             "invalid.input.retry.audio": "error.wrong.input.retry.wav",
             "invalid.input.disconnect.audio": "error.wrong.input.disconnect.wav",
-            "option.to.top.level.audio": "option.to.go.to.top.level.wav"
+            "option.to.top.level.audio": "option.to.go.to.top.level.wav",
+            "jobaid.audio.url":"jobaid/"
         };
         promptContext = new PromptContext(metadata);
     });
@@ -39,7 +40,7 @@ describe("Prompt context", function () {
     });
 
     it("should provide the URLs for the audio files for the invalid input conditions", function() {
-        expect(promptContext.audioForInvalidInputRetry()).toEqual("./audio/error.wrong.input.retry.wav")
+        expect(promptContext.audioForInvalidInputRetry()).toEqual("./audio/jobaid/error.wrong.input.retry.wav")
         expect(promptContext.audioForInvalidInputDisconnect()).toEqual("./audio/error.wrong.input.disconnect.wav")
     });
 

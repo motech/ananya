@@ -70,7 +70,7 @@ public class LandingCallFlowTest {
         assertEquals("/ananya/vxml/certificatecourse.vxml", links.item(1).getAttributes().getNamedItem("next").getTextContent());
 
         String unregistered = "/vxml/form[@id='unregistered']";
-        assertEquals(2, callFlow.readNode(unregistered + "/field[@name='repeat']/prompt/audio").getLength());
+        assertEquals(1, callFlow.readNode(unregistered + "/field[@name='repeat']/prompt/audio").getLength());
         assertEquals(2, callFlow.readNode(unregistered + "/field[@name='repeat']/grammar/rule/one-of/item").getLength());
         links = callFlow.readNode(unregistered + "/field[@name='repeat']/filled/if/goto");
         assertEquals("#controller", links.item(0).getAttributes().getNamedItem("next").getTextContent());

@@ -9,12 +9,10 @@
     <audio src="$wav"/>
 #end
 
-#macro(repeat $prompts $flow)
+#macro(repeat $prompt $flow)
     <field name="repeat">
         <prompt bargein="false">
-            #foreach($prompt in $prompts)
-                <audio src="$prompt"/>
-            #end
+            <audio src="$prompt"/>
         </prompt>
         <grammar mode="dtmf" version="1.0" root="root">
             <rule id="root" scope="public">
@@ -31,8 +29,26 @@
                 <goto next="$flow"/>
             </if>
         </filled>
+        <noinput>
+          <script>
+              promptContext.gotNoInput();
+          </script>
+          <if cond="promptContext.hasExceededMaxNoInputs()">
+               <disconnect/>
+          <else/>
+               <reprompt/>
+          </if>
+        </noinput>
         <nomatch>
-            <reprompt/>
+           <script>
+               promptContext.gotInvalidInput();
+               <audio expr="promptContext.audioForInvalidInputRetry()"/>
+           </script>
+           <if cond="promptContext.hasExceededMaxInvalidInputs()">
+               <disconnect/>
+           <else/>
+              <reprompt/>
+           </if>
         </nomatch>
     </field>
 #end

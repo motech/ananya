@@ -22,7 +22,7 @@ public class JobAidSeed {
     }
 
     private Node createJobAidTree() {
-        Node course = courseNode("JobAidCourse", "0001_welcome_job_aid.wav", "0002_select_level.wav");
+        Node course = courseNode("JobAidCourse", "0002_select_level.wav");
         Node level1 = levelNode("level 1", "1", "0003_select_chapter_1.1.wav");
         Node level2 = levelNode("level 2", "2", "0004_select_chapter_1.2.wav");
         Node level3 = levelNode("level 3", "3", "0005_select_chapter_1.3.wav");
@@ -90,10 +90,10 @@ public class JobAidSeed {
         }
     }
 
-    private Node courseNode(String name, String welcome, String menu) {
+    private Node courseNode(String name, String menu) {
         Map<String, String> data = new HashMap<String, String>();
         data.put("type", "Level");
-        List<StringContent> content = Arrays.asList(new StringContent("hindi", "menu", menu), new StringContent("hindi", "introduction", welcome));
+        List<StringContent> content = Arrays.asList(new StringContent("hindi", "menu", menu));
         return new Node(name, data, content, new ArrayList<Node>());
     }
 

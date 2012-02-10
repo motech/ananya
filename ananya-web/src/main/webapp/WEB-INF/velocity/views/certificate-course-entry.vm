@@ -1,9 +1,12 @@
 #vxmlHeader()
 <script srcexpr="$callerData"/>
 <script src="$entryJs"/>
+<script src="../../../js/prompt_context.js"/>
+<script src="../../../dynamic/js/metadata.js"/>
 <script>
     <![CDATA[
     var controller = new EntryController(callerData);
+    var promptContext = new PromptContext(metaData);
     ]]>
 </script>
 
@@ -31,9 +34,8 @@
 </form>
 
 <form id="unregistered">
-    #repeat([
-        "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}",
-        "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}"],
+    #play("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}")
+    #repeat(["${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}"],
         "${registerFlow}")
 </form>
 #vxmlFooter()

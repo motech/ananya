@@ -24,6 +24,7 @@
 
 <form id="registered">
     <block>
+        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
         <goto next="$nextFlow"/>
     </block>
 </form>

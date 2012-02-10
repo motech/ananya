@@ -69,4 +69,15 @@ describe("Registration Controller", function () {
         expect(controller.playBackPrompt("panchayat","panchayatAudio")).toEqual("/audio/location/panchayatAudio.wav");
     });
 
+    it("should play registration done prompt and the beep", function() {
+        metadata = {
+                    "audio.url":"/audio",
+                    "register.audio.url":"/register/",
+                    "register.complete":"regdone.wav",
+                    "registration.beep.audio" : "beep.wav"
+            };
+        controller = new RegisterController(metadata);
+        expect(controller.playRegistrationDone()).toEqual("/audio/register/regdone.wav");
+        expect(controller.playBeep()).toEqual("/audio/register/beep.wav");
+    });
 });

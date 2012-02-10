@@ -29,7 +29,7 @@ var PromptContext = function (metadata) {
     };
 
     this.audioForInvalidInputRetry = function() {
-        return this.audioFileBase() + this.metadata['invalid.input.retry.audio'];
+        return this.audioFileBase() + this.metadata['jobaid.audio.url']+ this.metadata['invalid.input.retry.audio'];
     };
 
     this.audioForInvalidInputDisconnect = function() {
