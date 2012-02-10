@@ -68,4 +68,12 @@ public class BaseLog extends MotechBaseDataObject {
     public DateTime getStartTime() {
         return this.startTime;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
 }

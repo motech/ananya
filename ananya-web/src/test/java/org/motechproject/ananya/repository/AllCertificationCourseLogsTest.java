@@ -25,7 +25,7 @@ public class AllCertificationCourseLogsTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveACertificationLog() {
-        CertificationCourseLog log = new CertificationCourseLog("caller", "9999990000", "1");
+        CertificationCourseLog log = new CertificationCourseLog("caller", "9999990000", "1", null, null, null, null, null);
         assertThat(log.getId(), is(nullValue()));
         allCertificationCourseLogs.add(log);
         assertThat(log.getId(), is(notNullValue()));
@@ -36,9 +36,9 @@ public class AllCertificationCourseLogsTest extends SpringIntegrationTest {
     @Test
     public void shouldGetALogByCallIdAndToken() {
         final String callId = "9999990000";
-        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1");
-        CertificationCourseLog log2 = new CertificationCourseLog("caller", callId, "2");
-        CertificationCourseLog log3 = new CertificationCourseLog("caller", callId, "3");
+        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1", null, null, null, null, null);
+        CertificationCourseLog log2 = new CertificationCourseLog("caller", callId, "2", null, null, null, null, null);
+        CertificationCourseLog log3 = new CertificationCourseLog("caller", callId, "3", null, null, null, null, null);
         allCertificationCourseLogs.add(log1);
         allCertificationCourseLogs.add(log2);
         allCertificationCourseLogs.add(log3);
@@ -50,7 +50,7 @@ public class AllCertificationCourseLogsTest extends SpringIntegrationTest {
     @Test
     public void shouldAddALogOnlyIfAbsent() {
         final String callId = "9999990000";
-        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1");
+        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1", null, null, null, null, null);
         assertThat(allCertificationCourseLogs.addIfAbsent(log1), is(true));
         assertThat(allCertificationCourseLogs.addIfAbsent(log1), is(false));
     }

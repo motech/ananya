@@ -6,7 +6,7 @@
     <script src="../dynamic/js/metadata.js"/>
     <script src="../dynamic/js/certification_course_data.js"/>
     <script src="../js/utility.js"/>
-    <!--<script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>-->
+    <script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>
 
     <script src="../js/prompt_context.js"/>
     <script src="../js/certificatecourse/abstract_interactions.js"/>
@@ -15,8 +15,11 @@
     <script src="../js/certificatecourse/data_transfer_list.js"/>
     <script src="../js/certificatecourse/controller.js"/>
 
+    <var name="callerId" expr="session.connection.remote.uri"/>
+    <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
     <script>
         <![CDATA[
+                var callId = callerId + "-" + (new Date()).valueOf();
                 var controller = new CertificateCourseController(courseData, metaData);
           ]]>
     </script>
@@ -28,7 +31,7 @@
     <form id="controller">
         <block name="postData" cond="controller.anyDataToPost()">
             <var name="dataToPost" expr="controller.dataToPost()"/>
-            <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost"/>
+            <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost callerId callId"/>
             <script>
                 controller.dataPostSuccessful();
             </script>
@@ -52,6 +55,17 @@
                 <rule id="dummyGrammar">
                     <one-of>
                         <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
                     </one-of>
                 </rule>
             </grammar>

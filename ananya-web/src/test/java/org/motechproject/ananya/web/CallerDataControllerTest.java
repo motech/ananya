@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,8 @@ public class CallerDataControllerTest {
     @Mock
     private FrontLineWorkerService flwService;
     @Mock
+    private CertificateCourseService certificateCourseService;
+    @Mock
     private HttpServletRequest request;
     @Mock
     private HttpSession session;
@@ -30,7 +33,7 @@ public class CallerDataControllerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        callerDataController = new CallerDataController(flwService);
+        callerDataController = new CallerDataController(flwService, certificateCourseService);
     }
 
     @Test

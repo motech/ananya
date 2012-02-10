@@ -69,4 +69,10 @@ public class FrontLineWorkerService {
         final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         return frontLineWorker == null? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
     }
+
+    public void resetScoresForChapterIndex(String callerId, String chapterIndex) {
+        final FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+        frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex);
+        save(frontLineWorker);
+    }
 }
