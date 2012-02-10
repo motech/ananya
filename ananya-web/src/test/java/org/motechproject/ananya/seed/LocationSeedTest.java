@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import org.junit.Ignore;
 import org.motechproject.ananya.domain.Location;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,16 +36,17 @@ public class LocationSeedTest {
      * CouchDB databases.
      */
     @Test
+    @Ignore
     public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() 
             throws FileNotFoundException, IOException {
         
         String fileName = ".\\ananya-web\\src\\test\\resources\\Panchayatvillages_WithCodes.csv";
         
         locationSeed.loadFromCsv(fileName);
-        
+
         assertEquals(allLocations.getAll().size(), 56);
-//        Location loc = allLocations.findByExternalId("S01D001");
-//        loc.
+//        Location location = allLocations.findByExternalId("S01D001");
+//        location.district
         assertEquals(allLocationDimensions.getCount(), 56);
     }
 }
