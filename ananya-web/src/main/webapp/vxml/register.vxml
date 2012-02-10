@@ -11,6 +11,7 @@
         <![CDATA[
         var controller = new RegisterController(metaData);
         var promptContext = new PromptContext(metaData);
+        var record;
          ]]>
     </script>
 
@@ -26,10 +27,25 @@
                 <option dtmf="2" value="ASHA"/>
                 <option dtmf="3" value="ANGANWADI"/>
             <noinput>
-                <value expr="controller.playPrompt('designation')"/>
+                <script>
+                      promptContext.gotNoInput();
+                  </script>
+                  <if cond="promptContext.hasExceededMaxNoInputs()">
+                       <disconnect/>
+                  <else/>
+                        <reprompt/>
+                  </if>
             </noinput>
             <nomatch>
-                <value expr="controller.playPrompt('designation')"/>
+                 <script>
+                       promptContext.gotInvalidInput();
+                   </script>
+                   <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                       <disconnect/>
+                   <else/>
+                        <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                        <reprompt/>
+                    </if>
             </nomatch>
             <filled>
                 <script>
@@ -78,29 +94,45 @@
                <rule id="root" scope="public">
                    <one-of>
                        <item>1</item>
+                       <item>2</item>
                    </one-of>
                </rule>
             </grammar>
             <noinput>
-               <script>
-                   controller.capture(record);
-               </script>
-               <goto next="#record_form"/>
+              <script>
+                  promptContext.gotNoInput();
+              </script>
+              <if cond="promptContext.hasExceededMaxNoInputs()">
+                   <disconnect/>
+              <else/>
+                   <script>
+                       controller.capture(record);
+                   </script>
+                   <goto next="#record_form"/>
+              </if>
             </noinput>
             <nomatch>
-                <script>
-                   controller.capture(record);
+               <script>
+                   promptContext.gotInvalidInput();
                </script>
-               <goto next="#record_form"/>
+               <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                   <disconnect/>
+               <else/>
+                   <script>
+                       controller.capture(record);
+                   </script>
+                   <goto next="#record_form"/>
+               </if>
             </nomatch>
            <filled>
                <if cond="confirm=='1'">
                    <goto next="#record_form"/>
+               <elseif cond="confirm=='2'"/>
+                   <script>
+                       controller.capture(record);
+                   </script>
+                   <goto next="#record_form"/>
                </if>
-               <script>
-                   controller.capture(record);
-               </script>
-               <goto next="#record_form"/>
            </filled>
        </field>
 
@@ -116,7 +148,8 @@
                   namelist="session.connection.remote.uri name"/>
             <data srcexpr="controller.submitUrl()" method="post"
                   namelist="session.connection.remote.uri designation district block panchayat"/>
-            <goto next="controller.nextFlow(session.connection.local.uri)"/>
+            <audio expr="controller.playRegistrationDone()"/>
+            <goto expr="controller.nextFlow(session.connection.local.uri)"/>
         </block>
 
         <record name="nameRecord" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
@@ -137,12 +170,13 @@
                 <else/>
                      <prompt bargein="false">
                           <audio expr="controller.playNoInputPrompt(field)"/>
+                          <audio expr="controller.playBeep()"/>
                      </prompt>
-                     <goto nextitem="fieldRecord" />
+                     <goto nextitem="nameRecord" />
                  </if>
             </noinput>
             <filled>
-              <assign name="record" expr="fieldRecord"/>
+              <assign name="record" expr="nameRecord"/>
             </filled>
         </record>
 
@@ -167,6 +201,7 @@
                 <else/>
                    <prompt bargein="false">
                        <audio expr="controller.playNoInputPrompt(field)"/>
+                       <audio expr="controller.playBeep()"/>
                    </prompt>
                    <goto nextitem="fieldRecord" />
                </if>
@@ -180,6 +215,7 @@
                 <else/>
                <prompt bargein="false">
                    <audio expr="controller.playNoInputPrompt(field)"/>
+                   <audio expr="controller.playBeep()"/>
                </prompt>
                <goto nextitem="fieldRecord" />
                </if>
