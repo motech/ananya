@@ -287,6 +287,11 @@
             <artifactId>motech-cmslite-api</artifactId>
             <version>0.8-SNAPSHOT</version>
         </dependency>
+         <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-api</artifactId>
+            <version>0.8-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

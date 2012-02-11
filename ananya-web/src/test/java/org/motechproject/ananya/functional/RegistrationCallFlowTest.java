@@ -34,10 +34,10 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         MyWebClient.PostParam designation = param("designation", "ASHA");
         String panchayatCode = "S01D001B001V001";
         MyWebClient.PostParam panchayat = param("panchayat", panchayatCode);
-        MyWebClient.PostParam callerId = param("session.connection.remote.uri", "555");
+        MyWebClient.PostParam callerId = param("session.connection.remote.uri", "9986574420");
         new MyWebClient().post("http://localhost:9979/ananya/flw/register/", designation,panchayat ,callerId);
 
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("555");
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("9986574420");
         Location location = allLocations.findByExternalId(panchayatCode);
 
         assertEquals(location.getId(), frontLineWorker.getLocationId());

@@ -59,8 +59,8 @@ public class RegistrationController {
         registrationLog.designation(designation).panchayat(panchayat);
         logService.addNew(registrationLog);
 
-        LogData reportData = new LogData(LogType.REGISTRATION, registrationLog.getId());
-        reportPublisher.publish(reportData);
+        LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
+        reportPublisher.publish(logData);
 
         log.info("Registered new FLW:" + callerId);
         return new ModelAndView("register-done");
