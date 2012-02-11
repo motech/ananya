@@ -9,8 +9,8 @@ import org.motechproject.ananya.domain.LogData;
 import org.motechproject.ananya.domain.LogType;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.ReportDataPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +33,13 @@ public class RegistrationController {
     private FrontLineWorkerService flwService;
     private ReportDataPublisher reportPublisher;
     private AllRecordings allRecordings;
-    private AllRegistrationLogs allLogs;
+    private RegistrationLogService logService;
 
 
     @Autowired
     public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings,
-                                  AllRegistrationLogs allLogs, ReportDataPublisher reportPublisher) {
-        this.allLogs = allLogs;
+                                  RegistrationLogService logService, ReportDataPublisher reportPublisher) {
+        this.logService = logService;
         this.allRecordings = allRecordings;
         this.flwService = flwService;
         this.reportPublisher = reportPublisher;
@@ -57,7 +57,7 @@ public class RegistrationController {
 
         RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
         registrationLog.designation(designation).panchayat(panchayat);
-        allLogs.add(registrationLog);
+        logService.addNew(registrationLog);
 
         LogData reportData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         reportPublisher.publish(reportData);

@@ -11,8 +11,8 @@ import org.motechproject.ananya.domain.LogData;
 import org.motechproject.ananya.domain.LogType;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.ReportDataPublisher;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,7 +44,7 @@ public class RegistrationControllerTest {
     @Mock
     private HttpSession session;
     @Mock
-    private AllRegistrationLogs allRegistrationLogs;
+    private RegistrationLogService logService;
     @Mock
     private ReportDataPublisher reportPublisher;
 
@@ -52,7 +52,7 @@ public class RegistrationControllerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new RegistrationController(flwService, allRecordings, allRegistrationLogs, reportPublisher);
+        controller = new RegistrationController(flwService, allRecordings, logService, reportPublisher);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class RegistrationControllerTest {
         ArgumentCaptor<LogData> reportCaptor = ArgumentCaptor.forClass(LogData.class);
 
         verify(flwService).createNew(callerNo, Designation.ASHA, panchayat);
-        verify(allRegistrationLogs).add(logCaptor.capture());
+        verify(logService).addNew(logCaptor.capture());
         verify(reportPublisher).publish(reportCaptor.capture());
 
         RegistrationLog capturedLog = logCaptor.getValue();
