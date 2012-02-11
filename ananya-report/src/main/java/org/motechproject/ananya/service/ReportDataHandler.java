@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportDataHandler {
 
-    private TransactionToReportMapper transactionToReportingMapper;
+    private ReportDataMeasure reportDataMeasureService;
 
     @Autowired
-    public ReportDataHandler(TransactionToReportMapper transactionToReportingMapper) {
-        this.transactionToReportingMapper = transactionToReportingMapper;
+    public ReportDataHandler(ReportDataMeasure reportDataMeasureService) {
+        this.reportDataMeasureService = reportDataMeasureService;
     }
 
     @MotechListener(subjects={ReportDataPublisher.SEND_REGISTRATION_DATA_KEY})
 	public void handleRegistration(MotechEvent event) {
         LogData logData = (LogData) event.getParameters().get("1");
-        this.transactionToReportingMapper.transformAndPushToReportingDB(logData);
+        this.reportDataMeasureService.createRegistrationMeasure(logData);
     }
 }

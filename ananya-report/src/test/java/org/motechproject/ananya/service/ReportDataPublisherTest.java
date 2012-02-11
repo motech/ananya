@@ -35,7 +35,6 @@ public class ReportDataPublisherTest {
         verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_DATA_KEY), captor.capture());
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
-
     }
 
 }

@@ -21,7 +21,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-report.xml")
 public class ReportDataHandlerIT {
 
     @Autowired
@@ -79,11 +79,11 @@ public class ReportDataHandlerIT {
         assertEquals(locationDimension.getPanchayat(), "panchayat");
 
         assertEquals((int)timeDimension.getDay(), dateTime.getDayOfYear());
-        assertEquals((int)timeDimension.getWeek(), dateTime.getWeekyear());
+        assertEquals((int)timeDimension.getWeek(), dateTime.getWeekOfWeekyear());
         assertEquals((int)timeDimension.getMonth(), dateTime.getMonthOfYear());
         assertEquals((int)timeDimension.getYear(), dateTime.getYear());
 
-        assertEquals(frontLineWorkerDimension.getMsisdn(), msisdn);
+        assertEquals(frontLineWorkerDimension.getMsisdn(), new Long(555));
         assertEquals(frontLineWorkerDimension.getOperator(), "");
         assertEquals(frontLineWorkerDimension.getName(), "Name");
         assertEquals(frontLineWorkerDimension.getStatus(), RegistrationStatus.REGISTERED.toString());

@@ -19,7 +19,7 @@ public class ReportDataHandlerTest {
 
     private ReportDataHandler handler;
     @Mock
-    private TransactionToReportMapper mapper;
+    private ReportDataMeasure mapper;
 
     @Before
     public void setUp() {
@@ -37,7 +37,7 @@ public class ReportDataHandlerTest {
         handler.handleRegistration(event);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(mapper).transformAndPushToReportingDB(captor.capture());
+        verify(mapper).createRegistrationMeasure(captor.capture());
         assertEquals(logData, captor.getValue());
     }
 

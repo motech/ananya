@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TransactionToReportMapper {
+public class ReportDataMeasure {
 
     private AllRegistrationLogs allRegistrationLogs;
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -26,7 +26,7 @@ public class TransactionToReportMapper {
     private ReportDB reportDB;
 
     @Autowired
-    public TransactionToReportMapper(
+    public ReportDataMeasure(
             AllRegistrationLogs allRegistrationLogs, AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations,
             AllLocationDimensions allLocationDimensions, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
             AllTimeDimensions allTimeDimensions, ReportDB reportDB) {
@@ -41,7 +41,7 @@ public class TransactionToReportMapper {
         this.reportDB = reportDB;
     }
 
-    public void transformAndPushToReportingDB(LogData logData) {
+    public void createRegistrationMeasure(LogData logData) {
         RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
         Location location = allLocations.get(frontLineWorker.getLocationId());
