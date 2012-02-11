@@ -2,11 +2,11 @@ package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LogData;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
-import org.motechproject.ananya.domain.log.LogData;
-import org.motechproject.ananya.domain.log.RegistrationLog;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;

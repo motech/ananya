@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.log.LogType;
-import org.motechproject.ananya.domain.log.LogData;
+import org.motechproject.ananya.domain.LogData;
+import org.motechproject.ananya.domain.LogType;
 import org.motechproject.context.EventContext;
 
 import static junit.framework.Assert.assertEquals;

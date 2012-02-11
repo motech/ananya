@@ -1,8 +1,8 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.ReportCard;
-import org.motechproject.ananya.domain.log.CertificationCourseLog;
 import org.motechproject.ananya.repository.AllCertificationCourseLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

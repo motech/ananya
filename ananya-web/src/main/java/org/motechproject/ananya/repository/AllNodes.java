@@ -82,9 +82,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
             allStringContents.add(stringContentToSave);
             node.addContentId(stringContentToSave.getId());
         }
-
         add(node);
-
         final String nodeId = node.getId();
         final List<Node> children = node.children();
         for(Node childNode : children){

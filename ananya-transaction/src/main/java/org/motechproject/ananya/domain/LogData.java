@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain.log;
+package org.motechproject.ananya.domain;
 
 import java.io.Serializable;
 

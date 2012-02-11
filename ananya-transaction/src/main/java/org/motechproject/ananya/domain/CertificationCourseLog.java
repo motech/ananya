@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain.log;
+package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;

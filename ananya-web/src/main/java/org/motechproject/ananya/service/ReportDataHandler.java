@@ -1,6 +1,6 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.log.LogData;
+import org.motechproject.ananya.domain.LogData;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;

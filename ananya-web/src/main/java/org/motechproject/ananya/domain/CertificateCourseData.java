@@ -1,7 +1,6 @@
 package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.motechproject.ananya.domain.log.CertificationCourseLog;
 
 public class CertificateCourseData {
     private String token;

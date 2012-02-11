@@ -10,6 +10,7 @@
         <module>ananya-flw</module>
         <module>ananya-web</module>
         <module>ananya-report</module>
+        <module>ananya-transaction</module>
     </modules>
     <name>Ananya</name>
 

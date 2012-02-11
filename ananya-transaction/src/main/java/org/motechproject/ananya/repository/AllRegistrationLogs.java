@@ -3,7 +3,7 @@ package org.motechproject.ananya.repository;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
-import org.motechproject.ananya.domain.log.RegistrationLog;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

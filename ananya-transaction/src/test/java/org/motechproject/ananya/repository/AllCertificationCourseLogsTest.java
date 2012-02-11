@@ -2,19 +2,22 @@ package org.motechproject.ananya.repository;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Test;
-import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.log.CertificationCourseLog;
+import org.junit.runner.RunWith;
+import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class AllCertificationCourseLogsTest extends SpringIntegrationTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:applicationContext-transaction.xml")
+public class AllCertificationCourseLogsTest {
     @Autowired
     private AllCertificationCourseLogs allCertificationCourseLogs;
 
