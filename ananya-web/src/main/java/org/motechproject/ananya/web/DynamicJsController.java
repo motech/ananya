@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/dynamic/js")
-public class DynamicJSHandler {
+public class DynamicJsController {
 
     private AllNodes allNodes;
     private FrontLineWorkerService frontLineWorkerService;
 
     @Autowired
-    public DynamicJSHandler(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService) {
+    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService) {
         this.allNodes = allNodes;
         this.frontLineWorkerService = frontLineWorkerService;
     }

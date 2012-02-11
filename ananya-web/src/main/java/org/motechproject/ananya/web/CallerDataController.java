@@ -1,11 +1,9 @@
 package org.motechproject.ananya.web;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.CertificateCourseData;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.log.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -83,10 +81,12 @@ public class CallerDataController {
             }
         }
         String callerId = request.getParameter("callerId");
-        BookMark bookMark = new BookMark(request.getParameter("bookmark.type"), request.getParameter("bookmark.chapterIndex"), request.getParameter("bookmark.lessonIndex"));
+        BookMark bookMark = new BookMark(
+                request.getParameter("bookmark.type"),
+                request.getParameter("bookmark.chapterIndex"),
+                request.getParameter("bookmark.lessonIndex"));
 
         frontLineWorkerService.addBookMark(callerId, bookMark);
-
         return "";
     }
 
@@ -94,11 +94,11 @@ public class CallerDataController {
     @ResponseBody
     public String addScore(HttpServletRequest request) {
         String callerId = request.getParameter("callerId");
-        String chapterIndex = request.getParameter("quizResponse.chapterIndex");
-        String questionIndex = request.getParameter("quizResponse.questionIndex");
-        boolean result = Boolean.parseBoolean(request.getParameter("quizResponse.result"));
+        ReportCard.Score score = new ReportCard.Score(
+                request.getParameter("quizResponse.chapterIndex"),
+                request.getParameter("quizResponse.questionIndex"),
+                Boolean.parseBoolean(request.getParameter("quizResponse.result")));
 
-        ReportCard.Score score = new ReportCard.Score(chapterIndex, questionIndex, result);
         frontLineWorkerService.addScore(callerId, score);
         return "<done/>";
     }

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.web;
+package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.motechproject.ananya.domain.log.CertificationCourseLog;

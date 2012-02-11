@@ -47,7 +47,8 @@ public class TransactionToReportMapper {
         Location location = allLocations.get(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
-                        Long.valueOf(frontLineWorker.getMsisdn()),registrationLog.getOperator(), frontLineWorker.getName(), frontLineWorker.getStatus().toString());
+                Long.valueOf(frontLineWorker.getMsisdn()), registrationLog.getOperator(),
+                frontLineWorker.getName(), frontLineWorker.getStatus().toString());
 
         LocationDimension locationDimension = allLocationDimensions.getOrMakeFor(location.getExternalId(), location.district(), location.blockName(), location.panchayat());
         TimeDimension timeDimension = allTimeDimensions.getOrMakeFor(registrationLog.getStartTime());

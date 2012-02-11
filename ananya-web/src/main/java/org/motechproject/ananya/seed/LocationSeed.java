@@ -98,7 +98,7 @@ public class LocationSeed {
      *                                                          Bharatpura              S01D001B001V003	
      * 
      */
-    public void loadFromCsv(String fileName) throws FileNotFoundException, IOException {
+    public void loadFromCsv(String fileName) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(fileName));
         
         String currentDistrict = "", currentDistrictCode, currentBlock = "", 
