@@ -24,7 +24,7 @@
           ]]>
     </script>
 
-    <property name="timeout" value="8s"/>
+    <property name="timeout" value="1s"/>
     <property name="bargein" value="true"/>
     <property name="inputmodes" value="dtmf"/>
 
@@ -38,10 +38,8 @@
             <script>
                 controller.dataPostSuccessful();
             </script>
-            <log expr="'Data has been posted.'"/>
         </block>
         <catch event="error">
-            <!--GOT AN ERROR BUT CONTINUING.-->
             <goto nextitem="continueInteraction"/>
         </catch>
         <block name="continueInteraction">
@@ -140,4 +138,20 @@
             <disconnect/>
         </block>
     </form>
+
+    <form id="exit">
+        <block>
+            <log expr="'****************** Exiting the app now ********************'"/>
+            <exit/>
+        </block>
+    </form>
+
+    <catch event="connection.disconnect.hangup">
+        <log expr="'****************** Telling controller that I have been disconnected ********************'"/>
+        <script>
+            controller.callDisconnected();
+        </script>
+        <log expr="'****************** Going to controller ********************'"/>
+        <goto next="#controller"/>
+    </catch>
 </vxml>

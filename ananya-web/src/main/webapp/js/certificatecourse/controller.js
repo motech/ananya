@@ -32,6 +32,9 @@ var CertificateCourseController = function(course, metadata, courseState) {
     };
 
     this.nextAction = function() {
+        if(this.interaction.exit && this.interaction.exit()) {
+            return "#exit";
+        }
         if(this.interaction.disconnect && this.interaction.disconnect()) {
             return "#disconnect";
         }
@@ -90,7 +93,7 @@ var CertificateCourseController = function(course, metadata, courseState) {
             this.promptContext.resetCounts();
             this.setInteraction(this.interaction.continueWithoutInput());
         }
-    }
+    };
 
     this.processInput = function(input) {
         var nextInteraction;
@@ -112,6 +115,11 @@ var CertificateCourseController = function(course, metadata, courseState) {
             }
         }
         this.setInteraction(nextInteraction);
+    };
+
+    this.callDisconnected = function() {
+        var exitInteraction = {exit:function(){return true;}}
+        this.setInteraction(exitInteraction);
     }
 
     this.init(course, metadata);
