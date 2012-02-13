@@ -29,7 +29,7 @@ public class AllLocationDimensions {
         LocationDimension existingLocationDimension = 
                 fetchFor(locationDimension.getLocationId());
         
-        if (null == existingLocationDimension) {
+        if (existingLocationDimension == null) {
             template.save(locationDimension);
             return locationDimension;
         }
@@ -42,4 +42,5 @@ public class AllLocationDimensions {
     public int getCount() {
         return DataAccessUtils.intResult(template.find("select count(*) from LocationDimension"));
     }
+
 }

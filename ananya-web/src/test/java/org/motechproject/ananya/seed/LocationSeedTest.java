@@ -1,52 +1,82 @@
-
 package org.motechproject.ananya.seed;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocationDimensions;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
+
 import static junit.framework.Assert.assertEquals;
-import org.junit.Ignore;
-import org.motechproject.ananya.domain.Location;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
 public class LocationSeedTest {
-    
+
     @Autowired
     private LocationSeed locationSeed;
-    
+
     @Autowired
     private AllLocations allLocations;
-    
+
     @Autowired
     private AllLocationDimensions allLocationDimensions;
-    
-    /*
-     * Functional test to ensure data is extracted from CSV into Postgres and
-     * CouchDB databases.
-     */
+
+    @Autowired
+    private DataAccessTemplate template;
+
+    @Before
+    public void setUp() {
+        allLocations.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+    }
+
     @Test
-    @Ignore
-    public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() 
-            throws FileNotFoundException, IOException {
-        
-        String fileName = ".\\ananya-web\\src\\test\\resources\\Panchayatvillages_WithCodes.csv";
-        
+    public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() throws IOException {
+
+        String fileName = getClass().getResource("/Panchayatvillages_WithCodes.csv").getPath();
+
         locationSeed.loadFromCsv(fileName);
 
         assertEquals(allLocations.getAll().size(), 56);
-//        Location location = allLocations.findByExternalId("S01D001");
-//        location.district
         assertEquals(allLocationDimensions.getCount(), 56);
+
+        Location location = allLocations.findByExternalId("S01D001");
+        assertEquals(location.district(), "Patna");
+
+        location = allLocations.findByExternalId("S01D001B001");
+        assertEquals(location.district(), "Patna");
+        assertEquals(location.blockName(), "Dulhin Bazar");
+
+        location = allLocations.findByExternalId("S01D001B001V003");
+        assertEquals(location.district(), "Patna");
+        assertEquals(location.blockName(), "Dulhin Bazar");
+        assertEquals(location.panchayat(), "Bharatpura");
+
+        location = allLocations.findByExternalId("S01D003");
+        assertEquals(location.district(), "West Champaran");
+
+        location = allLocations.findByExternalId("S01D003B001");
+        assertEquals(location.district(), "West Champaran");
+        assertEquals(location.blockName(), "Majhhaulia");
+
+        location = allLocations.findByExternalId("S01D003B001V003");
+        assertEquals(location.district(), "West Champaran");
+        assertEquals(location.blockName(), "Majhhaulia");
+        assertEquals(location.panchayat(), "Bahuarawa");
+    }
+
+    @After
+    public void tearDown() {
+        allLocations.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 }
