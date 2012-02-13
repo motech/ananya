@@ -9,7 +9,7 @@ var CertificateCourseController = function(course, metadata, courseState) {
         this.courseState = courseState;
         this.initializeInteractionsArray(metadata, course, this.courseState);
         this.dataTransferList = new DataTransferList();
-        this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey]);
+        this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey].resumeCall());
     };
 
     //TODO: This should be pulled out.

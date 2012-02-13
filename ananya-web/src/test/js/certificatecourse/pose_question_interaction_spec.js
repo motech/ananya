@@ -105,4 +105,8 @@ describe("Pose Question Interaction", function() {
         expect(courseState.chapterIndex).toEqual(1);
         expect(courseState.lessonOrQuestionIndex).toEqual(0);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(poseQuestionInteraction.resumeCall()).toEqual(poseQuestionInteraction);
+    });
 });

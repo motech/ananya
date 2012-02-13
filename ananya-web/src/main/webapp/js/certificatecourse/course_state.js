@@ -10,10 +10,10 @@ var CourseState = function(callerData) {
         this.scoresByChapter = callerData.scoresByChapter;
 
         if(bookmark && bookmark.type) {
-            if(bookmark.chapterIndex) {
+            if(bookmark.chapterIndex!=null) {
                 this.chapterIndex = bookmark.chapterIndex;
             }
-            if(bookmark.lessonIndex) {
+            if(bookmark.lessonIndex!=null) {
                 this.lessonOrQuestionIndex = bookmark.lessonIndex;
             }
             this.interactionKey = bookmark.type;

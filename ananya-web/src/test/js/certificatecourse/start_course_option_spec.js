@@ -45,4 +45,8 @@ describe("Start course option", function() {
 
         expect(startCourseOption.continueWithoutInput()).toEqual(startNextChapterInteraction);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(startCourseOption.resumeCall()).toEqual(startCourseOption);
+    });
 });

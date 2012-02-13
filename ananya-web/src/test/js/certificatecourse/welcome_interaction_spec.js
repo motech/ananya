@@ -24,4 +24,8 @@ describe("Welcome interaction", function() {
     it("should not take any input", function() {
         expect(welcomeInteraction.doesTakeInput()).toEqual(false);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(welcomeInteraction.resumeCall()).toEqual(welcomeInteraction);
+    });
 });

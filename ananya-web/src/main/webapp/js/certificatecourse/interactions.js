@@ -105,6 +105,10 @@ var StartNextChapter = function(metadata, course, courseState) {
         return nextState;
     }
 
+    this.resumeCall = function() {
+        return this;
+    }
+
     this.init(metadata, course, courseState);
 };
 
@@ -342,8 +346,8 @@ PlayAnswerExplanationInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions[ReportChapterScoreInteraction.KEY];
 }
 
-PlayAnswerExplanationInteraction.prototype.bookMark = function() {
-
+PlayAnswerExplanationInteraction.prototype.resumeCall = function() {
+    return this.nextInteraction();
 }
 
 

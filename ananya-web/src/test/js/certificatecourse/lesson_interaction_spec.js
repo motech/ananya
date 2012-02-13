@@ -27,4 +27,8 @@ describe("Lesson interaction", function() {
     it("should not take any input", function() {
         expect(lessonInteraction.doesTakeInput()).toEqual(false);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(lessonInteraction.resumeCall()).toEqual(lessonInteraction);
+    });
 });

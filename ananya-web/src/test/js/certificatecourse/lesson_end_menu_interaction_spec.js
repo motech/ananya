@@ -84,4 +84,8 @@ describe("Lesson End Menu Interaction", function() {
         expect(lessonEndMenuInteraction.continueWithoutInput()).toEqual(startNextChapter);
         expect(courseState.chapterIndex).toEqual(1);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(lessonEndMenuInteraction.resumeCall()).toEqual(lessonEndMenuInteraction);
+    });
 });

@@ -48,4 +48,7 @@ describe("Start quiz interaction", function() {
         expect(courseState.lessonOrQuestionIndex).toEqual(indexOfFirstQuestionInTheChapter);
     });
 
+    it("should resume call at the same place where the call was left", function () {
+        expect(startQuizInteraction.resumeCall()).toEqual(startQuizInteraction);
+    });
 });

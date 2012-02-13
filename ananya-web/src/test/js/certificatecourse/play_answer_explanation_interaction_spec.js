@@ -89,4 +89,29 @@ describe("Evaluation question response interaction", function() {
     it("should give its own key", function () {
         expect(playAnswerExplanationInteraction.getInteractionKey()).toEqual("playAnswerExplanation");
     });
+
+    it("when resuming call if there are further questions, should start at the next question", function () {
+        courseState.setChapterIndex(0);
+        courseState.setLessonOrQuestionIndex(2);
+        CertificateCourse.interactions[PoseQuestionInteraction.KEY] = {};
+
+        var interactionToResume = playAnswerExplanationInteraction.resumeCall();
+
+        expect(interactionToResume).toEqual(CertificateCourse.interactions[PoseQuestionInteraction.KEY]);
+        expect(courseState.chapterIndex).toEqual(0);
+        expect(courseState.lessonOrQuestionIndex).toEqual(3);
+    });
+
+    it("when resuming call if there are no further questions, should start at report chapter scores and should not change the course state", function () {
+        courseState.setChapterIndex(0);
+        courseState.setLessonOrQuestionIndex(3);
+        CertificateCourse.interactions[ReportChapterScoreInteraction.KEY] = {};
+
+        var interactionToResume = playAnswerExplanationInteraction.resumeCall();
+
+        expect(interactionToResume).toEqual(CertificateCourse.interactions[ReportChapterScoreInteraction.KEY]);
+        expect(courseState.chapterIndex).toEqual(0);
+        expect(courseState.lessonOrQuestionIndex).toEqual(3);
+    });
+
 });

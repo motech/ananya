@@ -60,11 +60,7 @@ AbstractCourseInteraction.prototype.continueWithoutInput = function() {
 };
 
 AbstractCourseInteraction.prototype.resumeCall = function() {
-        throw "Please extend resumeCall in your class";
-};
-
-AbstractCourseInteraction.prototype.bookMark = function() {
-
+        return this;
 };
 
 AbstractCourseInteraction.prototype.getInteractionKey = function() {

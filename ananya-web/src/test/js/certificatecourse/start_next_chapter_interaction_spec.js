@@ -53,4 +53,10 @@ describe("Start next chapter interaction", function() {
 
         expect(nextState).toEqual(endOfCourseInteraction);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        var courseState = new CourseState();
+        var startNextChapter = new StartNextChapter(metadata, course, courseState);
+        expect(startNextChapter.resumeCall()).toEqual(startNextChapter);
+    });
 });

@@ -38,4 +38,8 @@ describe("Report chapter score interaction", function() {
     it("should not take any input", function() {
         expect(reportChapterScoreInteraction.doesTakeInput()).toEqual(false);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(reportChapterScoreInteraction.resumeCall()).toEqual(reportChapterScoreInteraction);
+    });
 });
