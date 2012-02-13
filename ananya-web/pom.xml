@@ -43,7 +43,7 @@
                         <id>load-seed-data-in-db</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
-                            <target>
+                            <target name="load.seed.data">
                                 <echo message="Seed data loading: START"/>
                                 <property name="compile_classpath" refid="maven.compile.classpath"/>
                                 <java classname="org.motechproject.deliverytools.seed.SetupSeedData">
