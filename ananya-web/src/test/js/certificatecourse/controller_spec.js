@@ -234,5 +234,10 @@ describe("Certificate course controller spec", function() {
          expect(controller.anyDataToPost()).toEqual(false);
      });
 
+     it("should set exit interaction if the call is disconnected.", function () {
+         controller.callDisconnected();
+         expect(controller.interaction.exit()).toEqual(true);
+     });
+
 
 });

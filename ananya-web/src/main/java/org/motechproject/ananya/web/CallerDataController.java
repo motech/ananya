@@ -69,37 +69,4 @@ public class CallerDataController {
         }
         return null;
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/bookmark/add")
-    @ResponseBody
-    public String addBookMark(HttpServletRequest request) {
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        for(Map.Entry<String, String[]> entry: parameterMap.entrySet()) {
-            System.out.println(entry.getKey()+ ":");
-            for(String value:entry.getValue()) {
-                System.out.println("\t" + value);
-            }
-        }
-        String callerId = request.getParameter("callerId");
-        BookMark bookMark = new BookMark(
-                request.getParameter("bookmark.type"),
-                request.getParameter("bookmark.chapterIndex"),
-                request.getParameter("bookmark.lessonIndex"));
-
-        frontLineWorkerService.addBookMark(callerId, bookMark);
-        return "";
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/score/add")
-    @ResponseBody
-    public String addScore(HttpServletRequest request) {
-        String callerId = request.getParameter("callerId");
-        ReportCard.Score score = new ReportCard.Score(
-                request.getParameter("quizResponse.chapterIndex"),
-                request.getParameter("quizResponse.questionIndex"),
-                Boolean.parseBoolean(request.getParameter("quizResponse.result")));
-
-        frontLineWorkerService.addScore(callerId, score);
-        return "<done/>";
-    }
 }

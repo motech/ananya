@@ -24,7 +24,7 @@
                 <version>2.1.1</version>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <groupId>org.apache.maven.plugins</groupId> 
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.7.2</version>
                 <configuration>
@@ -43,7 +43,7 @@
                         <id>load-seed-data-in-db</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
-                            <target>
+                            <target name="load.seed.data">
                                 <echo message="Seed data loading: START"/>
                                 <property name="compile_classpath" refid="maven.compile.classpath"/>
                                 <java classname="org.motechproject.deliverytools.seed.SetupSeedData">
@@ -287,7 +287,7 @@
             <artifactId>motech-cmslite-api</artifactId>
             <version>0.8-SNAPSHOT</version>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
             <version>0.8-SNAPSHOT</version>

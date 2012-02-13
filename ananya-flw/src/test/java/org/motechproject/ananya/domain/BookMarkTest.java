@@ -12,12 +12,12 @@ import static org.junit.Assert.assertThat;
 public class BookMarkTest {
     @Test
     public void shouldNotAddLessonIndexToBookmarkJsonWhenNotPresent() {
-        BookMark bookMark = new BookMark("lesson", "0", null);
+        BookMark bookMark = new BookMark("lesson", 0, null);
         String bookMarkJsonString = bookMark.asJson();
         final JsonElement bookMarkElement = new JsonParser().parse(bookMarkJsonString);
         final JsonObject bookMarkJson = bookMarkElement.getAsJsonObject();
         assertThat(bookMarkJson.get("type").getAsString(), is("lesson"));
-        assertThat(bookMarkJson.get("chapterIndex").getAsString(), is("0"));
+        assertThat(bookMarkJson.get("chapterIndex").getAsInt(), is(0));
         assertThat(bookMarkJson.get("lessonIndex"), is(nullValue()));
     }
 
@@ -34,13 +34,13 @@ public class BookMarkTest {
 
     @Test
     public void shouldAddLessonIndexToBookmarkJsonWhenPresent() {
-        BookMark bookMark = new BookMark("lesson", "0", "2");
+        BookMark bookMark = new BookMark("lesson", 0, 2);
         String bookMarkJsonString = bookMark.asJson();
         final JsonElement bookMarkElement = new JsonParser().parse(bookMarkJsonString);
         final JsonObject bookMarkJson = bookMarkElement.getAsJsonObject();
         assertThat(bookMarkJson.get("type").getAsString(), is("lesson"));
-        assertThat(bookMarkJson.get("lessonIndex").getAsString(), is("2"));
-        assertThat(bookMarkJson.get("chapterIndex").getAsString(), is("0"));
+        assertThat(bookMarkJson.get("lessonIndex").getAsInt(), is(2));
+        assertThat(bookMarkJson.get("chapterIndex").getAsInt(), is(0));
     }
 
 }

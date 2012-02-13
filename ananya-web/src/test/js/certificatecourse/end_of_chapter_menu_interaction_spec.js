@@ -62,4 +62,8 @@ describe("End of chapter menu Interaction", function() {
         expect(courseState.chapterIndex).toEqual(1);
         expect(courseState.lessonOrQuestionIndex).toEqual(3);
     });
+
+    it("should resume call at the same place where the call was left", function () {
+        expect(endOfChapterMenuInteraction.resumeCall()).toEqual(endOfChapterMenuInteraction);
+    });
 });

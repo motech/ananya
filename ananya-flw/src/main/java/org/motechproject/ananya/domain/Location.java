@@ -42,7 +42,7 @@ public class Location extends MotechBaseDataObject{
         return panchayat;
     }
 
-    public Location cloneValues(Location location) {
+    public Location cloneFrom(Location location) {
         this.externalId = location.externalId;
         this.district = location.district;
         this.blockName = location.blockName;
