@@ -28,7 +28,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234").status(RegistrationStatus.REGISTERED);
-        flw.addBookMark(new BookMark("lesson", "0", "2"));
+        flw.addBookMark(new BookMark("lesson", 0, 2));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
@@ -128,7 +128,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
     private String callerDataFor(final boolean isRegistered, final String typeOfBookmark, final int chapter, final int lesson) {
         return trim("var callerData = {\n" +
                 "    \"isRegistered\" : \"" + isRegistered + "\",\n" +
-                "    \"bookmark\" : {\"type\" : \"" + typeOfBookmark + "\" , \"chapterIndex\" : \"" + chapter + "\" , \"lessonIndex\" : \"" + lesson + "\"},\n" +
+                "    \"bookmark\" : {\"type\" : \"" + typeOfBookmark + "\" , \"chapterIndex\" : " + chapter + " , \"lessonIndex\" : " + lesson + "},\n" +
                 "    \"scoresByChapter\" : {\n" +
                 "}\n" +
                 "};");

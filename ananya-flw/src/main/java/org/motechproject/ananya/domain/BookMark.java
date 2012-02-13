@@ -9,14 +9,14 @@ public class BookMark {
     @JsonProperty
     private String type;
     @JsonProperty
-    private String chapterIndex;
+    private Integer chapterIndex;
     @JsonProperty
-    private String lessonIndex;
+    private Integer lessonIndex;
 
     public BookMark() {
     }
 
-    public BookMark(String type, String chapterIndex, String lessonIndex) {
+    public BookMark(String type, Integer chapterIndex, Integer lessonIndex) {
         this.type = type;
         this.chapterIndex = chapterIndex;
         this.lessonIndex = lessonIndex;
@@ -55,11 +55,11 @@ public class BookMark {
         return type;
     }
 
-    public String getChapterIndex() {
+    public Integer getChapterIndex() {
         return chapterIndex;
     }
 
-    public String getLessonIndex() {
+    public Integer getLessonIndex() {
         return lessonIndex;
     }
 

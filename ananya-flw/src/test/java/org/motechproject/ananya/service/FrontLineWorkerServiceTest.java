@@ -128,7 +128,7 @@ public class FrontLineWorkerServiceTest {
     public void shouldReturnBookmarkOfFrontLineWorker() {
         String msisdn = "999";
         FrontLineWorker frontLineWorker = FrontLineWorker();
-        BookMark bookMark = new BookMark("leson", "0", "2");
+        BookMark bookMark = new BookMark("leson", 0, 2);
         frontLineWorker.addBookMark(bookMark);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 

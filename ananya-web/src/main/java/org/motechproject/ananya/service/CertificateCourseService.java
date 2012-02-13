@@ -23,8 +23,8 @@ public class CertificateCourseService {
         if(!wasAddedJustNow) {
            return;
         }
-        final String chapterIndex = certificationCourseLog.getChapterIndex();
-        final String lessonOrQuestionIndex = certificationCourseLog.getLessonOrQuestionIndex();
+        final Integer chapterIndex = certificationCourseLog.getChapterIndex();
+        final Integer lessonOrQuestionIndex = certificationCourseLog.getLessonOrQuestionIndex();
         final Boolean result = certificationCourseLog.isResult();
         final String callerId = certificationCourseLog.getCallerId();
 
@@ -38,7 +38,7 @@ public class CertificateCourseService {
         }
         final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(certificationCourseLog.getInteractionKey());
         if(interactionIsPlayAnswerExplanation) {
-            final ReportCard.Score score = new ReportCard.Score(chapterIndex, lessonOrQuestionIndex, result);
+            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result);
             frontLineWorkerService.addScore(callerId, score);
         }
     }

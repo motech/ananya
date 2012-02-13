@@ -7,9 +7,9 @@ import org.ektorp.support.TypeDiscriminator;
 @TypeDiscriminator("doc.type == 'CertificationCourseLog'")
 public class CertificationCourseLog extends BaseLog {
     @JsonProperty
-    private String chapterIndex;
+    private Integer chapterIndex;
     @JsonProperty
-    private String lessonOrQuestionIndex;
+    private Integer lessonOrQuestionIndex;
     @JsonProperty
     private String questionResponse;
     @JsonProperty
@@ -20,7 +20,7 @@ public class CertificationCourseLog extends BaseLog {
 
     }
 
-    public CertificationCourseLog(String callerId, String callId, String token, String chapterIndex, String lessonOrQuestionIndex, String questionResponse, Boolean result, String interactionKey) {
+    public CertificationCourseLog(String callerId, String callId, String token, Integer chapterIndex, Integer lessonOrQuestionIndex, String questionResponse, Boolean result, String interactionKey) {
         super(callerId, null, null, null, null, token, callId);
         this.chapterIndex = chapterIndex;
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
@@ -29,7 +29,7 @@ public class CertificationCourseLog extends BaseLog {
         this.interactionKey = interactionKey;
     }
 
-    public String getLessonOrQuestionIndex() {
+    public Integer getLessonOrQuestionIndex() {
         return lessonOrQuestionIndex;
     }
 
@@ -45,7 +45,7 @@ public class CertificationCourseLog extends BaseLog {
         return interactionKey;
     }
 
-    public String getChapterIndex() {
+    public Integer getChapterIndex() {
         return chapterIndex;
     }
 
