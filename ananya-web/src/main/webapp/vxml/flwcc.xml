@@ -20,7 +20,7 @@
     <script>
         <![CDATA[
                 var callId = callerId + "-" + (new Date()).valueOf();
-                var controller = new CertificateCourseController(courseData, metaData);
+                var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData));
           ]]>
     </script>
 
@@ -31,6 +31,9 @@
     <form id="controller">
         <block name="postData" cond="controller.anyDataToPost()">
             <var name="dataToPost" expr="controller.dataToPost()"/>
+            <log expr="dataToPost"/>
+            <log expr="callerId"/>
+            <log expr="callId"/>
             <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost callerId callId"/>
             <script>
                 controller.dataPostSuccessful();

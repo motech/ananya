@@ -1,23 +1,46 @@
 package org.motechproject.ananya.domain;
 
-import org.junit.Assert;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class BookMarkTest {
     @Test
     public void shouldNotAddLessonIndexToBookmarkJsonWhenNotPresent() {
         BookMark bookMark = new BookMark("lesson", "0", null);
-        String bookmarkJson = bookMark.asJson();
-        String expectedBookmark = "{\"type\" : \"lesson\" , \"chapterIndex\" : \"0\"}";
-        Assert.assertEquals(expectedBookmark, bookmarkJson);
+        String bookMarkJsonString = bookMark.asJson();
+        final JsonElement bookMarkElement = new JsonParser().parse(bookMarkJsonString);
+        final JsonObject bookMarkJson = bookMarkElement.getAsJsonObject();
+        assertThat(bookMarkJson.get("type").getAsString(), is("lesson"));
+        assertThat(bookMarkJson.get("chapterIndex").getAsString(), is("0"));
+        assertThat(bookMarkJson.get("lessonIndex"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldNotAddChapterIndexToBookmarkJsonWhenNotPresent() {
+        BookMark bookMark = new BookMark("welcome", null, null);
+        String bookMarkJsonString = bookMark.asJson();
+        final JsonElement bookMarkElement = new JsonParser().parse(bookMarkJsonString);
+        final JsonObject bookMarkJson = bookMarkElement.getAsJsonObject();
+        assertThat(bookMarkJson.get("type").getAsString(), is("welcome"));
+        assertThat(bookMarkJson.get("lessonIndex"), is(nullValue()));
+        assertThat(bookMarkJson.get("chapterIndex"), is(nullValue()));
     }
 
     @Test
     public void shouldAddLessonIndexToBookmarkJsonWhenPresent() {
         BookMark bookMark = new BookMark("lesson", "0", "2");
-        String bookmarkJson = bookMark.asJson();
-        String expectedBookmark = "{\"type\" : \"lesson\" , \"chapterIndex\" : \"0\" , \"lessonIndex\" : \"2\"}";
-        Assert.assertEquals(expectedBookmark, bookmarkJson);
+        String bookMarkJsonString = bookMark.asJson();
+        final JsonElement bookMarkElement = new JsonParser().parse(bookMarkJsonString);
+        final JsonObject bookMarkJson = bookMarkElement.getAsJsonObject();
+        assertThat(bookMarkJson.get("type").getAsString(), is("lesson"));
+        assertThat(bookMarkJson.get("lessonIndex").getAsString(), is("2"));
+        assertThat(bookMarkJson.get("chapterIndex").getAsString(), is("0"));
     }
 
 }

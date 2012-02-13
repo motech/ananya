@@ -1,11 +1,32 @@
-var CourseState = function() {
-    this.setState = function(chapterIndex, lessonOrQuestionIndex, currentQuestionResponse, isAnswerCorrect, interactionKey) {
-        this.chapterIndex = chapterIndex;
-        this.lessonOrQuestionIndex = lessonOrQuestionIndex;
-        this.currentQuestionResponse = currentQuestionResponse;
-        this.isAnswerCorrect = isAnswerCorrect;
-        this.interactionKey = interactionKey;
-        this.scoresByChapter = {};
+var CourseState = function(callerData) {
+    this.init = function(callerData){
+        if(!callerData) {
+            callerData = {"bookmark":{}, "scoresByChapter":{}};
+        }
+        this.defineStateVars();
+
+        var bookmark = callerData.bookmark;
+
+        this.scoresByChapter = callerData.scoresByChapter;
+
+        if(bookmark && bookmark.type) {
+            if(bookmark.chapterIndex) {
+                this.chapterIndex = bookmark.chapterIndex;
+            }
+            if(bookmark.lessonIndex) {
+                this.lessonOrQuestionIndex = bookmark.lessonIndex;
+            }
+            this.interactionKey = bookmark.type;
+        }
+    }
+
+    this.defineStateVars = function() {
+        this.chapterIndex = null;
+        this.lessonOrQuestionIndex = null;
+        this.currentQuestionResponse = null;
+        this.isAnswerCorrect = null;
+        this.interactionKey = WelcomeInteraction.KEY;
+        this.scoresByChapter = null;
     };
 
     this.setChapterIndex = function(chapterIndex) {
@@ -42,6 +63,6 @@ var CourseState = function() {
         };
     };
 
-    this.setState(null, null, null, null, null);
+    this.init(callerData);
 };
 

@@ -3,13 +3,13 @@ var CertificateCourse = function () {
 
 CertificateCourse.interactions = new Array();
 
-var CertificateCourseController = function(course, metadata) {
+var CertificateCourseController = function(course, metadata, courseState) {
     this.init = function(course, metadata) {
         this.promptContext = new PromptContext(metadata);
-        this.courseState = new CourseState();
+        this.courseState = courseState;
         this.initializeInteractionsArray(metadata, course, this.courseState);
         this.dataTransferList = new DataTransferList();
-        this.setInteraction(CertificateCourse.interactions[WelcomeInteraction.KEY]);
+        this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey]);
     };
 
     //TODO: This should be pulled out.

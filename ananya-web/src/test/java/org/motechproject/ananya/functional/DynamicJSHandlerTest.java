@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -125,23 +126,23 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
     }
 
     private String callerDataFor(final boolean isRegistered, final String typeOfBookmark, final int chapter, final int lesson) {
-        return "var callerData = {\n" +
+        return trim("var callerData = {\n" +
                 "    \"isRegistered\" : \"" + isRegistered + "\",\n" +
                 "    \"bookmark\" : {\"type\" : \"" + typeOfBookmark + "\" , \"chapterIndex\" : \"" + chapter + "\" , \"lessonIndex\" : \"" + lesson + "\"},\n" +
                 "    \"scoresByChapter\" : {\n" +
                 "}\n" +
-                "};";
+                "};");
     }
     private String callerDataWithoutBookmarkFor(final boolean isRegistered) {
-        return "var callerData = {\n" +
+        return trim("var callerData = {\n" +
                 "    \"isRegistered\" : \"" + isRegistered + "\",\n" +
                 "    \"bookmark\" : {},\n" +
                 "    \"scoresByChapter\" : {\n" +
                 "}\n" +
-                "};";
+                "};");
     }
 
     private String trim(String someString) {
-        return someString.replaceAll("\n\\s*", "\n").replaceAll("\r\n", "\n").trim();
+        return StringUtils.deleteWhitespace(someString);
     }
 }

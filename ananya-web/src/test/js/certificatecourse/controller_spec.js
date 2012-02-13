@@ -14,7 +14,7 @@ describe("Certificate course controller spec", function() {
         };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
-        controller = new CertificateCourseController(course, metadata);
+        controller = new CertificateCourseController(course, metadata, new CourseState());
     });
 
     it("should get the audio to be played", function () {

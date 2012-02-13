@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.text.MessageFormat;
@@ -63,11 +64,7 @@ public class BookMark {
     }
 
     public String asJson() {
-        String typeAndChapter = MessageFormat.format("\"type\" : \"{0}\" , \"chapterIndex\" : \"{1}\"", type, chapterIndex);
-
-        if (lessonIndex != null) {
-            return MessageFormat.format("'{'{0} , \"lessonIndex\" : \"{1}\"'}'", typeAndChapter, lessonIndex);
-        }
-        return MessageFormat.format("'{'{0}'}'", typeAndChapter);
+        //TODO: Is creating a Gson obj costly? if so, then could we use a single instance? Will there be any threading issues.
+        return new Gson().toJson(this);
     }
 }
