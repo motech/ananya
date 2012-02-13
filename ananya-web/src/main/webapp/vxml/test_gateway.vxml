@@ -2,57 +2,57 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
-    
+
     <script src="../dynamic/js/metadata.js"/>
     <script>
-        var controller = function() {
-            
+        var Controller = function() {
+
             this.promptUri = function() {
-                return metadata["audio.url"] + metadata["test_gateway.audio"];
+                //return "http://221.134.198.15/ananya/audioTest/motech_test.wav";
+                return metaData["audio.url"] + metaData["test_gateway.audio"];
             };
-            
+
             this.certificateCourseLandingUri = function() {
-                return metaData[web.url] + "/vxml/certificatecourse/landing/";
+                return metaData["web.url"] + "/vxml/certificatecourse/landing/";
             };
-            
+
             this.jobAidLandingUri = function() {
-                return metaData[web.url] + "/vxml/jobaid/landing/";
+                return metaData["web.url"] + "/vxml/jobaid/landing/";
             };
-            
+
             this.registerUri = function() {
-                return metaData[web.url] + "/vxml/register.vxml";
+                return metaData["web.url"] + "/vxml/register.vxml";
             };
-            
+
             this.jobAidUri = function() {
-                return metaData[web.url] + "/vxml/jobaid.vxml";
+                return metaData["web.url"] + "/vxml/jobaid.vxml";
             };
-            
+
             this.certificateCourseUri = function() {
-                return metaData[web.url] + "/vxml/flwcc.xml";
+                return metaData["web.url"] + "/vxml/flwcc.xml";
             };
-            
-        }
+
+        };
+
+        var controller = new Controller();
     </script>
-    
+
     <property name="bargein" value="true"/>
     <property name="inputmodes" value="dtmf" />
     <property name="timeout" value="4s"/>
-    
+
     <menu id="test_menu" dtmf="true">
         <prompt>
-            <audio src="controller.promptUri()" />
+            <!-- URL is <value expr="controller.promptUri()" /> -->
+            <audio expr="controller.promptUri()" />
         </prompt>
-        
-        <choice dtmf="1" next="controller.certificateCourseLandingUri()" />
-        <choice dtmf="2" next="controller.jobAidLandingUri()" />
-        <choice dtmf="3" next="controller.registerUri()" />
-        <choice dtmf="4" next="controller.jobAidUri()" />
-        <choice dtmf="5" next="controller.certificateCourseUri()" />
 
-        <choice dtmf="9">
-            <disconnect />
-        </choice>
-        
+        <choice dtmf="1" expr="controller.certificateCourseLandingUri()" />
+        <choice dtmf="2" expr="controller.jobAidLandingUri()" />
+        <choice dtmf="3" expr="controller.registerUri()" />
+        <choice dtmf="4" expr="controller.jobAidUri()" />
+        <choice dtmf="5" expr="controller.certificateCourseUri()" />
+
         <noinput>
             <reprompt />
         </noinput>
@@ -60,5 +60,5 @@
             <reprompt />
         </nomatch>
     </menu>
-    
+
 </vxml>
