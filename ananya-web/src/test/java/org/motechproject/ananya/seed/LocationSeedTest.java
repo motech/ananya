@@ -42,7 +42,7 @@ public class LocationSeedTest {
     @Test
     public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() throws IOException {
 
-        String path = getClass().getResource("/Panchayatvillages_WithCodes.csv").getPath();
+        String path = getClass().getResource("/locations_with_codes.csv").getPath();
         locationSeed.loadFromCsv(path);
 
         assertEquals(allLocations.getAll().size(), 56);

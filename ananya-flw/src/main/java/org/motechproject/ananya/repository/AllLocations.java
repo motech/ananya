@@ -30,12 +30,11 @@ public class AllLocations extends MotechBaseRepository<Location> {
     
     public Location addOrUpdate(Location location) {
         Location existingLocation = findByExternalId(location.getExternalId());
-        if (null == existingLocation) {
+        if (existingLocation == null) {
             add(location);
             return location;
         }
-        
-        existingLocation.cloneValues(location);
+        existingLocation.cloneFrom(location);
         update(existingLocation);
         return existingLocation;
     }

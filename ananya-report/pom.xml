@@ -109,7 +109,7 @@
                 <executions>
                     <execution>
                         <id>recreate-postgres-db</id>
-                        <phase>pre-integration-test</phase>
+                        <phase>post-clean</phase>
                         <configuration>
                             <target>
                                 <echo message="Ananya DB reset: START"/>
@@ -142,7 +142,7 @@
                 <executions>
                     <execution>
                         <id>run-postgres-change-sets</id>
-                        <phase>pre-integration-test</phase>
+                        <phase>post-clean</phase>
                         <configuration>
                             <changeLogFile>src/test/resources/sql/main-change-log.xml</changeLogFile>
                             <driver>org.postgresql.Driver</driver>
