@@ -29,13 +29,15 @@
 
 <form id="registered_bookmark_absent">
     #repeat(
-        ["${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}"],
+        "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}",
         $nextFlow)
 </form>
 
 <form id="unregistered">
+    <block>
     #play("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}")
-    #repeat(["${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}"],
+    </block>
+    #repeat("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}",
         "${registerFlow}")
 </form>
 #vxmlFooter()

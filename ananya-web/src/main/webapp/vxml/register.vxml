@@ -84,7 +84,7 @@
             </if>
        </block>
 
-       <field name="confirm" type="boolean">
+       <field name="confirm">
             <prompt bargein="false">
                <audio expr="controller.playConfirmPrompt(field)"/>
                <audio expr="controller.playBackPrompt(field,record)"/>
@@ -105,10 +105,7 @@
               <if cond="promptContext.hasExceededMaxNoInputs()">
                    <disconnect/>
               <else/>
-                   <script>
-                       controller.capture(record);
-                   </script>
-                   <goto next="#record_form"/>
+                    <reprompt/>
               </if>
             </noinput>
             <nomatch>
@@ -118,22 +115,20 @@
                <if cond="promptContext.hasExceededMaxInvalidInputs()">
                    <disconnect/>
                <else/>
-                   <script>
-                       controller.capture(record);
-                   </script>
-                   <goto next="#record_form"/>
+                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                   <reprompt/>
                </if>
             </nomatch>
            <filled>
-               <if cond="confirm=='1'">
-                   <goto next="#record_form"/>
-               <elseif cond="confirm=='2'"/>
-                   <script>
-                       controller.capture(record);
-                   </script>
-                   <goto next="#record_form"/>
-               </if>
-           </filled>
+              <if cond="confirm == '1'">
+                  <goto next="#record_form"/>
+              <elseif cond="confirm == '2'"/>
+                  <script>
+                      controller.capture(record);
+                  </script>
+                  <goto next="#record_form"/>
+              </if>
+          </filled>
        </field>
 
         <block name="submit_form">
@@ -222,6 +217,9 @@
             </nomatch>
             <filled>
               <assign name="record" expr="fieldRecord"/>
+              <script>
+                  promptContext.resetCounts();
+              </script>
             </filled>
        </field>
 

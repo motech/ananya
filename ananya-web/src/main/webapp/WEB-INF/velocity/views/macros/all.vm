@@ -42,11 +42,11 @@
         <nomatch>
            <script>
                promptContext.gotInvalidInput();
-               <audio expr="promptContext.audioForInvalidInputRetry()"/>
            </script>
            <if cond="promptContext.hasExceededMaxInvalidInputs()">
                <disconnect/>
            <else/>
+              <audio expr="promptContext.audioForInvalidInputRetry()"/>
               <reprompt/>
            </if>
         </nomatch>
