@@ -20,19 +20,12 @@ public class AllLocationDimensions {
         return locationDimension;
     }
 
-    public LocationDimension fetchFor(String locationCode) {
-        return (LocationDimension) template.getUniqueResult(
-                LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
-        }
-
     public LocationDimension addOrUpdate(LocationDimension locationDimension) {
-        LocationDimension existingLocationDimension = fetchFor(locationDimension.getLocationId());
-        
+        LocationDimension existingLocationDimension = getFor(locationDimension.getLocationId());
         if (existingLocationDimension == null) {
             template.save(locationDimension);
             return locationDimension;
         }
-        
         existingLocationDimension.cloneValues(locationDimension);
         template.update(existingLocationDimension);
         return existingLocationDimension;

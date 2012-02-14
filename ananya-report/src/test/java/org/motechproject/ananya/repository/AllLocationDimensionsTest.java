@@ -34,12 +34,12 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
         LocationDimension initialLocationDimension = new LocationDimension("ZZZ999", "Mandwa", "Algarh", "Gujarat");
 
         allLocationDimensions.add(initialLocationDimension);
-        assertNotNull(allLocationDimensions.fetchFor("ZZZ999"));
+        assertNotNull(allLocationDimensions.getFor("ZZZ999"));
 
         LocationDimension updatedLocationDimension = new LocationDimension("ZZZ999", "Patna", "Jila", "Panchayat");
         updatedLocationDimension = allLocationDimensions.addOrUpdate(updatedLocationDimension);
 
-        LocationDimension existingDbLocationDimension = allLocationDimensions.fetchFor("ZZZ999");
+        LocationDimension existingDbLocationDimension = allLocationDimensions.getFor("ZZZ999");
 
         assertEquals(updatedLocationDimension, existingDbLocationDimension);
     }
