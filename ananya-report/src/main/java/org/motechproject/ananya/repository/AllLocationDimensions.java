@@ -11,7 +11,7 @@ public class AllLocationDimensions {
     @Autowired
     private DataAccessTemplate template;
 
-    public LocationDimension getOrMakeFor(String locationCode) {
+    public LocationDimension getFor(String locationCode) {
         return (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
     }
 
