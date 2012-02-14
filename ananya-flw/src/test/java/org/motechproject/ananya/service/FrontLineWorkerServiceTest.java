@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -134,4 +135,23 @@ public class FrontLineWorkerServiceTest {
 
         assertThat(frontLineWorkerService.getBookmark(msisdn) , is(bookMark));
     }
+
+    @Test
+    public void shouldSaveNameWhenNameIsWellFormed() throws Exception {
+        String msisdn = "555", name = "abcd";
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
+        
+        frontLineWorkerService.saveName(msisdn, name);
+        
+        verify(allFrontLineWorkers).update(mockWorker);
+    }
+
+    @Test
+    @Ignore
+    public void shouldNotSaveNameAndThrowExceptionWhenNameIsNotWellFormed() throws Exception {
+        String msisdn = "555", name = "";
+        frontLineWorkerService.saveName(msisdn, name);
+    }
+
 }

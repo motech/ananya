@@ -75,4 +75,16 @@ public class FrontLineWorkerService {
         frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
         save(frontLineWorker);
     }
+
+    public void saveName(String msisdn, String name) throws Exception {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+
+        if(frontLineWorker == null) throw new Exception();
+        name = name.trim();
+        if(name.isEmpty()) throw new Exception();
+
+        frontLineWorker.setName(name);
+        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        allFrontLineWorkers.update(frontLineWorker);
+    }
 }

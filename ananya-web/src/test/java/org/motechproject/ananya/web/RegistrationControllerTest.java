@@ -114,6 +114,19 @@ public class RegistrationControllerTest {
 
     }
 
+    @Test
+    public void shouldSaveTranscribedName() throws Exception {
+        String msisdn = "12345";
+        String name = "flw_name";
+
+        when(request.getParameter("msisdn")).thenReturn(msisdn);
+        when(request.getParameter("name")).thenReturn(name);
+
+        controller.saveTranscribedName(request);
+
+        verify(flwService).saveName(msisdn, name);
+    }
+
     private String getFieldValue(Object o, String field) {
         return ReflectionTestUtils.getField(o, field).toString();
     }

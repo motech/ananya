@@ -3,8 +3,10 @@ package org.motechproject.ananya.functional;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +43,24 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         Location location = allLocations.findByExternalId(panchayatCode);
 
         assertEquals(location.getId(), frontLineWorker.getLocationId());
+    }
+    
+    @Test
+    public void shouldUpdateTranscribedNameAndStatusForExistingWorker() throws IOException {
+
+        allFrontLineWorkers.add(new FrontLineWorker("555", Designation.ANGANWADI, "S01D001").status(RegistrationStatus.PENDING_REGISTRATION));
+
+        String msisdn = "555";
+        String name = "hobbes";
+
+        MyWebClient.PostParam msisdnParam = param("msisdn", msisdn);
+        MyWebClient.PostParam nameParam = param("name", name);
+
+        new MyWebClient().post("http://localhost:9979/ananya/flw/save/name", msisdnParam, nameParam);
+
+        FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+
+        assertEquals(updatedFrontLineWorker.getName(), name);
+        assertEquals(updatedFrontLineWorker.getStatus(), RegistrationStatus.REGISTERED);
     }
 }

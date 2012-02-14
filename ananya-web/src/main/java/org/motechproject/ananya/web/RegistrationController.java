@@ -81,6 +81,21 @@ public class RegistrationController {
         return new ModelAndView("register-done");
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")
+    @ResponseBody
+    public void saveTranscribedName(HttpServletRequest request) {
+        String msisdn = request.getParameter("msisdn");
+        String name = request.getParameter("name");
+
+        try {
+            flwService.saveName(msisdn, name);
+        } catch (Exception e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            // return error message
+        }
+        // returns ok
+    }
+
     protected ServletFileUpload getUploader() {
         return new ServletFileUpload(new DiskFileItemFactory());
     }
