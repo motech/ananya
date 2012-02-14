@@ -11,6 +11,7 @@
         <module>ananya-web</module>
         <module>ananya-report</module>
         <module>ananya-transaction</module>
+        <module>ananya-index-updater</module>
     </modules>
     <name>Ananya</name>
 
