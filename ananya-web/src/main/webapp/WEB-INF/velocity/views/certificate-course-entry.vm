@@ -10,7 +10,7 @@
     ]]>
 </script>
 
-<property name="bargein" value="true"/>
+<property name="bargein" value="false"/>
 
 <form id="controller">
     <block>
