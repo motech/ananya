@@ -53,13 +53,16 @@ public class ReportDataHandlerIT {
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId());
-        frontLineWorker.setName("Name"); frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.setName("Name");
+        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         DateTime dateTime = DateTime.now();
         RegistrationLog registrationLog = new RegistrationLog(msisdn, "123", dateTime, dateTime.plusMinutes(1), "");
         allRegistrationLogs.add(registrationLog);
 
+        LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
+        allLocationDimensions.add(locationDimension);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();
@@ -68,7 +71,6 @@ public class ReportDataHandlerIT {
 
         handler.handleRegistration(event);
 
-        LocationDimension locationDimension = allLocationDimensions.fetchFor(locationCode);
         TimeDimension timeDimension = allTimeDimensions.fetchFor(dateTime);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
@@ -78,10 +80,10 @@ public class ReportDataHandlerIT {
         assertEquals(locationDimension.getBlock(), "block");
         assertEquals(locationDimension.getPanchayat(), "panchayat");
 
-        assertEquals((int)timeDimension.getDay(), dateTime.getDayOfYear());
-        assertEquals((int)timeDimension.getWeek(), dateTime.getWeekOfWeekyear());
-        assertEquals((int)timeDimension.getMonth(), dateTime.getMonthOfYear());
-        assertEquals((int)timeDimension.getYear(), dateTime.getYear());
+        assertEquals((int) timeDimension.getDay(), dateTime.getDayOfYear());
+        assertEquals((int) timeDimension.getWeek(), dateTime.getWeekOfWeekyear());
+        assertEquals((int) timeDimension.getMonth(), dateTime.getMonthOfYear());
+        assertEquals((int) timeDimension.getYear(), dateTime.getYear());
 
         assertEquals(frontLineWorkerDimension.getMsisdn(), new Long(555));
         assertEquals(frontLineWorkerDimension.getOperator(), "");
@@ -89,6 +91,9 @@ public class ReportDataHandlerIT {
         assertEquals(frontLineWorkerDimension.getStatus(), RegistrationStatus.REGISTERED.toString());
 
         assertNotNull(registrationMeasure);
+        assertEquals("block", registrationMeasure.getLocationDimension().getBlock());
+        assertEquals(locationCode, registrationMeasure.getLocationDimension().getLocationId());
+        assertEquals(dateTime.getDayOfYear(), (int) registrationMeasure.getTimeDimension().getDay());
     }
 
 }

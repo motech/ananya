@@ -28,16 +28,6 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
         deleteAllLocations();
     }
 
-    @Test
-    public void shouldInsertNewLocationDimensionIfNotPresentInDB(){
-        LocationDimension expectedLocationDimension = new LocationDimension("ZZZ999", "Mandwa", "Algarh", "Gujarat");
-
-        assertNull(allLocationDimensions.fetchFor("ZZZ999"));
-
-        allLocationDimensions.addOrUpdate(expectedLocationDimension);
-
-        assertNotNull(allLocationDimensions.fetchFor("ZZZ999"));
-    }
 
     @Test
     public void shouldUpdateLocationIfExistsInDB(){

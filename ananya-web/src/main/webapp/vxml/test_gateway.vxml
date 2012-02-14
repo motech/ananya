@@ -8,7 +8,6 @@
         var Controller = function() {
 
             this.promptUri = function() {
-                //return "http://221.134.198.15/ananya/audioTest/motech_test.wav";
                 return metaData["audio.url"] + metaData["test_gateway.audio"];
             };
 
@@ -43,7 +42,6 @@
 
     <menu id="test_menu" dtmf="true">
         <prompt>
-            <!-- URL is <value expr="controller.promptUri()" /> -->
             <audio expr="controller.promptUri()" />
         </prompt>
 

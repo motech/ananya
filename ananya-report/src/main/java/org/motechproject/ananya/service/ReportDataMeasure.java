@@ -51,9 +51,7 @@ public class ReportDataMeasure {
                 Long.valueOf(frontLineWorker.getMsisdn()), registrationLog.getOperator(),
                 frontLineWorker.getName(), frontLineWorker.getStatus().toString());
 
-        LocationDimension locationDimension = allLocationDimensions.getOrMakeFor(
-                location.getExternalId(),location.district(), location.blockName(), location.panchayat());
-
+        LocationDimension locationDimension = allLocationDimensions.getOrMakeFor(location.getExternalId());
         TimeDimension timeDimension = allTimeDimensions.getOrMakeFor(registrationLog.getStartTime());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
