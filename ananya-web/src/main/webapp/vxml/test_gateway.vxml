@@ -12,11 +12,11 @@
             };
 
             this.certificateCourseLandingUri = function() {
-                return metaData["web.url"] + "vxml/certificatecourse/landing/";
+                return metaData["web.url"] + "vxml/certificatecourse/landing";
             };
 
             this.jobAidLandingUri = function() {
-                return metaData["web.url"] + "vxml/jobaid/landing/";
+                return metaData["web.url"] + "vxml/jobaid/landing";
             };
 
             this.registerUri = function() {
@@ -28,7 +28,7 @@
             };
 
             this.certificateCourseUri = function() {
-                return metaData["web.url"] + "vxml/certificatecourse.xml";
+                return metaData["web.url"] + "vxml/certificatecourse.vxml";
             };
 
         };
