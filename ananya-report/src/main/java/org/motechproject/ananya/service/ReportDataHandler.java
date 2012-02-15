@@ -16,15 +16,15 @@ public class ReportDataHandler {
         this.reportDataMeasureService = reportDataMeasureService;
     }
 
-    @MotechListener(subjects={ReportDataPublisher.SEND_REGISTRATION_DATA_KEY})
-	public void handleRegistration(MotechEvent event) {
-        LogData logData = (LogData) event.getParameters().get("1");
-        this.reportDataMeasureService.createRegistrationMeasure(logData);
+    @MotechListener(subjects = {ReportDataPublisher.SEND_REGISTRATION_DATA_KEY})
+    public void handleRegistration(MotechEvent event) {
+        for (Object log : event.getParameters().values())
+            this.reportDataMeasureService.createRegistrationMeasure((LogData) log);
     }
 
-    @MotechListener(subjects={ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY})
+    @MotechListener(subjects = {ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY})
     public void handleRegistrationCompletion(MotechEvent event) {
-        LogData logData = (LogData) event.getParameters().get("1");
-        this.reportDataMeasureService.updateRegistrationStatusAndName(logData);
+        for (Object log : event.getParameters().values())
+            this.reportDataMeasureService.updateRegistrationStatusAndName((LogData) log);
     }
 }
