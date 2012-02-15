@@ -42,7 +42,6 @@ public class ReportDataMeasure {
     }
 
     public void createRegistrationMeasure(LogData logData) {
-
         RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
         Location location = allLocations.get(frontLineWorker.getLocationId());
@@ -59,10 +58,8 @@ public class ReportDataMeasure {
     }
 
     public void updateRegistrationStatusAndName(LogData logData) {
-        
-        FrontLineWorker existingFlw = this.allFrontLineWorkers.get(logData.getDataId());
-        FrontLineWorkerDimension existingFlwDimension =
-                this.allFrontLineWorkerDimensions.fetchFor(Long.valueOf(existingFlw.getMsisdn()));
+        FrontLineWorker existingFlw = allFrontLineWorkers.get(logData.getDataId());
+        FrontLineWorkerDimension existingFlwDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(existingFlw.getMsisdn()));
 
         existingFlwDimension.setName(existingFlw.getName());
         existingFlwDimension.setStatus(existingFlw.getStatus().toString());
