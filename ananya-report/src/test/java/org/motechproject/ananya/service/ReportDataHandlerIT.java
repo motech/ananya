@@ -71,7 +71,7 @@ public class ReportDataHandlerIT {
 
         handler.handleRegistration(event);
 
-        TimeDimension timeDimension = allTimeDimensions.fetchFor(dateTime);
+        TimeDimension timeDimension = allTimeDimensions.getFor(dateTime);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
 

@@ -52,7 +52,7 @@ public class ReportDataMeasure {
                 frontLineWorker.getName(), frontLineWorker.getStatus().toString());
 
         LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
-        TimeDimension timeDimension = allTimeDimensions.getOrMakeFor(registrationLog.getStartTime());
+        TimeDimension timeDimension = allTimeDimensions.getFor(registrationLog.getStartTime());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         reportDB.add(registrationMeasure);
@@ -61,13 +61,11 @@ public class ReportDataMeasure {
     public void updateRegistrationStatusAndName(LogData logData) {
         
         FrontLineWorker existingFlw = this.allFrontLineWorkers.get(logData.getDataId());
-        
         FrontLineWorkerDimension existingFlwDimension =
                 this.allFrontLineWorkerDimensions.fetchFor(Long.valueOf(existingFlw.getMsisdn()));
 
         existingFlwDimension.setName(existingFlw.getName());
         existingFlwDimension.setStatus(existingFlw.getStatus().toString());
-
         this.allFrontLineWorkerDimensions.update(existingFlwDimension);
     }
 }

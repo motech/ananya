@@ -66,7 +66,9 @@
            </if>
         </block>
         <script>
+            <![CDATA[
                var field = controller.nextField();
+               ]]>
         </script>
 
        <block>
@@ -90,8 +92,8 @@
                <audio expr="controller.playBackPrompt(field,record)"/>
                <audio expr="controller.playRerecordPrompt(field)"/>
             </prompt>
-            <grammar mode="dtmf" version="1.0" root="root">
-               <rule id="root" scope="public">
+            <grammar mode="dtmf" version="1.0" root="root1">
+               <rule id="root1" scope="public">
                    <one-of>
                        <item>1</item>
                        <item>2</item>
@@ -133,11 +135,13 @@
 
         <block name="submit_form">
             <script>
+               <![CDATA[
                 var name = controller.name();
                 var designation = controller.designation();
                 var district = controller.district();
                 var block = controller.block();
                 var panchayat = controller.panchayat();
+                ]]>
             </script>
             <data srcexpr="controller.submitNameUrl()" enctype="multipart/form-data" method="post"
                   namelist="session.connection.remote.uri name"/>
@@ -148,8 +152,8 @@
         </block>
 
         <record name="nameRecord" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
-            <grammar mode="dtmf" version="1.0" root="root">
-                  <rule id="root" scope="public">
+            <grammar mode="dtmf" version="1.0" root="root2">
+                  <rule id="root2" scope="public">
                         <one-of>
                          <item>1</item>
                         </one-of>
@@ -179,8 +183,8 @@
         <field name="fieldRecord">
             <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
 
-            <grammar mode="dtmf" version="1.0" root="root">
-               <rule id="root" scope="public">
+            <grammar mode="dtmf" version="1.0" root="root3">
+               <rule id="root3" scope="public">
                    <one-of>
                        <item>1</item>
                    </one-of>
