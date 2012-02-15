@@ -23,4 +23,8 @@ public class AllFrontLineWorkerDimensions {
         return (FrontLineWorkerDimension) template.getUniqueResult(
                 FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
     }
+
+    public void update(FrontLineWorkerDimension frontLineWorkerDimension) {
+        template.update(frontLineWorkerDimension);
+    }
 }

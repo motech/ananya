@@ -21,4 +21,10 @@ public class ReportDataHandler {
         LogData logData = (LogData) event.getParameters().get("1");
         this.reportDataMeasureService.createRegistrationMeasure(logData);
     }
+
+    @MotechListener(subjects={ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY})
+    public void handleRegistrationCompletion(MotechEvent event) {
+        LogData logData = (LogData) event.getParameters().get("1");
+        this.reportDataMeasureService.updateRegistrationStatusAndName(logData);
+    }
 }

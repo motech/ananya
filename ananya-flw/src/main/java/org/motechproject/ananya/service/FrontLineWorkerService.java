@@ -76,7 +76,7 @@ public class FrontLineWorkerService {
         save(frontLineWorker);
     }
 
-    public void saveName(String msisdn, String name) throws Exception {
+    public FrontLineWorker saveName(String msisdn, String name) throws Exception {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
 
         if(frontLineWorker == null) throw new Exception();
@@ -86,5 +86,7 @@ public class FrontLineWorkerService {
         frontLineWorker.setName(name);
         frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.update(frontLineWorker);
+
+        return frontLineWorker;
     }
 }

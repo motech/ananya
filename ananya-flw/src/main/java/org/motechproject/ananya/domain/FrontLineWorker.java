@@ -29,6 +29,17 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker() {
     }
 
+    @Override
+    public String toString() {
+        return "FrontLineWorker{" +
+                "name='" + name + '\'' +
+                ", msisdn='" + msisdn + '\'' +
+                ", designation=" + designation +
+                ", locationId='" + locationId + '\'' +
+                ", status=" + status +
+                '}';
+    }
+
     public FrontLineWorker(String msisdn, Designation designation, String locationId) {
         this.msisdn = msisdn;
         this.designation = designation;

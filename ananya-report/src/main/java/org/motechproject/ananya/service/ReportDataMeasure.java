@@ -57,4 +57,17 @@ public class ReportDataMeasure {
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         reportDB.add(registrationMeasure);
     }
+
+    public void updateRegistrationStatusAndName(LogData logData) {
+        
+        FrontLineWorker existingFlw = this.allFrontLineWorkers.get(logData.getDataId());
+        
+        FrontLineWorkerDimension existingFlwDimension =
+                this.allFrontLineWorkerDimensions.fetchFor(Long.valueOf(existingFlw.getMsisdn()));
+
+        existingFlwDimension.setName(existingFlw.getName());
+        existingFlwDimension.setStatus(existingFlw.getStatus().toString());
+
+        this.allFrontLineWorkerDimensions.update(existingFlwDimension);
+    }
 }

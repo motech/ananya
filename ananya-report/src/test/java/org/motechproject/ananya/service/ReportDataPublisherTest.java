@@ -37,4 +37,15 @@ public class ReportDataPublisherTest {
         assertEquals(captured, reportData);
     }
 
+    @Test
+    public void shouldPublishReportUpdationDataToEventContext() {
+        LogData reportData = new LogData(LogType.REGISTRATION_SAVE_NAME, "123");
+
+        reportDataPublisher.publishRegistrationUpdation(reportData);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY), captor.capture());
+        LogData captured = captor.getValue();
+        assertEquals(captured, reportData);
+    }
 }

@@ -4,10 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.RegistrationLog;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
@@ -84,15 +81,21 @@ public class RegistrationController {
     @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")
     @ResponseBody
     public void saveTranscribedName(HttpServletRequest request) {
+        FrontLineWorker savedFrontLineWorker = null;
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
 
         try {
-            flwService.saveName(msisdn, name);
+            savedFrontLineWorker = flwService.saveName(msisdn, name);
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             // return error message
         }
+
+        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
+        reportPublisher.publishRegistrationUpdation(logData);
+        
+        log.info("Saved Transcribed name for:"+savedFrontLineWorker);
         // returns ok
     }
 

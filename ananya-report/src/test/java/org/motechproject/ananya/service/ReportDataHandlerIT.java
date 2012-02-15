@@ -96,4 +96,28 @@ public class ReportDataHandlerIT {
         assertEquals(dateTime.getDayOfYear(), (int) registrationMeasure.getTimeDimension().getDay());
     }
 
+    @Test
+    public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
+        String msisdn = "555";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001");
+        frontLineWorker.setName("Name");
+        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        allFrontLineWorkers.add(frontLineWorker);
+
+        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.PENDING_REGISTRATION.toString());
+
+        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, frontLineWorker.getId());
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("1", logData);
+        MotechEvent event = new MotechEvent("", map);
+
+        handler.handleRegistrationCompletion(event);
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
+
+        assertEquals(frontLineWorkerDimension.getMsisdn(), new Long(555));
+        assertEquals(frontLineWorkerDimension.getOperator(), "");
+        assertEquals(frontLineWorkerDimension.getName(), "Name");
+        assertEquals(frontLineWorkerDimension.getStatus(), RegistrationStatus.REGISTERED.toString());
+    }
 }

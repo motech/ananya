@@ -41,5 +41,18 @@ public class ReportDataHandlerTest {
         assertEquals(logData, captor.getValue());
     }
 
+    @Test
+    public void shouldFetchLogDataFromMotechAndPassToMapper() {
+        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, "1234");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("1", logData);
+        MotechEvent event = new MotechEvent("", map);
+
+        handler.handleRegistrationCompletion(event);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(mapper).updateRegistrationStatusAndName(captor.capture());
+        assertEquals(logData, captor.getValue());
+    }
 
 }

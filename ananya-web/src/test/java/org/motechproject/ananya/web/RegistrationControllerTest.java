@@ -6,10 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
-import org.motechproject.ananya.domain.RegistrationLog;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
@@ -118,13 +115,23 @@ public class RegistrationControllerTest {
     public void shouldSaveTranscribedName() throws Exception {
         String msisdn = "12345";
         String name = "flw_name";
+        String id = "111";
+        FrontLineWorker mockFlw = new FrontLineWorker(msisdn, Designation.ANGANWADI, "D001S01");
+        mockFlw.setId(id);
 
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
+        when(flwService.saveName(msisdn,name)).thenReturn(mockFlw);
 
         controller.saveTranscribedName(request);
-
         verify(flwService).saveName(msisdn, name);
+
+        ArgumentCaptor<LogData> logDataCaptor = ArgumentCaptor.forClass(LogData.class);
+        verify(reportPublisher).publishRegistrationUpdation(logDataCaptor.capture());
+
+        LogData capturedReport = logDataCaptor.getValue();
+
+        assertEquals(capturedReport.getDataId(), id);
     }
 
     private String getFieldValue(Object o, String field) {
