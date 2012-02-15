@@ -21,8 +21,9 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/vxml/*/landing/">-1</prop>
-                    <prop key="/dynamic/**">-1</prop>
+                    <prop key="/vxml/*/landing/">1</prop>
+                    <prop key="/generated/js/**">900</prop>
+                    <prop key="/generated/js/dynamic/**">1</prop>
                 </props>
             </property>
         </bean>

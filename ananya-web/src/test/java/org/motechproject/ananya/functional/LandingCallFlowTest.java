@@ -31,7 +31,7 @@ public class LandingCallFlowTest {
 
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/enter/");
 
-        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
+        assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
         assertEquals("/ananya/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
 
         String controller = "/vxml/form[@id='controller']";
@@ -51,7 +51,7 @@ public class LandingCallFlowTest {
 
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/enter/");
 
-        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
+        assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
         assertEquals("/ananya/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
         assertEquals("false", callFlow.readString("/vxml/property[@name='bargein']/@value"));
 

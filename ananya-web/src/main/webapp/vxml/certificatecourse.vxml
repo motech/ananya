@@ -3,10 +3,10 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
-    <script src="../dynamic/js/metadata.js"/>
-    <script src="../dynamic/js/certification_course_data.js"/>
+    <script src="../generated/js/metadata.js"/>
+    <script src="../generated/js/certification_course_data.js"/>
     <script src="../js/utility.js"/>
-    <script srcexpr="'../dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
 
     <script src="../js/prompt_context.js"/>
     <script src="../js/certificatecourse/abstract_interactions.js"/>

@@ -1,5 +1,7 @@
 package org.motechproject.ananya.domain;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.cmslite.api.model.StringContent;

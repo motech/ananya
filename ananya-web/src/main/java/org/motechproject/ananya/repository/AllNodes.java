@@ -1,9 +1,11 @@
 package org.motechproject.ananya.repository;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.support.GenerateView;
 import org.motechproject.ananya.domain.Node;
+import org.motechproject.ananya.util.gson.AttributeExclusionDeterminer;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.motechproject.dao.MotechBaseRepository;
@@ -17,6 +19,12 @@ import java.util.List;
 @Repository
 public class AllNodes extends MotechBaseRepository<Node> {
     private AllStringContents allStringContents;
+    private static Gson GSON;
+
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
+        GSON = gsonBuilder.create();
+    }
 
     @Autowired
     public AllNodes(@Qualifier("ananyaDbConnector") CouchDbConnector dbCouchDbConnector, AllStringContents allStringContents) {
@@ -69,8 +77,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
 
     public String nodeAsJson(String treeName) throws IOException {
         Node node = findByName(treeName);
-        Gson gson = new Gson();
-        return gson.toJson(node);
+        return GSON.toJson(node);
     }
 
     public void addNodeWithDescendants(Node rootNode) {

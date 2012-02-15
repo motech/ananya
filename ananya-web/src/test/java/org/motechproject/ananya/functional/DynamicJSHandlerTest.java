@@ -32,7 +32,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/dynamic/js/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String expectedPageResponse = callerDataFor(true, "lesson", 0, 2);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
@@ -71,7 +71,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/dynamic/js/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String callerDataAssignmentStmt = page.getWebResponse().getContentAsString();
         String callerDataJson = jsonWithWhichCallerDataVarIsBeingAssigned(callerDataAssignmentStmt);
@@ -111,7 +111,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/dynamic/js/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String expectedPageResponse = callerDataWithoutBookmarkFor(true);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
@@ -119,7 +119,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithoutAnyDetailsWhenTheFLWDoesNotExist() throws IOException {
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/dynamic/js/caller_data.js?callerId=1234");
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=1234");
 
         String expectedPageResponse = callerDataWithoutBookmarkFor(false);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));

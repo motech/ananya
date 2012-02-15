@@ -45,7 +45,7 @@ public class LandingControllerTest {
 
         assertEquals("/ananya/vxml/jobaid.vxml", nextFlow);
         assertEquals("/ananya/vxml/register.vxml", registerFlow);
-        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
+        assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
         assertEquals("/ananya/js/entry/controller.js", entryJs);
         assertEquals("jobaid-entry",modelAndView.getViewName());
     }
@@ -61,7 +61,7 @@ public class LandingControllerTest {
 
         assertEquals("/ananya/vxml/certificatecourse.vxml", nextFlow);
         assertEquals("/ananya/vxml/register.vxml", registerFlow);
-        assertEquals("'/ananya/dynamic/js/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
+        assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
         assertEquals("/ananya/js/entry/controller.js", entryJs);
         assertEquals("certificate-course-entry",modelAndView.getViewName());
     }

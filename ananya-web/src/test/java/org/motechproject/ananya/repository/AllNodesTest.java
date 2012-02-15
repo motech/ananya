@@ -23,8 +23,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class AllNodesTest extends SpringIntegrationTest {
     @Autowired
@@ -258,6 +257,15 @@ public class AllNodesTest extends SpringIntegrationTest {
         Assert.assertThat(courseContents, hasItem(new StringContentMatcher(allStringContents.getContent(language, courseMenuContentName))));
         Assert.assertThat(level1Contents, hasItem(new StringContentMatcher(allStringContents.getContent(language, levelContentName))));
         Assert.assertThat(level2Chap2Contents, hasItem(new StringContentMatcher(allStringContents.getContent(language, chapterContentName))));
+    }
+
+    @Test
+    public void shouldNotBloatNodesJsonWithCouchFields() throws Exception {
+        String courseAsJson = allNodes.nodeAsJson(COURSE_NAME);
+        assertTrue(courseAsJson.indexOf("\"revision\"") ==  -1);
+        assertTrue(courseAsJson.indexOf("\"parentId\"") ==  -1);
+        assertTrue(courseAsJson.indexOf("\"id\"") ==  -1);
+        assertTrue(courseAsJson.indexOf("\"contentIds\"") ==  -1);
     }
 
     public static class StringContentMatcher extends BaseMatcher<StringContent> {

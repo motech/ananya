@@ -67,19 +67,4 @@
     <session-config>
         <session-timeout>120</session-timeout>
     </session-config>
-
-    <error-page>
-        <exception-type>java.lang.Exception</exception-type>
-        <location>/uncaughtException</location>
-    </error-page>
-
-    <error-page>
-        <error-code>404</error-code>
-        <location>/resourceNotFound</location>
-    </error-page>
-
-     <error-page>
-        <error-code>403</error-code>
-        <location>/authorizationFailure</location>
-    </error-page>
 </web-app>

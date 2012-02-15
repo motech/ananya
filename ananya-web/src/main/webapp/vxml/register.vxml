@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
-    <script src="../dynamic/js/metadata.js"/>
+    <script src="../generated/js/metadata.js"/>
     <script src="../js/register/controller.js"/>
     <script src="../js/prompt_context.js"/>
 

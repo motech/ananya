@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping(value = "/dynamic/js")
+@RequestMapping(value = "/generated/js")
 public class DynamicJsController {
 
     private AllNodes allNodes;
@@ -45,7 +45,7 @@ public class DynamicJsController {
         return String.format("var courseData = %s;", allNodes.nodeAsJson("CertificationCourse"));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/caller_data.js")
+    @RequestMapping(method = RequestMethod.GET, value = "/dynamic/caller_data.js")
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
         response.setContentType("application/javascript");

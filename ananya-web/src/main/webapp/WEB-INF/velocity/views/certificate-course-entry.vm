@@ -2,7 +2,7 @@
 <script srcexpr="$callerData"/>
 <script src="$entryJs"/>
 <script src="../../../js/prompt_context.js"/>
-<script src="../../../dynamic/js/metadata.js"/>
+<script src="../../../generated/js/metadata.js"/>
 <script>
     <![CDATA[
     var controller = new EntryController(callerData);
@@ -14,9 +14,6 @@
 
 <form id="controller">
     <block>
-        <prompt>
-            <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
-        </prompt>
         <goto expr="controller.decideFlowForCertificateCourse()"/>
     </block>
 </form>
@@ -28,6 +25,9 @@
 </form>
 
 <form id="registered_bookmark_absent">
+    <prompt>
+            <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
+    </prompt>
     #repeat(
         "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}",
         $nextFlow)
@@ -35,6 +35,7 @@
 
 <form id="unregistered">
     <block>
+    <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
     #play("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}")
     </block>
     #repeat("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}",
