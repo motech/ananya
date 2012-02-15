@@ -42,7 +42,7 @@ public class RegistrationController {
         this.reportPublisher = reportPublisher;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "flw/register/")
+    @RequestMapping(method = RequestMethod.POST, value = "flw/register")
     @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
         String callerId = request.getParameter("session.connection.remote.uri");
@@ -63,7 +63,7 @@ public class RegistrationController {
         return new ModelAndView("register-done");
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "flw/record/name/")
+    @RequestMapping(method = RequestMethod.POST, value = "flw/record/name")
     @ResponseBody
     public ModelAndView recordName(HttpServletRequest request) throws Exception {
         ServletFileUpload upload = getUploader();
