@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.*;
@@ -42,6 +44,24 @@ public class ReportDataHandlerIT {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Autowired
     private AllRegistrationMeasures allRegistrationMeasures;
+    @Autowired
+    private DataAccessTemplate template;
+
+    @Before
+    public void setUp(){
+        cleanDB();
+    }
+
+    @After
+    public void tearDown(){
+        cleanDB();
+    }
+
+    private void cleanDB() {
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+    }
 
     @Test
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
@@ -63,6 +83,7 @@ public class ReportDataHandlerIT {
 
         LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
+        allTimeDimensions.makeFor(dateTime);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();

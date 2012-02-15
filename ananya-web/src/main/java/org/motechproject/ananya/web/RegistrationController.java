@@ -57,7 +57,7 @@ public class RegistrationController {
         logService.addNew(registrationLog);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
-        reportPublisher.publish(logData);
+        reportPublisher.publishRegistration(logData);
 
         log.info("Registered new FLW:" + callerId);
         return new ModelAndView("register-done");
@@ -93,7 +93,7 @@ public class RegistrationController {
         }
 
         LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
-        reportPublisher.publishRegistrationUpdation(logData);
+        reportPublisher.publishRegistrationUpdate(logData);
         
         log.info("Saved Transcribed name for:"+savedFrontLineWorker);
         // returns ok
