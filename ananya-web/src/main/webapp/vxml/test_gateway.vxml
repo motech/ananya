@@ -12,23 +12,23 @@
             };
 
             this.certificateCourseLandingUri = function() {
-                return metaData["web.url"] + "/vxml/certificatecourse/landing/";
+                return metaData["web.url"] + "vxml/certificatecourse/landing/";
             };
 
             this.jobAidLandingUri = function() {
-                return metaData["web.url"] + "/vxml/jobaid/landing/";
+                return metaData["web.url"] + "vxml/jobaid/landing/";
             };
 
             this.registerUri = function() {
-                return metaData["web.url"] + "/vxml/register.vxml";
+                return metaData["web.url"] + "vxml/register.vxml";
             };
 
             this.jobAidUri = function() {
-                return metaData["web.url"] + "/vxml/jobaid.vxml";
+                return metaData["web.url"] + "vxml/jobaid.vxml";
             };
 
             this.certificateCourseUri = function() {
-                return metaData["web.url"] + "/vxml/flwcc.xml";
+                return metaData["web.url"] + "vxml/certificatecourse.xml";
             };
 
         };
