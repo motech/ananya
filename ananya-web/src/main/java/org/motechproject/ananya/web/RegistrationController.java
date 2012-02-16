@@ -51,37 +51,51 @@ public class RegistrationController {
     @RequestMapping(method = RequestMethod.POST, value = "flw/register")
     @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
-        String callerId = request.getParameter("session.connection.remote.uri");
-        String calledNumber = request.getParameter("session.connection.local.uri");
-        String designation = request.getParameter("designation");
-        String panchayat = request.getParameter("panchayat");
+        try {
+            String callerId = request.getParameter("session.connection.remote.uri");
+            String calledNumber = request.getParameter("session.connection.local.uri");
+            String designation = request.getParameter("designation");
+            String panchayat = request.getParameter("panchayat");
 
-        flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
+            log.info("callerid=" + callerId + "|calledNo=" + calledNumber + "|designation=" + designation + "|panchayat=" + panchayat);
 
-        RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
-        registrationLog.designation(designation).panchayat(panchayat);
-        logService.addNew(registrationLog);
+            flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
 
-        LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
-        reportPublisher.publishRegistration(logData);
+            RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
+            registrationLog.designation(designation).panchayat(panchayat);
+            logService.addNew(registrationLog);
 
-        log.info("Registered new FLW:" + callerId);
+            LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
+            reportPublisher.publishRegistration(logData);
+
+            log.info("Registered new FLW:" + callerId);
+
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            throw e;
+        }
+
         return new ModelAndView("register-done");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/record/name")
     @ResponseBody
     public ModelAndView recordName(HttpServletRequest request) throws Exception {
-        ServletFileUpload upload = getUploader();
-        List items = upload.parseRequest(request);
+        try {
+            ServletFileUpload upload = getUploader();
+            List items = upload.parseRequest(request);
+            String callerId = getField(items, "session.connection.remote.uri");
+            String realPath = request.getSession().getServletContext().getRealPath("/recordings/");
 
-        String callerId = getField(items, "session.connection.remote.uri");
-        String realPath = request.getSession().getServletContext().getRealPath("/recordings/");
+            allRecordings.store(callerId, items, realPath);
 
-        allRecordings.store(callerId, items, realPath);
+            log.info("Recorded new FLW name:" + callerId);
+            return new ModelAndView("register-done");
 
-        log.info("Recorded new FLW name:" + callerId);
-        return new ModelAndView("register-done");
+        } catch (Exception e) {
+            log.error("Exception:", e);
+            throw e;
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")

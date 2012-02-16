@@ -19,7 +19,6 @@
     <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
     <script>
         <![CDATA[
-                var callId = callerId + "-" + (new Date()).valueOf();
                 var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData));
           ]]>
     </script>

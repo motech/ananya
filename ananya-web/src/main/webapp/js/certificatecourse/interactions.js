@@ -1,81 +1,6 @@
 /*
-    WelcomeInteraction
-*/
-
-var WelcomeInteraction = function(metadata, course) {
-    this.init = function(metadata, course) {
-        AbstractCourseInteraction.call(this, metadata, WelcomeInteraction.KEY);
-        this.course = course;
-    }
-
-    this.init(metadata, course);
-};
-
-WelcomeInteraction.KEY = "welcome";
-
-WelcomeInteraction.prototype = new AbstractCourseInteraction();
-WelcomeInteraction.prototype.constructor = WelcomeInteraction;
-
-WelcomeInteraction.prototype.playAudio = function() {
-    return this.findAudio(this.course, "introduction");
-};
-
-WelcomeInteraction.prototype.doesTakeInput = function() {
-    return false;
-}
-
-WelcomeInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions[StartCourseOption.KEY];
-}
-
-WelcomeInteraction.prototype.bookMark = function() {
-
-}
-
-/*
-    StartCourseOption
-*/
-var StartCourseOption = function(metadata, course) {
-    this.init = function(metadata, course) {
-        AbstractCourseInteraction.call(this, metadata, StartCourseOption.KEY);
-        this.course = course;
-    }
-
-    this.init(metadata, course);
-};
-
-StartCourseOption.KEY = "startCourseOption";
-
-StartCourseOption.prototype = new AbstractCourseInteraction();
-StartCourseOption.prototype.constructor = StartCourseOption;
-
-StartCourseOption.prototype.doesTakeInput = function() {
-    return true;
-}
-
-StartCourseOption.prototype.playAudio = function() {
-    return this.findAudio(this.course, "menu");
-};
-
-StartCourseOption.prototype.validateInput = function(input) {
-    return input == '1' || input == '2';
-};
-
-StartCourseOption.prototype.continueWithoutInput = function(){
-    return CertificateCourse.interactions[StartNextChapter.KEY];
-}
-
-StartCourseOption.prototype.processInputAndReturnNextInteraction = function(input){
-    if(input == 1) {
-        return CertificateCourse.interactions[WelcomeInteraction.KEY];
-    }
-    return CertificateCourse.interactions[StartNextChapter.KEY];
-}
-
-/*
     StartNextChapter
 */
-//TODO: This should extend from something called silent interaction.
 var StartNextChapter = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
         this.course = course;
@@ -166,7 +91,7 @@ var LessonEndMenuInteraction = function(metadata, course, courseState) {
 LessonEndMenuInteraction.KEY = "lessonEndMenu";
 
 LessonEndMenuInteraction.prototype = new AbstractCourseInteraction();
-LessonEndMenuInteraction.prototype.constructor = StartCourseOption;
+LessonEndMenuInteraction.prototype.constructor = LessonEndMenuInteraction;
 
 LessonEndMenuInteraction.prototype.doesTakeInput = function() {
     return true;
@@ -286,7 +211,6 @@ PoseQuestionInteraction.prototype.continueWithoutInput = function(){
     return CertificateCourse.interactions[StartNextChapter.KEY];
 };
 
-//TODO: Here we will need to populate some shared DS with response, so that it can be sent to server.
 PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = function(userResponse){
     var currentChapterIndex = this.courseState.chapterIndex;
     var currentQuestion = this.course.children[currentChapterIndex].children[this.courseState.lessonOrQuestionIndex];
@@ -374,10 +298,6 @@ InvalidInputInteraction.prototype.playAudio = function() {
 InvalidInputInteraction.prototype.doesTakeInput = function() {
     return false;
 };
-
-//InvalidInputInteraction.prototype.getInteractionKey = function() {
-//    return this.interactionToReturnTo.getInteractionKey();
-//};
 
 InvalidInputInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;

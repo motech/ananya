@@ -14,6 +14,7 @@ public class CertificationCourseLog extends BaseLog {
     private String questionResponse;
     @JsonProperty
     private Boolean result;
+    @JsonProperty
     private String interactionKey;
 
     public CertificationCourseLog() {

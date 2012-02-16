@@ -18,7 +18,7 @@ describe("Certificate course controller spec", function() {
     });
 
     it("should get the audio to be played", function () {
-        expect(controller.playAudio()).toEqual("./audio/certificatecourse/Introduction.wav");
+        expect(controller.playAudio()).toEqual("./audio/certificatecourse/chapter_1_lesson_1.wav");
     });
 
     it("should initialize prompt context at start", function() {

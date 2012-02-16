@@ -14,9 +14,7 @@ var CertificateCourseController = function(course, metadata, courseState) {
 
     //TODO: This should be pulled out.
     this.initializeInteractionsArray = function(metadata, course, courseState) {
-        CertificateCourse.interactions[WelcomeInteraction.KEY] = new WelcomeInteraction(metadata, course);
-        CertificateCourse.interactions[StartCourseOption.KEY] = new StartCourseOption(metadata, course);
-        CertificateCourse.interactions[StartNextChapter.KEY] = new StartNextChapter(metadata, course, courseState)
+        CertificateCourse.interactions[StartNextChapter.KEY] = new StartNextChapter(metadata, course, courseState);
         CertificateCourse.interactions[LessonInteraction.KEY] = new LessonInteraction(metadata, course, courseState);
         CertificateCourse.interactions[LessonEndMenuInteraction.KEY] = new LessonEndMenuInteraction(metadata, course, courseState);
         CertificateCourse.interactions[StartQuizInteraction.KEY] = new StartQuizInteraction(metadata, course, courseState);

@@ -20,16 +20,16 @@ public class LandingCallFlowTest {
     public void shouldGetLandingPage() throws Exception {
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/landing");
 
-        assertEquals("/ananya/vxml/jobaid/enter/", callFlow.readString("/vxml/form/block/goto/@next"));
+        assertEquals("/ananya/vxml/jobaid/enter", callFlow.readString("/vxml/form/block/goto/@next"));
 
         callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/landing");
-        assertEquals("/ananya/vxml/certificatecourse/enter/", callFlow.readString("/vxml/form/block/goto/@next"));
+        assertEquals("/ananya/vxml/certificatecourse/enter", callFlow.readString("/vxml/form/block/goto/@next"));
     }
 
     @Test
     public void shouldGetEntryPageForJobAid() throws Exception {
 
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/enter/");
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/enter");
 
         assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
         assertEquals("/ananya/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
@@ -49,7 +49,7 @@ public class LandingCallFlowTest {
     @Test
     public void shouldGetEntryPageForCertificateCourse() throws Exception {
 
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/enter/");
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/enter");
 
         assertEquals("'/ananya/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
         assertEquals("/ananya/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));

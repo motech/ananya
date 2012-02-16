@@ -25,7 +25,7 @@ var CourseState = function(callerData) {
         this.lessonOrQuestionIndex = null;
         this.currentQuestionResponse = null;
         this.isAnswerCorrect = null;
-        this.interactionKey = WelcomeInteraction.KEY;
+        this.interactionKey = StartNextChapter.KEY;
         this.scoresByChapter = null;
     };
 

@@ -25,9 +25,9 @@
 </form>
 
 <form id="registered_bookmark_absent">
-    <prompt>
+    <block>
             <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
-    </prompt>
+    </block>
     #repeat(
         "${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}",
         $nextFlow)

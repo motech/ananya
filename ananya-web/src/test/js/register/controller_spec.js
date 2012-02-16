@@ -63,10 +63,14 @@ describe("Registration Controller", function () {
                    "audio.url":"/audio",
                    "location.audio.url":"/location/",
                };
+        var map1 = {"resultKey":"districtAudio" };
+        var map2 = {"resultKey":"blockAudio" };
+        var map3 = {"resultKey":"panchayatAudio" };
+
         controller = new RegisterController(metadata);
-        expect(controller.playBackPrompt("district","districtAudio")).toEqual("/audio/location/districtAudio.wav");
-        expect(controller.playBackPrompt("block","blockAudio")).toEqual("/audio/location/blockAudio.wav");
-        expect(controller.playBackPrompt("panchayat","panchayatAudio")).toEqual("/audio/location/panchayatAudio.wav");
+        expect(controller.playBackPrompt("district",map1)).toEqual("/audio/location/districtAudio.wav");
+        expect(controller.playBackPrompt("block",map2)).toEqual("/audio/location/blockAudio.wav");
+        expect(controller.playBackPrompt("panchayat",map3)).toEqual("/audio/location/panchayatAudio.wav");
     });
 
     it("should play registration done prompt and the beep", function() {
