@@ -46,18 +46,18 @@ var RegisterController = function(metadata) {
     };
 
     this.submitUrl = function() {
-        return metadata["web.url"] + "/flw/register";
+        return metadata["web.url"] + "flw/register";
     };
 
     this.submitNameUrl = function() {
-        return metadata["web.url"] + "/flw/record/name";
+        return metadata["web.url"] + "flw/record/name";
     };
 
     this.nextFlow = function(calledNumber) {
         if (metadata["certificatecourse.application.number"] == calledNumber)
-            return metadata["web.url"] + "/vxml/certificatecourse.vxml";
+            return metadata["web.url"] + "vxml/certificatecourse.vxml";
         else
-            return metadata["web.url"] + "/vxml/jobaid.vxml";
+            return metadata["web.url"] + "vxml/jobaid.vxml";
     };
 
     this.getGrammar = function(field) {
