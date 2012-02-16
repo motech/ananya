@@ -79,9 +79,11 @@
        </block>
 
        <block>
-            <if cond="myField=='name'">
-            <goto nextitem="nameRecord"/>
+            <if cond="myField == 'name'">
+                <log>you have reached nameRecord<value expr="myField"/></log>
+                <goto nextitem="nameRecord"/>
             <else/>
+                <log>you have reached fieldRecord<value expr="myField"/></log>
              <goto nextitem="fieldRecord"/>
             </if>
        </block>

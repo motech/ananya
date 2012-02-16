@@ -45,11 +45,11 @@
             <audio expr="controller.promptUri()" />
         </prompt>
 
-        <choice dtmf="1" expr="controller.certificateCourseLandingUri()" />
-        <choice dtmf="2" expr="controller.jobAidLandingUri()" />
-        <choice dtmf="3" expr="controller.registerUri()" />
-        <choice dtmf="4" expr="controller.jobAidUri()" />
-        <choice dtmf="5" expr="controller.certificateCourseUri()" />
+        <choice maxage="0" maxstale="0" dtmf="1" expr="controller.certificateCourseLandingUri()" />
+        <choice maxage="0" maxstale="0" dtmf="2" expr="controller.jobAidLandingUri()" />
+        <choice maxage="0" maxstale="0" dtmf="3" expr="controller.registerUri()" />
+        <choice maxage="0" maxstale="0" dtmf="4" expr="controller.jobAidUri()" />
+        <choice maxage="0" maxstale="0" dtmf="5" expr="controller.certificateCourseUri()" />
 
         <noinput>
             <reprompt />
