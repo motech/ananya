@@ -58,9 +58,12 @@ public class ReportDataHandlerIT {
     }
 
     private void cleanDB() {
+        allFrontLineWorkers.removeAll();
+        allRegistrationLogs.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+//        template.deleteAll(template.loadAll(RegistrationMeasure.class));
     }
 
     @Test
