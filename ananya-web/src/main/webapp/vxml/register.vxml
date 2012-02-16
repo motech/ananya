@@ -11,7 +11,7 @@
         <![CDATA[
         var controller = new RegisterController(metaData);
         var promptContext = new PromptContext(metaData);
-        var record;
+        var myRecord, myField;
          ]]>
     </script>
 
@@ -67,20 +67,20 @@
         </block>
         <script>
             <![CDATA[
-               var field = controller.nextField();
+               myField = controller.nextField();
                ]]>
         </script>
 
        <block>
            <prompt bargein="false">
-               <audio expr="controller.playPrompt(field)"/>
+               <audio expr="controller.playPrompt(myField)"/>
                <audio expr="controller.playBeep()"/>
            </prompt>
        </block>
 
        <block>
-            <if cond="field=='name'">
-            <goto nextitem="nameRecord"/>
+            <if cond="myField == 'name'">
+                <goto nextitem="nameRecord"/>
             <else/>
              <goto nextitem="fieldRecord"/>
             </if>
@@ -88,9 +88,9 @@
 
        <field name="confirm">
             <prompt bargein="false">
-               <audio expr="controller.playConfirmPrompt(field)"/>
-               <audio expr="controller.playBackPrompt(field,record)"/>
-               <audio expr="controller.playRerecordPrompt(field)"/>
+               <audio expr="controller.playConfirmPrompt(myField)"/>
+               <audio expr="controller.playBackPrompt(myField,myRecord)"/>
+               <audio expr="controller.playRerecordPrompt(myField)"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                <rule id="root1" scope="public">
@@ -126,7 +126,7 @@
                   <goto next="#record_form"/>
               <elseif cond="confirm == '2'"/>
                   <script>
-                      controller.capture(record);
+                      controller.capture(myRecord);
                   </script>
                   <goto next="#record_form"/>
               </if>
@@ -151,7 +151,7 @@
             <goto expr="controller.nextFlow(session.connection.local.uri)"/>
         </block>
 
-        <record name="nameRecord" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
+        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
             <grammar mode="dtmf" version="1.0" root="root2">
                   <rule id="root2" scope="public">
                         <one-of>
@@ -159,7 +159,6 @@
                         </one-of>
                   </rule>
             </grammar>
-
             <noinput>
                 <script>
                     promptContext.gotNoInput();
@@ -168,20 +167,20 @@
                     <disconnect/>
                 <else/>
                      <prompt bargein="false">
-                          <audio expr="controller.playNoInputPrompt(field)"/>
+                          <audio expr="controller.playNoInputPrompt(myField)"/>
                           <audio expr="controller.playBeep()"/>
                      </prompt>
                      <goto nextitem="nameRecord" />
                  </if>
             </noinput>
             <filled>
-              <assign name="record" expr="nameRecord"/>
+              <assign name="myRecord" expr="nameRecord"/>
             </filled>
         </record>
 
 
         <field name="fieldRecord">
-            <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
+            <grammar srcexpr="controller.getGrammar(myField)" type="application/srgs+xml"/>
 
             <grammar mode="dtmf" version="1.0" root="root3">
                <rule id="root3" scope="public">
@@ -199,7 +198,7 @@
                     <disconnect/>
                 <else/>
                    <prompt bargein="false">
-                       <audio expr="controller.playNoInputPrompt(field)"/>
+                       <audio expr="controller.playNoInputPrompt(myField)"/>
                        <audio expr="controller.playBeep()"/>
                    </prompt>
                    <goto nextitem="fieldRecord" />
@@ -213,14 +212,14 @@
                     <disconnect/>
                 <else/>
                <prompt bargein="false">
-                   <audio expr="controller.playNoInputPrompt(field)"/>
+                   <audio expr="controller.playNoInputPrompt(myField)"/>
                    <audio expr="controller.playBeep()"/>
                </prompt>
                <goto nextitem="fieldRecord" />
                </if>
             </nomatch>
             <filled>
-              <assign name="record" expr="fieldRecord"/>
+              <assign name="myRecord" expr="fieldRecord"/>
               <script>
                   promptContext.resetCounts();
               </script>
