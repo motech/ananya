@@ -30,7 +30,7 @@ public class LandingControllerTest {
         ModelAndView modelAndView = landingController.entryRouter(request, "jobaid");
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         assertEquals("landing",modelAndView.getViewName());
-        assertEquals("/ananya/vxml/jobaid/enter/", nextFlow);
+        assertEquals("/ananya/vxml/jobaid/enter", nextFlow);
     }
 
     @Test
