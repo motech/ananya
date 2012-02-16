@@ -11,7 +11,7 @@
         <![CDATA[
         var controller = new RegisterController(metaData);
         var promptContext = new PromptContext(metaData);
-        var record, myField;
+        var myRecord, myField;
          ]]>
     </script>
 
@@ -80,10 +80,8 @@
 
        <block>
             <if cond="myField == 'name'">
-                <log>you have reached nameRecord<value expr="myField"/></log>
                 <goto nextitem="nameRecord"/>
             <else/>
-                <log>you have reached fieldRecord<value expr="myField"/></log>
              <goto nextitem="fieldRecord"/>
             </if>
        </block>
@@ -91,7 +89,7 @@
        <field name="confirm">
             <prompt bargein="false">
                <audio expr="controller.playConfirmPrompt(myField)"/>
-               <audio expr="controller.playBackPrompt(myField,record)"/>
+               <audio expr="controller.playBackPrompt(myField,myRecord)"/>
                <audio expr="controller.playRerecordPrompt(myField)"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
@@ -128,7 +126,7 @@
                   <goto next="#record_form"/>
               <elseif cond="confirm == '2'"/>
                   <script>
-                      controller.capture(record);
+                      controller.capture(myRecord);
                   </script>
                   <goto next="#record_form"/>
               </if>
@@ -153,7 +151,7 @@
             <goto expr="controller.nextFlow(session.connection.local.uri)"/>
         </block>
 
-        <record name="nameRecord" type="x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
+        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
             <grammar mode="dtmf" version="1.0" root="root2">
                   <rule id="root2" scope="public">
                         <one-of>
@@ -161,7 +159,6 @@
                         </one-of>
                   </rule>
             </grammar>
-
             <noinput>
                 <script>
                     promptContext.gotNoInput();
@@ -177,7 +174,7 @@
                  </if>
             </noinput>
             <filled>
-              <assign name="record" expr="nameRecord"/>
+              <assign name="myRecord" expr="nameRecord"/>
             </filled>
         </record>
 
@@ -222,7 +219,7 @@
                </if>
             </nomatch>
             <filled>
-              <assign name="record" expr="fieldRecord"/>
+              <assign name="myRecord" expr="fieldRecord"/>
               <script>
                   promptContext.resetCounts();
               </script>
