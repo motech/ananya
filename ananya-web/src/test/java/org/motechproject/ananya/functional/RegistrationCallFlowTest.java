@@ -60,7 +60,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
 
-        assertEquals(updatedFrontLineWorker.getName(), name);
-        assertEquals(updatedFrontLineWorker.getStatus(), RegistrationStatus.REGISTERED);
+        assertEquals(updatedFrontLineWorker.name(), name);
+        assertEquals(updatedFrontLineWorker.status(), RegistrationStatus.REGISTERED);
     }
 }

@@ -73,8 +73,8 @@ public class ReportDataHandlerIT {
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId());
-        frontLineWorker.setName("Name");
-        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.name("Name");
+        frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         DateTime dateTime = DateTime.now();
@@ -121,8 +121,8 @@ public class ReportDataHandlerIT {
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001");
-        frontLineWorker.setName("Name");
-        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.name("Name");
+        frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.PENDING_REGISTRATION.toString());

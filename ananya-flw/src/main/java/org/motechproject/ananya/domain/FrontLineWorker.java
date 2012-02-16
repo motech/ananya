@@ -7,10 +7,13 @@ import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
+
     @JsonProperty
     private String name;
+
     @JsonProperty
     private String msisdn;
+
     @JsonProperty
     private BookMark bookmark;
 
@@ -54,6 +57,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn;
     }
 
+    public Long msisdn() {
+        return Long.valueOf(msisdn);
+    }
+
     public BookMark bookMark() {
         return bookmark != null ? bookmark : new EmptyBookmark();
     }
@@ -76,6 +83,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this;
     }
 
+    public String name() {
+        return this.name;
+    }
+
     public void addBookMark(BookMark bookMark) {
         this.bookmark = bookMark;
     }
@@ -85,19 +96,4 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.designation.equals(Designation.ANGANWADI);
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setStatus(RegistrationStatus status) {
-        this.status = status;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public RegistrationStatus getStatus() {
-        return this.status;
-    }
 }
