@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 
 @Service
 public class FrontLineWorkerService {
@@ -76,13 +77,12 @@ public class FrontLineWorkerService {
         save(frontLineWorker);
     }
 
-    public FrontLineWorker saveName(String msisdn, String name) throws Exception {
+    public FrontLineWorker saveName(String msisdn, String name) throws WorkerDoesNotExistException {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
 
-        if(frontLineWorker == null) throw new Exception();
-        name = name.trim();
-        if(name.isEmpty()) throw new Exception();
-
+        if (frontLineWorker == null)
+            throw new WorkerDoesNotExistException();
+        
         frontLineWorker.name(name);
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.update(frontLineWorker);

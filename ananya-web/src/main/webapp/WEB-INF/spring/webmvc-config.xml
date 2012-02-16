@@ -46,4 +46,9 @@
         <property name="resourceLoaderPath" value="/WEB-INF/velocity/views"/>
         <property name="configLocation" value="/WEB-INF/velocity/velocity.properties"/>
     </bean>
+    
+    <bean id="xmlViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location" value="/WEB-INF/views.xml"/>
+    </bean>
+
 </beans>

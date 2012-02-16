@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 
 public class FrontLineWorkerServiceTest {
 
@@ -147,11 +148,12 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).update(mockWorker);
     }
 
-    @Test
-    @Ignore
+    @Test(expected=WorkerDoesNotExistException.class)
     public void shouldNotSaveNameAndThrowExceptionWhenNameIsNotWellFormed() throws Exception {
-        String msisdn = "555", name = "";
+        String msisdn = "123", name = "abcd";
+        
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
+        
         frontLineWorkerService.saveName(msisdn, name);
     }
-
 }

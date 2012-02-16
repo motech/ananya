@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import java.util.HashMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -21,6 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import org.motechproject.ananya.exceptions.AnanyaApiException;
+import org.motechproject.ananya.exceptions.AnanyaArgumentMissingException;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
 @Scope(value = "prototype")
@@ -80,23 +86,41 @@ public class RegistrationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")
     @ResponseBody
-    public void saveTranscribedName(HttpServletRequest request) {
+    public ModelAndView saveTranscribedName(HttpServletRequest request) throws AnanyaApiException {
         FrontLineWorker savedFrontLineWorker = null;
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
+        
+        if (msisdn == null || msisdn.trim().isEmpty())
+            throw new AnanyaArgumentMissingException("msisdn");
 
+        if (name == null || name.trim().isEmpty())
+            throw new AnanyaArgumentMissingException(("name"));
+        
         try {
             savedFrontLineWorker = flwService.saveName(msisdn, name);
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            // return error message
+        } catch (WorkerDoesNotExistException e) {
+            throw new AnanyaApiException("ERR_WORKER_DOES_NOT_EXIST", 
+                    "Worker does not exist for mentioned mobile number.");
         }
 
         LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
         reportPublisher.publishRegistrationUpdate(logData);
         
         log.info("Saved Transcribed name for:"+savedFrontLineWorker);
-        // returns ok
+        
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("root", new ResponseStatus("SUCCESS", "Successful"));
+        
+        return new ModelAndView("jsonView", model);
+    }
+    
+    @ExceptionHandler(AnanyaApiException.class)
+    public ModelAndView handleException(AnanyaApiException ex) {
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("root", new ResponseStatus(ex.getErrorCode(), ex.getErrorMessage()));
+        
+        return new ModelAndView("jsonView", model);
     }
 
     protected ServletFileUpload getUploader() {

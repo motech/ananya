@@ -20,13 +20,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:applicationContext.xml")
 public class RegistrationControllerTest {
 
     private RegistrationController controller;
@@ -51,7 +59,7 @@ public class RegistrationControllerTest {
         initMocks(this);
         controller = new RegistrationController(flwService, allRecordings, logService, reportPublisher);
     }
-
+    
     @Test
     public void shouldRegisterFLWWithLocation() throws Exception {
         String callerNo = "123";
