@@ -34,8 +34,6 @@ describe("Course State", function() {
 
     it("should define and initialize variables with default state if relevant information is not passed", function () {
         var callerData = {"bookmark":{}, "scoresByChapter":{}};
-//        var courseStateWithDefaults = new CourseState(callerData);
-//        defaultValueAssertions(courseStateWithDefaults);
         var courseStateWithDefaults = new CourseState(null);
         defaultValueAssertions(courseStateWithDefaults);
     });
@@ -44,5 +42,6 @@ describe("Course State", function() {
         expect(courseStateWithDefaults.chapterIndex).toBeNull();
         expect(courseStateWithDefaults.lessonOrQuestionIndex).toBeNull();
         expect(courseStateWithDefaults.scoresByChapter).toEqual({});
+        expect(courseStateWithDefaults.interactionKey).toEqual(StartNextChapter.KEY);
     };
 });

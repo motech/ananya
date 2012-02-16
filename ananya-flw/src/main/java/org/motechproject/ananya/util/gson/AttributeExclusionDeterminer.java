@@ -16,10 +16,8 @@ public class AttributeExclusionDeterminer implements ExclusionStrategy {
     @Override
     public boolean shouldSkipField(FieldAttributes
                                            fieldAttributes) {
-        if(parameterNamesToExclude.contains(fieldAttributes.getName())) {
-            return true;
-        }
-        return false;
+        return parameterNamesToExclude.contains(fieldAttributes.getName());
+
     }
 
     @Override
