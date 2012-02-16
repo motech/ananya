@@ -40,7 +40,7 @@ describe("Prompt context", function () {
     });
 
     it("should provide the URLs for the audio files for the invalid input conditions", function() {
-        expect(promptContext.audioForInvalidInputRetry()).toEqual("./audio/jobaid/error.wrong.input.retry.wav")
+        expect(promptContext.audioForInvalidInputRetry()).toEqual("./audio/error.wrong.input.retry.wav")
         expect(promptContext.audioForInvalidInputDisconnect()).toEqual("./audio/error.wrong.input.disconnect.wav")
     });
 
