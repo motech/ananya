@@ -83,8 +83,8 @@ public class FrontLineWorkerService {
         name = name.trim();
         if(name.isEmpty()) throw new Exception();
 
-        frontLineWorker.setName(name);
-        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.name(name);
+        frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.update(frontLineWorker);
 
         return frontLineWorker;

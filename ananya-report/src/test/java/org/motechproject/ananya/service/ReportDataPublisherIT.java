@@ -24,6 +24,6 @@ public class ReportDataPublisherIT {
         LogData reportData = new LogData(LogType.REGISTRATION, "123");
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("1", reportData);
-        publisher.publish(reportData);
+        publisher.publishRegistration(reportData);
     }
 }

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LandingController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing/")
+    @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing")
     public ModelAndView entryRouter(HttpServletRequest request, @PathVariable String entry) {
 
         String contextPath = request.getContextPath();

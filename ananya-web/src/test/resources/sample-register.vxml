@@ -269,7 +269,7 @@
         </field>
 
         <block>
-            <data src="/ananya/flw/register/"
+            <data src="/ananya/flw/register"
                   enctype="multipart/form-data"
                   method="post"
                   namelist="session.connection.local.uri designation name district block panchayat"/>

@@ -42,32 +42,27 @@ public class ReportDataMeasure {
     }
 
     public void createRegistrationMeasure(LogData logData) {
-
         RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
         Location location = allLocations.get(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
-                Long.valueOf(frontLineWorker.getMsisdn()), registrationLog.getOperator(),
-                frontLineWorker.getName(), frontLineWorker.getStatus().toString());
+                frontLineWorker.msisdn(), registrationLog.getOperator(),
+                frontLineWorker.name(), frontLineWorker.status().toString());
 
         LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
-        TimeDimension timeDimension = allTimeDimensions.getOrMakeFor(registrationLog.getStartTime());
+        TimeDimension timeDimension = allTimeDimensions.getFor(registrationLog.getStartTime());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         reportDB.add(registrationMeasure);
     }
 
     public void updateRegistrationStatusAndName(LogData logData) {
-        
-        FrontLineWorker existingFlw = this.allFrontLineWorkers.get(logData.getDataId());
-        
-        FrontLineWorkerDimension existingFlwDimension =
-                this.allFrontLineWorkerDimensions.fetchFor(Long.valueOf(existingFlw.getMsisdn()));
+        FrontLineWorker existingFlw = allFrontLineWorkers.get(logData.getDataId());
+        FrontLineWorkerDimension existingFlwDimension = allFrontLineWorkerDimensions.fetchFor(existingFlw.msisdn());
 
-        existingFlwDimension.setName(existingFlw.getName());
-        existingFlwDimension.setStatus(existingFlw.getStatus().toString());
-
+        existingFlwDimension.setName(existingFlw.name());
+        existingFlwDimension.setStatus(existingFlw.status().toString());
         this.allFrontLineWorkerDimensions.update(existingFlwDimension);
     }
 }

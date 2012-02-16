@@ -17,12 +17,15 @@ public class RegistrationMeasure {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "time_id")
     private TimeDimension timeDimension;
+
     @ManyToOne
     @JoinColumn(name = "location_id")
     private LocationDimension locationDimension;
+    
     @ManyToOne
     @JoinColumn(name = "flw_id")
     private FrontLineWorkerDimension frontLineWorkerDimension;

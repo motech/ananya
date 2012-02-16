@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ReportDataPublisher {
 
     public static final String SEND_REGISTRATION_DATA_KEY = "org.motechproject.ananya.report.registration";
-    public static final String SEND_REGISTRATION_COMPLETION_DATA_KEY = "org.motechproject.ananya.report.registrationCompletion";
+    public static final String SEND_REGISTRATION_COMPLETION_DATA_KEY = "org.motechproject.ananya.report.registration.completion";
 
     private EventContext eventContext;
 
@@ -19,11 +19,11 @@ public class ReportDataPublisher {
         this.eventContext = eventContext;
     }
 
-    public void publish(LogData logData) {
+    public void publishRegistration(LogData logData) {
         eventContext.send(SEND_REGISTRATION_DATA_KEY, logData);
     }
     
-    public void publishRegistrationUpdation(LogData logData) {
+    public void publishRegistrationUpdate(LogData logData) {
         eventContext.send(SEND_REGISTRATION_COMPLETION_DATA_KEY, logData);
     }
 }

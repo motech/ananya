@@ -46,11 +46,11 @@ var RegisterController = function(metadata) {
     };
 
     this.submitUrl = function() {
-        return metadata["web.url"] + "/flw/register/";
+        return metadata["web.url"] + "/flw/register";
     };
 
     this.submitNameUrl = function() {
-        return metadata["web.url"] + "/flw/record/name/";
+        return metadata["web.url"] + "/flw/record/name";
     };
 
     this.nextFlow = function(calledNumber) {

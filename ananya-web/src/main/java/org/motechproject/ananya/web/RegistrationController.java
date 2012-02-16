@@ -42,7 +42,7 @@ public class RegistrationController {
         this.reportPublisher = reportPublisher;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "flw/register/")
+    @RequestMapping(method = RequestMethod.POST, value = "flw/register")
     @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
         String callerId = request.getParameter("session.connection.remote.uri");
@@ -57,13 +57,13 @@ public class RegistrationController {
         logService.addNew(registrationLog);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
-        reportPublisher.publish(logData);
+        reportPublisher.publishRegistration(logData);
 
         log.info("Registered new FLW:" + callerId);
         return new ModelAndView("register-done");
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "flw/record/name/")
+    @RequestMapping(method = RequestMethod.POST, value = "flw/record/name")
     @ResponseBody
     public ModelAndView recordName(HttpServletRequest request) throws Exception {
         ServletFileUpload upload = getUploader();
@@ -93,7 +93,7 @@ public class RegistrationController {
         }
 
         LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
-        reportPublisher.publishRegistrationUpdation(logData);
+        reportPublisher.publishRegistrationUpdate(logData);
         
         log.info("Saved Transcribed name for:"+savedFrontLineWorker);
         // returns ok

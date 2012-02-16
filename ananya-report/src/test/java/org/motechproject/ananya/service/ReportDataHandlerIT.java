@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.*;
@@ -42,6 +44,24 @@ public class ReportDataHandlerIT {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Autowired
     private AllRegistrationMeasures allRegistrationMeasures;
+    @Autowired
+    private DataAccessTemplate template;
+
+    @Before
+    public void setUp(){
+        cleanDB();
+    }
+
+    @After
+    public void tearDown(){
+        cleanDB();
+    }
+
+    private void cleanDB() {
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+    }
 
     @Test
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
@@ -53,8 +73,8 @@ public class ReportDataHandlerIT {
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId());
-        frontLineWorker.setName("Name");
-        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.name("Name");
+        frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         DateTime dateTime = DateTime.now();
@@ -63,6 +83,7 @@ public class ReportDataHandlerIT {
 
         LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
+        allTimeDimensions.makeFor(dateTime);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();
@@ -71,7 +92,7 @@ public class ReportDataHandlerIT {
 
         handler.handleRegistration(event);
 
-        TimeDimension timeDimension = allTimeDimensions.fetchFor(dateTime);
+        TimeDimension timeDimension = allTimeDimensions.getFor(dateTime);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
 
@@ -100,8 +121,8 @@ public class ReportDataHandlerIT {
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001");
-        frontLineWorker.setName("Name");
-        frontLineWorker.setStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.name("Name");
+        frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.PENDING_REGISTRATION.toString());

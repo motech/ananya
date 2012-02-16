@@ -29,7 +29,7 @@ public class ReportDataPublisherTest {
     public void shouldPublishReportDataToEventContext() {
         LogData reportData = new LogData(LogType.CERTIFICATE_COURSE, "123");
 
-        reportDataPublisher.publish(reportData);
+        reportDataPublisher.publishRegistration(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_DATA_KEY), captor.capture());
@@ -41,7 +41,7 @@ public class ReportDataPublisherTest {
     public void shouldPublishReportUpdationDataToEventContext() {
         LogData reportData = new LogData(LogType.REGISTRATION_SAVE_NAME, "123");
 
-        reportDataPublisher.publishRegistrationUpdation(reportData);
+        reportDataPublisher.publishRegistrationUpdate(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY), captor.capture());

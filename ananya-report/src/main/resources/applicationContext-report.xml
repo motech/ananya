@@ -12,9 +12,11 @@
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:annotation-config/>
     <context:spring-configured/>
-    <context:component-scan base-package="org.motechproject.ananya"/>
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
+
+    <context:component-scan base-package="org.motechproject.ananya"/>
+
     <import resource="classpath:applicationContext-hibernate.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>

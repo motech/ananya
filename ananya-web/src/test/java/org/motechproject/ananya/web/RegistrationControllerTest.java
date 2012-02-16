@@ -70,7 +70,7 @@ public class RegistrationControllerTest {
 
         verify(flwService).createNew(callerNo, Designation.ASHA, panchayat);
         verify(logService).addNew(logCaptor.capture());
-        verify(reportPublisher).publish(reportCaptor.capture());
+        verify(reportPublisher).publishRegistration(reportCaptor.capture());
 
         RegistrationLog capturedLog = logCaptor.getValue();
         LogData capturedReport = reportCaptor.getValue();
@@ -127,7 +127,7 @@ public class RegistrationControllerTest {
         verify(flwService).saveName(msisdn, name);
 
         ArgumentCaptor<LogData> logDataCaptor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportPublisher).publishRegistrationUpdation(logDataCaptor.capture());
+        verify(reportPublisher).publishRegistrationUpdate(logDataCaptor.capture());
 
         LogData capturedReport = logDataCaptor.getValue();
 

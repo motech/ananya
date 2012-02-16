@@ -37,7 +37,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         String panchayatCode = "S01D001B001V001";
         MyWebClient.PostParam panchayat = param("panchayat", panchayatCode);
         MyWebClient.PostParam callerId = param("session.connection.remote.uri", "9986574420");
-        new MyWebClient().post("http://localhost:9979/ananya/flw/register/", designation,panchayat ,callerId);
+        new MyWebClient().post("http://localhost:9979/ananya/flw/register", designation,panchayat ,callerId);
 
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("9986574420");
         Location location = allLocations.findByExternalId(panchayatCode);
@@ -60,7 +60,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
 
-        assertEquals(updatedFrontLineWorker.getName(), name);
-        assertEquals(updatedFrontLineWorker.getStatus(), RegistrationStatus.REGISTERED);
+        assertEquals(updatedFrontLineWorker.name(), name);
+        assertEquals(updatedFrontLineWorker.status(), RegistrationStatus.REGISTERED);
     }
 }
