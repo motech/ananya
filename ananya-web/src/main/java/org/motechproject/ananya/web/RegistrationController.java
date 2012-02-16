@@ -1,7 +1,6 @@
 package org.motechproject.ananya.web;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.joda.time.DateTime;
@@ -52,6 +51,8 @@ public class RegistrationController {
             String designation = request.getParameter("designation");
             String panchayat = request.getParameter("panchayat");
 
+            log.info("callerid=" + callerId + "|calledNo=" + calledNumber + "|designation=" + designation + "|panchayat=" + panchayat);
+
             flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
 
             RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
@@ -100,6 +101,7 @@ public class RegistrationController {
 
             FrontLineWorker savedFrontLineWorker = flwService.saveName(msisdn, name);
             LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
+
             reportPublisher.publishRegistrationUpdate(logData);
             log.info("Saved Transcribed name for:" + savedFrontLineWorker);
 

@@ -9,7 +9,10 @@ var RegisterController = function(metadata) {
     };
 
     this.capture = function(record) {
-        records[fieldCounter] = record;
+        if (record.resultKey)
+            records[fieldCounter] = record.resultKey;
+        else
+            records[fieldCounter] = record;
         fieldCounter++;
     };
 
@@ -22,7 +25,7 @@ var RegisterController = function(metadata) {
     };
 
     this.playBeep = function(field) {
-        return metadata["audio.url"] +metadata['register.audio.url']+ metadata['registration.beep.audio'] ;
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata['registration.beep.audio'];
     };
 
     this.playConfirmPrompt = function(field) {
@@ -68,15 +71,15 @@ var RegisterController = function(metadata) {
     };
 
     this.playBack = function(record) {
-        return metadata["audio.url"]  + metadata['location.audio.url']+ record.resultKey + ".wav";
+        return metadata["audio.url"] + metadata['location.audio.url'] + record.resultKey + ".wav";
     };
 
-    this.playBackPrompt = function(field,record) {
-        if(this.isVoiceRecognised(field))
+    this.playBackPrompt = function(field, record) {
+        if (this.isVoiceRecognised(field))
             return this.playBack(record);
         else
-           return record;
-        };
+            return record;
+    };
 
     this.designation = function() {
         return records[0];
