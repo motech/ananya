@@ -16,8 +16,8 @@ public class LandingController {
 
         String contextPath = request.getContextPath();
         String nextFlow = "jobaid".equals(entry) ?
-                contextPath + "/vxml/jobaid/enter/" :
-                contextPath + "/vxml/certificatecourse/enter/";
+                contextPath + "/vxml/jobaid/enter" :
+                contextPath + "/vxml/certificatecourse/enter";
 
         return new ModelAndView("landing").addObject("nextFlow", nextFlow);
     }
