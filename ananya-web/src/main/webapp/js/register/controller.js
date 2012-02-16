@@ -68,7 +68,7 @@ var RegisterController = function(metadata) {
     };
 
     this.playBack = function(record) {
-        return metadata["audio.url"]  + metadata['location.audio.url']+ record + ".wav";
+        return metadata["audio.url"]  + metadata['location.audio.url']+ record.resultKey + ".wav";
     };
 
     this.playBackPrompt = function(field,record) {

@@ -2,7 +2,7 @@
 <grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_BLOCKS_S01D001" tag-format="semantics/1.0">
 	<rule id="ANANYA_BLOCKS_S01D001" scope="public">
 		<one-of>
-			<item>दुल्हिनबाजार <tag> out.Block = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिनबाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
 		</one-of>
 	</rule>
 </grammar>
