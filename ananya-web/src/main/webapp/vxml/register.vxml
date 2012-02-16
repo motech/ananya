@@ -11,7 +11,7 @@
         <![CDATA[
         var controller = new RegisterController(metaData);
         var promptContext = new PromptContext(metaData);
-        var record;
+        var record, myField;
          ]]>
     </script>
 
@@ -67,19 +67,19 @@
         </block>
         <script>
             <![CDATA[
-               var field = controller.nextField();
+               myField = controller.nextField();
                ]]>
         </script>
 
        <block>
            <prompt bargein="false">
-               <audio expr="controller.playPrompt(field)"/>
+               <audio expr="controller.playPrompt(myField)"/>
                <audio expr="controller.playBeep()"/>
            </prompt>
        </block>
 
        <block>
-            <if cond="field=='name'">
+            <if cond="myField=='name'">
             <goto nextitem="nameRecord"/>
             <else/>
              <goto nextitem="fieldRecord"/>
@@ -88,9 +88,9 @@
 
        <field name="confirm">
             <prompt bargein="false">
-               <audio expr="controller.playConfirmPrompt(field)"/>
-               <audio expr="controller.playBackPrompt(field,record)"/>
-               <audio expr="controller.playRerecordPrompt(field)"/>
+               <audio expr="controller.playConfirmPrompt(myField)"/>
+               <audio expr="controller.playBackPrompt(myField,record)"/>
+               <audio expr="controller.playRerecordPrompt(myField)"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                <rule id="root1" scope="public">
@@ -168,7 +168,7 @@
                     <disconnect/>
                 <else/>
                      <prompt bargein="false">
-                          <audio expr="controller.playNoInputPrompt(field)"/>
+                          <audio expr="controller.playNoInputPrompt(myField)"/>
                           <audio expr="controller.playBeep()"/>
                      </prompt>
                      <goto nextitem="nameRecord" />
@@ -181,7 +181,7 @@
 
 
         <field name="fieldRecord">
-            <grammar srcexpr="controller.getGrammar(field)" type="application/srgs+xml"/>
+            <grammar srcexpr="controller.getGrammar(myField)" type="application/srgs+xml"/>
 
             <grammar mode="dtmf" version="1.0" root="root3">
                <rule id="root3" scope="public">
@@ -199,7 +199,7 @@
                     <disconnect/>
                 <else/>
                    <prompt bargein="false">
-                       <audio expr="controller.playNoInputPrompt(field)"/>
+                       <audio expr="controller.playNoInputPrompt(myField)"/>
                        <audio expr="controller.playBeep()"/>
                    </prompt>
                    <goto nextitem="fieldRecord" />
@@ -213,7 +213,7 @@
                     <disconnect/>
                 <else/>
                <prompt bargein="false">
-                   <audio expr="controller.playNoInputPrompt(field)"/>
+                   <audio expr="controller.playNoInputPrompt(myField)"/>
                    <audio expr="controller.playBeep()"/>
                </prompt>
                <goto nextitem="fieldRecord" />
