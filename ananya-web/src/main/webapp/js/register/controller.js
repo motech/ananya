@@ -40,7 +40,7 @@ var RegisterController = function(metadata) {
         return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"];
     };
 
-    this.playRegistrationDone = function(field) {
+    this.playRegistrationDone = function() {
         return metadata["audio.url"] + metadata['register.audio.url'] + metadata['register.complete'];
     };
 
