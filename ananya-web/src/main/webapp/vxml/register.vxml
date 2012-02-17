@@ -150,9 +150,6 @@
             <data srcexpr="controller.submitUrl()" method="post"
                   namelist="session.connection.remote.uri designation district block panchayat"
                   maxage="0" maxstale="0"/>
-        </block>
-
-        <block name="submit_complete">
             <audio expr="controller.playRegistrationDone()"/>
             <goto expr="controller.nextFlow(session.connection.local.uri)"/>
         </block>
