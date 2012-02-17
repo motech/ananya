@@ -64,11 +64,7 @@ var RegisterController = function(metadata) {
     };
 
     this.getGrammar = function() {
-        var field = fields[fieldCounter];
-        if (field == 'block' || field == 'panchayat')
-            return metadata["grammar.url"] + metadata["grammar.title." + field] + records[fieldCounter - 1] + ".grxml";
-        else
-            return metadata["grammar.url"] + metadata["grammar.title.district"] + ".grxml";
+        return metadata["grammar.url"]+"ANANYA_ALL.grxml";
     };
 
     this.playBack = function(record) {

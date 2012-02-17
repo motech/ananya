@@ -1,5 +1,9 @@
-#vxmlHeader()
-<block>
-    <prompt>Registration done</prompt>
-</block>
-#vxmlFooter()
+<xml>
+  <parent>
+    <child>value number one</child>
+    <child>value number two</child>
+    <child>value number three</child>
+    <child>value number four</child>
+    <child>value number five</child>
+  </parent>
+</xml>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
     <script src="../generated/js/metadata.js"/>
     <script src="../js/register/controller.js"/>
@@ -23,29 +23,29 @@
             <prompt>
                 <audio expr="controller.playPrompt('designation')"/>
             </prompt>
-                <option dtmf="1" value="ANM"/>
-                <option dtmf="2" value="ASHA"/>
-                <option dtmf="3" value="ANGANWADI"/>
+            <option dtmf="1" value="ANM"/>
+            <option dtmf="2" value="ASHA"/>
+            <option dtmf="3" value="ANGANWADI"/>
             <noinput>
                 <script>
-                      promptContext.gotNoInput();
-                  </script>
-                  <if cond="promptContext.hasExceededMaxNoInputs()">
-                       <disconnect/>
-                  <else/>
-                        <reprompt/>
-                  </if>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <reprompt/>
+                </if>
             </noinput>
             <nomatch>
-                 <script>
-                       promptContext.gotInvalidInput();
-                   </script>
-                   <if cond="promptContext.hasExceededMaxInvalidInputs()">
-                       <disconnect/>
-                   <else/>
-                        <audio expr="promptContext.audioForInvalidInputRetry()"/>
-                        <reprompt/>
-                    </if>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
+                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                    <reprompt/>
+                </if>
             </nomatch>
             <filled>
                 <script>
@@ -61,9 +61,9 @@
             promptContext.resetCounts();
         </script>
         <block>
-           <if cond="controller.allCaptured()">
-               <goto nextitem="submit_form"/>
-           </if>
+            <if cond="controller.allCaptured()">
+                <goto nextitem="submit_form"/>
+            </if>
         </block>
         <script>
             <![CDATA[
@@ -71,71 +71,71 @@
                ]]>
         </script>
 
-       <block>
-           <prompt bargein="false">
-               <audio expr="controller.playPrompt(myField)"/>
-               <audio expr="controller.playBeep()"/>
-           </prompt>
-       </block>
+        <block>
+            <prompt bargein="false">
+                <audio expr="controller.playPrompt(myField)"/>
+                <audio expr="controller.playBeep()"/>
+            </prompt>
+        </block>
 
-       <block>
+        <block>
             <if cond="myField == 'name'">
                 <goto nextitem="nameRecord"/>
-            <else/>
-             <goto nextitem="fieldRecord"/>
+                <else/>
+                <goto nextitem="fieldRecord"/>
             </if>
-       </block>
+        </block>
 
-       <field name="confirm">
+        <field name="confirm">
             <prompt bargein="false">
-               <audio expr="controller.playConfirmPrompt(myField)"/>
-               <audio expr="controller.playBackPrompt(myField,myRecord)"/>
-               <audio expr="controller.playRerecordPrompt(myField)"/>
+                <audio expr="controller.playConfirmPrompt(myField)"/>
+                <audio expr="controller.playBackPrompt(myField,myRecord)"/>
+                <audio expr="controller.playRerecordPrompt(myField)"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
-               <rule id="root1" scope="public">
-                   <one-of>
-                       <item>1</item>
-                       <item>2</item>
-                   </one-of>
-               </rule>
+                <rule id="root1" scope="public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
             </grammar>
             <noinput>
-              <script>
-                  promptContext.gotNoInput();
-              </script>
-              <if cond="promptContext.hasExceededMaxNoInputs()">
-                   <disconnect/>
-              <else/>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
                     <reprompt/>
-              </if>
+                </if>
             </noinput>
             <nomatch>
-               <script>
-                   promptContext.gotInvalidInput();
-               </script>
-               <if cond="promptContext.hasExceededMaxInvalidInputs()">
-                   <disconnect/>
-               <else/>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
                     <audio expr="promptContext.audioForInvalidInputRetry()"/>
-                   <reprompt/>
-               </if>
+                    <reprompt/>
+                </if>
             </nomatch>
-           <filled>
-              <if cond="confirm == '1'">
-                  <goto next="#record_form"/>
-              <elseif cond="confirm == '2'"/>
-                  <script>
-                      controller.capture(myRecord);
-                  </script>
-                  <goto next="#record_form"/>
-              </if>
-          </filled>
-       </field>
+            <filled>
+                <if cond="confirm == '1'">
+                    <goto next="#record_form"/>
+                    <elseif cond="confirm == '2'"/>
+                    <script>
+                        controller.capture(myRecord);
+                    </script>
+                    <goto next="#record_form"/>
+                </if>
+            </filled>
+        </field>
 
         <block name="submit_form">
             <script>
-               <![CDATA[
+                <![CDATA[
                 var name = controller.name();
                 var designation = controller.designation();
                 var district = controller.district();
@@ -143,21 +143,27 @@
                 var panchayat = controller.panchayat();
                 ]]>
             </script>
-            <data srcexpr="controller.submitNameUrl()" enctype="multipart/form-data" method="post"
-                  namelist="session.connection.remote.uri name"/>
+            <data srcexpr="controller.submitNameUrl()"
+                  enctype="multipart/form-data" method="post"
+                  namelist="session.connection.remote.uri name"
+                  maxage="0" maxstale="0"/>
             <data srcexpr="controller.submitUrl()" method="post"
-                  namelist="session.connection.remote.uri designation district block panchayat"/>
+                  namelist="session.connection.remote.uri designation district block panchayat"
+                  maxage="0" maxstale="0"/>
+        </block>
+
+        <block name="submit_complete">
             <audio expr="controller.playRegistrationDone()"/>
             <goto expr="controller.nextFlow(session.connection.local.uri)"/>
         </block>
 
-        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms"  dtmfterm="true">
+        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
             <grammar mode="dtmf" version="1.0" root="root2">
-                  <rule id="root2" scope="public">
-                        <one-of>
-                         <item>1</item>
-                        </one-of>
-                  </rule>
+                <rule id="root2" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
             </grammar>
             <noinput>
                 <script>
@@ -165,66 +171,66 @@
                 </script>
                 <if cond="promptContext.hasExceededMaxNoInputs()">
                     <disconnect/>
-                <else/>
-                     <prompt bargein="false">
-                          <audio expr="controller.playNoInputPrompt(myField)"/>
-                          <audio expr="controller.playBeep()"/>
-                     </prompt>
-                     <goto nextitem="nameRecord" />
-                 </if>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="nameRecord"/>
+                </if>
             </noinput>
             <filled>
-              <assign name="myRecord" expr="nameRecord"/>
+                <assign name="myRecord" expr="nameRecord"/>
             </filled>
         </record>
 
 
         <field name="fieldRecord">
-            <grammar srcexpr="controller.getGrammar()" type="application/srgs+xml"/>
+            <grammar srcexpr="controller.getGrammar()" type="application/srgs+xml" fetchhint="safe"/>
 
             <grammar mode="dtmf" version="1.0" root="root3">
-               <rule id="root3" scope="public">
-                   <one-of>
-                       <item>1</item>
-                   </one-of>
-               </rule>
+                <rule id="root3" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
             </grammar>
 
-           <noinput>
+            <noinput>
                 <script>
                     promptContext.gotNoInput();
                 </script>
                 <if cond="promptContext.hasExceededMaxNoInputs()">
                     <disconnect/>
-                <else/>
-                   <prompt bargein="false">
-                       <audio expr="controller.playNoInputPrompt(myField)"/>
-                       <audio expr="controller.playBeep()"/>
-                   </prompt>
-                   <goto nextitem="fieldRecord" />
-               </if>
-           </noinput>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="fieldRecord"/>
+                </if>
+            </noinput>
             <nomatch>
-                 <script>
+                <script>
                     promptContext.gotInvalidInput();
                 </script>
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
-                <else/>
-               <prompt bargein="false">
-                   <audio expr="controller.playNoInputPrompt(myField)"/>
-                   <audio expr="controller.playBeep()"/>
-               </prompt>
-               <goto nextitem="fieldRecord" />
-               </if>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="fieldRecord"/>
+                </if>
             </nomatch>
             <filled>
-              <assign name="myRecord" expr="fieldRecord"/>
-              <script>
-                  promptContext.resetCounts();
-              </script>
+                <assign name="myRecord" expr="fieldRecord"/>
+                <script>
+                    promptContext.resetCounts();
+                </script>
             </filled>
-       </field>
+        </field>
 
     </form>
 </vxml>
