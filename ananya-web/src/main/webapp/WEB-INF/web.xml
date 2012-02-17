@@ -17,6 +17,11 @@
         <param-value>classpath*:applicationContext.xml</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>urlVersion</param-name>
+        <param-value>v1</param-value>
+    </context-param>
+
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -62,6 +67,11 @@
     <servlet-mapping>
         <servlet-name>ananya</servlet-name>
         <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ananya</servlet-name>
+        <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
 
     <session-config>

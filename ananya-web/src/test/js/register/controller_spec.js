@@ -84,4 +84,22 @@ describe("Registration Controller", function () {
         expect(controller.playRegistrationDone()).toEqual("/audio/register/regdone.wav");
         expect(controller.playBeep()).toEqual("/audio/register/beep.wav");
     });
+
+    it("should go to certification flow for certification number", function() {
+        metadata = {
+                        "certificate.application.number" : "123",
+                        "url.version" : "v1.2"
+                    };
+        controller = new RegisterController(metadata);
+        expect(controller.nextFlow("123")).toEqual("v1.2/vxml/certificatecourse.vxml");
+    });
+
+    it("should go to jobaid flow for jobaid application number", function() {
+         metadata = {
+                        "certificate.application.number" : "123",
+                        "url.version" : "v1.2"
+                    };
+        controller = new RegisterController(metadata);
+        expect(controller.nextFlow("456")).toEqual("v1.2/vxml/jobaid.vxml");
+    });
 });

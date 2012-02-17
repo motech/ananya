@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Properties;
 
 @Controller
 @RequestMapping(value = "/generated/js")
@@ -18,17 +20,19 @@ public class DynamicJsController {
 
     private AllNodes allNodes;
     private FrontLineWorkerService frontLineWorkerService;
+    private Properties properties;
 
     @Autowired
-    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService) {
+    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService, @Qualifier("ananyaProperties") Properties properties) {
         this.allNodes = allNodes;
         this.frontLineWorkerService = frontLineWorkerService;
+        this.properties = properties;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
     public ModelAndView serveMetaData(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
-        return new ModelAndView("metadata");
+        return new ModelAndView("metadata").addObject("urlVersion", properties.getProperty("url.version"));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data.js")

@@ -49,18 +49,18 @@ var RegisterController = function(metadata) {
     };
 
     this.submitUrl = function() {
-        return metadata["web.url"] + "flw/register";
+        return "flw/register";
     };
 
     this.submitNameUrl = function() {
-        return metadata["web.url"] + "flw/record/name";
+        return  "flw/record/name";
     };
 
     this.nextFlow = function(calledNumber) {
-        if (metadata["certificatecourse.application.number"] == calledNumber)
-            return metadata["web.url"] + "vxml/certificatecourse.vxml";
+        if (metadata["certificate.application.number"] == calledNumber)
+            return metadata["url.version"] + "/vxml/certificatecourse.vxml";
         else
-            return metadata["web.url"] + "vxml/jobaid.vxml";
+            return metadata["url.version"] + "/vxml/jobaid.vxml";
     };
 
     this.getGrammar = function() {
