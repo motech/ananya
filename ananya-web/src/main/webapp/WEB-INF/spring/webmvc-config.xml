@@ -8,8 +8,7 @@
         <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
     <mvc:annotation-driven/>
-    <mvc:resources location="/" mapping="/resources/**"/>
-    <mvc:default-servlet-handler/>
+    <mvc:resources location="/" mapping="/**"/>
 
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>

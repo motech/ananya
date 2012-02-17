@@ -2,4 +2,5 @@ var metaData = {
     #foreach($key in $bundle.keys)
      "$key" : "$bundle.get($key)",
     #end
+    "url.version" : "$urlVersion"
 };
