@@ -49,7 +49,6 @@ public class RegistrationController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/register")
-    @ResponseBody
     public ModelAndView registerNew(HttpServletRequest request) throws Exception {
         try {
             String callerId = request.getParameter("session.connection.remote.uri");
@@ -74,12 +73,10 @@ public class RegistrationController {
             log.error("Exception:", e);
             throw e;
         }
-
         return new ModelAndView("register-done");
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/record/name")
-    @ResponseBody
     public ModelAndView recordName(HttpServletRequest request) throws Exception {
         try {
             ServletFileUpload upload = getUploader();
