@@ -180,7 +180,7 @@
 
 
         <field name="fieldRecord">
-            <grammar srcexpr="controller.getGrammar(myField)" type="application/srgs+xml"/>
+            <grammar srcexpr="controller.getGrammar()" type="application/srgs+xml"/>
 
             <grammar mode="dtmf" version="1.0" root="root3">
                <rule id="root3" scope="public">

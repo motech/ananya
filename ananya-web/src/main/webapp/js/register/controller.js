@@ -63,11 +63,12 @@ var RegisterController = function(metadata) {
             return metadata["web.url"] + "vxml/jobaid.vxml";
     };
 
-    this.getGrammar = function(field) {
-        if (field == 'district')
-            return metadata["grammar.url"] + metadata["grammar.title.district"] + ".grxml";
-        else
+    this.getGrammar = function() {
+        var field = fields[fieldCounter];
+        if (field == 'block' || field == 'panchayat')
             return metadata["grammar.url"] + metadata["grammar.title." + field] + records[fieldCounter - 1] + ".grxml";
+        else
+            return metadata["grammar.url"] + metadata["grammar.title.district"] + ".grxml";
     };
 
     this.playBack = function(record) {
