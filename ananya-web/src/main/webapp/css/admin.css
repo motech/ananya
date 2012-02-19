@@ -1,0 +1,16 @@
+
+table, tbody {
+    font-size: 14px;
+    border-spacing: 3px;
+}
+
+td, th {
+    width: auto;
+    text-align: left;
+    padding-left: 20px;
+    border: 0 none;
+}
+
+th {
+    text-decoration: underline;
+}
