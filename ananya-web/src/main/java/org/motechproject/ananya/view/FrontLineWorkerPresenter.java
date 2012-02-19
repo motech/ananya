@@ -1,5 +1,7 @@
 package org.motechproject.ananya.view;
 
+import org.joda.time.DateTime;
+
 public class FrontLineWorkerPresenter {
     private String id;
     private String msisdn;
@@ -7,14 +9,17 @@ public class FrontLineWorkerPresenter {
     private String block;
     private String district;
     private String panchayat;
+    private DateTime registeredDate;
 
-    public FrontLineWorkerPresenter(String id, String msisdn, String status, String block, String district, String panchayat) {
+    public FrontLineWorkerPresenter(String id, String msisdn, String status, String block,
+                                    String district, String panchayat, DateTime registeredDate) {
         this.id = id;
         this.msisdn = msisdn;
         this.status = status;
         this.block = block;
         this.district = district;
         this.panchayat = panchayat;
+        this.registeredDate = registeredDate;
     }
 
     public String getId() {
@@ -41,4 +46,7 @@ public class FrontLineWorkerPresenter {
         return panchayat;
     }
 
+    public DateTime getRegisteredDate() {
+        return registeredDate;
+    }
 }

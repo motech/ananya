@@ -2,7 +2,6 @@ var AdminController = function() {
 
     var removeSelectedFlw = function() {
         var flwToDelete = $(this).attr("docid");
-//        var url = 'flw/delete?id='+flwToDelete;
         $.ajax({
             url:'flw/delete',
             dataType:'html',
@@ -14,7 +13,7 @@ var AdminController = function() {
     };
 
     var refreshScreen = function() {
-        $("flw_form").submit();
+        $("#flw_form").submit();
     };
 
     var bootstrap = function() {

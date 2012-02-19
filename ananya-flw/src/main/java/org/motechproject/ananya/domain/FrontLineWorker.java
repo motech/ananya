@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
@@ -28,6 +29,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private String locationId;
+
+    @JsonProperty
+    private DateTime registeredDate = DateTime.now();
 
     public FrontLineWorker() {
     }
@@ -96,4 +100,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.designation.equals(Designation.ANGANWADI);
     }
 
+    public DateTime registeredDate() {
+        return registeredDate;
+    }
 }
