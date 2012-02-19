@@ -20,6 +20,7 @@
             <th>district</th>
             <th>block</th>
             <th>panchayat</th>
+            <th>date</th>
             <th></th>
         </tr>
         </thead>
@@ -31,6 +32,7 @@
                 <td>$workerPresenter.getDistrict()</td>
                 <td>$workerPresenter.getBlock()</td>
                 <td>$workerPresenter.getPanchayat()</td>
+                <td>$workerPresenter.getRegisteredDate()</td>
                 <td><input type="button" value="x" docid="$workerPresenter.getId()" class="flw_delete"/></td>
             </tr>
         #end
