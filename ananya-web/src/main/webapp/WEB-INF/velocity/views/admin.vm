@@ -7,10 +7,11 @@
     <link rel="stylesheet" type="text/css" href="${bundle.web.url}css/admin.css" media="screen, projection, print"/>
 </head>
 <body>
-<div id="workerPresenter_form">
-    <h3>Registered FLWs</h3>
-    <table>
-        <thead>
+<h2>Ananya Test Admin:</h2>
+
+<div id="flws_div">
+    <table id="flws_table">
+        <thead class="theader">
         <tr>
             <th>id</th>
             <th>msisdn</th>
@@ -18,16 +19,18 @@
             <th>district</th>
             <th>block</th>
             <th>panchayat</th>
+            <th></th>
         </tr>
         </thead>
         #foreach($workerPresenter in $workerPresenters)
             <tr>
-                <td>$workerPresenter.getId()</td>
+                <td class="flw_id">$workerPresenter.getId()</td>
                 <td>$workerPresenter.getMsisdn()</td>
                 <td>$workerPresenter.getStatus()</td>
                 <td>$workerPresenter.getDistrict()</td>
                 <td>$workerPresenter.getBlock()</td>
                 <td>$workerPresenter.getPanchayat()</td>
+                <td><input type="button" value="x" docid="$workerPresenter.getId()" class="flw_delete"/></td>
             </tr>
         #end
     </table>

@@ -1,7 +1,7 @@
 
 table, tbody {
-    font-size: 14px;
-    border-spacing: 3px;
+    font-size: 13px;
+    border-spacing: 0px;
 }
 
 td, th {
@@ -13,4 +13,11 @@ td, th {
 
 th {
     text-decoration: underline;
+    background-color: #5f9ea0;
 }
+
+
+#flws_table{
+    background-color: #dcdcdc;
+}
+
