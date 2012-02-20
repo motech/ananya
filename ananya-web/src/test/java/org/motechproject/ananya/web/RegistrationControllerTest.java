@@ -2,16 +2,15 @@ package org.motechproject.ananya.web;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.RegistrationLogService;
-import org.motechproject.ananya.service.ReportDataPublisher;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.motechproject.ananya.request.RegistrationRequest;
+import org.motechproject.ananya.service.RegistrationService;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
@@ -20,11 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static junit.framework.Assert.assertEquals;
-import org.junit.Ignore;
+
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -38,8 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class RegistrationControllerTest {
 
     private RegistrationController controller;
-    @Mock
-    private FrontLineWorkerService flwService;
+
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -49,17 +45,15 @@ public class RegistrationControllerTest {
     @Mock
     private HttpSession session;
     @Mock
-    private RegistrationLogService logService;
-    @Mock
-    private ReportDataPublisher reportPublisher;
+    private RegistrationService registrationService;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new RegistrationController(flwService, allRecordings, logService, reportPublisher);
+        controller = new RegistrationController(allRecordings, registrationService);
     }
-    
+
     @Test
     public void shouldRegisterFLWWithLocation() throws Exception {
         String callerNo = "123";
@@ -73,22 +67,9 @@ public class RegistrationControllerTest {
 
         ModelAndView modelAndView = controller.registerNew(request);
 
-        ArgumentCaptor<RegistrationLog> logCaptor = ArgumentCaptor.forClass(RegistrationLog.class);
-        ArgumentCaptor<LogData> reportCaptor = ArgumentCaptor.forClass(LogData.class);
+        verify(registrationService).register(argThat(new RegistrationRequestMatcher(new RegistrationRequest(callerNo, calledNo, Designation.ASHA.name(), panchayat))));
 
-        verify(flwService).createNew(callerNo, Designation.ASHA, panchayat);
-        verify(logService).addNew(logCaptor.capture());
-        verify(reportPublisher).publishRegistration(reportCaptor.capture());
-
-        RegistrationLog capturedLog = logCaptor.getValue();
-        LogData capturedReport = reportCaptor.getValue();
-
-        assertEquals(callerNo, getFieldValue(capturedLog,"callerId"));
-        assertEquals(calledNo, getFieldValue(capturedLog,"calledNumber"));
-        assertEquals(panchayat, getFieldValue(capturedLog,"panchayat"));
-        assertEquals(LogType.REGISTRATION.name(), getFieldValue(capturedReport,"type"));
         assertEquals("register-done", modelAndView.getViewName());
-
     }
 
     @Test
@@ -129,21 +110,29 @@ public class RegistrationControllerTest {
 
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
-        when(flwService.saveName(msisdn,name)).thenReturn(mockFlw);
 
         controller.saveTranscribedName(request);
-        verify(flwService).saveName(msisdn, name);
 
-        ArgumentCaptor<LogData> logDataCaptor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportPublisher).publishRegistrationUpdate(logDataCaptor.capture());
-
-        LogData capturedReport = logDataCaptor.getValue();
-
-        assertEquals(capturedReport.getDataId(), id);
+        verify(registrationService).saveTranscribedName(msisdn, name);
     }
 
-    private String getFieldValue(Object o, String field) {
-        return ReflectionTestUtils.getField(o, field).toString();
+    public static class RegistrationRequestMatcher extends BaseMatcher<RegistrationRequest> {
+        private RegistrationRequest request;
+
+        public RegistrationRequestMatcher(RegistrationRequest request) {
+            this.request = request;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            RegistrationRequest actualRequest = (RegistrationRequest)o;
+            return request.callerId().equals(actualRequest.callerId()) && request.calledNumber().equals(actualRequest.calledNumber()) ;
+        }
     }
 
 }

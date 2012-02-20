@@ -4,12 +4,10 @@ import java.util.HashMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.RegistrationLogService;
-import org.motechproject.ananya.service.ReportDataPublisher;
+import org.motechproject.ananya.request.RegistrationRequest;
+import org.motechproject.ananya.service.RegistrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +31,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class RegistrationController {
     private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
-    private FrontLineWorkerService flwService;
-    private ReportDataPublisher reportPublisher;
     private AllRecordings allRecordings;
-    private RegistrationLogService logService;
+
+    private RegistrationService registrationService;
 
 
     @Autowired
-    public RegistrationController(FrontLineWorkerService flwService, AllRecordings allRecordings,
-                                  RegistrationLogService logService, ReportDataPublisher reportPublisher) {
-        this.logService = logService;
+    public RegistrationController(AllRecordings allRecordings, RegistrationService registrationService) {
         this.allRecordings = allRecordings;
-        this.flwService = flwService;
-        this.reportPublisher = reportPublisher;
+        this.registrationService = registrationService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/register")
@@ -56,17 +50,10 @@ public class RegistrationController {
             String designation = request.getParameter("designation");
             String panchayat = request.getParameter("panchayat");
 
+            RegistrationRequest registrationRequest = new RegistrationRequest(callerId, calledNumber, designation, panchayat);
+            registrationService.register(registrationRequest);
+
             log.info("callerid=" + callerId + "|calledNo=" + calledNumber + "|designation=" + designation + "|panchayat=" + panchayat);
-
-            flwService.createNew(callerId, Designation.valueOf(designation), panchayat);
-
-            RegistrationLog registrationLog = new RegistrationLog(callerId, calledNumber, DateTime.now(), DateTime.now(), "");
-            registrationLog.designation(designation).panchayat(panchayat);
-            logService.addNew(registrationLog);
-
-            LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
-            reportPublisher.publishRegistration(logData);
-
             log.info("Registered new FLW:" + callerId);
 
         } catch (Exception e) {
@@ -98,39 +85,33 @@ public class RegistrationController {
     @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")
     @ResponseBody
     public ModelAndView saveTranscribedName(HttpServletRequest request) throws AnanyaApiException {
-        FrontLineWorker savedFrontLineWorker = null;
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
-        
+
         if (msisdn == null || msisdn.trim().isEmpty())
             throw new AnanyaArgumentMissingException("msisdn");
 
         if (name == null || name.trim().isEmpty())
             throw new AnanyaArgumentMissingException(("name"));
-        
+
         try {
-            savedFrontLineWorker = flwService.saveName(msisdn, name);
+            registrationService.saveTranscribedName(msisdn,name);
         } catch (WorkerDoesNotExistException e) {
-            throw new AnanyaApiException("ERR_WORKER_DOES_NOT_EXIST", 
+            throw new AnanyaApiException("ERR_WORKER_DOES_NOT_EXIST",
                     "Worker does not exist for mentioned mobile number.");
         }
 
-        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, savedFrontLineWorker.getId());
-        reportPublisher.publishRegistrationUpdate(logData);
-        
-        log.info("Saved Transcribed name for:"+savedFrontLineWorker);
-        
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("root", new ResponseStatus("SUCCESS", "Successful"));
-        
+
         return new ModelAndView("jsonView", model);
     }
-    
+
     @ExceptionHandler(AnanyaApiException.class)
     public ModelAndView handleException(AnanyaApiException ex) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("root", new ResponseStatus(ex.getErrorCode(), ex.getErrorMessage()));
-        
+
         return new ModelAndView("jsonView", model);
     }
 
