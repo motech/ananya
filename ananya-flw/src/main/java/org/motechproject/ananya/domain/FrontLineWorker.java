@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
@@ -31,7 +32,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String locationId;
 
     @JsonProperty
-    private DateTime registeredDate = DateTime.now();
+    private DateTime registeredDate = DateUtil.now();
 
     public FrontLineWorker() {
     }
@@ -101,6 +102,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public DateTime registeredDate() {
-        return registeredDate;
+       return registeredDate;
     }
 }
