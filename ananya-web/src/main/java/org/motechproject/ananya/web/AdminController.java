@@ -9,14 +9,17 @@ import org.motechproject.ananya.view.FrontLineWorkerPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @Controller
 public class AdminController {
@@ -28,8 +31,12 @@ public class AdminController {
     @Autowired
     private AllLocations allLocations;
 
+    @Autowired
+    @Qualifier("ananyaProperties")
+    private Properties properties;
+
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/admin/")
-    public ModelAndView showTestPage() {
+    public ModelAndView showTestPage(HttpServletRequest request) {
         List<FrontLineWorkerPresenter> workerPresenters = new ArrayList<FrontLineWorkerPresenter>();
         List<FrontLineWorker> workers = allFrontLineWorkers.getAll();
         try {
@@ -41,7 +48,9 @@ public class AdminController {
         } catch (Exception e) {
             log.error("Exception:", e);
         }
-        return new ModelAndView("admin").addObject("workerPresenters", workerPresenters);
+        return new ModelAndView("admin")
+                .addObject("workerPresenters", workerPresenters)
+                .addObject("contextPathWithVersion", contextWithVersion(request));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/admin/flw/delete")
@@ -53,5 +62,9 @@ public class AdminController {
             log.info("Deleted : " + flwToDelete);
         }
         return "Deleted : " + flwToDelete;
+    }
+
+    private String contextWithVersion(HttpServletRequest request) {
+        return request.getContextPath() + "/" + properties.getProperty("url.version");
     }
 }
