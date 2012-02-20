@@ -1,10 +1,10 @@
 <html>
 <head>
     <title>Ananya Test</title>
-    <script type="text/javascript" src="${bundle.web.url}js/admin/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="${bundle.web.url}js/admin/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="${bundle.web.url}js/admin/controller.js"></script>
-    <link rel="stylesheet" type="text/css" href="${bundle.web.url}css/admin.css" media="screen, projection, print"/>
+    <script type="text/javascript" src="${contextPathWithVersion}/js/admin/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="${contextPathWithVersion}/js/admin/jquery-ui-1.8.16.custom.min.js"></script>
+    <script type="text/javascript" src="${contextPathWithVersion}/js/admin/controller.js"></script>
+    <link rel="stylesheet" type="text/css" href="${contextPathWithVersion}/css/admin.css" media="screen, projection, print"/>
 </head>
 <body>
 <h2>Ananya Test Admin:</h2>
