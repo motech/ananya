@@ -20,46 +20,44 @@ public class LandingController {
     public LandingController(@Qualifier("ananyaProperties") Properties properties) {
         this.properties = properties;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing")
     public ModelAndView entryRouter(HttpServletRequest request, @PathVariable String entry) {
-
-        String nextFlow = "jobaid".equals(entry) ?
-                "vxml/jobaid/enter/" :
-                "vxml/certificatecourse/enter/";
+        final String nextFlow = String.format("%s/vxml/%s/enter", contextWithVersion(request), entry);
         return new ModelAndView("landing").addObject("nextFlow", nextFlow);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/jobaid/enter")
     public ModelAndView enterJobAid(HttpServletRequest request) {
-        String urlVersion = urlVersion();
+        String contextWithVersion = contextWithVersion(request);
         return modelAndView(
                 request,
                 "jobaid-entry",
-                urlVersion + "/vxml/jobaid.vxml",
-                urlVersion + "/vxml/register.vxml");
+                contextWithVersion + "/vxml/jobaid.vxml",
+                contextWithVersion + "/vxml/register.vxml");
     }
 
-    private String urlVersion() {
-        return properties.getProperty("url.version");
+    private String contextWithVersion(HttpServletRequest request) {
+        return  request.getContextPath() + "/" + properties.getProperty("url.version");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/certificatecourse/enter")
     public ModelAndView enterCertificateCourse(HttpServletRequest request) {
-        String urlVersion = urlVersion();
+        String contextWithVersion = contextWithVersion(request);
         return modelAndView(
                 request,
                 "certificate-course-entry",
-                urlVersion + "/vxml/certificatecourse.vxml",
-                urlVersion + "/vxml/register.vxml");
+                contextWithVersion + "/vxml/certificatecourse.vxml",
+                contextWithVersion + "/vxml/register.vxml");
     }
 
     private ModelAndView modelAndView(HttpServletRequest request, String view, String nextFlow, String regFlow) {
         return new ModelAndView(view)
                 .addObject("nextFlow", nextFlow)
                 .addObject("registerFlow", regFlow)
-                .addObject("callerData", "'" + urlVersion() + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri")
-                .addObject("entryJs", urlVersion() + "/js/entry/controller.js");
+                .addObject("callerData", "'" + contextWithVersion(request) + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri")
+                .addObject("entryJs", contextWithVersion(request) + "/js/entry/controller.js")
+                .addObject("contextPathWithVersion", contextWithVersion(request));
     }
 
 }

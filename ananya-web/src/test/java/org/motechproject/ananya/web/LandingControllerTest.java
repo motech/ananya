@@ -35,7 +35,11 @@ public class LandingControllerTest {
         ModelAndView modelAndView = landingController.entryRouter(request, "jobaid");
         String nextFlow = (String) modelAndView.getModel().get("nextFlow");
         assertEquals("landing",modelAndView.getViewName());
-        assertEquals("vxml/jobaid/enter/", nextFlow);
+        assertEquals(contextAndVersion() + "/vxml/jobaid/enter", nextFlow);
+    }
+
+    private String contextAndVersion() {
+        return "/ananya/" + URL_VERSION;
     }
 
     @Test
@@ -48,10 +52,10 @@ public class LandingControllerTest {
         String callerData = (String) modelAndView.getModel().get("callerData");
         String entryJs = (String) modelAndView.getModel().get("entryJs");
 
-        assertEquals(URL_VERSION + "/vxml/jobaid.vxml", nextFlow);
-        assertEquals(URL_VERSION + "/vxml/register.vxml", registerFlow);
-        assertEquals("'" + URL_VERSION + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
-        assertEquals(URL_VERSION + "/js/entry/controller.js", entryJs);
+        assertEquals(contextAndVersion() + "/vxml/jobaid.vxml", nextFlow);
+        assertEquals(contextAndVersion() + "/vxml/register.vxml", registerFlow);
+        assertEquals("'" + contextAndVersion() + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
+        assertEquals(contextAndVersion() + "/js/entry/controller.js", entryJs);
         assertEquals("jobaid-entry",modelAndView.getViewName());
     }
 
@@ -63,11 +67,13 @@ public class LandingControllerTest {
         String registerFlow = (String) modelAndView.getModel().get("registerFlow");
         String callerData = (String) modelAndView.getModel().get("callerData");
         String entryJs = (String) modelAndView.getModel().get("entryJs");
+        String contextAndVersionPassedToTemplate = (String) modelAndView.getModel().get("contextPathWithVersion");
 
-        assertEquals(URL_VERSION + "/vxml/certificatecourse.vxml", nextFlow);
-        assertEquals(URL_VERSION + "/vxml/register.vxml", registerFlow);
-        assertEquals("'" + URL_VERSION + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
-        assertEquals(URL_VERSION + "/js/entry/controller.js", entryJs);
+        assertEquals(contextAndVersion() + "/vxml/certificatecourse.vxml", nextFlow);
+        assertEquals(contextAndVersion() + "/vxml/register.vxml", registerFlow);
+        assertEquals("'" + contextAndVersion() + "/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callerData);
+        assertEquals(contextAndVersion() + "/js/entry/controller.js", entryJs);
+        assertEquals(contextAndVersion(), contextAndVersionPassedToTemplate);
         assertEquals("certificate-course-entry",modelAndView.getViewName());
     }
 }

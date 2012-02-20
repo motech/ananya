@@ -30,9 +30,11 @@ public class DynamicJsController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
-    public ModelAndView serveMetaData(HttpServletResponse response) throws Exception {
+    public ModelAndView serveMetaData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
-        return new ModelAndView("metadata").addObject("urlVersion", properties.getProperty("url.version"));
+        return new ModelAndView("metadata").
+                addObject("urlVersion", properties.getProperty("url.version")).
+                addObject("contextPath", request.getContextPath());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data.js")

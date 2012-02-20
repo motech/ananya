@@ -17,11 +17,6 @@
         <param-value>classpath*:applicationContext.xml</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>urlVersion</param-name>
-        <param-value>v1</param-value>
-    </context-param>
-
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -77,4 +72,9 @@
     <session-config>
         <session-timeout>120</session-timeout>
     </session-config>
+
+     <mime-mapping>
+        <extension>grxml</extension>
+        <mime-type>text/xml</mime-type>
+    </mime-mapping>
 </web-app>

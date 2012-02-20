@@ -49,6 +49,10 @@ var CertificateCourseController = function(course, metadata, courseState) {
         return stringifiedDataToPost;
     };
 
+    this.dataPostUrl = function() {
+        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['certificate.add.bookmark.url'];
+    };
+
     this.anyDataToPost = function() {
         return this.dataTransferList.size() > 0;
     }
