@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
+      application="${bundle.web.url}vxml/root.vxml">
 
-    <script src="../generated/js/metadata.js"/>
     <script src="../generated/js/certification_course_data.js"/>
-    <script src="../js/utility.js"/>
     <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
 
     <script src="../js/prompt_context.js"/>
     <script src="../js/certificatecourse/abstract_interactions.js"/>
     <script src="../js/certificatecourse/interactions.js"/>
     <script src="../js/certificatecourse/course_state.js"/>
-    <script src="../js/certificatecourse/data_transfer_list.js"/>
     <script src="../js/certificatecourse/controller.js"/>
 
-    <var name="callerId" expr="session.connection.remote.uri"/>
-    <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
     <script>
         <![CDATA[
                 var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData));
@@ -152,5 +148,9 @@
         </script>
         <log expr="'****************** Going to controller ********************'"/>
         <goto next="#controller"/>
+        <!--
+            Disconnect events caught here can't be chained to the root.xml. The control should be passed back
+            to root.xml so that the call duration may be logged. TODO using GOTO/throw.
+         -->
     </catch>
 </vxml>

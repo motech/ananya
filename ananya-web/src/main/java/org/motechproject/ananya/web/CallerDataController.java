@@ -8,6 +8,8 @@ import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.LogManager;
 
 @Controller
 public class CallerDataController {
+    private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
     private FrontLineWorkerService frontLineWorkerService;
     private CertificateCourseService certificateCourseService;
 
@@ -68,5 +72,16 @@ public class CallerDataController {
             certificateCourseService.saveState(courseLog);
         }
         return null;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/ananya/calldurationdata/add")
+    @ResponseBody
+    public String addCallDetailData(HttpServletRequest request){
+        String callerId = request.getParameter("callerId");
+        String callId = request.getParameter("callId");
+
+        String stringifiedData = request.getParameter("dataToPost");
+        log.info(callId+"   "+callerId+ "    " + stringifiedData);
+        return "Post Done";
     }
 }

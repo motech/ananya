@@ -45,8 +45,7 @@ var CertificateCourseController = function(course, metadata, courseState) {
     };
 
     this.dataToPost = function() {
-        var stringifiedDataToPost = Utility.stringify(this.dataTransferList.transferList);
-        return stringifiedDataToPost;
+        return this.dataTransferList.asJson();
     };
 
     this.dataPostUrl = function() {

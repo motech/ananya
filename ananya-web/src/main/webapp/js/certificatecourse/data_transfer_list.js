@@ -17,7 +17,11 @@ var DataTransferList = function() {
 
     this.size = function() {
         return this.transferList.length;
-    }
+    };
+
+    this.asJson = function() {
+        return Utility.stringify(this.transferList);
+    };
 
     this.init();
 };
