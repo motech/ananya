@@ -62,7 +62,7 @@ var RegisterController = function(metadata) {
             return url;
         }
         return metadata["context.path"] + "/" + metadata["url.version"] + "/" + url;
-    }
+    };
 
     this.nextFlow = function(calledNumber) {
         if (metadata["certificate.application.number"] == calledNumber)
