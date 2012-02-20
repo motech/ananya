@@ -46,7 +46,7 @@ public class FrontLineWorkerPresenter {
         return panchayat;
     }
 
-    public DateTime getRegisteredDate() {
-        return registeredDate;
+    public String getRegisteredDate() {
+        return registeredDate.toDate().toString();
     }
 }
