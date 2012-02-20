@@ -13,13 +13,12 @@ var AdminController = function() {
     };
 
     var refreshScreen = function() {
-        $("#flw_form").submit();
+        location.reload();
     };
 
     var bootstrap = function() {
         $('input[class="flw_delete"]').click(removeSelectedFlw);
     };
-
     $(bootstrap);
 };
 

@@ -140,6 +140,9 @@
                     <jsTestSrcDir>
                         ${project.basedir}/src/test/js
                     </jsTestSrcDir>
+                    <sourceExcludes>
+                        <include>**/admin/*.js</include>
+                    </sourceExcludes>
                 </configuration>
             </plugin>
             <plugin>
