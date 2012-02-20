@@ -6,7 +6,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.request.RegistrationRequest;
+import org.motechproject.ananya.domain.RegistrationRequest;
 import org.motechproject.ananya.service.RegistrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

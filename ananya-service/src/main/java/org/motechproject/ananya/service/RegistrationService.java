@@ -1,10 +1,11 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.exceptions.AnanyaApiException;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
-import org.motechproject.ananya.request.RegistrationRequest;
+import org.motechproject.ananya.request.LogRegistrationRequest;
+import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.LogService;
+import org.motechproject.ananya.service.ReportDataPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +27,9 @@ public class RegistrationService {
         String designation = registrationRequest.designation();
         String panchayat = registrationRequest.panchayat();
 
+        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest(callerId, registrationRequest.calledNumber(), designation, panchayat);
         frontLineWorkerService.createNew(callerId, Designation.valueOf(designation), panchayat);
-        String registeredId = logService.registered(registrationRequest);
+        String registeredId = logService.registered(logRegistrationRequest);
 
         LogData logData = new LogData(LogType.REGISTRATION, registeredId);
         reportPublisher.publishRegistration(logData);

@@ -1,19 +1,17 @@
 package org.motechproject.ananya.service;
 
-import junit.framework.TestCase;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
-import org.motechproject.ananya.request.RegistrationRequest;
-import org.omg.CORBA.StringHolder;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.motechproject.ananya.domain.RegistrationRequest;
+import org.motechproject.ananya.request.LogRegistrationRequest;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,13 +39,14 @@ public class RegistrationServiceTest  {
 
     @Test
     public void shouldRegisterNewFLW() {
+        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V005");
         RegistrationRequest registrationRequest = new RegistrationRequest("123", "456", "ANM", "B001V005");
         final String id = "id";
-        when(logService.registered(registrationRequest)).thenReturn(id);
+        when(logService.registered(any(LogRegistrationRequest.class))).thenReturn(id);
 
         registrationService.register(registrationRequest);
 
-        verify(logService).registered(registrationRequest);
+        verify(logService).registered(argThat(new LogRegistrationRequestMatcher(logRegistrationRequest)));
         verify(reportDataPublisher).publishRegistration(argThat(new LogDataMatcher(new LogData(LogType.REGISTRATION,id))));
         verify(frontLineWorkerService).createNew("123",Designation.ANM,"B001V005");
     }
@@ -80,7 +79,26 @@ public class RegistrationServiceTest  {
 
         @Override
         public void describeTo(Description description) {
-            throw new RuntimeException();
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+
+    public static class LogRegistrationRequestMatcher extends BaseMatcher<LogRegistrationRequest> {
+        private LogRegistrationRequest request;
+
+        public LogRegistrationRequestMatcher(LogRegistrationRequest request) {
+            this.request = request;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public boolean matches(Object o) {
+            LogRegistrationRequest actualRequest = (LogRegistrationRequest)o;
+            return request.callerId().equals(actualRequest.callerId()) && request.calledNumber().equals(actualRequest.calledNumber()) ;
         }
     }
 }

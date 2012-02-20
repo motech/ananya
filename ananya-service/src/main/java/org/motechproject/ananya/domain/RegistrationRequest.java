@@ -1,10 +1,15 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.domain;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationRequest {
     private String callerId;
     private String calledNumber;
     private String designation;
     private String panchayat;
+
+    public static final String LOG_TYPE = "RegistrationLog";
 
     public RegistrationRequest(String callerId, String calledNumber, String designation, String panchayat) {
         this.callerId = callerId;
@@ -28,4 +33,5 @@ public class RegistrationRequest {
     public String panchayat() {
         return this.panchayat;
     }
+
 }

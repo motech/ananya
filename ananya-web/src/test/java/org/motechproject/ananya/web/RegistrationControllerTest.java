@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllRecordings;
-import org.motechproject.ananya.request.RegistrationRequest;
 import org.motechproject.ananya.service.RegistrationService;
 import org.springframework.web.servlet.ModelAndView;
 

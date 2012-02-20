@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
-import org.motechproject.ananya.request.RegistrationRequest;
+import org.motechproject.ananya.request.LogRegistrationRequest;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class LogServiceTest {
 
     @Test
     public void shouldCallAllRegistrationLogsToPersist() {
-        RegistrationRequest registrationRequest = new RegistrationRequest("123", "456", "ANM", "B001V004");
+        LogRegistrationRequest registrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V004");
 
         logService.registered(registrationRequest);
 
