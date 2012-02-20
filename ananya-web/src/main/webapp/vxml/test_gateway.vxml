@@ -12,23 +12,23 @@
             };
 
             this.certificateCourseLandingUri = function() {
-                return  "vxml/certificatecourse/landing";
+                return  "certificatecourse/landing";
             };
 
             this.jobAidLandingUri = function() {
-                return "vxml/jobaid/landing";
+                return "jobaid/landing";
             };
 
             this.registerUri = function() {
-                return "vxml/register.vxml";
+                return "register.vxml";
             };
 
             this.jobAidUri = function() {
-                return "vxml/jobaid.vxml";
+                return "jobaid.vxml";
             };
 
             this.certificateCourseUri = function() {
-                return "vxml/certificatecourse.vxml";
+                return "certificatecourse.vxml";
             };
 
         };
