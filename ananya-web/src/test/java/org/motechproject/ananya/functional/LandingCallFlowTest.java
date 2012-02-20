@@ -19,10 +19,10 @@ public class LandingCallFlowTest {
     @Test
     public void shouldGetLandingPage() throws Exception {
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/landing");
-        assertEquals("vxml/jobaid/enter/", callFlow.readString("/vxml/form/block/goto/@next"));
+        assertEquals("/ananya/v1/vxml/jobaid/enter", callFlow.readString("/vxml/form/block/goto/@next"));
 
         callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/landing");
-        assertEquals("vxml/certificatecourse/enter/", callFlow.readString("/vxml/form/block/goto/@next"));
+        assertEquals("/ananya/v1/vxml/certificatecourse/enter", callFlow.readString("/vxml/form/block/goto/@next"));
 
     }
 
@@ -31,17 +31,17 @@ public class LandingCallFlowTest {
 
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/enter");
 
-        assertEquals("'v1/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
-        assertEquals("v1/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
+        assertEquals("'/ananya/v1/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
+        assertEquals("/ananya/v1/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
 
         String controller = "/vxml/form[@id='controller']";
         assertEquals("controller.decideFlowForJobAid()", callFlow.readString(controller + "/block/goto/@expr"));
 
         String registeredForm = "/vxml/form[@id='registered']";
-        assertEquals("v1/vxml/jobaid.vxml", callFlow.readString(registeredForm + "/block/goto/@next"));
+        assertEquals("/ananya/v1/vxml/jobaid.vxml", callFlow.readString(registeredForm + "/block/goto/@next"));
 
         String unregisteredForm = "/vxml/form[@id='unregistered']";
-        assertEquals("v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/block/goto/@next"));
+        assertEquals("/ananya/v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/block/goto/@next"));
         NodeList prompts = callFlow.readNode(unregisteredForm + "/block/audio");
         assertEquals(3, prompts.getLength());
     }
@@ -51,8 +51,8 @@ public class LandingCallFlowTest {
 
         CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/enter");
 
-        assertEquals("'v1/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
-        assertEquals("v1/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
+        assertEquals("'/ananya/v1/generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri", callFlow.readString("/vxml/script/@srcexpr"));
+        assertEquals("/ananya/v1/js/entry/controller.js", callFlow.readString("/vxml/script/@src"));
         assertEquals("false", callFlow.readString("/vxml/property[@name='bargein']/@value"));
 
         String controller = "/vxml/form[@id='controller']";
@@ -67,13 +67,13 @@ public class LandingCallFlowTest {
         assertEquals(2, callFlow.readNode(registeredWithoutBookmark + "/field[@name='repeat']/grammar/rule/one-of/item").getLength());
         NodeList links = callFlow.readNode(registeredWithoutBookmark + "/field[@name='repeat']/filled/if/goto");
         assertEquals("#controller", links.item(0).getAttributes().getNamedItem("next").getTextContent());
-        assertEquals("v1/vxml/certificatecourse.vxml", links.item(1).getAttributes().getNamedItem("next").getTextContent());
+        assertEquals("/ananya/v1/vxml/certificatecourse.vxml", links.item(1).getAttributes().getNamedItem("next").getTextContent());
 
         String unregistered = "/vxml/form[@id='unregistered']";
         assertEquals(1, callFlow.readNode(unregistered + "/field[@name='repeat']/prompt/audio").getLength());
         assertEquals(2, callFlow.readNode(unregistered + "/field[@name='repeat']/grammar/rule/one-of/item").getLength());
         links = callFlow.readNode(unregistered + "/field[@name='repeat']/filled/if/goto");
         assertEquals("#controller", links.item(0).getAttributes().getNamedItem("next").getTextContent());
-        assertEquals("v1/vxml/register.vxml", links.item(1).getAttributes().getNamedItem("next").getTextContent());
+        assertEquals("/ananya/v1/vxml/register.vxml", links.item(1).getAttributes().getNamedItem("next").getTextContent());
     }
 }

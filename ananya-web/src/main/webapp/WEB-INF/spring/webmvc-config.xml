@@ -8,6 +8,13 @@
         <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
     <mvc:annotation-driven/>
+
+    <!--
+        DO NOT remove the following line.
+        The following defines the Resource Handler for static content.
+        If you add a static file and find that it is not being served by the app server,
+        please add a mime type mapping for the extension of the file in web.xml
+    -->
     <mvc:resources location="/" mapping="/**"/>
 
     <mvc:interceptors>

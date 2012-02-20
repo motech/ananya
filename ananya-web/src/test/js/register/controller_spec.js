@@ -87,19 +87,69 @@ describe("Registration Controller", function () {
 
     it("should go to certification flow for certification number", function() {
         metadata = {
+                        "context.path" : "/ananya",
                         "certificate.application.number" : "123",
                         "url.version" : "v1.2"
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("123")).toEqual("v1.2/vxml/certificatecourse.vxml");
+        expect(controller.nextFlow("123")).toEqual("/ananya/v1.2/vxml/certificatecourse.vxml");
     });
 
     it("should go to jobaid flow for jobaid application number", function() {
          metadata = {
+                        "context.path" : "/ananya",
                         "certificate.application.number" : "123",
                         "url.version" : "v1.2"
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("456")).toEqual("v1.2/vxml/jobaid.vxml");
+        expect(controller.nextFlow("456")).toEqual("/ananya/v1.2/vxml/jobaid.vxml");
     });
+    
+    it("should give the URL to submit registration data", function () {
+         metadata = {
+                        "context.path" : "/ananya",
+                        "url.version" : "v1.2",
+                        "register.submit.url" : "flw/register"
+                    };
+
+        controller = new RegisterController(metadata);
+        expect(controller.submitUrl()).toEqual("/ananya/v1.2/flw/register");
+    });
+
+    it("should give the URL to submit name", function () {
+         metadata = {
+                        "context.path" : "/ananya",
+                        "url.version" : "v1.2",
+                        "register.name.submit.url" : "flw/record/name"
+                    };
+
+        controller = new RegisterController(metadata);
+        expect(controller.submitNameUrl()).toEqual("/ananya/v1.2/flw/record/name");
+    });
+
+    it("should give the URL to submit name if the URL specified starts with http://", function () {
+         metadata = {
+                        "context.path" : "/ananya",
+                        "url.version" : "v1.2",
+                        "register.name.submit.url" : "http://someOMURL/ananya/flw/record/name"
+                    };
+
+        controller = new RegisterController(metadata);
+        expect(controller.submitNameUrl()).toEqual("http://someOMURL/ananya/flw/record/name");
+    });
+
+    it("should give the URL to get grammar", function () {
+         metadata = {
+                        "context.path" : "/ananya",
+                        "url.version" : "v1.2",
+                        "grammar.url" : "grammar"
+                    };
+
+        controller = new RegisterController(metadata);
+        expect(controller.getGrammar()).toEqual("/ananya/v1.2/grammar/ANANYA_ALL.grxml");
+    });
+
+
+
+
 });

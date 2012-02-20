@@ -33,7 +33,7 @@
             <log expr="dataToPost"/>
             <log expr="callerId"/>
             <log expr="callId"/>
-            <data srcexpr="metaData['certificate.add.bookmark.url']" method="POST" namelist="dataToPost callerId callId"/>
+            <data srcexpr="controller.dataPostUrl()" method="POST" namelist="dataToPost callerId callId"/>
             <script>
                 controller.dataPostSuccessful();
             </script>
