@@ -20,5 +20,5 @@ var EntryController = function(callerData) {
 
     this.isCallerRegistered = function() {
         return callerData.isRegistered == "true";
-    }
+    };
 };

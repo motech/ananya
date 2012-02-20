@@ -9,13 +9,13 @@
     <audio src="$wav"/>
 #end
 
-#macro(repeat $prompt $flow)
+#macro(repeat $prompt $flow $grammar)
     <field name="repeat">
         <prompt bargein="false">
             <audio src="$prompt"/>
         </prompt>
-        <grammar mode="dtmf" version="1.0" root="root">
-            <rule id="root" scope="public">
+        <grammar mode="dtmf" version="1.0" root="$grammar">
+            <rule id="$grammar" scope="public">
                 <one-of>
                     <item>$bundle.certificate.repeat.option1</item>
                     <item>$bundle.certificate.repeat.option2</item>
