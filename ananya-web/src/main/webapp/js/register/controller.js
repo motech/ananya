@@ -49,22 +49,31 @@ var RegisterController = function(metadata) {
     };
 
     this.submitUrl = function() {
-        return metadata["web.url"] + "flw/register";
+            return this.absoluteUrl(metadata["register.submit.url"]);
     };
 
     this.submitNameUrl = function() {
-        return metadata["web.url"] + "flw/record/name";
+        return  this.absoluteUrl(metadata["register.name.submit.url"]);
+    };
+
+    this.absoluteUrl = function(url) {
+        var urlStartsWithHttp = (url.indexOf("http:")==0);
+        if(urlStartsWithHttp) {
+            return url;
+        }
+        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + url;
     };
 
     this.nextFlow = function(calledNumber) {
-        if (metadata["certificatecourse.application.number"] == calledNumber)
-            return metadata["web.url"] + "vxml/certificatecourse.vxml";
+        if (metadata["certificate.application.number"] == calledNumber)
+            return this.absoluteUrl("vxml/certificatecourse.vxml");
         else
-            return metadata["web.url"] + "vxml/jobaid.vxml";
+            return this.absoluteUrl("vxml/jobaid.vxml");
     };
 
     this.getGrammar = function() {
-        return metadata["grammar.url"]+"ANANYA_ALL.grxml";
+        var relativeUrl = metadata["grammar.url"]+ "/" + "ANANYA_ALL.grxml";
+        return this.absoluteUrl(relativeUrl);
     };
 
     this.playBack = function(record) {

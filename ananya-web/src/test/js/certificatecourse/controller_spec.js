@@ -10,8 +10,11 @@ describe("Certificate course controller spec", function() {
                         "audio.url": audioFileBase,
                         "certificate.audio.url" : certificateCourseLocation,
                         "maximum.invalid.input.count" : "2",
-                        "maximum.noinput.count" : "2"
-        };
+                        "maximum.noinput.count" : "2",
+                        "url.version" : "v1",
+                        "context.path" : "/ananya",
+                        "certificate.add.bookmark.url" : "coursestate/add"
+     };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
         controller = new CertificateCourseController(course, metadata, new CourseState());
@@ -232,6 +235,10 @@ describe("Certificate course controller spec", function() {
      it("should say if there is no data to post", function () {
          spyOn(controller.dataTransferList, "size").andReturn(0);
          expect(controller.anyDataToPost()).toEqual(false);
+     });
+
+     it("should give the url at which the coursestate is to be posted", function () {
+         expect(controller.dataPostUrl()).toEqual("/ananya/v1/coursestate/add");
      });
 
      it("should set exit interaction if the call is disconnected.", function () {
