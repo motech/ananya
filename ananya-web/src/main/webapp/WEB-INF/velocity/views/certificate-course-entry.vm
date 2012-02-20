@@ -1,8 +1,8 @@
 #vxmlHeader()
 <script srcexpr="$callerData"/>
 <script src="$entryJs"/>
-<script src="../../../js/prompt_context.js"/>
-<script src="../../../generated/js/metadata.js"/>
+<script src="${bundle.web.url}js/prompt_context.js"/>
+<script src="${bundle.web.url}generated/js/metadata.js"/>
 <script>
     <![CDATA[
     var controller = new EntryController(callerData);
