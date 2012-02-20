@@ -27,16 +27,16 @@
 
 <form id="registered_bookmark_absent">
     <block>
-        <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
+        <audio src="${contextPathWithVersion}${bundle.audio.vm.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
     </block>
-    #repeat("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}", $nextFlow, "root1")
+    #repeat("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.reg}", $nextFlow, "root1")
 </form>
 
 <form id="unregistered">
     <block>
-        <audio src="${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
-        #play("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}")
+        <audio src="${contextPathWithVersion}${bundle.audio.vm.url}${bundle.certificate.audio.url}${bundle.certificate.welcome}"></audio>
+        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.certificate.audio.url}${bundle.certificate.need.to.register}")
     </block>
-    #repeat("${bundle.audio.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}","${registerFlow}","root2")
+    #repeat("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.certificate.audio.url}${bundle.certificate.options.for.non.reg}","${registerFlow}","root2")
 </form>
 #vxmlFooter()

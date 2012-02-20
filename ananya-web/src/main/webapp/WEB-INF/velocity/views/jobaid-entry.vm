@@ -15,16 +15,16 @@
 
 <form id="unregistered">
     <block>
-        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
-        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.detail}")
-        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.need.to.register}")
+        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
+        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.detail}")
+        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.need.to.register}")
         <goto next="$registerFlow"/>
     </block>
 </form>
 
 <form id="registered">
     <block>
-        #play("${bundle.audio.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
+        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
         <goto next="$nextFlow"/>
     </block>
 </form>
