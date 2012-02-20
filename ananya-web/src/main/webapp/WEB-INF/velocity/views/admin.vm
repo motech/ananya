@@ -10,7 +10,6 @@
 <h2>Ananya Test Admin:</h2>
 
 <div id="flws_div">
-    <form id="flw_form" action=".">
     <table id="flws_table">
         <thead class="theader">
         <tr>
@@ -37,7 +36,6 @@
             </tr>
         #end
     </table>
-    </form>
 </div>
 </body>
 
