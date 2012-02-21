@@ -1,30 +1,31 @@
 package org.motechproject.ananya.web;
 
-import java.util.HashMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllRecordings;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.RegistrationRequest;
+import org.motechproject.ananya.domain.ResponseStatus;
+import org.motechproject.ananya.exceptions.AnanyaApiException;
+import org.motechproject.ananya.exceptions.AnanyaArgumentMissingException;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
+import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.service.RegistrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.motechproject.ananya.exceptions.AnanyaApiException;
-import org.motechproject.ananya.exceptions.AnanyaArgumentMissingException;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
 @Scope(value = "prototype")
@@ -88,17 +89,14 @@ public class RegistrationController {
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
 
-        if (msisdn == null || msisdn.trim().isEmpty())
+        if (StringUtils.isBlank(msisdn))
             throw new AnanyaArgumentMissingException("msisdn");
-
-        if (name == null || name.trim().isEmpty())
+        if (StringUtils.isBlank(name))
             throw new AnanyaArgumentMissingException(("name"));
-
         try {
             registrationService.saveTranscribedName(msisdn,name);
         } catch (WorkerDoesNotExistException e) {
-            throw new AnanyaApiException("ERR_WORKER_DOES_NOT_EXIST",
-                    "Worker does not exist for mentioned mobile number.");
+            throw new AnanyaApiException("ERR_WORKER_DOES_NOT_EXIST","Worker does not exist for mentioned mobile number.");
         }
 
         Map<String, Object> model = new HashMap<String, Object>();
@@ -111,7 +109,6 @@ public class RegistrationController {
     public ModelAndView handleException(AnanyaApiException ex) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("root", new ResponseStatus(ex.getErrorCode(), ex.getErrorMessage()));
-
         return new ModelAndView("jsonView", model);
     }
 

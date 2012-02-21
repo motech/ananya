@@ -3,9 +3,6 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.request.LogRegistrationRequest;
-import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.LogService;
-import org.motechproject.ananya.service.ReportDataPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
