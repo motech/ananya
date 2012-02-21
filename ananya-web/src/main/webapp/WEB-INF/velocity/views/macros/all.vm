@@ -46,7 +46,7 @@
            <if cond="promptContext.hasExceededMaxInvalidInputs()">
                <disconnect/>
            <else/>
-              <audio expr="promptContext.audioForInvalidInputRetry()"/>
+              <audio src="${contextPathWithVersion}${bundle.audio.vm.url}${bundle.invalid.input.retry.audio}"/>
               <reprompt/>
            </if>
         </nomatch>
