@@ -2,7 +2,7 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="${bundle.web.url}vxml/root.vxml">
+      application="root.vxml">
 
     <script src="../generated/js/certification_course_data.js"/>
     <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
