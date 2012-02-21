@@ -26,7 +26,8 @@ public class CallDetailLoggerServiceTest {
 
     @Test
     public void shouldSaveCallDetailLog() {
-        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(),"");
+        String time = DateTime.now().toString();
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, time,"");
 
         callDetailLoggerService.Save(log);
 

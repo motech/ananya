@@ -28,8 +28,8 @@
             <var name="dataToPost" expr="callDetailLogger.dataToPost()"/>
             <log> Data to post : <value expr="dataToPost"/> </log>
             <log> caller id : <value expr="callerId"/></log>
-            <log expr="callId"/>
-            <data srcexpr="metaData['add.call.data.url']" method="POST" namelist="dataToPost callerId callId"/>
+            <log> call id : <value expr="callId"/></log>
+            <data srcexpr="metaData['add.call.duration.url']" method="POST" namelist="dataToPost callerId callId"/>
             <script>
                 callDetailLogger.dataPostSuccessful();
             </script>

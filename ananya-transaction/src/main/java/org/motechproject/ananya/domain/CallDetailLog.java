@@ -15,7 +15,7 @@ public class CallDetailLog extends MotechBaseDataObject{
     private String callerId;
 
     @JsonProperty
-    private DateTime time;
+    private String time;
 
     @JsonProperty
     private String operator;
@@ -26,12 +26,20 @@ public class CallDetailLog extends MotechBaseDataObject{
     public CallDetailLog() {
     }
 
-    public CallDetailLog(String callId, String callerId, CallEvent callEvent, DateTime time, String operator) {
+    public CallDetailLog(String callId, String callerId, CallEvent callEvent, String time, String operator) {
         this.callId = callId;
         this.callerId = callerId;
         this.time = time;
         this.operator = operator;
         this.callEvent = callEvent;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public CallEvent getCallEvent() {
+        return callEvent;
     }
 
     public String getCallId() {

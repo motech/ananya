@@ -2,10 +2,8 @@ package org.motechproject.ananya.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CertificateCourseData;
+import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Map;
-import java.util.logging.LogManager;
 
 @Controller
 public class CallerDataController {
@@ -59,12 +55,12 @@ public class CallerDataController {
         String stringifiedData = request.getParameter("dataToPost");
 
         Gson gson = new Gson();
-        Type collectionType = new TypeToken<Collection<CertificateCourseData>>(){}.getType();
-        Collection<CertificateCourseData> data = gson.fromJson(stringifiedData, collectionType);
+        Type collectionType = new TypeToken<Collection<TransferData<CertificationCourseLog>>>(){}.getType();
+        Collection<TransferData<CertificationCourseLog>> data = gson.fromJson(stringifiedData, collectionType);
 
         System.out.println("\n\nPrinting the data packets received.");
-        for(CertificateCourseData eachPacket : data) {
-            final CertificationCourseLog courseLog = eachPacket.data();
+        for(TransferData eachPacket : data) {
+            final CertificationCourseLog courseLog = (CertificationCourseLog) eachPacket.data();
             courseLog.setCallerId(callerId);
             courseLog.setCallId(callId);
             courseLog.setToken(eachPacket.token());

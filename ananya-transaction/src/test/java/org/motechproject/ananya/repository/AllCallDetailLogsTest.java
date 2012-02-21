@@ -28,7 +28,8 @@ public class AllCallDetailLogsTest {
 
     @Test
     public void shouldSaveACallDetailLog() {
-        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(),"");
+        String time = DateTime.now().toString();
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, time, "");
         assertThat(log.getId(), is(nullValue()));
         allCallDetailLogs.add(log);
         assertThat(log.getId(), is(notNullValue()));

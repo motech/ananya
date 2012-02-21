@@ -4,11 +4,11 @@ var CallDetailLogger = function(){
     };
 
     this.start_call=function() {
-        this.dataTransferList.add({ "start" : new Date().toLocaleString() });
+        this.dataTransferList.add({ "event": "CALL_START" ,"time" :  new Date().toLocaleString() });
     };
 
     this.end_call=function() {
-        this.dataTransferList.add({ "end" : new Date().toLocaleString() });
+        this.dataTransferList.add({ "event": "CALL_END" ,"time" :  new Date().toLocaleString() });
     };
 
     this.dataPostSuccessful=function(){

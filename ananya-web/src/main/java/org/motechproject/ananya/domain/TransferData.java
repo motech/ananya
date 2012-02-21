@@ -2,11 +2,11 @@ package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class CertificateCourseData {
+public class TransferData<T> {
     private String token;
-    private CertificationCourseLog data;
+    private T data;
 
-    public CertificateCourseData(String token, CertificationCourseLog data) {
+    public TransferData(String token, T data) {
         this.token = token;
         this.data = data;
     }
@@ -15,7 +15,7 @@ public class CertificateCourseData {
         return token;
     }
 
-    public CertificationCourseLog data() {
+    public T data() {
         return data;
     }
 
