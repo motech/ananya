@@ -74,14 +74,5 @@ public class CallerDataController {
         return null;
     }
     
-    @RequestMapping(method = RequestMethod.POST, value="/ananya/calldurationdata/add")
-    @ResponseBody
-    public String addCallDetailData(HttpServletRequest request){
-        String callerId = request.getParameter("callerId");
-        String callId = request.getParameter("callId");
 
-        String stringifiedData = request.getParameter("dataToPost");
-        log.info(callId+"   "+callerId+ "    " + stringifiedData);
-        return "Post Done";
-    }
 }

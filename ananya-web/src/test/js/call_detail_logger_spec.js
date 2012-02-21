@@ -10,13 +10,11 @@ describe("Call Detail Logger", function() {
     it("on start call should add item to data transfer list.", function() {
         callDetailLogger.start_call();
         expect(callDetailLogger.dataTransferList.size()).toEqual(1);
-        expect(callDetailLogger.dataTransferList.transferList[0].data.start).toContain("GMT+0530 (IST)");
     });
 
     it("on end call should add item to data transfer list.", function() {
         callDetailLogger.end_call();
         expect(callDetailLogger.dataTransferList.size()).toEqual(1);
-        expect(callDetailLogger.dataTransferList.transferList[0].data.end).toContain("GMT+0530 (IST)");
     });
 
     it("on data post successful should drain data transfer list.", function() {
