@@ -1,26 +1,19 @@
 package org.motechproject.ananya.web;
 
-import com.google.gson.Gson;
-import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallDetailLog;
-import org.motechproject.ananya.domain.CallDurationData;
-import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.CallEvent;
 import org.motechproject.ananya.service.CallDetailLoggerService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.motechproject.ananya.domain.CallEvent;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;

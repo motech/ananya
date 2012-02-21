@@ -11,6 +11,14 @@ var CallDetailLogger = function(){
         this.dataTransferList.add({ "event": "CALL_END" ,"time" :  new Date().toLocaleString() });
     };
 
+    this.registration_start=function() {
+        this.dataTransferList.add({ "event": "REGISTRATION_START" ,"time" :  new Date().toLocaleString() });
+    };
+
+    this.registration_end=function() {
+        this.dataTransferList.add({ "event": "REGISTRATION_END" ,"time" :  new Date().toLocaleString() });
+    };
+
     this.dataPostSuccessful=function(){
         this.dataTransferList.drain();
     };

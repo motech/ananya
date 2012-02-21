@@ -11,33 +11,24 @@
     <script src="../js/certificatecourse/data_transfer_list.js"/>
     <script src="../js/utility.js"/>
     <script>
-        <![CDATA[
             var callDetailLogger = new CallDetailLogger();
             callDetailLogger.start_call();
-        ]]>
+            function call_disconnect(){
+                callDetailLogger.end_call();
+            }
     </script>
 
-    <form id="disconnect">
-        <log>***** Inside disconnect form ******</log>
-        <block>
-            <script>
-                callDetailLogger.end_call();
-            </script>
-        </block>
-        <block name="postEndCallData">
-            <var name="dataToPost" expr="callDetailLogger.dataToPost()"/>
-            <log> Data to post : <value expr="dataToPost"/> </log>
-            <log> caller id : <value expr="callerId"/></log>
-            <log> call id : <value expr="callId"/></log>
-            <data srcexpr="metaData['add.call.duration.url']" method="POST" namelist="dataToPost callerId callId"/>
-            <script>
-                callDetailLogger.dataPostSuccessful();
-            </script>
-        </block>
-    </form>
 
     <catch event = "connection.disconnect.hangup">
         <log>***** Disconnect event caught ******</log>
-        <goto next="../root.vxml#disconnect"/>
+        <script>
+            call_disconnect();
+        </script>
+        <var name="dataToPost" expr="callDetailLogger.dataToPost()"/>
+        <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
+        <data srcexpr="metaData['add.call.duration.url']" method="POST" namelist="dataToPost callerId callId"/>
+        <script>
+            callDetailLogger.dataPostSuccessful();
+        </script>
     </catch>
 </vxml>
