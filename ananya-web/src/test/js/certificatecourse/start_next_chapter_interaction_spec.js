@@ -47,7 +47,7 @@ describe("Start next chapter interaction", function() {
         var startNextChapter = new StartNextChapter(metadata, course, courseState);
 
         var endOfCourseInteraction = {};
-        CertificateCourse.interactions["endOfCourse"] = endOfCourseInteraction;
+        CertificateCourse.interactions[EndOfCourseInteraction.KEY] = endOfCourseInteraction;
 
         var nextState = startNextChapter.processSilentlyAndReturnNextState();
 
