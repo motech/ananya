@@ -17,6 +17,7 @@
 
     <property name="timeout" value="4s"/>
     <property name="bargein" value="true"/>
+    <property name="confidencelevel" value=".4"/>
 
     <form id="record_designation_form">
         <field name="designation">
