@@ -18,10 +18,10 @@ public class LandingCallFlowTest {
 
     @Test
     public void shouldGetLandingPage() throws Exception {
-        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/landing");
+        CallFlow callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/jobaid/landing.vxml");
         assertEquals("/ananya/v1/vxml/jobaid/enter", callFlow.readString("/vxml/form/block/goto/@next"));
 
-        callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/landing");
+        callFlow = myWebClient.getCallFlow("http://localhost:9979/ananya/vxml/certificatecourse/landing.vxml");
         assertEquals("/ananya/v1/vxml/certificatecourse/enter", callFlow.readString("/vxml/form/block/goto/@next"));
 
     }
