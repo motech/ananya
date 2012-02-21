@@ -9,8 +9,6 @@ public class LogRegistrationRequest {
     private String designation;
     private String panchayat;
 
-    public static final String LOG_TYPE = "RegistrationLog";
-
     public LogRegistrationRequest(String callerId, String calledNumber, String designation, String panchayat) {
         this.callerId = callerId;
         this.calledNumber = calledNumber;
