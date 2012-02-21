@@ -1,6 +1,6 @@
-describe("End of course interaction", function() {
+describe("Play thanks", function() {
 
-    var metadata, course, endOfCourseInteraction;
+    var metadata, course, playThanksInteraction;
     var audioFileBase = "./audio/";
     var certificateCourseLocation = "certificatecourse/";
     var courseState;
@@ -10,15 +10,15 @@ describe("End of course interaction", function() {
         course = certificationCourseWithTwoLessonsInEveryChapter();
         courseState = new CourseState();
         CertificateCourse.interactions = new Array();
-        endOfCourseInteraction = new EndOfCourseInteraction(metadata, course, courseState);
+        playThanksInteraction = new PlayThanksInteraction(metadata, course, courseState);
     });
 
     it("should play the thank you message", function () {
-        expect(endOfCourseInteraction.playAudio()).toEqual("./audio/certificatecourse/0246_thanks_p.wav");
+        expect(playThanksInteraction.playAudio()).toEqual("./audio/certificatecourse/0246_thanks_p.wav");
     });
 
     it("should not take any input", function() {
-        expect(endOfCourseInteraction.doesTakeInput()).toEqual(false);
+        expect(playThanksInteraction.doesTakeInput()).toEqual(false);
     });
 
     it("should return play final score as next interaction and should not change the course state", function () {
@@ -26,7 +26,7 @@ describe("End of course interaction", function() {
         courseState.setLessonOrQuestionIndex(4);
         CertificateCourse.interactions[PlayFinalScoreInteraction.KEY] = {};
 
-        expect(endOfCourseInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[PlayFinalScoreInteraction.KEY]);
+        expect(playThanksInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[PlayFinalScoreInteraction.KEY]);
         expect(courseState.chapterIndex).toEqual(2);
         expect(courseState.lessonOrQuestionIndex).toEqual(4);
     });

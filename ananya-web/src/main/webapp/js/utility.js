@@ -47,6 +47,17 @@ var Utility = function() {
             return value.substring(0, value.length - 1);
         }
     }
+
+    this.format = function() {
+        var formatted = arguments[0];
+        var i = 0;
+        for(var arg = 1; arg < arguments.length; ++arg) {
+            var index = arg - 1;
+            formatted = formatted.replace("{" + index + "}", arguments[arg]);
+        }
+        return formatted;
+    };
+
 };
 
 var Utility = new Utility();

@@ -22,8 +22,10 @@ var CertificateCourseController = function(course, metadata, courseState) {
         CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY] = new PlayAnswerExplanationInteraction(metadata, course, courseState);
         CertificateCourse.interactions[ReportChapterScoreInteraction.KEY] = new ReportChapterScoreInteraction(metadata, course, courseState);
         CertificateCourse.interactions[EndOfChapterMenuInteraction.KEY] = new EndOfChapterMenuInteraction(metadata, course, courseState);
-        CertificateCourse.interactions[EndOfCourseInteraction.KEY] = new EndOfCourseInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[PlayThanksInteraction.KEY] = new PlayThanksInteraction(metadata, course, courseState);
         CertificateCourse.interactions[PlayFinalScoreInteraction.KEY] = new PlayFinalScoreInteraction(metadata, course, courseState);
+        CertificateCourse.interactions[PlayCourseResultInteraction.KEY] = new PlayCourseResultInteraction(metadata, course, courseState);
+        CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
     };
 
     this.playAudio = function() {

@@ -19,7 +19,7 @@ var StartNextChapter = function(metadata, course, courseState) {
             var currentLessonOrQuestionIndex = this.courseState.lessonOrQuestionIndex;
             var maxChapterIndex = course.children.length-1;
             if(currentChapterIndex >= maxChapterIndex) {
-               nextState = CertificateCourse.interactions[EndOfCourseInteraction.KEY];
+               nextState = CertificateCourse.interactions[PlayThanksInteraction.KEY];
             }
             else {
                 this.courseState.chapterIndex++;
@@ -386,38 +386,34 @@ EndOfChapterMenuInteraction.prototype.processInputAndReturnNextInteraction = fun
 }
 
 /*
-    EndOfCourse
+    PlayThanks
 */
-var EndOfCourseInteraction = function(metadata, course, courseState) {
+var PlayThanksInteraction = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
-        AbstractCourseInteraction.call(this, metadata, EndOfCourseInteraction.KEY);
+        AbstractCourseInteraction.call(this, metadata, PlayThanksInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
     }
 
     this.init(metadata, course, courseState);
 };
-EndOfCourseInteraction.KEY = "endOfCourse";
+PlayThanksInteraction.KEY = "playThanks";
 
-EndOfCourseInteraction.prototype = new AbstractCourseInteraction();
-EndOfCourseInteraction.prototype.constructor = EndOfCourseInteraction;
+PlayThanksInteraction.prototype = new AbstractCourseInteraction();
+PlayThanksInteraction.prototype.constructor = PlayThanksInteraction;
 
-EndOfCourseInteraction.prototype.playAudio = function() {
+PlayThanksInteraction.prototype.playAudio = function() {
     var audioFileName = this.audioFileBase() + this.metadata['certificate.end.thanks'];
 
     return audioFileName;
 };
 
-EndOfCourseInteraction.prototype.doesTakeInput = function() {
+PlayThanksInteraction.prototype.doesTakeInput = function() {
     return false;
 }
 
-EndOfCourseInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["playFinalScore"];
-}
-
-EndOfCourseInteraction.prototype.bookMark = function() {
-
+PlayThanksInteraction.prototype.nextInteraction = function() {
+    return CertificateCourse.interactions[PlayFinalScoreInteraction.KEY];
 }
 
 /*
@@ -438,19 +434,73 @@ PlayFinalScoreInteraction.prototype = new AbstractCourseInteraction();
 PlayFinalScoreInteraction.prototype.constructor = PlayFinalScoreInteraction;
 
 PlayFinalScoreInteraction.prototype.playAudio = function() {
-    var audioFileName = this.audioFileBase() + this.metadata['certificate.end.thanks'];
+    var scoresByChapter = this.courseState.scoresByChapter;
+    var finalScore = calculateFinalScore(scoresByChapter);
+
+    var finalScoreFileRaw = this.metadata['certificate.end.final.score'];
+    var finalScoreFile = Utility.format(finalScoreFileRaw, parseInt(this.metadata['certificate.end.final.score.prefix.start']) + finalScore, finalScore);
+
+
+    var audioFileName = this.audioFileBase() + finalScoreFile;
 
     return audioFileName;
 };
+
+calculateFinalScore = function (scoresByChapter) {
+    var finalScore = 0;
+    for (var key in scoresByChapter) {
+        if (scoresByChapter.hasOwnProperty(key)) {
+            finalScore += scoresByChapter[key];
+        }
+    }
+    return finalScore;
+}
 
 PlayFinalScoreInteraction.prototype.doesTakeInput = function() {
     return false;
 }
 
 PlayFinalScoreInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["playFinalScore"];
+    return CertificateCourse.interactions[PlayCourseResultInteraction.KEY];
 }
 
-PlayFinalScoreInteraction.prototype.bookMark = function() {
 
+/*
+    PlayCourseResult
+*/
+var PlayCourseResultInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata, PlayCourseResultInteraction.KEY);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.init(metadata, course, courseState);
+};
+PlayCourseResultInteraction.KEY = "playCourseResult";
+
+PlayCourseResultInteraction.prototype = new AbstractCourseInteraction();
+PlayCourseResultInteraction.prototype.constructor = PlayCourseResultInteraction;
+
+PlayCourseResultInteraction.prototype.playAudio = function() {
+    var scoresByChapter = this.courseState.scoresByChapter;
+    var finalScore = calculateFinalScore(scoresByChapter);
+    var audioFileName  = this.audioFileBase();
+    if(finalScore < 18){
+        audioFileName += this.metadata["certificate.end.result.fail"];
+    }
+    else{
+        audioFileName += this.metadata["certificate.end.result.pass"];
+    }
+
+    return audioFileName;
+};
+
+
+PlayCourseResultInteraction.prototype.doesTakeInput = function() {
+    return false;
+}
+
+PlayCourseResultInteraction.prototype.nextInteraction = function() {
+    return CertificateCourse.interactions["endOfCourse"];
 }
