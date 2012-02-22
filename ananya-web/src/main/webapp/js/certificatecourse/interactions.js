@@ -502,5 +502,42 @@ PlayCourseResultInteraction.prototype.doesTakeInput = function() {
 }
 
 PlayCourseResultInteraction.prototype.nextInteraction = function() {
-    return CertificateCourse.interactions["endOfCourse"];
+    return CertificateCourse.interactions[CourseEndMarkerInteraction.KEY];
 }
+
+/*
+    CourseEndMarker
+*/
+var CourseEndMarkerInteraction = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    // TODO: Will all the scores be reset to 0 if users starts the course again?
+    this.processSilentlyAndReturnNextState = function() {
+        this.courseState.setChapterIndex(null);
+        this.courseState.setLessonOrQuestionIndex(null);
+
+        return CertificateCourse.interactions["endOfCourse"];
+    }
+
+    this.resumeCall = function() {
+        return this;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+/*
+    EndOfCourse
+*/
+var EndOfCourseInteraction = function() {
+    this.disconnect = function() {
+        return true;
+    }
+};
+
+EndOfCourseInteraction.prototype.getInteractionKey = function() {
+    return null;
+};

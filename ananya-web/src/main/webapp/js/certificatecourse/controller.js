@@ -25,7 +25,8 @@ var CertificateCourseController = function(course, metadata, courseState) {
         CertificateCourse.interactions[PlayThanksInteraction.KEY] = new PlayThanksInteraction(metadata, course, courseState);
         CertificateCourse.interactions[PlayFinalScoreInteraction.KEY] = new PlayFinalScoreInteraction(metadata, course, courseState);
         CertificateCourse.interactions[PlayCourseResultInteraction.KEY] = new PlayCourseResultInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["endOfCourse"] = {disconnect:function(){return true;}};
+        CertificateCourse.interactions[CourseEndMarkerInteraction.KEY] = new CourseEndMarkerInteraction(metadata, course, courseState);
+        CertificateCourse.interactions["endOfCourse"] = new EndOfCourseInteraction();
     };
 
     this.playAudio = function() {

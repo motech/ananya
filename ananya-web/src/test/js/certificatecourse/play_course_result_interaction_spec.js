@@ -45,13 +45,13 @@ describe("Play course result", function() {
         expect(playCourseResultInteraction.doesTakeInput()).toEqual(false);
     });
 
-//    it("should return play certification course result as next interaction and should not change the course state", function () {
-//        courseState.setChapterIndex(2);
-//        courseState.setLessonOrQuestionIndex(4);
-//        CertificateCourse.interactions["PlayCertificationCourseResult"] = {};
-//
-//        expect(playCourseResultInteraction.nextInteraction()).toEqual(CertificateCourse.interactions["PlayCertificationCourseResult"]);
-//        expect(courseState.chapterIndex).toEqual(2);
-//        expect(courseState.lessonOrQuestionIndex).toEqual(4);
-//    });
+    it("should return course end marker as next interaction and should not change the course state", function () {
+        courseState.setChapterIndex(2);
+        courseState.setLessonOrQuestionIndex(4);
+        CertificateCourse.interactions[CourseEndMarkerInteraction.KEY] = {};
+
+        expect(playCourseResultInteraction.nextInteraction()).toEqual(CertificateCourse.interactions[CourseEndMarkerInteraction.KEY]);
+        expect(courseState.chapterIndex).toEqual(2);
+        expect(courseState.lessonOrQuestionIndex).toEqual(4);
+    });
 });
