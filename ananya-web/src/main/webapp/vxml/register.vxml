@@ -122,10 +122,11 @@
             </noinput>
             <filled>
                 <assign name="myRecord" expr="nameRecord"/>
+                <goto nextitem="confirm"/>
             </filled>
         </record>
 
-        <field name="confirmName">
+        <field name="confirm">
             <prompt bargein="false">
                 <audio expr="controller.playConfirmPrompt(myField)"/>
                 <audio expr="controller.playBackPrompt(myField,myRecord)"/>
@@ -161,9 +162,9 @@
                 </if>
             </nomatch>
             <filled>
-                <if cond="confirmName == '1'">
+                <if cond="confirm == '1'">
                     <goto next="#record_form"/>
-                    <elseif cond="confirmName == '2'"/>
+                    <elseif cond="confirm == '2'"/>
                     <script>
                         controller.capture(myRecord);
                     </script>
@@ -215,6 +216,7 @@
                 <script>
                     promptContext.resetCounts();
                 </script>
+                <goto nextitem="confirm"/>
             </filled>
         </field>
 
