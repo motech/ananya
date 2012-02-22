@@ -123,4 +123,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
        this.registeredDate = registeredDate;
     }
 
+    public boolean hasStartedCertificationCourse() {
+        return status().isRegistered() && bookMark().getType() != null;
+    }
+
 }

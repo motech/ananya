@@ -155,4 +155,17 @@ public class FrontLineWorkerServiceTest {
         
         frontLineWorkerService.saveName(msisdn, name);
     }
+
+    @Test
+    public void shouldResetScoresWhenStartingCourse() throws Exception {
+        String msisdn = "123" ;
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "");
+        mockWorker.status(RegistrationStatus.REGISTERED);
+        mockWorker.reportCard().addScore(new ReportCard.Score("0","5",true));
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
+        frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
+
+        assertTrue(mockWorker.reportCard().scores().size() == 0);
+    }
 }

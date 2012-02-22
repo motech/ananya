@@ -28,6 +28,10 @@ public class ReportCard {
         scores.add(score);
     }
 
+    public void clearAllScores() {
+        scores.clear();
+    }
+
     public void clearScoresForChapterIndex(String chapterIndex) {
         Collection scoresForChapterIndex = CollectionUtils.select(scores, Score.findByChapterId(chapterIndex));
         scores.removeAll(scoresForChapterIndex);

@@ -43,6 +43,7 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
         FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM, "1234","").status(RegistrationStatus.REGISTERED);
 
         ReportCard reportCard = flw.reportCard();
+        flw.addBookMark(new BookMark("lesson",3,0));
 
         final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
         final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);

@@ -69,6 +69,7 @@ public class FrontLineWorkerService {
 
     public Map<String, Integer> scoresByChapter(String msisdn){
         final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        
         return frontLineWorker == null? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
     }
 
@@ -89,5 +90,17 @@ public class FrontLineWorkerService {
         allFrontLineWorkers.update(frontLineWorker);
 
         return frontLineWorker;
+    }
+    
+    public void resetScoresWhenStartingCertificateCourse(String msisdn) {
+        final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        if(frontLineWorker != null && !frontLineWorker.hasStartedCertificationCourse()) {
+            resetAllScores(frontLineWorker);
+        }
+    }
+
+    private void resetAllScores(FrontLineWorker frontLineWorker) {
+        frontLineWorker.reportCard().clearAllScores();
+        save(frontLineWorker);
     }
 }

@@ -55,6 +55,9 @@ public class DynamicJsController {
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
         response.setContentType("application/javascript");
+
+        frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
+
         return new ModelAndView("caller_data")
                 .addObject("bookmark", frontLineWorkerService.getBookmark(msisdn).asJson())
                 .addObject("isCallerRegistered", frontLineWorkerService.isCallerRegistered(msisdn))
