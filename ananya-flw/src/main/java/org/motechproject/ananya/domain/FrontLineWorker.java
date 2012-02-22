@@ -104,4 +104,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public DateTime registeredDate() {
        return registeredDate;
     }
+
+    public void setRegisteredDate(DateTime registeredDate) {
+       this.registeredDate = registeredDate;
+    }
 }
