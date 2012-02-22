@@ -15,7 +15,7 @@
          ]]>
     </script>
 
-    <property name="timeout" value="4s"/>
+    <property name="timeout" value="8s"/>
     <property name="bargein" value="true"/>
     <property name="confidencelevel" value=".4"/>
 

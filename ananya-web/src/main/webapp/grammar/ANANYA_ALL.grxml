@@ -8,6 +8,10 @@
 			<item>खगरिया <tag> out.resultKey = &quot;S01D002&quot;</tag></item>
 
             <item>दुल्हिनबाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिनबजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिन <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>बजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+
             <item>मझौलीया <tag> out.resultKey = &quot;S01D003B001&quot; </tag></item>
 			<item>मझौलिया <tag> out.resultKey = &quot;S01D003B001&quot;</tag></item>
 			<item>मझोलीया <tag> out.resultKey = &quot;S01D003B001&quot;</tag></item>
