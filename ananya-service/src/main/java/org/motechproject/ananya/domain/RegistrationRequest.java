@@ -8,14 +8,20 @@ public class RegistrationRequest {
     private String calledNumber;
     private String designation;
     private String panchayat;
+    private String operator;
 
     public static final String LOG_TYPE = "RegistrationLog";
 
-    public RegistrationRequest(String callerId, String calledNumber, String designation, String panchayat) {
+    public RegistrationRequest(String callerId, String calledNumber, String designation, String panchayat, String operator) {
         this.callerId = callerId;
         this.calledNumber = calledNumber;
         this.designation = designation;
         this.panchayat = panchayat;
+        this.operator = operator;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
     public String callerId() {

@@ -41,17 +41,22 @@ public class ReportDataMeasure {
         this.reportDB = reportDB;
     }
 
+    
     public void createRegistrationMeasure(LogData logData) {
         RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(registrationLog.getCallerId());
+        createRegistrationMeasureWith(registrationLog.getCallerId());
+    }
+
+    public void createRegistrationMeasureWith(String msisdn) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         Location location = allLocations.get(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
-                frontLineWorker.msisdn(), registrationLog.getOperator(),
+                frontLineWorker.msisdn(), frontLineWorker.getOperator(),
                 frontLineWorker.name(), frontLineWorker.status().toString());
 
         LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
-        TimeDimension timeDimension = allTimeDimensions.getFor(registrationLog.getStartTime());
+        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.registeredDate());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         reportDB.add(registrationMeasure);

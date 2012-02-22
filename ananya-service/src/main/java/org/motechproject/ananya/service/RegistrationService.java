@@ -24,8 +24,9 @@ public class RegistrationService {
         String designation = registrationRequest.designation();
         String panchayat = registrationRequest.panchayat();
 
-        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest(callerId, registrationRequest.calledNumber(), designation, panchayat);
-        frontLineWorkerService.createNew(callerId, Designation.valueOf(designation), panchayat);
+        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest(
+                callerId, registrationRequest.calledNumber(), designation, panchayat, registrationRequest.getOperator());
+        frontLineWorkerService.createNew(callerId, Designation.valueOf(designation), panchayat, registrationRequest.getOperator());
         String registeredId = logService.registered(logRegistrationRequest);
 
         LogData logData = new LogData(LogType.REGISTRATION, registeredId);

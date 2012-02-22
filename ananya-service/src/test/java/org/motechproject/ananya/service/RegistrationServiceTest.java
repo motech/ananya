@@ -39,8 +39,8 @@ public class RegistrationServiceTest  {
 
     @Test
     public void shouldRegisterNewFLW() {
-        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V005");
-        RegistrationRequest registrationRequest = new RegistrationRequest("123", "456", "ANM", "B001V005");
+        LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V005", "");
+        RegistrationRequest registrationRequest = new RegistrationRequest("123", "456", "ANM", "B001V005","");
         final String id = "id";
         when(logService.registered(any(LogRegistrationRequest.class))).thenReturn(id);
 
@@ -48,7 +48,7 @@ public class RegistrationServiceTest  {
 
         verify(logService).registered(argThat(new LogRegistrationRequestMatcher(logRegistrationRequest)));
         verify(reportDataPublisher).publishRegistration(argThat(new LogDataMatcher(new LogData(LogType.REGISTRATION,id))));
-        verify(frontLineWorkerService).createNew("123",Designation.ANM,"B001V005");
+        verify(frontLineWorkerService).createNew("123",Designation.ANM,"B001V005", registrationRequest.getOperator());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class RegistrationServiceTest  {
         final String msisdn = "123";
         final String name = "myName";
         final String id = "id";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM, "B001V005") { {setId(id);}};
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM, "B001V005","") { {setId(id);}};
         when(frontLineWorkerService.saveName(msisdn, name)).thenReturn(frontLineWorker);
 
         registrationService.saveTranscribedName(msisdn, name);

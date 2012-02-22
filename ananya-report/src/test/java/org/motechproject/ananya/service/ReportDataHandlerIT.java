@@ -75,18 +75,22 @@ public class ReportDataHandlerIT {
         Location location = new Location(locationCode, "district", "block", "panchayat");
         allLocations.add(location);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId());
+        DateTime registeredDate = DateTime.now();
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId(),"");
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
+        frontLineWorker.setRegisteredDate(registeredDate);
+
         allFrontLineWorkers.add(frontLineWorker);
 
-        DateTime dateTime = DateTime.now();
+        DateTime dateTime = DateTime.now().plusDays(3);
         RegistrationLog registrationLog = new RegistrationLog(msisdn, "123", dateTime, dateTime.plusMinutes(1), "");
         allRegistrationLogs.add(registrationLog);
 
         LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
-        allTimeDimensions.makeFor(dateTime);
+        allTimeDimensions.makeFor(registeredDate);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();
@@ -95,7 +99,7 @@ public class ReportDataHandlerIT {
 
         handler.handleRegistration(event);
 
-        TimeDimension timeDimension = allTimeDimensions.getFor(dateTime);
+        TimeDimension timeDimension = allTimeDimensions.getFor(registeredDate);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId(), timeDimension.getId(), locationDimension.getId());
 
@@ -104,10 +108,10 @@ public class ReportDataHandlerIT {
         assertEquals(locationDimension.getBlock(), "block");
         assertEquals(locationDimension.getPanchayat(), "panchayat");
 
-        assertEquals((int) timeDimension.getDay(), dateTime.getDayOfYear());
-        assertEquals((int) timeDimension.getWeek(), dateTime.getWeekOfWeekyear());
-        assertEquals((int) timeDimension.getMonth(), dateTime.getMonthOfYear());
-        assertEquals((int) timeDimension.getYear(), dateTime.getYear());
+        assertEquals((int) timeDimension.getDay(), registeredDate.getDayOfYear());
+        assertEquals((int) timeDimension.getWeek(), registeredDate.getWeekOfWeekyear());
+        assertEquals((int) timeDimension.getMonth(), registeredDate.getMonthOfYear());
+        assertEquals((int) timeDimension.getYear(), registeredDate.getYear());
 
         assertEquals(frontLineWorkerDimension.getMsisdn(), new Long(555));
         assertEquals(frontLineWorkerDimension.getOperator(), "");
@@ -117,13 +121,13 @@ public class ReportDataHandlerIT {
         assertNotNull(registrationMeasure);
         assertEquals("block", registrationMeasure.getLocationDimension().getBlock());
         assertEquals(locationCode, registrationMeasure.getLocationDimension().getLocationId());
-        assertEquals(dateTime.getDayOfYear(), (int) registrationMeasure.getTimeDimension().getDay());
+        assertEquals(registeredDate.getDayOfYear(), (int) registrationMeasure.getTimeDimension().getDay());
     }
 
     @Test
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001","");
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);

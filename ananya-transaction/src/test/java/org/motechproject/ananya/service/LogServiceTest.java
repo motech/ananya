@@ -2,22 +2,17 @@ package org.motechproject.ananya.service;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.request.LogRegistrationRequest;
 
-import java.util.List;
-
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -35,7 +30,7 @@ public class LogServiceTest {
 
     @Test
     public void shouldCallAllRegistrationLogsToPersist() {
-        LogRegistrationRequest registrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V004");
+        LogRegistrationRequest registrationRequest = new LogRegistrationRequest("123", "456", "ANM", "B001V004", "");
 
         logService.registered(registrationRequest);
 

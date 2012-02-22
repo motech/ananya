@@ -17,6 +17,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String msisdn;
 
     @JsonProperty
+    private String operator;
+
+    @JsonProperty
     private BookMark bookmark;
 
     @JsonProperty
@@ -42,16 +45,27 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return "FrontLineWorker{" +
                 "name='" + name + '\'' +
                 ", msisdn='" + msisdn + '\'' +
+                ", operator='" + operator + '\'' +
+                ", bookmark=" + bookmark +
+                ", reportCard=" + reportCard +
+                ", status=" + status +
                 ", designation=" + designation +
                 ", locationId='" + locationId + '\'' +
-                ", status=" + status +
+                ", registeredDate=" + registeredDate +
                 '}';
     }
 
-    public FrontLineWorker(String msisdn, Designation designation, String locationId) {
+
+
+    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator) {
         this.msisdn = msisdn;
         this.designation = designation;
         this.locationId = locationId;
+        this.operator = operator;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
     public String getLocationId() {
@@ -108,4 +122,5 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void setRegisteredDate(DateTime registeredDate) {
        this.registeredDate = registeredDate;
     }
+
 }

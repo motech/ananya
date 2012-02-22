@@ -13,21 +13,22 @@ import javax.persistence.*;
 public class RegistrationMeasure {
 
     public static final String FIND_BY_FLW_LOCATION_TIME = "find.by.flw.location.time";
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "time_id")
+    @JoinColumn(name = "time_id", nullable = false)
     private TimeDimension timeDimension;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private LocationDimension locationDimension;
     
     @ManyToOne
-    @JoinColumn(name = "flw_id")
+    @JoinColumn(name = "flw_id", nullable = false)
     private FrontLineWorkerDimension frontLineWorkerDimension;
 
     public RegistrationMeasure() {

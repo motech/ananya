@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -58,7 +57,7 @@ public class FrontLineWorkerServiceTest {
         patna.setId("id");
         when(allLocations.findByExternalId(panchayatCode)).thenReturn(patna);
 
-        frontLineWorkerService.createNew("msisdn", Designation.ASHA, panchayatCode);
+        frontLineWorkerService.createNew("msisdn", Designation.ASHA, panchayatCode, "");
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
@@ -95,7 +94,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     private FrontLineWorker FrontLineWorker() {
-        return new FrontLineWorker("123", Designation.ANM, "123");
+        return new FrontLineWorker("123", Designation.ANM, "123","");
     }
 
     @Test
@@ -140,7 +139,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldSaveNameWhenNameIsWellFormed() throws Exception {
         String msisdn = "555", name = "abcd";
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001");
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001","");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
         
         frontLineWorkerService.saveName(msisdn, name);

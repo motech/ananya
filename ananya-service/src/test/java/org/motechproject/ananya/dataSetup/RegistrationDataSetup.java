@@ -12,6 +12,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.service.ReportDataMeasure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,6 +50,9 @@ public class RegistrationDataSetup {
 
     private ArrayList<FrontLineWorker> frontLineWorkerList;
 
+    @Autowired
+    private ReportDataMeasure reportDataMeasure;
+
     private void populateLocationCodes() {
         locations = new ArrayList<Location>();
         for (String code : predefinedLocationCodes) {
@@ -64,6 +68,8 @@ public class RegistrationDataSetup {
         endDate = DateTime.parse(dataSetupProperties.getProperty("capture.end.date"));
         numberOfFLW = Integer.parseInt(dataSetupProperties.getProperty("number.of.flw"));
         frontLineWorkerList = new ArrayList<FrontLineWorker>();
+
+        allFrontLineWorkers.removeAll();
     }
 
     @Test
@@ -75,7 +81,7 @@ public class RegistrationDataSetup {
             FrontLineWorker frontLineWorker = new FrontLineWorker(
                     RandomStringUtils.randomNumeric(10),
                     getDesignation(),
-                    location.getId());
+                    location.getId(),"");
             frontLineWorker.setRegisteredDate(getRegisteredDate());
             frontLineWorker.status(RegistrationStatus.REGISTERED);
             frontLineWorkerList.add(frontLineWorker);
@@ -90,6 +96,9 @@ public class RegistrationDataSetup {
         if (frontLineWorkerList == null || frontLineWorkerList.size() == 0) return;
 
         ananyaDbConnector.executeBulk(frontLineWorkerList);
+        for(FrontLineWorker frontLineWorker : frontLineWorkerList){
+            reportDataMeasure.createRegistrationMeasureWith(frontLineWorker.getMsisdn());
+        }
         frontLineWorkerList.clear();
     }
     

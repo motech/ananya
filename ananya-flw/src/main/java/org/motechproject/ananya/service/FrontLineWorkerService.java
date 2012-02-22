@@ -34,9 +34,10 @@ public class FrontLineWorkerService {
         return getStatus(msisdn).isRegistered();
     }
 
-    public String createNew(String msisdn, Designation designation, String panchayatCode) {
+    public String createNew(String msisdn, Designation designation, String panchayatCode, String operator) {
         Location location = allLocations.findByExternalId(panchayatCode);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId()).status(RegistrationStatus.PENDING_REGISTRATION);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator)
+                                            .status(RegistrationStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
     }

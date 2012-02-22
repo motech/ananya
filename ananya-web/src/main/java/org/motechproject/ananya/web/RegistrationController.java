@@ -51,7 +51,7 @@ public class RegistrationController {
             String designation = request.getParameter("designation");
             String panchayat = request.getParameter("panchayat");
 
-            RegistrationRequest registrationRequest = new RegistrationRequest(callerId, calledNumber, designation, panchayat);
+            RegistrationRequest registrationRequest = new RegistrationRequest(callerId, calledNumber, designation, panchayat, "");
             registrationService.register(registrationRequest);
 
             log.info("callerid=" + callerId + "|calledNo=" + calledNumber + "|designation=" + designation + "|panchayat=" + panchayat);

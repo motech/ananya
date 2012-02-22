@@ -22,7 +22,8 @@ public class LogService {
     }
 
     public String registered(LogRegistrationRequest registrationRequest) {
-        RegistrationLog registrationLog = new RegistrationLog(registrationRequest.callerId(), registrationRequest.calledNumber(), DateTime.now(), DateTime.now(), "");
+        RegistrationLog registrationLog = new RegistrationLog(registrationRequest.callerId(),
+                registrationRequest.calledNumber(), DateTime.now(), DateTime.now(), registrationRequest.getOperator());
         registrationLog.designation(registrationRequest.designation()).panchayat(registrationRequest.panchayat());
         allRegistrationLogs.add(registrationLog);
         return registrationLog.getId();
