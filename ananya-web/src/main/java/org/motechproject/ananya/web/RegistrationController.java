@@ -84,7 +84,6 @@ public class RegistrationController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "flw/save/name")
-    @ResponseBody
     public ModelAndView saveTranscribedName(HttpServletRequest request) throws AnanyaApiException {
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
