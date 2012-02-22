@@ -46,9 +46,9 @@ public class CallDetailController {
             CallEvent callEvent =  callData.getEvent();
             String time = callData.getTime();
             CallDetailLog callDetailLog = new CallDetailLog(callId, callerId, callEvent, time, "operator");
-            log.info("callerID : ", callerId);
-            log.info("event : ", callEvent);
-            log.info("time : ", time);
+            log.info("callerID : "+ callerId);
+            log.info("event : "+ callEvent);
+            log.info("time : "+ time);
             callDetailLoggerService.Save(callDetailLog);
         }
         return "Post Done";
