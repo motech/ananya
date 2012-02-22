@@ -4,9 +4,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class CallDurationData {
     private CallEvent event;
-    private String time;
+    private long time;
 
-    public CallDurationData(CallEvent event, String time) {
+    public CallDurationData(CallEvent event, long time) {
         this.event = event;
         this.time = time;
     }
@@ -19,7 +19,7 @@ public class CallDurationData {
         return event;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 }

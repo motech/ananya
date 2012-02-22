@@ -1,5 +1,10 @@
 package org.motechproject.ananya.web;
 
+import com.google.gson.Gson;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +19,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -44,8 +53,8 @@ public class CallDetailControllerTest {
     public void shouldSaveCallDetail() throws IllegalAccessException {
         String callerId = "callerId";
         String callId = "callId";
-
-        String dataToPost = "[{\"token\":\"0\",\"data\":{\"event\":\"CALL_START\",\"time\":\"Tue Feb 21 2012 11:13:44 GMT+0530 (IST)\"}}]";
+        DateTime dateTime = new DateTime(2012, 2, 22, 14, 53, 13);
+        String dataToPost = "[{\"token\":\"0\",\"data\":{\"event\":\"CALL_START\",\"time\":1329902593000}}]";
 
         when(request.getParameter("callerId")).thenReturn(callerId);
         when(request.getParameter("callId")).thenReturn(callId);
@@ -56,9 +65,10 @@ public class CallDetailControllerTest {
         verify(callDetailLoggerService).Save(captor.capture());
         CallDetailLog captured = captor.getValue();
 
+        
         assertEquals(callerId, getFieldValue(captured,"callerId"));
         assertEquals(callId, getFieldValue(captured,"callId"));
-        assertEquals("Tue Feb 21 2012 11:13:44 GMT+0530 (IST)", getFieldValue(captured,"time"));
+        assertEquals(dateTime, getFieldValue(captured, "time"));
         assertEquals(CallEvent.CALL_START, getFieldValue(captured,"callEvent"));
     }
 }

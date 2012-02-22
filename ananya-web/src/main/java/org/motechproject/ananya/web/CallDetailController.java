@@ -2,6 +2,7 @@ package org.motechproject.ananya.web;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CallDetailLog;
 import org.motechproject.ananya.domain.CallDurationData;
 import org.motechproject.ananya.domain.CallEvent;
@@ -44,11 +45,11 @@ public class CallDetailController {
         {
             CallDurationData callData = data.data();
             CallEvent callEvent =  callData.getEvent();
-            String time = callData.getTime();
-            CallDetailLog callDetailLog = new CallDetailLog(callId, callerId, callEvent, time, "operator");
+            DateTime dateTime = new DateTime(callData.getTime());
+            CallDetailLog callDetailLog = new CallDetailLog(callId, callerId, callEvent, dateTime, "operator");
             log.info("callerID : "+ callerId);
             log.info("event : "+ callEvent);
-            log.info("time : "+ time);
+            log.info("time : "+ dateTime);
             callDetailLoggerService.Save(callDetailLog);
         }
         return "Post Done";

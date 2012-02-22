@@ -26,12 +26,11 @@ public class CallDetailLoggerServiceTest {
 
     @Test
     public void shouldSaveCallDetailLog() {
-        String time = DateTime.now().toString();
-        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, time,"");
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(),"");
 
         callDetailLoggerService.Save(log);
 
-        verify(allCallDetailLogs).add(log);
+        verify(allCallDetailLogs).addIfAbsent(log);
     }
 
 }

@@ -13,7 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-transaction.xml")
@@ -28,11 +30,35 @@ public class AllCallDetailLogsTest {
 
     @Test
     public void shouldSaveACallDetailLog() {
-        String time = DateTime.now().toString();
-        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, time, "");
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(), "");
         assertThat(log.getId(), is(nullValue()));
         allCallDetailLogs.add(log);
         assertThat(log.getId(), is(notNullValue()));
+        CallDetailLog logFromDb = allCallDetailLogs.get(log.getId());
+        assertThat(logFromDb.getCallId(), is(log.getCallId()));
+    }
+
+    @Test
+    public void shouldSaveACallDetailLogIfAbsent(){
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(), "");
+
+        boolean added = allCallDetailLogs.addIfAbsent(log);
+
+        assertTrue(added);
+        assertThat(log.getId(), is(notNullValue()));
+        CallDetailLog logFromDb = allCallDetailLogs.get(log.getId());
+        assertThat(logFromDb.getCallId(), is(log.getCallId()));
+    }
+
+    @Test
+    public void shouldNotSaveACallDetailLogIfAlreadyPresent(){
+        CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(), "");
+
+        allCallDetailLogs.add(log);
+        assertThat(log.getId(), is(notNullValue()));
+        boolean added = allCallDetailLogs.addIfAbsent(log);
+        assertFalse(added);
+
         CallDetailLog logFromDb = allCallDetailLogs.get(log.getId());
         assertThat(logFromDb.getCallId(), is(log.getCallId()));
     }

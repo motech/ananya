@@ -1,5 +1,6 @@
 package org.motechproject.ananya.functional;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,8 @@ public class CallDetailLoggerFlowTest extends SpringIntegrationTest {
     public void shouldSaveCallDetailAtTheEndOfTheCall() throws IOException {
         String callId = "callId";
         String callerId = "callerId";
-        String dataToPost = "[{\"token\":\"0\",\"data\":{\"event\":\"CALL_START\",\"time\":\"DateTime\"}}]";
+        DateTime dateTime = new DateTime(2012, 2, 22, 14, 53, 13);
+        String dataToPost = "[{\"token\":\"0\",\"data\":{\"event\":\"CALL_START\",\"time\":1329902593000}}]";
 
         MyWebClient.PostParam callIdParam = MyWebClient.PostParam.param("callId", callId);
         MyWebClient.PostParam callerIdParam = MyWebClient.PostParam.param("callerId", callerId);
@@ -42,6 +44,5 @@ public class CallDetailLoggerFlowTest extends SpringIntegrationTest {
 
         CallDetailLog byCallId = allCallDetailLogs.findByCallId(callId);
         assertEquals(org.motechproject.ananya.domain.CallEvent.CALL_START,byCallId.getCallEvent());
-        assertEquals("DateTime",byCallId.getTime());
     }
 }
