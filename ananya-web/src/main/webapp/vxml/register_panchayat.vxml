@@ -53,6 +53,7 @@
                 <script>
                     promptContext.resetCounts();
                 </script>
+                <goto nextitem="confirm"/>
             </filled>
         </field>
 
