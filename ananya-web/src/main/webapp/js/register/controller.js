@@ -77,12 +77,12 @@ var RegisterController = function(metadata) {
     };
 
     this.getBlockGrammar = function() {
-        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_BLOCKS_S01D001.grxml";
+        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_BLOCKS_"+records[fieldCounter]+".grxml";
         return this.absoluteUrl(relativeUrl);
     };
 
     this.getPanchayatGrammar = function() {
-        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_VILLAGES_S01D001B001.grxml";
+        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_VILLAGES_"+records[fieldCounter]+".grxml";
         return this.absoluteUrl(relativeUrl);
     };
 

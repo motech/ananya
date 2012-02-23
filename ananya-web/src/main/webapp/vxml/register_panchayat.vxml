@@ -4,14 +4,11 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="register_root.vxml">
     <form>
-        <block>
+        <field name="panchayatRecord">
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
                 <audio expr="controller.playBeep()"/>
             </prompt>
-        </block>
-
-        <field name="panchayatRecord">
             <grammar srcexpr="controller.getPanchayatGrammar()" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">
                 <rule id="root3" scope="public">
