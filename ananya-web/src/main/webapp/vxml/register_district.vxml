@@ -4,12 +4,12 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="register_root.vxml">
     <form>
-        <field name="blockRecord">
+        <field name="districtRecord">
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
                 <audio expr="controller.playBeep()"/>
             </prompt>
-            <grammar srcexpr="controller.getBlockGrammar()" type="application/srgs+xml" fetchhint="safe"/>
+            <grammar srcexpr="controller.getDistrictGrammar()" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">
                 <rule id="root3" scope="public">
                     <one-of>
@@ -28,7 +28,7 @@
                         <audio expr="controller.playNoInputPrompt(myField)"/>
                         <audio expr="controller.playBeep()"/>
                     </prompt>
-                    <goto nextitem="blockRecord"/>
+                    <goto nextitem="districtRecord"/>
                 </if>
             </noinput>
             <nomatch>
@@ -42,11 +42,11 @@
                         <audio expr="controller.playNoInputPrompt(myField)"/>
                         <audio expr="controller.playBeep()"/>
                     </prompt>
-                    <goto nextitem="blockRecord"/>
+                    <goto nextitem="districtRecord"/>
                 </if>
             </nomatch>
             <filled>
-                <assign name="myRecord" expr="blockRecord"/>
+                <assign name="myRecord" expr="districtRecord"/>
                 <script>
                     promptContext.resetCounts();
                 </script>
@@ -100,7 +100,6 @@
                 </if>
             </filled>
         </field>
-
 
     </form>
 </vxml>       
