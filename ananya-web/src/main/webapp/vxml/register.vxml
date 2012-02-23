@@ -64,7 +64,7 @@
             <if cond="myField == 'name'">
                 <goto nextitem="nameRecord"/>
                 <elseif cond="myField == 'district'"/>
-                <goto nextitem="register_district.vxml"/>
+                <goto next="register_district.vxml"/>
                 <elseif cond="myField == 'block'"/>
                 <goto next="register_block.vxml"/>
                 <elseif cond="myField == 'panchayat'"/>
