@@ -4,22 +4,6 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="register_root.vxml">
 
-    <script src="../generated/js/metadata.js"/>
-    <script src="../js/register/controller.js"/>
-    <script src="../js/prompt_context.js"/>
-
-    <script>
-        <![CDATA[
-        var controller = new RegisterController(metaData);
-        var promptContext = new PromptContext(metaData);
-        var myRecord, myField;
-         ]]>
-    </script>
-
-    <property name="timeout" value="8s"/>
-    <property name="bargein" value="true"/>
-    <property name="confidencelevel" value=".4"/>
-
     <form id="record_designation_form">
         <field name="designation">
             <prompt>
