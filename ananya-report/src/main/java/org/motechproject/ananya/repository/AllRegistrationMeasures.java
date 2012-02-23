@@ -16,4 +16,8 @@ public class AllRegistrationMeasures {
                 new String[]{"flw_id", "time_id", "location_id"},
                 new Object[]{flwId, timeId, locationId});
     }
+
+    public void removeAll() {
+        template.bulkUpdate("delete from RegistrationMeasure");
+    }
 }

@@ -30,4 +30,34 @@
         </dependency>
     </dependencies>
 
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<version>1.6</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>set-up-performance-data</id>-->
+                        <!--<phase>pre-integration-test</phase>-->
+                        <!--<configuration>-->
+                            <!--<target name="load.performance.data">-->
+                                <!--<echo message="Performance Data Loading: START"/>-->
+                                    <!--<property name="compile_classpath" refid="maven.compile.classpath"/>-->
+                                    <!--<java classname="org.motechproject.ananya.dataSetup.PerformanceDataSetupLauncher">-->
+                                        <!--<classpath>-->
+                                            <!--<pathelement path="${compile_classpath}"/>-->
+                                        <!--</classpath>-->
+                                    <!--</java>-->
+                                <!--<echo message="Performance Data Loading: END"/>-->
+                            <!--</target>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
+
 </project>
