@@ -146,7 +146,7 @@ describe("Registration Controller", function () {
                     };
 
         controller = new RegisterController(metadata);
-        expect(controller.getDistGrammar()).toEqual("/ananya/v1.2/grammar/ANANYA_S001_DISTRICTS.grxml");
+        expect(controller.getDistrictGrammar()).toEqual("/ananya/v1.2/grammar/ANANYA_S001_DISTRICTS.grxml");
     });
 
 

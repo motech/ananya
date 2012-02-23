@@ -71,7 +71,7 @@ var RegisterController = function(metadata) {
             return this.absoluteUrl("vxml/jobaid.vxml");
     };
 
-    this.getDistGrammar = function() {
+    this.getDistrictGrammar = function() {
         var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_S001_DISTRICTS.grxml";
         return this.absoluteUrl(relativeUrl);
     };
