@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
+      application="register_root.vxml">
+    <form>
+        <field name="panchayatRecord">
+            <prompt bargein="false">
+                <audio expr="controller.playPrompt(myField)"/>
+                <audio expr="controller.playBeep()"/>
+            </prompt>
+            <grammar srcexpr="controller.getPanchayatGrammar()" type="application/srgs+xml" fetchhint="safe"/>
+            <grammar mode="dtmf" version="1.0" root="root3">
+                <rule id="root3" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="panchayatRecord"/>
+                </if>
+            </noinput>
+            <nomatch>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="panchayatRecord"/>
+                </if>
+            </nomatch>
+            <filled>
+                <assign name="myRecord" expr="panchayatRecord"/>
+                <script>
+                    promptContext.resetCounts();
+                </script>
+                <goto nextitem="confirm"/>
+            </filled>
+        </field>
+
+        <field name="confirm">
+            <prompt bargein="false">
+                <audio expr="controller.playConfirmPrompt(myField)"/>
+                <audio expr="controller.playBackPrompt(myField,myRecord)"/>
+                <audio expr="controller.playRerecordPrompt(myField)"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root1">
+                <rule id="root1" scope="public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <reprompt/>
+                </if>
+            </noinput>
+            <nomatch>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
+                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                    <reprompt/>
+                </if>
+            </nomatch>
+            <filled>
+                <if cond="confirm == '1'">
+                    <goto next="register.vxml#record_form"/>
+                    <elseif cond="confirm == '2'"/>
+                    <script>
+                        controller.capture(myRecord);
+                    </script>
+                    <goto next="register.vxml#record_form"/>
+                </if>
+            </filled>
+        </field>
+
+    </form>
+</vxml>       

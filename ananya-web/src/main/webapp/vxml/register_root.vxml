@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <script src="../generated/js/metadata.js"/>
+    <script src="../js/register/controller.js"/>
+    <script src="../js/prompt_context.js"/>
+
+    <script>
+        <![CDATA[
+        var controller = new RegisterController(metaData);
+        var promptContext = new PromptContext(metaData);
+        var myRecord, myField;
+         ]]>
+    </script>
+
+    <property name="timeout" value="8s"/>
+    <property name="bargein" value="true"/>
+    <property name="confidencelevel" value=".4"/>
+
+</vxml>

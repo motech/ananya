@@ -14,12 +14,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class AllNodes extends MotechBaseRepository<Node> {
     private AllStringContents allStringContents;
     private static Gson GSON;
+    private ConcurrentHashMap<String, String> cachedTreeJsons = new ConcurrentHashMap();
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
@@ -76,8 +80,13 @@ public class AllNodes extends MotechBaseRepository<Node> {
     }
 
     public String nodeAsJson(String treeName) throws IOException {
-        Node node = findByName(treeName);
-        return GSON.toJson(node);
+        String nodeAsJson = cachedTreeJsons.get(treeName);
+        if(nodeAsJson == null){
+             Node node = findByName(treeName);
+             nodeAsJson = GSON.toJson(node);
+             cachedTreeJsons.putIfAbsent(treeName, nodeAsJson);
+        }
+        return nodeAsJson;
     }
 
     public void addNodeWithDescendants(Node rootNode) {
