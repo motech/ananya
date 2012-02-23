@@ -8,16 +8,10 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>Ananya Service</name>
 
-    <artifactId>ananya-service</artifactId>
+    <artifactId>ananya-performance</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.motechproject.ananya</groupId>
-            <artifactId>ananya-transaction</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-flw</artifactId>

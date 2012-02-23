@@ -12,6 +12,7 @@
         <module>ananya-report</module>
         <module>ananya-transaction</module>
         <module>ananya-service</module>
+        <module>ananya-performance</module>
     </modules>
     <name>Ananya</name>
 

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.dataSetup;
+package org.motechproject.ananya.performance.dataSetup;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.ektorp.CouchDbConnector;
@@ -7,11 +7,8 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.repository.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.AllRegistrationMeasures;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.repository.*;
 import org.motechproject.ananya.service.ReportDataMeasure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +33,7 @@ public class RegistrationDataSetup {
     private ReportDataMeasure reportDataMeasure;
 
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    private AllLocationDimensions allLocationDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
 
     // The Chosen Ones : Amni, West Thatha, Dumari, Gudara, Nautan Khund
@@ -63,6 +61,7 @@ public class RegistrationDataSetup {
                                  AllFrontLineWorkers allFrontLineWorkers,
                                  ReportDataMeasure reportDataMeasure,
                                  AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                 AllLocationDimensions allLocationDimensions,
                                  AllRegistrationMeasures allRegistrationMeasures)
     {
         this.allLocations = allLocations;
@@ -71,6 +70,7 @@ public class RegistrationDataSetup {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.reportDataMeasure = reportDataMeasure;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+        this.allLocationDimensions = allLocationDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
 
         populateLocationCodes();
