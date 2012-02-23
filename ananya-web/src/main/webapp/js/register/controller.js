@@ -49,7 +49,7 @@ var RegisterController = function(metadata) {
     };
 
     this.submitUrl = function() {
-            return this.absoluteUrl(metadata["register.submit.url"]);
+        return this.absoluteUrl(metadata["register.submit.url"]);
     };
 
     this.submitNameUrl = function() {
@@ -57,8 +57,8 @@ var RegisterController = function(metadata) {
     };
 
     this.absoluteUrl = function(url) {
-        var urlStartsWithHttp = (url.indexOf("http:")==0);
-        if(urlStartsWithHttp) {
+        var urlStartsWithHttp = (url.indexOf("http:") == 0);
+        if (urlStartsWithHttp) {
             return url;
         }
         return metadata["context.path"] + "/" + metadata["url.version"] + "/" + url;
@@ -71,8 +71,18 @@ var RegisterController = function(metadata) {
             return this.absoluteUrl("vxml/jobaid.vxml");
     };
 
-    this.getGrammar = function() {
-        var relativeUrl = metadata["grammar.url"]+ "/" + "ANANYA_ALL.grxml";
+    this.getDistGrammar = function() {
+        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_S001_DISTRICTS.grxml";
+        return this.absoluteUrl(relativeUrl);
+    };
+
+    this.getBlockGrammar = function() {
+        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_BLOCKS_S01D001.grxml";
+        return this.absoluteUrl(relativeUrl);
+    };
+
+    this.getPanchayatGrammar = function() {
+        var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_VILLAGES_S01D001B001.grxml";
         return this.absoluteUrl(relativeUrl);
     };
 

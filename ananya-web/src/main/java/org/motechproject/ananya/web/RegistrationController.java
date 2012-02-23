@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -110,6 +111,11 @@ public class RegistrationController {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("root", new ResponseStatus(ex.getErrorCode(), ex.getErrorMessage()));
         return new ModelAndView("jsonView", model);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "vxml/register/block")
+    public ModelAndView getBlockVxml(@RequestParam String district) {
+        return new ModelAndView("block").addObject("district",district);
     }
 
     protected ServletFileUpload getUploader() {

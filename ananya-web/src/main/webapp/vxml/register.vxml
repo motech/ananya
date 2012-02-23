@@ -2,7 +2,7 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="root.vxml">
+      application="register_root.vxml">
 
     <script src="../generated/js/metadata.js"/>
     <script src="../js/register/controller.js"/>
@@ -72,23 +72,72 @@
                myField = controller.nextField();
                ]]>
         </script>
-
         <block>
+            <if cond="myField == 'name'">
+                <goto nextitem="nameRecord"/>
+                <elseif cond="myField == 'district'"/>
+                <goto nextitem="districtRecord"/>
+                <elseif cond="myField == 'block'"/>
+                <goto next="register_block.vxml"/>
+                <elseif cond="myField == 'panchayat'"/>
+                <goto next="register_panchayat.vxml"/>
+                <else/>
+                <goto nextitem="submit_form"/>
+            </if>
+        </block>
+        <block name="submit_form">
+            <script>
+                <![CDATA[
+                var name = controller.name();
+                var designation = controller.designation();
+                var district = controller.district();
+                var block = controller.block();
+                var panchayat = controller.panchayat();
+                ]]>
+            </script>
+            <data srcexpr="controller.submitNameUrl()"
+                  enctype="multipart/form-data" method="post"
+                  namelist="session.connection.remote.uri name"
+                  maxage="0" maxstale="0"/>
+            <data srcexpr="controller.submitUrl()" method="post"
+                  namelist="session.connection.remote.uri designation district block panchayat"
+                  maxage="0" maxstale="0"/>
+            <audio expr="controller.playRegistrationDone()"/>
+            <goto expr="controller.nextFlow(session.connection.local.uri)"/>
+        </block>
+
+        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
                 <audio expr="controller.playBeep()"/>
             </prompt>
-        </block>
+            <grammar mode="dtmf" version="1.0" root="root2">
+                <rule id="root2" scope="public">
+                    <one-of>
+                        <item>1</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <prompt bargein="false">
+                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="controller.playBeep()"/>
+                    </prompt>
+                    <goto nextitem="nameRecord"/>
+                </if>
+            </noinput>
+            <filled>
+                <assign name="myRecord" expr="nameRecord"/>
+            </filled>
+        </record>
 
-        <block>
-            <if cond="myField == 'name'">
-                <goto nextitem="nameRecord"/>
-                <else/>
-                <goto nextitem="fieldRecord"/>
-            </if>
-        </block>
-
-        <field name="confirm">
+        <field name="confirmName">
             <prompt bargein="false">
                 <audio expr="controller.playConfirmPrompt(myField)"/>
                 <audio expr="controller.playBackPrompt(myField,myRecord)"/>
@@ -124,9 +173,9 @@
                 </if>
             </nomatch>
             <filled>
-                <if cond="confirm == '1'">
+                <if cond="confirmName == '1'">
                     <goto next="#record_form"/>
-                    <elseif cond="confirm == '2'"/>
+                    <elseif cond="confirmName == '2'"/>
                     <script>
                         controller.capture(myRecord);
                     </script>
@@ -135,58 +184,9 @@
             </filled>
         </field>
 
-        <block name="submit_form">
-            <script>
-                <![CDATA[
-                var name = controller.name();
-                var designation = controller.designation();
-                var district = controller.district();
-                var block = controller.block();
-                var panchayat = controller.panchayat();
-                ]]>
-            </script>
-            <data srcexpr="controller.submitNameUrl()"
-                  enctype="multipart/form-data" method="post"
-                  namelist="session.connection.remote.uri name"
-                  maxage="0" maxstale="0"/>
-            <data srcexpr="controller.submitUrl()" method="post"
-                  namelist="session.connection.remote.uri designation district block panchayat"
-                  maxage="0" maxstale="0"/>
-            <audio expr="controller.playRegistrationDone()"/>
-            <goto expr="controller.nextFlow(session.connection.local.uri)"/>
-        </block>
 
-        <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
-            <grammar mode="dtmf" version="1.0" root="root2">
-                <rule id="root2" scope="public">
-                    <one-of>
-                        <item>1</item>
-                    </one-of>
-                </rule>
-            </grammar>
-            <noinput>
-                <script>
-                    promptContext.gotNoInput();
-                </script>
-                <if cond="promptContext.hasExceededMaxNoInputs()">
-                    <disconnect/>
-                    <else/>
-                    <prompt bargein="false">
-                        <audio expr="controller.playNoInputPrompt(myField)"/>
-                        <audio expr="controller.playBeep()"/>
-                    </prompt>
-                    <goto nextitem="nameRecord"/>
-                </if>
-            </noinput>
-            <filled>
-                <assign name="myRecord" expr="nameRecord"/>
-            </filled>
-        </record>
-
-
-        <field name="fieldRecord">
-            <grammar srcexpr="controller.getGrammar()" type="application/srgs+xml" fetchhint="safe"/>
-
+        <field name="districtRecord">
+            <grammar srcexpr="controller.getDistGrammar()" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">
                 <rule id="root3" scope="public">
                     <one-of>
@@ -194,7 +194,6 @@
                     </one-of>
                 </rule>
             </grammar>
-
             <noinput>
                 <script>
                     promptContext.gotNoInput();
@@ -206,7 +205,7 @@
                         <audio expr="controller.playNoInputPrompt(myField)"/>
                         <audio expr="controller.playBeep()"/>
                     </prompt>
-                    <goto nextitem="fieldRecord"/>
+                    <goto nextitem="districtRecord"/>
                 </if>
             </noinput>
             <nomatch>
@@ -220,11 +219,11 @@
                         <audio expr="controller.playNoInputPrompt(myField)"/>
                         <audio expr="controller.playBeep()"/>
                     </prompt>
-                    <goto nextitem="fieldRecord"/>
+                    <goto nextitem="districtRecord"/>
                 </if>
             </nomatch>
             <filled>
-                <assign name="myRecord" expr="fieldRecord"/>
+                <assign name="myRecord" expr="districtRecord"/>
                 <script>
                     promptContext.resetCounts();
                 </script>
