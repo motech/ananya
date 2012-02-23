@@ -89,6 +89,17 @@ public class AllNodesTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void nodeAsJsonShouldAlwaysReturnCorrectTree() throws Exception {
+        String treeAsJson = allNodes.nodeAsJson(COURSE_NAME);
+        Node from = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);
+        assertThat(from, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
+        Node again = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);
+        assertThat(again, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
+        Node onceAgain = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);
+        assertThat(onceAgain, NodeDeepMatcher.isSameAsNodeRepresentedBy(root));
+    }
+
+    @Test
     public void shouldSaveNodeWithAllChildren() throws Exception {
         long randomizeData = System.currentTimeMillis();
 
