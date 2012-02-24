@@ -2,20 +2,25 @@ package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class TransferData<T> {
+public class TransferData {
     private String token;
-    private T data;
+    private DataTransferType type;
+    private String data;
 
-    public TransferData(String token, T data) {
+    public TransferData(String token, String data) {
         this.token = token;
         this.data = data;
     }
 
-    public String token() {
+    public String getToken() {
         return token;
     }
 
-    public T data() {
+    public DataTransferType getType() {
+        return type;
+    }
+
+    public String getData() {
         return data;
     }
 

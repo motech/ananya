@@ -10,14 +10,11 @@ describe("Certificate course controller spec", function() {
                         "audio.url": audioFileBase,
                         "certificate.audio.url" : certificateCourseLocation,
                         "maximum.invalid.input.count" : "2",
-                        "maximum.noinput.count" : "2",
-                        "url.version" : "v1",
-                        "context.path" : "/ananya",
-                        "certificate.add.bookmark.url" : "coursestate/add"
+                        "maximum.noinput.count" : "2"
      };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
-        controller = new CertificateCourseController(course, metadata, new CourseState());
+        controller = new CertificateCourseController(course, metadata, new CourseState(), new DataTransferList());
     });
 
     it("should get the audio to be played", function () {
@@ -26,10 +23,6 @@ describe("Certificate course controller spec", function() {
 
     it("should initialize prompt context at start", function() {
         expect(controller.promptContext).toBeDefined();
-    });
-
-    it("should initialize data transfer list at start", function () {
-        expect(controller.dataTransferList).toBeDefined();
     });
 
     it("should increment no input count in prompt context if there is no input", function() {
@@ -218,27 +211,7 @@ describe("Certificate course controller spec", function() {
         controller.setInteraction(phoneInteraction);
 
         expect(controller.courseState.toJson).toHaveBeenCalled();
-        expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState);
-     });
-     
-     it("should drain the dataToPost if dataPostIsSuccesful", function () {
-        spyOn(controller.dataTransferList, "drain").andCallThrough();
-        controller.dataPostSuccessful();
-        expect(controller.dataTransferList.drain).toHaveBeenCalled();
-     });
-
-     it("should say if there is any data to post", function () {
-         spyOn(controller.dataTransferList, "size").andReturn(10);
-         expect(controller.anyDataToPost()).toEqual(true);
-     });
-
-     it("should say if there is no data to post", function () {
-         spyOn(controller.dataTransferList, "size").andReturn(0);
-         expect(controller.anyDataToPost()).toEqual(false);
-     });
-
-     it("should give the url at which the coursestate is to be posted", function () {
-         expect(controller.dataPostUrl()).toEqual("/ananya/v1/coursestate/add");
+        expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState, DataTransferList.TYPE_CC_BOOKMARK);
      });
 
      it("should set exit interaction if the call is disconnected.", function () {

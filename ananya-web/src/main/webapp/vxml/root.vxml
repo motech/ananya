@@ -11,13 +11,15 @@
     <script src="../js/certificatecourse/data_transfer_list.js"/>
     <script src="../js/utility.js"/>
     <script>
+        <![CDATA[
             var callDetailLogger = new CallDetailLogger();
+            var dataTransferList = new DataTransferList();
             callDetailLogger.start_call();
             function call_disconnect(){
                 callDetailLogger.end_call();
             }
+        ]]>
     </script>
-
 
     <catch event = "connection.disconnect.hangup">
         <log>***** Disconnect event caught ******</log>
@@ -28,7 +30,9 @@
         <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
         <data srcexpr="metaData['add.call.duration.url']" method="POST" namelist="dataToPost callerId callId"/>
         <script>
-            callDetailLogger.dataPostSuccessful();
+            <![CDATA[
+                dataTransferList.drain();
+            ]]>
         </script>
     </catch>
 </vxml>

@@ -3,12 +3,12 @@ var CertificateCourse = function () {
 
 CertificateCourse.interactions = new Array();
 
-var CertificateCourseController = function(course, metadata, courseState) {
-    this.init = function(course, metadata) {
+var CertificateCourseController = function(course, metadata, courseState, dataTransferList) {
+    this.init = function(course, metadata, dataTransferList) {
         this.promptContext = new PromptContext(metadata);
         this.courseState = courseState;
+        this.dataTransferList = dataTransferList;
         this.initializeInteractionsArray(metadata, course, this.courseState);
-        this.dataTransferList = new DataTransferList();
         this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey].resumeCall());
     };
 
@@ -48,22 +48,6 @@ var CertificateCourseController = function(course, metadata, courseState) {
         }
     };
 
-    this.dataToPost = function() {
-        return this.dataTransferList.asJson();
-    };
-
-    this.dataPostUrl = function() {
-        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['certificate.add.bookmark.url'];
-    };
-
-    this.anyDataToPost = function() {
-        return this.dataTransferList.size() > 0;
-    }
-
-    this.dataPostSuccessful = function() {
-        this.dataTransferList.drain();
-    };
-
     this.playingDone = function() {
         this.setInteraction(this.interaction.nextInteraction());
     };
@@ -79,7 +63,7 @@ var CertificateCourseController = function(course, metadata, courseState) {
         }
         if(this.currentInteractionIsBookMarkable()) {
             this.courseState.setInteractionKey(this.interaction.getInteractionKey());
-            this.dataTransferList.add(this.courseState.toJson());
+            this.dataTransferList.add(this.courseState.toJson(), DataTransferList.TYPE_CC_BOOKMARK);
         }
     };
 
@@ -127,6 +111,6 @@ var CertificateCourseController = function(course, metadata, courseState) {
         this.setInteraction(exitInteraction);
     }
 
-    this.init(course, metadata);
+    this.init(course, metadata, dataTransferList);
 };
 

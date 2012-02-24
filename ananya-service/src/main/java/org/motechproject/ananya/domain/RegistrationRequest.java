@@ -1,11 +1,6 @@
 package org.motechproject.ananya.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class RegistrationRequest {
-    private String callerId;
-    private String calledNumber;
+public class RegistrationRequest extends BaseRequest {
     private String designation;
     private String panchayat;
     private String operator;
@@ -13,8 +8,7 @@ public class RegistrationRequest {
     public static final String LOG_TYPE = "RegistrationLog";
 
     public RegistrationRequest(String callerId, String calledNumber, String designation, String panchayat, String operator) {
-        this.callerId = callerId;
-        this.calledNumber = calledNumber;
+        super(callerId, calledNumber);
         this.designation = designation;
         this.panchayat = panchayat;
         this.operator = operator;
@@ -22,14 +16,6 @@ public class RegistrationRequest {
 
     public String getOperator() {
         return operator;
-    }
-
-    public String callerId() {
-        return this.callerId;
-    }
-
-    public String calledNumber() {
-        return this.calledNumber;
     }
 
     public String designation() {

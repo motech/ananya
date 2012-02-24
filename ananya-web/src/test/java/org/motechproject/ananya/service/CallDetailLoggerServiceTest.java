@@ -28,7 +28,7 @@ public class CallDetailLoggerServiceTest {
     public void shouldSaveCallDetailLog() {
         CallDetailLog log = new CallDetailLog("caller", "callerId", CallEvent.REGISTRATION_START, DateTime.now(),"");
 
-        callDetailLoggerService.Save(log);
+        callDetailLoggerService.save(log);
 
         verify(allCallDetailLogs).addIfAbsent(log);
     }

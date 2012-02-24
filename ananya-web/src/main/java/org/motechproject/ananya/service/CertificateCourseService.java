@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CertificationCourseLog;
+import org.motechproject.ananya.domain.CertificationCourseBookmark;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.repository.AllCertificationCourseLogs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,25 @@ public class CertificateCourseService {
         this.frontLineWorkerService = frontLineWorkerService;
     }
 
-    public void saveState(CertificationCourseLog certificationCourseLog) {
-        boolean wasAddedJustNow = allCertificationCourseLogs.addIfAbsent(certificationCourseLog);
-        if(!wasAddedJustNow) {
-           return;
-        }
-        final Integer chapterIndex = certificationCourseLog.getChapterIndex();
-        final Integer lessonOrQuestionIndex = certificationCourseLog.getLessonOrQuestionIndex();
-        final Boolean result = certificationCourseLog.isResult();
-        final String callerId = certificationCourseLog.getCallerId();
+    public void saveState(CertificationCourseBookmark certificationCourseBookmark) {
+//        boolean wasAddedJustNow = allCertificationCourseLogs.addIfAbsent(certificationCourseBookmark);
+//        if(!wasAddedJustNow) {
+//           return;
+//        }
+        final Integer chapterIndex = certificationCourseBookmark.getChapterIndex();
+        final Integer lessonOrQuestionIndex = certificationCourseBookmark.getLessonOrQuestionIndex();
+        final Boolean result = certificationCourseBookmark.isResult();
+        final String callerId = certificationCourseBookmark.getCallerId();
 
-        final BookMark bookMark = new BookMark(certificationCourseLog.getInteractionKey(), chapterIndex, lessonOrQuestionIndex);
+        final BookMark bookMark = new BookMark(certificationCourseBookmark.getInteractionKey(), chapterIndex, lessonOrQuestionIndex);
 
         frontLineWorkerService.addBookMark(callerId, bookMark);
 
-        final boolean interactionIsStartQuiz = "startQuiz".equals(certificationCourseLog.getInteractionKey());
+        final boolean interactionIsStartQuiz = "startQuiz".equals(certificationCourseBookmark.getInteractionKey());
         if(interactionIsStartQuiz) {
             frontLineWorkerService.resetScoresForChapterIndex(callerId, chapterIndex);
         }
-        final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(certificationCourseLog.getInteractionKey());
+        final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(certificationCourseBookmark.getInteractionKey());
         if(interactionIsPlayAnswerExplanation) {
             final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result);
             frontLineWorkerService.addScore(callerId, score);

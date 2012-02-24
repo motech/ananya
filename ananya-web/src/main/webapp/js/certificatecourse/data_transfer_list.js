@@ -1,13 +1,21 @@
 var DataTransferList = function() {
+    this.TYPE_CC_BOOKMARK = "ccBookmark";
+    this.TYPE_CALL_DURATION = "callDuration";
+
     this.init = function() {
         this.counter = 0;
         this.drain();
     };
 
-    this.add = function(data) {
+    this.add = function(data, type) {
         var dataPacket = new Object();
+        //header elements follow
         dataPacket["token"] = this.counter++;
+        dataPacket["type"] = type;
+
+        // data elements follow
         dataPacket["data"] = data;
+
         this.transferList[this.transferList.length] = dataPacket;
     };
 
@@ -15,12 +23,16 @@ var DataTransferList = function() {
         this.transferList = new Array();
     };
 
-    this.size = function() {
-        return this.transferList.length;
+    this.anyData = function() {
+        return this.transferList.length > 0;
     };
 
-    this.asJson = function() {
+    this.dataToPost = function() {
         return Utility.stringify(this.transferList);
+    };
+
+    this.dataPostUrl = function() {
+        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['certificate.add.bookmark.url'];
     };
 
     this.init();

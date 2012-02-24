@@ -20,12 +20,12 @@ public class RegistrationService {
     }
 
     public void register(RegistrationRequest registrationRequest) {
-        String callerId = registrationRequest.callerId();
+        String callerId = registrationRequest.getCallerId();
         String designation = registrationRequest.designation();
         String panchayat = registrationRequest.panchayat();
 
         LogRegistrationRequest logRegistrationRequest = new LogRegistrationRequest(
-                callerId, registrationRequest.calledNumber(), designation, panchayat, registrationRequest.getOperator());
+                callerId, registrationRequest.getCalledNumber(), designation, panchayat, registrationRequest.getOperator());
         frontLineWorkerService.createNew(callerId, Designation.valueOf(designation), panchayat, registrationRequest.getOperator());
         String registeredId = logService.registered(logRegistrationRequest);
 

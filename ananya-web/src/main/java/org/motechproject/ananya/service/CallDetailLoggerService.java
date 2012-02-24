@@ -15,7 +15,7 @@ public class CallDetailLoggerService {
     }
 
 
-    public void Save(CallDetailLog callDetailLog) {
+    public void save(CallDetailLog callDetailLog) {
         allCallDetailLogs.addIfAbsent(callDetailLog);
     }
 

@@ -15,7 +15,7 @@
 
     <script>
         <![CDATA[
-                var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData));
+                var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData), dataTransferList);
           ]]>
     </script>
 
@@ -24,14 +24,14 @@
     <property name="inputmodes" value="dtmf"/>
 
     <form id="controller">
-        <block name="postData" cond="controller.anyDataToPost()">
-            <var name="dataToPost" expr="controller.dataToPost()"/>
+        <block name="postData" cond="dataTransferList.anyData()">
+            <var name="dataToPost" expr="dataTransferList.dataToPost()"/>
             <log expr="dataToPost"/>
             <log expr="callerId"/>
             <log expr="callId"/>
-            <data srcexpr="controller.dataPostUrl()" method="POST" namelist="dataToPost callerId callId"/>
+            <data srcexpr="dataTransferList.dataPostUrl()" method="POST" namelist="dataToPost callerId callId"/>
             <script>
-                controller.dataPostSuccessful();
+                dataTransferList.drain();
             </script>
         </block>
         <catch event="error">

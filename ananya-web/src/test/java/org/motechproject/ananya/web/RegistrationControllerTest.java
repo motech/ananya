@@ -6,10 +6,15 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationRequest;
 import org.motechproject.ananya.repository.AllRecordings;
 import org.motechproject.ananya.service.RegistrationService;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletContext;
@@ -20,14 +25,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-
-import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
@@ -130,7 +131,7 @@ public class RegistrationControllerTest {
         @Override
         public boolean matches(Object o) {
             RegistrationRequest actualRequest = (RegistrationRequest)o;
-            return request.callerId().equals(actualRequest.callerId()) && request.calledNumber().equals(actualRequest.calledNumber()) ;
+            return request.getCallerId().equals(actualRequest.getCallerId()) && request.getCalledNumber().equals(actualRequest.getCalledNumber()) ;
         }
     }
 
