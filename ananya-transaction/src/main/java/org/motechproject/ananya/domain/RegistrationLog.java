@@ -23,7 +23,7 @@ public class RegistrationLog extends BaseLog {
     }
 
     public RegistrationLog(String callerId, String calledNumber, DateTime startTime, DateTime endTime, String operator) {
-        super(callerId, calledNumber, startTime, endTime, operator, null, null);
+        super(callerId, calledNumber, startTime, endTime, operator, null);
     }
 
     public RegistrationLog designation(String designation) {

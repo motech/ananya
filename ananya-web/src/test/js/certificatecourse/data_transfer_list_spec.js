@@ -5,7 +5,7 @@ describe("Data transfer list", function() {
         metadata = {
             "url.version" : "v1",
             "context.path" : "/ananya",
-            "certificate.add.bookmark.url" : "coursestate/add"
+            "transfer.data.url" : "transferdata"
         };
         dataTransferList = new DataTransferList();
     });

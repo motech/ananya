@@ -7,8 +7,9 @@ public class TransferData {
     private DataTransferType type;
     private String data;
 
-    public TransferData(String token, String data) {
+    public TransferData(String token, DataTransferType type, String data) {
         this.token = token;
+        this.type = type;
         this.data = data;
     }
 

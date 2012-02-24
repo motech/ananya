@@ -19,7 +19,7 @@ public class CertificateCourseService {
     }
 
     public void saveState(CertificationCourseBookmark certificationCourseBookmark) {
-//        boolean wasAddedJustNow = allCertificationCourseLogs.addIfAbsent(certificationCourseBookmark);
+//        boolean wasAddedJustNow = allCertificationCourseLogs.addOrUpdate(certificationCourseBookmark);
 //        if(!wasAddedJustNow) {
 //           return;
 //        }

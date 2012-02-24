@@ -30,7 +30,7 @@ public class AllCertificationCourseLogs extends MotechBaseRepository<Certificati
     }
 
     public boolean addIfAbsent(CertificationCourseLog courseLog) {
-        final CertificationCourseLog logFromDb = findByCallIdAndToken(courseLog.getCallId(), courseLog.getToken());
+        final CertificationCourseLog logFromDb = findByCallIdAndToken(courseLog.getCallId(), null);
         if(logFromDb == null) {
             add(courseLog);
             return true;

@@ -32,7 +32,7 @@ var DataTransferList = function() {
     };
 
     this.dataPostUrl = function() {
-        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['certificate.add.bookmark.url'];
+        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['transfer.data.url'];
     };
 
     this.init();

@@ -73,7 +73,7 @@ public class AllCertificationCourseLogsTest {
         @Override
         public boolean matches(Object o) {
             CertificationCourseLog actualLog = (CertificationCourseLog)o;
-            return log.getCallId().equals(actualLog.getCallId()) && log.getToken().equals(actualLog.getToken());
+            return log.getCallId().equals(actualLog.getCallId());
         }
     }
 }

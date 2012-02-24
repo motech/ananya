@@ -22,7 +22,7 @@ public class CertificationCourseLog extends BaseLog {
     }
 
     public CertificationCourseLog(String callerId, String callId, String token, Integer chapterIndex, Integer lessonOrQuestionIndex, String questionResponse, Boolean result, String interactionKey) {
-        super(callerId, null, null, null, null, token, callId);
+        super(callerId, null, null, null, null, callId);
         this.chapterIndex = chapterIndex;
         this.lessonOrQuestionIndex = lessonOrQuestionIndex;
         this.questionResponse = questionResponse;

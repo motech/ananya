@@ -21,21 +21,17 @@ public class BaseLog extends MotechBaseDataObject {
     protected DateTime endTime;
 
     @JsonProperty
-    private String token;
-    @JsonProperty
-
     protected String operator;
 
     public BaseLog() {
     }
 
-    public BaseLog(String callerId, String calledNumber, DateTime startTime, DateTime endTime, String operator, String token, String callId) {
+    public BaseLog(String callerId, String calledNumber, DateTime startTime, DateTime endTime, String operator, String callId) {
         this.callerId = callerId;
         this.calledNumber = calledNumber;
         this.startTime = startTime;
         this.endTime = endTime;
         this.operator = operator;
-        this.token = token;
         this.callId = callId;
     }
 
@@ -53,12 +49,13 @@ public class BaseLog extends MotechBaseDataObject {
         return endTime;
     }
 
-    public String getOperator() {
-        return operator;
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public String getToken() {
-        return token;
+    public String getOperator() {
+
+        return operator;
     }
 
     public String getCallerId() {
@@ -69,8 +66,8 @@ public class BaseLog extends MotechBaseDataObject {
         return this.startTime;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setEndTime(DateTime endTime) {
+        this.endTime = endTime;
     }
 
     public void setCallId(String callId) {

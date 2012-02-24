@@ -10,3 +10,4 @@ public enum CallEvent {
     CERTIFICATECOURSE_END,
     CALL_END
 }
+
