@@ -4,5 +4,5 @@ public enum CallFlow{
     CALL,
     REGISTRATION,
     CERTIFICATECOURSE,
-    JobAid
+    JOBAID
 }

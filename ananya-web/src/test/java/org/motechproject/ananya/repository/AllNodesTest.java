@@ -103,7 +103,7 @@ public class AllNodesTest extends SpringIntegrationTest {
     public void shouldSaveNodeWithAllChildren() throws Exception {
         long randomizeData = System.currentTimeMillis();
 
-        final String COURSE = "JobAid" + randomizeData;
+        final String COURSE = "JOBAID" + randomizeData;
 
         final String LEVEL_1 = "level1" + randomizeData;
         final String LEVEL_2 = "level2" + randomizeData;
@@ -154,7 +154,7 @@ public class AllNodesTest extends SpringIntegrationTest {
     @Test
     public void shouldSaveContentOnSavingNode() {
         long randomizeData = System.currentTimeMillis();
-        final String COURSE = "JobAid" + randomizeData;
+        final String COURSE = "JOBAID" + randomizeData;
         final String courseIntroContentName = "courseIntro";
         final String courseMenuContentName = "courseMenu";
         final String levelContentName = "levelIntro";
@@ -216,7 +216,7 @@ public class AllNodesTest extends SpringIntegrationTest {
     public void shouldPopulateContentInNodesWhileFindingByName(){
         long randomizeData = System.currentTimeMillis();
 
-        final String COURSE = "JobAid" + randomizeData;
+        final String COURSE = "JOBAID" + randomizeData;
         final String courseIntroContentName = "courseIntro";
         final String courseMenuContentName = "courseMenu";
         final String levelContentName = "levelIntro";

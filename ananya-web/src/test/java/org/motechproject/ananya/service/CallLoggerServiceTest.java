@@ -6,7 +6,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallDuration;
@@ -19,7 +18,6 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-@Ignore
 public class CallLoggerServiceTest {
     private CallLoggerService callLoggerService;
     @Mock
@@ -90,9 +88,9 @@ public class CallLoggerServiceTest {
                 @Override
                 public boolean matches(Object o) {
                     CallLog o1 = (CallLog) o;
-                    return o1.getStartTime()== startTime
+                    return ((o1.getStartTime() == null && startTime == null) ||o1.getStartTime().equals(startTime))
                         && o1.getCallFlow() == callFlowall
-                        && o1.getEndTime() == endTime
+                        && ((o1.getEndTime() == null && endTime == null) || o1.getEndTime().equals(endTime))
                         && o1.getCallId() == "callId";
                 }
 

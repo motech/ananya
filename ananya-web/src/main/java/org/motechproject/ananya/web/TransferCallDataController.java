@@ -65,7 +65,7 @@ public class TransferCallDataController {
         Collection<CallDuration> durations = new ArrayList<CallDuration>();
 
         for(TransferData transferData : data){
-            if(transferData.getType() == DataTransferType.CC_BOOKMARK)
+            if(transferData.getType() == DataTransferType.ccBookmark)
                     bookmarks.add(CaptureBookmark(transferData.getData(), callId, callerId, transferData.getToken()));
             else
                 durations.add(CaptureLogDetail(transferData.getData(), callId, callerId));

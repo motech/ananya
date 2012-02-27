@@ -47,7 +47,7 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     }
 
     @View(name = "by_callIdAndCallFlow", map = "function(doc) { if (doc.type=='CallLog') { emit([doc.callId, doc.callFlow], doc); } }")
-    private CallLog findByCallIdAndCallFlow(String callId, CallFlow callFlow) {
+    public CallLog findByCallIdAndCallFlow(String callId, CallFlow callFlow) {
         ViewQuery viewQuery = createQuery("by_callIdAndCallFlow").key(ComplexKey.of(callId, callFlow)).includeDocs(true);
         List<CallLog> callDurations = db.queryView(viewQuery, CallLog.class);
         if (callDurations == null || callDurations.isEmpty()) return null;
