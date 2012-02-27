@@ -16,13 +16,13 @@ describe("Report chapter score interaction", function() {
     it("should play the message corresponding to the chapter and score", function () {
         var currentChapterIndex = 1;
         courseState.setChapterIndex(currentChapterIndex);
-        courseState.scoresByChapter[currentChapterIndex] = 3;
-        expect(reportChapterScoreInteraction.playAudio()).toEqual("./audio/certificatecourse/chapter2_3_out_of_4.wav");
+        courseState.scoresByChapter[currentChapterIndex] = 1;
+        expect(reportChapterScoreInteraction.playAudio()).toEqual("./audio/certificatecourse/chapter_2_score_1.wav");
 
         currentChapterIndex = 0;
         courseState.setChapterIndex(currentChapterIndex);
         courseState.scoresByChapter[currentChapterIndex] = 0;
-        expect(reportChapterScoreInteraction.playAudio()).toEqual("./audio/certificatecourse/chapter1_0_out_of_4.wav");
+        expect(reportChapterScoreInteraction.playAudio()).toEqual("./audio/certificatecourse/chapter_1_score_0.wav");
     });
 
     it("should return end of chapter menu as next interaction and should not change the course state", function () {

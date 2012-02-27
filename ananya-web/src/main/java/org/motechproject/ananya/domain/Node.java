@@ -19,7 +19,7 @@ public class Node extends MotechBaseDataObject {
     @JsonProperty
     private String parentId;
     @JsonProperty
-    private List<String> contentIds;
+    private List<String>  contentIds;
 
     private List<Node> children;
     private List<StringContent> contents;
@@ -83,6 +83,10 @@ public class Node extends MotechBaseDataObject {
 
     public Map<String, String> data() {
         return Collections.unmodifiableMap(this.data);
+    }
+
+    public void addData(String key, String value) {
+        data.put(key, value);
     }
 
     public List<Node> children() {

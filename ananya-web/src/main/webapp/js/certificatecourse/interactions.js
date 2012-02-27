@@ -320,15 +320,12 @@ ReportChapterScoreInteraction.KEY = "reportChapterScore";
 ReportChapterScoreInteraction.prototype = new AbstractCourseInteraction();
 ReportChapterScoreInteraction.prototype.constructor = ReportChapterScoreInteraction;
 
-//TODO: Figure out the max number of questions on the fly, right now assuming it to be 4.
 ReportChapterScoreInteraction.prototype.playAudio = function() {
     var currentChapterIndex = this.courseState.chapterIndex;
+    var currentChapter = this.course.children[currentChapterIndex];
     var chapterScore = this.courseState.scoresByChapter[currentChapterIndex];
-    var currentChapterNumber = currentChapterIndex + 1;
 
-    var audioFileName = this.audioFileBase() + "chapter" + currentChapterNumber + "_" + chapterScore + "_out_of_4.wav";
-
-    return audioFileName;
+    return this.findAudio(currentChapter, "score " + chapterScore);
 };
 
 ReportChapterScoreInteraction.prototype.doesTakeInput = function() {
