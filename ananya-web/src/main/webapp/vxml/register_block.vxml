@@ -7,7 +7,6 @@
         <field name="blockRecord">
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
-                <audio expr="controller.playBeep()"/>
             </prompt>
             <grammar srcexpr="controller.getBlockGrammar()" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">

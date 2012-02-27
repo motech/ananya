@@ -17,6 +17,6 @@
 
     <property name="timeout" value="8s"/>
     <property name="bargein" value="true"/>
-    <property name="confidencelevel" value=".4"/>
+    <property name="confidencelevel" value=".3"/>
 
 </vxml>
