@@ -37,20 +37,6 @@ public class AllCertificationCourseLogsTest {
     }
 
     @Test
-    public void shouldGetALogByCallIdAndToken() {
-        final String callId = "9999990000";
-        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1", null, null, null, null, null);
-        CertificationCourseLog log2 = new CertificationCourseLog("caller", callId, "2", null, null, null, null, null);
-        CertificationCourseLog log3 = new CertificationCourseLog("caller", callId, "3", null, null, null, null, null);
-        allCertificationCourseLogs.add(log1);
-        allCertificationCourseLogs.add(log2);
-        allCertificationCourseLogs.add(log3);
-
-        final CertificationCourseLog log3FromDb = allCertificationCourseLogs.findByCallIdAndToken(callId, "3");
-        assertThat(log3FromDb, is(new CertificationCourseLogMatcher(log3)));
-    }
-
-    @Test
     public void shouldAddALogOnlyIfAbsent() {
         final String callId = "9999990000";
         CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1", null, null, null, null, null);
