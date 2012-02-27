@@ -20,7 +20,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class DynamicJSHandlerTest extends SpringIntegrationTest {
+public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -37,6 +37,8 @@ public class DynamicJSHandlerTest extends SpringIntegrationTest {
         String expectedPageResponse = callerDataFor(true, "lesson", 0, 2);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
     }
+
+
 
     @Test
     public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {

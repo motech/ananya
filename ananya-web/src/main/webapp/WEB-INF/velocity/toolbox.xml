@@ -5,4 +5,9 @@
         <class>org.apache.velocity.tools.generic.ResourceTool</class>
         <parameter name="bundles" value="bundles/vxmlbundle"/>
     </tool>
+    <tool scope="application">
+        <key>bundle-airtel</key>
+        <class>org.apache.velocity.tools.generic.ResourceTool</class>
+        <parameter name="bundles" value="bundles/vxmlbundle_airtel"/>
+    </tool>
 </toolbox>

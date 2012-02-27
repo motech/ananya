@@ -69,6 +69,11 @@
         <url-pattern>/v1/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ananya</servlet-name>
+        <url-pattern>/airtel/*</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>120</session-timeout>
     </session-config>
