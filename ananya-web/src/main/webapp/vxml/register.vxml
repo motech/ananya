@@ -6,7 +6,7 @@
 
     <form id="record_designation_form">
         <field name="designation">
-            <prompt>
+            <prompt bargein="false">
                 <audio expr="controller.playPrompt('designation')"/>
             </prompt>
             <option dtmf="1" value="ANM"/>
