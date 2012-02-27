@@ -29,7 +29,7 @@
             <log expr="dataToPost"/>
             <log expr="callerId"/>
             <log expr="callId"/>
-            <data srcexpr="dataTransferList.dataPostUrl()" method="POST" namelist="dataToPost callerId callId"/>
+            <data srcexpr="dataTransferList.dataPostUrl()" method="post" namelist="dataToPost callerId callId"/>
             <script>
                 dataTransferList.drain();
             </script>
