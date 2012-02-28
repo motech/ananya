@@ -1,12 +1,13 @@
 describe("Call Context", function() {
     var course, callContext;
-    var audioFileBase = "./js/";
+    var audioFileBase = "audio/";
     var jobaidFileBase = "jobaid/";
 
     beforeEach(function() {
         var metadata = {"audio.url": audioFileBase, "jobaid.audio.url":jobaidFileBase};
         course = jobAidCourseWithTwoLessonsInEveryChapter();
-        callContext = new CallContext(course, metadata);
+        var pathToRoot = "../";
+        callContext = new CallContext(course, metadata, pathToRoot);
     });
 
     it("when initialized should have course as the current interaction.", function() {
@@ -94,9 +95,9 @@ describe("Call Context", function() {
     });
 
     it("should return the menu for the current interaction", function () {
-        expect(callContext.currentInteractionMenu()).toEqual("./js/jobaid/MenuLevels.wav");
+        expect(callContext.currentInteractionMenu()).toEqual("../audio/jobaid/MenuLevels.wav");
         callContext.handleInput(1);
-        expect(callContext.currentInteractionMenu()).toEqual("./js/jobaid/MenuLevel1Chapters.wav");
+        expect(callContext.currentInteractionMenu()).toEqual("../audio/jobaid/MenuLevel1Chapters.wav");
     });
 
     it("should return the lesson for the current interaction", function () {
@@ -104,7 +105,7 @@ describe("Call Context", function() {
         var chapterNeeded = 1;
         var lessonNeeded = 1;
         callContext.handleInput(levelNeeded).handleInput(chapterNeeded).handleInput(lessonNeeded);
-        expect(callContext.currentInteractionLesson()).toEqual("./js/jobaid/chapter_1_lesson_1.wav");
+        expect(callContext.currentInteractionLesson()).toEqual("../audio/jobaid/chapter_1_lesson_1.wav");
     });
 
     it("should navigate to course node when handleInput is called with 0", function () {

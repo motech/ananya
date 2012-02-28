@@ -1,5 +1,6 @@
-var RegisterController = function(metadata) {
+var RegisterController = function(metadata,pathToRoot) {
     var metadata = metadata;
+    var pathToRoot = pathToRoot;
     var fieldCounter = 0;
     var records = [];
     var fields = ["designation", "name", "district", "block", "panchayat"];
@@ -21,27 +22,27 @@ var RegisterController = function(metadata) {
     };
 
     this.playPrompt = function(field) {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".say"];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".say"]);
     };
 
     this.playBeep = function(field) {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata['registration.beep.audio'];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata['registration.beep.audio']);
     };
 
     this.playConfirmPrompt = function(field) {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".confirm"];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".confirm"]);
     };
 
     this.playNoInputPrompt = function(field) {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".noinput"];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".noinput"]);
     };
 
     this.playRerecordPrompt = function(field) {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"]);
     };
 
     this.playRegistrationDone = function() {
-        return metadata["audio.url"] + metadata['register.audio.url'] + metadata['register.complete'];
+        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata['register.complete']);
     };
 
     this.isVoiceRecognised = function(field) {
@@ -61,14 +62,14 @@ var RegisterController = function(metadata) {
         if (urlStartsWithHttp) {
             return url;
         }
-        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + url;
+        return pathToRoot + url;
     };
 
     this.nextFlow = function(calledNumber) {
         if (metadata["certificate.application.number"] == calledNumber)
-            return this.absoluteUrl("vxml/certificatecourse.vxml");
+            return "certificatecourse.vxml";
         else
-            return this.absoluteUrl("vxml/jobaid.vxml");
+            return "jobaid.vxml";
     };
 
     this.getDistrictGrammar = function() {
@@ -87,8 +88,12 @@ var RegisterController = function(metadata) {
     };
 
     this.playBack = function(record) {
-        return metadata["audio.url"] + metadata['location.audio.url'] + record.resultKey + ".wav";
+        return this.absoluteUrl(metadata["audio.url"] + metadata['location.audio.url'] + record.resultKey + ".wav");
     };
+
+    this.needToRegisterPrompt = function() {
+        return this.absoluteUrl(metadata["audio.url"] + metadata["certificate.audio.url"] + metadata["certificate.need.to.register"]);
+    }
 
     this.playBackPrompt = function(field, record) {
         if (this.isVoiceRecognised(field))

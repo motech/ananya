@@ -9,7 +9,8 @@
 
     <script>
         <![CDATA[
-        var controller = new RegisterController(metaData);
+        var pathToRoot = "../";
+        var controller = new RegisterController(metaData, pathToRoot);
         var promptContext = new PromptContext(metaData);
         var myRecord, myField;
          ]]>

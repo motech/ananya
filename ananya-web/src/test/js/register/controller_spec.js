@@ -36,19 +36,19 @@ describe("Registration Controller", function () {
     it("should play all prompts based on field", function() {
 
         metadata = {
-            "audio.url":"/audio",
+            "audio.url":"audio",
             "register.audio.url":"/register",
             "register.name.say":"/say.name.wav",
             "register.name.confirm":"/confirm.name.wav",
             "register.name.noinput":"/noinput.name.wav",
             "register.name.rerecord":"/rerecord.name.wav"
         };
-        controller = new RegisterController(metadata);
+        controller = new RegisterController(metadata,"../");
 
-        expect(controller.playPrompt("name")).toEqual("/audio/register/say.name.wav");
-        expect(controller.playConfirmPrompt("name")).toEqual("/audio/register/confirm.name.wav");
-        expect(controller.playNoInputPrompt("name")).toEqual("/audio/register/noinput.name.wav");
-        expect(controller.playRerecordPrompt("name")).toEqual("/audio/register/rerecord.name.wav");
+        expect(controller.playPrompt("name")).toEqual("../audio/register/say.name.wav");
+        expect(controller.playConfirmPrompt("name")).toEqual("../audio/register/confirm.name.wav");
+        expect(controller.playNoInputPrompt("name")).toEqual("../audio/register/noinput.name.wav");
+        expect(controller.playRerecordPrompt("name")).toEqual("../audio/register/rerecord.name.wav");
     });
 
     it("should play back prompt for fields that are not voice recognised", function() {
@@ -60,71 +60,63 @@ describe("Registration Controller", function () {
 
     it("should play back recorded audio for fields that are voice recognised", function() {
        metadata = {
-                   "audio.url":"/audio",
+                   "audio.url":"audio",
                    "location.audio.url":"/location/",
                };
         var map1 = {"resultKey":"districtAudio" };
         var map2 = {"resultKey":"blockAudio" };
         var map3 = {"resultKey":"panchayatAudio" };
 
-        controller = new RegisterController(metadata);
-        expect(controller.playBackPrompt("district",map1)).toEqual("/audio/location/districtAudio.wav");
-        expect(controller.playBackPrompt("block",map2)).toEqual("/audio/location/blockAudio.wav");
-        expect(controller.playBackPrompt("panchayat",map3)).toEqual("/audio/location/panchayatAudio.wav");
+        controller = new RegisterController(metadata,"../");
+        expect(controller.playBackPrompt("district",map1)).toEqual("../audio/location/districtAudio.wav");
+        expect(controller.playBackPrompt("block",map2)).toEqual("../audio/location/blockAudio.wav");
+        expect(controller.playBackPrompt("panchayat",map3)).toEqual("../audio/location/panchayatAudio.wav");
     });
 
     it("should play registration done prompt and the beep", function() {
         metadata = {
-                    "audio.url":"/audio",
+                    "audio.url":"audio",
                     "register.audio.url":"/register/",
                     "register.complete":"regdone.wav",
                     "registration.beep.audio" : "beep.wav"
             };
-        controller = new RegisterController(metadata);
-        expect(controller.playRegistrationDone()).toEqual("/audio/register/regdone.wav");
-        expect(controller.playBeep()).toEqual("/audio/register/beep.wav");
+        controller = new RegisterController(metadata, "../");
+        expect(controller.playRegistrationDone()).toEqual("../audio/register/regdone.wav");
+        expect(controller.playBeep()).toEqual("../audio/register/beep.wav");
     });
 
     it("should go to certification flow for certification number", function() {
         metadata = {
-                        "context.path" : "/ananya",
-                        "certificate.application.number" : "123",
-                        "url.version" : "v1.2"
+                        "certificate.application.number" : "123"
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("123")).toEqual("/ananya/v1.2/vxml/certificatecourse.vxml");
+        expect(controller.nextFlow("123")).toEqual("certificatecourse.vxml");
     });
 
     it("should go to jobaid flow for jobaid application number", function() {
          metadata = {
-                        "context.path" : "/ananya",
                         "certificate.application.number" : "123",
-                        "url.version" : "v1.2"
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("456")).toEqual("/ananya/v1.2/vxml/jobaid.vxml");
+        expect(controller.nextFlow("456")).toEqual("jobaid.vxml");
     });
     
     it("should give the URL to submit registration data", function () {
          metadata = {
-                        "context.path" : "/ananya",
-                        "url.version" : "v1.2",
                         "register.submit.url" : "flw/register"
                     };
 
-        controller = new RegisterController(metadata);
-        expect(controller.submitUrl()).toEqual("/ananya/v1.2/flw/register");
+        controller = new RegisterController(metadata, "../");
+        expect(controller.submitUrl()).toEqual("../flw/register");
     });
 
     it("should give the URL to submit name", function () {
          metadata = {
-                        "context.path" : "/ananya",
-                        "url.version" : "v1.2",
                         "register.name.submit.url" : "flw/record/name"
                     };
 
-        controller = new RegisterController(metadata);
-        expect(controller.submitNameUrl()).toEqual("/ananya/v1.2/flw/record/name");
+        controller = new RegisterController(metadata, "../../");
+        expect(controller.submitNameUrl()).toEqual("../../flw/record/name");
     });
 
     it("should give the URL to submit name if the URL specified starts with http://", function () {
@@ -134,19 +126,17 @@ describe("Registration Controller", function () {
                         "register.name.submit.url" : "http://someOMURL/ananya/flw/record/name"
                     };
 
-        controller = new RegisterController(metadata);
+        controller = new RegisterController(metadata, "../");
         expect(controller.submitNameUrl()).toEqual("http://someOMURL/ananya/flw/record/name");
     });
 
     it("should give the URL to get grammar", function () {
          metadata = {
-                        "context.path" : "/ananya",
-                        "url.version" : "v1.2",
                         "grammar.url" : "grammar"
                     };
 
-        controller = new RegisterController(metadata);
-        expect(controller.getDistrictGrammar()).toEqual("/ananya/v1.2/grammar/ANANYA_S001_DISTRICTS.grxml");
+        controller = new RegisterController(metadata, "../");
+        expect(controller.getDistrictGrammar()).toEqual("../grammar/ANANYA_S001_DISTRICTS.grxml");
     });
 
 

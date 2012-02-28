@@ -3,10 +3,10 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="../root.vxml">
-    <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-    <script src="../js/entry/controller.js"/>
-    <script src="../js/prompt_context.js"/>
-    <script src="../generated/js/metadata.js"/>
+    <script srcexpr="'../../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="../../js/entry/controller.js"/>
+    <script src="../../js/prompt_context.js"/>
+    <script src="../../generated/js/metadata.js"/>
     <script>
         <![CDATA[
     var controller = new EntryController(callerData);
@@ -83,7 +83,7 @@
             <prompt bargein="true">
                 <audio src="controller.certificateWelcomePrompt()"></audio>
             </prompt>
-            <audio src="../audio/certificatecourse/0005_register1.wav"/>
+            <audio src="controller.needToRegisterPrompt()"/>
         </block>
         <field name="repeat">
             <prompt bargein="false">
@@ -100,7 +100,7 @@
             <filled>
                 <if cond="repeat == '1'">
                     <goto next="#controller"/>
-                    <elseif cond="repeat == '2'"/>
+                <elseif cond="repeat == '2'"/>
                     <goto next="../vxml/register.vxml"/>
                 </if>
             </filled>

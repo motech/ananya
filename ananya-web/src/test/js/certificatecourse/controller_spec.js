@@ -1,7 +1,7 @@
 describe("Certificate course controller spec", function() {
 
     var metadata, course;
-    var audioFileBase = "./audio/";
+    var audioFileBase = "audio/";
     var certificateCourseLocation = "certificatecourse/";
     var controller;
 
@@ -14,11 +14,11 @@ describe("Certificate course controller spec", function() {
      };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
-        controller = new CertificateCourseController(course, metadata, new CourseState(), new DataTransferList());
+        controller = new CertificateCourseController(course, metadata, new CourseState(), new DataTransferList(),"../");
     });
 
     it("should get the audio to be played", function () {
-        expect(controller.playAudio()).toEqual("./audio/certificatecourse/chapter_1_lesson_1.wav");
+        expect(controller.playAudio()).toEqual("../audio/certificatecourse/chapter_1_lesson_1.wav");
     });
 
     it("should initialize prompt context at start", function() {

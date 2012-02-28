@@ -1,7 +1,0 @@
-#vxmlHeader()
-<form id="landing_page">
-    <block>
-        <goto next="$nextFlow"/>
-    </block>
-</form>
-#vxmlFooter()

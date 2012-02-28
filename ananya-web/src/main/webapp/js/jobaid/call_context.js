@@ -1,10 +1,11 @@
-var CallContext = function(course, metadata) {
-    this.init = function(course, metadata) {
+var CallContext = function(course, metadata, pathToRoot) {
+    this.init = function(course, metadata, pathToRoot) {
         Course.buildLinks(course);
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
         this.shouldPlayNextIntroduction = true;
+        this.pathToRoot = pathToRoot;
     };
 
     this.navigateTo = function(shortCode) {
@@ -65,7 +66,7 @@ var CallContext = function(course, metadata) {
     };
 
     this.audioFileBase = function() {
-        return this.metadata['audio.url']+this.metadata['jobaid.audio.url'];
+        return this.resourceUrl(this.metadata['audio.url']+this.metadata['jobaid.audio.url']);
     };
 
     this.resetPromptCounts = function() {
@@ -83,5 +84,13 @@ var CallContext = function(course, metadata) {
         return undefined;
     };
 
-    this.init(course, metadata);
+    this.resourceUrl = function(url) {
+        var urlStartsWithHttp = (url.indexOf("http:") == 0);
+        if (urlStartsWithHttp) {
+            return url;
+        }
+        return this.pathToRoot + url;
+    };
+
+    this.init(course, metadata, pathToRoot);
 };

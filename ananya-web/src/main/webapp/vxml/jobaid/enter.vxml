@@ -1,12 +1,11 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="../root.vxml">
-    <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-    <script src="../js/entry/controller.js"/>
-    <script src="../generated/js/metadata.js"/>
+    <script srcexpr="'../../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="../../js/entry/controller.js"/>
+    <script src="../../generated/js/metadata.js"/>
     <script>
         <![CDATA[
     var controller = new EntryController(callerData,metaData);
@@ -24,14 +23,14 @@
             <audio expr="controller.welcomePrompt()"/>
             <audio expr="controller.jobaidDetailPrompt()"/>
             <audio expr="controller.needToRegisterPrompt()"/>
-            <goto expr="../vxml/register.vxml"/>
+            <goto expr="../register.vxml"/>
         </block>
     </form>
 
     <form id="registered">
         <block>
             <audio src="controller.welcomePrompt()"/>
-            <goto next="../vxml/jobaid.vxml"/>
+            <goto next="../jobaid.vxml"/>
         </block>
     </form>
 </vxml>
