@@ -3,13 +3,18 @@ package org.motechproject.ananya.seed;
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.cmslite.api.model.StringContent;
-import org.motechproject.dao.MotechJsonReader;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class CertificationCourseSeed {
+    public static final int NUMBER_OF_LESSONS_IN_A_CHAPTER = 4;
+    public static final int NUMBER_OF_QUESTIONS_IN_A_CHAPTER = 4;
+    public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
     @Autowired
     private AllNodes allNodes;
 
@@ -22,7 +27,7 @@ public class CertificationCourseSeed {
     private Node createNodeForCourse() {
         Node courseNode = new Node("CertificationCourse");
         courseNode.addData("type", "course");
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 1; i <= NUMBER_OF_CHAPTERS_IN_COURSE; i++) {
             courseNode.addChild(createNodeForChapter(i));
         }
         return courseNode;
@@ -41,7 +46,7 @@ public class CertificationCourseSeed {
         chapterNode.addContent(chapterMenu);
         chapterNode.addContent(quizHeader);
 
-        for(int score = 0; score<=4; score++) {
+        for(int score = 0; score<=NUMBER_OF_QUESTIONS_IN_A_CHAPTER; score++) {
             String scoreName = String.format("ch%d_%d_ca.wav", number, score);
             final String scoreKey = String.format("score %d", score);
 
@@ -49,11 +54,11 @@ public class CertificationCourseSeed {
             chapterNode.addContent(scoreReport);
         }
 
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= NUMBER_OF_LESSONS_IN_A_CHAPTER; i++) {
             chapterNode.addChild(createNodeForLesson(number, i));
         }
 
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= NUMBER_OF_QUESTIONS_IN_A_CHAPTER; i++) {
             chapterNode.addChild(createNodeForQuestion(number, i));
         }
 
@@ -78,7 +83,9 @@ public class CertificationCourseSeed {
     private Node createNodeForQuestion(int chapterNumber, int questionNumber){
         Node questionNode = new Node("Chapter " + chapterNumber + " Question " + questionNumber);
         questionNode.addData("type", "quiz");
-        questionNode.addData("correctAnswer", "1");
+
+        String questionKey = String.format("Chapter %d, Question %d", chapterNumber,questionNumber);
+        questionNode.addData("correctAnswer", CORRECT_ANSWERS.get(questionKey));
 
         String questionName = String.format("ch%d_q%d.wav",chapterNumber, questionNumber);
         StringContent question = new StringContent("hindi","question",findFileNameContaining(questionName));
@@ -105,73 +112,94 @@ public class CertificationCourseSeed {
         return null;
     }
 
+    private static final Map<String, String> CORRECT_ANSWERS = new HashMap<String, String>();
+    
+    static {
+        CORRECT_ANSWERS.put("Chapter 1, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 1, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 1, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 1, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 2, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 2, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 2, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 2, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 3, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 3, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 3, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 3, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 4, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 4, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 4, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 4, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 5, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 5, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 5, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 5, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 6, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 6, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 6, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 6, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 7, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 7, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 7, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 7, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 8, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 8, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 8, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 8, Question 4","2");
+        
+        CORRECT_ANSWERS.put("Chapter 9, Question 1","1");
+        CORRECT_ANSWERS.put("Chapter 9, Question 2","2");
+        CORRECT_ANSWERS.put("Chapter 9, Question 3","1");
+        CORRECT_ANSWERS.put("Chapter 9, Question 4","2");
+        
+    }
     private static final String[] ALL_AUDIOS = {
-            "0000_error_in_pressing_number.wav",
-            "0001_welcome_new_user.wav",
+            "0000_b_dead_space_1pt5_sec.wav",
             "0001_wp_ma_mohnish.wav",
             "0002_start_course_op.wav",
-            "0002_start_course_option_prompt.wav",
             "0002_wp_ama_ar.wav",
             "0003_ch1_l1.wav",
             "0003_ch1_l1_not_reg.wav",
-            "0003_main_menu_help.wav",
             "0004_ch1_l1_op.wav",
-            "0004_chapter_1_lesson_1.wav",
             "0005_ch1_l2.wav",
-            "0005_chapter_1_lesson_1_option_prompt.wav",
             "0005_register1.wav",
             "0006_alreadyreg.wav",
             "0006_ch1_l2_op.wav",
-            "0006_chapter_1_lesson_2.wav",
             "0007_ch1_l3.wav",
-            "0007_chapter_1_lesson_2_option_prompt.wav",
             "0007_notreg.wav",
             "0008_ch1_l3_op.wav",
-            "0008_chapter_1_lesson_3.wav",
             "0009_ch1_l4.wav",
-            "0009_chapter_1_lesson_3_option_prompt.wav",
             "0010_ch1_l4_op.wav",
-            "0010_chapter_1_lesson_4.wav",
             "0011_ch1_qp.wav",
-            "0011_chapter_1_lesson_4_option_prompt.wav",
-            "0012_a_chapter_1_quiz_start_header.wav",
-            "0012_b_chapter_1_q_1.wav",
             "0012_ch1_q1.wav",
             "0013_ch1_q1_ca.wav",
-            "0013_chapter_1_quiz_q_1_correct_answer.wav",
             "0014_ch1_q1_wa.wav",
-            "0014_chapter_1_quiz_q_1_wrong_answer.wav",
             "0015_ch1_q2.wav",
-            "0015_chapter_1_quiz_q_2.wav",
             "0016_ch1_q2_ca.wav",
-            "0016_chapter_1_quiz_q_2_correct_answer.wav",
             "0017_ch1_q2_wa.wav",
-            "0017_chapter_1_quiz_q_2_wrong_answer.wav",
             "0018_ch1_q3.wav",
-            "0018_chapter_1_quiz_q_3.wav",
             "0019_ch1_q3_ca.wav",
-            "0019_chapter_1_quiz_q_3_correct_answer.wav",
             "0020_ch1_q3_wa.wav",
-            "0020_chapter_1_quiz_q_3_wrong_answer.wav",
             "0021_ch1_q4.wav",
-            "0021_chapter_1_quiz_q_4.wav",
             "0022_ch1_q4_ca.wav",
-            "0022_chapter_1-quiz_q_4_correct_answer.wav",
             "0023_ch1_q4_wa.wav",
-            "0023_chapter_1_quiz_q_4_wrong_answer.wav",
             "0024_ch1_4_ca.wav",
             "0025_ch1_3_ca.wav",
             "0026_ch1_2_ca.wav",
             "0027_ch1_1_ca.wav",
             "0028_ch1_0_ca.wav",
             "0029_ch1_end_op.wav",
-            "0029_chapter_1_end_option_prompt.wav",
             "0030_ch2_l1.wav",
-            "0030_chapter_2_lesson_1.wav",
             "0031_ch2_l1_op.wav",
-            "0031_chapter_2_lesson_1_option_prompt.wav",
             "0032_ch2_l2.wav",
-            "0032_congarts_and_tease.wav",
             "0033_ch2_l2_op.wav",
             "0033_welcome_back_generic.wav",
             "0034_ch2_l3.wav",
@@ -428,11 +456,6 @@ public class CertificationCourseSeed {
             "0283_final_score_35.wav",
             "0284_final_score_36.wav",
             "0285_score_less_than_18.wav",
-            "0286_score_18_or_more.wav",
-            "chapter1_0_out_of_4.wav",
-            "chapter1_1_out_of_4.wav",
-            "chapter1_2_out_of_4.wav",
-            "chapter1_3_out_of_4.wav",
-            "chapter1_4_out_of_4.wav"
+            "0286_score_18_or_more.wav"
     };
 }
