@@ -1,7 +1,6 @@
 package org.motechproject.ananya.repository;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-transaction.xml")
@@ -37,7 +34,7 @@ public class AllCallLogsTest {
         assertThat(callLog.getId(), is(notNullValue()));
         CallLog logFromDb = allCallLogs.get(callLog.getId());
         assertThat(logFromDb.getCallId(), is(callLog.getCallId()));
-        assertThat(logFromDb.getStartTime(), is(callLog.getStartTime().toDateTime(DateTimeZone.UTC)));
+        assertThat(logFromDb.getStartTime(), is(callLog.getStartTime()));
         assertNull(logFromDb.getEndTime());
     }
     
@@ -53,7 +50,7 @@ public class AllCallLogsTest {
         CallLog logFromDb = allCallLogs.addOrUpdate(callLog);
 
         assertNotNull(logFromDb.getCallId());
-        assertThat(logFromDb.getStartTime(), is(startTime.toDateTime(DateTimeZone.UTC)));
+        assertThat(logFromDb.getStartTime(), is(startTime));
         assertThat(logFromDb.getEndTime(), is(endTime));
     }
 
@@ -70,7 +67,7 @@ public class AllCallLogsTest {
         CallLog logFromDb = allCallLogs.addOrUpdate(callLog);
         assertNotNull(logFromDb.getCallId());
         assertThat(logFromDb.getStartTime(), is(startTime));
-        assertThat(logFromDb.getEndTime(), is(endTime.toDateTime(DateTimeZone.UTC)));
+        assertThat(logFromDb.getEndTime(), is(endTime));
     }
 
 }

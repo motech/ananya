@@ -8,6 +8,6 @@ public enum CallEvent {
     JOBAID_END,
     CERTIFICATECOURSE_START,
     CERTIFICATECOURSE_END,
-    CALL_END
+    DISCONNECT
 }
 

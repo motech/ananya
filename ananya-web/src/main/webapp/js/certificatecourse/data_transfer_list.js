@@ -1,6 +1,4 @@
 var DataTransferList = function() {
-    this.TYPE_CC_BOOKMARK = "ccBookmark";
-    this.TYPE_CALL_DURATION = "callDuration";
 
     this.init = function() {
         this.counter = 0;
@@ -32,8 +30,11 @@ var DataTransferList = function() {
     };
 
     this.dataPostUrl = function() {
-        return metadata["context.path"] + "/" + metadata["url.version"] + "/" + metadata['transfer.data.url'];
+        return metaData["context.path"] + "/" + metaData["url.version"] + "/" + metaData['transfer.data.url'];
     };
 
     this.init();
 };
+
+DataTransferList.TYPE_CC_BOOKMARK = "ccBookmark";
+DataTransferList.TYPE_CALL_DURATION = "callDuration";

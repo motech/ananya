@@ -40,8 +40,4 @@ public class RegistrationLog extends BaseLog {
         return Long.getLong(this.callerId);
     }
 
-    public String getOperator() {
-        return this.operator;
-    }
-
 }

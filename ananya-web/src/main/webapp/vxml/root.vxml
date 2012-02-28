@@ -12,11 +12,11 @@
     <script src="../js/utility.js"/>
     <script>
         <![CDATA[
-            var callDetailLogger = new CallDetailLogger();
             var dataTransferList = new DataTransferList();
+            var callDetailLogger = new CallDetailLogger(dataTransferList);
             callDetailLogger.start_call();
-            function call_disconnect(){
-                callDetailLogger.end_call();
+            function root_disconnect(){
+                callDetailLogger.disconnect();
             }
         ]]>
     </script>
@@ -24,11 +24,11 @@
     <catch event = "connection.disconnect.hangup">
         <log>***** Disconnect event caught ******</log>
         <script>
-            call_disconnect();
+            root_disconnect();
         </script>
-        <var name="dataToPost" expr="callDetailLogger.dataToPost()"/>
+        <var name="dataToPost" expr="dataTransferList.dataToPost()"/>
         <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
-        <data srcexpr="metaData['add.call.duration.url']" method="POST" namelist="dataToPost callerId callId"/>
+        <data srcexpr="dataTransferList.dataPostUrl()" method="post" namelist="dataToPost callerId callId"/>
         <script>
             <![CDATA[
                 dataTransferList.drain();

@@ -11,15 +11,45 @@
     <block>
         <goto expr="controller.decideFlowForJobAid()"/>
     </block>
+
 </form>
 
+
 <form id="unregistered">
-    <block>
-        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
-        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.detail}")
-        #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.need.to.register}")
-        <goto next="$registerFlow"/>
-    </block>
+    <field name="dummyField">
+        <prompt timeout="1ms" bargein="true">
+            #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.welcome}")
+            #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.detail}")
+            #play("${contextPathWithVersion}${bundle.audio.vm.url}${bundle.jobaid.audio.url}${bundle.jobaid.need.to.register}")
+        </prompt>
+        <grammar mode="dtmf" version="1.0" root="dummyGrammar">
+            <rule id="dummyGrammar">
+                <one-of>
+                    <item>0</item>
+                    <item>1</item>
+                    <item>2</item>
+                    <item>3</item>
+                    <item>4</item>
+                    <item>5</item>
+                    <item>6</item>
+                    <item>7</item>
+                    <item>8</item>
+                    <item>9</item>
+                    <item>*</item>
+                    <item>#</item>
+                </one-of>
+            </rule>
+        </grammar>
+        <nomatch>
+            <goto next="$registerFlow"/>
+        </nomatch>
+        <noinput>
+            <goto next="$registerFlow"/>
+        </noinput>
+        <filled>
+            <goto next="$registerFlow"/>
+        </filled>
+    </field>
 </form>
 
 <form id="registered">

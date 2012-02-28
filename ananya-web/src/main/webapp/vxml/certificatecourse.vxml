@@ -15,7 +15,8 @@
 
     <script>
         <![CDATA[
-                var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData), dataTransferList);
+            callDetailLogger.cc_start();
+            var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData), dataTransferList);
           ]]>
     </script>
 
@@ -144,6 +145,7 @@
     <catch event="connection.disconnect.hangup">
         <log expr="'****************** Telling controller that I have been disconnected ********************'"/>
         <script>
+            root_disconnect();
             controller.callDisconnected();
         </script>
         <log expr="'****************** Going to controller ********************'"/>

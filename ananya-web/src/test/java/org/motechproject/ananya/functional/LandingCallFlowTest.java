@@ -41,8 +41,10 @@ public class LandingCallFlowTest {
         assertEquals("/ananya/v1/vxml/jobaid.vxml", callFlow.readString(registeredForm + "/block/goto/@next"));
 
         String unregisteredForm = "/vxml/form[@id='unregistered']";
-        assertEquals("/ananya/v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/block/goto/@next"));
-        NodeList prompts = callFlow.readNode(unregisteredForm + "/block/audio");
+        assertEquals("/ananya/v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/field/nomatch/goto/@next"));
+        assertEquals("/ananya/v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/field/noinput/goto/@next"));
+        assertEquals("/ananya/v1/vxml/register.vxml", callFlow.readString(unregisteredForm + "/field/filled/goto/@next"));
+        NodeList prompts = callFlow.readNode(unregisteredForm + "/field/prompt/audio");
         assertEquals(3, prompts.getLength());
     }
 

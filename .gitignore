@@ -19,3 +19,5 @@ bbcwt.log*
 test-output/
 .DS_Store
 *.log*
+ananya-web/src/main/webapp/audio/*
+*.wav

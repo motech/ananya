@@ -14,7 +14,10 @@ import org.motechproject.ananya.domain.CallFlow;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.repository.AllCallLogs;
 
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -35,15 +38,6 @@ public class CallLoggerServiceTest {
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CALL_START, start.getMillis()));
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlow.CALL, null);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-    }
-
-    @Test
-    public void shouldSaveCallLogForCallEndEvent() {
-        final DateTime end = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CALL_END, end.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlow.CALL, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
     }
 
@@ -81,6 +75,42 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlow.CERTIFICATECOURSE, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+    }
+
+    @Test
+    public void shouldSaveCallLogForJobAidStartEvent() {
+        final DateTime start = DateTime.now();
+        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_START, start.getMillis()));
+
+        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlow.JOBAID, null);
+        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+    }
+
+    @Test
+    public void shouldSaveCallLogForJobAidEndEvent() {
+        final DateTime end = DateTime.now();
+        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_END, end.getMillis()));
+
+        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlow.JOBAID, end);
+        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+    }
+
+    @Test
+    public void shouldSaveAllCallLogWithUpdatedEndTimeForDisconnectEvent() {
+        final DateTime end = new DateTime(2011,1,1,1,10);
+        DateTime callStart = new DateTime(2011, 1, 1, 1, 1);
+        DateTime regStart = new DateTime(2011, 1, 1, 1, 5);
+        DateTime regEnd = new DateTime(2011, 1, 1, 1, 6);
+
+        ArrayList<CallLog> callLogs = new ArrayList<CallLog>() {};
+        callLogs.add(new CallLog("callId", "callerId", CallFlow.CALL, callStart,null));
+        callLogs.add(new CallLog("callId", "callerId", CallFlow.REGISTRATION, regStart, regEnd));
+
+        stub(allCallLogs.findByCallId("callId")).toReturn(callLogs);
+
+        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, end.getMillis()));
+
+        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher(callStart, CallFlow.CALL, end)));
     }
 
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlow callFlowall, final DateTime endTime) {

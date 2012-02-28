@@ -2,7 +2,7 @@ describe("Data transfer list", function() {
     var dataTransferList;
 
     beforeEach(function() {
-        metadata = {
+        metaData = {
             "url.version" : "v1",
             "context.path" : "/ananya",
             "transfer.data.url" : "transferdata"
