@@ -19,9 +19,9 @@ public class AllCertificationCourseLogs extends MotechBaseRepository<Certificati
         super(CertificationCourseLog.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_callId_and_token", map = "function(doc) { if (doc.type=='CertificationCourseLog') { emit([doc.callId, doc.token], doc); } }")
-    public CertificationCourseLog findByCallIdAndToken(String callId, String token) {
-        ViewQuery query = createQuery("by_callId_and_token").key(ComplexKey.of(callId, token));
+    @View(name = "by_callId", map = "function(doc) { if (doc.type=='CertificationCourseLog') { emit([doc.callId], doc); } }")
+    public CertificationCourseLog findByCallId(String callId) {
+        ViewQuery query = createQuery("by_callId").key(ComplexKey.of(callId));
         List<CertificationCourseLog> result = db.queryView(query, CertificationCourseLog.class);
         if(result.size() > 0) {
             return result.get(0);
@@ -29,12 +29,4 @@ public class AllCertificationCourseLogs extends MotechBaseRepository<Certificati
         return null;
     }
 
-    public boolean addIfAbsent(CertificationCourseLog courseLog) {
-        final CertificationCourseLog logFromDb = findByCallIdAndToken(courseLog.getCallId(), null);
-        if(logFromDb == null) {
-            add(courseLog);
-            return true;
-        }
-        return false;
-    }
 }

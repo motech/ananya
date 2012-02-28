@@ -1,10 +1,10 @@
 package org.motechproject.ananya.domain;
 
 public abstract class BaseRequest {
-    private String callId;
-    private String callerId;
-    private String calledNumber;
-    private String token;
+    protected String callId;
+    protected String callerId;
+    protected String calledNumber;
+    protected String token;
 
     public String getToken() {
         return token;

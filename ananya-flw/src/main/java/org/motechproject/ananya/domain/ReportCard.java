@@ -62,6 +62,8 @@ public class ReportCard {
         private String questionIndex;
         @JsonProperty
         private boolean result;
+        @JsonProperty
+        private String callId;
 
         public Score() {
 

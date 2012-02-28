@@ -28,20 +28,12 @@ public class AllCertificationCourseLogsTest {
 
     @Test
     public void shouldSaveACertificationLog() {
-        CertificationCourseLog log = new CertificationCourseLog("caller", "9999990000", "1", null, null, null, null, null);
+        CertificationCourseLog log = new CertificationCourseLog();//"caller", "9999990000", "1", null, null, null, null, null);
         assertThat(log.getId(), is(nullValue()));
         allCertificationCourseLogs.add(log);
         assertThat(log.getId(), is(notNullValue()));
         final CertificationCourseLog logFromDb = allCertificationCourseLogs.get(log.getId());
         assertThat(logFromDb.getCallId(), is(log.getCallId()));
-    }
-
-    @Test
-    public void shouldAddALogOnlyIfAbsent() {
-        final String callId = "9999990000";
-        CertificationCourseLog log1 = new CertificationCourseLog("caller", callId, "1", null, null, null, null, null);
-        assertThat(allCertificationCourseLogs.addIfAbsent(log1), is(true));
-        assertThat(allCertificationCourseLogs.addIfAbsent(log1), is(false));
     }
 
     public static class CertificationCourseLogMatcher extends BaseMatcher<CertificationCourseLog> {
@@ -53,7 +45,7 @@ public class AllCertificationCourseLogsTest {
 
         @Override
         public void describeTo(Description description) {
-            //To change body of implemented methods use File | Settings | File Templates.
+
         }
 
         @Override

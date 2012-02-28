@@ -1,60 +1,40 @@
 package org.motechproject.ananya.domain;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @TypeDiscriminator("doc.type == 'CertificationCourseLog'")
 public class CertificationCourseLog extends BaseLog {
+
     @JsonProperty
-    private Integer chapterIndex;
+    private String certificateCourseId;
+
     @JsonProperty
-    private Integer lessonOrQuestionIndex;
-    @JsonProperty
-    private String questionResponse;
-    @JsonProperty
-    private Boolean result;
-    @JsonProperty
-    private String interactionKey;
+    private List<CertificationCourseLogItem> courseLogItems = new ArrayList<CertificationCourseLogItem>();
 
     public CertificationCourseLog() {
-
     }
 
-    public CertificationCourseLog(String callerId, String callId, String token, Integer chapterIndex, Integer lessonOrQuestionIndex, String questionResponse, Boolean result, String interactionKey) {
-        super(callerId, null, null, null, null, callId);
-        this.chapterIndex = chapterIndex;
-        this.lessonOrQuestionIndex = lessonOrQuestionIndex;
-        this.questionResponse = questionResponse;
-        this.result = result;
-        this.interactionKey = interactionKey;
+    public CertificationCourseLog(String callerId, String calledNumber, DateTime startTime,
+                   DateTime endTime, String operator, String callId, String certificateCourseId) {
+        super(callerId, calledNumber, startTime, endTime, operator, callId);
+
+        this.certificateCourseId = certificateCourseId;
     }
 
-    public Integer getLessonOrQuestionIndex() {
-        return lessonOrQuestionIndex;
+    public void addCourseLogItem(CertificationCourseLogItem courseLogItem) {
+        this.courseLogItems.add(courseLogItem);
     }
 
-    public String getQuestionResponse() {
-        return questionResponse;
+    public List<CertificationCourseLogItem> getCourseLogItems() {
+        return courseLogItems;
     }
 
-    public Boolean isResult() {
-        return result;
-    }
-
-    public String getInteractionKey() {
-        return interactionKey;
-    }
-
-    public Integer getChapterIndex() {
-        return chapterIndex;
-    }
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void setCallerId(String callerId) {
-        this.callerId = callerId;
+    public String getCertificateCourseId() {
+        return certificateCourseId;
     }
 }
