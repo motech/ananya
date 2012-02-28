@@ -30,13 +30,13 @@ public class LandingControllerTest {
     }
 
 
-    @Test
-    public void shouldReturnLandingWithGotoBasedOnEntryPathVariable(){
-        ModelAndView modelAndView = landingController.entryRouter(request, "jobaid");
-        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
-        assertEquals("landing",modelAndView.getViewName());
-        assertEquals(contextAndVersion() + "/vxml/jobaid/enter", nextFlow);
-    }
+//    @Test
+//    public void shouldReturnLandingWithGotoBasedOnEntryPathVariable(){
+//        ModelAndView modelAndView = landingController.entryRouter(request, "jobaid");
+//        String nextFlow = (String) modelAndView.getModel().get("nextFlow");
+//        assertEquals("landing",modelAndView.getViewName());
+//        assertEquals(contextAndVersion() + "/vxml/jobaid/enter", nextFlow);
+//    }
 
     private String contextAndVersion() {
         return "/ananya/" + URL_VERSION;

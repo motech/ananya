@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +33,26 @@ public class DynamicJsController {
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
     public ModelAndView serveMetaData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
-        String requestURI = request.getRequestURI();
-        if(requestURI.contains("airtel"))
-            return metadata(request, "metadata_airtel");
-        else
-            return metadata(request, "metadata");
-    }
+        String operator = operatorFromURL(request);
 
-    private ModelAndView metadata(HttpServletRequest request, String metadata) {
-        return new ModelAndView(metadata).
+        return new ModelAndView("metadata"+operator).
             addObject("urlVersion", properties.getProperty("url.version")).
             addObject("contextPath", request.getContextPath());
+    }
+
+    private String operatorFromURL(HttpServletRequest request) {
+        String urlVersion = properties.getProperty("url.version");
+        String currentPath = "/" + urlVersion;
+        boolean versionedUrl = request.getServletPath().contains(urlVersion);
+        
+        String operator = "";
+        if(versionedUrl) {
+            operator = StringUtils.remove(request.getServletPath(), currentPath);
+            if(!operator.isEmpty()) {
+                operator = operator.substring(1);
+            }
+        }
+        return operator;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data.js")

@@ -33,26 +33,39 @@ public class DynamicJsControllerTest {
     @Before
     public void setUp(){
         initMocks(this);
-        when(properties.getProperty("url.version")).thenReturn("anyVersion");
+        when(properties.getProperty("url.version")).thenReturn("v1");
     }
 
     @Test
     public void shouldGetMetadataWhenURIDoesNotContainAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/metadata.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/v1/generated/js/metadata.js");
+        request.setServletPath("/v1");
 
         DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
-        assertEquals(modelAndView.getViewName(),"metadata");
+        assertEquals("metadata", modelAndView.getViewName());
     }
 
     @Test
-    public void shouldGetAirtelMetadataWhenURIDoesContainsAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/airtel/generated/js/metadata.js");
+    public void shouldGetAirtelMetadataWhenURIContainsAirtel() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
+        request.setServletPath("/airtel/v1");
 
         DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
-        assertEquals(modelAndView.getViewName(),"metadata_airtel");
+        assertEquals("metadataairtel", modelAndView.getViewName());
+    }
+
+    @Test
+    public void shouldGetMetadataEvenWhenURIDoesNotHaveVersionAndVendor() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/metadata.js");
+        request.setServletPath("/generated/js/metadata.js");
+
+        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
+        ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
+
+        assertEquals("metadata", modelAndView.getViewName());
     }
 }

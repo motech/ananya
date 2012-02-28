@@ -21,11 +21,11 @@ public class LandingController {
         this.properties = properties;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/vxml/{entry}/landing.vxml")
-    public ModelAndView entryRouter(HttpServletRequest request, @PathVariable String entry) {
-        final String nextFlow = String.format("%s/vxml/%s/enter", contextWithVersion(request), entry);
-        return new ModelAndView("landing").addObject("nextFlow", nextFlow);
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = "/vxml/{entry}/landing.vxml")
+//    public ModelAndView entryRouter(HttpServletRequest request, @PathVariable String entry) {
+//        final String nextFlow = String.format("%s/vxml/%s/enter", contextWithVersion(request), entry);
+//        return new ModelAndView("landing").addObject("nextFlow", nextFlow);
+//    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/vxml/jobaid/enter")
     public ModelAndView enterJobAid(HttpServletRequest request) {

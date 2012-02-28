@@ -71,7 +71,7 @@
 
     <servlet-mapping>
         <servlet-name>ananya</servlet-name>
-        <url-pattern>/airtel/*</url-pattern>
+        <url-pattern>/airtel/v1/*</url-pattern>
     </servlet-mapping>
 
     <session-config>

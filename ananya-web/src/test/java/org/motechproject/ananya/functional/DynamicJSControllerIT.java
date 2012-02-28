@@ -38,7 +38,11 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
     }
 
+    @Test
+    public void should() throws IOException {
+        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/metadata.js");
 
+    }
 
     @Test
     public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {

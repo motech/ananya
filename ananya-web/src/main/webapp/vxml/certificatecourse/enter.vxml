@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
+      application="../root.vxml">
+    <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="../js/entry/controller.js"/>
+    <script src="../js/prompt_context.js"/>
+    <script src="../generated/js/metadata.js"/>
+    <script>
+        <![CDATA[
+    var controller = new EntryController(callerData);
+    var promptContext = new PromptContext(metaData);
+    ]]>
+    </script>
+
+    <property name="bargein" value="false"/>
+    <property name="timeout" value="4s"/>
+
+    <form id="controller">
+        <block>
+            <goto expr="controller.decideFlowForCertificateCourse()"/>
+        </block>
+    </form>
+
+    <form id="registered_bookmark_present">
+        <block>
+            <goto next="../vxml/certificatecourse.vxml"/>
+        </block>
+    </form>
+
+    <form id="registered_bookmark_absent">
+        <block>
+            <prompt bargein="true">
+                <audio expr="controller.certificateWelcomePrompt()"></audio>
+            </prompt>
+        </block>
+        <field name="repeat">
+            <prompt bargein="false">
+                <audio src="controller.certificationOptionsForRegisteredPrompt()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root1">
+                <rule id="root1" scope="public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <if cond="repeat == '1'">
+                    <goto next="#controller"/>
+                    <elseif cond="repeat == '2'"/>
+                    <goto next="../vxml/certificatecourse.vxml"/>
+                </if>
+            </filled>
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <reprompt/>
+                </if>
+            </noinput>
+            <nomatch>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
+                    <audio src="controller.invalidInputPrompt()"/>
+                    <reprompt/>
+                </if>
+            </nomatch>
+        </field>
+    </form>
+
+    <form id="unregistered">
+        <block>
+            <prompt bargein="true">
+                <audio src="controller.certificateWelcomePrompt()"></audio>
+            </prompt>
+            <audio src="../audio/certificatecourse/0005_register1.wav"/>
+        </block>
+        <field name="repeat">
+            <prompt bargein="false">
+                <audio src="controller.certificationOptionsForUnregisteredPrompt()"/>
+            </prompt>
+            <grammar mode="dtmf" version="1.0" root="root2">
+                <rule id="root2" scope="public">
+                    <one-of>
+                        <item>1</item>
+                        <item>2</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <filled>
+                <if cond="repeat == '1'">
+                    <goto next="#controller"/>
+                    <elseif cond="repeat == '2'"/>
+                    <goto next="../vxml/register.vxml"/>
+                </if>
+            </filled>
+            <noinput>
+                <script>
+                    promptContext.gotNoInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxNoInputs()">
+                    <disconnect/>
+                    <else/>
+                    <reprompt/>
+                </if>
+            </noinput>
+            <nomatch>
+                <script>
+                    promptContext.gotInvalidInput();
+                </script>
+                <if cond="promptContext.hasExceededMaxInvalidInputs()">
+                    <disconnect/>
+                    <else/>
+                    <audio src="controller.invalidInputPrompt()"/>
+                    <reprompt/>
+                </if>
+            </nomatch>
+        </field>
+    </form>
+</vxml>
