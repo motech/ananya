@@ -31,15 +31,7 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
     };
 
     this.playAudio = function() {
-        return this.resourceUrl(this.interaction.playAudio());
-    };
-
-    this.resourceUrl = function(url) {
-        var urlStartsWithHttp = (url.indexOf("http:") == 0);
-        if (urlStartsWithHttp) {
-            return url;
-        }
-        return this.pathToRoot + url;
+        return Utility.resourceUrl(pathToRoot,this.interaction.playAudio());
     };
 
     this.nextAction = function() {

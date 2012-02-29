@@ -23,36 +23,36 @@ var EntryController = function(callerData , metaData) {
         return callerData.isRegistered == "true";
     };
 
-    this.jobaidWelcomePrompt = function() {
-        return this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome"];
+    this.jobAidWelcomePrompt = function() {
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome"]);
     }
 
-    this.jobaidDetailPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.detail"];
+    this.jobAidDetailPrompt = function() {
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.detail"]);
     }
 
-    this.jobaidNeedToRegisterPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.need.to.register"];
+    this.jobAidNeedToRegisterPrompt = function() {
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.need.to.register"]);
     }
 
     this.certificateNeedToRegisterPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.need.to.register"];
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.need.to.register"]);
     }
 
     this.certificateWelcomePrompt = function() {
-        return this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.welcome"];
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.welcome"]);
     }
 
     this.certificationOptionsForRegisteredPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.options.for.reg"];
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.options.for.reg"]);
     }
 
     this.certificationOptionsForUnregisteredPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.options.for.non.reg"];
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.options.for.non.reg"]);
     }
 
     this.invalidInputPrompt = function() {
-        return this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["invalid.input.retry.audio"];
+        return Utility.resourceUrl(pathToRoot,this.metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["invalid.input.retry.audio"]);
     }
 
     this.register = function() {
