@@ -73,7 +73,6 @@
         <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
-                <audio expr="controller.playBeep()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root2">
                 <rule id="root2" scope="public">
@@ -91,7 +90,6 @@
                     <else/>
                     <prompt bargein="false">
                         <audio expr="controller.playNoInputPrompt(myField)"/>
-                        <audio expr="controller.playBeep()"/>
                     </prompt>
                     <goto nextitem="nameRecord"/>
                 </if>
