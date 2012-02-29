@@ -1,5 +1,6 @@
-var EntryController = function(callerData , metaData) {
+var EntryController = function(callerData , metaData , pathToRoot) {
 
+    var pathToRoot = pathToRoot;
     var metaData = metaData;
     var callerData = callerData;
 

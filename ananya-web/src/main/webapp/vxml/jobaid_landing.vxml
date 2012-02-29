@@ -2,10 +2,10 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="../root.vxml">
+      application="root.vxml">
 
-    <script src="../../generated/js/metadata.js"/>
-    <script src="../../js/landing/controller.js"/>
+    <script src="../generated/js/metadata.js"/>
+    <script src="../js/landing/controller.js"/>
 
     <script>
         var controller = new LandingController(metaData);
