@@ -1,6 +1,7 @@
-var CallContext = function(course, metadata, pathToRoot) {
-    this.init = function(course, metadata, pathToRoot) {
+var CallContext = function(course, metadata, pathToRoot,promptContext) {
+    this.init = function(course, metadata, pathToRoot,promptContext) {
         Course.buildLinks(course);
+        this.promptContext = promptContext;
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
@@ -84,6 +85,15 @@ var CallContext = function(course, metadata, pathToRoot) {
         return undefined;
     };
 
+    this.audioForInvalidInputRetry = function() {
+        return this.resourceUrl(this.promptContext.audioForInvalidInputRetry());
+    };
+
+    this.audioForOptionToGoToTopLevel = function() {
+        return this.resourceUrl(this.metadata['audio.url'] + this.metadata['option.to.top.level.audio']);
+    };
+
+
     this.resourceUrl = function(url) {
         var urlStartsWithHttp = (url.indexOf("http:") == 0);
         if (urlStartsWithHttp) {
@@ -92,5 +102,5 @@ var CallContext = function(course, metadata, pathToRoot) {
         return this.pathToRoot + url;
     };
 
-    this.init(course, metadata, pathToRoot);
+    this.init(course, metadata, pathToRoot,promptContext);
 };

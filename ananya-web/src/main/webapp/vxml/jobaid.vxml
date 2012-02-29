@@ -15,8 +15,8 @@
         <![CDATA[
             var pathToRoot = "../";
              callDetailLogger.jobaid_start();
-            var callContext = new CallContext(courseData, metaData, pathToRoot);
             var promptContext = new PromptContext(metaData);
+            var callContext = new CallContext(courseData, metaData, pathToRoot,promptContext);
             var shortCode = new ShortCode().getCode(metaData['jobaid.application.number'],session.connection.local.uri)
             callContext.navigateTo(shortCode);
           ]]>
@@ -50,7 +50,7 @@
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
             <prompt cond="!callContext.isAtCourseRoot()">
-                <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
+                <audio expr="controller.audioForOptionToGoToTopLevel()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">
@@ -82,7 +82,7 @@
                         <audio expr="callContext.currentInteractionMenu()"/>
                     </prompt>
                     <prompt cond="!callContext.isAtCourseRoot()">
-                        <audio expr="promptContext.audioForOptionToGoToTopLevel()"/>
+                        <audio expr="controller.audioForOptionToGoToTopLevel()"/>
                     </prompt>
                 </if>
             </noinput>
@@ -106,7 +106,7 @@
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <disconnect/>
             <else/>
-                <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                <audio expr="controller.audioForInvalidInputRetry(promptContext)"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
         </block>

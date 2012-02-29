@@ -32,22 +32,6 @@ var PromptContext = function (metadata) {
         return this.audioFileBase() + this.metadata['invalid.input.retry.audio'];
     };
 
-    this.audioForInvalidInputDisconnect = function() {
-        return this.audioFileBase() + this.metadata['invalid.input.disconnect.audio'];
-    };
-
-    this.audioForNoInputRetry = function() {
-        return this.audioFileBase() + this.metadata['no.input.retry.audio'];
-    };
-
-    this.audioForNoInputDisconnect = function() {
-        return this.audioFileBase() + this.metadata['no.input.disconnect.audio'];
-    };
-
-    this.audioForOptionToGoToTopLevel = function() {
-        return this.audioFileBase() + this.metadata['option.to.top.level.audio'];
-    };
-
     this.inputEnteredIsValid = function(input) {
         for(var i = 0; i < this.validInputs.length; i++){
            if(input == this.validInputs[i])

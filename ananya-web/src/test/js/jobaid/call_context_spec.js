@@ -1,13 +1,19 @@
 describe("Call Context", function() {
-    var course, callContext;
+    var course, callContext, promptContext;
     var audioFileBase = "audio/";
     var jobaidFileBase = "jobaid/";
 
     beforeEach(function() {
-        var metadata = {"audio.url": audioFileBase, "jobaid.audio.url":jobaidFileBase};
+        var metadata = {
+                        "audio.url": audioFileBase,
+                        "jobaid.audio.url":jobaidFileBase,
+                        "option.to.top.level.audio" : "option.to.go.to.top.level.wav",
+                        "invalid.input.retry.audio" : "0000_error_in_pressing_number.wav"
+                        };
         course = jobAidCourseWithTwoLessonsInEveryChapter();
         var pathToRoot = "../";
-        callContext = new CallContext(course, metadata, pathToRoot);
+        promptContext = new PromptContext(metadata);
+        callContext = new CallContext(course, metadata, pathToRoot, promptContext);
     });
 
     it("when initialized should have course as the current interaction.", function() {
@@ -222,5 +228,13 @@ describe("Call Context", function() {
         expect(callContext.currentInteraction).toEqual(level1);
 
         expect(callContext.shouldPlayIntroduction()).toEqual(false);
+    });
+
+    it("should provide the URLs for the audio files for the top-level menu option", function() {
+        expect(callContext.audioForOptionToGoToTopLevel()).toEqual("../audio/option.to.go.to.top.level.wav")
+    });
+
+    it("should provide the URLs for audio For Invalid Input Retry", function() {
+        expect(callContext.audioForInvalidInputRetry()).toEqual("../audio/0000_error_in_pressing_number.wav")
     });
 })
