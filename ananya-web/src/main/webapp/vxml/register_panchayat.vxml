@@ -8,9 +8,7 @@
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
             </prompt>
-            <grammar srcexpr="controller.getPanchayatGrammar()" type="application/srgs+xml" fetchhint="safe">
-                <lexicon uri="../grammar/panchayat.lex"/>
-            </grammar>
+            <grammar srcexpr="controller.getPanchayatGrammar()" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">
                 <rule id="root3" scope="public">
                     <one-of>
