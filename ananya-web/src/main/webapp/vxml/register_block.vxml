@@ -25,7 +25,6 @@
                     <else/>
                     <prompt bargein="false">
                         <audio expr="controller.playNoInputPrompt(myField)"/>
-                        <audio expr="controller.playBeep()"/>
                     </prompt>
                     <goto nextitem="blockRecord"/>
                 </if>
@@ -39,7 +38,6 @@
                     <else/>
                     <prompt bargein="false">
                         <audio expr="controller.playNoInputPrompt(myField)"/>
-                        <audio expr="controller.playBeep()"/>
                     </prompt>
                     <goto nextitem="blockRecord"/>
                 </if>
