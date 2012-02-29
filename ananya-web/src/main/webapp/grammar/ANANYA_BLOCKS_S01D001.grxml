@@ -1,11 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_BLOCKS_S01D001" tag-format="semantics/1.0">
-	<rule id="ANANYA_BLOCKS_S01D001" scope="public">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<grammar version="1.0" xml:lang="hi-IN" mode="voice" xmlns="http://www.w3.org/2001/06/grammar" root="ANANYA_out.resultKeyS_S01D001" tag-format="semantics/1.0">
+	<rule id="ANANYA_out.resultKeyS_S01D001" scope="public">
 		<one-of>
-			<item>दुल्हिनबाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
-			<item>दुल्हिनबजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
-			<item>दुल्हिन <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>ढोलन <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
 			<item>बजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिन <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>धुलहिन्  <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुलहिन्  <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>	
+			<item>ढोलन बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>ढोलन बजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>ध्होलन बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>ध्होलन बजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिन बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुल्हिन बजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>धुलहिन्  बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
+			<item>दुलहिन्  बाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>			
+			<item>दुल्हिनबाजार <tag> out.resultKey = &quot;S01D001B001&quot; </tag></item>
 		</one-of>
 	</rule>
 </grammar>
