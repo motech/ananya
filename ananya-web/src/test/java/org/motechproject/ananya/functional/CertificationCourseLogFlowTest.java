@@ -3,12 +3,12 @@ package org.motechproject.ananya.functional;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.TestUtils.TestUtils;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.motechproject.ananya.repository.AllCertificationCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -29,23 +29,26 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     @Autowired
     private AllCallLogCounters allCallLogCounters;
 
+    @Autowired
+    private AllLocations allLocations;
+
     @Before
     public void setUp() throws Exception {
         myWebClient = new MyWebClient();
     }
-    @Test
-    public void shouldLog() throws IOException {
 
-        FrontLineWorker flw = new FrontLineWorker("9986574000", Designation.ANGANWADI, "S001B003", null);
-        allFrontLineWorkers.add(flw);
-        markForDeletion(flw);
-        
+    @Test
+    public void shouldLogCertificationCourseAndSaveBookmarkAndScores() throws IOException {
+
+        FrontLineWorker frontLineWorker = TestUtils.getSampleFLW();
+        allFrontLineWorkers.add(frontLineWorker);
+
         String packet1 = "{" +
                 "    \"chapterIndex\" : 1,                                     " +
                 "    \"lessonOrQuestionIndex\" : 2,                            " +
                 "    \"questionResponse\" : 1,                                 " +
                 "    \"result\" : true,                                        " +
-                "    \"interactionKey\" : \"startNextChapter\",                " +
+                "    \"interactionKey\" : \"playAnswerExplanation\",                " +
 
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"contentType\" : \"lesson\",                             " +
@@ -58,15 +61,32 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
                 "   \"time\"  : 1231413" +
                 "}";
         MyWebClient.PostParam callerId = param("callerId", "9986574000");
-        MyWebClient.PostParam callId = param("callId", "99865740001234567890");
+        String callId = "99865740001234567890";
+        MyWebClient.PostParam callIdParam = param("callId", callId);
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post("http://localhost:9979/ananya/transferdata",callId, callerId, dataToPost);
+        myWebClient.post("http://localhost:9979/ananya/transferdata",callIdParam, callerId, dataToPost);
 
-        CertificationCourseLog byCallId = allCertificationCourseLogs.findByCallId("99865740001234567890");
+        CertificationCourseLog byCallId = allCertificationCourseLogs.findByCallId(callId);
         assertEquals(byCallId.getCourseLogItems().size(), 1);
 
+        frontLineWorker = allFrontLineWorkers.get(frontLineWorker.getId());
+
+        BookMark bookMark = frontLineWorker.bookMark();
+        assertEquals((int)bookMark.getChapterIndex(), 1);
+        assertEquals((int)bookMark.getLessonIndex(), 2);
+        assertEquals(bookMark.getType(), "playAnswerExplanation");
+
+        assertEquals(frontLineWorker.reportCard().scores().size(), 1);
+        assertEquals(frontLineWorker.reportCard().scores().get(0).result(), true);
+
+
+        CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
+
+        markForDeletion(frontLineWorker);
+        markForDeletion(byCallId);
+        markForDeletion(callLogCounter);
     }
 
 }

@@ -275,7 +275,6 @@ public class AllNodesTest extends SpringIntegrationTest {
         String courseAsJson = allNodes.nodeAsJson(COURSE_NAME);
         assertTrue(courseAsJson.indexOf("\"revision\"") ==  -1);
         assertTrue(courseAsJson.indexOf("\"parentId\"") ==  -1);
-        assertTrue(courseAsJson.indexOf("\"id\"") ==  -1);
         assertTrue(courseAsJson.indexOf("\"contentIds\"") ==  -1);
     }
 

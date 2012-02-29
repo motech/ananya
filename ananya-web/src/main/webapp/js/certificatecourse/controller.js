@@ -72,7 +72,7 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
         }
         if(this.currentInteractionIsBookMarkable()) {
             this.courseState.setInteractionKey(this.interaction.getInteractionKey());
-            this.dataTransferList.add(this.courseState.toJson(), DataTransferList.TYPE_CC_BOOKMARK);
+            this.dataTransferList.add(this.courseState.toJson(), DataTransferList.TYPE_CC_STATE);
         }
     };
 

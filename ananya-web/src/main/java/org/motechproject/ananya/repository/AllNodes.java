@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -26,7 +24,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     private ConcurrentHashMap<String, String> cachedTreeJsons = new ConcurrentHashMap();
 
     static {
-        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
+        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("revision", "parentId", "contentIds"));
         GSON = gsonBuilder.create();
     }
 

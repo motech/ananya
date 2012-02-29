@@ -69,12 +69,17 @@ public class ReportCard {
 
         }
 
-        public Score(String chapterIndex, String questionIndex, Boolean result) {
+        public Score(String chapterIndex, String questionIndex, Boolean result, String callId) {
             this.chapterIndex = chapterIndex;
             this.questionIndex = questionIndex;
             this.result = result;
+            this.callId = callId;
         }
 
+        public Score(String chapterIndex, String questionIndex, Boolean result) {
+            this(chapterIndex, questionIndex, result, null);
+        }
+        
         public String questionIndex() {
             return questionIndex;
         }

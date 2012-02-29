@@ -22,7 +22,8 @@ public class CertificateCourseService {
     }
     
     public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
-        final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(), courseStateRequest.getChapterIndex(), courseStateRequest.getLessonOrQuestionIndex());
+        final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
+                courseStateRequest.getChapterIndex(), courseStateRequest.getLessonOrQuestionIndex());
 
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
@@ -38,7 +39,8 @@ public class CertificateCourseService {
         }
         final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(courseStateRequest.getInteractionKey());
         if(interactionIsPlayAnswerExplanation) {
-            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result);
+            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(),
+                    lessonOrQuestionIndex.toString(), result, courseStateRequest.getCallId());
             frontLineWorkerService.addScore(courseStateRequest.getCallerId(), score);
         }
     }

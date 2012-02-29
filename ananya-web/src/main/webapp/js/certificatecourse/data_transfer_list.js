@@ -36,5 +36,5 @@ var DataTransferList = function() {
     this.init();
 };
 
-DataTransferList.TYPE_CC_BOOKMARK = "ccBookmark";
+DataTransferList.TYPE_CC_STATE = "ccState";
 DataTransferList.TYPE_CALL_DURATION = "callDuration";
