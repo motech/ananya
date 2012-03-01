@@ -17,20 +17,12 @@ var CallDetailLogger = function(dataTransferList){
 
     this.cc_start=function() {
         this.dataTransferList.add({ "callEvent": "CERTIFICATECOURSE_START" ,"time" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
-        this.dataTransferList.add({ "callEvent": "CERTIFICATECOURSE_START" ,"ticall_detail_logger.jsme" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
-    };
-
-    this.cc_end=function() {
-        this.dataTransferList.add({ "callEvent": "CERTIFICATECOURSE_END" ,"time" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
     };
 
     this.jobaid_start=function() {
         this.dataTransferList.add({ "callEvent": "JOBAID_START" ,"time" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
     };
 
-    this.jobaid_end=function() {
-        this.dataTransferList.add({ "callEvent": "JOBAID_END" ,"time" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
-    };
 
     this.disconnect=function() {
         this.dataTransferList.add({ "callEvent": "DISCONNECT" ,"time" :  new Date().getTime()  }, DataTransferList.TYPE_CALL_DURATION);
