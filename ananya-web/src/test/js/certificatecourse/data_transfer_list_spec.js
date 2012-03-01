@@ -78,6 +78,6 @@ describe("Data transfer list", function() {
      });
 
       it("should give the url at which the coursestate is to be posted", function () {
-          expect(dataTransferList.dataPostUrl('../../')).toEqual("../../transferdata");
+          expect(dataTransferList.dataPostUrl()).toEqual("/ananya/v1/transferdata");
       });
 });

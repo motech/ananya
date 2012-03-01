@@ -29,8 +29,8 @@ var DataTransferList = function() {
         return Utility.stringify(this.transferList);
     };
 
-    this.dataPostUrl = function(pathToRoot) {
-        return pathToRoot + metaData['transfer.data.url'];
+    this.dataPostUrl = function() {
+        return metaData["context.path"] + "/" + metaData["url.version"] + "/" + metaData['transfer.data.url'];
     };
 
     this.init();
