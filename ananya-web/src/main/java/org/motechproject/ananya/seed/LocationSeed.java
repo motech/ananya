@@ -3,7 +3,7 @@ package org.motechproject.ananya.seed;
 import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;

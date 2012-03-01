@@ -1,6 +1,7 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya.repository.measure;
 
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

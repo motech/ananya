@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;

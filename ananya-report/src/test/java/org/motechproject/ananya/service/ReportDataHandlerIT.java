@@ -5,12 +5,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.*;
+import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

@@ -1,7 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import org.joda.time.LocalDate;
-import org.motechproject.ananya.repository.AllTimeDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;

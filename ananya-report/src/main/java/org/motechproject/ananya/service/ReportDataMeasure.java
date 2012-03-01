@@ -9,6 +9,9 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.*;
+import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +46,7 @@ public class ReportDataMeasure {
 
     
     public void createRegistrationMeasure(LogData logData) {
+        //TODO:should not access the repos directly [sush/rahul]
         RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
         createRegistrationMeasureWith(registrationLog.getCallerId());
     }

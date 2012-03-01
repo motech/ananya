@@ -1,6 +1,7 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya.repository.dimension;
 
 import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;

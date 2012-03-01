@@ -61,5 +61,52 @@
         </createIndex>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="5">
+        <createTable tableName="course_item_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="type" type="varchar(30)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="6">
+        <createTable tableName="course_item_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="course_item_id" type="integer"/>
+            <column name="time_id" type="integer"/>
+            <column name="score" type="integer"/>
+            <column name="event" type="varchar(30)"/>
+        </createTable>
+
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_course_item_id">
+            <column name="course_item_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="7">
+        <createTable tableName="call_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="call_id" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+
+        <createIndex tableName="call_measure" indexName="idx_call_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>
