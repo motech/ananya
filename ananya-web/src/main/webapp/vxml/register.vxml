@@ -74,13 +74,6 @@
             <prompt bargein="false">
                 <audio expr="controller.playPrompt(myField)"/>
             </prompt>
-            <grammar mode="dtmf" version="1.0" root="root2">
-                <rule id="root2" scope="public">
-                    <one-of>
-                        <item>1</item>
-                    </one-of>
-                </rule>
-            </grammar>
             <noinput>
                 <script>
                     promptContext.gotNoInput();
