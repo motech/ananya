@@ -26,8 +26,7 @@ public class CallMeasure {
     public CallMeasure() {
     }
 
-    public CallMeasure(Integer id, FrontLineWorkerDimension frontLineWorkerDimension, String callId, Integer duration) {
-        this.id = id;
+    public CallMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, Integer duration) {
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.callId = callId;
         this.duration = duration;

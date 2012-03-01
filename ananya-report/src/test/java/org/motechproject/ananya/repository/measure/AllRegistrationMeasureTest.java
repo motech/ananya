@@ -1,4 +1,4 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya.repository.measure;
 
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;

@@ -1,11 +1,10 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya.repository.dimension;
 
 import org.junit.After;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
-import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
