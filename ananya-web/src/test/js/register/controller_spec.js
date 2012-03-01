@@ -90,7 +90,7 @@ describe("Registration Controller", function () {
                         "certificate.application.number" : "123"
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("123")).toEqual("certificatecourse.vxml");
+        expect(controller.nextFlow("123")).toEqual("vxml/certificatecourse.vxml");
     });
 
     it("should go to jobaid flow for jobaid application number", function() {
@@ -98,7 +98,7 @@ describe("Registration Controller", function () {
                         "certificate.application.number" : "123",
                     };
         controller = new RegisterController(metadata);
-        expect(controller.nextFlow("456")).toEqual("jobaid.vxml");
+        expect(controller.nextFlow("456")).toEqual("vxml/jobaid.vxml");
     });
     
     it("should give the URL to submit registration data", function () {

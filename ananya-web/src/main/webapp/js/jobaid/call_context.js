@@ -89,7 +89,7 @@ var CallContext = function(course, metadata, promptContext) {
     };
 
     this.audioForOptionToGoToTopLevel = function() {
-        return this.metadata['audio.url'] + this.metadata['option.to.top.level.audio'];
+        return this.audioFileBase() + this.metadata['option.to.top.level.audio'];
     };
 
     this.init(course, metadata,promptContext);

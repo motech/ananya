@@ -2,14 +2,15 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="../root.vxml">
-    <script srcexpr="'../../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-    <script src="../../js/entry/controller.js"/>
-    <script src="../../js/prompt_context.js"/>
-    <script src="../../generated/js/metadata.js"/>
+      application="vxml/root.vxml"
+      xml:base="../../"  >
+    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="js/entry/controller.js"/>
+    <script src="js/prompt_context.js"/>
+    <script src="generated/js/metadata.js"/>
     <script>
         <![CDATA[
-    var controller = new EntryController(callerData);
+    var controller = new EntryController(callerData,metaData);
     var promptContext = new PromptContext(metaData);
     ]]>
     </script>
@@ -25,19 +26,22 @@
 
     <form id="registered_bookmark_present">
         <block>
-            <goto next="../vxml/certificatecourse.vxml"/>
+            <goto next="vxml/certificatecourse.vxml"/>
         </block>
     </form>
 
     <form id="registered_bookmark_absent">
         <block>
+            <log>
+                Continuing with absent BOOKMARK **************************************************************************
+            </log>
             <prompt bargein="true">
                 <audio expr="controller.certificateWelcomePrompt()"></audio>
             </prompt>
         </block>
         <field name="repeat">
             <prompt bargein="false">
-                <audio src="controller.certificationOptionsForRegisteredPrompt()"/>
+                <audio expr="controller.certificationOptionsForRegisteredPrompt()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                 <rule id="root1" scope="public">
@@ -51,7 +55,7 @@
                 <if cond="repeat == '1'">
                     <goto next="#controller"/>
                     <elseif cond="repeat == '2'"/>
-                    <goto next="../vxml/certificatecourse.vxml"/>
+                    <goto next="vxml/certificatecourse.vxml"/>
                 </if>
             </filled>
             <noinput>
@@ -71,7 +75,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio src="controller.invalidInputPrompt()"/>
+                    <audio expr="controller.invalidInputPrompt()"/>
                     <reprompt/>
                 </if>
             </nomatch>
@@ -79,15 +83,19 @@
     </form>
 
     <form id="unregistered">
+
         <block>
+            <log>
+                Continuing with unregistered **************************************************************************
+            </log>
             <prompt bargein="true">
-                <audio src="controller.certificateWelcomePrompt()"></audio>
+                <audio expr="controller.certificateWelcomePrompt()"></audio>
             </prompt>
-            <audio src="controller.needToRegisterPrompt()"/>
+            <audio expr="controller.certificateNeedToRegisterPrompt()"/>
         </block>
         <field name="repeat">
             <prompt bargein="false">
-                <audio src="controller.certificationOptionsForUnregisteredPrompt()"/>
+                <audio expr="controller.certificationOptionsForUnregisteredPrompt()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root2">
                 <rule id="root2" scope="public">
@@ -101,7 +109,7 @@
                 <if cond="repeat == '1'">
                     <goto next="#controller"/>
                 <elseif cond="repeat == '2'"/>
-                    <goto next="../vxml/register.vxml"/>
+                    <goto next="vxml/register.vxml"/>
                 </if>
             </filled>
             <noinput>
@@ -121,7 +129,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio src="controller.invalidInputPrompt()"/>
+                    <audio expr="controller.invalidInputPrompt()"/>
                     <reprompt/>
                 </if>
             </nomatch>

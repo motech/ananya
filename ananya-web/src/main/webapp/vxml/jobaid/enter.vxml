@@ -2,10 +2,11 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="../root.vxml">
-    <script srcexpr="'../../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-    <script src="../../js/entry/controller.js"/>
-    <script src="../../generated/js/metadata.js"/>
+      application="vxml/root.vxml"
+      xml:base="../../"  >
+    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="js/entry/controller.js"/>
+    <script src="generated/js/metadata.js"/>
     <script>
         <![CDATA[
     var controller = new EntryController(callerData,metaData);
@@ -20,17 +21,17 @@
 
     <form id="unregistered">
         <block>
-            <audio expr="controller.welcomePrompt()"/>
-            <audio expr="controller.jobaidDetailPrompt()"/>
-            <audio expr="controller.needToRegisterPrompt()"/>
-            <goto expr="../register.vxml"/>
+            <audio expr="controller.jobAidWelcomePrompt()"/>
+            <audio expr="controller.jobAidDetailPrompt()"/>
+            <audio expr="controller.jobAidNeedToRegisterPrompt()"/>
+            <goto next="vxml/register.vxml"/>
         </block>
     </form>
 
     <form id="registered">
         <block>
-            <audio src="controller.welcomePrompt()"/>
-            <goto next="../jobaid.vxml"/>
+            <audio expr="controller.jobAidWelcomePrompt()"/>
+            <goto next="vxml/jobaid.vxml"/>
         </block>
     </form>
 </vxml>

@@ -230,7 +230,7 @@ describe("Call Context", function() {
     });
 
     it("should provide the URLs for the audio files for the top-level menu option", function() {
-        expect(callContext.audioForOptionToGoToTopLevel()).toEqual("../audio/option.to.go.to.top.level.wav")
+        expect(callContext.audioForOptionToGoToTopLevel()).toEqual("../audio/jobaid/option.to.go.to.top.level.wav")
     });
 
     it("should provide the URLs for audio For Invalid Input Retry", function() {

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
+      xml:base="../" >
 
     <var name="callerId" expr="session.connection.remote.uri"/>
     <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
 
-    <script src="../generated/js/metadata.js"/>
-    <script src="../js/call_detail_logger.js"/>
-    <script src="../js/certificatecourse/data_transfer_list.js"/>
-    <script src="../js/utility.js"/>
+    <script src="generated/js/metadata.js"/>
+    <script src="js/call_detail_logger.js"/>
+    <script src="js/certificatecourse/data_transfer_list.js"/>
+    <script src="js/utility.js"/>
     <script>
         <![CDATA[
             var dataTransferList = new DataTransferList();

@@ -2,7 +2,8 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="register_root.vxml">
+      application="vxml/register_root.vxml"
+      xml:base="../">
     <form>
         <field name="panchayatRecord">
             <prompt bargein="false">
@@ -88,12 +89,12 @@
             </nomatch>
             <filled>
                 <if cond="confirm == '1'">
-                    <goto next="register.vxml#record_form"/>
+                    <goto next="vxml/register.vxml#record_form"/>
                     <elseif cond="confirm == '2'"/>
                     <script>
                         controller.capture(myRecord);
                     </script>
-                    <goto next="register.vxml#record_form"/>
+                    <goto next="vxml/register.vxml#record_form"/>
                 </if>
             </filled>
         </field>

@@ -30,7 +30,7 @@ var DataTransferList = function() {
     };
 
     this.dataPostUrl = function() {
-        return metaData["context.path"] + "/" + metaData["url.version"] + "/" + metaData['transfer.data.url'];
+        return metaData['transfer.data.url'];
     };
 
     this.init();

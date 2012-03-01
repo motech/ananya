@@ -2,15 +2,16 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="root.vxml">
+      application="vxml/root.vxml"
+      xml:base="../"  >
 
     <!-- TODO: How do we handle if any of the following fetches fail? -->
-    <script src="../generated/js/metadata.js"/>
-    <script src="../generated/js/jobaid_course_data.js"/>
+    <script src="generated/js/metadata.js"/>
+    <script src="generated/js/jobaid_course_data.js"/>
 
-    <script src="../js/jobaid/course.js"/>
-    <script src="../js/jobaid/call_context.js"/>
-    <script src="../js/prompt_context.js"/>
+    <script src="js/jobaid/course.js"/>
+    <script src="js/jobaid/call_context.js"/>
+    <script src="js/prompt_context.js"/>
     <script>
         <![CDATA[
              callDetailLogger.jobaid_start();
@@ -49,7 +50,7 @@
                 <audio expr="callContext.currentInteractionMenu()"/>
             </prompt>
             <prompt cond="!callContext.isAtCourseRoot()">
-                <audio expr="controller.audioForOptionToGoToTopLevel()"/>
+                <audio expr="callContext.audioForOptionToGoToTopLevel()"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">
@@ -105,7 +106,7 @@
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <disconnect/>
             <else/>
-                <audio expr="controller.audioForInvalidInputRetry(promptContext)"/>
+                <audio expr="callContext.audioForInvalidInputRetry(promptContext)"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
         </block>

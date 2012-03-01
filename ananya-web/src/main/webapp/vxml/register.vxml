@@ -2,7 +2,8 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="register_root.vxml">
+      application="vxml/register_root.vxml"
+      xml:base="../">
 
     <form id="record_designation_form">
         <field name="designation">
@@ -60,11 +61,11 @@
             <if cond="myField == 'name'">
                 <goto nextitem="nameRecord"/>
                 <elseif cond="myField == 'district'"/>
-                <goto next="register_district.vxml"/>
+                <goto next="vxml/register_district.vxml"/>
                 <elseif cond="myField == 'block'"/>
-                <goto next="register_block.vxml"/>
+                <goto next="vxml/register_block.vxml"/>
                 <elseif cond="myField == 'panchayat'"/>
-                <goto next="register_panchayat.vxml"/>
+                <goto next="vxml/register_panchayat.vxml"/>
                 <else/>
                 <goto nextitem="submit_form"/>
             </if>

@@ -2,16 +2,17 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="root.vxml">
+      application="vxml/root.vxml"
+      xml:base="../" >
 
-    <script src="../generated/js/certification_course_data.js"/>
-    <script srcexpr="'../generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    <script src="generated/js/certification_course_data.js"/>
+    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
 
-    <script src="../js/prompt_context.js"/>
-    <script src="../js/certificatecourse/abstract_interactions.js"/>
-    <script src="../js/certificatecourse/interactions.js"/>
-    <script src="../js/certificatecourse/course_state.js"/>
-    <script src="../js/certificatecourse/controller.js"/>
+    <script src="js/prompt_context.js"/>
+    <script src="js/certificatecourse/abstract_interactions.js"/>
+    <script src="js/certificatecourse/interactions.js"/>
+    <script src="js/certificatecourse/course_state.js"/>
+    <script src="js/certificatecourse/controller.js"/>
 
     <script>
         <![CDATA[

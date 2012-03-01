@@ -58,9 +58,9 @@ var RegisterController = function(metadata) {
 
     this.nextFlow = function(calledNumber) {
         if (metadata["certificate.application.number"] == calledNumber)
-            return "certificatecourse.vxml";
+            return "vxml/certificatecourse.vxml";
         else
-            return "jobaid.vxml";
+            return "vxml/jobaid.vxml";
     };
 
     this.getDistrictGrammar = function() {
