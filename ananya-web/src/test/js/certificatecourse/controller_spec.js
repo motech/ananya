@@ -1,7 +1,7 @@
 describe("Certificate course controller spec", function() {
 
     var metadata, course;
-    var audioFileBase = "audio/";
+    var audioFileBase = "../audio/";
     var certificateCourseLocation = "certificatecourse/";
     var controller;
 

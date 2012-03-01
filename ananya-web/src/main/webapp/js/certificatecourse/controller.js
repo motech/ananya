@@ -3,14 +3,13 @@ var CertificateCourse = function () {
 
 CertificateCourse.interactions = new Array();
 
-var CertificateCourseController = function(course, metadata, courseState, dataTransferList, pathToRoot) {
-    this.init = function(course, metadata, dataTransferList, pathToRoot) {
+var CertificateCourseController = function(course, metadata, courseState, dataTransferList) {
+    this.init = function(course, metadata, dataTransferList) {
         this.promptContext = new PromptContext(metadata);
         this.courseState = courseState;
         this.dataTransferList = dataTransferList;
         this.initializeInteractionsArray(metadata, course, this.courseState);
         this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey].resumeCall());
-        this.pathToRoot = pathToRoot;
     };
 
     //TODO: This should be pulled out.
@@ -31,15 +30,7 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
     };
 
     this.playAudio = function() {
-        return this.resourceUrl(this.interaction.playAudio());
-    };
-
-    this.resourceUrl = function(url) {
-        var urlStartsWithHttp = (url.indexOf("http:") == 0);
-        if (urlStartsWithHttp) {
-            return url;
-        }
-        return this.pathToRoot + url;
+        return this.interaction.playAudio();
     };
 
     this.nextAction = function() {
@@ -120,6 +111,6 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
         this.setInteraction(exitInteraction);
     }
 
-    this.init(course, metadata, dataTransferList, pathToRoot);
+    this.init(course, metadata, dataTransferList);
 };
 

@@ -1,6 +1,6 @@
 describe("Call Context", function() {
     var course, callContext, promptContext;
-    var audioFileBase = "audio/";
+    var audioFileBase = "../audio/";
     var jobaidFileBase = "jobaid/";
 
     beforeEach(function() {
@@ -11,9 +11,8 @@ describe("Call Context", function() {
                         "invalid.input.retry.audio" : "0000_error_in_pressing_number.wav"
                         };
         course = jobAidCourseWithTwoLessonsInEveryChapter();
-        var pathToRoot = "../";
         promptContext = new PromptContext(metadata);
-        callContext = new CallContext(course, metadata, pathToRoot, promptContext);
+        callContext = new CallContext(course, metadata, promptContext);
     });
 
     it("when initialized should have course as the current interaction.", function() {

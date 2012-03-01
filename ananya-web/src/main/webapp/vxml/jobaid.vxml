@@ -13,10 +13,9 @@
     <script src="../js/prompt_context.js"/>
     <script>
         <![CDATA[
-            var pathToRoot = "../";
              callDetailLogger.jobaid_start();
             var promptContext = new PromptContext(metaData);
-            var callContext = new CallContext(courseData, metaData, pathToRoot,promptContext);
+            var callContext = new CallContext(courseData, metaData, promptContext);
             var shortCode = new ShortCode().getCode(metaData['jobaid.application.number'],session.connection.local.uri)
             callContext.navigateTo(shortCode);
           ]]>

@@ -1,12 +1,11 @@
-var CallContext = function(course, metadata, pathToRoot,promptContext) {
-    this.init = function(course, metadata, pathToRoot,promptContext) {
+var CallContext = function(course, metadata, promptContext) {
+    this.init = function(course, metadata, promptContext) {
         Course.buildLinks(course);
         this.promptContext = promptContext;
         this.course = course;
         this.currentInteraction = course;
         this.metadata = metadata;
         this.shouldPlayNextIntroduction = true;
-        this.pathToRoot = pathToRoot;
     };
 
     this.navigateTo = function(shortCode) {
@@ -67,7 +66,7 @@ var CallContext = function(course, metadata, pathToRoot,promptContext) {
     };
 
     this.audioFileBase = function() {
-        return this.resourceUrl(this.metadata['audio.url']+this.metadata['jobaid.audio.url']);
+        return this.metadata['audio.url']+this.metadata['jobaid.audio.url'];
     };
 
     this.resetPromptCounts = function() {
@@ -86,21 +85,12 @@ var CallContext = function(course, metadata, pathToRoot,promptContext) {
     };
 
     this.audioForInvalidInputRetry = function() {
-        return this.resourceUrl(this.promptContext.audioForInvalidInputRetry());
+        return this.promptContext.audioForInvalidInputRetry();
     };
 
     this.audioForOptionToGoToTopLevel = function() {
-        return this.resourceUrl(this.metadata['audio.url'] + this.metadata['option.to.top.level.audio']);
+        return this.metadata['audio.url'] + this.metadata['option.to.top.level.audio'];
     };
 
-
-    this.resourceUrl = function(url) {
-        var urlStartsWithHttp = (url.indexOf("http:") == 0);
-        if (urlStartsWithHttp) {
-            return url;
-        }
-        return this.pathToRoot + url;
-    };
-
-    this.init(course, metadata, pathToRoot,promptContext);
+    this.init(course, metadata,promptContext);
 };

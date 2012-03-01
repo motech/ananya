@@ -1,6 +1,5 @@
-var RegisterController = function(metadata,pathToRoot) {
+var RegisterController = function(metadata) {
     var metadata = metadata;
-    var pathToRoot = pathToRoot;
     var fieldCounter = 0;
     var records = [];
     var fields = ["designation", "name", "district", "block", "panchayat"];
@@ -22,27 +21,27 @@ var RegisterController = function(metadata,pathToRoot) {
     };
 
     this.playPrompt = function(field) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".say"]);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".say"];
     };
 
     this.playBeep = function(field) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata['registration.beep.audio']);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata['registration.beep.audio'];
     };
 
     this.playConfirmPrompt = function(field) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".confirm"]);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".confirm"];
     };
 
     this.playNoInputPrompt = function(field) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".noinput"]);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".noinput"];
     };
 
     this.playRerecordPrompt = function(field) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"]);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata["register." + field + ".rerecord"];
     };
 
     this.playRegistrationDone = function() {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['register.audio.url'] + metadata['register.complete']);
+        return metadata["audio.url"] + metadata['register.audio.url'] + metadata['register.complete'];
     };
 
     this.isVoiceRecognised = function(field) {
@@ -50,19 +49,11 @@ var RegisterController = function(metadata,pathToRoot) {
     };
 
     this.submitUrl = function() {
-        return this.absoluteUrl(metadata["register.submit.url"]);
+        return metadata["register.submit.url"];
     };
 
     this.submitNameUrl = function() {
-        return  this.absoluteUrl(metadata["register.name.submit.url"]);
-    };
-
-    this.absoluteUrl = function(url) {
-        var urlStartsWithHttp = (url.indexOf("http:") == 0);
-        if (urlStartsWithHttp) {
-            return url;
-        }
-        return pathToRoot + url;
+        return  metadata["register.name.submit.url"];
     };
 
     this.nextFlow = function(calledNumber) {
@@ -74,25 +65,25 @@ var RegisterController = function(metadata,pathToRoot) {
 
     this.getDistrictGrammar = function() {
         var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_S001_DISTRICTS.grxml";
-        return this.absoluteUrl(relativeUrl);
+        return relativeUrl;
     };
 
     this.getBlockGrammar = function() {
         var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_BLOCKS_" + records[fieldCounter - 1] + ".grxml";
-        return this.absoluteUrl(relativeUrl);
+        return relativeUrl;
     };
 
     this.getPanchayatGrammar = function() {
         var relativeUrl = metadata["grammar.url"] + "/" + "ANANYA_VILLAGES_" + records[fieldCounter - 1] + ".grxml";
-        return this.absoluteUrl(relativeUrl);
+        return relativeUrl;
     };
 
     this.playBack = function(record) {
-        return this.absoluteUrl(metadata["audio.url"] + metadata['location.audio.url'] + record.resultKey + ".wav");
+        return metadata["audio.url"] + metadata['location.audio.url'] + record.resultKey + ".wav";
     };
 
     this.needToRegisterPrompt = function() {
-        return this.absoluteUrl(metadata["audio.url"] + metadata["certificate.audio.url"] + metadata["certificate.need.to.register"]);
+        return metadata["audio.url"] + metadata["certificate.audio.url"] + metadata["certificate.need.to.register"];
     }
 
     this.playBackPrompt = function(field, record) {

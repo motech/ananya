@@ -36,14 +36,14 @@ describe("Registration Controller", function () {
     it("should play all prompts based on field", function() {
 
         metadata = {
-            "audio.url":"audio",
+            "audio.url":"../audio",
             "register.audio.url":"/register",
             "register.name.say":"/say.name.wav",
             "register.name.confirm":"/confirm.name.wav",
             "register.name.noinput":"/noinput.name.wav",
             "register.name.rerecord":"/rerecord.name.wav"
         };
-        controller = new RegisterController(metadata,"../");
+        controller = new RegisterController(metadata);
 
         expect(controller.playPrompt("name")).toEqual("../audio/register/say.name.wav");
         expect(controller.playConfirmPrompt("name")).toEqual("../audio/register/confirm.name.wav");
@@ -60,14 +60,14 @@ describe("Registration Controller", function () {
 
     it("should play back recorded audio for fields that are voice recognised", function() {
        metadata = {
-                   "audio.url":"audio",
+                   "audio.url":"../audio",
                    "location.audio.url":"/location/",
                };
         var map1 = {"resultKey":"districtAudio" };
         var map2 = {"resultKey":"blockAudio" };
         var map3 = {"resultKey":"panchayatAudio" };
 
-        controller = new RegisterController(metadata,"../");
+        controller = new RegisterController(metadata);
         expect(controller.playBackPrompt("district",map1)).toEqual("../audio/location/districtAudio.wav");
         expect(controller.playBackPrompt("block",map2)).toEqual("../audio/location/blockAudio.wav");
         expect(controller.playBackPrompt("panchayat",map3)).toEqual("../audio/location/panchayatAudio.wav");
@@ -75,12 +75,12 @@ describe("Registration Controller", function () {
 
     it("should play registration done prompt and the beep", function() {
         metadata = {
-                    "audio.url":"audio",
+                    "audio.url":"../audio",
                     "register.audio.url":"/register/",
                     "register.complete":"regdone.wav",
                     "registration.beep.audio" : "beep.wav"
             };
-        controller = new RegisterController(metadata, "../");
+        controller = new RegisterController(metadata);
         expect(controller.playRegistrationDone()).toEqual("../audio/register/regdone.wav");
         expect(controller.playBeep()).toEqual("../audio/register/beep.wav");
     });
@@ -103,19 +103,19 @@ describe("Registration Controller", function () {
     
     it("should give the URL to submit registration data", function () {
          metadata = {
-                        "register.submit.url" : "flw/register"
+                        "register.submit.url" : "../flw/register"
                     };
 
-        controller = new RegisterController(metadata, "../");
+        controller = new RegisterController(metadata);
         expect(controller.submitUrl()).toEqual("../flw/register");
     });
 
     it("should give the URL to submit name", function () {
          metadata = {
-                        "register.name.submit.url" : "flw/record/name"
+                        "register.name.submit.url" : "../../flw/record/name"
                     };
 
-        controller = new RegisterController(metadata, "../../");
+        controller = new RegisterController(metadata);
         expect(controller.submitNameUrl()).toEqual("../../flw/record/name");
     });
 
@@ -126,7 +126,7 @@ describe("Registration Controller", function () {
                         "register.name.submit.url" : "http://someOMURL/ananya/flw/record/name"
                     };
 
-        controller = new RegisterController(metadata, "../");
+        controller = new RegisterController(metadata);
         expect(controller.submitNameUrl()).toEqual("http://someOMURL/ananya/flw/record/name");
     });
 
@@ -135,8 +135,8 @@ describe("Registration Controller", function () {
                         "grammar.url" : "grammar"
                     };
 
-        controller = new RegisterController(metadata, "../");
-        expect(controller.getDistrictGrammar()).toEqual("../grammar/ANANYA_S001_DISTRICTS.grxml");
+        controller = new RegisterController(metadata);
+        expect(controller.getDistrictGrammar()).toEqual("grammar/ANANYA_S001_DISTRICTS.grxml");
     });
 
 
