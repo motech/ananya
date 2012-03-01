@@ -61,11 +61,3 @@ var Utility = function() {
 };
 
 var Utility = new Utility();
-
-Utility.resourceUrl = function(pathToRoot, url) {
-    var urlStartsWithHttp = (url.indexOf("http:") == 0);
-    if (urlStartsWithHttp) {
-        return url;
-    }
-    return pathToRoot + url;
-};

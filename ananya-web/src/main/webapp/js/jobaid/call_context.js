@@ -67,7 +67,7 @@ var CallContext = function(course, metadata, pathToRoot,promptContext) {
     };
 
     this.audioFileBase = function() {
-        return Utility.resourceUrl(pathToRoot,this.metadata['audio.url']+this.metadata['jobaid.audio.url']);
+        return this.resourceUrl(this.metadata['audio.url']+this.metadata['jobaid.audio.url']);
     };
 
     this.resetPromptCounts = function() {
@@ -86,11 +86,20 @@ var CallContext = function(course, metadata, pathToRoot,promptContext) {
     };
 
     this.audioForInvalidInputRetry = function() {
-        return Utility.resourceUrl(pathToRoot,this.promptContext.audioForInvalidInputRetry());
+        return this.resourceUrl(this.promptContext.audioForInvalidInputRetry());
     };
 
     this.audioForOptionToGoToTopLevel = function() {
-        return Utility.resourceUrl(pathToRoot,this.metadata['audio.url'] + this.metadata['option.to.top.level.audio']);
+        return this.resourceUrl(this.metadata['audio.url'] + this.metadata['option.to.top.level.audio']);
+    };
+
+
+    this.resourceUrl = function(url) {
+        var urlStartsWithHttp = (url.indexOf("http:") == 0);
+        if (urlStartsWithHttp) {
+            return url;
+        }
+        return this.pathToRoot + url;
     };
 
     this.init(course, metadata, pathToRoot,promptContext);

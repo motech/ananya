@@ -20,9 +20,9 @@
 
     <form id="unregistered">
         <block>
-            <audio expr="controller.jobAidWelcomePrompt()"/>
-            <audio expr="controller.jobAidDetailPrompt()"/>
-            <audio expr="controller.jobAidNeedToRegisterPrompt()"/>
+            <audio expr="controller.welcomePrompt()"/>
+            <audio expr="controller.jobaidDetailPrompt()"/>
+            <audio expr="controller.needToRegisterPrompt()"/>
             <goto expr="../register.vxml"/>
         </block>
     </form>
