@@ -24,7 +24,6 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     }
 
     public CallLog addOrUpdate(CallLog log) {
-
         CallLog logFromDb = findByCallIdAndCallFlow(log.getCallId(), log.getCallFlow());
         if(logFromDb == null) {
             add(log);
@@ -41,9 +40,7 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     @GenerateView
     public Collection<CallLog> findByCallId(String callId) {
         ViewQuery viewQuery = createQuery("by_callId").key(callId).includeDocs(true);
-        List<CallLog> callLogs = db.queryView(viewQuery, CallLog.class);
-        if (callLogs == null || callLogs.isEmpty()) return null;
-        return callLogs;
+        return db.queryView(viewQuery, CallLog.class);
     }
 
     @View(name = "by_callIdAndCallFlow", map = "function(doc) { if (doc.type=='CallLog') { emit([doc.callId, doc.callFlow], doc); } }")
@@ -52,5 +49,11 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
         List<CallLog> callDurations = db.queryView(viewQuery, CallLog.class);
         if (callDurations == null || callDurations.isEmpty()) return null;
         return callDurations.get(0);
+    }
+
+    public void delete(Collection<CallLog> callLogs) {
+        for(CallLog log:callLogs){
+            remove(log);
+        }
     }
 }

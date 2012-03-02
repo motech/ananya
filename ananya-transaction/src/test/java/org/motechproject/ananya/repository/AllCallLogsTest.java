@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -68,6 +73,24 @@ public class AllCallLogsTest {
         assertNotNull(logFromDb.getCallId());
         assertThat(logFromDb.getStartTime(), is(startTime));
         assertThat(logFromDb.getEndTime(), is(endTime));
+    }
+
+    @Test
+    public void shouldDeleteGivenListOfCallLogs(){
+        DateTime startTime = DateTime.now();
+        DateTime endTime = DateTime.now().plusDays(1);
+
+        CallLog callLog1 = new CallLog("callId", "callerId", CallFlow.CALL, startTime, endTime);
+        allCallLogs.add(callLog1);
+        CallLog callLog2 = new CallLog("callId", "callerId", CallFlow.CERTIFICATECOURSE, startTime, endTime);
+        allCallLogs.add(callLog2);
+
+        List<CallLog> callLogs = Arrays.asList(callLog1, callLog2);
+        allCallLogs.delete(callLogs);
+
+        Collection<CallLog> callLogsByCallId = allCallLogs.findByCallId("callId");
+        assertEquals(0, callLogsByCallId.size());
+
     }
 
 }

@@ -7,7 +7,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "call_duration_measure")
+@NamedQuery(name = CallDurationMeasure.FIND_BY_CALL_ID, query = "select cd from CallDurationMeasure cd where cd.callId=:callId")
 public class CallDurationMeasure {
+
+    public static final String FIND_BY_CALL_ID = "find.by.call.id";
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +25,19 @@ public class CallDurationMeasure {
     private String callId;
 
     @Column(name = "duration")
-    //TODO:int or integer? [sush,rahul]
-    private Integer duration;
+    private int duration;
+
+    @Column(name = "type")
+    private String type;
 
     public CallDurationMeasure() {
     }
 
-    public CallDurationMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, Integer duration) {
+    public CallDurationMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, int duration, String type) {
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.callId = callId;
         this.duration = duration;
+        this.type = type;
     }
 
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
@@ -43,5 +50,9 @@ public class CallDurationMeasure {
 
     public int getDuration() {
         return duration;
+    }
+
+    public String getType() {
+        return type;
     }
 }

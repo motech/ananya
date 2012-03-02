@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.joda.time.Seconds;
+import org.motechproject.ananya.domain.CallFlow;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -27,10 +29,17 @@ public class CallDurationMeasureService {
     public void createCallDurationMeasure(String callId){
         Collection<CallLog> allCallLogs = callLoggerService.getAllCallLogs(callId);
         for(CallLog callLog: allCallLogs){
+            if( callLog.getStartTime() == null || callLog.getEndTime() == null){
+                continue;
+            }
             int duration = Seconds.secondsBetween(callLog.getStartTime(), callLog.getEndTime()).getSeconds();
             Long msisdn = Long.valueOf(callLog.getCallerId());
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
-            reportDB.add(new CallDurationMeasure(frontLineWorkerDimension, callId, duration));
+            if(frontLineWorkerDimension == null){
+                frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn,callLog.getOperator(),"","");
+            }
+            reportDB.add(new CallDurationMeasure(frontLineWorkerDimension, callId, duration, callLog.getCallFlow().name()));
         }
+        callLoggerService.delete(allCallLogs);
     }
 }

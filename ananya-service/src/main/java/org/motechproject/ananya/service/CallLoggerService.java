@@ -72,4 +72,8 @@ public class CallLoggerService {
     public Collection<CallLog> getAllCallLogs(String callid) {
         return allCallLogs.findByCallId(callid);
     }
+
+    public void delete(Collection<CallLog> callLogs) {
+        allCallLogs.delete(callLogs);
+    }
 }

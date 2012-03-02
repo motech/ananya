@@ -104,6 +104,7 @@
             <column name="flw_id" type="bigint"/>
             <column name="call_id" type="varchar(255)"/>
             <column name="duration" type="integer"/>
+            <column name="type" type="varchar(30)"/>
         </createTable>
 
         <createIndex tableName="call_duration_measure" indexName="idx_call_duration_measure_flw_id">

@@ -50,6 +50,10 @@ public class BaseLog extends MotechBaseDataObject {
         return this.callerId;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
     public DateTime getStartTime() {
         return DateUtil.setTimeZone(this.startTime);
     }

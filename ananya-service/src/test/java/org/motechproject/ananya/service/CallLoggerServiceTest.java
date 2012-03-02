@@ -130,6 +130,17 @@ public class CallLoggerServiceTest {
         assertTrue(allCallLogsForCallId.contains(mockCallLog));
     }
 
+    @Test
+    public void shouldDeleteAllGivenCallLogs(){
+        Collection<CallLog> callLogs = new ArrayList<CallLog>();
+        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlow.CALL, DateTime.now(), DateTime.now());
+        callLogs.add(mockCallLog);
+
+        callLoggerService.delete(callLogs);
+
+        verify(allCallLogs).delete(callLogs);
+    }
+
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlow callFlowall, final DateTime endTime) {
         return new BaseMatcher<CallLog>() {
                 @Override
