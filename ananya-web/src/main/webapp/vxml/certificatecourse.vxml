@@ -14,7 +14,8 @@
     <script>
         <![CDATA[
             callDetailLogger.cc_start();
-            var controller = new CertificateCourseController(courseData, metaData, new CourseState(callerData), dataTransferList);
+            var controller = new CertificateCourseController(courseData, metaData,
+                     new CourseState(callerData, courseData), dataTransferList, pathToRoot);
           ]]>
     </script>
 

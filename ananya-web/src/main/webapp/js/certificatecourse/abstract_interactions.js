@@ -66,3 +66,15 @@ AbstractCourseInteraction.prototype.resumeCall = function() {
 AbstractCourseInteraction.prototype.getInteractionKey = function() {
   return this.interactionKey;
 };
+
+AbstractCourseInteraction.prototype.shouldLog = function() {
+    return true;
+};
+
+AbstractCourseInteraction.prototype.getCourseType = function() {
+    return null;
+}
+
+AbstractCourseInteraction.prototype.getCourseItemState = function() {
+    return null;
+}

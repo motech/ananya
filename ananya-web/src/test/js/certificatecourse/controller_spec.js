@@ -1,3 +1,4 @@
+// TODO: duplicate code to generate test interaction object. return via testutils
 describe("Certificate course controller spec", function() {
 
     var metadata, course;
@@ -14,7 +15,8 @@ describe("Certificate course controller spec", function() {
      };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
-        controller = new CertificateCourseController(course, metadata, new CourseState(), new DataTransferList(),"../");
+        controller = new CertificateCourseController(course, metadata,
+            new CourseState(null, certificationCourseWithTwoLessonsInEveryChapter()), new DataTransferList(),"../");
     });
 
     it("should get the audio to be played", function () {
@@ -33,10 +35,16 @@ describe("Certificate course controller spec", function() {
 
     it("should return the interaction's no input interaction if no input count has exceeded max", function () {
         var interactionWithoutInput = {
-                                        getInteractionKey:function() {return "anotherKey";}
+                                        getInteractionKey:function() {return "anotherKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
         };
         var currentInteraction = { continueWithoutInput : function() {return interactionWithoutInput;},
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
                                  };
 
         controller.setInteraction(currentInteraction);
@@ -51,12 +59,18 @@ describe("Certificate course controller spec", function() {
 
     it("for interactions involving input, if the interaction is progressing to next due to successive no inputs by user, the prompt counts should be reset.", function () {
         var interactionWithoutInput = {
-                                        getInteractionKey:function() {return "anotherKey";}
+                                        getInteractionKey:function() {return "anotherKey";},
+                                        getCourseType: function() { return "myCourseType"; },
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
         };
         var currentInteraction = {
                                     validateInput : function(input) { return input == 1; },
                                     continueWithoutInput : function() {return interactionWithoutInput;},
-                                    getInteractionKey:function() {return "myKey";}
+                                    getInteractionKey:function() {return "myKey";},
+                                    getCourseType: function() { return "myCourseType"; },
+                                    getCourseItemState: function() { return "start"; },
+                                    shouldLog: function() { return false; }
                                  };
 
         var invalidInput = 2;
@@ -66,7 +80,7 @@ describe("Certificate course controller spec", function() {
         expect(controller.promptContext.noInputCount).toEqual(1);
         expect(controller.promptContext.invalidInputCount).toEqual(0);
 
-        controller.processInput(2);
+        controller.processInput(invalidInput);
         expect(controller.promptContext.noInputCount).toEqual(1);
         expect(controller.promptContext.invalidInputCount).toEqual(1);
 
@@ -83,12 +97,18 @@ describe("Certificate course controller spec", function() {
 
     it("for interactions involving input, the interaction should progress to the next if input is valid.", function() {
         var interactionAfterInput = {
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
         };
         var interactionNeedingInput = {
                                         validateInput : function(input) { return true;},
                                         processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
                                        };
 
         controller.setInteraction(interactionNeedingInput);
@@ -98,12 +118,18 @@ describe("Certificate course controller spec", function() {
 
     it("for interactions involving input, the prompt counts should be reset if input is valid", function () {
         var interactionAfterInput = {
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
         };
         var interactionAllowingOnly1AsValidInput = {
                                         validateInput : function(input) { return input == 1;},
                                         processInputAndReturnNextInteraction : function(input) { return interactionAfterInput; },
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
                                        };
 
         var validInput = 1, invalidInput = 2;
@@ -135,7 +161,10 @@ describe("Certificate course controller spec", function() {
 
         var interactionNeedingInput = {
                                         validateInput : function(input) { return false;},
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
                                        };
         controller.setInteraction(interactionNeedingInput);
         controller.processInput(1);
@@ -146,7 +175,10 @@ describe("Certificate course controller spec", function() {
     it("for interactions involving input, if the input is not valid for more than allowed number of times, the call should disconnect", function () {
         var interactionNeedingInput = {
                                         validateInput : function(input) { return false;},
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
                                        };
         controller.setInteraction(interactionNeedingInput);
 
@@ -164,7 +196,10 @@ describe("Certificate course controller spec", function() {
 
     it("should quietly execute current interaction and all subsequent interactions, till interaction does not need phone", function() {
         var phoneInteraction = {
-                                        getInteractionKey:function() {return "myKey";}
+                                        getInteractionKey:function() {return "myKey";},
+                                        getCourseType :function() {return "course";},
+                                        getCourseItemState: function() { return "start"; },
+                                        shouldLog: function() { return false; }
         };
         var noPhoneInteraction3 = {
                                     processSilentlyAndReturnNextState : function() {return phoneInteraction;}
@@ -191,7 +226,10 @@ describe("Certificate course controller spec", function() {
     it("should set a bookmarkable interaction's key in courseState, when a transition is happening to that interaction", function () {
         var keyForInteraction = "keyForInteraction";
         var bookmarkableInteraction = {
-                                         getInteractionKey:function() {return keyForInteraction;}
+                                         getInteractionKey:function() {return keyForInteraction;},
+                                         getCourseType :function() {return "course";},
+                                         getCourseItemState: function() { return "start"; },
+                                         shouldLog: function() { return false; }
                                       };
         controller.setInteraction(bookmarkableInteraction);
 
@@ -200,7 +238,10 @@ describe("Certificate course controller spec", function() {
 
     it("whenever switching to an interaction, should add the current state's json to the data transfer list", function() {
         var phoneInteraction = {
-                                     getInteractionKey:function() {return "myKey";}
+                                     getInteractionKey:function() {return "myKey";},
+                                     getCourseType :function() {return "course";},
+                                     getCourseItemState: function() { return "start"; },
+                                     shouldLog: function() { return false; }
         };
 
         var jsonState = {"chapterIndex":1, "lessonOrQuestionIndex":5};

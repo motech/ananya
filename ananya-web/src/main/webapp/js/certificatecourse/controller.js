@@ -14,6 +14,7 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
 
     //TODO: This should be pulled out.
     this.initializeInteractionsArray = function(metadata, course, courseState) {
+        CertificateCourse.interactions[StartCertificationCourse.KEY] = new StartCertificationCourse(metadata, course, courseState);
         CertificateCourse.interactions[StartNextChapter.KEY] = new StartNextChapter(metadata, course, courseState);
         CertificateCourse.interactions[LessonInteraction.KEY] = new LessonInteraction(metadata, course, courseState);
         CertificateCourse.interactions[LessonEndMenuInteraction.KEY] = new LessonEndMenuInteraction(metadata, course, courseState);
@@ -26,7 +27,7 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
         CertificateCourse.interactions[PlayFinalScoreInteraction.KEY] = new PlayFinalScoreInteraction(metadata, course, courseState);
         CertificateCourse.interactions[PlayCourseResultInteraction.KEY] = new PlayCourseResultInteraction(metadata, course, courseState);
         CertificateCourse.interactions[CourseEndMarkerInteraction.KEY] = new CourseEndMarkerInteraction(metadata, course, courseState);
-        CertificateCourse.interactions["endOfCourse"] = new EndOfCourseInteraction();
+        CertificateCourse.interactions[EndOfCourseInteraction.KEY] = new EndOfCourseInteraction();
     };
 
     this.playAudio = function() {
@@ -59,13 +60,19 @@ var CertificateCourseController = function(course, metadata, courseState, dataTr
 
     this.quietlyProcessTillAPhoneInteractionIsNeeded = function() {
         while(this.currentInteractionHasToBeProcessedSilently()) {
+            this.processCurrentInteractionIntoPostQ();
             this.interaction = this.interaction.processSilentlyAndReturnNextState();
         }
+        this.processCurrentInteractionIntoPostQ();
+    };
+
+    this.processCurrentInteractionIntoPostQ = function() {
         if(this.currentInteractionIsBookMarkable()) {
-            this.courseState.setInteractionKey(this.interaction.getInteractionKey());
+            this.courseState.setCourseStateForServerCall(this.interaction.getCourseType(),
+                this.interaction.getInteractionKey(), this.interaction.getCourseItemState(), this.interaction.shouldLog());
             this.dataTransferList.add(this.courseState.toJson(), DataTransferList.TYPE_CC_STATE);
         }
-    };
+    }
 
     this.currentInteractionIsBookMarkable = function() {
         return this.interaction && this.interaction.getInteractionKey;

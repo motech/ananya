@@ -9,18 +9,18 @@ describe("Course end marker", function() {
         CertificateCourse.interactions = new Array();
     });
 
-    it("should set start next chapter interaction, first chapter, first lesson in state and go to end of course", function () {
+    it("should set start certificate course interaction, first chapter, first lesson in state and go to end of course", function () {
         var courseState = new CourseState();
         var courseEndMarker = new CourseEndMarkerInteraction(metadata, course, courseState);
 
-        CertificateCourse.interactions["endOfCourse"] = {};
+        CertificateCourse.interactions[EndOfCourseInteraction.KEY] = {};
 
         var nextState = courseEndMarker.processSilentlyAndReturnNextState();
 
         expect(courseState.chapterIndex).toEqual(null);
         expect(courseState.lessonOrQuestionIndex).toEqual(null);
-        expect(courseState.interactionKey).toEqual(StartNextChapter.KEY);
-        expect(nextState).toEqual(CertificateCourse.interactions["endOfCourse"]);
+        expect(courseState.interactionKey).toEqual(StartCertificationCourse.KEY);
+        expect(nextState).toEqual(CertificateCourse.interactions[EndOfCourseInteraction.KEY]);
     });
 
     it("should resume call at the same place where the call was left", function () {

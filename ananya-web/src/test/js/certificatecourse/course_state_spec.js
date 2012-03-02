@@ -42,6 +42,6 @@ describe("Course State", function() {
         expect(courseStateWithDefaults.chapterIndex).toBeNull();
         expect(courseStateWithDefaults.lessonOrQuestionIndex).toBeNull();
         expect(courseStateWithDefaults.scoresByChapter).toEqual({});
-        expect(courseStateWithDefaults.interactionKey).toEqual(StartNextChapter.KEY);
+        expect(courseStateWithDefaults.interactionKey).toEqual(StartCertificationCourse.KEY);
     };
 });

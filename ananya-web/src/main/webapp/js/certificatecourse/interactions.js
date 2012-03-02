@@ -1,8 +1,43 @@
 /*
+ StartCertificationCourse
+ */
+var StartCertificationCourse = function(metadata, course, courseState) {
+    this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata, StartCertificationCourse.KEY);
+        this.course = course;
+        this.courseState = courseState;
+    }
+
+    this.processSilentlyAndReturnNextState = function() {
+        return CertificateCourse.interactions[StartNextChapter.KEY];
+    }
+
+    this.resumeCall = function() {
+        return this;
+    }
+
+    this.getCourseType = function() {
+        return CourseType.COURSE;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.START;
+    }
+
+    this.init(metadata, course, courseState);
+};
+
+StartCertificationCourse.KEY = "startCertificationCourse";
+StartCertificationCourse.prototype = new AbstractCourseInteraction();
+StartCertificationCourse.prototype.constructor = LessonInteraction;
+
+
+/*
     StartNextChapter
 */
 var StartNextChapter = function(metadata, course, courseState) {
     this.init = function(metadata, course, courseState) {
+        AbstractCourseInteraction.call(this, metadata, StartNextChapter.KEY);
         this.course = course;
         this.courseState = courseState;
     }
@@ -34,10 +69,21 @@ var StartNextChapter = function(metadata, course, courseState) {
         return this;
     }
 
+    this.getCourseType = function() {
+        return CourseType.CHAPTER;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.START;
+    }
+
     this.init(metadata, course, courseState);
 };
 
 StartNextChapter.KEY = "startNextChapter";
+StartNextChapter.prototype = new AbstractCourseInteraction();
+StartNextChapter.prototype.constructor = LessonInteraction;
+
 
 /*
     LessonInteraction
@@ -47,6 +93,10 @@ var LessonInteraction = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata, LessonInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.START;
     }
 
     this.init(metadata, course, courseState);
@@ -74,6 +124,10 @@ LessonInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions[LessonEndMenuInteraction.KEY];
 }
 
+LessonInteraction.prototype.getCourseType = function() {
+    return CourseType.LESSON;
+}
+
 /*
     LessonEndMenuInteraction
 */
@@ -83,6 +137,10 @@ var LessonEndMenuInteraction = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata, LessonEndMenuInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.END;
     }
 
     this.init(metadata, course, courseState);
@@ -135,6 +193,9 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
     return CertificateCourse.interactions[LessonInteraction.KEY];
 }
 
+LessonEndMenuInteraction.getCourseType = function() {
+    return CourseType.LESSON;
+}
 
 /*
     StartQuizInteraction
@@ -146,10 +207,15 @@ var StartQuizInteraction = function(metadata, course, courseState) {
         this.courseState = courseState;
     }
 
+    this.getCourseItemState = function() {
+        return CourseState.START;
+    }
+
     this.init(metadata, course, courseState);
 };
 
 StartQuizInteraction.KEY = "startQuiz";
+
 StartQuizInteraction.prototype = new AbstractCourseInteraction();
 StartQuizInteraction.prototype.constructor = StartQuizInteraction;
 
@@ -173,6 +239,9 @@ StartQuizInteraction.prototype.bookMark = function() {
 
 }
 
+StartQuizInteraction.prototype.getCourseType = function() {
+    return CourseType.QUIZ;
+}
 
 /*
     PoseQuestionInteraction
@@ -225,6 +294,10 @@ PoseQuestionInteraction.prototype.processInputAndReturnNextInteraction = functio
     return CertificateCourse.interactions[PlayAnswerExplanationInteraction.KEY];
 }
 
+PoseQuestionInteraction.prototype.shouldLog = function() {
+    return false;
+}
+
 /*
     PlayAnswerExplanation
 */
@@ -233,6 +306,10 @@ var PlayAnswerExplanationInteraction = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata, PlayAnswerExplanationInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.START;
     }
 
     this.init(metadata, course, courseState);
@@ -274,6 +351,9 @@ PlayAnswerExplanationInteraction.prototype.resumeCall = function() {
     return this.nextInteraction();
 }
 
+PlayAnswerExplanationInteraction.prototype.shouldLog = function() {
+    return false;
+}
 
 /*
     InvalidInputInteraction
@@ -303,6 +383,10 @@ InvalidInputInteraction.prototype.nextInteraction = function() {
     return this.interactionToReturnTo;
 };
 
+InvalidInputInteraction.prototype.shouldLog = function() {
+    return false;
+}
+
 /*
     ReportChapterScore
 */
@@ -311,6 +395,10 @@ var ReportChapterScoreInteraction = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata, ReportChapterScoreInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.END;
     }
 
     this.init(metadata, course, courseState);
@@ -340,6 +428,10 @@ ReportChapterScoreInteraction.prototype.bookMark = function() {
 
 }
 
+ReportChapterScoreInteraction.prototype.getCourseType = function() {
+    return CourseType.QUIZ;
+}
+
 /*
     EndOfChapterMenu
 */
@@ -348,6 +440,10 @@ var EndOfChapterMenuInteraction = function(metadata, course, courseState) {
         AbstractCourseInteraction.call(this, metadata, EndOfChapterMenuInteraction.KEY);
         this.course = course;
         this.courseState = courseState;
+    }
+
+    this.getCourseItemState = function() {
+        return CourseState.END;
     }
 
     this.init(metadata, course, courseState);
@@ -382,6 +478,10 @@ EndOfChapterMenuInteraction.prototype.processInputAndReturnNextInteraction = fun
     return CertificateCourse.interactions[StartNextChapter.KEY];
 }
 
+EndOfChapterMenuInteraction.prototype.getCourseType = function() {
+    return CourseType.CHAPTER;
+}
+
 /*
     PlayThanks
 */
@@ -411,6 +511,10 @@ PlayThanksInteraction.prototype.doesTakeInput = function() {
 
 PlayThanksInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions[PlayFinalScoreInteraction.KEY];
+}
+
+PlayThanksInteraction.prototype.shouldLog = function() {
+    return false;
 }
 
 /*
@@ -461,6 +565,10 @@ PlayFinalScoreInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions[PlayCourseResultInteraction.KEY];
 }
 
+PlayFinalScoreInteraction.prototype.shouldLog = function() {
+    return false;
+}
+
 
 /*
     PlayCourseResult
@@ -502,6 +610,10 @@ PlayCourseResultInteraction.prototype.nextInteraction = function() {
     return CertificateCourse.interactions[CourseEndMarkerInteraction.KEY];
 }
 
+PlayCourseResultInteraction.prototype.shouldLog = function() {
+    return false;
+}
+
 /*
     CourseEndMarker
 */
@@ -516,15 +628,23 @@ var CourseEndMarkerInteraction = function(metadata, course, courseState) {
         this.courseState.setChapterIndex(null);
         this.courseState.setLessonOrQuestionIndex(null);
 
-        return CertificateCourse.interactions["endOfCourse"];
+        return CertificateCourse.interactions[EndOfCourseInteraction.KEY];
     }
 
     this.resumeCall = function() {
         return this;
     }
 
+    this.getCourseItemState = function() {
+        return null;
+    }
+
     this.init(metadata, course, courseState);
 };
+
+CourseEndMarkerInteraction.prototype.shouldLog = function() {
+    return false;
+}
 
 /*
     EndOfCourse
@@ -538,3 +658,14 @@ var EndOfCourseInteraction = function() {
 EndOfCourseInteraction.prototype.getInteractionKey = function() {
     return null;
 };
+
+EndOfCourseInteraction.prototype.getCourseType = function() {
+    return CourseType.COURSE;
+}
+
+EndOfCourseInteraction.prototype.getCourseItemState = function() {
+    return CourseState.END;
+}
+
+
+EndOfCourseInteraction.KEY = "endOfCourse";
