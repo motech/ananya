@@ -44,4 +44,5 @@ describe("Course State", function() {
         expect(courseStateWithDefaults.scoresByChapter).toEqual({});
         expect(courseStateWithDefaults.interactionKey).toEqual(StartCertificationCourse.KEY);
     };
+
 });

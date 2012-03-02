@@ -55,19 +55,19 @@ var CourseState = function(callerData, courseData) {
         this.interactionKey = interactionKey;
     };
 
-    this.contentIdFunctions = {};
+    this.contentIdFunctions = { "parent" : this };
 
-    this.contentIdFunctions[CourseType.COURSE] = function() { this.courseData.id };
-    this.contentIdFunctions[CourseType.CHAPTER] = function() { this.courseData.children[this.chapterIndex].id };
-    this.contentIdFunctions[CourseType.LESSON] = function() { this.courseData.children[this.chapterIndex].children[this.lessonOrQuestionIndex].id };
-    this.contentIdFunctions[CourseType.QUIZ] = function() { this.courseData.children[this.chapterIndex].id };
+    this.contentIdFunctions[CourseType.COURSE] = function() { this["parent"].courseData.id };
+    this.contentIdFunctions[CourseType.CHAPTER] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].id };
+    this.contentIdFunctions[CourseType.LESSON] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].children[this["parent"].lessonOrQuestionIndex].id };
+    this.contentIdFunctions[CourseType.QUIZ] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].id };
 
     this.setCourseStateForServerCall = function(contentType, interactionKey, courseItemState, shouldLog) {
         this.interactionKey = interactionKey;
         this.contentType = contentType;
         this.courseItemState = courseItemState;
-        if (shouldLog) {
-            this.contentId = this.courseData.id;//this.contentIdFunctions[this.contentType]();
+        if (shouldLog && this.contentIdFunctions[this.contentType]) {
+            this.contentId = this.contentIdFunctions[this.contentType]();
         } else {
             this.contentId = null;
         }

@@ -16,7 +16,15 @@ describe("Certificate course controller spec", function() {
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
         controller = new CertificateCourseController(course, metadata,
-            new CourseState(null, certificationCourseWithTwoLessonsInEveryChapter()), new DataTransferList(),"../");
+            new CourseState(
+                {
+                    "bookmark" : {
+                        "type" : "lesson",
+                        "chapterIndex" : 0,
+                        "lessonIndex" : 0
+                    }
+                },
+                certificationCourseWithTwoLessonsInEveryChapter()), new DataTransferList(),"../");
     });
 
     it("should get the audio to be played", function () {
