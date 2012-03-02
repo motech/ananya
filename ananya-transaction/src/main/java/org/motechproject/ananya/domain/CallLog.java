@@ -21,4 +21,5 @@ public class CallLog extends BaseLog{
     public CallFlow getCallFlow() {
         return callFlow;
     }
+
 }

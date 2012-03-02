@@ -21,6 +21,7 @@ public class CallDurationMeasure {
     private String callId;
 
     @Column(name = "duration")
+    //TODO:int or integer? [sush,rahul]
     private Integer duration;
 
     public CallDurationMeasure() {
@@ -30,5 +31,17 @@ public class CallDurationMeasure {
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.callId = callId;
         this.duration = duration;
+    }
+
+    public FrontLineWorkerDimension getFrontLineWorkerDimension() {
+        return frontLineWorkerDimension;
+    }
+
+    public String getCallId() {
+        return callId;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 }

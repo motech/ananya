@@ -69,4 +69,7 @@ public class CallLoggerService {
         allCallLogs.addOrUpdate(callLog);
     }
 
+    public Collection<CallLog> getAllCallLogs(String callid) {
+        return allCallLogs.findByCallId(callid);
+    }
 }

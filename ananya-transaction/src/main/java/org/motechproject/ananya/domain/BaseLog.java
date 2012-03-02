@@ -46,20 +46,20 @@ public class BaseLog extends MotechBaseDataObject {
     }
 
 
-    public DateTime getEndTime() {
-        return DateUtil.setTimeZone(this.endTime);
-    }
-
-    public void setStartTime(DateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public String getCallerId() {
         return this.callerId;
     }
 
     public DateTime getStartTime() {
         return DateUtil.setTimeZone(this.startTime);
+    }
+
+    public DateTime getEndTime() {
+        return DateUtil.setTimeZone(this.endTime);
+    }
+
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
     }
 
     public void setEndTime(DateTime endTime) {

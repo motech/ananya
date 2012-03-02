@@ -14,11 +14,14 @@ import org.motechproject.ananya.domain.CallFlow;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.repository.AllCallLogs;
 
-import java.util.ArrayList;
+import java.util.*;
 
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CallLoggerServiceTest {
@@ -111,6 +114,20 @@ public class CallLoggerServiceTest {
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, end.getMillis()));
 
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher(callStart, CallFlow.CALL, end)));
+    }
+
+    @Test
+    public void shouldGetAllCallLogsForAGivenCallId(){
+        String callid = "callid";
+        Collection<CallLog> callLogs = new ArrayList<CallLog>();
+        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlow.CALL, DateTime.now(), DateTime.now());
+        callLogs.add(mockCallLog);
+        when(allCallLogs.findByCallId(callid)).thenReturn(callLogs);
+
+        Collection<CallLog> allCallLogsForCallId = callLoggerService.getAllCallLogs(callid);
+
+        assertEquals(1, allCallLogsForCallId.size());
+        assertTrue(allCallLogsForCallId.contains(mockCallLog));
     }
 
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlow callFlowall, final DateTime endTime) {
