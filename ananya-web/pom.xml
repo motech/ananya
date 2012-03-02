@@ -46,7 +46,7 @@
                             <target name="load.seed.data">
                                 <echo message="Seed data loading: START"/>
                                 <property name="compile_classpath" refid="maven.compile.classpath"/>
-                                <java classname="org.motechproject.deliverytools.seed.SetupSeedData">
+                                <java classname="org.motechproject.deliverytools.seed.SetupSeedData" failonerror="true">
                                     <classpath>
                                         <pathelement path="${compile_classpath}"/>
                                     </classpath>

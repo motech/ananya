@@ -109,7 +109,7 @@ public class CertificationCourseSeed {
                 return fileName;
             }
         }
-        return null;
+        throw new RuntimeException("Could not find any file with the name: " + endOptionName);
     }
 
     private static final Map<String, String> CORRECT_ANSWERS = new HashMap<String, String>();
@@ -325,7 +325,7 @@ public class CertificationCourseSeed {
             "0152_ch6_q2_wa.wav",
             "0153_ch6_q3.wav",
             "0154_ch6_q3_ca.wav",
-            "0155_ch6_q3_Wa.wav",
+            "0155_ch6_q3_wa.wav",
             "0156_ch6_q4.wav",
             "0157_ch6_q4_ca.wav",
             "0158_ch6_q4_wa.wav",
