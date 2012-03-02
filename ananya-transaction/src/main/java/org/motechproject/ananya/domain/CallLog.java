@@ -8,18 +8,18 @@ import org.joda.time.DateTime;
 public class CallLog extends BaseLog{
 
     @JsonProperty
-    private CallFlow callFlow;
+    private IvrFlow ivrFlow;
 
     public CallLog() {
     }
 
-    public CallLog(String callId, String callerId, CallFlow callFlow, DateTime startTime, DateTime endTime) {
+    public CallLog(String callId, String callerId, IvrFlow ivrFlow, DateTime startTime, DateTime endTime) {
         super(callerId, "", startTime, endTime, "", callId);
-        this.callFlow = callFlow;
+        this.ivrFlow = ivrFlow;
     }
 
-    public CallFlow getCallFlow() {
-        return callFlow;
+    public IvrFlow getIvrFlow() {
+        return ivrFlow;
     }
 
 }

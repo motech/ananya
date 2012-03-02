@@ -1,10 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.CallDuration;
-import org.motechproject.ananya.domain.CallEvent;
-import org.motechproject.ananya.domain.CallFlow;
-import org.motechproject.ananya.domain.CallLog;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +11,12 @@ import java.util.Collection;
 @Service
 public class CallLoggerService {
     private AllCallLogs allCallLogs;
+    private ReportDataPublisher reportPublisher;
 
     @Autowired
-    public CallLoggerService(AllCallLogs allCallLogs) {
+    public CallLoggerService(AllCallLogs allCallLogs, ReportDataPublisher reportDataPublisher) {
         this.allCallLogs = allCallLogs;
+        this.reportPublisher = reportDataPublisher;
     }
 
 
@@ -25,7 +24,7 @@ public class CallLoggerService {
         DateTime time = new DateTime(callDuration.getTime());
         if( callDuration.getCallEvent() == CallEvent.DISCONNECT){
             HandleDisconnect(callDuration, time);
-
+            reportPublisher.publishCallDuration(new LogData(LogType.CALL_DURATION, callDuration.getCallId()));
             return;
         }
         HandleNormalFlow(callDuration, time);
@@ -38,23 +37,18 @@ public class CallLoggerService {
             if(log.getEndTime()==null) {
                 log.setEndTime(time);
                 allCallLogs.addOrUpdate(log);
-
             }
         }
-
     }
 
     private void HandleNormalFlow(CallDuration callDuration, DateTime time) {
         DateTime startTime = null, endTime = null;
-
         String[] split = callDuration.getCallEvent().toString().split("_");
-
-
-        CallFlow callFlow;
+        IvrFlow ivrFlow;
 
         try
         {
-            callFlow = CallFlow.valueOf(split[0]);
+            ivrFlow = IvrFlow.valueOf(split[0]);
         }
         catch(IllegalArgumentException ex)
         {
@@ -65,12 +59,12 @@ public class CallLoggerService {
         else if(split[1].equalsIgnoreCase("end")) endTime = time;
         else return;
 
-        CallLog callLog = new CallLog(callDuration.getCallId(), callDuration.getCallerId(), callFlow, startTime, endTime);
+        CallLog callLog = new CallLog(callDuration.getCallId(), callDuration.getCallerId(), ivrFlow, startTime, endTime);
         allCallLogs.addOrUpdate(callLog);
     }
 
-    public Collection<CallLog> getAllCallLogs(String callid) {
-        return allCallLogs.findByCallId(callid);
+    public Collection<CallLog> getAllCallLogs(String callId) {
+        return allCallLogs.findByCallId(callId);
     }
 
     public void delete(Collection<CallLog> callLogs) {

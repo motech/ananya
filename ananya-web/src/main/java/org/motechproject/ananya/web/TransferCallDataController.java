@@ -81,7 +81,7 @@ public class TransferCallDataController {
                     CertificationCourseStateRequest.makeObjectFromJson(
                             callerId, callId, transferData.getToken(), transferData.getData()));
             else
-                durations.add(CaptureLogDetail(transferData.getData(), callId, callerId));
+                durations.add(CaptureCallLog(transferData.getData(), callId, callerId));
         }
 
         certificateCourseService.saveState(certificationCourseStateRequests);
@@ -92,7 +92,7 @@ public class TransferCallDataController {
     }
 
 
-    private CallDuration CaptureLogDetail(String data, String callId, String callerId) {
+    private CallDuration CaptureCallLog(String data, String callId, String callerId) {
         Gson gson = new Gson();
         Type collectionType = new TypeToken<CallDuration>(){}.getType();
         CallDuration callDuration = gson.fromJson(data, collectionType);

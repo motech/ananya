@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.CallFlow;
+import org.motechproject.ananya.domain.IvrFlow;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +56,9 @@ public class CallLogFlowTest extends SpringIntegrationTest{
         DateTime regEndTime = new DateTime(1330320606087L);
         DateTime jobAidStartTime = new DateTime(1330320624871L);
 
-        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(callStartTime, CallFlow.CALL, disconnectTime, callId)));
-        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(regStartTime, CallFlow.REGISTRATION, regEndTime, callId)));
-        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(jobAidStartTime, CallFlow.JOBAID, disconnectTime, callId)));
+        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(callStartTime, IvrFlow.CALL, disconnectTime, callId)));
+        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(regStartTime, IvrFlow.REGISTRATION, regEndTime, callId)));
+        assertThat(allCallLogsByCallId, hasItems(callLogMatcher(jobAidStartTime, IvrFlow.JOBAID, disconnectTime, callId)));
     }
 
 
@@ -67,13 +67,13 @@ public class CallLogFlowTest extends SpringIntegrationTest{
 
     }
 
-    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlow callFlow, final DateTime endTime, final String callId) {
+    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final IvrFlow ivrFlow, final DateTime endTime, final String callId) {
         return new BaseMatcher<CallLog>() {
             @Override
             public boolean matches(Object o) {
                 CallLog o1 = (CallLog) o;
                 return ((o1.getStartTime() == null && startTime == null) ||o1.getStartTime().equals(startTime))
-                        && o1.getCallFlow() == callFlow
+                        && o1.getIvrFlow() == ivrFlow
                         && ((o1.getEndTime() == null && endTime == null) || o1.getEndTime().equals(endTime))
                         && o1.getCallId().equals(callId);
             }

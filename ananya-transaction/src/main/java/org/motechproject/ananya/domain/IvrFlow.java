@@ -1,6 +1,6 @@
 package org.motechproject.ananya.domain;
 
-public enum CallFlow{
+public enum IvrFlow {
     CALL,
     REGISTRATION,
     CERTIFICATECOURSE,
