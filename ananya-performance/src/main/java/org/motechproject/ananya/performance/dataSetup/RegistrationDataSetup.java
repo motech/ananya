@@ -7,18 +7,22 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.repository.*;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.service.ReportDataMeasure;
+import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
 @Component
 public class RegistrationDataSetup {
@@ -32,7 +36,7 @@ public class RegistrationDataSetup {
     private AllLocations allLocations;
     private AllFrontLineWorkers allFrontLineWorkers;
 
-    private ReportDataMeasure reportDataMeasure;
+    private RegistrationMeasureService registrationMeasureService;
 
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllLocationDimensions allLocationDimensions;
@@ -61,7 +65,7 @@ public class RegistrationDataSetup {
                                  @Qualifier("dataSetupProperties") Properties dataSetupProperties,
                                  @Qualifier("ananyaDbConnector") CouchDbConnector ananyaDbConnector,
                                  AllFrontLineWorkers allFrontLineWorkers,
-                                 ReportDataMeasure reportDataMeasure,
+                                 RegistrationMeasureService registrationMeasureService,
                                  AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                  AllLocationDimensions allLocationDimensions,
                                  AllRegistrationMeasures allRegistrationMeasures)
@@ -70,7 +74,7 @@ public class RegistrationDataSetup {
         this.dataSetupProperties = dataSetupProperties;
         this.ananyaDbConnector = ananyaDbConnector;
         this.allFrontLineWorkers = allFrontLineWorkers;
-        this.reportDataMeasure = reportDataMeasure;
+        this.registrationMeasureService = registrationMeasureService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allLocationDimensions = allLocationDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
@@ -119,7 +123,7 @@ public class RegistrationDataSetup {
 
         ananyaDbConnector.executeBulk(frontLineWorkerList);
         for(FrontLineWorker frontLineWorker : frontLineWorkerList){
-            reportDataMeasure.createRegistrationMeasureWith(frontLineWorker.getMsisdn());
+            registrationMeasureService.createRegistrationMeasureWith(frontLineWorker.getMsisdn());
         }
         frontLineWorkerList.clear();
     }
