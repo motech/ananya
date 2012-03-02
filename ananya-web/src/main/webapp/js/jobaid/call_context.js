@@ -8,13 +8,6 @@ var CallContext = function(course, metadata, promptContext) {
         this.shouldPlayNextIntroduction = true;
     };
 
-    this.navigateTo = function(shortCode) {
-        for (var i = 0; i < shortCode.length; i++) {
-            if (!this.isValidInput(shortCode.charAt(i))) break;
-            this.handleInput(shortCode.charAt(i));
-        }
-    };
-
     this.handleInput = function(input) {
         if (input == 0) {
             this.shouldPlayNextIntroduction = false;
@@ -24,6 +17,27 @@ var CallContext = function(course, metadata, promptContext) {
         this.shouldPlayNextIntroduction = true;
         this.currentInteraction = this.currentInteraction.children[input - 1];
         return this;
+    };
+
+    this.navigateTo = function(shortCode) {
+         this.shouldPlayNextIntroduction = true;
+         var levels = this.course.children;
+         for(levelNo=0; levelNo < levels.length ; levelNo++){
+            var chapters = levels[levelNo].children;
+
+            for (var chapterNo = 0; chapterNo < chapters.length ; chapterNo++) {
+                var lessons = chapters[chapterNo].children;
+
+                for(var lessonNo=0;lessonNo < lessons.length ; lessonNo++){
+                    if (lessons[lessonNo].data.shortcode == shortCode)
+                        {
+                            this.currentInteraction = lessons[lessonNo];
+                            return this;
+                        }
+                }
+            }
+         }
+         return this;
     };
 
     this.lessonFinished = function() {

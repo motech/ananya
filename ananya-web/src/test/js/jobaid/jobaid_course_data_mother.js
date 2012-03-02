@@ -130,7 +130,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 1 Chapter 1 Lesson 1",
                                 "data": {
                                     "number": "1",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "3456"
                                 },
                                 "contents": [
                                     {
@@ -146,7 +147,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 1 Chapter 1 Lesson 2",
                                 "data": {
                                     "number": "2",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "9876"
                                 },
                                 "contents": [
                                     {
@@ -183,7 +185,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 1 Chapter 2 Lesson 1",
                                 "data": {
                                     "number": "1",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "1234"
                                 },
                                 "contents": [
                                     {
@@ -199,7 +202,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 1 Chapter 2 Lesson 2",
                                 "data": {
                                     "number": "2",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "4567"
                                 },
                                 "contents": [
                                     {
@@ -252,7 +256,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 2 Chapter 1 Lesson 1",
                                 "data": {
                                     "number": "1",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "1111"
                                 },
                                 "contents": [
                                     {
@@ -268,7 +273,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 2 Chapter 1 Lesson 2",
                                 "data": {
                                     "number": 2,
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "2222"
                                 },
                                 "contents": [
                                     {
@@ -305,7 +311,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 2 Chapter 2 Lesson 1",
                                 "data": {
                                     "number": "1",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "3333"
                                 },
                                 "contents": [
                                     {
@@ -321,7 +328,8 @@ function jobAidCourseWithTwoLessonsInEveryChapter() {
                                 "name": "Level 2 Chapter 2 Lesson 2",
                                 "data": {
                                     "number": "2",
-                                    "type": "Lesson"
+                                    "type": "Lesson",
+                                    "shortcode" : "4444"
                                 },
                                 "contents": [
                                     {

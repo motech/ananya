@@ -192,35 +192,6 @@ describe("Call Context", function() {
 
     });
 
-    it("should go to level1-chapter2 for shortcode 12.", function () {
-        var level1 = course.children[0];
-        var level1_chapter2 = level1.children[1];
-        callContext.navigateTo("12")
-        expect(callContext.currentInteraction).toEqual(level1_chapter2);
-    });
-
-    it("should go to level2-chapter1-lesson2 for shortcode 212.", function () {
-        var level2 = course.children[1];
-        var level2_chapter1 = level2.children[0];
-        var level2_chapter1_lesson2 = level2_chapter1.children[1];
-
-        callContext.navigateTo("212")
-        expect(callContext.currentInteraction).toEqual(level2_chapter1_lesson2);
-    });
-
-    it("should go to course root for no shortcode", function () {
-        callContext.navigateTo("")
-        expect(callContext.currentInteraction).toEqual(course);
-    });
-
-    it("should go to last valid level for invalid shortcode and stop moving after encountering the invalid level", function () {
-        var level1 = course.children[0];
-        var level1_chapter2 = level1.children[1];
-        callContext.navigateTo("1252")
-        expect(callContext.currentInteraction).toEqual(level1_chapter2);
-
-    });
-
     it("should play next introduction only if introduction present and current interaction is not last lesson", function() {
         var level1 = course.children[0];
         callContext.handleInput(1);
@@ -235,5 +206,16 @@ describe("Call Context", function() {
 
     it("should provide the URLs for audio For Invalid Input Retry", function() {
         expect(callContext.audioForInvalidInputRetry()).toEqual("../audio/0000_error_in_pressing_number.wav")
+    });
+
+    it("should find lesson node matching the short code", function() {
+        var lesson = course.children[1].children[0].children[0];
+        callContext.navigateTo("1111");
+        expect(callContext.currentInteraction).toEqual(lesson);
+    });
+
+    it("should find go to beginning of course for invalid shortcode", function() {
+        callContext.navigateTo("0000");
+        expect(callContext.currentInteraction).toEqual(course);
     });
 })

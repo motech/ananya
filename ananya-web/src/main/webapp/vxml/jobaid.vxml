@@ -17,8 +17,7 @@
              callDetailLogger.jobaid_start();
             var promptContext = new PromptContext(metaData);
             var callContext = new CallContext(courseData, metaData, promptContext);
-            var shortCode = new ShortCode().getCode(metaData['jobaid.application.number'],session.connection.local.uri)
-            callContext.navigateTo(shortCode);
+            callContext.navigateTo(session.connection.local.uri);
           ]]>
     </script>
 
