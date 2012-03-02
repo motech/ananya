@@ -12,5 +12,4 @@ public class ReportDB {
     public <T> void add(T dataBean) {
         template.save(dataBean);
     }
-
 }

@@ -25,6 +25,7 @@ public class CallLoggerService {
         DateTime time = new DateTime(callDuration.getTime());
         if( callDuration.getCallEvent() == CallEvent.DISCONNECT){
             HandleDisconnect(callDuration, time);
+
             return;
         }
         HandleNormalFlow(callDuration, time);
@@ -37,6 +38,7 @@ public class CallLoggerService {
             if(log.getEndTime()==null) {
                 log.setEndTime(time);
                 allCallLogs.addOrUpdate(log);
+
             }
         }
 

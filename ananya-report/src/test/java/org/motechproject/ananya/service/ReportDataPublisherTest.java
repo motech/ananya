@@ -48,4 +48,16 @@ public class ReportDataPublisherTest {
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
+
+    @Test
+    public void shouldPublishCallDurationData(){
+        LogData reportData = new LogData(LogType.CALL_DURATION, "callId");
+
+        reportDataPublisher.publishCallDuration(reportData);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportDataPublisher.SEND_CALL_DURATION_DATA_KEY), captor.capture());
+        LogData captured = captor.getValue();
+        assertEquals(captured, reportData);
+    }
 }

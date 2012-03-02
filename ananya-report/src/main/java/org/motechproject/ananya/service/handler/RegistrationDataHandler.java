@@ -1,30 +1,32 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.handler;
 
 import org.motechproject.ananya.domain.LogData;
+import org.motechproject.ananya.service.RegistrationMeasureService;
+import org.motechproject.ananya.service.ReportDataPublisher;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReportDataHandler {
+public class RegistrationDataHandler {
 
-    private ReportDataMeasure reportDataMeasureService;
+    private RegistrationMeasureService registrationMeasureServiceService;
 
     @Autowired
-    public ReportDataHandler(ReportDataMeasure reportDataMeasureService) {
-        this.reportDataMeasureService = reportDataMeasureService;
+    public RegistrationDataHandler(RegistrationMeasureService registrationMeasureServiceService) {
+        this.registrationMeasureServiceService = registrationMeasureServiceService;
     }
 
     @MotechListener(subjects = {ReportDataPublisher.SEND_REGISTRATION_DATA_KEY})
     public void handleRegistration(MotechEvent event) {
         for (Object log : event.getParameters().values())
-            this.reportDataMeasureService.createRegistrationMeasure((LogData) log);
+            this.registrationMeasureServiceService.createRegistrationMeasure((LogData) log);
     }
 
     @MotechListener(subjects = {ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY})
     public void handleRegistrationCompletion(MotechEvent event) {
         for (Object log : event.getParameters().values())
-            this.reportDataMeasureService.updateRegistrationStatusAndName((LogData) log);
+            this.registrationMeasureServiceService.updateRegistrationStatusAndName((LogData) log);
     }
 }

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReportDataMeasure {
+public class RegistrationMeasureService {
 
     private AllRegistrationLogs allRegistrationLogs;
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -29,7 +29,7 @@ public class ReportDataMeasure {
     private ReportDB reportDB;
 
     @Autowired
-    public ReportDataMeasure(
+    public RegistrationMeasureService(
             AllRegistrationLogs allRegistrationLogs, AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations,
             AllLocationDimensions allLocationDimensions, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
             AllTimeDimensions allTimeDimensions, ReportDB reportDB) {

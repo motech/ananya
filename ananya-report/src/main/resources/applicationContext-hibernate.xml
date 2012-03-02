@@ -18,7 +18,7 @@
                 <value>org.motechproject.ananya.domain.dimension.CourseItemDimension</value>
                 <value>org.motechproject.ananya.domain.measure.RegistrationMeasure</value>
                 <value>org.motechproject.ananya.domain.measure.CourseItemMeasure</value>
-                <value>org.motechproject.ananya.domain.measure.CallMeasure</value>
+                <value>org.motechproject.ananya.domain.measure.CallDurationMeasure</value>
             </list>
         </property>
 

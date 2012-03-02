@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.handler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.LogData;
 import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;
@@ -15,16 +16,18 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ReportDataHandlerTest {
+public class RegistrationDataHandlerTest {
 
-    private ReportDataHandler handler;
+    private RegistrationDataHandler handler;
     @Mock
-    private ReportDataMeasure mapper;
+    private RegistrationMeasureService registrationMeasureService;
+
+
 
     @Before
     public void setUp() {
         initMocks(this);
-        handler = new ReportDataHandler(mapper);
+        handler = new RegistrationDataHandler(registrationMeasureService);
     }
 
     @Test
@@ -37,7 +40,7 @@ public class ReportDataHandlerTest {
         handler.handleRegistration(event);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(mapper).createRegistrationMeasure(captor.capture());
+        verify(registrationMeasureService).createRegistrationMeasure(captor.capture());
         assertEquals(logData, captor.getValue());
     }
 
@@ -51,7 +54,7 @@ public class ReportDataHandlerTest {
         handler.handleRegistrationCompletion(event);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(mapper).updateRegistrationStatusAndName(captor.capture());
+        verify(registrationMeasureService).updateRegistrationStatusAndName(captor.capture());
         assertEquals(logData, captor.getValue());
     }
 

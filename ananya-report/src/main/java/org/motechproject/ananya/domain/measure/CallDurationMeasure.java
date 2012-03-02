@@ -6,8 +6,8 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "call_measure")
-public class CallMeasure {
+@Table(name = "call_duration_measure")
+public class CallDurationMeasure {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +23,10 @@ public class CallMeasure {
     @Column(name = "duration")
     private Integer duration;
 
-    public CallMeasure() {
+    public CallDurationMeasure() {
     }
 
-    public CallMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, Integer duration) {
+    public CallDurationMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, Integer duration) {
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.callId = callId;
         this.duration = duration;

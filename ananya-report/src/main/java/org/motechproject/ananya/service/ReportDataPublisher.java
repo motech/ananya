@@ -11,6 +11,7 @@ public class ReportDataPublisher {
 
     public static final String SEND_REGISTRATION_DATA_KEY = "org.motechproject.ananya.report.registration";
     public static final String SEND_REGISTRATION_COMPLETION_DATA_KEY = "org.motechproject.ananya.report.registration.completion";
+    public static final String SEND_CALL_DURATION_DATA_KEY = "org.motechproject.ananya.report.call.duration";
 
     private EventContext eventContext;
 
@@ -25,5 +26,9 @@ public class ReportDataPublisher {
     
     public void publishRegistrationUpdate(LogData logData) {
         eventContext.send(SEND_REGISTRATION_COMPLETION_DATA_KEY, logData);
+    }
+
+    public void publishCallDuration(LogData logData) {
+        eventContext.send(SEND_CALL_DURATION_DATA_KEY, logData);
     }
 }

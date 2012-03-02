@@ -69,6 +69,8 @@
             <column name="name" type="varchar(255)"/>
             <column name="type" type="varchar(30)"/>
         </createTable>
+
+        <addUniqueConstraint tableName="course_item_dimension" columnNames="name" constraintName="unq_name"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="6">
@@ -95,7 +97,7 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="7">
-        <createTable tableName="call_measure" schemaName="report">
+        <createTable tableName="call_duration_measure" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -104,7 +106,7 @@
             <column name="duration" type="integer"/>
         </createTable>
 
-        <createIndex tableName="call_measure" indexName="idx_call_measure_flw_id">
+        <createIndex tableName="call_duration_measure" indexName="idx_call_duration_measure_flw_id">
             <column name="flw_id"/>
         </createIndex>
     </changeSet>

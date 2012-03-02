@@ -16,6 +16,7 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.handler.RegistrationDataHandler;
 import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,10 +30,10 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-report.xml")
-public class ReportDataHandlerIT {
+public class RegistrationDataHandlerIT {
 
     @Autowired
-    private ReportDataHandler handler;
+    private RegistrationDataHandler handler;
     @Autowired
     private AllRegistrationLogs allRegistrationLogs;
     @Autowired
