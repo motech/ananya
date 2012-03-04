@@ -11,10 +11,10 @@ import java.util.Collection;
 @Service
 public class CallLoggerService {
     private AllCallLogs allCallLogs;
-    private ReportDataPublisher reportPublisher;
+    private ReportPublisherService reportPublisher;
 
     @Autowired
-    public CallLoggerService(AllCallLogs allCallLogs, ReportDataPublisher reportDataPublisher) {
+    public CallLoggerService(AllCallLogs allCallLogs, ReportPublisherService reportDataPublisher) {
         this.allCallLogs = allCallLogs;
         this.reportPublisher = reportDataPublisher;
     }
@@ -22,41 +22,38 @@ public class CallLoggerService {
 
     public void save(CallDuration callDuration) {
         DateTime time = new DateTime(callDuration.getTime());
-        if( callDuration.getCallEvent() == CallEvent.DISCONNECT){
-            HandleDisconnect(callDuration, time);
+        if (callDuration.getCallEvent() == CallEvent.DISCONNECT) {
+            handleDisconnect(callDuration, time);
             reportPublisher.publishCallDuration(new LogData(LogType.CALL_DURATION, callDuration.getCallId()));
             return;
         }
-        HandleNormalFlow(callDuration, time);
+        handleNormalFlow(callDuration, time);
     }
 
-    private void HandleDisconnect(CallDuration callDuration, DateTime time) {
+    private void handleDisconnect(CallDuration callDuration, DateTime time) {
 
         Collection<CallLog> allCallLogsByCallId = allCallLogs.findByCallId(callDuration.getCallId());
-        for(CallLog log : allCallLogsByCallId){
-            if(log.getEndTime()==null) {
+        for (CallLog log : allCallLogsByCallId) {
+            if (log.getEndTime() == null) {
                 log.setEndTime(time);
                 allCallLogs.addOrUpdate(log);
             }
         }
     }
 
-    private void HandleNormalFlow(CallDuration callDuration, DateTime time) {
+    private void handleNormalFlow(CallDuration callDuration, DateTime time) {
         DateTime startTime = null, endTime = null;
         String[] split = callDuration.getCallEvent().toString().split("_");
         IvrFlow ivrFlow;
 
-        try
-        {
+        try {
             ivrFlow = IvrFlow.valueOf(split[0]);
-        }
-        catch(IllegalArgumentException ex)
-        {
+        } catch (IllegalArgumentException ex) {
             return;
         }
 
-        if(split[1].equalsIgnoreCase("start")) startTime = time;
-        else if(split[1].equalsIgnoreCase("end")) endTime = time;
+        if (split[1].equalsIgnoreCase("start")) startTime = time;
+        else if (split[1].equalsIgnoreCase("end")) endTime = time;
         else return;
 
         CallLog callLog = new CallLog(callDuration.getCallId(), callDuration.getCallerId(), ivrFlow, startTime, endTime);

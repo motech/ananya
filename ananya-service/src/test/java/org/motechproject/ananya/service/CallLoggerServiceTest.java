@@ -27,7 +27,7 @@ public class CallLoggerServiceTest {
     private AllCallLogs allCallLogs;
 
     @Mock
-    private ReportDataPublisher reportDataPublisher;
+    private ReportPublisherService reportDataPublisher;
 
     @Before
     public void setUp() {

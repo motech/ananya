@@ -24,7 +24,7 @@ import java.util.Collection;
 
 @Controller
 public class TransferCallDataController {
-    private static Logger log = LoggerFactory.getLogger(RegistrationController.class);
+    private static Logger log = LoggerFactory.getLogger(TransferCallDataController.class);
     private CallLoggerService callLoggerService;
     private CertificateCourseService certificateCourseService;
     private CallLogCounterService callLogCounterService;

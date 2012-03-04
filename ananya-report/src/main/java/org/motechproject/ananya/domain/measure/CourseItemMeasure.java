@@ -3,7 +3,6 @@ package org.motechproject.ananya.domain.measure;
 import org.motechproject.ananya.domain.CourseItemEvent;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
@@ -38,7 +37,11 @@ public class CourseItemMeasure {
     public CourseItemMeasure() {
     }
 
-    public CourseItemMeasure(TimeDimension timeDimension, CourseItemDimension courseItemDimension, FrontLineWorkerDimension frontLineWorkerDimension, Integer score, CourseItemEvent event) {
+    public CourseItemMeasure(TimeDimension timeDimension,
+                             CourseItemDimension courseItemDimension,
+                             FrontLineWorkerDimension frontLineWorkerDimension,
+                             Integer score,
+                             CourseItemEvent event) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;

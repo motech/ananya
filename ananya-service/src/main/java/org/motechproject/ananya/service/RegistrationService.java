@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 public class RegistrationService {
     private FrontLineWorkerService frontLineWorkerService;
     private LogService logService;
-    private ReportDataPublisher reportPublisher;
+    private ReportPublisherService reportPublisher;
 
     @Autowired
-    public RegistrationService(FrontLineWorkerService frontLineWorkerService, LogService logService, ReportDataPublisher reportPublisher) {
+    public RegistrationService(FrontLineWorkerService frontLineWorkerService, LogService logService, ReportPublisherService reportPublisher) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.logService = logService;
         this.reportPublisher = reportPublisher;

@@ -28,23 +28,18 @@ import java.util.Random;
 public class RegistrationDataSetup {
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationDataSetup.class);
-    
-    private Properties dataSetupProperties;
 
+    private Properties dataSetupProperties;
+    private RegistrationMeasureService registrationMeasureService;
     private CouchDbConnector ananyaDbConnector;
 
     private AllLocations allLocations;
     private AllFrontLineWorkers allFrontLineWorkers;
-
-    private RegistrationMeasureService registrationMeasureService;
-
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllLocationDimensions allLocationDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
+    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
-    // The Chosen Ones : Amni, West Thatha, Dumari, Gudara, Nautan Khund
-    private String[] predefinedLocationCodes = new String[]
-            {"S01D002B001V001", "S01D002B001V007", "S01D003B001V010", "S01D003B001V012", "S01D003B001V022"};
+    private String[] predefinedLocationCodes = new String[]{"S01D002B001V001", "S01D002B001V007", "S01D003B001V010", "S01D003B001V012", "S01D003B001V022"};
 
     private List<Location> locations;
 
@@ -55,7 +50,7 @@ public class RegistrationDataSetup {
     private DateTime startDate;
 
     private DateTime endDate;
-    
+
     private int batchSize;
 
     private ArrayList<FrontLineWorker> frontLineWorkerList;
@@ -68,8 +63,7 @@ public class RegistrationDataSetup {
                                  RegistrationMeasureService registrationMeasureService,
                                  AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                  AllLocationDimensions allLocationDimensions,
-                                 AllRegistrationMeasures allRegistrationMeasures)
-    {
+                                 AllRegistrationMeasures allRegistrationMeasures) {
         this.allLocations = allLocations;
         this.dataSetupProperties = dataSetupProperties;
         this.ananyaDbConnector = ananyaDbConnector;
@@ -100,7 +94,7 @@ public class RegistrationDataSetup {
             FrontLineWorker frontLineWorker = new FrontLineWorker(
                     RandomStringUtils.randomNumeric(10),
                     getDesignation(),
-                    location.getId(),"");
+                    location.getId(), "");
             frontLineWorker.setRegisteredDate(getRegisteredDate());
             frontLineWorker.status(RegistrationStatus.REGISTERED);
             frontLineWorker.name(RandomStringUtils.randomAlphabetic(6)); // may randomize length of name
@@ -118,11 +112,11 @@ public class RegistrationDataSetup {
         log.info("Done. Relax.");
     }
 
-    private void pushWorkersIntoDB(){
+    private void pushWorkersIntoDB() {
         if (frontLineWorkerList == null || frontLineWorkerList.size() == 0) return;
 
         ananyaDbConnector.executeBulk(frontLineWorkerList);
-        for(FrontLineWorker frontLineWorker : frontLineWorkerList){
+        for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
             registrationMeasureService.createRegistrationMeasureWith(frontLineWorker.getMsisdn());
         }
         frontLineWorkerList.clear();

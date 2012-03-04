@@ -26,7 +26,7 @@ public class RegistrationServiceTest  {
     private FrontLineWorkerService frontLineWorkerService;
 
     @Mock
-    private ReportDataPublisher reportDataPublisher;
+    private ReportPublisherService reportDataPublisher;
 
     @Mock
     private LogService logService;

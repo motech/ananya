@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReportDataPublisher {
+public class ReportPublisherService {
 
     public static final String SEND_REGISTRATION_DATA_KEY = "org.motechproject.ananya.report.registration";
     public static final String SEND_REGISTRATION_COMPLETION_DATA_KEY = "org.motechproject.ananya.report.registration.completion";
@@ -16,7 +16,7 @@ public class ReportDataPublisher {
     private EventContext eventContext;
 
     @Autowired
-    public ReportDataPublisher(@Qualifier("eventContext") EventContext eventContext) {
+    public ReportPublisherService(@Qualifier("eventContext") EventContext eventContext) {
         this.eventContext = eventContext;
     }
 

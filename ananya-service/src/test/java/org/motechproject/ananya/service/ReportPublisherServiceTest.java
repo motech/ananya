@@ -13,26 +13,26 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ReportDataPublisherTest {
+public class ReportPublisherServiceTest {
 
-    private ReportDataPublisher reportDataPublisher;
+    private ReportPublisherService reportPublisherService;
     @Mock
     private EventContext eventContext;
 
     @Before
     public void setUp() {
         initMocks(this);
-        reportDataPublisher = new ReportDataPublisher(eventContext);
+        reportPublisherService = new ReportPublisherService(eventContext);
     }
 
     @Test
     public void shouldPublishReportDataToEventContext() {
         LogData reportData = new LogData(LogType.CERTIFICATE_COURSE, "123");
 
-        reportDataPublisher.publishRegistration(reportData);
+        reportPublisherService.publishRegistration(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublisherService.SEND_REGISTRATION_DATA_KEY), captor.capture());
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
@@ -41,10 +41,10 @@ public class ReportDataPublisherTest {
     public void shouldPublishReportUpdationDataToEventContext() {
         LogData reportData = new LogData(LogType.REGISTRATION_SAVE_NAME, "123");
 
-        reportDataPublisher.publishRegistrationUpdate(reportData);
+        reportPublisherService.publishRegistrationUpdate(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportDataPublisher.SEND_REGISTRATION_COMPLETION_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublisherService.SEND_REGISTRATION_COMPLETION_DATA_KEY), captor.capture());
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
@@ -53,10 +53,10 @@ public class ReportDataPublisherTest {
     public void shouldPublishCallDurationData(){
         LogData reportData = new LogData(LogType.CALL_DURATION, "callId");
 
-        reportDataPublisher.publishCallDuration(reportData);
+        reportPublisherService.publishCallDuration(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportDataPublisher.SEND_CALL_DURATION_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublisherService.SEND_CALL_DURATION_DATA_KEY), captor.capture());
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }

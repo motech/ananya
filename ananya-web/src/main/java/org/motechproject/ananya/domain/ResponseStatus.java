@@ -3,28 +3,28 @@ package org.motechproject.ananya.domain;
 
 public class ResponseStatus {
     
-    protected String responseCode;
+    protected String code;
     
-    protected String responseMessage;
+    protected String message;
 
-    public ResponseStatus(String responseCode, String responseMessage) {
-        this.responseCode = responseCode;
-        this.responseMessage = responseMessage;
+    public ResponseStatus(String code, String message) {
+        this.code = code;
+        this.message = message;
     }
 
-    public String getResponseCode() {
-        return responseCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getResponseMessage() {
-        return responseMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
