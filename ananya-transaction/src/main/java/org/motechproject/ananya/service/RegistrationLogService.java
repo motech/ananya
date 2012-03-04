@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LogService {
+public class RegistrationLogService {
 
     private AllRegistrationLogs allRegistrationLogs;
 
     @Autowired
-    public LogService(AllRegistrationLogs allRegistrationLogs) {
+    public RegistrationLogService(AllRegistrationLogs allRegistrationLogs) {
         this.allRegistrationLogs = allRegistrationLogs;
     }
 

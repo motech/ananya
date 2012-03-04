@@ -29,7 +29,7 @@ public class RegistrationServiceTest  {
     private ReportPublisherService reportDataPublisher;
 
     @Mock
-    private LogService logService;
+    private RegistrationLogService logService;
 
     @Before
     public void setUp(){

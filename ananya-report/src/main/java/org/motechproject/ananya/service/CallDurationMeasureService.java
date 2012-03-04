@@ -36,7 +36,7 @@ public class CallDurationMeasureService {
             if(frontLineWorkerDimension == null){
                 frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn,callLog.getOperator(),"","");
             }
-            reportDB.add(new CallDurationMeasure(frontLineWorkerDimension, callId, duration, callLog.getIvrFlow().name()));
+            reportDB.add(new CallDurationMeasure(frontLineWorkerDimension, callId, duration, callLog.getCallFlowType().name()));
         }
         callLoggerService.delete(allCallLogs);
     }

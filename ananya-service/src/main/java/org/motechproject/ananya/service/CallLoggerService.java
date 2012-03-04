@@ -44,10 +44,10 @@ public class CallLoggerService {
     private void handleNormalFlow(CallDuration callDuration, DateTime time) {
         DateTime startTime = null, endTime = null;
         String[] split = callDuration.getCallEvent().toString().split("_");
-        IvrFlow ivrFlow;
+        CallFlowType ivrFlow;
 
         try {
-            ivrFlow = IvrFlow.valueOf(split[0]);
+            ivrFlow = CallFlowType.valueOf(split[0]);
         } catch (IllegalArgumentException ex) {
             return;
         }

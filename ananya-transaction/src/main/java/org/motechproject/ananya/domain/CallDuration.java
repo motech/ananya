@@ -6,6 +6,7 @@ public class CallDuration {
     private String callerId;
     private long time;
     private CallEvent callEvent;
+
     public CallDuration() {
     }
 

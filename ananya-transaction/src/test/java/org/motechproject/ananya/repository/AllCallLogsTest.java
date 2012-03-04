@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.domain.IvrFlow;
+import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,7 +32,7 @@ public class AllCallLogsTest {
 
     @Test
     public void shouldSaveCallLogWithOnlyStartTimeIfNotPresent() {
-        CallLog callLog = new CallLog("callId", "callerId", IvrFlow.CALL, DateTime.now(), null);
+        CallLog callLog = new CallLog("callId", "callerId", CallFlowType.CALL, DateTime.now(), null);
         assertThat(callLog.getId(), is(nullValue()));
         allCallLogs.addOrUpdate(callLog);
         assertThat(callLog.getId(), is(notNullValue()));
@@ -47,10 +47,10 @@ public class AllCallLogsTest {
         DateTime startTime = DateTime.now();
         DateTime endTime = DateTime.now().plusDays(1);
         
-        CallLog callLog = new CallLog("callId", "callerId", IvrFlow.CALL, startTime, null);
+        CallLog callLog = new CallLog("callId", "callerId", CallFlowType.CALL, startTime, null);
         allCallLogs.add(callLog);
 
-        callLog = new CallLog("callId", "callerId", IvrFlow.CALL, null, endTime);
+        callLog = new CallLog("callId", "callerId", CallFlowType.CALL, null, endTime);
         CallLog logFromDb = allCallLogs.addOrUpdate(callLog);
 
         assertNotNull(logFromDb.getCallId());
@@ -63,10 +63,10 @@ public class AllCallLogsTest {
         DateTime startTime = DateTime.now();
         DateTime endTime = DateTime.now().plusDays(1);
 
-        CallLog callLog = new CallLog("callId", "callerId", IvrFlow.CALL, null, endTime);
+        CallLog callLog = new CallLog("callId", "callerId", CallFlowType.CALL, null, endTime);
         allCallLogs.add(callLog);
 
-        callLog = new CallLog("callId", "callerId", IvrFlow.CALL, startTime, null);
+        callLog = new CallLog("callId", "callerId", CallFlowType.CALL, startTime, null);
 
         CallLog logFromDb = allCallLogs.addOrUpdate(callLog);
         assertNotNull(logFromDb.getCallId());
@@ -79,9 +79,9 @@ public class AllCallLogsTest {
         DateTime startTime = DateTime.now();
         DateTime endTime = DateTime.now().plusDays(1);
 
-        CallLog callLog1 = new CallLog("callId", "callerId", IvrFlow.CALL, startTime, endTime);
+        CallLog callLog1 = new CallLog("callId", "callerId", CallFlowType.CALL, startTime, endTime);
         allCallLogs.add(callLog1);
-        CallLog callLog2 = new CallLog("callId", "callerId", IvrFlow.CERTIFICATECOURSE, startTime, endTime);
+        CallLog callLog2 = new CallLog("callId", "callerId", CallFlowType.CERTIFICATECOURSE, startTime, endTime);
         allCallLogs.add(callLog2);
 
         List<CallLog> callLogs = Arrays.asList(callLog1, callLog2);

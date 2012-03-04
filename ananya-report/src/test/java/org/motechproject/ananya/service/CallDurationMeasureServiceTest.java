@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.IvrFlow;
+import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -38,7 +38,7 @@ public class CallDurationMeasureServiceTest {
     public void shouldSaveCallDurationsForACallId(){
         String callId = "callId";
         Long callerId = 123456789L;
-        CallLog callCallLog = new CallLog(callId, callerId.toString(), IvrFlow.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
+        CallLog callCallLog = new CallLog(callId, callerId.toString(), CallFlowType.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
         List<CallLog> callLogs = Arrays.asList(callCallLog);
         when(callLoggerService.getAllCallLogs(callId)).thenReturn(callLogs);
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered" );
@@ -60,7 +60,7 @@ public class CallDurationMeasureServiceTest {
     public void shouldCreateFLWDimensionAndThenSaveCallDurationMeasureIfFLWDimensionDoesNotExist(){
         String callId = "callId";
         Long callerId = 123456789L;
-        List<CallLog> callLogs = Arrays.asList(new CallLog(callId, callerId.toString(), IvrFlow.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10)));
+        List<CallLog> callLogs = Arrays.asList(new CallLog(callId, callerId.toString(), CallFlowType.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10)));
         when(callLoggerService.getAllCallLogs(callId)).thenReturn(callLogs);
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "" );
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(null);
@@ -74,7 +74,7 @@ public class CallDurationMeasureServiceTest {
         assertEquals(frontLineWorkerDimension, callDurationMeasure.getFrontLineWorkerDimension());
         assertEquals(callId, callDurationMeasure.getCallId());
         assertEquals(130, callDurationMeasure.getDuration());
-        assertEquals(IvrFlow.CALL.name(), callDurationMeasure.getType());
+        assertEquals(CallFlowType.CALL.name(), callDurationMeasure.getType());
         verify(callLoggerService).delete(callLogs);
     }
 
@@ -82,7 +82,7 @@ public class CallDurationMeasureServiceTest {
     public void shouldNotSaveCallDurationMeasureWhenDurationDataISIncorrect(){
         String callId = "callId";
         Long callerId = 123456789L;
-        List<CallLog> callLogs = Arrays.asList(new CallLog(callId, callerId.toString(), IvrFlow.CALL, DateTime.now(), null));
+        List<CallLog> callLogs = Arrays.asList(new CallLog(callId, callerId.toString(), CallFlowType.CALL, DateTime.now(), null));
         when(callLoggerService.getAllCallLogs(callId)).thenReturn(callLogs);
 
         callDurationMeasureService.createCallDurationMeasure(callId);
@@ -96,8 +96,8 @@ public class CallDurationMeasureServiceTest {
     public void shouldSaveCallDurationsForMultipleCallFlows(){
         String callId = "callId";
         Long callerId = 123456789L;
-        CallLog callLog1 = new CallLog(callId, callerId.toString(), IvrFlow.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
-        CallLog callLog2 = new CallLog(callId, callerId.toString(), IvrFlow.JOBAID, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
+        CallLog callLog1 = new CallLog(callId, callerId.toString(), CallFlowType.CALL, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
+        CallLog callLog2 = new CallLog(callId, callerId.toString(), CallFlowType.JOBAID, DateTime.now(), DateTime.now().plusMinutes(2).plusSeconds(10));
         List<CallLog> callLogs = Arrays.asList(callLog1, callLog2);
 
         when(callLoggerService.getAllCallLogs(callId)).thenReturn(callLogs);

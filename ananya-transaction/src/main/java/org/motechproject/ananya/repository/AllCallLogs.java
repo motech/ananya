@@ -5,7 +5,7 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
-import org.motechproject.ananya.domain.IvrFlow;
+import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     }
 
     public CallLog addOrUpdate(CallLog log) {
-        CallLog logFromDb = findByCallIdAndCallFlow(log.getCallId(), log.getIvrFlow());
+        CallLog logFromDb = findByCallIdAndCallFlow(log.getCallId(), log.getCallFlowType());
         if(logFromDb == null) {
             add(log);
             return log;
@@ -44,7 +44,7 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     }
 
     @View(name = "by_callIdAndIvrFlow", map = "function(doc) { if (doc.type=='CallLog') { emit([doc.callId, doc.ivrFlow], doc); } }")
-    public CallLog findByCallIdAndCallFlow(String callId, IvrFlow ivrFlow) {
+    public CallLog findByCallIdAndCallFlow(String callId, CallFlowType ivrFlow) {
         ViewQuery viewQuery = createQuery("by_callIdAndIvrFlow").key(ComplexKey.of(callId, ivrFlow)).includeDocs(true);
         List<CallLog> callDurations = db.queryView(viewQuery, CallLog.class);
         if (callDurations == null || callDurations.isEmpty()) return null;

@@ -4,7 +4,6 @@ package org.motechproject.ananya.domain;
 public class ResponseStatus {
     
     protected String code;
-    
     protected String message;
 
     public ResponseStatus(String code, String message) {

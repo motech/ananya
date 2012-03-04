@@ -6,7 +6,6 @@ import org.motechproject.ananya.repository.AllCertificationCourseLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -68,8 +67,8 @@ public class CertificateCourseService {
             if (!StringUtils.isBlank(certificationCourseStateRequest.getContentId())) {
                 CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(
                         certificationCourseStateRequest.getContentId(), certificationCourseStateRequest.getContentType(),
-                        CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase()),
-                        certificationCourseStateRequest.getContentData());
+                        certificationCourseStateRequest.getContentData(), CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase())
+                );
 
                 courseLogDocument.addCourseLogItem(courseLogItem);
             }

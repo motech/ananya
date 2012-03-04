@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.IvrFlow;
+import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.LogData;
 import org.motechproject.ananya.domain.LogType;
@@ -57,9 +57,9 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         String callId = "callId";
 
         DateTime now = DateTime.now();
-        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, IvrFlow.CALL, now, now.plusMinutes(5)));
-        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, IvrFlow.JOBAID, now.plusMinutes(2), now.plusMinutes(5)));
-        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, IvrFlow.CERTIFICATECOURSE, now.plusMinutes(2), null));
+        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, CallFlowType.CALL, now, now.plusMinutes(5)));
+        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, CallFlowType.JOBAID, now.plusMinutes(2), now.plusMinutes(5)));
+        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, CallFlowType.CERTIFICATECOURSE, now.plusMinutes(2), null));
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", "");
 
@@ -73,8 +73,8 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         List<CallDurationMeasure> callDurationMeasures = template.loadAll(CallDurationMeasure.class);
 
         assertEquals(2, callDurationMeasures.size());
-        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 300, msisdn, IvrFlow.CALL.name())));
-        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 180, msisdn, IvrFlow.JOBAID.name())));
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 300, msisdn, CallFlowType.CALL.name())));
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 180, msisdn, CallFlowType.JOBAID.name())));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         String callId = "callId";
 
         DateTime now = DateTime.now();
-        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, IvrFlow.CALL, now, now.plusMinutes(5)));
+        allCallLogs.addOrUpdate(new CallLog(callId, msisdn, CallFlowType.CALL, now, now.plusMinutes(5)));
 
         LogData logData = new LogData(LogType.CALL_DURATION, callId);
         Map<String, Object> map = new HashMap<String, Object>();

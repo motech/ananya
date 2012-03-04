@@ -3,25 +3,23 @@ package org.motechproject.ananya.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CertificationCourseLogItem {
-
     @JsonProperty
     private String contentId;
     @JsonProperty
     private String contentType;
     @JsonProperty
-    private CourseItemState courseItemState;
-    @JsonProperty
     private String contentData;
+    @JsonProperty
+    private CourseItemState courseItemState;
 
     public CertificationCourseLogItem() {
     }
 
-    public CertificationCourseLogItem(
-            String contentId, String contentType, CourseItemState courseItemState, String contentData) {
+    public CertificationCourseLogItem(String contentId, String contentType, String contentData, CourseItemState courseItemState) {
         this.contentId = contentId;
         this.contentType = contentType;
-        this.courseItemState = courseItemState;
         this.contentData = contentData;
+        this.courseItemState = courseItemState;
     }
 
     public String getContentId() {

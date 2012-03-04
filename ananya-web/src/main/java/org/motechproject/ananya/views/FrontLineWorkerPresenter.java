@@ -1,4 +1,4 @@
-package org.motechproject.ananya.view;
+package org.motechproject.ananya.views;
 
 import org.joda.time.DateTime;
 

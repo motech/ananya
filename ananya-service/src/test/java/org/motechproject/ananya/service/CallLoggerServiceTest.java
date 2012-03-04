@@ -40,7 +40,7 @@ public class CallLoggerServiceTest {
         final DateTime start = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CALL_START, start.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, IvrFlow.CALL, null);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CALL, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -50,7 +50,7 @@ public class CallLoggerServiceTest {
         final DateTime start = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.REGISTRATION_START, start.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, IvrFlow.REGISTRATION, null);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.REGISTRATION, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -60,7 +60,7 @@ public class CallLoggerServiceTest {
         final DateTime end = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.REGISTRATION_END, end.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, IvrFlow.REGISTRATION, end);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.REGISTRATION, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -70,7 +70,7 @@ public class CallLoggerServiceTest {
         final DateTime start = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_START, start.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, IvrFlow.CERTIFICATECOURSE, null);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CERTIFICATECOURSE, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -80,7 +80,7 @@ public class CallLoggerServiceTest {
         final DateTime end = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_END, end.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, IvrFlow.CERTIFICATECOURSE, end);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.CERTIFICATECOURSE, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -90,7 +90,7 @@ public class CallLoggerServiceTest {
         final DateTime start = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_START, start.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, IvrFlow.JOBAID, null);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.JOBAID, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -100,7 +100,7 @@ public class CallLoggerServiceTest {
         final DateTime end = DateTime.now();
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_END, end.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, IvrFlow.JOBAID, end);
+        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.JOBAID, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
         verifyNoMoreInteractions(reportDataPublisher);
     }
@@ -113,14 +113,14 @@ public class CallLoggerServiceTest {
         DateTime regEnd = new DateTime(2011, 1, 1, 1, 6);
 
         ArrayList<CallLog> callLogs = new ArrayList<CallLog>() {};
-        callLogs.add(new CallLog("callId", "callerId", IvrFlow.CALL, callStart,null));
-        callLogs.add(new CallLog("callId", "callerId", IvrFlow.REGISTRATION, regStart, regEnd));
+        callLogs.add(new CallLog("callId", "callerId", CallFlowType.CALL, callStart,null));
+        callLogs.add(new CallLog("callId", "callerId", CallFlowType.REGISTRATION, regStart, regEnd));
 
         stub(allCallLogs.findByCallId("callId")).toReturn(callLogs);
 
         callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, end.getMillis()));
 
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher(callStart, IvrFlow.CALL, end)));
+        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher(callStart, CallFlowType.CALL, end)));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class CallLoggerServiceTest {
     public void shouldGetAllCallLogsForAGivenCallId(){
         String callid = "callid";
         Collection<CallLog> callLogs = new ArrayList<CallLog>();
-        CallLog mockCallLog = new CallLog("callId", "callerId", IvrFlow.CALL, DateTime.now(), DateTime.now());
+        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlowType.CALL, DateTime.now(), DateTime.now());
         callLogs.add(mockCallLog);
         when(allCallLogs.findByCallId(callid)).thenReturn(callLogs);
 
@@ -152,7 +152,7 @@ public class CallLoggerServiceTest {
     @Test
     public void shouldDeleteAllGivenCallLogs(){
         Collection<CallLog> callLogs = new ArrayList<CallLog>();
-        CallLog mockCallLog = new CallLog("callId", "callerId", IvrFlow.CALL, DateTime.now(), DateTime.now());
+        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlowType.CALL, DateTime.now(), DateTime.now());
         callLogs.add(mockCallLog);
 
         callLoggerService.delete(callLogs);
@@ -160,13 +160,13 @@ public class CallLoggerServiceTest {
         verify(allCallLogs).delete(callLogs);
     }
 
-    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final IvrFlow ivrFlowall, final DateTime endTime) {
+    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType ivrFlowall, final DateTime endTime) {
         return new BaseMatcher<CallLog>() {
                 @Override
                 public boolean matches(Object o) {
                     CallLog o1 = (CallLog) o;
                     return ((o1.getStartTime() == null && startTime == null) ||o1.getStartTime().equals(startTime))
-                        && o1.getIvrFlow() == ivrFlowall
+                        && o1.getCallFlowType() == ivrFlowall
                         && ((o1.getEndTime() == null && endTime == null) || o1.getEndTime().equals(endTime))
                         && o1.getCallId() == "callId";
                 }

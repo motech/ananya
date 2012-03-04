@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistrationService {
     private FrontLineWorkerService frontLineWorkerService;
-    private LogService logService;
+    private RegistrationLogService logService;
     private ReportPublisherService reportPublisher;
 
     @Autowired
-    public RegistrationService(FrontLineWorkerService frontLineWorkerService, LogService logService, ReportPublisherService reportPublisher) {
+    public RegistrationService(FrontLineWorkerService frontLineWorkerService, RegistrationLogService logService, ReportPublisherService reportPublisher) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.logService = logService;
         this.reportPublisher = reportPublisher;

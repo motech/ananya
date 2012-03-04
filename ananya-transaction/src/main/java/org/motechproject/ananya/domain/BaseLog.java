@@ -7,20 +7,16 @@ import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 
 public class BaseLog extends MotechBaseDataObject {
-
     @JsonProperty
     private String callId;
     @JsonProperty
     protected String callerId;
     @JsonProperty
     protected String calledNumber;
-
     @JsonProperty
     protected DateTime startTime;
-
     @JsonProperty
     protected DateTime endTime;
-
     @JsonProperty
     protected String operator;
 

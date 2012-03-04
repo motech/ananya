@@ -20,12 +20,12 @@ public class LogServiceTest {
 
     @Mock
     private AllRegistrationLogs allRegistrationLogs;
-    private LogService logService;
+    private RegistrationLogService logService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        logService = new LogService(allRegistrationLogs);
+        logService = new RegistrationLogService(allRegistrationLogs);
     }
 
     @Test
