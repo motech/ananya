@@ -6,14 +6,11 @@
       xml:base="../" >
 
     <script src="generated/js/certification_course_data.js"/>
-    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-
     <script src="js/prompt_context.js"/>
     <script src="js/certificatecourse/abstract_interactions.js"/>
     <script src="js/certificatecourse/interactions.js"/>
     <script src="js/certificatecourse/course_state.js"/>
     <script src="js/certificatecourse/controller.js"/>
-
     <script>
         <![CDATA[
             callDetailLogger.cc_start();
@@ -138,18 +135,18 @@
 
     <form id="exit">
         <block>
-            <log expr="'****************** Exiting the app now ********************'"/>
+            <log>TW::<value expr="callerId"/> Exiting the certificate course now</log>
             <exit/>
         </block>
     </form>
 
     <catch event="connection.disconnect.hangup">
-        <log expr="'****************** Telling controller that I have been disconnected ********************'"/>
+        <log>TW::<value expr="callerId"/> telling controller that I have been disconnected</log>
         <script>
             root_disconnect();
             controller.callDisconnected();
         </script>
-        <log expr="'****************** Going to controller ********************'"/>
+        <log>TW::<value expr="callerId"/> going to controller</log>
         <goto next="#controller"/>
         <!--
             Disconnect events caught here can't be chained to the root.xml. The control should be passed back

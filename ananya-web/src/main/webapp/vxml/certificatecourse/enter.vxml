@@ -4,10 +4,10 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="vxml/root.vxml"
       xml:base="../../"  >
+
     <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
     <script src="js/entry/controller.js"/>
     <script src="js/prompt_context.js"/>
-    <script src="generated/js/metadata.js"/>
     <script>
         <![CDATA[
     var controller = new EntryController(callerData,metaData);
@@ -26,15 +26,14 @@
 
     <form id="registered_bookmark_present">
         <block>
+            <log>TW::<value expr="callerId"/> moved into certificate course</log>
             <goto next="vxml/certificatecourse.vxml"/>
         </block>
     </form>
 
     <form id="registered_bookmark_absent">
         <block>
-            <log>
-                Continuing with absent BOOKMARK **************************************************************************
-            </log>
+            <log>TW::<value expr="callerId"/> registered with no bookmarks</log>
             <prompt bargein="true">
                 <audio expr="controller.certificateWelcomePrompt()"></audio>
             </prompt>
@@ -55,6 +54,7 @@
                 <if cond="repeat == '1'">
                     <goto next="#controller"/>
                     <elseif cond="repeat == '2'"/>
+                    <log>TW::<value expr="callerId"/> moved into certificate course</log>
                     <goto next="vxml/certificatecourse.vxml"/>
                 </if>
             </filled>
@@ -83,11 +83,8 @@
     </form>
 
     <form id="unregistered">
-
         <block>
-            <log>
-                Continuing with unregistered **************************************************************************
-            </log>
+            <log>TW::<value expr="callerId"/> not registered</log>
             <prompt bargein="true">
                 <audio expr="controller.certificateWelcomePrompt()"></audio>
             </prompt>
@@ -109,6 +106,7 @@
                 <if cond="repeat == '1'">
                     <goto next="#controller"/>
                 <elseif cond="repeat == '2'"/>
+                    <log>TW::<value expr="callerId"/> moved into registration flow</log>
                     <goto next="vxml/register.vxml"/>
                 </if>
             </filled>

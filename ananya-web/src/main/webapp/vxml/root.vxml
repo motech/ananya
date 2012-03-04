@@ -7,7 +7,9 @@
     <var name="callerId" expr="session.connection.remote.uri"/>
     <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
 
-    <script src="generated/js/metadata.js"/>
+    <script srcexpr="'generated/js/metadata.js?'+  (new Date()).valueOf()"/>
+    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
+    
     <script src="js/call_detail_logger.js"/>
     <script src="js/certificatecourse/data_transfer_list.js"/>
     <script src="js/utility.js"/>

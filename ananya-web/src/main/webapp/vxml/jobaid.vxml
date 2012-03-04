@@ -3,18 +3,15 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="vxml/root.vxml"
-      xml:base="../"  >
+      xml:base="../">
 
-    <!-- TODO: How do we handle if any of the following fetches fail? -->
-    <script src="generated/js/metadata.js"/>
     <script src="generated/js/jobaid_course_data.js"/>
-
     <script src="js/jobaid/course.js"/>
     <script src="js/jobaid/call_context.js"/>
     <script src="js/prompt_context.js"/>
     <script>
         <![CDATA[
-             callDetailLogger.jobaid_start();
+            callDetailLogger.jobaid_start();
             var promptContext = new PromptContext(metaData);
             var callContext = new CallContext(courseData, metaData, promptContext);
             callContext.navigateTo(session.connection.local.uri);
@@ -104,7 +101,7 @@
             </script>
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <disconnect/>
-            <else/>
+                <else/>
                 <audio expr="callContext.audioForInvalidInputRetry(promptContext)"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>

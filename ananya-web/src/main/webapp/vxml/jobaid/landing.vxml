@@ -4,12 +4,8 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       xml:base="../../"  >
 
-    <!--
-        Appending current time as we want latest url.version from metadata.
-    -->
     <script srcexpr="'generated/js/metadata.js?' +  (new Date()).valueOf()"/>
     <script src="js/landing/controller.js"/>
-
     <script>
         var controller = new LandingController(metaData);
     </script>
