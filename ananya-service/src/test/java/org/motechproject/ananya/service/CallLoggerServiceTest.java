@@ -160,13 +160,13 @@ public class CallLoggerServiceTest {
         verify(allCallLogs).delete(callLogs);
     }
 
-    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType ivrFlowall, final DateTime endTime) {
+    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType callFlowType, final DateTime endTime) {
         return new BaseMatcher<CallLog>() {
                 @Override
                 public boolean matches(Object o) {
                     CallLog o1 = (CallLog) o;
                     return ((o1.getStartTime() == null && startTime == null) ||o1.getStartTime().equals(startTime))
-                        && o1.getCallFlowType() == ivrFlowall
+                        && o1.getCallFlowType() == callFlowType
                         && ((o1.getEndTime() == null && endTime == null) || o1.getEndTime().equals(endTime))
                         && o1.getCallId() == "callId";
                 }

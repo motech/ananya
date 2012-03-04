@@ -23,18 +23,18 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
         super(CallLog.class, dbCouchDbConnector);
     }
 
-    public CallLog addOrUpdate(CallLog log) {
-        CallLog logFromDb = findByCallIdAndCallFlow(log.getCallId(), log.getCallFlowType());
-        if(logFromDb == null) {
-            add(log);
-            return log;
+    public CallLog addOrUpdate(CallLog callLog) {
+        CallLog callLogFromDb = findByCallIdAndCallFlow(callLog.getCallId(), callLog.getCallFlowType());
+        if (callLogFromDb == null) {
+            add(callLog);
+            return callLog;
         }
-        if(log.getStartTime() !=null)
-            logFromDb.setStartTime(log.getStartTime());
-        if(log.getEndTime() != null)
-            logFromDb.setEndTime(log.getEndTime());
-        update(logFromDb);
-        return logFromDb;
+        if (callLog.getStartTime() != null)
+            callLogFromDb.setStartTime(callLog.getStartTime());
+        if (callLog.getEndTime() != null)
+            callLogFromDb.setEndTime(callLog.getEndTime());
+        update(callLogFromDb);
+        return callLogFromDb;
     }
 
     @GenerateView
@@ -43,16 +43,16 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
         return db.queryView(viewQuery, CallLog.class);
     }
 
-    @View(name = "by_callIdAndIvrFlow", map = "function(doc) { if (doc.type=='CallLog') { emit([doc.callId, doc.ivrFlow], doc); } }")
-    public CallLog findByCallIdAndCallFlow(String callId, CallFlowType ivrFlow) {
-        ViewQuery viewQuery = createQuery("by_callIdAndIvrFlow").key(ComplexKey.of(callId, ivrFlow)).includeDocs(true);
+    @View(name = "by_callIdAndCallFlowType", map = "function(doc) { if (doc.type=='CallLog') { emit([doc.callId, doc.callFlowType], doc); } }")
+    public CallLog findByCallIdAndCallFlow(String callId, CallFlowType callFlowType) {
+        ViewQuery viewQuery = createQuery("by_callIdAndCallFlowType").key(ComplexKey.of(callId, callFlowType)).includeDocs(true);
         List<CallLog> callDurations = db.queryView(viewQuery, CallLog.class);
         if (callDurations == null || callDurations.isEmpty()) return null;
         return callDurations.get(0);
     }
 
     public void delete(Collection<CallLog> callLogs) {
-        for(CallLog log:callLogs){
+        for (CallLog log : callLogs) {
             remove(log);
         }
     }

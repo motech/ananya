@@ -44,10 +44,10 @@ public class CallLoggerService {
     private void handleNormalFlow(CallDuration callDuration, DateTime time) {
         DateTime startTime = null, endTime = null;
         String[] split = callDuration.getCallEvent().toString().split("_");
-        CallFlowType ivrFlow;
+        CallFlowType callFlowType;
 
         try {
-            ivrFlow = CallFlowType.valueOf(split[0]);
+            callFlowType = CallFlowType.valueOf(split[0]);
         } catch (IllegalArgumentException ex) {
             return;
         }
@@ -56,7 +56,7 @@ public class CallLoggerService {
         else if (split[1].equalsIgnoreCase("end")) endTime = time;
         else return;
 
-        CallLog callLog = new CallLog(callDuration.getCallId(), callDuration.getCallerId(), ivrFlow, startTime, endTime);
+        CallLog callLog = new CallLog(callDuration.getCallId(), callDuration.getCallerId(), callFlowType, startTime, endTime);
         allCallLogs.addOrUpdate(callLog);
     }
 
