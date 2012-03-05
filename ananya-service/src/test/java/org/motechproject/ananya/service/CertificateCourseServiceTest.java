@@ -9,7 +9,6 @@ import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.LogData;
 import org.motechproject.ananya.domain.LogType;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -27,11 +26,14 @@ public class CertificateCourseServiceTest {
 
     @Mock
     ReportPublisherService reportPublisherService;
+
+    @Mock
+    SendSMSService sendSMSService;
     
     @Before
     public void setUp(){
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(allCertificateCourseLogs, frontLineWorkerService, reportPublisherService, null, null);
+        certificateCourseService = new CertificateCourseService(allCertificateCourseLogs, frontLineWorkerService, reportPublisherService, sendSMSService);
     }
     
     @Test

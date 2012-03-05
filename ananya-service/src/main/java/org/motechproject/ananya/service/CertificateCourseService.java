@@ -2,10 +2,9 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.handler.SendSMSHandler;
+import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.context.EventContext;
-import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,15 @@ public class CertificateCourseService {
     private AllCertificateCourseLogs allCertificateCourseLogs;
     private FrontLineWorkerService frontLineWorkerService;
     private ReportPublisherService reportPublisherService;
-    private EventContext eventContext;
-    private Properties ananyaServiceProperties;
+    private SendSMSService sendSMSService;
 
     @Autowired
     public CertificateCourseService(
-            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService, Properties ananyaServiceProperties, @Qualifier("eventContext") EventContext eventContext) {
+            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService, SendSMSService sendSMSService) {
         this.allCertificateCourseLogs = allCertificateCourseLogs;
         this.reportPublisherService = reportPublisherService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.ananyaServiceProperties = ananyaServiceProperties;
-        this.eventContext = eventContext;
+        this.sendSMSService = sendSMSService;
     }
 
     public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
@@ -47,7 +44,6 @@ public class CertificateCourseService {
         final Boolean result = courseStateRequest.isResult();
         final String callerId = courseStateRequest.getCallerId();
 
-        final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(courseStateRequest.getInteractionKey());
         String interactionKey = courseStateRequest.getInteractionKey();
         if("startQuiz".equals(interactionKey)) {
             frontLineWorkerService.resetScoresForChapterIndex(callerId, chapterIndex);
@@ -62,15 +58,7 @@ public class CertificateCourseService {
             int currentCertificateCourseAttempts = frontLineWorkerService.incrementCertificateCourseAttempts(frontLineWorker);
 
             if(totalScore >= FrontLineWorkerService.CERTIFICATE_COURSE_PASSING_SCORE) {
-                String smsMessage = ananyaServiceProperties.getProperty("course.completion.sms.message");
-                String referenceNumber = frontLineWorker.getLocationId() + callerId + currentCertificateCourseAttempts;
-
-
-                Map<String, Object> parameters = new HashMap<String, Object>();
-                parameters.put(SendSMSHandler.PARAMETER_SMS_MESSAGE, smsMessage + referenceNumber);
-                parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);
-
-                eventContext.send(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS, parameters);
+                sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
             }
         }
     }
