@@ -31,7 +31,7 @@ public class CertificateCourseServiceTest {
     @Before
     public void setUp(){
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(allCertificateCourseLogs, frontLineWorkerService, reportPublisherService);
+        certificateCourseService = new CertificateCourseService(allCertificateCourseLogs, frontLineWorkerService, reportPublisherService, null, null);
     }
     
     @Test

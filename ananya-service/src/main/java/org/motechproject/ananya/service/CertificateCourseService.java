@@ -3,24 +3,35 @@ package org.motechproject.ananya.service;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
+import org.motechproject.ananya.handler.SendSMSHandler;
+import org.motechproject.context.EventContext;
+import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 
 @Service
 public class CertificateCourseService {
     private AllCertificateCourseLogs allCertificateCourseLogs;
     private FrontLineWorkerService frontLineWorkerService;
     private ReportPublisherService reportPublisherService;
-
+    private EventContext eventContext;
+    private Properties ananyaServiceProperties;
 
     @Autowired
     public CertificateCourseService(
-            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService) {
+            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService, Properties ananyaServiceProperties, @Qualifier("eventContext") EventContext eventContext) {
         this.allCertificateCourseLogs = allCertificateCourseLogs;
-        this.frontLineWorkerService = frontLineWorkerService;
         this.reportPublisherService = reportPublisherService;
+        this.frontLineWorkerService = frontLineWorkerService;
+        this.ananyaServiceProperties = ananyaServiceProperties;
+        this.eventContext = eventContext;
     }
 
     public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
@@ -34,16 +45,33 @@ public class CertificateCourseService {
         final Integer chapterIndex = courseStateRequest.getChapterIndex();
         final Integer lessonOrQuestionIndex = courseStateRequest.getLessonOrQuestionIndex();
         final Boolean result = courseStateRequest.isResult();
+        final String callerId = courseStateRequest.getCallerId();
 
-        final boolean interactionIsStartQuiz = "startQuiz".equals(courseStateRequest.getInteractionKey());
-        if (interactionIsStartQuiz) {
-            frontLineWorkerService.resetScoresForChapterIndex(courseStateRequest.getCallerId(), chapterIndex);
-        }
         final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(courseStateRequest.getInteractionKey());
-        if (interactionIsPlayAnswerExplanation) {
-            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(),
-                    lessonOrQuestionIndex.toString(), result, courseStateRequest.getCallId());
-            frontLineWorkerService.addScore(courseStateRequest.getCallerId(), score);
+        String interactionKey = courseStateRequest.getInteractionKey();
+        if("startQuiz".equals(interactionKey)) {
+            frontLineWorkerService.resetScoresForChapterIndex(callerId, chapterIndex);
+
+        } else if ("playAnswerExplanation".equals(interactionKey)) {
+            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, courseStateRequest.getCallId());
+            frontLineWorkerService.addScore(callerId, score);
+
+        } else if ("playCourseResult".equals(interactionKey)) {
+            FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(callerId);
+            int totalScore = frontLineWorkerService.totalScore(callerId);
+            int currentCertificateCourseAttempts = frontLineWorkerService.incrementCertificateCourseAttempts(frontLineWorker);
+
+            if(totalScore >= FrontLineWorkerService.CERTIFICATE_COURSE_PASSING_SCORE) {
+                String smsMessage = ananyaServiceProperties.getProperty("course.completion.sms.message");
+                String referenceNumber = frontLineWorker.getLocationId() + callerId + currentCertificateCourseAttempts;
+
+
+                Map<String, Object> parameters = new HashMap<String, Object>();
+                parameters.put(SendSMSHandler.PARAMETER_SMS_MESSAGE, smsMessage + referenceNumber);
+                parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);
+
+                eventContext.send(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS, parameters);
+            }
         }
     }
 

@@ -262,7 +262,7 @@ describe("Certificate course controller spec", function() {
         controller.setInteraction(phoneInteraction);
 
         expect(controller.courseState.toJson).toHaveBeenCalled();
-        expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState, DataTransferList.TYPE_CC_BOOKMARK);
+        expect(controller.dataTransferList.add).toHaveBeenCalledWith(jsonState, DataTransferList.TYPE_CC_STATE);
      });
 
      it("should set exit interaction if the call is disconnected.", function () {

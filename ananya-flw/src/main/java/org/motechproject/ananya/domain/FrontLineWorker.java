@@ -37,6 +37,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private DateTime registeredDate = DateUtil.now();
 
+    @JsonProperty
+    private Integer certificateCourseAttempts;
+
     public FrontLineWorker() {
     }
 
@@ -52,6 +55,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
                 ", designation=" + designation +
                 ", locationId='" + locationId + '\'' +
                 ", registeredDate=" + registeredDate +
+                ", certificateCourseAttempts=" + certificateCourseAttempts +
                 '}';
     }
 
@@ -62,6 +66,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
         this.locationId = locationId;
         this.operator = operator;
+        this.certificateCourseAttempts = 0;
     }
 
     public String getOperator() {
@@ -125,6 +130,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public boolean hasStartedCertificationCourse() {
         return status().isRegistered() && bookMark().getType() != null;
+    }
+
+    public Integer incrementCertificateCourseAttempts() {
+        return ++certificateCourseAttempts;
     }
 
 }

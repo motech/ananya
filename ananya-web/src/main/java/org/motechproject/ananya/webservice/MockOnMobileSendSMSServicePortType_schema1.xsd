@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://webservice.ananya.motechproject.org/" xmlns:tns="http://webservice.ananya.motechproject.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="singlePush" type="tns:singlePush"/>
+
+  <xs:element name="singlePushResponse" type="tns:singlePushResponse"/>
+
+  <xs:complexType name="singlePush">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:string" minOccurs="0"/>
+      <xs:element name="arg1" type="xs:string" minOccurs="0"/>
+      <xs:element name="arg2" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="singlePushResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

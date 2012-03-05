@@ -20,4 +20,5 @@
     <import resource="classpath:applicationContext-hibernate.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
+    <import resource="classpath:applicationContext-services.xml"/>
 </beans>

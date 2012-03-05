@@ -8,12 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 
 @Service
 public class FrontLineWorkerService {
+    public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -102,5 +105,24 @@ public class FrontLineWorkerService {
     private void resetAllScores(FrontLineWorker frontLineWorker) {
         frontLineWorker.reportCard().clearAllScores();
         save(frontLineWorker);
+    }
+
+    public int totalScore(String msisdn) {
+        int totalScore = 0;
+        
+        Collection<Integer> scores = this.scoresByChapter(msisdn).values();
+        Iterator<Integer> scoresIterator = scores.iterator();
+        while(scoresIterator.hasNext()) {
+            totalScore += scoresIterator.next();
+        }
+
+        return totalScore;
+    }
+
+    public int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
+        int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
+        save(frontLineWorker);
+
+        return certificateCourseAttempts;
     }
 }
