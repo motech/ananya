@@ -60,4 +60,16 @@ public class ReportPublisherServiceTest {
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
+
+    @Test
+    public void shouldPublishCertificateCourseData(){
+        LogData reportData = new LogData(LogType.CERTIFICATE_COURSE, "");
+
+        reportPublisherService.publishCertificateCourseData(reportData);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportPublisherService.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
+        LogData captured = captor.getValue();
+        assertEquals(captured, reportData);
+    }
 }

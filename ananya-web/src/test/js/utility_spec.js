@@ -1,5 +1,6 @@
 describe("Utility", function() {
     it("should stringify complex jsons", function() {
+
         var courseState = new CourseState();
         courseState.setChapterIndex(8);
         courseState.setLessonOrQuestionIndex(3);
@@ -19,7 +20,8 @@ describe("Utility", function() {
         courseState3.setCurrentQuestionResponse(2);
         courseState3.setInteractionKey("dummyInteraction");
 
-        var dataTransferList = new DataTransferList();
+        metaData = {"transfer.data.url" : "transferdata"};
+        var dataTransferList = new DataTransferList(metaData);
         dataTransferList.add(courseState.toJson());
         dataTransferList.add(courseState2.toJson());
         dataTransferList.add(courseState3.toJson());

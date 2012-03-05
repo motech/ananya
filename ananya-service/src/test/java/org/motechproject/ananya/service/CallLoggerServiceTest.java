@@ -124,18 +124,6 @@ public class CallLoggerServiceTest {
     }
 
     @Test
-    public void shouldPublishCallDurationEventForDisconnectEvent(){
-        stub(allCallLogs.findByCallId("callId")).toReturn(new ArrayList<CallLog>() {});
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, DateTime.now().getMillis()));
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportDataPublisher).publishCallDuration(captor.capture());
-
-        LogData logData = captor.getValue();
-        assertEquals("callId", logData.getDataId());
-    }
-
-    @Test
     public void shouldGetAllCallLogsForAGivenCallId(){
         String callid = "callid";
         Collection<CallLog> callLogs = new ArrayList<CallLog>();
@@ -158,6 +146,18 @@ public class CallLoggerServiceTest {
         callLoggerService.delete(callLogs);
 
         verify(allCallLogs).delete(callLogs);
+    }
+
+    @Test
+    public void shouldPublishCallDurationDataAtDisconnect(){
+        String callId = "callId";
+        callLoggerService.publishDisconnectEvent(callId);
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(reportDataPublisher).publishCallDuration(captor.capture());
+
+        LogData logData = captor.getValue();
+        assertEquals(callId, logData.getDataId());
+        assertEquals(LogType.CALL_DURATION, logData.getType());
     }
 
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType callFlowType, final DateTime endTime) {

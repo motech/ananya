@@ -1,8 +1,9 @@
-var DataTransferList = function() {
+var DataTransferList = function(metaData) {
 
-    this.init = function() {
+    this.init = function(metaData) {
         this.counter = 0;
         this.drain();
+        this.url = metaData['transfer.data.url'];
     };
 
     this.add = function(data, type) {
@@ -30,10 +31,14 @@ var DataTransferList = function() {
     };
 
     this.dataPostUrl = function() {
-        return metaData['transfer.data.url'];
+        return this.url;
     };
 
-    this.init();
+    this.setDataToPostUrlForDisconnect = function() {
+        this.url = metaData['transfer.data.url.for.disconnect'];
+    };
+
+    this.init(metaData);
 };
 
 DataTransferList.TYPE_CC_STATE = "ccState";

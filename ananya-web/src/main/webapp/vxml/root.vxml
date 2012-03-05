@@ -15,10 +15,11 @@
     <script src="js/utility.js"/>
     <script>
         <![CDATA[
-            var dataTransferList = new DataTransferList();
+            var dataTransferList = new DataTransferList(metaData);
             var callDetailLogger = new CallDetailLogger(dataTransferList);
             callDetailLogger.start_call();
             function root_disconnect(){
+                dataTransferList.setDataToPostUrlForDisconnect();
                 callDetailLogger.disconnect();
             }
         ]]>

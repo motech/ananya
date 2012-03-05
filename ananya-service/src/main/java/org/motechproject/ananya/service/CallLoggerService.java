@@ -24,7 +24,6 @@ public class CallLoggerService {
         DateTime time = new DateTime(callDuration.getTime());
         if (callDuration.getCallEvent() == CallEvent.DISCONNECT) {
             handleDisconnect(callDuration, time);
-            reportPublisher.publishCallDuration(new LogData(LogType.CALL_DURATION, callDuration.getCallId()));
             return;
         }
         handleNormalFlow(callDuration, time);
@@ -66,5 +65,10 @@ public class CallLoggerService {
 
     public void delete(Collection<CallLog> callLogs) {
         allCallLogs.delete(callLogs);
+    }
+
+    public void publishDisconnectEvent(String callId) {
+        LogData logData = new LogData(LogType.CALL_DURATION, callId);
+        reportPublisher.publishCallDuration(logData);
     }
 }

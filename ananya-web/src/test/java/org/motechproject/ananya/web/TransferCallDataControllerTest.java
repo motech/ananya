@@ -93,6 +93,21 @@ public class TransferCallDataControllerTest {
         verify(callLoggerService).save(argThat(new CallDurationMatcher(new CallDuration(callId, callerId, CallEvent.CALL_START, 1231413))));
         
     }
+    
+    @Test
+    public void shouldCallAppropriateServicesToHandleDisconnectEvent() {
+        final String callerId = "123";
+        final String callId = "456";
+
+        when(request.getParameter("callerId")).thenReturn(callerId);
+        when(request.getParameter("callId")).thenReturn(callId);
+        when(request.getParameter("dataToPost")).thenReturn("[]");
+        
+        transferCallDataController.receiveIVRDataAtDisconnect(request);
+
+        verify(certificateCourseService).publishCertificateCourseData(callId);
+        verify(callLoggerService).publishDisconnectEvent(callId);
+    }
 
     @Test
     public void tryJsonParse() {

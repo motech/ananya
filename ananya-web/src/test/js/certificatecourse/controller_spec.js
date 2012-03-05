@@ -1,21 +1,23 @@
 // TODO: duplicate code to generate test interaction object. return via testutils
 describe("Certificate course controller spec", function() {
 
-    var metadata, course;
+    var metaData, course;
     var audioFileBase = "../audio/";
     var certificateCourseLocation = "certificatecourse/";
     var controller;
 
     beforeEach(function() {
-        metadata = {
+        metaData = {
                         "audio.url": audioFileBase,
                         "certificate.audio.url" : certificateCourseLocation,
                         "maximum.invalid.input.count" : "2",
-                        "maximum.noinput.count" : "2"
-     };
+                        "maximum.noinput.count" : "2",
+                        "transfer.data.url" : "transferdata",
+                        "transfer.data.url.for.disconnect" : "transferdata/disconnect"
+        };
 
         course = certificationCourseWithTwoLessonsInEveryChapter();
-        controller = new CertificateCourseController(course, metadata,
+        controller = new CertificateCourseController(course, metaData,
             new CourseState(
                 {
                     "bookmark" : {
@@ -24,7 +26,7 @@ describe("Certificate course controller spec", function() {
                         "lessonIndex" : 0
                     }
                 },
-                certificationCourseWithTwoLessonsInEveryChapter()), new DataTransferList(),"../");
+                certificationCourseWithTwoLessonsInEveryChapter()), new DataTransferList(metaData),"../");
     });
 
     it("should get the audio to be played", function () {

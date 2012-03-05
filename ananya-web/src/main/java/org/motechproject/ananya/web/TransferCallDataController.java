@@ -87,7 +87,17 @@ public class TransferCallDataController {
         certificateCourseService.saveState(certificationCourseStateRequests);
 
         HandleCallDuration(durations);
+        
+        return "";
+    }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
+    @ResponseBody
+    public String receiveIVRDataAtDisconnect(HttpServletRequest request){
+        final String callId = request.getParameter("callId");
+        receiveIVRData(request);
+        certificateCourseService.publishCertificateCourseData(callId);
+        callLoggerService.publishDisconnectEvent(callId);
         return "";
     }
 

@@ -5,9 +5,10 @@ describe("Data transfer list", function() {
         metaData = {
             "url.version" : "v1",
             "context.path" : "/ananya",
-            "transfer.data.url" : "transferdata"
+            "transfer.data.url" : "transferdata",
+            "transfer.data.url.for.disconnect" : "transferdata/disconnect"
         };
-        dataTransferList = new DataTransferList();
+        dataTransferList = new DataTransferList(metaData);
     });
 
     it("should initialize the counter keeping track of packets to zero at the start", function () {
@@ -21,8 +22,6 @@ describe("Data transfer list", function() {
         var type1 = "t1";
         var type2 = "t2";
 
-        dataTransferList.init();
-        
         dataTransferList.add(payLoad1,type1);
         dataTransferList.add(payLoad2,type2);
 
@@ -41,8 +40,6 @@ describe("Data transfer list", function() {
     it("should drain all the data upon call of drain(), but retain the current value of counter", function () {
         var payLoad1 = {"foo" : "bar1"};
         var payLoad2 = {"foo" : "bar2"};
-
-        dataTransferList.init();
 
         dataTransferList.add(payLoad1);
         dataTransferList.add(payLoad2);

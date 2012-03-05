@@ -12,12 +12,15 @@ import java.util.List;
 public class CertificateCourseService {
     private AllCertificationCourseLogs allCertificationCourseLogs;
     private FrontLineWorkerService frontLineWorkerService;
+    private ReportPublisherService reportPublisherService;
+
 
     @Autowired
     public CertificateCourseService(
-            AllCertificationCourseLogs allCertificationCourseLogs, FrontLineWorkerService frontLineWorkerService) {
+            AllCertificationCourseLogs allCertificationCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService) {
         this.allCertificationCourseLogs = allCertificationCourseLogs;
         this.frontLineWorkerService = frontLineWorkerService;
+        this.reportPublisherService = reportPublisherService;
     }
     
     public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
@@ -78,5 +81,10 @@ public class CertificateCourseService {
         CertificationCourseStateRequest recentCourseRequest =
                 certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
         saveBookmark(recentCourseRequest);
+    }
+
+    public void publishCertificateCourseData(String callId) {
+        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
+        reportPublisherService.publishCertificateCourseData(logData);
     }
 }
