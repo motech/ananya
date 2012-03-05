@@ -9,6 +9,7 @@ var StartCertificationCourse = function(metadata, course, courseState) {
     }
 
     this.processSilentlyAndReturnNextState = function() {
+        this.courseState.setChapterIndex(0);
         return CertificateCourse.interactions[StartNextChapter.KEY];
     }
 
@@ -44,8 +45,8 @@ var StartNextChapter = function(metadata, course, courseState) {
 
     this.processSilentlyAndReturnNextState = function() {
         var nextState;
-        if(this.courseState.chapterIndex == null) {
-            this.courseState.setChapterIndex(0);
+
+        if(this.courseState.lessonOrQuestionIndex == null) {
             this.courseState.setLessonOrQuestionIndex(0);
             nextState = CertificateCourse.interactions[LessonInteraction.KEY];
         }
@@ -193,7 +194,7 @@ LessonEndMenuInteraction.prototype.processInputAndReturnNextInteraction = functi
     return CertificateCourse.interactions[LessonInteraction.KEY];
 }
 
-LessonEndMenuInteraction.getCourseType = function() {
+LessonEndMenuInteraction.prototype.getCourseType = function() {
     return CourseType.LESSON;
 }
 

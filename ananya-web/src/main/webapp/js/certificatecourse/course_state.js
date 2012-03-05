@@ -69,11 +69,24 @@ var CourseState = function(callerData, courseData) {
         this.interactionKey = interactionKey;
         this.contentType = contentType;
         this.courseItemState = courseItemState;
-        if (shouldLog && this.contentIdFunctions[this.contentType]) {
-            this.contentId = this.contentIdFunctions[this.contentType]();
+
+        if (shouldLog) {
+            if (this.contentType == CourseType.COURSE) {
+                this.contentId = this.courseData.id;
+            } else if (this.contentType == CourseType.CHAPTER || this.contentType == CourseType.QUIZ) {
+                this.contentId = this.courseData.children[this.chapterIndex].id;
+            } else if (this.contentType == CourseType.LESSON) {
+                this.contentId = this.courseData.children[this.chapterIndex].children[this.lessonOrQuestionIndex].id;
+            }
         } else {
             this.contentId = null;
         }
+
+//        if (shouldLog && this.contentIdFunctions[this.contentType]) {
+//            this.contentId = this.contentIdFunctions[this.contentType]();
+//        } else {
+//            this.contentId = null;
+//        }
     }
 
     this.getStateData = function() {
