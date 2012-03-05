@@ -23,9 +23,10 @@ public class AllCourseItemDimensionsTest extends SpringIntegrationTest{
     @Test
     public void shouldSaveCourseItemDimension() {
         String name = "chapter 1";
+        String contentId = "contentId";
         CourseItemType type = CourseItemType.CHAPTER;
 
-        CourseItemDimension chapter = allCourseItemDimensions.getOrMakeFor(name, type);
+        CourseItemDimension chapter = allCourseItemDimensions.getOrMakeFor(name, contentId, type);
 
         assertNotNull(chapter.getId());
     }
@@ -33,10 +34,11 @@ public class AllCourseItemDimensionsTest extends SpringIntegrationTest{
     @Test
     public void shouldGetCourseItemDimensionIfExists() {
         String name = "chapter 1";
+        String contentId = "contentId";
         CourseItemType type = CourseItemType.CHAPTER;
 
-        CourseItemDimension chapter = allCourseItemDimensions.getOrMakeFor(name, type);
-        CourseItemDimension chapterNew = allCourseItemDimensions.getOrMakeFor(name, type);
+        CourseItemDimension chapter = allCourseItemDimensions.getOrMakeFor(name, contentId, type);
+        CourseItemDimension chapterNew = allCourseItemDimensions.getOrMakeFor(name, contentId, type);
 
         assertEquals(chapter.getId(), chapterNew.getId());
     }

@@ -1,6 +1,6 @@
 package org.motechproject.ananya.domain.measure;
 
-import org.motechproject.ananya.domain.CourseItemEvent;
+import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -34,6 +34,26 @@ public class CourseItemMeasure {
     @Column(name = "event")
     private String event;
 
+    public TimeDimension getTimeDimension() {
+        return timeDimension;
+    }
+
+    public CourseItemDimension getCourseItemDimension() {
+        return courseItemDimension;
+    }
+
+    public FrontLineWorkerDimension getFrontLineWorkerDimension() {
+        return frontLineWorkerDimension;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public CourseItemState getEvent() {
+        return CourseItemState.valueOf(event);
+    }
+
     public CourseItemMeasure() {
     }
 
@@ -41,7 +61,7 @@ public class CourseItemMeasure {
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              Integer score,
-                             CourseItemEvent event) {
+                             CourseItemState event) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;

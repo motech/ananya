@@ -9,7 +9,7 @@ public class CertificationCourseLogItem {
     @JsonProperty
     private String contentName;
     @JsonProperty
-    private String contentType;
+    private CourseItemType contentType;
     @JsonProperty
     private String contentData;
     @JsonProperty
@@ -20,18 +20,20 @@ public class CertificationCourseLogItem {
     public CertificationCourseLogItem() {
     }
 
-    public CertificationCourseLogItem(String contentId, String contentType, String contentData, CourseItemState courseItemState) {
+    public CertificationCourseLogItem(String contentId, CourseItemType contentType, String contentName, String contentData, CourseItemState courseItemState, DateTime time) {
         this.contentId = contentId;
         this.contentType = contentType;
+        this.contentName = contentName;
         this.contentData = contentData;
         this.courseItemState = courseItemState;
+        this.time = time;
     }
 
     public String getContentId() {
         return contentId;
     }
 
-    public String getContentType() {
+    public CourseItemType getContentType() {
         return contentType;
     }
 

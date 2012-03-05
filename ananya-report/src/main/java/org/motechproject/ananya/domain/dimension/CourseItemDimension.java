@@ -3,7 +3,6 @@ package org.motechproject.ananya.domain.dimension;
 import org.motechproject.ananya.domain.CourseItemType;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "course_item_dimension")
@@ -20,14 +19,18 @@ public class CourseItemDimension {
     @Column(name="name")
     private String name;
 
+    @Column(name="content_id")
+    private String contentId;
+
     @Column(name="type")
     private String type;
 
     public CourseItemDimension() {
     }
 
-    public CourseItemDimension(String name, CourseItemType type) {
+    public CourseItemDimension(String name, String contentId, CourseItemType type) {
         this.name = name;
+        this.contentId = contentId;
         this.type = String.valueOf(type);
     }
 

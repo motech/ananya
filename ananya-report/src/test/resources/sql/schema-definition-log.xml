@@ -67,10 +67,12 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(255)"/>
+            <column name="content_id" type="varchar(255)"/>
             <column name="type" type="varchar(30)"/>
         </createTable>
 
         <addUniqueConstraint tableName="course_item_dimension" columnNames="name" constraintName="unq_name"/>
+        <addUniqueConstraint tableName="course_item_dimension" columnNames="content_id" constraintName="unq_content_id"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="6">

@@ -2,7 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCertificationCourseLogs;
+import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,19 @@ import java.util.List;
 
 @Service
 public class CertificateCourseService {
-    private AllCertificationCourseLogs allCertificationCourseLogs;
+    private AllCertificateCourseLogs allCertificateCourseLogs;
     private FrontLineWorkerService frontLineWorkerService;
     private ReportPublisherService reportPublisherService;
 
 
     @Autowired
     public CertificateCourseService(
-            AllCertificationCourseLogs allCertificationCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService) {
-        this.allCertificationCourseLogs = allCertificationCourseLogs;
+            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService) {
+        this.allCertificateCourseLogs = allCertificateCourseLogs;
         this.frontLineWorkerService = frontLineWorkerService;
         this.reportPublisherService = reportPublisherService;
     }
-    
+
     public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
         final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
                 courseStateRequest.getChapterIndex(), courseStateRequest.getLessonOrQuestionIndex());
@@ -36,31 +36,32 @@ public class CertificateCourseService {
         final Boolean result = courseStateRequest.isResult();
 
         final boolean interactionIsStartQuiz = "startQuiz".equals(courseStateRequest.getInteractionKey());
-        if(interactionIsStartQuiz) {
+        if (interactionIsStartQuiz) {
             frontLineWorkerService.resetScoresForChapterIndex(courseStateRequest.getCallerId(), chapterIndex);
         }
         final boolean interactionIsPlayAnswerExplanation = "playAnswerExplanation".equals(courseStateRequest.getInteractionKey());
-        if(interactionIsPlayAnswerExplanation) {
+        if (interactionIsPlayAnswerExplanation) {
             final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(),
                     lessonOrQuestionIndex.toString(), result, courseStateRequest.getCallId());
             frontLineWorkerService.addScore(courseStateRequest.getCallerId(), score);
         }
     }
-    
+
     public void saveState(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
 
-        if (certificationCourseStateRequestCollection == null || certificationCourseStateRequestCollection.size() == 0) return;
+        if (certificationCourseStateRequestCollection == null || certificationCourseStateRequestCollection.size() == 0)
+            return;
 
         CertificationCourseLog courseLogDocument;
         CertificationCourseStateRequest courseStateRequest = certificationCourseStateRequestCollection.get(0);
         final String callId = courseStateRequest.getCallId();
 
-        courseLogDocument = allCertificationCourseLogs.findByCallId(callId);
+        courseLogDocument = allCertificateCourseLogs.findByCallId(callId);
         if (courseLogDocument == null) {
             courseLogDocument = new CertificationCourseLog(courseStateRequest.getCallerId(),
                     courseStateRequest.getCalledNumber(), null, null, "", callId, courseStateRequest.getCertificateCourseId()
             );
-            allCertificationCourseLogs.add(courseLogDocument);
+            allCertificateCourseLogs.add(courseLogDocument);
         }
 
         for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
@@ -69,14 +70,18 @@ public class CertificateCourseService {
             // Only a bookmark, not a log item. continue
             if (!StringUtils.isBlank(certificationCourseStateRequest.getContentId())) {
                 CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(
-                        certificationCourseStateRequest.getContentId(), certificationCourseStateRequest.getContentType(),
-                        certificationCourseStateRequest.getContentData(), CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase())
+                        certificationCourseStateRequest.getContentId(),
+                        CourseItemType.valueOf(certificationCourseStateRequest.getContentType().toUpperCase()),
+                        certificationCourseStateRequest.getContentName(),
+                        certificationCourseStateRequest.getContentData(),
+                        CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase()),
+                        certificationCourseStateRequest.getTime()
                 );
 
                 courseLogDocument.addCourseLogItem(courseLogItem);
             }
         }
-        allCertificationCourseLogs.update(courseLogDocument);
+        allCertificateCourseLogs.update(courseLogDocument);
 
         CertificationCourseStateRequest recentCourseRequest =
                 certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
@@ -86,5 +91,13 @@ public class CertificateCourseService {
     public void publishCertificateCourseData(String callId) {
         LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
         reportPublisherService.publishCertificateCourseData(logData);
+    }
+
+    public CertificationCourseLog getCertificateCourseLogFor(String callId) {
+        return allCertificateCourseLogs.findByCallId(callId);
+    }
+
+    public void deleteCertificateCourseLogsFor(String callId) {
+        allCertificateCourseLogs.deleteFor(callId);
     }
 }

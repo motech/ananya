@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AllCertificationCourseLogs extends MotechBaseRepository<CertificationCourseLog> {
+public class AllCertificateCourseLogs extends MotechBaseRepository<CertificationCourseLog> {
     @Autowired
-    public AllCertificationCourseLogs(@Qualifier("ananyaDbConnector") CouchDbConnector dbCouchDbConnector) {
+    public AllCertificateCourseLogs(@Qualifier("ananyaDbConnector") CouchDbConnector dbCouchDbConnector) {
         super(CertificationCourseLog.class, dbCouchDbConnector);
     }
 
@@ -29,4 +29,10 @@ public class AllCertificationCourseLogs extends MotechBaseRepository<Certificati
         return null;
     }
 
+    public void deleteFor(String callId) {
+        CertificationCourseLog courseLog = findByCallId(callId);
+        if(courseLog != null){
+            remove(courseLog);
+        }
+    }
 }

@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
 
@@ -16,10 +17,12 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     private String contentId;
     private String contentType;
+    private String contentName;
     private String courseItemState;
     private String contentData;
     private String certificateCourseId;
-    
+    private DateTime time;
+
     public CertificationCourseStateRequest() {
     }
 
@@ -82,6 +85,14 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     public Integer getChapterIndex() {
         return chapterIndex;
+    }
+
+    public String getContentName() {
+        return contentName;
+    }
+
+    public DateTime getTime() {
+        return time;
     }
 
     public String toString() {

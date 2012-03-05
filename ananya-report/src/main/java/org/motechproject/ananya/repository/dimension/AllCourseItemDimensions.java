@@ -12,10 +12,10 @@ public class AllCourseItemDimensions {
     @Autowired
     private DataAccessTemplate template;
 
-    public CourseItemDimension getOrMakeFor(String name, CourseItemType type) {
+    public CourseItemDimension getOrMakeFor(String name, String contentId, CourseItemType type) {
         CourseItemDimension dimension = (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME, new String[]{"name"}, new Object[]{name});
         if (dimension == null) {
-            dimension = new CourseItemDimension(name, type);
+            dimension = new CourseItemDimension(name, contentId, type);
             template.save(dimension);
         }
         return dimension;

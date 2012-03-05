@@ -6,7 +6,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestUtils.TestUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogCounters;
-import org.motechproject.ananya.repository.AllCertificationCourseLogs;
+import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     private MyWebClient myWebClient;
 
     @Autowired
-    private AllCertificationCourseLogs allCertificationCourseLogs;
+    private AllCertificateCourseLogs allCertificateCourseLogs;
     
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -68,7 +68,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
         myWebClient.post("http://localhost:9979/ananya/transferdata",callIdParam, callerId, dataToPost);
 
-        CertificationCourseLog byCallId = allCertificationCourseLogs.findByCallId(callId);
+        CertificationCourseLog byCallId = allCertificateCourseLogs.findByCallId(callId);
         assertEquals(byCallId.getCourseLogItems().size(), 1);
 
         frontLineWorker = allFrontLineWorkers.get(frontLineWorker.getId());
