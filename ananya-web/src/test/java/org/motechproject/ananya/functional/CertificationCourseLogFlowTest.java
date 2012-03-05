@@ -66,7 +66,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post("http://localhost:9979/ananya/transferdata",callIdParam, callerId, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata",callIdParam, callerId, dataToPost);
 
         CertificationCourseLog byCallId = allCertificateCourseLogs.findByCallId(callId);
         assertEquals(byCallId.getCourseLogItems().size(), 1);

@@ -45,7 +45,7 @@ public class CallLogFlowTest extends SpringIntegrationTest{
         MyWebClient.PostParam dataToPost = param("dataToPost",
     "[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{'time':1330320462642,'callEvent':'CALL_START'}},{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{'time':1330320582936,'callEvent':'REGISTRATION_START'}},{\"token\":\"2\",\"type\":\"callDuration\",\"data\":{'time':1330320606087,'callEvent':'REGISTRATION_END'}},{\"token\":\"3\",\"type\":\"callDuration\",\"data\":{'time':1330320624871,'callEvent':'JOBAID_START'}},{\"token\":\"4\",\"type\":\"callDuration\",\"data\":{'time':1330320634871,'callEvent':'DISCONNECT'}}]");
 
-        myWebClient.post("http://localhost:9979/ananya/transferdata",callIdParam, callerIdParam, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata",callIdParam, callerIdParam, dataToPost);
 
         Collection<CallLog> allCallLogsByCallId = allCallLogs.findByCallId(callId);
         Assert.assertEquals(3,allCallLogsByCallId.size());

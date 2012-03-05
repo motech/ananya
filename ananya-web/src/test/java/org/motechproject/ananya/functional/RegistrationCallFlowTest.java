@@ -38,7 +38,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         MyWebClient.PostParam panchayat = param("panchayat", panchayatCode);
         MyWebClient.PostParam callerId = param("session.connection.remote.uri", "9986574420");
 
-        myWebClient.post("http://localhost:9979/ananya/flw/register", designation,panchayat ,callerId);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/flw/register", designation,panchayat ,callerId);
 
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("9986574420");
         Location location = allLocations.findByExternalId(panchayatCode);
@@ -57,7 +57,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
         MyWebClient.PostParam msisdnParam = param("msisdn", msisdn);
         MyWebClient.PostParam nameParam = param("name", name);
 
-        new MyWebClient().post("http://localhost:9979/ananya/flw/save/name", msisdnParam, nameParam);
+        new MyWebClient().post(getAppServerHostUrl() + "/ananya/flw/save/name", msisdnParam, nameParam);
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
 

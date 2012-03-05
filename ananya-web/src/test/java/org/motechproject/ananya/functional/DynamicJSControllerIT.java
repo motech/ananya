@@ -32,7 +32,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String expectedPageResponse = callerDataFor(true, "lesson", 0, 2);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
@@ -40,7 +40,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void should() throws IOException {
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/metadata.js");
+        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/metadata.js");
 
     }
 
@@ -78,7 +78,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String callerDataAssignmentStmt = page.getWebResponse().getContentAsString();
         String callerDataJson = jsonWithWhichCallerDataVarIsBeingAssigned(callerDataAssignmentStmt);
@@ -118,7 +118,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=999");
+        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/dynamic/caller_data.js?callerId=999");
 
         String expectedPageResponse = callerDataWithoutBookmarkFor(true);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
@@ -126,7 +126,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithoutAnyDetailsWhenTheFLWDoesNotExist() throws IOException {
-        Page page = new MyWebClient().getPage("http://localhost:9979/ananya/generated/js/dynamic/caller_data.js?callerId=1234");
+        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/dynamic/caller_data.js?callerId=1234");
 
         String expectedPageResponse = callerDataWithoutBookmarkFor(false);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
