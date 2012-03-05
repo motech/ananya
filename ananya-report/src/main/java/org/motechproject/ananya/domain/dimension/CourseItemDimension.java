@@ -42,6 +42,10 @@ public class CourseItemDimension {
         return name;
     }
 
+    public String getContentId() {
+        return contentId;
+    }
+
     public CourseItemType getType() {
         return CourseItemType.valueOf(type);
     }

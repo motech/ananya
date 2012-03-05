@@ -22,7 +22,7 @@ public class CertificateCourseDataHandler {
     }
 
     @MotechListener(subjects = {ReportPublisherService.SEND_CALL_DURATION_DATA_KEY})
-    public void handleCallDuration(MotechEvent event) {
+    public void handleCertificateCourseDataDuration(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
             String callId = ((LogData) log).getDataId();
             this.courseItemMeasureService.createCourseItemMeasure(callId);
