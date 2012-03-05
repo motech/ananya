@@ -47,20 +47,18 @@ var StartNextChapter = function(metadata, course, courseState) {
         if(this.courseState.chapterIndex == null) {
             this.courseState.setChapterIndex(0);
             this.courseState.setLessonOrQuestionIndex(0);
-            this.courseState.setContentId(this.course.id);
             nextState = CertificateCourse.interactions[LessonInteraction.KEY];
         }
         else {
             var currentChapterIndex = this.courseState.chapterIndex;
             var currentLessonOrQuestionIndex = this.courseState.lessonOrQuestionIndex;
-            var maxChapterIndex = this.course.children.length-1;
+            var maxChapterIndex = course.children.length-1;
             if(currentChapterIndex >= maxChapterIndex) {
                nextState = CertificateCourse.interactions[PlayThanksInteraction.KEY];
             }
             else {
                 this.courseState.chapterIndex++;
                 this.courseState.setLessonOrQuestionIndex(0);
-                this.courseState.setContentId(this.course.children[this.courseState.chapterIndex].id)
                 nextState = CertificateCourse.interactions[LessonInteraction.KEY];
             }
         }
@@ -114,7 +112,6 @@ LessonInteraction.prototype.playAudio = function() {
     var currentLessonIndex = this.courseState.lessonOrQuestionIndex;
 
     var currentLesson = this.course.children[currentChapterIndex].children[currentLessonIndex];
-    this.courseState.setContentId(currentLesson.id);
 
     return this.findAudio(currentLesson, "lesson");
 };
@@ -224,8 +221,6 @@ StartQuizInteraction.prototype.constructor = StartQuizInteraction;
 
 StartQuizInteraction.prototype.playAudio = function() {
     var currentChapter = this.course.children[this.courseState.chapterIndex];
-
-    this.courseState.setContentId(currentChapter.id);
     return this.findAudio(currentChapter, "quizHeader");
 };
 
@@ -464,9 +459,6 @@ EndOfChapterMenuInteraction.prototype.doesTakeInput = function() {
 
 EndOfChapterMenuInteraction.prototype.playAudio = function() {
     var currentChapter = this.course.children[this.courseState.chapterIndex];
-
-    this.courseState.setContentId(currentChapter.id);
-
     return this.findAudio(currentChapter, "menu");
 };
 
@@ -510,7 +502,6 @@ PlayThanksInteraction.prototype.constructor = PlayThanksInteraction;
 PlayThanksInteraction.prototype.playAudio = function() {
     var audioFileName = this.audioFileBase() + this.metadata['certificate.end.thanks'];
 
-    this.courseState.setContentId(this.course.contentId);
     return audioFileName;
 };
 

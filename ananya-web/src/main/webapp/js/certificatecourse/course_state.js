@@ -86,7 +86,7 @@ var CourseState = function(callerData, courseData) {
         return {
             "chapterIndex" : this.chapterIndex,
             "lessonOrQuestionIndex" : this.lessonOrQuestionIndex,
-            "questionResponse" : this.currentQuestionResponse, // 
+            "questionResponse" : this.currentQuestionResponse,
             "result" : this.isAnswerCorrect,
             "interactionKey": this.interactionKey,
 
