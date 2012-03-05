@@ -57,10 +57,13 @@ var CourseState = function(callerData, courseData) {
 
     this.contentIdFunctions = { "parent" : this };
 
-    this.contentIdFunctions[CourseType.COURSE] = function() { this["parent"].courseData.id };
-    this.contentIdFunctions[CourseType.CHAPTER] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].id };
-    this.contentIdFunctions[CourseType.LESSON] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].children[this["parent"].lessonOrQuestionIndex].id };
-    this.contentIdFunctions[CourseType.QUIZ] = function() { this["parent"].courseData.children[this["parent"].chapterIndex].id };
+    this.contentIdFunctions[CourseType.COURSE] = function() { return this["parent"].courseData.id };
+    this.contentIdFunctions[CourseType.CHAPTER] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex].id };
+    this.contentIdFunctions[CourseType.LESSON] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex].children[this["parent"].lessonOrQuestionIndex].id };
+    this.contentIdFunctions[CourseType.QUIZ] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex].id };
 
     this.setCourseStateForServerCall = function(contentType, interactionKey, courseItemState, shouldLog) {
         this.interactionKey = interactionKey;
@@ -73,16 +76,12 @@ var CourseState = function(callerData, courseData) {
         }
     }
 
-    this.setCourseItemState = function(courseItemState){
-        this.courseItemState = courseItemState;
-    };
+    this.getStateData = function() {
+        return (this.interactionKey == ReportChapterScoreInteraction.KEY)
+            ? String(this.scoresByChapter[this.chapterIndex]) : null;
+    }
 
     this.toJson = function() {
-
-        function getStateData() {
-            return (this.interactionKey == ReportChapterScoreInteraction.KEY)
-                ? this.scoresByChapter[this.chapterIndex] : null;
-        }
 
         return {
             "chapterIndex" : this.chapterIndex,
@@ -94,7 +93,7 @@ var CourseState = function(callerData, courseData) {
             "contentId" : this.contentId,
             "contentType" : this.contentType,
             "courseItemState" : this.courseItemState,
-            "contentData" : getStateData(),
+            "contentData" : this.getStateData(),
             "certificateCourseId": ""
         };
     };

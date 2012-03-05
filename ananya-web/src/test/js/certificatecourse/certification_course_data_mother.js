@@ -170,7 +170,7 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                 ]
             },
             {
-                "id": "f3298014a71f8f7b76a04ff44e181b45",
+                "id": "f3298014a71f8f7b76a04ff44e181b46",
                 "name": "Chapter 2",
                 "data": {
                     "type": "chapter"
@@ -231,7 +231,7 @@ function certificationCourseWithTwoLessonsInEveryChapter() {
                         "children": []
                     },
                     {
-                        "id": "f3298014a71f8f7b76a04ff44e181b45",
+                        "id": "f3298014a71f8f7b76a04ff44e181b47",
                         "name": "Chapter 2 Lesson 2",
                         "data": {
                             "type": "lesson"
