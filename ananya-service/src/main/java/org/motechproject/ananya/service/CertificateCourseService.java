@@ -103,7 +103,7 @@ public class CertificateCourseService {
                         certificationCourseStateRequest.getContentName(),
                         certificationCourseStateRequest.getContentData(),
                         CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase()),
-                        certificationCourseStateRequest.getTime()
+                        certificationCourseStateRequest.getTimeAsDateTime()
                 );
 
                 courseLogDocument.addCourseLogItem(courseLogItem);

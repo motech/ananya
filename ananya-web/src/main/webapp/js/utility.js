@@ -58,6 +58,19 @@ var Utility = function() {
         return formatted;
     };
 
+    /*
+     * https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference:Global_Objects:Date
+     * YaaY to Mozilla!
+     */
+    this.toISODateString = function(d) {
+        function pad(n){return n<10 ? '0'+n : n}
+        return d.getUTCFullYear()+'-'
+            + pad(d.getUTCMonth()+1)+'-'
+            + pad(d.getUTCDate())+'T'
+            + pad(d.getUTCHours())+':'
+            + pad(d.getUTCMinutes())+':'
+            + pad(d.getUTCSeconds())+'Z'
+    }
 };
 
 var Utility = new Utility();

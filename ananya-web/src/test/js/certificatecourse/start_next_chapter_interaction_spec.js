@@ -9,8 +9,9 @@ describe("Start next chapter interaction", function() {
         CertificateCourse.interactions = new Array();
     });
 
-    it("should set first chapter first lesson in state and go to lesson interaction, if course state does not contain any chapter number", function () {
+    it("should set first lesson in state and go to lesson interaction, if course state does not contain any lesson number", function () {
         var courseState = new CourseState();
+        courseState.chapterIndex = 0;
         var startNextChapter = new StartNextChapter(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);

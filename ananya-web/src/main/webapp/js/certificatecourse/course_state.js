@@ -55,38 +55,29 @@ var CourseState = function(callerData, courseData) {
         this.interactionKey = interactionKey;
     };
 
-    this.contentIdFunctions = { "parent" : this };
+    this.contentFunctions = { "parent" : this };
 
-    this.contentIdFunctions[CourseType.COURSE] = function() { return this["parent"].courseData.id };
-    this.contentIdFunctions[CourseType.CHAPTER] = function()
-        { return this["parent"].courseData.children[this["parent"].chapterIndex].id };
-    this.contentIdFunctions[CourseType.LESSON] = function()
-        { return this["parent"].courseData.children[this["parent"].chapterIndex].children[this["parent"].lessonOrQuestionIndex].id };
-    this.contentIdFunctions[CourseType.QUIZ] = function()
-        { return this["parent"].courseData.children[this["parent"].chapterIndex].id };
+    this.contentFunctions[CourseType.COURSE] = function() { return this["parent"].courseData };
+    this.contentFunctions[CourseType.CHAPTER] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex] };
+    this.contentFunctions[CourseType.LESSON] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex].children[this["parent"].lessonOrQuestionIndex] };
+    this.contentFunctions[CourseType.QUIZ] = function()
+        { return this["parent"].courseData.children[this["parent"].chapterIndex] };
 
     this.setCourseStateForServerCall = function(contentType, interactionKey, courseItemState, shouldLog) {
         this.interactionKey = interactionKey;
         this.contentType = contentType;
         this.courseItemState = courseItemState;
 
-        if (shouldLog) {
-            if (this.contentType == CourseType.COURSE) {
-                this.contentId = this.courseData.id;
-            } else if (this.contentType == CourseType.CHAPTER || this.contentType == CourseType.QUIZ) {
-                this.contentId = this.courseData.children[this.chapterIndex].id;
-            } else if (this.contentType == CourseType.LESSON) {
-                this.contentId = this.courseData.children[this.chapterIndex].children[this.lessonOrQuestionIndex].id;
-            }
+        if (shouldLog && this.contentFunctions[this.contentType]) {
+            var content = this.contentFunctions[this.contentType]();
+            this.contentId = content.id;
+            this.contentName = content.name;
         } else {
             this.contentId = null;
+            this.contentName = null;
         }
-
-//        if (shouldLog && this.contentIdFunctions[this.contentType]) {
-//            this.contentId = this.contentIdFunctions[this.contentType]();
-//        } else {
-//            this.contentId = null;
-//        }
     }
 
     this.getStateData = function() {
@@ -104,9 +95,11 @@ var CourseState = function(callerData, courseData) {
             "interactionKey": this.interactionKey,
 
             "contentId" : this.contentId,
+            "contentName" : this.contentName,
             "contentType" : this.contentType,
             "courseItemState" : this.courseItemState,
             "contentData" : this.getStateData(),
+            "time" : Utility.toISODateString(new Date()),
             "certificateCourseId": ""
         };
     };

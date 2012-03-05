@@ -2,6 +2,7 @@ package org.motechproject.ananya.domain;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
@@ -21,7 +22,7 @@ public class CertificationCourseStateRequest extends BaseRequest {
     private String courseItemState;
     private String contentData;
     private String certificateCourseId;
-    private DateTime time;
+    private String time;
 
     public CertificationCourseStateRequest() {
     }
@@ -91,8 +92,14 @@ public class CertificationCourseStateRequest extends BaseRequest {
         return contentName;
     }
 
-    public DateTime getTime() {
+    public String getTime() {
         return time;
+    }
+    
+    public DateTime getTimeAsDateTime() {
+        if (StringUtils.isBlank(time)) return null;
+
+        return DateTime.parse(time);
     }
 
     public String toString() {
