@@ -30,15 +30,12 @@ public class SendSMSHandler {
 
     @MotechListener(subjects = {SUBJECT_SEND_SINGLE_SMS})
     public void sendSingleSMS(MotechEvent motechEvent) throws IOException {
-        LOG.info("************************************\nIn SMS handler\n*****************************");
         Map<String,Object> eventParams = motechEvent.getParameters();
-        Map parameters = (Map)eventParams.get("0");
+        Map parameters = (Map) eventParams.get("0");
         String smsMessage = (String) parameters.get(PARAMETER_SMS_MESSAGE);
         String mobileNumber = (String) parameters.get(PARAMETER_MOBILE_NUMBER);
 
-        LOG.info("************************************\n" + mobileNumber + "\n" + smsMessage + "\n*****************************");
-
-//        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("mock-handler-log.txt")));
+//        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("/Users/imdadah/mock-handler-log.txt")));
 //        bw.append(smsMessage);
 //        bw.close();
 

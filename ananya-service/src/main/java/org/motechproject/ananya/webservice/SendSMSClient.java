@@ -17,7 +17,10 @@ public class SendSMSClient {
     public String sendSingleSMS(String mobileNumber, String smsMessage) {
         String result = smsService.singlePush(mobileNumber, SENDER_ID, smsMessage);
 
-        //TODO any result handling here?
+        if("failure".equals(result)) {
+            throw new RuntimeException("SMS failed to deliver");
+        }
+
         return result;
     }
 }
