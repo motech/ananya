@@ -27,7 +27,7 @@ describe("Start next chapter interaction", function() {
     it("should set next chapter first lesson in state", function () {
         var courseState = new CourseState();
         courseState.setChapterIndex(0);
-        courseState.setLessonOrQuestionIndex(3);
+        courseState.setLessonOrQuestionIndex(0);
         var startNextChapter = new StartNextChapter(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);
@@ -35,13 +35,13 @@ describe("Start next chapter interaction", function() {
 
         var nextState = startNextChapter.processSilentlyAndReturnNextState();
 
-        expect(courseState.chapterIndex).toEqual(1);
+        expect(courseState.chapterIndex).toEqual(0);
         expect(courseState.lessonOrQuestionIndex).toEqual(0);
         expect(nextState).toEqual(lessonInteraction);
     });
 
     it("should set endOfCourse as next state if already at last chapter", function () {
-        var lastChapterIndex = 1;
+        var lastChapterIndex = 2;
         var courseState = new CourseState();
         courseState.setChapterIndex(lastChapterIndex);
         courseState.setLessonOrQuestionIndex(3);

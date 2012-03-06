@@ -47,8 +47,8 @@ describe("End of chapter menu Interaction", function() {
         courseState.setLessonOrQuestionIndex(3);
 
         expect(endOfChapterMenuInteraction.processInputAndReturnNextInteraction(2)).toEqual(startNextChapterInteraction);
-        expect(courseState.chapterIndex).toEqual(1);
-        expect(courseState.lessonOrQuestionIndex).toEqual(3);
+        expect(courseState.chapterIndex).toEqual(2);
+        expect(courseState.lessonOrQuestionIndex).toEqual(0);
 
     });
 
