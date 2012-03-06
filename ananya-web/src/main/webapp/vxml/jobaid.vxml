@@ -113,9 +113,13 @@
             <prompt bargein="false">
                 <audio expr="callContext.currentInteractionLesson()"/>
             </prompt>
-            <script>
-                callContext.lessonFinished();
-            </script>
+            <if cond="callContext.dialedViaShortCode">
+                <disconnect/>
+            <else/>
+                <script>
+                    callContext.lessonFinished();
+                </script>
+            </if>
             <goto next="#controller"/>
         </block>
     </form>

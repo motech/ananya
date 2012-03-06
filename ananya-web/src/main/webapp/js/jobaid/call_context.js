@@ -6,6 +6,7 @@ var CallContext = function(course, metadata, promptContext) {
         this.currentInteraction = course;
         this.metadata = metadata;
         this.shouldPlayNextIntroduction = true;
+        this.dialedViaShortCode = false;
     };
 
     this.handleInput = function(input) {
@@ -32,6 +33,7 @@ var CallContext = function(course, metadata, promptContext) {
                     if (lessons[lessonNo].data.shortcode == shortCode)
                         {
                             this.currentInteraction = lessons[lessonNo];
+                            this.dialedViaShortCode = true;
                             return this;
                         }
                 }

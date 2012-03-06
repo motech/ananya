@@ -212,10 +212,12 @@ describe("Call Context", function() {
         var lesson = course.children[1].children[0].children[0];
         callContext.navigateTo("1111");
         expect(callContext.currentInteraction).toEqual(lesson);
+        expect(callContext.dialedViaShortCode).toEqual(true);
     });
 
     it("should find go to beginning of course for invalid shortcode", function() {
         callContext.navigateTo("0000");
         expect(callContext.currentInteraction).toEqual(course);
+        expect(callContext.dialedViaShortCode).toEqual(false);
     });
 })
