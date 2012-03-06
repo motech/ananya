@@ -32,6 +32,7 @@ public class SendSMSService {
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(SendSMSHandler.PARAMETER_SMS_MESSAGE, smsMessageToSend);
         parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);
+        parameters.put(SendSMSHandler.PARAMETER_SMS_REFERENCE_NUMBER, referenceNumber);
 
         eventContext.send(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS, parameters);
     }

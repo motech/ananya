@@ -91,7 +91,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSendSMSWhenAtPlayCourseResult() throws IOException {
-        String msisdn = "9986500110" + System.currentTimeMillis();
+        String msisdn = "9" + System.currentTimeMillis();
         FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D001B012V001", null).status(RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("playFinalScore", 8, 8));
 

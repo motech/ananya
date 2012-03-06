@@ -113,5 +113,24 @@
             <column name="flw_id"/>
         </createIndex>
     </changeSet>
+    <changeSet context="setup" author="ThoughtWorks" id="8">
+        <createTable tableName="sms_sent_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="time_id" type="integer"/>
+            <column name="course_attempt" type="integer"/>
+            <column name="sms_sent" type="boolean"/>
+            <column name="sms_reference_number" type="varchar(30)"/>
+        </createTable>
+
+        <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+        <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>

@@ -2,17 +2,11 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.handler.SendSMSHandler;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
-import org.motechproject.context.EventContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 
 @Service

@@ -1,15 +1,12 @@
 package org.motechproject.ananya.handler;
 
 import org.apache.log4j.Logger;
-import org.motechproject.model.MotechEvent;
 import org.motechproject.ananya.webservice.SendSMSClient;
+import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -20,7 +17,9 @@ public class SendSMSHandler {
     public static final String SUBJECT_SEND_SINGLE_SMS = "sendSingleSMS";
     public static final String PARAMETER_SMS_MESSAGE = "smsMessage";
     public static final String PARAMETER_MOBILE_NUMBER = "mobileNumber";
+    public static final String PARAMETER_SMS_REFERENCE_NUMBER = "smsReferenceNumber";
 
+//    private static int attempt = 0;
     private SendSMSClient smsClient;
 
     @Autowired
@@ -34,12 +33,12 @@ public class SendSMSHandler {
         Map parameters = (Map) eventParams.get("0");
         String smsMessage = (String) parameters.get(PARAMETER_SMS_MESSAGE);
         String mobileNumber = (String) parameters.get(PARAMETER_MOBILE_NUMBER);
+        String smsReferenceNumber = (String) parameters.get(PARAMETER_SMS_REFERENCE_NUMBER);
 
-//        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("/Users/imdadah/mock-handler-log.txt")));
-//        bw.append(smsMessage);
+//        FileWriter file= new FileWriter("mock-handler-log.txt",true);
+//        BufferedWriter bw = new BufferedWriter(file);
+//        bw.append(smsMessage + " | attempt: " + (++attempt) + "\r\n");
 //        bw.close();
-
-        String result = smsClient.sendSingleSMS(mobileNumber, smsMessage);
-        // TODO any result handling here?
+        smsClient.sendSingleSMS(mobileNumber, smsMessage, smsReferenceNumber);
     }
 }

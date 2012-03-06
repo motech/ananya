@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 
 @Service
 public class FrontLineWorkerService {
@@ -124,5 +124,21 @@ public class FrontLineWorkerService {
         save(frontLineWorker);
 
         return certificateCourseAttempts;
+    }
+
+    public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        frontLineWorker.addSMSReferenceNumber(smsReferenceNumber);
+        save(frontLineWorker);
+    }
+
+    public int getCurrentCourseAttempt(String msisdn) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        return frontLineWorker.currentCourseAttempt();
+    }
+
+    public String getSMSReferenceNumber(String msisdn, int courseAttempt) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        return frontLineWorker.smsReferenceNumber(courseAttempt);
     }
 }

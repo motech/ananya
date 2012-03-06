@@ -7,6 +7,9 @@ import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
 
@@ -40,6 +43,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Integer certificateCourseAttempts;
 
+    @JsonProperty
+    private Map<Integer, String> smsReferenceNumbers;
+
     public FrontLineWorker() {
     }
 
@@ -56,6 +62,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
                 ", locationId='" + locationId + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", certificateCourseAttempts=" + certificateCourseAttempts +
+                ", smsReferenceNumbers=" + smsReferenceNumbers +
                 '}';
     }
 
@@ -67,6 +74,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.locationId = locationId;
         this.operator = operator;
         this.certificateCourseAttempts = 0;
+        this.smsReferenceNumbers = new HashMap<Integer, String>();
     }
 
     public String getOperator() {
@@ -136,4 +144,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return ++certificateCourseAttempts;
     }
 
+    public void addSMSReferenceNumber(String smsReferenceNumber) {
+        this.smsReferenceNumbers.put(this.certificateCourseAttempts, smsReferenceNumber);
+    }
+
+    public Integer currentCourseAttempt() {
+        return certificateCourseAttempts;
+    }
+
+    public String smsReferenceNumber(int courseAttempt) {
+        return this.smsReferenceNumbers.get(courseAttempt);
+    }
 }
