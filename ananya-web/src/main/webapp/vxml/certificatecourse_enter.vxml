@@ -2,12 +2,11 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="vxml/root.vxml"
-      xml:base="../../"  >
+      application="root.vxml">
 
-    <script srcexpr="'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri"/>
-    <script src="js/entry/controller.js"/>
-    <script src="js/prompt_context.js"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri)"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'js/entry/controller.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'js/prompt_context.js')"/>
     <script>
         <![CDATA[
     var controller = new EntryController(callerData,metaData);
@@ -27,7 +26,7 @@
     <form id="registered_bookmark_present">
         <block>
             <log>TW::<value expr="callerId"/> moved into certificate course</log>
-            <goto next="vxml/certificatecourse.vxml"/>
+            <goto next="certificatecourse.vxml"/>
         </block>
     </form>
 
@@ -35,12 +34,12 @@
         <block>
             <log>TW::<value expr="callerId"/> registered with no bookmarks</log>
             <prompt bargein="true">
-                <audio expr="controller.certificateWelcomePrompt()"></audio>
+                <audio expr="Utility.relativePath(pathToRoot,controller.certificateWelcomePrompt())"/>
             </prompt>
         </block>
         <field name="repeat">
             <prompt bargein="false">
-                <audio expr="controller.certificationOptionsForRegisteredPrompt()"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.certificationOptionsForRegisteredPrompt())"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                 <rule id="root1" scope="public">
@@ -55,7 +54,7 @@
                     <goto next="#controller"/>
                     <elseif cond="repeat == '2'"/>
                     <log>TW::<value expr="callerId"/> moved into certificate course</log>
-                    <goto next="vxml/certificatecourse.vxml"/>
+                    <goto next="certificatecourse.vxml"/>
                 </if>
             </filled>
             <noinput>
@@ -75,7 +74,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio expr="controller.invalidInputPrompt()"/>
+                    <audio expr="Utility.relativePath(pathToRoot,controller.invalidInputPrompt())"/>
                     <reprompt/>
                 </if>
             </nomatch>
@@ -86,13 +85,13 @@
         <block>
             <log>TW::<value expr="callerId"/> not registered</log>
             <prompt bargein="true">
-                <audio expr="controller.certificateWelcomePrompt()"></audio>
+                <audio expr="Utility.relativePath(pathToRoot,controller.certificateWelcomePrompt())"/>
             </prompt>
-            <audio expr="controller.certificateNeedToRegisterPrompt()"/>
+            <audio expr="Utility.relativePath(pathToRoot,controller.certificateNeedToRegisterPrompt())"/>
         </block>
         <field name="repeat">
             <prompt bargein="false">
-                <audio expr="controller.certificationOptionsForUnregisteredPrompt()"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.certificationOptionsForUnregisteredPrompt())"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root2">
                 <rule id="root2" scope="public">
@@ -107,7 +106,7 @@
                     <goto next="#controller"/>
                 <elseif cond="repeat == '2'"/>
                     <log>TW::<value expr="callerId"/> moved into registration flow</log>
-                    <goto next="vxml/register.vxml"/>
+                    <goto next="register.vxml"/>
                 </if>
             </filled>
             <noinput>
@@ -127,7 +126,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio expr="controller.invalidInputPrompt()"/>
+                    <audio expr="Utility.relativePath(pathToRoot,controller.invalidInputPrompt())"/>
                     <reprompt/>
                 </if>
             </nomatch>

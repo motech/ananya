@@ -74,3 +74,10 @@ var Utility = function() {
 };
 
 var Utility = new Utility();
+
+Utility.relativePath = function(pathToRootOfReferrer, pathFromRootOfResource) {
+    if(pathFromRootOfResource.indexOf("http://") == 0){
+        return pathFromRootOfResource;
+    }
+    return pathToRootOfReferrer + pathFromRootOfResource;
+}

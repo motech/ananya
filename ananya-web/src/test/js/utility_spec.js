@@ -32,4 +32,24 @@ describe("Utility", function() {
 
         expect(courseStates).toEqual(dataTransferList.transferList);
     });
+
+    it("should give relative path of a resource given the path to root and path to resource", function(){
+        var pathToRoot = "../";
+        var pathToResource = "js/landing/controller.js";
+
+        var relativeUrl = Utility.relativePath(pathToRoot,pathToResource);
+
+        expect(relativeUrl).toEqual("../js/landing/controller.js")
+    });
+
+    it("should give absolute path passed of a resource, if the path specified is absolute", function() {
+        var pathToRoot = "../";
+        var pathToResource = "http://someserver/ananya/js/landing/controller.js";
+
+        var relativeUrl = Utility.relativePath(pathToRoot,pathToResource);
+
+        expect(relativeUrl).toEqual(pathToResource)
+
+    });
+
 });

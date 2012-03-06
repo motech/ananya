@@ -2,14 +2,13 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="vxml/register_root.vxml"
-      xml:base="../">
+      application="register_root.vxml">
     <form>
         <field name="blockRecord">
             <prompt bargein="false">
-                <audio expr="controller.playPrompt(myField)"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playPrompt(myField))"/>
             </prompt>
-            <grammar srcexpr="controller.getBlockGrammar()" type="application/srgs+xml" fetchhint="safe"/>
+            <grammar srcexpr="Utility.relativePath(pathToRoot,controller.getBlockGrammar())" type="application/srgs+xml" fetchhint="safe"/>
             <grammar mode="dtmf" version="1.0" root="root3">
                 <rule id="root3" scope="public">
                     <one-of>
@@ -25,7 +24,7 @@
                     <disconnect/>
                     <else/>
                     <prompt bargein="false">
-                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="Utility.relativePath(pathToRoot,controller.playNoInputPrompt(myField))"/>
                     </prompt>
                     <goto nextitem="blockRecord"/>
                 </if>
@@ -38,7 +37,7 @@
                     <disconnect/>
                     <else/>
                     <prompt bargein="false">
-                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="Utility.relativePath(pathToRoot,controller.playNoInputPrompt(myField))"/>
                     </prompt>
                     <goto nextitem="blockRecord"/>
                 </if>
@@ -54,9 +53,9 @@
 
         <field name="confirm">
             <prompt bargein="false">
-                <audio expr="controller.playConfirmPrompt(myField)"/>
-                <audio expr="controller.playBackPrompt(myField,myRecord)"/>
-                <audio expr="controller.playRerecordPrompt(myField)"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playConfirmPrompt(myField))"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playBackPrompt(myField,myRecord))"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playRerecordPrompt(myField))"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                 <rule id="root1" scope="public">
@@ -83,18 +82,18 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                    <audio expr="Utility.relativePath(pathToRoot,promptContext.audioForInvalidInputRetry())"/>
                     <reprompt/>
                 </if>
             </nomatch>
             <filled>
                 <if cond="confirm == '1'">
-                    <goto next="vxml/register.vxml#record_form"/>
+                    <goto next="register.vxml#record_form"/>
                     <elseif cond="confirm == '2'"/>
                     <script>
                         controller.capture(myRecord);
                     </script>
-                    <goto next="vxml/register.vxml#record_form"/>
+                    <goto next="register.vxml#record_form"/>
                 </if>
             </filled>
         </field>

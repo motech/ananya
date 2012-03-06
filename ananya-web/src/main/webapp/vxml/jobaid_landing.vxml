@@ -2,16 +2,16 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      xml:base="../../"  >
+      application="root.vxml">
 
-    <script srcexpr="'generated/js/metadata.js?' +  (new Date()).valueOf()"/>
-    <script src="js/landing/controller.js"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?' +  (new Date()).valueOf())"/>
+    <script srcexpr="Utility.relativePath(pathToRoot, 'js/landing/controller.js')"/>
     <script>
         var controller = new LandingController(metaData);
     </script>
     <form id="landing_page">
         <block>
-            <goto expr="controller.jobAidEnterURL()"/>
+            <goto expr="Utility.relativePath(pathToRoot, controller.jobAidEnterURL())"/>
         </block>
     </form>
 </vxml>

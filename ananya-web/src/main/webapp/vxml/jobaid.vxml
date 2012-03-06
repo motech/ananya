@@ -2,13 +2,12 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="vxml/root.vxml"
-      xml:base="../">
+      application="root.vxml">
 
-    <script src="generated/js/jobaid_course_data.js"/>
-    <script src="js/jobaid/course.js"/>
-    <script src="js/jobaid/call_context.js"/>
-    <script src="js/prompt_context.js"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/course.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/call_context.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'js/prompt_context.js')"/>
     <script>
         <![CDATA[
             callDetailLogger.jobaid_start();
@@ -38,15 +37,15 @@
     <form id="genericLevel">
         <block name="introduction" cond="callContext.shouldPlayIntroduction()">
             <prompt bargein="false">
-                <audio expr="callContext.currentInteractionIntroduction()"/>
+                <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionIntroduction())"/>
             </prompt>
         </block>
         <field name="nextLevelSelection">
             <prompt>
-                <audio expr="callContext.currentInteractionMenu()"/>
+                <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionMenu())"/>
             </prompt>
             <prompt cond="!callContext.isAtCourseRoot()">
-                <audio expr="callContext.audioForOptionToGoToTopLevel()"/>
+                <audio expr="Utility.relativePath(pathToRoot,callContext.audioForOptionToGoToTopLevel())"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root">
                 <rule id="root">
@@ -75,10 +74,10 @@
                     <disconnect/>
                     <else/>
                     <prompt>
-                        <audio expr="callContext.currentInteractionMenu()"/>
+                        <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionMenu())"/>
                     </prompt>
                     <prompt cond="!callContext.isAtCourseRoot()">
-                        <audio expr="controller.audioForOptionToGoToTopLevel()"/>
+                        <audio expr="Utility.relativePath(pathToRoot,controller.audioForOptionToGoToTopLevel())"/>
                     </prompt>
                 </if>
             </noinput>
@@ -102,7 +101,7 @@
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <disconnect/>
                 <else/>
-                <audio expr="callContext.audioForInvalidInputRetry(promptContext)"/>
+                <audio expr="Utility.relativePath(pathToRoot,callContext.audioForInvalidInputRetry(promptContext))"/>
                 <goto nextitem="nextLevelSelection"/>
             </if>
         </block>
@@ -111,7 +110,7 @@
     <form id="lesson">
         <block>
             <prompt bargein="false">
-                <audio expr="callContext.currentInteractionLesson()"/>
+                <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionLesson())"/>
             </prompt>
             <if cond="callContext.dialedViaShortCode">
                 <disconnect/>

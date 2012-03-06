@@ -2,13 +2,12 @@
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="vxml/register_root.vxml"
-      xml:base="../">
+      application="register_root.vxml">
 
     <form id="record_designation_form">
         <field name="designation">
             <prompt bargein="false">
-                <audio expr="controller.playPrompt('designation')"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playPrompt('designation'))"/>
             </prompt>
             <option dtmf="1" value="ANM"/>
             <option dtmf="2" value="ASHA"/>
@@ -30,7 +29,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                    <audio expr="Utility.relativePath(pathToRoot,promptContext.audioForInvalidInputRetry())"/>
                     <reprompt/>
                 </if>
             </nomatch>
@@ -61,11 +60,11 @@
             <if cond="myField == 'name'">
                 <goto nextitem="nameRecord"/>
                 <elseif cond="myField == 'district'"/>
-                <goto next="vxml/register_district.vxml"/>
+                <goto next="register_district.vxml"/>
                 <elseif cond="myField == 'block'"/>
-                <goto next="vxml/register_block.vxml"/>
+                <goto next="register_block.vxml"/>
                 <elseif cond="myField == 'panchayat'"/>
-                <goto next="vxml/register_panchayat.vxml"/>
+                <goto next="register_panchayat.vxml"/>
                 <else/>
                 <goto nextitem="submit_form"/>
             </if>
@@ -73,7 +72,7 @@
 
         <record name="nameRecord" type="audio/x-wav" beep="false" maxtime="10s" finalsilence="4000ms" dtmfterm="true">
             <prompt bargein="false">
-                <audio expr="controller.playPrompt(myField)"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playPrompt(myField))"/>
             </prompt>
             <noinput>
                 <script>
@@ -83,7 +82,7 @@
                     <disconnect/>
                     <else/>
                     <prompt bargein="false">
-                        <audio expr="controller.playNoInputPrompt(myField)"/>
+                        <audio expr="Utility.relativePath(pathToRoot,controller.playNoInputPrompt(myField))"/>
                     </prompt>
                     <goto nextitem="nameRecord"/>
                 </if>
@@ -95,9 +94,9 @@
         </record>
         <field name="confirm">
             <prompt bargein="false">
-                <audio expr="controller.playConfirmPrompt(myField)"/>
-                <audio expr="controller.playBackPrompt(myField,myRecord)"/>
-                <audio expr="controller.playRerecordPrompt(myField)"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playConfirmPrompt(myField))"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playBackPrompt(myField,myRecord))"/>
+                <audio expr="Utility.relativePath(pathToRoot,controller.playRerecordPrompt(myField))"/>
             </prompt>
             <grammar mode="dtmf" version="1.0" root="root1">
                 <rule id="root1" scope="public">
@@ -124,7 +123,7 @@
                 <if cond="promptContext.hasExceededMaxInvalidInputs()">
                     <disconnect/>
                     <else/>
-                    <audio expr="promptContext.audioForInvalidInputRetry()"/>
+                    <audio expr="Utility.relativePath(pathToRoot,promptContext.audioForInvalidInputRetry())"/>
                     <reprompt/>
                 </if>
             </nomatch>
@@ -150,15 +149,15 @@
                 var panchayat = controller.panchayat();
                 ]]>
             </script>
-            <data srcexpr="controller.submitNameUrl()"
+            <data srcexpr="Utility.relativePath(pathToRoot,controller.submitNameUrl())"
                   enctype="multipart/form-data" method="post"
                   namelist="session.connection.remote.uri name"
                   maxage="0" maxstale="0"/>
-            <data srcexpr="controller.submitUrl()" method="post"
+            <data srcexpr="Utility.relativePath(pathToRoot,controller.submitUrl())" method="post"
                   namelist="session.connection.remote.uri designation district block panchayat"
                   maxage="0" maxstale="0"/>
-            <audio expr="controller.playRegistrationDone()"/>
-            <goto expr="controller.nextFlow(session.connection.local.uri)"/>
+            <audio expr="Utility.relativePath(pathToRoot,controller.playRegistrationDone())"/>
+            <goto expr="Utility.relativePath(pathToRoot, controller.nextFlow(session.connection.local.uri))"/>
         </block>
 
     </form>
