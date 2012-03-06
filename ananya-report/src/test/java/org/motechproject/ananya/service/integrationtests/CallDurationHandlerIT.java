@@ -16,8 +16,13 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.service.ReportPublisherService;
 import org.motechproject.ananya.service.handler.CallDurationHandler;
+import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
+import org.motechproject.server.event.EventListener;
+import org.motechproject.server.event.EventListenerRegistry;
+import org.motechproject.server.event.annotations.MotechListenerAbstractProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,10 +30,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-report.xml")
@@ -49,6 +56,16 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         allCallLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
+    }
+
+    @Test
+    public void shouldBindToTheCorrectHandlerForCallDurationEvent(){
+        EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
+        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_CALL_DURATION_DATA_KEY);
+        String handlerClass = ((MotechListenerAbstractProxy) listeners.toArray()[0]).getIdentifier();
+
+        assertEquals(1, listeners.size());
+        assertEquals("callDurationHandler",handlerClass);
     }
 
     @Test
@@ -75,6 +92,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         assertEquals(2, callDurationMeasures.size());
         assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 300, msisdn, CallFlowType.CALL.name())));
         assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, 180, msisdn, CallFlowType.JOBAID.name())));
+        assertEquals(0,allCallLogs.findByCallId(callId).size());
     }
 
     @Test
@@ -95,7 +113,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
         List<FrontLineWorkerDimension> lineWorkerDimensionList = template.loadAll(FrontLineWorkerDimension.class);
         assertEquals(1, lineWorkerDimensionList.size());
         assertEquals(Long.valueOf(msisdn), lineWorkerDimensionList.get(0).getMsisdn());
-
+        assertEquals(0,allCallLogs.findByCallId(callId).size());
     }
 
     private Matcher<CallDurationMeasure> callDurationMeasureMatcher(final String callId, final int duration, final String msisdn, final String type) {

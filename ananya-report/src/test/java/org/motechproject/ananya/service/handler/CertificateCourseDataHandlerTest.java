@@ -33,7 +33,7 @@ public class CertificateCourseDataHandlerTest {
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        handler.handleCertificateCourseDataDuration(event);
+        handler.handleCertificateCourseData(event);
 
         verify(courseItemMeasureService).createCourseItemMeasure("callId");
     }

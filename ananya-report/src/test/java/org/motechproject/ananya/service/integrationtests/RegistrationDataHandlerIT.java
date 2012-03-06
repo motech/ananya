@@ -16,14 +16,20 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.ReportPublisherService;
 import org.motechproject.ananya.service.handler.RegistrationDataHandler;
+import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
+import org.motechproject.server.event.EventListener;
+import org.motechproject.server.event.EventListenerRegistry;
+import org.motechproject.server.event.annotations.MotechListenerAbstractProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -69,6 +75,26 @@ public class RegistrationDataHandlerIT {
         template.deleteAll(template.loadAll(LocationDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+    }
+
+    @Test
+    public void shouldBindToTheCorrectHandlerForRegistrationDataEvent(){
+        EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
+        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_REGISTRATION_DATA_KEY);
+        String handlerClass = ((MotechListenerAbstractProxy) listeners.toArray()[0]).getIdentifier();
+
+        assertEquals(1, listeners.size());
+        assertEquals("registrationDataHandler",handlerClass);
+    }
+
+    @Test
+    public void shouldBindToTheCorrectHandlerForRegistrationCompletionEvent(){
+        EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
+        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_REGISTRATION_COMPLETION_DATA_KEY);
+        String handlerClass = ((MotechListenerAbstractProxy) listeners.toArray()[0]).getIdentifier();
+
+        assertEquals(1, listeners.size());
+        assertEquals("registrationDataHandler",handlerClass);
     }
 
     @Test

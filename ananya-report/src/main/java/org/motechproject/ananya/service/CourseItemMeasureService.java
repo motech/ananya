@@ -10,6 +10,8 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,8 @@ public class CourseItemMeasureService {
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseService certificateCourseService;
-
+    private static final Logger logger = LoggerFactory.getLogger(CourseItemMeasureService.class);
+    
     @Autowired
     public CourseItemMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                     AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions,

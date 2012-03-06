@@ -5,6 +5,8 @@ import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.ReportPublisherService;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CertificateCourseDataHandler {
 
     private CourseItemMeasureService courseItemMeasureService;
-
+    private static final Logger logger = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
     public CertificateCourseDataHandler() {
     }
 
@@ -21,8 +23,8 @@ public class CertificateCourseDataHandler {
         this.courseItemMeasureService = courseItemMeasureService;
     }
 
-    @MotechListener(subjects = {ReportPublisherService.SEND_CALL_DURATION_DATA_KEY})
-    public void handleCertificateCourseDataDuration(MotechEvent event) {
+    @MotechListener(subjects = {ReportPublisherService.SEND_CERTIFICATE_COURSE_DATA_KEY})
+    public void handleCertificateCourseData(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
             String callId = ((LogData) log).getDataId();
             this.courseItemMeasureService.createCourseItemMeasure(callId);
