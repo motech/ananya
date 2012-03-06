@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.jasypt.util.binary.StrongBinaryEncryptor;
 import org.motechproject.ananya.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.util.Properties;
 
 @Service
 public class SendSMSService {
-    private static final String COURSE_COMPLETION_SMS_MESSAGE = "course.completion.sms.message";
+    private static final String COURSE_COMPLETION_SMS_MESSAGE_KEY = "course.completion.sms.message";
     private Properties ananyaServiceProperties;
     private EventContext eventContext;
 
@@ -26,9 +25,9 @@ public class SendSMSService {
     public void buildAndSendSMS(String callerId, String locationId, Integer courseAttemptNumber) {
         String districtCode = extractDistrictCode(locationId);
         String blockCode = extractBlockCode(locationId);
-        String referenceNumber = districtCode + blockCode + locationId + String.format("%2d", courseAttemptNumber);
+        String referenceNumber = districtCode + blockCode + callerId + String.format("%02d", courseAttemptNumber);
 
-        String smsMessageToSend = this.ananyaServiceProperties.getProperty(COURSE_COMPLETION_SMS_MESSAGE) + referenceNumber;
+        String smsMessageToSend = this.ananyaServiceProperties.getProperty(COURSE_COMPLETION_SMS_MESSAGE_KEY) + referenceNumber;
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(SendSMSHandler.PARAMETER_SMS_MESSAGE, smsMessageToSend);
@@ -38,12 +37,12 @@ public class SendSMSService {
     }
 
     private String extractBlockCode(String locationId) {
-        String startCode = "D";
+        String startCode = "B";
         return extractCode(locationId, startCode);
     }
 
     private String extractDistrictCode(String locationId) {
-        String startCode = "B";
+        String startCode = "D";
         return extractCode(locationId, startCode);
     }
 
@@ -51,7 +50,7 @@ public class SendSMSService {
         String result = "";
         int indexStart = locationId.indexOf(startCode);
         if(indexStart != -1) {
-            result = locationId.substring(indexStart, 4);
+            result = locationId.substring(indexStart + 1, indexStart + 4);
         }
 
         return result;
