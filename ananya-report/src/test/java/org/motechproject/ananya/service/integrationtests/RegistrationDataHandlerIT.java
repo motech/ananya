@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service.IntegrationTests;
+package org.motechproject.ananya.service.integrationtests;
 
 import org.joda.time.DateTime;
 import org.junit.After;

@@ -3,7 +3,7 @@ package org.motechproject.ananya.functional;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.TestUtils.TestUtils;
+import org.motechproject.ananya.TestUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;

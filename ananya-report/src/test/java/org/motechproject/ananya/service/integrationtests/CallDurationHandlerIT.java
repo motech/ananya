@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service.IntegrationTests;
+package org.motechproject.ananya.service.integrationtests;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

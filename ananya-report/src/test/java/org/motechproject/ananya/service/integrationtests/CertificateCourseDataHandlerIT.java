@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service.IntegrationTests;
+package org.motechproject.ananya.service.integrationtests;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -12,7 +12,6 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
-import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;

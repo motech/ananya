@@ -1,4 +1,4 @@
-package org.motechproject.ananya.TestUtils;
+package org.motechproject.ananya;
 
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
