@@ -149,11 +149,11 @@
                 var panchayat = controller.panchayat();
                 ]]>
             </script>
-            <data srcexpr="Utility.relativePath(pathToRoot,controller.submitNameUrl())"
+            <data name="registrationNameSubmit" srcexpr="Utility.relativePath(pathToRoot,controller.submitNameUrl())"
                   enctype="multipart/form-data" method="post"
                   namelist="session.connection.remote.uri name"
                   maxage="0" maxstale="0"/>
-            <data srcexpr="Utility.relativePath(pathToRoot,controller.submitUrl())" method="post"
+            <data name="registrationLocationSubmit" srcexpr="Utility.relativePath(pathToRoot,controller.submitUrl())" method="post"
                   namelist="session.connection.remote.uri designation district block panchayat"
                   maxage="0" maxstale="0"/>
             <audio expr="Utility.relativePath(pathToRoot,controller.playRegistrationDone())"/>
