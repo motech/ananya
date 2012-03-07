@@ -16,7 +16,7 @@ var AbstractCourseInteraction = function(metadata, interactionKey) {
     this.findContentByName = function(interactionToUse, contentName) {
         var contents = interactionToUse.contents;
         var contentLength = contents.length;
-        for(i = 0; i< contentLength; i++){
+        for(var i = 0; i< contentLength; i++){
             if(contents[i].name == contentName)
                 return contents[i];
         }

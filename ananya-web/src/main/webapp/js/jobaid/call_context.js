@@ -23,7 +23,7 @@ var CallContext = function(course, metadata, promptContext) {
     this.navigateTo = function(shortCode) {
          this.shouldPlayNextIntroduction = true;
          var levels = this.course.children;
-         for(levelNo=0; levelNo < levels.length ; levelNo++){
+         for(var levelNo=0; levelNo < levels.length ; levelNo++){
             var chapters = levels[levelNo].children;
 
             for (var chapterNo = 0; chapterNo < chapters.length ; chapterNo++) {
@@ -93,7 +93,7 @@ var CallContext = function(course, metadata, promptContext) {
     this.findContentByName = function(contentName) {
         var contents = this.currentInteraction.contents
         var contentLength = contents.length
-        for (i = 0; i < contentLength; i++) {
+        for (var i = 0; i < contentLength; i++) {
             if (contents[i].name == contentName)
                 return contents[i];
         }

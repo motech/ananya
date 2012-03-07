@@ -509,7 +509,7 @@ PlayThanksInteraction.KEY = "playThanks";
 extend(PlayThanksInteraction,AbstractCourseInteraction);
 
 
-_calculateFinalScore = function (scoresByChapter) {
+var _calculateFinalScore = function (scoresByChapter) {
     var finalScore = 0;
     for (var key in scoresByChapter) {
         if (scoresByChapter.hasOwnProperty(key)) {
