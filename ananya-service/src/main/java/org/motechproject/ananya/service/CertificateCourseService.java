@@ -45,12 +45,14 @@ public class CertificateCourseService {
             frontLineWorkerService.addScore(callerId, score);
 
         } else if ("playCourseResult".equals(interactionKey)) {
-            FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(callerId);
-            int totalScore = frontLineWorkerService.totalScore(callerId);
-            int currentCertificateCourseAttempts = frontLineWorkerService.incrementCertificateCourseAttempts(frontLineWorker);
+            if(!frontLineWorkerService.getBookmark(callerId).getType().equals("playCourseResult")) {
+                FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(callerId);
+                int totalScore = frontLineWorkerService.totalScore(callerId);
+                int currentCertificateCourseAttempts = frontLineWorkerService.incrementCertificateCourseAttempts(frontLineWorker);
 
-            if(totalScore >= FrontLineWorkerService.CERTIFICATE_COURSE_PASSING_SCORE) {
-                sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
+                if(totalScore >= FrontLineWorkerService.CERTIFICATE_COURSE_PASSING_SCORE) {
+                    sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
+                }
             }
         }
     }
