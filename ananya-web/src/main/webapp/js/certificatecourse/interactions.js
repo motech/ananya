@@ -653,5 +653,9 @@ var EndOfCourseInteraction = function() {
     EndOfCourseInteraction.prototype.getCourseItemState = function() {
         return CourseState.END;
     }
+
+    this.shouldLog = function() {
+            return false;
+    }
 };
 EndOfCourseInteraction.KEY = "endOfCourse";

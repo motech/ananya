@@ -29,3 +29,10 @@ describe("Course end marker", function() {
         expect(courseEndMarker.resumeCall()).toEqual(courseEndMarker);
     });
 });
+
+describe("End Of Course Interaction", function() {
+    it("shouldLog method must be present on this interaction and return false", function () {
+        var endOfCourseInteraction = new EndOfCourseInteraction();
+        expect(endOfCourseInteraction.shouldLog()).toEqual(false);
+    });
+});
