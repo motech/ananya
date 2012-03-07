@@ -7,7 +7,6 @@ import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Component
@@ -19,7 +18,6 @@ public class SendSMSHandler {
     public static final String PARAMETER_MOBILE_NUMBER = "mobileNumber";
     public static final String PARAMETER_SMS_REFERENCE_NUMBER = "smsReferenceNumber";
 
-//    private static int attempt = 0;
     private SendSMSClient smsClient;
 
     @Autowired
@@ -28,17 +26,13 @@ public class SendSMSHandler {
     }
 
     @MotechListener(subjects = {SUBJECT_SEND_SINGLE_SMS})
-    public void sendSingleSMS(MotechEvent motechEvent) throws IOException {
+    public void sendSingleSMS(MotechEvent motechEvent) {
         Map<String,Object> eventParams = motechEvent.getParameters();
         Map parameters = (Map) eventParams.get("0");
         String smsMessage = (String) parameters.get(PARAMETER_SMS_MESSAGE);
         String mobileNumber = (String) parameters.get(PARAMETER_MOBILE_NUMBER);
         String smsReferenceNumber = (String) parameters.get(PARAMETER_SMS_REFERENCE_NUMBER);
 
-//        FileWriter file= new FileWriter("mock-handler-log.txt",true);
-//        BufferedWriter bw = new BufferedWriter(file);
-//        bw.append(smsMessage + " | attempt: " + (++attempt) + "\r\n");
-//        bw.close();
         smsClient.sendSingleSMS(mobileNumber, smsMessage, smsReferenceNumber);
     }
 }

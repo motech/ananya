@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendSMSClient {
 
-    private static final String SENDER_ID = "correctSenderIDHere"; //TODO
+    public static final String SENDER_ID = "correctSenderIDHere"; //TODO
     private OnMobileSendSMSService smsService;
     private FrontLineWorkerService frontLineWorkerService;
     private ReportPublisherService reportPublisherService;
