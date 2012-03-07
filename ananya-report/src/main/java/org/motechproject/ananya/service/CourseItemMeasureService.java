@@ -24,22 +24,22 @@ public class CourseItemMeasureService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
-    private CertificateCourseService certificateCourseService;
+    private CertificateCourseLogService certificateCourseLogService;
     private static final Logger logger = LoggerFactory.getLogger(CourseItemMeasureService.class);
     
     @Autowired
     public CourseItemMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                     AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions,
-                                    CertificateCourseService certificateCourseService) {
+                                    CertificateCourseLogService certificateCourseLogService) {
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.allCourseItemDimensions = allCourseItemDimensions;
-        this.certificateCourseService = certificateCourseService;
+        this.certificateCourseLogService = certificateCourseLogService;
     }
 
     public void createCourseItemMeasure(String callId) {
-        CertificationCourseLog courseLog = certificateCourseService.getCertificateCourseLogFor(callId);
+        CertificationCourseLog courseLog = certificateCourseLogService.getCertificateCourseLogFor(callId);
 
         if(courseLog == null) return;
 
@@ -53,7 +53,7 @@ public class CourseItemMeasureService {
             reportDB.add(courseItemMeasure);
         }
 
-        certificateCourseService.deleteCertificateCourseLogsFor(callId);
+        certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
     }
 
     private boolean courseItemContentIsNullOrEmpty(CertificationCourseLogItem logItem) {

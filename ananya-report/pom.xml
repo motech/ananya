@@ -18,11 +18,6 @@
             <artifactId>ananya-transaction</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject.ananya</groupId>
-            <artifactId>ananya-service</artifactId>
-            <version>${project.version}</version>
-        </dependency>
          <dependency>
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-flw</artifactId>

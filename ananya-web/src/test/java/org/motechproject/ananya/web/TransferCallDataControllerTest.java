@@ -9,9 +9,11 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.CallDuration;
+import org.motechproject.ananya.domain.CallEvent;
+import org.motechproject.ananya.domain.CertificationCourseStateRequest;
+import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -27,7 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -106,16 +107,7 @@ public class TransferCallDataControllerTest {
         when(request.getParameter("dataToPost")).thenReturn("[]");
         
         transferCallDataController.receiveIVRDataAtDisconnect(request);
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportPublisherService).publishCertificateCourseData(captor.capture());
-        verify(reportPublisherService).publishCallDuration(captor.capture());
-
-        List<LogData> logDatas = captor.getAllValues();
-        assertEquals(2, logDatas.size());
-        for( LogData logData : logDatas){
-            assertEquals(callId, logData.getDataId());
-        }
+        verify(reportPublisherService).publishCallDisconnectEvent(callId);
     }
 
     @Test

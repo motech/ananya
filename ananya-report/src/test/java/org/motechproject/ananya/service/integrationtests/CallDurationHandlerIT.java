@@ -10,13 +10,13 @@ import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.service.ReportPublisherService;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.handler.CallDurationHandler;
 import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
@@ -63,7 +63,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
     @Test
     public void shouldBindToTheCorrectHandlerForCallDurationEvent() throws NoSuchFieldException, ClassNotFoundException, IllegalAccessException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_CALL_DURATION_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_CALL_DURATION_DATA_KEY);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");

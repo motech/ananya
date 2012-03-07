@@ -3,8 +3,8 @@ package org.motechproject.ananya.service.handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.model.MotechEvent;
 

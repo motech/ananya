@@ -5,12 +5,14 @@ import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationRequest;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.request.LogRegistrationRequest;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;

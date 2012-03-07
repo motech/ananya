@@ -2,7 +2,6 @@ package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -37,7 +36,8 @@ public class CourseItemMeasureServiceTest {
     @Mock
     private AllCourseItemDimensions allCourseItemDimensions;
     @Mock
-    private CertificateCourseService certificateCourseService;
+    private CertificateCourseLogService certificateCourseLogService;
+
     CourseItemMeasureService courseItemMeasureService;
     String callId;
     String callerId;
@@ -51,7 +51,7 @@ public class CourseItemMeasureServiceTest {
         callerId = "123456789";
         calledNumber = "1234";
         now = DateTime.now();
-        courseItemMeasureService = new CourseItemMeasureService(reportDB, allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions, certificateCourseService);
+        courseItemMeasureService = new CourseItemMeasureService(reportDB, allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions, certificateCourseLogService);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class CourseItemMeasureServiceTest {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
-        when(certificateCourseService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
+        when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getOrMakeFor(contentName,contentId,contentType)).thenReturn(courseItemDimension);
@@ -96,7 +96,7 @@ public class CourseItemMeasureServiceTest {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
-        when(certificateCourseService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
+        when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getOrMakeFor(contentName,contentId,contentType)).thenReturn(courseItemDimension);
@@ -130,7 +130,7 @@ public class CourseItemMeasureServiceTest {
 
 
 
-        when(certificateCourseService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
+        when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension1);
         when(allTimeDimensions.getFor(now.plusDays(5))).thenReturn(timeDimension2);
         when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension).thenReturn(frontLineWorkerDimension);
@@ -170,19 +170,19 @@ public class CourseItemMeasureServiceTest {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
-        when(certificateCourseService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
+        when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getOrMakeFor(contentName,contentId,contentType)).thenReturn(courseItemDimension);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
-        verify(certificateCourseService).deleteCertificateCourseLogsFor(callId);
+        verify(certificateCourseLogService).deleteCertificateCourseLogsFor(callId);
     }
 
     @Test
     public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId(){
-        when(certificateCourseService.getCertificateCourseLogFor(callId)).thenReturn(null);
+        when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(null);
         courseItemMeasureService.createCourseItemMeasure("callId");
         verify(reportDB,never()).add(any(CourseItemMeasure.class));
 

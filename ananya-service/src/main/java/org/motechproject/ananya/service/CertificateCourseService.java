@@ -96,11 +96,5 @@ public class CertificateCourseService {
         saveBookmark(recentCourseRequest);
     }
 
-    public CertificationCourseLog getCertificateCourseLogFor(String callId) {
-        return allCertificateCourseLogs.findByCallId(callId);
-    }
 
-    public void deleteCertificateCourseLogsFor(String callId) {
-        allCertificateCourseLogs.deleteFor(callId);
-    }
 }

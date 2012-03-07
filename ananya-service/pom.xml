@@ -20,6 +20,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-report</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-flw</artifactId>
             <version>${project.version}</version>
         </dependency>

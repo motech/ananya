@@ -97,12 +97,8 @@ public class TransferCallDataController {
     public String receiveIVRDataAtDisconnect(HttpServletRequest request){
         final String callId = request.getParameter("callId");
         receiveIVRData(request);
+        reportPublisherService.publishCallDisconnectEvent(callId);
 
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
-        reportPublisherService.publishCertificateCourseData(logData);
-
-        logData = new LogData(LogType.CALL_DURATION, callId);
-        reportPublisherService.publishCallDuration(logData);
         return "";
     }
 

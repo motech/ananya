@@ -1,7 +1,7 @@
 package org.motechproject.ananya.webservice;
 
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.ReportPublisherService;
 import org.springframework.beans.factory.annotation.Autowired;

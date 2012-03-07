@@ -1,8 +1,8 @@
 package org.motechproject.ananya.service.handler;
 
-import org.motechproject.ananya.domain.LogData;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.service.ReportPublisherService;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class CertificateCourseDataHandler {
         this.courseItemMeasureService = courseItemMeasureService;
     }
 
-    @MotechListener(subjects = {ReportPublisherService.SEND_CERTIFICATE_COURSE_DATA_KEY})
+    @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
     public void handleCertificateCourseData(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
             String callId = ((LogData) log).getDataId();

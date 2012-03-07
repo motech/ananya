@@ -1,8 +1,12 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationRequest;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.request.LogRegistrationRequest;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

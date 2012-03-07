@@ -4,19 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.ReportPublisherService;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.mockito.Mockito.verify;
 
 public class SendSMSClientTest {
 

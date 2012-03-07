@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.requests;
 
 public enum LogType {
     REGISTRATION,
@@ -9,3 +9,4 @@ public enum LogType {
     SMS_SENT,
     CERTIFICATE_COURSE_DATA
 }
+

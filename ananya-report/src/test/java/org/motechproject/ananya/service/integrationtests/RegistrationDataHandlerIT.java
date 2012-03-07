@@ -5,7 +5,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -16,8 +15,9 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.service.ReportPublisherService;
-import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.handler.RegistrationDataHandler;
 import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
@@ -83,7 +83,7 @@ public class RegistrationDataHandlerIT {
     @Test
     public void shouldBindToTheCorrectHandlerForRegistrationDataEvent() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_REGISTRATION_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");
@@ -98,7 +98,7 @@ public class RegistrationDataHandlerIT {
     @Test
     public void shouldBindToTheCorrectHandlerForRegistrationCompletionEvent() throws IllegalAccessException, ClassNotFoundException, NoSuchFieldException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_REGISTRATION_COMPLETION_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_REGISTRATION_COMPLETION_DATA_KEY);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");

@@ -8,7 +8,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.CertificationCourseLog;
+import org.motechproject.ananya.domain.CertificationCourseLogItem;
+import org.motechproject.ananya.domain.CourseItemState;
+import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -17,8 +20,9 @@ import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.service.ReportPublisherService;
-import org.motechproject.ananya.service.handler.CallDurationHandler;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
@@ -72,7 +76,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     @Test
     public void shouldBindToTheCorrectHandlerForCertificateCourseDataEvent() throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_CERTIFICATE_COURSE_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");

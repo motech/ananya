@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.LogData;
-import org.motechproject.ananya.domain.LogType;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 
