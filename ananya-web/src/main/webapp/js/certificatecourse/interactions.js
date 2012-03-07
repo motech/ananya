@@ -52,22 +52,10 @@ var StartNextChapterInteraction = function(metadata, course, courseState) {
     }
 
     this.processSilentlyAndReturnNextState = function() {
-        var nextState;
-
         if(this.courseState.lessonOrQuestionIndex == null) {
             this.courseState.setLessonOrQuestionIndex(0);
-            nextState = CertificateCourse.interactions[LessonInteraction.KEY];
         }
-        else {
-            var maxChapterIndex = course.children.length - 1;
-            if(this.courseState.chapterIndex  > maxChapterIndex) {
-               nextState = CertificateCourse.interactions[PlayThanksInteraction.KEY];
-            }
-            else {
-                nextState = CertificateCourse.interactions[LessonInteraction.KEY];
-            }
-        }
-        return nextState;
+        return CertificateCourse.interactions[LessonInteraction.KEY];
     }
 
     this.resumeCall = function() {
@@ -464,8 +452,15 @@ var EndOfChapterMenuInteraction = function(metadata, course, courseState) {
         if(input == 1) {
             return CertificateCourse.interactions[LessonInteraction.KEY];
         }
+
         this.courseState.chapterIndex++;
-        return CertificateCourse.interactions[StartNextChapterInteraction.KEY];
+
+         var maxChapterIndex = course.children.length - 1;
+         if(this.courseState.chapterIndex  > maxChapterIndex) {
+           return CertificateCourse.interactions[PlayThanksInteraction.KEY];
+         }
+
+         return CertificateCourse.interactions[StartNextChapterInteraction.KEY];
     }
 
     this.getCourseType = function() {

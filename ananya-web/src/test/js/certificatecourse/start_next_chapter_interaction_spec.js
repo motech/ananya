@@ -40,21 +40,6 @@ describe("Start next chapter interaction", function() {
         expect(nextState).toEqual(lessonInteraction);
     });
 
-    it("should set endOfCourse as next state if already at last chapter", function () {
-        var lastChapterIndex = 2;
-        var courseState = new CourseState();
-        courseState.setChapterIndex(lastChapterIndex);
-        courseState.setLessonOrQuestionIndex(3);
-        var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);
-
-        var endOfCourseInteraction = {};
-        CertificateCourse.interactions[PlayThanksInteraction.KEY] = endOfCourseInteraction;
-
-        var nextState = startNextChapter.processSilentlyAndReturnNextState();
-
-        expect(nextState).toEqual(endOfCourseInteraction);
-    });
-
     it("should resume call at the same place where the call was left", function () {
         var courseState = new CourseState();
         var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);

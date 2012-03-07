@@ -40,13 +40,13 @@ describe("End of chapter menu Interaction", function() {
         expect(courseState.lessonOrQuestionIndex).toEqual(0);
     });
 
-    it("should go to start next chapter action on input of 2.", function () {
-        var startNextChapterInteraction = {};
-        CertificateCourse.interactions[StartNextChapterInteraction.KEY] = startNextChapterInteraction;
+    it("should go to play thanks interaction after last chapter end interaction", function () {
+        var playThanksInteraction = {};
+        CertificateCourse.interactions[PlayThanksInteraction.KEY] = playThanksInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(3);
 
-        expect(endOfChapterMenuInteraction.processInputAndReturnNextInteraction(2)).toEqual(startNextChapterInteraction);
+        expect(endOfChapterMenuInteraction.processInputAndReturnNextInteraction(2)).toEqual(playThanksInteraction);
         expect(courseState.chapterIndex).toEqual(2);
         expect(courseState.lessonOrQuestionIndex).toEqual(0);
 
