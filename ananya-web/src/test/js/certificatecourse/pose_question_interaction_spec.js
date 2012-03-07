@@ -95,7 +95,7 @@ describe("Pose Question Interaction", function() {
 
     it("should return start next chapter interaction on receiving no input", function () {
         var startNextChapterInteraction = {};
-        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapterInteraction;
+        CertificateCourse.interactions[StartNextChapterInteraction.KEY] = startNextChapterInteraction;
 
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(0);

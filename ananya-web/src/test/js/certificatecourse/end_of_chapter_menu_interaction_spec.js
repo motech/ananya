@@ -42,7 +42,7 @@ describe("End of chapter menu Interaction", function() {
 
     it("should go to start next chapter action on input of 2.", function () {
         var startNextChapterInteraction = {};
-        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapterInteraction;
+        CertificateCourse.interactions[StartNextChapterInteraction.KEY] = startNextChapterInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(3);
 
@@ -54,7 +54,7 @@ describe("End of chapter menu Interaction", function() {
 
     it("should return start next chapter interaction on receiving no input", function () {
         var startNextChapterInteraction = {};
-        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapterInteraction;
+        CertificateCourse.interactions[StartNextChapterInteraction.KEY] = startNextChapterInteraction;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(3);
 

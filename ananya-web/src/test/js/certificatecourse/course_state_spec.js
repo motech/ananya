@@ -61,16 +61,16 @@ describe("Course State", function() {
         expect(courseStateWithDefaults.chapterIndex).toBeNull();
         expect(courseStateWithDefaults.lessonOrQuestionIndex).toBeNull();
         expect(courseStateWithDefaults.scoresByChapter).toEqual({});
-        expect(courseStateWithDefaults.interactionKey).toEqual(StartCertificationCourse.KEY);
+        expect(courseStateWithDefaults.interactionKey).toEqual(StartCertificationCourseInteraction.KEY);
     };
 
     it("should set contentType, interactionKey, courseItem and as passed, and contentId to null since shouldLog is false",
         function() {
             var courseState = new CourseState();
-            courseState.setCourseStateForServerCall(CourseType.COURSE, StartCertificationCourse.KEY, CourseState.START, false);
+            courseState.setCourseStateForServerCall(CourseType.COURSE, StartCertificationCourseInteraction.KEY, CourseState.START, false);
 
             expect(courseState.contentType).toEqual(CourseType.COURSE);
-            expect(courseState.interactionKey).toEqual(StartCertificationCourse.KEY);
+            expect(courseState.interactionKey).toEqual(StartCertificationCourseInteraction.KEY);
             expect(courseState.courseItemState).toEqual(CourseState.START);
             expect(courseState.contentId).toEqual(null);
         }
@@ -78,7 +78,7 @@ describe("Course State", function() {
 
     it("should set contentId properly, in case of course, chapter/quiz and lesson/question", function() {
         var courseState = new CourseState(null, certificationCourseWithTwoLessonsInEveryChapter());
-        courseState.setCourseStateForServerCall(CourseType.COURSE, StartCertificationCourse.KEY, CourseState.START, true);
+        courseState.setCourseStateForServerCall(CourseType.COURSE, StartCertificationCourseInteraction.KEY, CourseState.START, true);
 
         expect(courseState.contentId).toEqual("f3298014a71f8f7b76a04ff44e181b45");
 

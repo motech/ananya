@@ -18,6 +18,7 @@ import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.service.ReportPublisherService;
+import org.motechproject.ananya.service.handler.CallDurationHandler;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
@@ -28,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +70,18 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldBindToTheCorrectHandlerForCertificateCourseDataEvent(){
+    public void shouldBindToTheCorrectHandlerForCertificateCourseDataEvent() throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
         Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_CERTIFICATE_COURSE_DATA_KEY);
-        String handlerClass = ((MotechListenerAbstractProxy) listeners.toArray()[0]).getIdentifier();
+
+        MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
+        Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");
+        declaredField.setAccessible(true);
+        Method handler = (Method) declaredField.get(motechListenerAbstractProxy);
 
         assertEquals(1, listeners.size());
-        assertEquals("certificateCourseDataHandler",handlerClass);
+        assertEquals(CertificateCourseDataHandler.class,handler.getDeclaringClass());
+        assertEquals("handleCertificateCourseData",handler.getName());
     }
 
 

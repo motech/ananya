@@ -12,7 +12,7 @@ describe("Start next chapter interaction", function() {
     it("should set first lesson in state and go to lesson interaction, if course state does not contain any lesson number", function () {
         var courseState = new CourseState();
         courseState.chapterIndex = 0;
-        var startNextChapter = new StartNextChapter(metadata, course, courseState);
+        var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);
         CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
@@ -28,7 +28,7 @@ describe("Start next chapter interaction", function() {
         var courseState = new CourseState();
         courseState.setChapterIndex(0);
         courseState.setLessonOrQuestionIndex(0);
-        var startNextChapter = new StartNextChapter(metadata, course, courseState);
+        var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);
 
         var lessonInteraction = new LessonInteraction(null, null);
         CertificateCourse.interactions[LessonInteraction.KEY] = lessonInteraction;
@@ -45,7 +45,7 @@ describe("Start next chapter interaction", function() {
         var courseState = new CourseState();
         courseState.setChapterIndex(lastChapterIndex);
         courseState.setLessonOrQuestionIndex(3);
-        var startNextChapter = new StartNextChapter(metadata, course, courseState);
+        var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);
 
         var endOfCourseInteraction = {};
         CertificateCourse.interactions[PlayThanksInteraction.KEY] = endOfCourseInteraction;
@@ -57,7 +57,7 @@ describe("Start next chapter interaction", function() {
 
     it("should resume call at the same place where the call was left", function () {
         var courseState = new CourseState();
-        var startNextChapter = new StartNextChapter(metadata, course, courseState);
+        var startNextChapter = new StartNextChapterInteraction(metadata, course, courseState);
         expect(startNextChapter.resumeCall()).toEqual(startNextChapter);
     });
 });

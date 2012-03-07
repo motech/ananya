@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,13 +61,18 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
     }
 
     @Test
-    public void shouldBindToTheCorrectHandlerForCallDurationEvent(){
+    public void shouldBindToTheCorrectHandlerForCallDurationEvent() throws NoSuchFieldException, ClassNotFoundException, IllegalAccessException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
         Set<EventListener> listeners = registry.getListeners(ReportPublisherService.SEND_CALL_DURATION_DATA_KEY);
-        String handlerClass = ((MotechListenerAbstractProxy) listeners.toArray()[0]).getIdentifier();
+
+        MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
+        Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");
+        declaredField.setAccessible(true);
+        Method handler = (Method) declaredField.get(motechListenerAbstractProxy);
 
         assertEquals(1, listeners.size());
-        assertEquals("callDurationHandler",handlerClass);
+        assertEquals(CallDurationHandler.class,handler.getDeclaringClass());
+        assertEquals("handleCallDuration",handler.getName());
     }
 
     @Test

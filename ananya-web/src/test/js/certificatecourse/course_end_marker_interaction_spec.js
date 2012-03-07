@@ -19,7 +19,7 @@ describe("Course end marker", function() {
 
         expect(courseState.chapterIndex).toEqual(null);
         expect(courseState.lessonOrQuestionIndex).toEqual(null);
-        expect(courseState.interactionKey).toEqual(StartCertificationCourse.KEY);
+        expect(courseState.interactionKey).toEqual(StartCertificationCourseInteraction.KEY);
         expect(nextState).toEqual(CertificateCourse.interactions[EndOfCourseInteraction.KEY]);
     });
 

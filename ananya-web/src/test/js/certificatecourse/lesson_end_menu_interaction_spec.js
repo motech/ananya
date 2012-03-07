@@ -77,7 +77,7 @@ describe("Lesson End Menu Interaction", function() {
 
     it("should return start next chapter interaction on receiving no input without changing the course state, when at last lesson", function () {
         var startNextChapter = {};
-        CertificateCourse.interactions[StartNextChapter.KEY] = startNextChapter;
+        CertificateCourse.interactions[StartNextChapterInteraction.KEY] = startNextChapter;
         courseState.setChapterIndex(1);
         courseState.setLessonOrQuestionIndex(1);
 
