@@ -6,7 +6,7 @@
     <script>
         var pathToRoot = "../";
     </script>
-    <script srcexpr="pathToRoot + 'js/utility.js?' + (new Date()).valueOf())"/>
+    <script srcexpr="pathToRoot + 'js/utility.js?' + (new Date()).valueOf()"/>
     <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/metadata.js?' +  (new Date()).valueOf())"/>
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/landing/controller.js')"/>
     <script>
