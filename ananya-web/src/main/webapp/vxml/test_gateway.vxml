@@ -12,11 +12,11 @@
             };
 
             this.certificateCourseLandingUri = function() {
-                return  "certificatecourse_landing.vxml?" + (new Date()).valueOf());
+                return  "certificatecourse_landing.vxml";
             };
 
             this.jobAidLandingUri = function() {
-                return "jobaid_landing.vxml?" + (new Date()).valueOf());
+                return "jobaid_landing.vxml";
             };
 
             this.registerUri = function() {
