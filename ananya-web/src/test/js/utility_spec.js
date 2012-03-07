@@ -52,4 +52,13 @@ describe("Utility", function() {
 
     });
 
+    it("when asked for relative URL of non string, should give back same object", function () {
+        var pathToRoot = "../";
+        var nonStringObj = new Object();
+
+        var relativeUrl = Utility.relativePath(pathToRoot,nonStringObj);
+
+        expect(relativeUrl).toEqual(nonStringObj)
+    });
+
 });
