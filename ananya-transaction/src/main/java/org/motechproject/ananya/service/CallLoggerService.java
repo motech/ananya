@@ -11,12 +11,10 @@ import java.util.Collection;
 @Service
 public class CallLoggerService {
     private AllCallLogs allCallLogs;
-    private ReportPublisherService reportPublisher;
 
     @Autowired
-    public CallLoggerService(AllCallLogs allCallLogs, ReportPublisherService reportDataPublisher) {
+    public CallLoggerService(AllCallLogs allCallLogs) {
         this.allCallLogs = allCallLogs;
-        this.reportPublisher = reportDataPublisher;
     }
 
 
@@ -65,10 +63,5 @@ public class CallLoggerService {
 
     public void delete(Collection<CallLog> callLogs) {
         allCallLogs.delete(callLogs);
-    }
-
-    public void publishDisconnectEvent(String callId) {
-        LogData logData = new LogData(LogType.CALL_DURATION, callId);
-        reportPublisher.publishCallDuration(logData);
     }
 }

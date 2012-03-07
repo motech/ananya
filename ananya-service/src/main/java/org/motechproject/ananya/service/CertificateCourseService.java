@@ -13,14 +13,12 @@ import java.util.List;
 public class CertificateCourseService {
     private AllCertificateCourseLogs allCertificateCourseLogs;
     private FrontLineWorkerService frontLineWorkerService;
-    private ReportPublisherService reportPublisherService;
     private SendSMSService sendSMSService;
 
     @Autowired
     public CertificateCourseService(
-            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService, SendSMSService sendSMSService) {
+            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, SendSMSService sendSMSService) {
         this.allCertificateCourseLogs = allCertificateCourseLogs;
-        this.reportPublisherService = reportPublisherService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.sendSMSService = sendSMSService;
     }
@@ -96,11 +94,6 @@ public class CertificateCourseService {
         CertificationCourseStateRequest recentCourseRequest =
                 certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
         saveBookmark(recentCourseRequest);
-    }
-
-    public void publishCertificateCourseData(String callId) {
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
-        reportPublisherService.publishCertificateCourseData(logData);
     }
 
     public CertificationCourseLog getCertificateCourseLogFor(String callId) {

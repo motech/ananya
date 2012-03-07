@@ -3,12 +3,11 @@ package org.motechproject.ananya.web;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.motechproject.ananya.domain.CallDuration;
-import org.motechproject.ananya.domain.CertificationCourseStateRequest;
-import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
+import org.motechproject.ananya.service.ReportPublisherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ public class TransferCallDataController {
     private CallLoggerService callLoggerService;
     private CertificateCourseService certificateCourseService;
     private CallLogCounterService callLogCounterService;
+    private ReportPublisherService reportPublisherService;
 
     private static enum CourseStateDataKeys {
         CHAPTER_INDEX("chapterIndex", Integer.class),
@@ -47,10 +47,11 @@ public class TransferCallDataController {
 
     @Autowired
     public TransferCallDataController(CallLoggerService callLoggerService,
-                    CertificateCourseService certificateCourseService, CallLogCounterService callLogCounterService) {
+                    CertificateCourseService certificateCourseService, CallLogCounterService callLogCounterService, ReportPublisherService reportPublisherService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
         this.callLogCounterService = callLogCounterService;
+        this.reportPublisherService = reportPublisherService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
@@ -96,8 +97,12 @@ public class TransferCallDataController {
     public String receiveIVRDataAtDisconnect(HttpServletRequest request){
         final String callId = request.getParameter("callId");
         receiveIVRData(request);
-        certificateCourseService.publishCertificateCourseData(callId);
-        callLoggerService.publishDisconnectEvent(callId);
+
+        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
+        reportPublisherService.publishCertificateCourseData(logData);
+
+        logData = new LogData(LogType.CALL_DURATION, callId);
+        reportPublisherService.publishCallDuration(logData);
         return "";
     }
 

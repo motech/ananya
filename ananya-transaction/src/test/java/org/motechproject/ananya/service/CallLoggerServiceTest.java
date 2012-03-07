@@ -26,13 +26,10 @@ public class CallLoggerServiceTest {
     @Mock
     private AllCallLogs allCallLogs;
 
-    @Mock
-    private ReportPublisherService reportDataPublisher;
-
     @Before
     public void setUp() {
         initMocks(this);
-        callLoggerService = new CallLoggerService(allCallLogs, reportDataPublisher);
+        callLoggerService = new CallLoggerService(allCallLogs);
     }
 
     @Test
@@ -42,7 +39,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CALL, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -52,7 +48,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.REGISTRATION, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -62,7 +57,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.REGISTRATION, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -72,7 +66,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CERTIFICATECOURSE, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -82,7 +75,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.CERTIFICATECOURSE, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -92,7 +84,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.JOBAID, null);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -102,7 +93,6 @@ public class CallLoggerServiceTest {
 
         Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.JOBAID, end);
         verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-        verifyNoMoreInteractions(reportDataPublisher);
     }
 
     @Test
@@ -146,18 +136,6 @@ public class CallLoggerServiceTest {
         callLoggerService.delete(callLogs);
 
         verify(allCallLogs).delete(callLogs);
-    }
-
-    @Test
-    public void shouldPublishCallDurationDataAtDisconnect(){
-        String callId = "callId";
-        callLoggerService.publishDisconnectEvent(callId);
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportDataPublisher).publishCallDuration(captor.capture());
-
-        LogData logData = captor.getValue();
-        assertEquals(callId, logData.getDataId());
-        assertEquals(LogType.CALL_DURATION, logData.getType());
     }
 
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType callFlowType, final DateTime endTime) {
