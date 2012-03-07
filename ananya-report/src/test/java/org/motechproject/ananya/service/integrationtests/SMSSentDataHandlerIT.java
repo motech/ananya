@@ -43,9 +43,8 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
 
     @After
     public void tearDown(){
+        allFrontLineWorkers.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(CourseItemMeasure.class));
-        template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
     }
 
@@ -71,35 +70,5 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
         List<SMSSentMeasure> smsSentMeasures = template.loadAll(SMSSentMeasure.class);
 
         assertEquals(1, smsSentMeasures.size());
-//        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, msisdn, timeDimension1.getId(),contentName)));
-//        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, msisdn, timeDimension2.getId(),contentName)));
-//
-//        List<CourseItemDimension> courseItemDimensions = template.loadAll(CourseItemDimension.class);
-//        assertEquals(1, courseItemDimensions.size());
-//        CourseItemDimension courseItemDimension = courseItemDimensions.get(0);
-//        assertEquals(contentId, courseItemDimension.getContentId());
-//        assertEquals(contentName, courseItemDimension.getName());
-//        assertEquals(CourseItemType.CHAPTER, courseItemDimension.getType());
-//
-//        List<FrontLineWorkerDimension> frontLineWorkerDimensions = template.loadAll(FrontLineWorkerDimension.class);
-//        FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensions.get(0);
-//        assertEquals(Long.valueOf(msisdn),frontLineWorkerDimension.getMsisdn());
     }
-
-//    private Matcher<CourseItemMeasure> callDurationMeasureMatcher(final CourseItemState event, final String msisdn, final Integer timeDimensionId, final String courseItemName) {
-//        return new BaseMatcher<CourseItemMeasure>() {
-//            @Override
-//            public boolean matches(Object o) {
-//                CourseItemMeasure o1 = (CourseItemMeasure) o;
-//                return o1.getEvent() == event &&
-//                        o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(msisdn)) &&
-//                        o1.getTimeDimension().getId().equals(timeDimensionId) &&
-//                        o1.getCourseItemDimension().getName().equals(courseItemName);
-//            }
-//
-//            @Override
-//            public void describeTo(Description description) {
-//            }
-//        };
-//    }
 }

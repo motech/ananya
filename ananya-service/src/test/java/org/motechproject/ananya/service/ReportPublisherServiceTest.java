@@ -72,4 +72,16 @@ public class ReportPublisherServiceTest {
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
+
+    @Test
+    public void shouldPublishSMSSent() {
+        LogData reportData = new LogData(LogType.SMS_SENT, "callerId");
+
+        reportPublisherService.publishSMSSent(reportData);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportPublisherService.SEND_SMS_SENT_DATA_KEY), captor.capture());
+        LogData captured = captor.getValue();
+        assertEquals(captured, reportData);
+    }
 }
