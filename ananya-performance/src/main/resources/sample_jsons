@@ -1,0 +1,64 @@
+
+[
+	{
+		"token" : 0,
+		"type" : "callDuration",
+		"data" : { "callEvent": "CALL_START" ,"time" :  1331202477476  }
+	},
+	{
+		"token" : 1,
+		"type" : "callDuration",
+		"data" : { "callEvent": "CERTIFICATECOURSE_START" ,"time" :  1331202477476  }
+	},
+	{
+		"token" : 2,
+		"type" : "ccState",
+		"data" :
+		    {
+			   "chapterIndex":0,
+			   "lessonOrQuestionIndex":null,
+			   "questionResponse":null,
+			   "result":null,
+			   "interactionKey":null,
+
+			   "contentId":"0cccd9b516233e4bb1c6c04fed2cc69f",
+			   "contentName":"CertificationCourse",
+			   "contentType": "Course",
+			   "courseItemState":"START",
+			   "contentData":null,
+			   "time":"2012-03-08T10:16:49.972Z",
+			   "certificateCourseId":"1"
+		    }
+	},
+	{
+		"token" : 3,
+		"type" : "ccState",
+		"data" :
+            {
+			   "chapterIndex":0,
+			   "lessonOrQuestionIndex":0,
+			   "questionResponse":null,
+			   "result":null,
+			   "interactionKey":null,
+
+			   "contentId":"0cccd9b516233e4bb1c6c04fed2cc69f",
+			   "contentName":"Chapter 1",
+			   "contentType": "Chapter",
+			   "courseItemState":"START",
+			   "contentData":null,
+			   "time":"2012-03-08T10:16:52.972Z",
+			   "certificateCourseId":"1"
+            }
+	}
+]
+
+
+
+[
+	{
+		"token" : 5,
+		"type" : "callDuration",
+		"data" : { "callEvent": "DISCONNECT", "time" :  1331202477476  }
+	}
+
+]
