@@ -24,7 +24,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     private ConcurrentHashMap<String, String> cachedTreeJsons = new ConcurrentHashMap();
 
     static {
-        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("revision", "parentId", "contentIds"));
+        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
         GSON = gsonBuilder.create();
     }
 
@@ -37,7 +37,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     @GenerateView
     public Node findByName(String treeName) {
         Node rootNode = findNode(treeName, "by_name");
-        return addDescendantsAndContent(rootNode);
+        return assembleDescendantsAndContent(rootNode);
     }
 
     @GenerateView
@@ -48,15 +48,15 @@ public class AllNodes extends MotechBaseRepository<Node> {
     @Override
     public Node get(String id) {
         Node node = super.get(id);
-        return addDescendantsAndContent(node);
+        return assembleDescendantsAndContent(node);
     }
 
-    private Node addDescendantsAndContent(Node node) {
+    private Node assembleDescendantsAndContent(Node node) {
         List<Node> children = findByParentId(node.getId());
         if (children.size() != 0) {
             for (Node childNode : children) {
                 node.addChild(childNode);
-                addDescendantsAndContent(childNode);
+                assembleDescendantsAndContent(childNode);
             }
         }
         addContentToNode(node);
@@ -85,6 +85,50 @@ public class AllNodes extends MotechBaseRepository<Node> {
              cachedTreeJsons.putIfAbsent(treeName, nodeAsJson);
         }
         return nodeAsJson;
+    }
+
+    public String nodeByIdWithItsImmediateChildrenIdsAsJson(String nodeId) throws IOException {
+        String nodeAsJson = cachedTreeJsons.get(nodeId);
+        if(nodeAsJson == null){
+             Node node = nodeByIdWithItsImmediateChildrenIds(nodeId);
+             nodeAsJson = GSON.toJson(node);
+             cachedTreeJsons.putIfAbsent(nodeId, nodeAsJson);
+        }
+        return nodeAsJson;
+    }
+
+    public Node nodeByIdWithItsImmediateChildrenIds(String nodeId) throws IOException {
+        Node node = get(nodeId);
+        List<Node> children = findByParentId(node.getId());
+        if (children.size() != 0) {
+            for (Node childNode : children) {
+                node.addChildId(childNode.getId());
+            }
+        }
+        addContentToNode(node);
+        return node;
+    }
+
+    public String nodeByNameWithItsImmediateChildrenIdsAsJson(String nodeName) throws IOException {
+        String nodeAsJson = cachedTreeJsons.get(nodeName + "_ImmediateChildren");
+        if(nodeAsJson == null){
+             Node node = nodeByIdWithItsImmediateChildrenIds(nodeName);
+             nodeAsJson = GSON.toJson(node);
+             cachedTreeJsons.putIfAbsent(nodeName + "_ImmediateChildren", nodeAsJson);
+        }
+        return nodeAsJson;
+    }
+
+    public Node nodeWithItsImmediateChildrenIds(String nodeName) throws IOException {
+        Node node = findNode(nodeName, "by_name");
+        List<Node> children = findByParentId(node.getId());
+        if (children.size() != 0) {
+            for (Node childNode : children) {
+                node.addChildId(childNode.getId());
+            }
+        }
+        addContentToNode(node);
+        return node;
     }
 
     public void addNodeWithDescendants(Node rootNode) {

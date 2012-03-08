@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <vxml version="2.1" xmlns="http://www.w3.org/2001/vxml"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
-      application="root.vxml">
+      xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
+
+    <var name="callerId" expr="session.connection.remote.uri"/>
+    <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
+    <script>
+        var pathToRoot = "../";
+    </script>
+    <script src="../js/utility.js"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?'+  (new Date()).valueOf())"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + callerId)"/>
+
+    <script srcexpr="Utility.relativePath(pathToRoot, 'js/call_detail_logger.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot, 'js/certificatecourse/data_transfer_list.js')"/>
+    <script>
+        <![CDATA[
+            var dataTransferList = new DataTransferList(metaData);
+            var callDetailLogger = new CallDetailLogger(dataTransferList);
+            callDetailLogger.start_call();
+            function root_disconnect(){
+                dataTransferList.setDataToPostUrlForDisconnect();
+                callDetailLogger.disconnect();
+            }
+        ]]>
+    </script>
 
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/course.js')"/>
@@ -122,4 +144,19 @@
             <goto next="#controller"/>
         </block>
     </form>
+
+    <catch event = "connection.disconnect.hangup">
+        <log>***** Disconnect event caught ******</log>
+        <script>
+            root_disconnect();
+        </script>
+        <var name="dataToPost" expr="dataTransferList.dataToPost()"/>
+        <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
+        <!--<data name="rootHangup" srcexpr="Utility.relativePath(dataTransferList.dataPostUrl())" method="post" namelist="dataToPost callerId callId"/>-->
+        <script>
+            <![CDATA[
+                dataTransferList.drain();
+            ]]>
+        </script>
+    </catch>
 </vxml>
