@@ -2,6 +2,7 @@ package org.motechproject.ananya.web;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.response.CallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,10 +76,10 @@ public class DynamicJsController {
         response.setContentType("application/javascript");
 
         frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
-
+        CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
         return new ModelAndView("caller_data")
-                .addObject("bookmark", frontLineWorkerService.getBookmark(msisdn).asJson())
-                .addObject("isCallerRegistered", frontLineWorkerService.isCallerRegistered(msisdn))
-                .addObject("scoresByChapter", frontLineWorkerService.scoresByChapter(msisdn));
+                .addObject("bookmark", callerData.getBookmark())
+                .addObject("isCallerRegistered", callerData.isCallerRegistered())
+                .addObject("scoresByChapter", callerData.getScoresByChapter());
     }
 }
