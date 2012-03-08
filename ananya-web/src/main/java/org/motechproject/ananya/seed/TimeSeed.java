@@ -19,7 +19,7 @@ public class TimeSeed {
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
 
         while (DateUtil.isOnOrBefore(startDate, endDate)) {
-            allTimeDimensions.makeFor(startDate.toDateTimeAtCurrentTime());
+            allTimeDimensions.addOrUpdate(startDate.toDateTimeAtCurrentTime());
             startDate = startDate.plusDays(1);
         }
     }
