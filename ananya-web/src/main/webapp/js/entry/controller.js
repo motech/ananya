@@ -13,15 +13,25 @@ var EntryController = function(callerData , metadata) {
     };
 
     this.decideFlowForJobAid = function() {
-        if (this.isCallerRegistered())
+        if(this.hasReachedMaxUsage())
+            return "#max_usage";
+        else if (this.isCallerRegistered())
             return "#registered";
         else
             return "#unregistered";
     };
 
+    this.hasReachedMaxUsage = function() {
+        return true;
+    };
+
     this.isCallerRegistered = function() {
         return callerData.isRegistered == "true";
     };
+
+    this.maxUsagePrompt = function() {
+        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["max.usage.prompt"];
+    }
 
     this.jobAidWelcomePrompt = function() {
         return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome"];
@@ -53,9 +63,5 @@ var EntryController = function(callerData , metadata) {
 
     this.invalidInputPrompt = function() {
         return metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["invalid.input.retry.audio"];
-    }
-
-    this.register = function() {
-        return
     }
 };

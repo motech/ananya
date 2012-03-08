@@ -3,6 +3,7 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd">
 
+    <var name="operator" expr="session.site"/>
     <var name="callerId" expr="session.connection.remote.uri"/>
     <var name="callId" expr="callerId + '-' + (new Date()).valueOf()"/>
 
@@ -11,7 +12,7 @@
     </script>
     <script src="../js/utility.js"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?'+  (new Date()).valueOf())"/>
-    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri)"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri + 'operator=' + session.site)"/>
     
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/call_detail_logger.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/certificatecourse/data_transfer_list.js')"/>
