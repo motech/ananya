@@ -68,9 +68,11 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     public void tearDown(){
         allCertificateCourseLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.flush();
         template.deleteAll(template.loadAll(CourseItemMeasure.class));
+        template.flush();
         template.deleteAll(template.loadAll(CourseItemDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.flush();
     }
 
     @Test
@@ -104,8 +106,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         allCertificateCourseLogs.add(courseLog);
         allCertificateCourseLogs.add(new CertificationCourseLog(msisdn, calledNumber, null, null, "", "someOtherCallId", ""));
 
-        TimeDimension timeDimension1 = allTimeDimensions.makeFor(now);
-        TimeDimension timeDimension2 = allTimeDimensions.makeFor(now.plusDays(26));
+        TimeDimension timeDimension1 = allTimeDimensions.addOrUpdate(now);
+        TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));
 
         LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();

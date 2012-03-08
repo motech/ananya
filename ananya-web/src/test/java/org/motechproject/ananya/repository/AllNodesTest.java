@@ -2,7 +2,6 @@ package org.motechproject.ananya.repository;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,32 +39,31 @@ public class AllNodesTest extends SpringIntegrationTest {
         root = new Node(COURSE_NAME);
         root.put("message", "Welcome to the course.");
         allNodes.add(root);
+        markForDeletion(root);
 
         Node rN1 = new Node("Level 1");
         rN1.put("message", "Welcome to level1 in the course.");
         root.addChild(rN1);
         allNodes.add(rN1);
+        markForDeletion(rN1);
 
         Node rN2 = new Node("Level 2");
         rN2.put("message", "Welcome to level2 in the course.");
         root.addChild(rN2);
         allNodes.add(rN2);
+        markForDeletion(rN2);
 
         Node rN1N1 = new Node("Chapter 1");
         rN1N1.put("message", "Welcome to chapter1 in level1.");
         rN1.addChild(rN1N1);
         allNodes.add(rN1N1);
+        markForDeletion(rN1N1);
 
         Node rN1N2 = new Node("Chapter 2");
         rN1N2.put("message", "Welcome to chapter2 in level1.");
         rN1.addChild(rN1N2);
         allNodes.add(rN1N2);
-    }
-
-    @After
-    public void tearDown() {
-        allNodes.removeAll();
-        allStringContents.removeAll();
+        markForDeletion(rN1N2);
     }
 
     @Test

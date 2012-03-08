@@ -56,8 +56,10 @@ public class CallDurationHandlerIT extends SpringIntegrationTest{
     @After
     public void tearDown(){
         allCallLogs.removeAll();
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
+        template.flush();
+        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.flush();
     }
 
     @Test

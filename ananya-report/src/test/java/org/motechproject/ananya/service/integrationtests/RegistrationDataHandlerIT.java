@@ -76,8 +76,9 @@ public class RegistrationDataHandlerIT {
         allFrontLineWorkers.removeAll();
         allRegistrationLogs.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.flush();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.flush();
     }
 
     @Test
@@ -134,7 +135,7 @@ public class RegistrationDataHandlerIT {
 
         LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
-        allTimeDimensions.makeFor(registeredDate);
+        allTimeDimensions.addOrUpdate(registeredDate);
 
         LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
         Map<String, Object> map = new HashMap<String, Object>();

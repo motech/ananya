@@ -47,7 +47,7 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     public void tearDown(){
         allFrontLineWorkers.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.flush();
     }
 
     @Test
@@ -59,7 +59,7 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
 
         DateTime now = DateTime.now();
-        TimeDimension timeDimension = allTimeDimensions.makeFor(now);
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(now);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "airtel", "Rani", "REGISTERED");
 
         LogData logData = new LogData(LogType.SMS_SENT, msisdn);
