@@ -31,7 +31,6 @@ public class SendSMSClientTest {
 
     @Test
     public void shouldSendSingleSMS(){
-
         String mobileNumber = "9876543210";
         String smsMessage = "Hello";
         String smsRefNum = "141241";
@@ -41,13 +40,6 @@ public class SendSMSClientTest {
         sendSMSClient.sendSingleSMS(mobileNumber, smsMessage, smsRefNum);
 
         verify(frontLineWorkerService).addSMSReferenceNumber(argThat(is(mobileNumber)), argThat(is(smsRefNum)));
-//        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-//        verify(reportPublisherService).publishSMSSent(captor.capture());
-//
-//        LogData logData = captor.getValue();
-//        Assert.assertEquals(logData.getType(), LogType.SMS_SENT);
-//        Assert.assertEquals(logData.getDataId(), mobileNumber);
-
     }
 
     @Test
