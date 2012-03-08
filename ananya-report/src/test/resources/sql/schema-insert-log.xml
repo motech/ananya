@@ -4,14 +4,4 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-    <!--<changeSet context="setup" author="ThoughtWorks" id="4" >-->
-        <!--<loadData encoding="UTF-8" file="src/test/resources/data/dimension-location.csv" tableName="location_dimension" schemaName="report">-->
-            <!--<column name="location_id" type="STRING"/>-->
-            <!--<column name="district" type="STRING"/>-->
-            <!--<column name="block" type="STRING"/>-->
-            <!--<column name="panchayat" type="STRING"/>-->
-        <!--</loadData>-->
-    <!--</changeSet>-->
-
-
 </databaseChangeLog>
