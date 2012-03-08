@@ -34,11 +34,9 @@
         </script>
         <var name="dataToPost" expr="dataTransferList.dataToPost()"/>
         <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
-        <data name="rootHangup" srcexpr="Utility.relativePath(dataTransferList.dataPostUrl())" method="post" namelist="dataToPost callerId callId"/>
+        <data name="rootHangup" srcexpr="Utility.relativePath(pathToRoot, dataTransferList.dataPostUrl())" method="post" namelist="dataToPost callerId callId"/>
         <script>
-            <![CDATA[
-                dataTransferList.drain();
-            ]]>
+            dataTransferList.drain();
         </script>
     </catch>
 </vxml>

@@ -91,7 +91,7 @@ public class TransferCallDataController {
 
         HandleCallDuration(durations);
         
-        return "";
+        return "<dummy/>";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
@@ -101,7 +101,7 @@ public class TransferCallDataController {
         receiveIVRData(request);
         reportPublisherService.publishCallDisconnectEvent(callId);
 
-        return "";
+        return "<dummy/>";
     }
 
 
