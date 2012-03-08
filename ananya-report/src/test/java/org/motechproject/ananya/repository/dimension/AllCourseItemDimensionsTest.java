@@ -43,5 +43,22 @@ public class AllCourseItemDimensionsTest extends SpringIntegrationTest{
         assertEquals(chapter.getId(), chapterNew.getId());
     }
 
+    @Test
+    public void shouldBeAbleToAddAnotherEntryOfQuizTypeWithTheSameChapterNameIfQuizTypeIsNotPresent() {
+        String name = "chapter 1";
+        String contentId = "contentId";
+        CourseItemType type = CourseItemType.CHAPTER;
+        String contentIdForQuiz = "contentIdForQuiz";
+        CourseItemType quizType = CourseItemType.QUIZ;
+
+        CourseItemDimension chapter = allCourseItemDimensions.getOrMakeFor(name, contentId, type);
+        CourseItemDimension chapterQuiz = allCourseItemDimensions.getOrMakeFor(name, contentIdForQuiz, quizType);
+        CourseItemDimension chapterQuizAgain = allCourseItemDimensions.getOrMakeFor(name, contentIdForQuiz, quizType);
+
+        Integer expectedIdForQuiz = chapter.getId() + 1;
+        assertEquals(expectedIdForQuiz, chapterQuiz.getId());
+        assertEquals(chapterQuiz.getId(),chapterQuizAgain.getId());
+    }
+
 
 }

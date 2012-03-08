@@ -71,7 +71,7 @@
             <column name="type" type="varchar(30)"/>
         </createTable>
 
-        <addUniqueConstraint tableName="course_item_dimension" columnNames="name" constraintName="unq_name"/>
+        <addUniqueConstraint tableName="course_item_dimension" columnNames="name,type" constraintName="unq_name_type"/>
         <addUniqueConstraint tableName="course_item_dimension" columnNames="content_id" constraintName="unq_content_id"/>
     </changeSet>
 
