@@ -120,6 +120,51 @@
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSampler>
           <hashTree/>
+          <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="send_transfer_data" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="callId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">12341331201330077</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">callId</stringProp>
+                </elementProp>
+                <elementProp name="callerId" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">1234</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">callerId</stringProp>
+                </elementProp>
+                <elementProp name="dataToPost" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value"> [ 	{ 		token : 0 		type : &quot;callDuration&quot; 		data : { &quot;callEvent&quot;: &quot;CALL_START&quot; ,&quot;time&quot; :  1331202477476  } 	}, 	{ 		token : 1 		type : &quot;callDuration&quot; 		data : { &quot;callEvent&quot;: &quot;CERTIFICATECOURSE_START&quot; ,&quot;time&quot; :  1331202477476  } 	}, 	{ 		token : 2, 		type : &quot;ccState&quot;, 		data :  		{ 			{ 			   &quot;chapterIndex&quot;:0, 			   &quot;lessonOrQuestionIndex&quot;:null, 			   &quot;questionResponse&quot;:null, 			   &quot;result&quot;:null, 			   &quot;interactionKey&quot;:null,  			   &quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed2cc69f&quot;, 			   &quot;contentName&quot;:&quot;CertificationCourse&quot;, 			   &quot;contentType&quot;: &quot;Course&quot;, 			   &quot;courseItemState&quot;:&quot;START&quot;, 			   &quot;contentData&quot;:null, 			   &quot;time&quot;:&quot;2012-03-08T10:16:49.972Z&quot;, 			   &quot;certificateCourseId&quot;:&quot;1&quot; 			} 		} 	}, 	{ 		token : 3, 		type : &quot;ccState&quot;, 		data :  		{ 			{ 			   &quot;chapterIndex&quot;:0, 			   &quot;lessonOrQuestionIndex&quot;:0, 			   &quot;questionResponse&quot;:null, 			   &quot;result&quot;:null, 			   &quot;interactionKey&quot;:null,  			   &quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed2cc69f&quot;, 			   &quot;contentName&quot;:&quot;Chapter 1&quot;, 			   &quot;contentType&quot;: &quot;Chapter&quot;, 			   &quot;courseItemState&quot;:&quot;START&quot;, 			   &quot;contentData&quot;:null, 			   &quot;time&quot;:&quot;2012-03-08T10:16:52.972Z&quot;, 			   &quot;certificateCourseId&quot;:&quot;1&quot; 			} 		} 	} ]  </stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">dataToPost</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
+            <stringProp name="HTTPSampler.port">9979</stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/ananya/transferdata</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
+            <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
+            <stringProp name="HTTPSampler.mimetype"></stringProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSampler>
+          <hashTree/>
           <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="from_unregistered_to_chap1_results_table" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
@@ -183,51 +228,6 @@
             </objProp>
             <stringProp name="filename"></stringProp>
           </ResultCollector>
-          <hashTree/>
-          <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="fetch_certificate_course_data" enabled="true">
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="callId" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">12341331201330077</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">callId</stringProp>
-                </elementProp>
-                <elementProp name="callerId" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">1234</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">callerId</stringProp>
-                </elementProp>
-                <elementProp name="dataToPost" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">{            &quot;chapterIndex&quot;:0,            &quot;lessonOrQuestionIndex&quot;:0,            &quot;questionResponse&quot;:0,            &quot;result&quot;:null,            &quot;interactionKey&quot;:null,             &quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed2cc69f&quot;,            &quot;contentName&quot;:&quot;CertificationCourse&quot;,            &quot;contentType&quot;: &quot;Course&quot;,            &quot;courseItemState&quot;:&quot;START&quot;,            &quot;contentData&quot;:null,            &quot;time&quot;:&quot;2012-03-08T10:16:49.972Z&quot;,            &quot;certificateCourseId&quot;:&quot;1&quot;        }</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">dataToPost</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain">127.0.0.1</stringProp>
-            <stringProp name="HTTPSampler.port">9979</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/ananya/transferdata</stringProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
-            <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
-            <stringProp name="HTTPSampler.mimetype"></stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          </HTTPSampler>
           <hashTree/>
         </hashTree>
       </hashTree>

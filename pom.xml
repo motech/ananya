@@ -8,11 +8,11 @@
     <version>0.1-SNAPSHOT</version>
     <modules>
         <module>ananya-flw</module>
-        <module>ananya-web</module>
         <module>ananya-report</module>
         <module>ananya-transaction</module>
         <module>ananya-service</module>
         <module>ananya-performance</module>
+        <module>ananya-web</module>
     </modules>
     <name>Ananya</name>
 
