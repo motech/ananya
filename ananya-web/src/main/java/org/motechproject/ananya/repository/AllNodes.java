@@ -87,48 +87,16 @@ public class AllNodes extends MotechBaseRepository<Node> {
         return nodeAsJson;
     }
 
-    public String nodeByIdWithItsImmediateChildrenIdsAsJson(String nodeId) throws IOException {
-        String nodeAsJson = cachedTreeJsons.get(nodeId);
+    public String nodeWithoutChildrenAsJson(String nodeName) throws  IOException {
+        final String mapKey = nodeName + "_without_children";
+        String nodeAsJson = cachedTreeJsons.get(mapKey);
         if(nodeAsJson == null){
-             Node node = nodeByIdWithItsImmediateChildrenIds(nodeId);
+             Node node = findNode(nodeName, "by_name");
+             addContentToNode(node);
              nodeAsJson = GSON.toJson(node);
-             cachedTreeJsons.putIfAbsent(nodeId, nodeAsJson);
+             cachedTreeJsons.putIfAbsent(mapKey, nodeAsJson);
         }
         return nodeAsJson;
-    }
-
-    public Node nodeByIdWithItsImmediateChildrenIds(String nodeId) throws IOException {
-        Node node = get(nodeId);
-        List<Node> children = findByParentId(node.getId());
-        if (children.size() != 0) {
-            for (Node childNode : children) {
-                node.addChildId(childNode.getId());
-            }
-        }
-        addContentToNode(node);
-        return node;
-    }
-
-    public String nodeByNameWithItsImmediateChildrenIdsAsJson(String nodeName) throws IOException {
-        String nodeAsJson = cachedTreeJsons.get(nodeName + "_ImmediateChildren");
-        if(nodeAsJson == null){
-             Node node = nodeByIdWithItsImmediateChildrenIds(nodeName);
-             nodeAsJson = GSON.toJson(node);
-             cachedTreeJsons.putIfAbsent(nodeName + "_ImmediateChildren", nodeAsJson);
-        }
-        return nodeAsJson;
-    }
-
-    public Node nodeWithItsImmediateChildrenIds(String nodeName) throws IOException {
-        Node node = findNode(nodeName, "by_name");
-        List<Node> children = findByParentId(node.getId());
-        if (children.size() != 0) {
-            for (Node childNode : children) {
-                node.addChildId(childNode.getId());
-            }
-        }
-        addContentToNode(node);
-        return node;
     }
 
     public void addNodeWithDescendants(Node rootNode) {

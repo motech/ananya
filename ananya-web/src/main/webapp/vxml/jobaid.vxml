@@ -26,7 +26,11 @@
         ]]>
     </script>
 
-    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data_without_levels.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_level_data.js?levelNumber=1')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_level_data.js?levelNumber=2')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_level_data.js?levelNumber=3')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_level_data.js?levelNumber=4')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/course.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/call_context.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/prompt_context.js')"/>

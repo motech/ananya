@@ -6,6 +6,7 @@ import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,6 +61,22 @@ public class DynamicJsController {
     public String serveJobAidCourseData(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
         return String.format("var courseData = %s;", allNodes.nodeAsJson("JobAidCourse"));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data_without_levels.js")
+    @ResponseBody
+    public String serveJobAidCourseDataWithoutLevels(HttpServletResponse response) throws Exception {
+        response.setContentType("application/javascript");
+        return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("JobAidCourse"));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/jobaid_level_data.js")
+    @ResponseBody
+    public String serveJobAidLevelData(HttpServletRequest request,
+                                       HttpServletResponse response) throws Exception {
+        String levelNumber = request.getParameter("levelNumber");
+        response.setContentType("application/javascript");
+        return String.format("courseData.children[%s] = %s", Integer.parseInt(levelNumber)-1, allNodes.nodeAsJson("level " + levelNumber));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/certification_course_data.js")
