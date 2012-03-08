@@ -13,7 +13,7 @@ public class AllCourseItemDimensions {
     private DataAccessTemplate template;
 
     public CourseItemDimension getOrMakeFor(String name, String contentId, CourseItemType type) {
-        CourseItemDimension dimension = (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME, new String[]{"name"}, new Object[]{name});
+        CourseItemDimension dimension = (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME_AND_TYPE, new String[]{"name","type"}, new Object[]{name,type});
         if (dimension == null) {
             dimension = new CourseItemDimension(name, contentId, type);
             template.save(dimension);

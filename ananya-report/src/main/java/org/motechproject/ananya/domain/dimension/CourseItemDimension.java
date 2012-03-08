@@ -6,10 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "course_item_dimension")
-@NamedQuery(name = CourseItemDimension.FIND_BY_NAME, query = "select cid from CourseItemDimension cid where cid.name=:name")
+@NamedQuery(name = CourseItemDimension.FIND_BY_NAME_AND_TYPE, query = "select cid from CourseItemDimension cid where cid.name=:name and cid.type=:type")
 public class CourseItemDimension {
 
-    public static final String FIND_BY_NAME = "find.by.name";
+    public static final String FIND_BY_NAME_AND_TYPE = "find.by.name.and.type";
 
     @Id
     @Column(name="id")
