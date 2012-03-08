@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +12,6 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     private Integer chapterIndex;
     private Integer lessonOrQuestionIndex;
-    private String questionResponse;
     private Boolean result;
     private String interactionKey;
 
@@ -70,10 +69,6 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     public Integer getLessonOrQuestionIndex() {
         return lessonOrQuestionIndex;
-    }
-
-    public String getQuestionResponse() {
-        return questionResponse;
     }
 
     public Boolean isResult() {

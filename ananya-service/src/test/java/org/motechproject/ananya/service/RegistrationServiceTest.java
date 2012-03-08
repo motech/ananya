@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.RegistrationRequest;
+import org.motechproject.ananya.request.RegistrationRequest;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.request.LogRegistrationRequest;
 import org.motechproject.ananya.requests.LogData;

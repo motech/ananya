@@ -6,13 +6,11 @@ import org.mockito.Mock;
 import org.motechproject.ananya.webservice.SendSMSClient;
 import org.motechproject.model.MotechEvent;
 
-import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 

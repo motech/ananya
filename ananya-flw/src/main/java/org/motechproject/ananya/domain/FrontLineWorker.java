@@ -13,6 +13,8 @@ import java.util.Map;
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
 
+    public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
+
     @JsonProperty
     private String name;
 

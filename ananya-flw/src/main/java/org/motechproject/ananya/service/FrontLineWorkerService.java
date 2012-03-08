@@ -4,6 +4,7 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,21 @@ import java.util.Map;
 
 @Service
 public class FrontLineWorkerService {
-    public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
+
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
+
 
     private AllFrontLineWorkers allFrontLineWorkers;
     private AllLocations allLocations;
+    private SendSMSService sendSMSService;
+    private SMSPublisherService smsPublisherService;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, SendSMSService sendSMSService,SMSPublisherService smsPublisherService) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.allLocations = allLocations;
+        this.sendSMSService = sendSMSService;
+        this.smsPublisherService = smsPublisherService;
     }
 
     public RegistrationStatus getStatus(String msisdn) {
@@ -130,6 +136,7 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         frontLineWorker.addSMSReferenceNumber(smsReferenceNumber);
         save(frontLineWorker);
+        smsPublisherService.publishSMSSent(msisdn);
     }
 
     public int getCurrentCourseAttempt(String msisdn) {
@@ -140,5 +147,30 @@ public class FrontLineWorkerService {
     public String getSMSReferenceNumber(String msisdn, int courseAttempt) {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         return frontLineWorker.smsReferenceNumber(courseAttempt);
+    }
+
+    public void saveScore(CertificateCourseStateFlwRequest request){
+        String interactionKey = request.getInteractionKey();
+        Integer chapterIndex = request.getChapterIndex();
+        Integer lessonOrQuestionIndex = request.getLessonOrQuestionIndex();
+        Boolean result = request.getResult();
+        String callId = request.getCallId();
+        String callerId = request.getCallerId();
+
+        if("startQuiz".equals(interactionKey)) {
+            resetScoresForChapterIndex(callerId, chapterIndex);
+
+        } else if ("playAnswerExplanation".equals(interactionKey)) {
+            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, callId);
+            addScore(callerId, score);
+        } else if ("playCourseResult".equals(interactionKey)) {
+            FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+            int totalScore = totalScore(callerId);
+            int currentCertificateCourseAttempts = incrementCertificateCourseAttempts(frontLineWorker);
+
+            if(totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
+                sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
+            }
+        }
     }
 }

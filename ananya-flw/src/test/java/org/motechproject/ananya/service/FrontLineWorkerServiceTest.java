@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 
@@ -16,7 +17,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 
 public class FrontLineWorkerServiceTest {
 
@@ -29,7 +29,7 @@ public class FrontLineWorkerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers,allLocations);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers,allLocations, null, null);
     }
 
     @Test

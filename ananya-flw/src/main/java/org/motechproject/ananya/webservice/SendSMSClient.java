@@ -1,9 +1,6 @@
 package org.motechproject.ananya.webservice;
 
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.ReportPublisherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +10,11 @@ public class SendSMSClient {
     public static final String SENDER_ID = "correctSenderIDHere"; //TODO
     private OnMobileSendSMSService smsService;
     private FrontLineWorkerService frontLineWorkerService;
-    private ReportPublisherService reportPublisherService;
 
     @Autowired
-    public SendSMSClient(OnMobileSendSMSService smsService, FrontLineWorkerService frontLineWorkerService, ReportPublisherService reportPublisherService) {
+    public SendSMSClient(OnMobileSendSMSService smsService, FrontLineWorkerService frontLineWorkerService) {
         this.smsService = smsService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.reportPublisherService = reportPublisherService;
     }
 
     public void sendSingleSMS(String mobileNumber, String smsMessage, String smsReferenceNumber) {
@@ -31,8 +26,6 @@ public class SendSMSClient {
 
         try {
             frontLineWorkerService.addSMSReferenceNumber(mobileNumber, smsReferenceNumber);
-            LogData logData = new LogData(LogType.SMS_SENT, mobileNumber);
-            reportPublisherService.publishSMSSent(logData);
         } catch (Exception e){
             e.printStackTrace();
         }

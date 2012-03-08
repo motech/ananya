@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallDuration;
 import org.motechproject.ananya.domain.CallEvent;
-import org.motechproject.ananya.domain.CertificationCourseStateRequest;
+import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;

@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -55,6 +56,6 @@ public class SendSMSServiceTest {
         parameters.put(SendSMSHandler.PARAMETER_SMS_MESSAGE, message + refNum);
         parameters.put(SendSMSHandler.PARAMETER_SMS_REFERENCE_NUMBER, refNum);
 
-        verify(context).send(argThat(is(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS)), argThat(is(parameters)));
+        verify(context).send(argThat(Matchers.is(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS)), argThat(is(parameters)));
     }
 }

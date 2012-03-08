@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -86,6 +87,7 @@ public class TransferCallDataController {
         }
 
         certificateCourseService.saveState(certificationCourseStateRequests);
+
 
         HandleCallDuration(durations);
         

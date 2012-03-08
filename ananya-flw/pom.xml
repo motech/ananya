@@ -11,5 +11,13 @@
     <artifactId>ananya-flw</artifactId>
     <name>Ananya FLW</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-api</artifactId>
+            <version>0.9-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>

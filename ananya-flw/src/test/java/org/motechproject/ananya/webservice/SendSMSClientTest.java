@@ -2,14 +2,11 @@ package org.motechproject.ananya.webservice;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.ReportPublisherService;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
@@ -26,13 +23,10 @@ public class SendSMSClientTest {
     @Mock
     private FrontLineWorkerService frontLineWorkerService;
 
-    @Mock
-    private ReportPublisherService reportPublisherService;
-
     @Before
     public void setUp(){
         initMocks(this);
-        sendSMSClient = new SendSMSClient(onMobileSendSMSService,frontLineWorkerService,reportPublisherService);
+        sendSMSClient = new SendSMSClient(onMobileSendSMSService,frontLineWorkerService);
     }
 
     @Test
@@ -47,12 +41,12 @@ public class SendSMSClientTest {
         sendSMSClient.sendSingleSMS(mobileNumber, smsMessage, smsRefNum);
 
         verify(frontLineWorkerService).addSMSReferenceNumber(argThat(is(mobileNumber)), argThat(is(smsRefNum)));
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(reportPublisherService).publishSMSSent(captor.capture());
-
-        LogData logData = captor.getValue();
-        assertEquals(logData.getType(), LogType.SMS_SENT);
-        assertEquals(logData.getDataId(), mobileNumber);
+//        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+//        verify(reportPublisherService).publishSMSSent(captor.capture());
+//
+//        LogData logData = captor.getValue();
+//        Assert.assertEquals(logData.getType(), LogType.SMS_SENT);
+//        Assert.assertEquals(logData.getDataId(), mobileNumber);
 
     }
 

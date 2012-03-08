@@ -3,6 +3,8 @@ package org.motechproject.ananya.service;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
+import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
+import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,38 +25,22 @@ public class CertificateCourseService {
         this.sendSMSService = sendSMSService;
     }
 
-    public void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
+    private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
         final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
                 courseStateRequest.getChapterIndex(), courseStateRequest.getLessonOrQuestionIndex());
 
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 
-    private void saveScores(final CertificationCourseStateRequest courseStateRequest) {
+    private CertificateCourseStateFlwRequest getCertificateCourseStateFlwRequest(final CertificationCourseStateRequest courseStateRequest) {
+
         final Integer chapterIndex = courseStateRequest.getChapterIndex();
         final Integer lessonOrQuestionIndex = courseStateRequest.getLessonOrQuestionIndex();
         final Boolean result = courseStateRequest.isResult();
         final String callerId = courseStateRequest.getCallerId();
-
-        String interactionKey = courseStateRequest.getInteractionKey();
-        if("startQuiz".equals(interactionKey)) {
-            frontLineWorkerService.resetScoresForChapterIndex(callerId, chapterIndex);
-
-        } else if ("playAnswerExplanation".equals(interactionKey)) {
-            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, courseStateRequest.getCallId());
-            frontLineWorkerService.addScore(callerId, score);
-
-        } else if ("playCourseResult".equals(interactionKey)) {
-            if(!frontLineWorkerService.getBookmark(callerId).getType().equals("playCourseResult")) {
-                FrontLineWorker frontLineWorker = frontLineWorkerService.getFrontLineWorker(callerId);
-                int totalScore = frontLineWorkerService.totalScore(callerId);
-                int currentCertificateCourseAttempts = frontLineWorkerService.incrementCertificateCourseAttempts(frontLineWorker);
-
-                if(totalScore >= FrontLineWorkerService.CERTIFICATE_COURSE_PASSING_SCORE) {
-                    sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
-                }
-            }
-        }
+        final String callId = courseStateRequest.getCallId();
+        final String interactionKey = courseStateRequest.getInteractionKey();
+        return new CertificateCourseStateFlwRequest(chapterIndex, lessonOrQuestionIndex, result, interactionKey, callId, callerId);
     }
 
     public void saveState(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
@@ -62,6 +48,19 @@ public class CertificateCourseService {
         if (certificationCourseStateRequestCollection == null || certificationCourseStateRequestCollection.size() == 0)
             return;
 
+        for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
+            CertificateCourseStateFlwRequest certificateCourseStateFlwRequest = getCertificateCourseStateFlwRequest(certificationCourseStateRequest);
+            frontLineWorkerService.saveScore(certificateCourseStateFlwRequest);
+        }
+
+        CertificationCourseStateRequest recentCourseRequest =
+                certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
+        saveBookmark(recentCourseRequest);
+
+        SaveCourseCertificateLog(certificationCourseStateRequestCollection);
+    }
+
+    private void SaveCourseCertificateLog(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
         CertificationCourseLog courseLogDocument;
         CertificationCourseStateRequest courseStateRequest = certificationCourseStateRequestCollection.get(0);
         final String callId = courseStateRequest.getCallId();
@@ -75,8 +74,6 @@ public class CertificateCourseService {
         }
 
         for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
-            saveScores(certificationCourseStateRequest);
-
             // Only a bookmark, not a log item. continue
             if (!StringUtils.isBlank(certificationCourseStateRequest.getContentId())) {
                 CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(
@@ -92,11 +89,5 @@ public class CertificateCourseService {
             }
         }
         allCertificateCourseLogs.update(courseLogDocument);
-
-        CertificationCourseStateRequest recentCourseRequest =
-                certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
-        saveBookmark(recentCourseRequest);
     }
-
-
 }

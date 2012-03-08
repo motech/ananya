@@ -5,16 +5,4 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <util:properties id="ananyaServiceProperties" location="classpath:/ananya-service.properties"/>
-
-    <bean id="smsService"
-          class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
-        <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
-        <property name="wsdlDocumentUrl"
-                  value="http://localhost:9979/ananya/services/MockOnMobileSendSMSService?wsdl"/>
-        <property name="namespaceUri" value="http://webservice.ananya.motechproject.org/"/>
-        <property name="serviceName" value="MockOnMobileSendSMSServiceService"/>
-        <property name="portName" value="MockOnMobileSendSMSServicePort"/>
-        <property name="lookupServiceOnStartup" value="false"/>
-    </bean>
 </beans>
