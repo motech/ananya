@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,8 @@ import java.util.Properties;
 @Controller
 @RequestMapping(value = "/generated/js")
 public class DynamicJsController {
+
+    private static Logger log = LoggerFactory.getLogger(DynamicJsController.class);
 
     private AllNodes allNodes;
     private FrontLineWorkerService frontLineWorkerService;
@@ -74,6 +78,7 @@ public class DynamicJsController {
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
         response.setContentType("application/javascript");
+        log.info("fetching caller data for: "+msisdn);
 
         frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
