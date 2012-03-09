@@ -73,7 +73,6 @@
         </createTable>
 
         <addUniqueConstraint tableName="course_item_dimension" columnNames="name,type" constraintName="unq_name_type"/>
-        <addUniqueConstraint tableName="course_item_dimension" columnNames="content_id" constraintName="unq_content_id"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="6">
