@@ -26,6 +26,7 @@
             <column name="month" type="smallint"/>
             <column name="year" type="smallint"/>
         </createTable>
+        <addUniqueConstraint tableName="time_dimension" columnNames="day,week,month,year" constraintName="unq_day_week_month_year"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="3">
@@ -131,9 +132,6 @@
         <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_time_id">
             <column name="time_id"/>
         </createIndex>
-    </changeSet>
-    <changeSet context="setup" author="ThoughtWorks" id="9">
-        <addUniqueConstraint tableName="item_dimension" columnNames="day,week,month,year" constraintName="unq_day_week_month_year"/>
     </changeSet>
 
 </databaseChangeLog>
