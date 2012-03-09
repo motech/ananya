@@ -12,16 +12,4 @@ public class FrontLineWorkerTest {
         assertNotNull(flw.bookMark());
         assertThat(flw.bookMark(), is(EmptyBookmark.class));
     }
-
-    @Test
-    public void shouldHaveStartedCertificationCourse() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI, "locationId","");
-        flw.status(RegistrationStatus.REGISTERED);
-
-        assertThat(flw.bookMark(), is(EmptyBookmark.class));
-        assertFalse(flw.hasStartedCertificationCourse());
-
-        flw.addBookMark(new BookMark("lesson",0,1));
-        assertTrue(flw.hasStartedCertificationCourse());
-    }
 }

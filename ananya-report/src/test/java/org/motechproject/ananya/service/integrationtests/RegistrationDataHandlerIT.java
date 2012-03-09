@@ -159,7 +159,6 @@ public class RegistrationDataHandlerIT {
         assertEquals((int) timeDimension.getYear(), registeredDate.getYear());
 
         assertEquals(frontLineWorkerDimension.getMsisdn(), new Long(555));
-        assertEquals(frontLineWorkerDimension.getOperator(), "");
         assertEquals(frontLineWorkerDimension.getName(), "Name");
         assertEquals(frontLineWorkerDimension.getStatus(), RegistrationStatus.REGISTERED.toString());
 

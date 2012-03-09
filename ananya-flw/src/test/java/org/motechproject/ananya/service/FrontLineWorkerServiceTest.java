@@ -11,6 +11,8 @@ import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
 
+import java.io.StreamCorruptedException;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -84,20 +86,6 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers,times(0)).add(frontLineWorkerArgumentCaptor.capture());
     }
 
-    @Test
-    public void shouldResetScoresWhenStartingCourse() throws Exception {
-        String msisdn = "123" ;
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "");
-        mockWorker.status(RegistrationStatus.REGISTERED);
-        mockWorker.reportCard().addScore(new ReportCard.Score("0", "5", true));
-
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
-        frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
-
-        assertTrue(mockWorker.reportCard().scores().size() == 0);
-    }
-
-    @Test
     public void shouldClearTheScoresOfTheChapterOnStartingAQuizForThatChapter(){
         String callerId = "callerId";
         int chapterIndex = 1;
@@ -231,5 +219,19 @@ public class FrontLineWorkerServiceTest {
         CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, "airtel");
 
         assertEquals(true,(boolean) callerData.hasReachedMaxUsageForMonth());
+    }
+
+    @Test
+    public void shouldResetScoresAtCertificationCourseStartInteractionWhileSavingScores(){
+        String callerId = "callerId";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator");
+        frontLineWorker.reportCard().addScore(new ReportCard.Score("1","1",true));
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(1,1,false, InteractionKeys.StartCertificationCourseInteraction,"callId", callerId);
+
+        frontLineWorkerService.saveScore(request);
+
+        assertEquals(0, frontLineWorker.reportCard().scores().size());
     }
 }

@@ -81,7 +81,6 @@ public class DynamicJsController {
         response.setContentType("application/javascript");
         log.info("fetching caller data for: "+msisdn);
 
-        frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
         CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn , operator);
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())

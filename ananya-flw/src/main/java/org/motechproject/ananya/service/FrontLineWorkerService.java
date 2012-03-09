@@ -68,11 +68,6 @@ public class FrontLineWorkerService {
         save(frontLineWorker);
     }
 
-    private void resetAllScores(FrontLineWorker frontLineWorker) {
-        frontLineWorker.reportCard().clearAllScores();
-        save(frontLineWorker);
-    }
-
     private int totalScore(FrontLineWorker frontLineWorker) {
         int totalScore = 0;
 
@@ -110,10 +105,11 @@ public class FrontLineWorkerService {
         save(frontLineWorker);
     }
 
-    public void resetScoresWhenStartingCertificateCourse(String msisdn) {
+    private void resetAllScores(String msisdn) {
         final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        if(frontLineWorker != null && !frontLineWorker.hasStartedCertificationCourse()) {
-            resetAllScores(frontLineWorker);
+        if(frontLineWorker != null) {
+            frontLineWorker.reportCard().clearAllScores();
+            save(frontLineWorker);
         }
     }
 
@@ -142,7 +138,9 @@ public class FrontLineWorkerService {
         String callId = request.getCallId();
         String callerId = request.getCallerId();
 
-        if(InteractionKeys.StartQuizInteraction.equals(interactionKey)) {
+        if(InteractionKeys.StartCertificationCourseInteraction.equals(interactionKey)) {
+            resetAllScores(callerId);
+        } else if(InteractionKeys.StartQuizInteraction.equals(interactionKey)) {
             resetScoresForChapterIndex(callerId, chapterIndex);
         } else if (InteractionKeys.PlayAnswerExplanationInteraction.equals(interactionKey)) {
             final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, callId);
@@ -174,8 +172,8 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         if (frontLineWorker == null)
             return false;
-        
-        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+
+        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null? 0 : frontLineWorker.getCurrentJobAidUsage();
         //TODO:should FLWService talk to operator domain? [Imdad/Sush]
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
 

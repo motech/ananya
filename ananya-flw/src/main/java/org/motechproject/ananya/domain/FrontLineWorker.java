@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -91,7 +92,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public String getOperator() {
-        return operator;
+        //TODO: only for #1344, assuming the operator information is already present [Imdad/Sush]
+        return StringUtils.isEmpty(operator) ? "airtel" : operator;
     }
 
     public String getLocationId() {
@@ -147,10 +149,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setRegisteredDate(DateTime registeredDate) {
        this.registeredDate = registeredDate;
-    }
-
-    public boolean hasStartedCertificationCourse() {
-        return status().isRegistered() && bookMark().getType() != null;
     }
 
     public Integer incrementCertificateCourseAttempts() {
