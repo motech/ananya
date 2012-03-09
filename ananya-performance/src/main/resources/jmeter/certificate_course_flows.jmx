@@ -41,11 +41,11 @@
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="controller" enabled="true"/>
         <hashTree>
-          <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_tokens" enabled="false">
+          <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_tokens" enabled="true">
             <stringProp name="scriptLanguage">javascript</stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="filename"></stringProp>
-            <stringProp name="script">var tokens = {};
+            <stringProp name="script">var tokens = [];
 tokens[0] = [{&quot;token&quot;:0,&quot;type&quot;:&quot;callDuration&quot;,&quot;data&quot;:{&quot;callEvent&quot;:&quot;CALL_START&quot;,&quot;time&quot;:1331211295810}}, {&quot;token&quot;:1,&quot;type&quot;:&quot;callDuration&quot;,&quot;data&quot;:{&quot;callEvent&quot;:&quot;CERTIFICATECOURSE_START&quot;,&quot;time&quot;:1331211297476}},{&quot;token&quot;:2,&quot;type&quot;:&quot;ccState&quot;,&quot;data&quot;:{&quot;result&quot;:null,&quot;questionResponse&quot;:null,&quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed6a66d5&quot;,&quot;contentType&quot;:&quot;lesson&quot;,&quot;certificateCourseId&quot;:&quot;&quot;,&quot;contentData&quot;:null,&quot;interactionKey&quot;:&quot;lessonEndMenu&quot;,&quot;courseItemState&quot;:&quot;end&quot;,&quot;contentName&quot;:&quot;Chapter 1 Lesson 1&quot;,&quot;time&quot;:&quot;2012-03-08T12:54:57Z&quot;,&quot;chapterIndex&quot;:0,&quot;lessonOrQuestionIndex&quot;:0}}];
 tokens[3] = [{&quot;token&quot;:3,&quot;type&quot;:&quot;ccState&quot;,&quot;data&quot;:{&quot;result&quot;:null,&quot;questionResponse&quot;:null,&quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed6a807e&quot;,&quot;contentType&quot;:&quot;lesson&quot;,&quot;certificateCourseId&quot;:&quot;&quot;,&quot;contentData&quot;:null,&quot;interactionKey&quot;:&quot;lesson&quot;,&quot;courseItemState&quot;:&quot;start&quot;,&quot;contentName&quot;:&quot;Chapter 1 Lesson 2&quot;,&quot;time&quot;:&quot;2012-03-08T12:55:18Z&quot;,&quot;chapterIndex&quot;:0,&quot;lessonOrQuestionIndex&quot;:1}}];
 tokens[4] = [{&quot;token&quot;:4,&quot;type&quot;:&quot;ccState&quot;,&quot;data&quot;:{&quot;result&quot;:null,&quot;questionResponse&quot;:null,&quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed6a807e&quot;,&quot;contentType&quot;:&quot;lesson&quot;,&quot;certificateCourseId&quot;:&quot;&quot;,&quot;contentData&quot;:null,&quot;interactionKey&quot;:&quot;lessonEndMenu&quot;,&quot;courseItemState&quot;:&quot;end&quot;,&quot;contentName&quot;:&quot;Chapter 1 Lesson 2&quot;,&quot;time&quot;:&quot;2012-03-08T12:55:31Z&quot;,&quot;chapterIndex&quot;:0,&quot;lessonOrQuestionIndex&quot;:1}}];
@@ -225,13 +225,7 @@ tokens[27] = [{&quot;token&quot;:27,&quot;type&quot;:&quot;ccState&quot;,&quot;d
 tokens[28] = [{&quot;token&quot;:28,&quot;type&quot;:&quot;callDuration&quot;,&quot;data&quot;:{&quot;callEvent&quot;:&quot;DISCONNECT&quot;,&quot;time&quot;:1331211652263}}];
 */
 
-vars.put(&quot;tokens&quot;, tokens);</stringProp>
-          </BSFPreProcessor>
-          <hashTree/>
-          <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="js_preprocessor" enabled="true">
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">var Utility = function() {
+var Utility = function() {
     this.stringify = function(value) {
         switch (typeof value) {
             case &apos;string&apos;:
@@ -308,27 +302,27 @@ vars.put(&quot;tokens&quot;, tokens);</stringProp>
 
 var Utility = new Utility();
 
+var i = 0;
+for(i = 0; i &lt; tokens.length; i++) {
+  vars.put(&quot;token-&quot; + i, Utility.stringify(tokens[i]));
+}
 
+vars.put(&quot;some&quot;,&quot;123&quot;);</stringProp>
+          </BSFPreProcessor>
+          <hashTree/>
+          <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="js_preprocessor" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">
 var thread = ctx.getThreadNum();
-
-var tokens = {};
-tokens[0] = [{&quot;token&quot;:0,&quot;type&quot;:&quot;callDuration&quot;,&quot;data&quot;:{&quot;callEvent&quot;:&quot;CALL_START&quot;,&quot;time&quot;:1331211295810}}, {&quot;token&quot;:1,&quot;type&quot;:&quot;callDuration&quot;,&quot;data&quot;:{&quot;callEvent&quot;:&quot;CERTIFICATECOURSE_START&quot;,&quot;time&quot;:1331211297476}},{&quot;token&quot;:2,&quot;type&quot;:&quot;ccState&quot;,&quot;data&quot;:{&quot;result&quot;:null,&quot;questionResponse&quot;:null,&quot;contentId&quot;:&quot;0cccd9b516233e4bb1c6c04fed6a66d5&quot;,&quot;contentType&quot;:&quot;lesson&quot;,&quot;certificateCourseId&quot;:&quot;&quot;,&quot;contentData&quot;:null,&quot;interactionKey&quot;:&quot;lessonEndMenu&quot;,&quot;courseItemState&quot;:&quot;end&quot;,&quot;contentName&quot;:&quot;Chapter 1 Lesson 1&quot;,&quot;time&quot;:&quot;2012-03-08T12:54:57Z&quot;,&quot;chapterIndex&quot;:0,&quot;lessonOrQuestionIndex&quot;:0}}];
 
 var callerId = &quot;9999&quot;+thread;
 var callId=callerId+new Date().valueOf();
-
+var dataToPost = vars.get(&quot;token-0&quot;);
 
 vars.put(&quot;callId&quot;, callId);
 vars.put(&quot;callerId&quot;, callerId);
-vars.put(&quot;dataToPost&quot;, Utility.stringify(tokens[0]));
-
-
-
-
-
-
-
-
+vars.put(&quot;dataToPost&quot;, dataToPost);
 </stringProp>
             <stringProp name="scriptLanguage">javascript</stringProp>
           </BSFPreProcessor>
