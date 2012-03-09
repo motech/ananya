@@ -14,7 +14,7 @@
 
     <form id="controller">
         <block>
-            <goto expr="controller.decideFlowForJobAid(operator)"/>
+            <goto expr="controller.decideFlowForJobAid()"/>
         </block>
     </form>
 

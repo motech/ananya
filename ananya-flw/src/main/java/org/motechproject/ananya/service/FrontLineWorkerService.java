@@ -197,6 +197,6 @@ public class FrontLineWorkerService {
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         //TODO:should FLWService talk to operator domain? [Imdad/Sush]
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
-        return (operator.getAllowedUsagePerMonth() < currentJobAidUsage);
+        return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
     }
 }

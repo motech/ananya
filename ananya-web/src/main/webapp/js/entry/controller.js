@@ -23,7 +23,7 @@ var EntryController = function(callerData , metadata) {
             return "#unregistered";
     };
 
-    this.hasReachedMaxUsage = function(operator) {
+    this.hasReachedMaxUsage = function() {
         return (callerData.hasReachedMaxUsageForMonth);
     };
 
