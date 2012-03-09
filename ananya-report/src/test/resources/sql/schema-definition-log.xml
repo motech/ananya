@@ -132,5 +132,8 @@
             <column name="time_id"/>
         </createIndex>
     </changeSet>
+    <changeSet context="setup" author="ThoughtWorks" id="9">
+        <addUniqueConstraint tableName="item_dimension" columnNames="day,week,month,year" constraintName="unq_day_week_month_year"/>
+    </changeSet>
 
 </databaseChangeLog>
