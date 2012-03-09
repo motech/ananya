@@ -122,7 +122,7 @@ public class RegistrationDataHandlerIT {
 
         DateTime registeredDate = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId(),"", null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId(),"");
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
@@ -172,7 +172,7 @@ public class RegistrationDataHandlerIT {
     @Test
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001","", null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001","");
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);

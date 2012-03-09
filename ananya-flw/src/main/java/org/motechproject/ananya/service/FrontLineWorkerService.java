@@ -108,7 +108,7 @@ public class FrontLineWorkerService {
     public String createNew(String msisdn, Designation designation, String panchayatCode, String operator) {
         Location location = allLocations.findByExternalId(panchayatCode);
         Operator operatorObj = allOperators.findByName(operator);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator, operatorObj)
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator)
                                             .status(RegistrationStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
@@ -185,13 +185,18 @@ public class FrontLineWorkerService {
         String bookmark = getBookmark(msisdn).asJson();
         boolean isCallerRegistered = isCallerRegistered(msisdn);
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
-        Integer currentJobAidUsage = currentJobAidUsage(msisdn);
-
-        return new CallerDataResponse(bookmark, isCallerRegistered, scoresByChapter,currentJobAidUsage);
+        Boolean reachedMaxUsageForMonth = hasReachedMaxUsageForMonth(msisdn);
+        return new CallerDataResponse(bookmark, isCallerRegistered, scoresByChapter, reachedMaxUsageForMonth);
     }
 
-    private Integer currentJobAidUsage(String msisdn) {
+    private Boolean hasReachedMaxUsageForMonth(String msisdn) {
         FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        return frontLineWorker == null? FrontLineWorker.DUMMY_MAX_JOB_AID_USAGE : frontLineWorker.getCurrentJobAidUsage();
+        if (frontLineWorker == null)
+            return false;
+        
+        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+        //TODO:should FLWService talk to operator domain? [Imdad/Sush]
+        Operator operator = allOperators.findByName(frontLineWorker.getOperator());
+        return (operator.getAllowedUsagePerMonth() < currentJobAidUsage);
     }
 }

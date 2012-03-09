@@ -11,6 +11,6 @@ public class TestUtils {
     }
 
     public static FrontLineWorker getSampleFLW() {
-        return new FrontLineWorker("9986574000", Designation.ANGANWADI, null, null, null);
+        return new FrontLineWorker("9986574000", Designation.ANGANWADI, null, null);
     }
 }

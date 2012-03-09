@@ -105,7 +105,7 @@ public class RegistrationControllerTest {
         String msisdn = "12345";
         String name = "flw_name";
         String id = "111";
-        FrontLineWorker mockFlw = new FrontLineWorker(msisdn, Designation.ANGANWADI, "D001S01","", null);
+        FrontLineWorker mockFlw = new FrontLineWorker(msisdn, Designation.ANGANWADI, "D001S01","");
         mockFlw.setId(id);
 
         when(request.getParameter("msisdn")).thenReturn(msisdn);

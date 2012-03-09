@@ -58,7 +58,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     private FrontLineWorker FrontLineWorker() {
-        return new FrontLineWorker("123", Designation.ANM, "123","", null);
+        return new FrontLineWorker("123", Designation.ANM, "123","operator");
     }
 
     @Test
@@ -67,6 +67,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker registeredFrontLineWorker = FrontLineWorker();
         registeredFrontLineWorker.status(RegistrationStatus.REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",registeredFrontLineWorker.getCurrentJobAidUsage()-1));
 
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(registeredMsisdn);
 
@@ -79,6 +80,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker registeredFrontLineWorker = FrontLineWorker();
         registeredFrontLineWorker.status(RegistrationStatus.PENDING_REGISTRATION);
         when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",registeredFrontLineWorker.getCurrentJobAidUsage()-1));
 
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(registeredMsisdn);
 
@@ -91,6 +93,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker registeredFrontLineWorker = FrontLineWorker();
         registeredFrontLineWorker.status(RegistrationStatus.UNREGISTERED);
         when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",registeredFrontLineWorker.getCurrentJobAidUsage()-1));
 
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(registeredMsisdn);
 
@@ -100,7 +103,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldSaveNameWhenNameIsWellFormed() throws Exception {
         String msisdn = "555", name = "abcd";
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001","", null);
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001","");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
         
         frontLineWorkerService.saveName(msisdn, name);
@@ -120,7 +123,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldResetScoresWhenStartingCourse() throws Exception {
         String msisdn = "123" ;
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "", null);
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "");
         mockWorker.status(RegistrationStatus.REGISTERED);
         mockWorker.reportCard().addScore(new ReportCard.Score("0","5",true));
 
@@ -220,6 +223,7 @@ public class FrontLineWorkerServiceTest {
         BookMark bookMark = new BookMark("leson", 0, 2);
         frontLineWorker.addBookMark(bookMark);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",frontLineWorker.getCurrentJobAidUsage()-1));
 
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
 
@@ -233,6 +237,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker expectedFrontLineWorker = FrontLineWorker();
         setUpTestScoreSet(expectedFrontLineWorker,true);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",expectedFrontLineWorker.getCurrentJobAidUsage()-1));
 
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(callerId);
 
@@ -252,11 +257,14 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldReturnCurrentJobAidUsageWithTheCallerDataForFLW() {
-
+    public void shouldPopulateCallerDataWithMaxUsageBeingTrueWhenUsageHasMaxedOut() {
         String msisdn = "9876543210";
+        String operator = "operator";
+        FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ASHA, "location", operator);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(flw);
+        when(allOperators.findByName(operator)).thenReturn(new Operator(operator,flw.getCurrentJobAidUsage() - 1));
         CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
 
-        assertEquals((int) callerData.getCurrentJobAidUsage(), FrontLineWorker.DUMMY_MAX_JOB_AID_USAGE);
+        assertEquals(true,(boolean) callerData.hasReachedMaxUsageForMonth());
     }
 }

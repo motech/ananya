@@ -86,6 +86,6 @@ public class DynamicJsController {
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("scoresByChapter", callerData.getScoresByChapter())
-                .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage());
+                .addObject("hasReachedMaxUsageForMonth", callerData.hasReachedMaxUsageForMonth());
     }
 }

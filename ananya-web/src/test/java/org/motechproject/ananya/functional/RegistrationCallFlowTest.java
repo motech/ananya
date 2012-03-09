@@ -49,7 +49,7 @@ public class RegistrationCallFlowTest extends SpringIntegrationTest{
     @Test
     public void shouldUpdateTranscribedNameAndStatusForExistingWorker() throws IOException {
 
-        allFrontLineWorkers.add(new FrontLineWorker("555", Designation.ANGANWADI, "S01D001","", null).status(RegistrationStatus.PENDING_REGISTRATION));
+        allFrontLineWorkers.add(new FrontLineWorker("555", Designation.ANGANWADI, "S01D001","").status(RegistrationStatus.PENDING_REGISTRATION));
 
         String msisdn = "555";
         String name = "hobbes";

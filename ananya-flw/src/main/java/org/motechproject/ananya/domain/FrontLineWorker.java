@@ -26,9 +26,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String operator;
 
     @JsonProperty
-    private Operator operatorObj;
-
-    @JsonProperty
     private BookMark bookmark;
 
     @JsonProperty
@@ -77,12 +74,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
 
 
-    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator, Operator operatorObj) {
+    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator) {
         this.msisdn = msisdn;
         this.designation = designation;
         this.locationId = locationId;
         this.operator = operator;
-        this.operatorObj = operatorObj;
         this.certificateCourseAttempts = 0;
         this.smsReferenceNumbers = new HashMap<Integer, String>();
         this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]

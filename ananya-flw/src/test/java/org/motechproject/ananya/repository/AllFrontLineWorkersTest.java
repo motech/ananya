@@ -19,7 +19,7 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
         String msisdn = "9901";
         Designation designation = Designation.ANGANWADI;
         String locationId = "123";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, locationId,"", null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, locationId,"");
         allFrontLineWorkers.add(frontLineWorker);
 
         markForDeletion(frontLineWorker);
@@ -33,7 +33,7 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "9901";
         Designation designation = Designation.ANGANWADI;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, "999","", null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, "999","");
         allFrontLineWorkers.add(frontLineWorker);
 
         markForDeletion(frontLineWorker);
