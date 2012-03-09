@@ -8,14 +8,14 @@ import static org.junit.Assert.*;
 public class FrontLineWorkerTest {
     @Test
     public void shouldReturnEmptyBookmarkIfThereIsNoBookmark() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI, "locationId","");
+        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI, "locationId","", null);
         assertNotNull(flw.bookMark());
         assertThat(flw.bookMark(), is(EmptyBookmark.class));
     }
 
     @Test
     public void shouldHaveStartedCertificationCourse() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI, "locationId","");
+        FrontLineWorker flw = new FrontLineWorker("msisdn", Designation.ANGANWADI, "locationId","", null);
         flw.status(RegistrationStatus.REGISTERED);
 
         assertThat(flw.bookMark(), is(EmptyBookmark.class));

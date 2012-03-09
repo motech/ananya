@@ -23,7 +23,9 @@ describe("Controller for certificate/jobaid course entry", function () {
         var callerData = {
             "isRegistered" : "false"
         };
-        controller = new EntryController(callerData);
+
+        var metadata = {'usage.general' : 50};
+        controller = new EntryController(callerData, metadata);
         expect(controller.decideFlowForCertificateCourse()).toEqual("#unregistered");
     });
 
@@ -31,7 +33,9 @@ describe("Controller for certificate/jobaid course entry", function () {
         var callerData = {
             "isRegistered" : "false"
         };
-        controller = new EntryController(callerData);
+
+        var metadata = {'usage.general' : 50};
+        controller = new EntryController(callerData, metadata);
         expect(controller.decideFlowForJobAid()).toEqual("#unregistered");
     });
 

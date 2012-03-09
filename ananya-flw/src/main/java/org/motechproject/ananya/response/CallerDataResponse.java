@@ -6,11 +6,13 @@ public class CallerDataResponse {
     private String bookmark;
     private boolean isCallerRegistered;
     private Map<String,Integer> scoresByChapter;
+    private Integer currentJobAidUsage;
 
-    public CallerDataResponse(String bookmark, boolean callerRegistered, Map<String, Integer> scoresByChapter) {
+    public CallerDataResponse(String bookmark, boolean callerRegistered, Map<String, Integer> scoresByChapter, Integer currentJobAidUsage) {
         this.bookmark = bookmark;
         isCallerRegistered = callerRegistered;
         this.scoresByChapter = scoresByChapter;
+        this.currentJobAidUsage = currentJobAidUsage;
     }
 
     public String getBookmark() {
@@ -23,5 +25,9 @@ public class CallerDataResponse {
 
     public Map<String, Integer> getScoresByChapter() {
         return scoresByChapter;
+    }
+
+    public Integer getCurrentJobAidUsage() {
+        return currentJobAidUsage;
     }
 }

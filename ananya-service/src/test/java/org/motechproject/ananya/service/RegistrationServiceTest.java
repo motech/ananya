@@ -58,7 +58,7 @@ public class RegistrationServiceTest  {
         final String msisdn = "123";
         final String name = "myName";
         final String id = "id";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM, "B001V005","") { {setId(id);}};
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANM, "B001V005","", null) { {setId(id);}};
         when(frontLineWorkerService.saveName(msisdn, name)).thenReturn(frontLineWorker);
 
         registrationService.saveTranscribedName(msisdn, name);

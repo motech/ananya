@@ -94,7 +94,7 @@ public class RegistrationDataSetup {
             FrontLineWorker frontLineWorker = new FrontLineWorker(
                     RandomStringUtils.randomNumeric(10),
                     getDesignation(),
-                    location.getId(), "");
+                    location.getId(), "", null);
             frontLineWorker.setRegisteredDate(getRegisteredDate());
             frontLineWorker.status(RegistrationStatus.REGISTERED);
             frontLineWorker.name(RandomStringUtils.randomAlphabetic(6)); // may randomize length of name

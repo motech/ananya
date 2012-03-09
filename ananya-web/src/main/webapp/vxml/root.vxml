@@ -9,10 +9,11 @@
 
     <script>
         var pathToRoot = "../";
+        operator = "airtel";
     </script>
     <script src="../js/utility.js"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?'+  (new Date()).valueOf())"/>
-    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri + 'operator=' + session.site)"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri)"/>
     
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/call_detail_logger.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/certificatecourse/data_transfer_list.js')"/>

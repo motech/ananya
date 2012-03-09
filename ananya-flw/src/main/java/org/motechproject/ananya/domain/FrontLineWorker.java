@@ -14,6 +14,7 @@ import java.util.Map;
 public class FrontLineWorker extends MotechBaseDataObject {
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
+    public static final int DUMMY_MAX_JOB_AID_USAGE = 50;
 
     @JsonProperty
     private String name;
@@ -23,6 +24,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private String operator;
+
+    @JsonProperty
+    private Operator operatorObj;
 
     @JsonProperty
     private BookMark bookmark;
@@ -48,6 +52,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Map<Integer, String> smsReferenceNumbers;
 
+    @JsonProperty
+    private Integer currentJobAidUsage;
+
     public FrontLineWorker() {
     }
 
@@ -70,13 +77,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
 
 
-    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator) {
+    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator, Operator operatorObj) {
         this.msisdn = msisdn;
         this.designation = designation;
         this.locationId = locationId;
         this.operator = operator;
+        this.operatorObj = operatorObj;
         this.certificateCourseAttempts = 0;
         this.smsReferenceNumbers = new HashMap<Integer, String>();
+        this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]
     }
 
     public String getOperator() {
@@ -156,5 +165,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public String smsReferenceNumber(int courseAttempt) {
         return this.smsReferenceNumbers.get(courseAttempt);
+    }
+
+    public Integer getCurrentJobAidUsage() {
+        return this.currentJobAidUsage;
     }
 }

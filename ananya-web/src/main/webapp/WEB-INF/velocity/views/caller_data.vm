@@ -11,6 +11,5 @@ var callerData = {
         #end
        #end
    },
-   "operator" : ${operator},
-   "currentUsage" : ${currentUsage}
+   "hasReachedMaxUsageForMonth" : ${hasReachedMaxUsageForMonth}
 };

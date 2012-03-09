@@ -4,6 +4,7 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,13 +27,15 @@ public class FrontLineWorkerService {
     private AllLocations allLocations;
     private SendSMSService sendSMSService;
     private SMSPublisherService smsPublisherService;
+    private AllOperators allOperators;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, SendSMSService sendSMSService,SMSPublisherService smsPublisherService) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, SendSMSService sendSMSService, SMSPublisherService smsPublisherService, AllOperators allOperators) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.allLocations = allLocations;
         this.sendSMSService = sendSMSService;
         this.smsPublisherService = smsPublisherService;
+        this.allOperators = allOperators;
     }
 
     private RegistrationStatus getStatus(String msisdn) {
@@ -105,7 +107,8 @@ public class FrontLineWorkerService {
 
     public String createNew(String msisdn, Designation designation, String panchayatCode, String operator) {
         Location location = allLocations.findByExternalId(panchayatCode);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator)
+        Operator operatorObj = allOperators.findByName(operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator, operatorObj)
                                             .status(RegistrationStatus.PENDING_REGISTRATION);
         allFrontLineWorkers.add(frontLineWorker);
         return msisdn;
@@ -182,7 +185,13 @@ public class FrontLineWorkerService {
         String bookmark = getBookmark(msisdn).asJson();
         boolean isCallerRegistered = isCallerRegistered(msisdn);
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
+        Integer currentJobAidUsage = currentJobAidUsage(msisdn);
 
-        return new CallerDataResponse(bookmark, isCallerRegistered, scoresByChapter);
+        return new CallerDataResponse(bookmark, isCallerRegistered, scoresByChapter,currentJobAidUsage);
+    }
+
+    private Integer currentJobAidUsage(String msisdn) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        return frontLineWorker == null? FrontLineWorker.DUMMY_MAX_JOB_AID_USAGE : frontLineWorker.getCurrentJobAidUsage();
     }
 }

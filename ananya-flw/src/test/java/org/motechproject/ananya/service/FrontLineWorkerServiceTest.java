@@ -8,6 +8,7 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
 
@@ -28,12 +29,14 @@ public class FrontLineWorkerServiceTest {
     @Mock
     private SendSMSService sendSMSService; 
     @Mock
-    private SMSPublisherService publisherService; 
-   
+    private SMSPublisherService publisherService;
+    @Mock
+    private AllOperators allOperators;
+
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers,allLocations, sendSMSService, publisherService);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers,allLocations, sendSMSService, publisherService, allOperators);
     }
 
     @Test
@@ -55,7 +58,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     private FrontLineWorker FrontLineWorker() {
-        return new FrontLineWorker("123", Designation.ANM, "123","");
+        return new FrontLineWorker("123", Designation.ANM, "123","", null);
     }
 
     @Test
@@ -97,7 +100,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldSaveNameWhenNameIsWellFormed() throws Exception {
         String msisdn = "555", name = "abcd";
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001","");
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001","", null);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(mockWorker);
         
         frontLineWorkerService.saveName(msisdn, name);
@@ -117,7 +120,7 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldResetScoresWhenStartingCourse() throws Exception {
         String msisdn = "123" ;
-        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "");
+        FrontLineWorker mockWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S01D001", "", null);
         mockWorker.status(RegistrationStatus.REGISTERED);
         mockWorker.reportCard().addScore(new ReportCard.Score("0","5",true));
 
@@ -246,5 +249,14 @@ public class FrontLineWorkerServiceTest {
                frontLineWorker.reportCard().addScore(new ReportCard.Score(Integer.toString(chapterIndex),Integer.toString(questionIndex),result));
            }
         }
+    }
+
+    @Test
+    public void shouldReturnCurrentJobAidUsageWithTheCallerDataForFLW() {
+
+        String msisdn = "9876543210";
+        CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
+
+        assertEquals((int) callerData.getCurrentJobAidUsage(), FrontLineWorker.DUMMY_MAX_JOB_AID_USAGE);
     }
 }

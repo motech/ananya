@@ -85,6 +85,7 @@ public class DynamicJsController {
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
-                .addObject("scoresByChapter", callerData.getScoresByChapter());
+                .addObject("scoresByChapter", callerData.getScoresByChapter())
+                .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage());
     }
 }

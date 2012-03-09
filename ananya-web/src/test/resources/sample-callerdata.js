@@ -1,4 +1,6 @@
 var callerData = {
    "isRegistered" : "false",
-   "bookmark" : "{}"
+   "bookmark" : "{}",
+    "scoresByChapter" : {},
+    "hasReachedMaxUsageForMonth" : false
 };

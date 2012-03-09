@@ -27,7 +27,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
-       FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234","").status(RegistrationStatus.REGISTERED);
+       FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234","", null).status(RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("lesson", 0, 2));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
@@ -46,7 +46,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM, "1234","").status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ANM, "1234","", null).status(RegistrationStatus.REGISTERED);
 
         ReportCard reportCard = flw.reportCard();
         flw.addBookMark(new BookMark("lesson",3,0));
@@ -114,7 +114,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithoutBookmarkDetailsWhenThereIsNoBookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234","").status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", Designation.ASHA, "1234","", null).status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 

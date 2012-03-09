@@ -12,17 +12,19 @@ var EntryController = function(callerData , metadata) {
             return "#registered_bookmark_absent";
     };
 
-    this.decideFlowForJobAid = function() {
-        if(this.hasReachedMaxUsage())
-            return "#max_usage";
-        else if (this.isCallerRegistered())
-            return "#registered";
+    this.decideFlowForJobAid = function(operator) {
+        if (this.isCallerRegistered()){
+            if(this.hasReachedMaxUsage(operator))
+                return "#max_usage";
+            else
+                return "#registered";
+        }
         else
             return "#unregistered";
     };
 
-    this.hasReachedMaxUsage = function() {
-        return true;
+    this.hasReachedMaxUsage = function(operator) {
+        return (callerData.hasReachedMaxUsageForMonth);
     };
 
     this.isCallerRegistered = function() {

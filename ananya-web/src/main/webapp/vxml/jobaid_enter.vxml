@@ -40,7 +40,7 @@
         <block>
             <log>TW::<value expr="callerId"/> has reached max usage and hence disconnected</log>
             <audio expr="Utility.relativePath(pathToRoot,controller.maxUsagePrompt())"/>
-            <goto next="jobaid.vxml"/>
+            <disconnect/>
         </block>
     </form>
 </vxml>
