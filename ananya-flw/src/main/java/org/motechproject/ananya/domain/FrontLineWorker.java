@@ -32,7 +32,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private ReportCard reportCard = new ReportCard();
 
     @JsonProperty
-    private RegistrationStatus status = RegistrationStatus.UNREGISTERED;
+    private RegistrationStatus status = RegistrationStatus.PARTIALLY_REGISTERED;
 
     @JsonProperty
     private Designation designation;
@@ -55,6 +55,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker() {
     }
 
+    public FrontLineWorker(String msisdn , String operator) {
+        this.msisdn = msisdn;
+        this.operator = operator;
+        this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]
+    }
+
     @Override
     public String toString() {
         return "FrontLineWorker{" +
@@ -73,7 +79,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
 
-
+    //Used only in tests
     public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator) {
         this.msisdn = msisdn;
         this.designation = designation;

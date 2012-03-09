@@ -18,14 +18,6 @@ public class ReportPublisherService {
         this.eventContext = eventContext;
     }
 
-    public void publishRegistration(LogData logData) {
-        eventContext.send(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY, logData);
-    }
-    
-    public void publishRegistrationUpdate(LogData logData) {
-        eventContext.send(ReportPublishEventKeys.SEND_REGISTRATION_COMPLETION_DATA_KEY, logData);
-    }
-
     public void publishSMSSent(LogData logData) {
         eventContext.send(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY, logData);
     }

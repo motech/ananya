@@ -38,15 +38,6 @@ public class FrontLineWorkerService {
         this.allOperators = allOperators;
     }
 
-    private RegistrationStatus getStatus(String msisdn) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        return frontLineWorker != null ? frontLineWorker.status() : RegistrationStatus.UNREGISTERED;
-    }
-
-    private boolean isCallerRegistered(String msisdn) {
-        return getStatus(msisdn).isRegistered();
-    }
-
     private FrontLineWorker getFrontLineWorker(String msisdn) {
         return allFrontLineWorkers.findByMsisdn(msisdn);
     }
@@ -105,32 +96,18 @@ public class FrontLineWorkerService {
         return certificateCourseAttempts;
     }
 
-    public String createNew(String msisdn, Designation designation, String panchayatCode, String operator) {
-        Location location = allLocations.findByExternalId(panchayatCode);
-        Operator operatorObj = allOperators.findByName(operator);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, designation, location.getId(), operator)
-                                            .status(RegistrationStatus.PENDING_REGISTRATION);
+
+    private FrontLineWorker createNew(String msisdn, String operator) {
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn,operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
-        return msisdn;
+        return frontLineWorker;
     }
 
     public void addBookMark(String callerId, BookMark bookMark){
         FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
         frontLineWorker.addBookMark(bookMark);
         save(frontLineWorker);
-    }
-
-    public FrontLineWorker saveName(String msisdn, String name) throws WorkerDoesNotExistException {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-
-        if (frontLineWorker == null)
-            throw new WorkerDoesNotExistException();
-
-        frontLineWorker.name(name);
-        frontLineWorker.status(RegistrationStatus.REGISTERED);
-        allFrontLineWorkers.update(frontLineWorker);
-
-        return frontLineWorker;
     }
 
     public void resetScoresWhenStartingCertificateCourse(String msisdn) {
@@ -181,12 +158,16 @@ public class FrontLineWorkerService {
         }
     }
 
-    public CallerDataResponse getCallerData(String msisdn) {
+    public CallerDataResponse createCallerData(String msisdn, String operator) {
         String bookmark = getBookmark(msisdn).asJson();
-        boolean isCallerRegistered = isCallerRegistered(msisdn);
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        if(frontLineWorker == null){
+            frontLineWorker = createNew(msisdn , operator);
+        }
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
         Boolean reachedMaxUsageForMonth = hasReachedMaxUsageForMonth(msisdn);
-        return new CallerDataResponse(bookmark, isCallerRegistered, scoresByChapter, reachedMaxUsageForMonth);
+
+        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter,reachedMaxUsageForMonth);
     }
 
     private Boolean hasReachedMaxUsageForMonth(String msisdn) {
@@ -197,6 +178,7 @@ public class FrontLineWorkerService {
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         //TODO:should FLWService talk to operator domain? [Imdad/Sush]
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
+
         return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
     }
 }

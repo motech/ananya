@@ -29,30 +29,6 @@ public class ReportPublisherServiceTest {
     }
 
     @Test
-    public void shouldPublishReportDataToEventContext() {
-        LogData reportData = new LogData(LogType.CERTIFICATE_COURSE, "123");
-
-        reportPublisherService.publishRegistration(reportData);
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY), captor.capture());
-        LogData captured = captor.getValue();
-        assertEquals(captured, reportData);
-    }
-
-    @Test
-    public void shouldPublishReportUpdationDataToEventContext() {
-        LogData reportData = new LogData(LogType.REGISTRATION_SAVE_NAME, "123");
-
-        reportPublisherService.publishRegistrationUpdate(reportData);
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_REGISTRATION_COMPLETION_DATA_KEY), captor.capture());
-        LogData captured = captor.getValue();
-        assertEquals(captured, reportData);
-    }
-
-    @Test
     public void shouldPublishDisconnectEvent(){
         String callId = "callID";
         reportPublisherService.publishCallDisconnectEvent(callId);

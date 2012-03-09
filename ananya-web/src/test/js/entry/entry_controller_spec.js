@@ -33,10 +33,9 @@ describe("Controller for certificate/jobaid course entry", function () {
         var callerData = {
             "isRegistered" : "false"
         };
-
         var metadata = {'usage.general' : 50};
         controller = new EntryController(callerData, metadata);
-        expect(controller.decideFlowForJobAid()).toEqual("#unregistered");
+        expect(controller.decideFlowForJobAid()).toEqual("#partially_registered");
     });
 
     it("should return 'registered' form for registered caller in jobaid entry", function() {
@@ -65,4 +64,25 @@ describe("Controller for certificate/jobaid course entry", function () {
 
     });
 
+    it("should return jobaid welcome prompt for registered users", function() {
+         var registeredCaller = {};
+         var metaData = {
+            "audio.url" : "audio/",
+            "jobaid.audio.url" : "jobaid/",
+            "jobaid.welcome.registered" : "0001_welcome_job_aid_reg.wav"
+         };
+         controller = new EntryController(registeredCaller , metaData);
+         expect(controller.jobAidWelcomePromptRegistered()).toEqual("audio/jobaid/0001_welcome_job_aid_reg.wav")
+    });
+
+    it("should return jobaid welcome prompt for partially registered users", function() {
+         var registeredCaller = {};
+         var metaData = {
+            "audio.url" : "audio/",
+            "jobaid.audio.url" : "jobaid/",
+            "jobaid.welcome.registered" : "0001_welcome_job_aid_not_reg.wav"
+         };
+         controller = new EntryController(registeredCaller , metaData);
+         expect(controller.jobAidWelcomePromptRegistered()).toEqual("audio/jobaid/0001_welcome_job_aid_not_reg.wav")
+    });
 });

@@ -20,7 +20,7 @@ var EntryController = function(callerData , metadata) {
                 return "#registered";
         }
         else
-            return "#unregistered";
+            return "#partially_registered";
     };
 
     this.hasReachedMaxUsage = function() {
@@ -35,16 +35,12 @@ var EntryController = function(callerData , metadata) {
         return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["max.usage.prompt"];
     }
 
-    this.jobAidWelcomePrompt = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome"];
+    this.jobAidWelcomePromptRegistered = function() {
+        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome.registered"];
     }
 
-    this.jobAidDetailPrompt = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.detail"];
-    }
-
-    this.jobAidNeedToRegisterPrompt = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.need.to.register"];
+    this.jobAidWelcomePromptPartiallyRegistered = function() {
+        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome.partially.registered"];
     }
 
     this.certificateNeedToRegisterPrompt = function() {

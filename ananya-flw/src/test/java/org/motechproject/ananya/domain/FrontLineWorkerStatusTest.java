@@ -10,7 +10,6 @@ public class FrontLineWorkerStatusTest {
     @Test
     public void shouldReturnTrueIfRegistered(){
         assertTrue(RegistrationStatus.REGISTERED.isRegistered());
-        assertTrue(RegistrationStatus.PENDING_REGISTRATION.isRegistered());
-        assertFalse(RegistrationStatus.UNREGISTERED.isRegistered());
+        assertFalse(RegistrationStatus.PARTIALLY_REGISTERED.isRegistered());
     }
 }

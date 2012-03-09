@@ -77,11 +77,12 @@ public class DynamicJsController {
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/caller_data.js")
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
+        String operator = request.getParameter("operator");
         response.setContentType("application/javascript");
         log.info("fetching caller data for: "+msisdn);
 
         frontLineWorkerService.resetScoresWhenStartingCertificateCourse(msisdn);
-        CallerDataResponse callerData = frontLineWorkerService.getCallerData(msisdn);
+        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn , operator);
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())

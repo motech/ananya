@@ -4,7 +4,7 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="root.vxml">
 
-    <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri)"/>
+    <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri+ '%26operator=' +session.site)"/>
     <script srcexpr="Utility.relativePath(pathToRoot, 'js/entry/controller.js')"/>
     <script>
         <![CDATA[
@@ -18,20 +18,18 @@
         </block>
     </form>
 
-    <form id="unregistered">
+    <form id="partially_registered">
         <block>
-            <log>TW::<value expr="callerId"/> unregistered, moving into registration</log>
-            <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePrompt())"/>
-            <audio expr="Utility.relativePath(pathToRoot, controller.jobAidDetailPrompt())"/>
-            <audio expr="Utility.relativePath(pathToRoot, controller.jobAidNeedToRegisterPrompt())"/>
-            <goto next="register.vxml"/>
+            <log>TW::<value expr="callerId"/> partially registered</log>
+            <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptPartiallyRegistered())"/>
+            <goto next="jobaid.vxml"/>
         </block>
     </form>
 
     <form id="registered">
         <block>
             <log>TW::<value expr="callerId"/> moved into jobaid</log>
-            <audio expr="Utility.relativePath(pathToRoot,controller.jobAidWelcomePrompt())"/>
+            <audio expr="Utility.relativePath(pathToRoot,controller.jobAidWelcomePromptRegistered())"/>
             <goto next="jobaid.vxml"/>
         </block>
     </form>

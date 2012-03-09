@@ -177,7 +177,7 @@ public class RegistrationDataHandlerIT {
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.PENDING_REGISTRATION.toString());
+        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.REGISTERED.toString());
 
         LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, frontLineWorker.getId());
         Map<String, Object> map = new HashMap<String, Object>();
