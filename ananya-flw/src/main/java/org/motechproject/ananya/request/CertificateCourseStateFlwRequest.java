@@ -1,6 +1,8 @@
 package org.motechproject.ananya.request;
 
 
+import org.motechproject.ananya.domain.InteractionKeys;
+
 public class CertificateCourseStateFlwRequest {
     private Integer chapterIndex;
     private Integer lessonOrQuestionIndex;
@@ -48,6 +50,22 @@ public class CertificateCourseStateFlwRequest {
 
     public String getInteractionKey() {
         return interactionKey;
+    }
+
+    public boolean isStartCertificationCourseInteraction() {
+        return InteractionKeys.StartCertificationCourseInteraction.equals(interactionKey);
+    }
+
+    public boolean isStartQuizInteraction() {
+        return InteractionKeys.StartQuizInteraction.equals(interactionKey);
+    }
+
+    public boolean isPlayAnswerExplanationInteraction() {
+        return InteractionKeys.PlayAnswerExplanationInteraction.equals(interactionKey);
+    }
+
+    public boolean isPlayCourseResultInteraction() {
+        return InteractionKeys.PlayCourseResultInteraction.equals(interactionKey);
     }
 
 }

@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
@@ -22,12 +21,11 @@ public class FrontLineWorkerService {
 
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
-
     private AllFrontLineWorkers allFrontLineWorkers;
     private AllLocations allLocations;
+    private AllOperators allOperators;
     private SendSMSService sendSMSService;
     private SMSPublisherService smsPublisherService;
-    private AllOperators allOperators;
 
     @Autowired
     public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, SendSMSService sendSMSService, SMSPublisherService smsPublisherService, AllOperators allOperators) {
@@ -38,119 +36,104 @@ public class FrontLineWorkerService {
         this.allOperators = allOperators;
     }
 
-    private FrontLineWorker getFrontLineWorker(String msisdn) {
-        return allFrontLineWorkers.findByMsisdn(msisdn);
-    }
-
-    private void save(FrontLineWorker frontLineWorker) {
+    private void addScore(String callerId, ReportCard.Score score) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        frontLineWorker.reportCard().addScore(score);
         allFrontLineWorkers.update(frontLineWorker);
     }
 
-    private void addScore(String callerId, ReportCard.Score score) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
-        frontLineWorker.reportCard().addScore(score);
-        save(frontLineWorker);
-    }
-
     private BookMark getBookmark(String msisdn) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         return frontLineWorker == null ? new EmptyBookmark() : frontLineWorker.bookMark();
     }
 
-    private Map<String, Integer> scoresByChapter(String msisdn){
-        final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+    private Map<String, Integer> scoresByChapter(String msisdn) {
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         return getScoresByChapterFor(frontLineWorker);
     }
 
     private void resetScoresForChapterIndex(String callerId, Integer chapterIndex) {
-        final FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
-        save(frontLineWorker);
+        allFrontLineWorkers.update(frontLineWorker);
     }
 
     private int totalScore(FrontLineWorker frontLineWorker) {
         int totalScore = 0;
-
         Collection<Integer> scores = this.getScoresByChapterFor(frontLineWorker).values();
         Iterator<Integer> scoresIterator = scores.iterator();
-        while(scoresIterator.hasNext()) {
+        while (scoresIterator.hasNext())
             totalScore += scoresIterator.next();
-        }
-
         return totalScore;
     }
 
     private Map<String, Integer> getScoresByChapterFor(FrontLineWorker frontLineWorker) {
-        return frontLineWorker == null? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
+        return frontLineWorker == null ? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
     }
 
     private int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
         int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
-        save(frontLineWorker);
-
+        allFrontLineWorkers.update(frontLineWorker);
         return certificateCourseAttempts;
     }
 
-
     private FrontLineWorker createNew(String msisdn, String operator) {
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn,operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
         return frontLineWorker;
     }
 
-    public void addBookMark(String callerId, BookMark bookMark){
-        FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+    public void addBookMark(String callerId, BookMark bookMark) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.addBookMark(bookMark);
-        save(frontLineWorker);
+        allFrontLineWorkers.update(frontLineWorker);
     }
 
     private void resetAllScores(String msisdn) {
-        final FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        if(frontLineWorker != null) {
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker != null) {
             frontLineWorker.reportCard().clearAllScores();
-            save(frontLineWorker);
+            allFrontLineWorkers.update(frontLineWorker);
         }
     }
 
     public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         frontLineWorker.addSMSReferenceNumber(smsReferenceNumber);
-        save(frontLineWorker);
+        allFrontLineWorkers.update(frontLineWorker);
         smsPublisherService.publishSMSSent(msisdn);
     }
 
     public int getCurrentCourseAttempt(String msisdn) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         return frontLineWorker.currentCourseAttempt();
     }
 
     public String getSMSReferenceNumber(String msisdn, int courseAttempt) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         return frontLineWorker.smsReferenceNumber(courseAttempt);
     }
 
-    public void saveScore(CertificateCourseStateFlwRequest request){
-        String interactionKey = request.getInteractionKey();
+    public void saveScore(CertificateCourseStateFlwRequest request) {
+        String callId = request.getCallId();
+        String callerId = request.getCallerId();
         Integer chapterIndex = request.getChapterIndex();
         Integer lessonOrQuestionIndex = request.getLessonOrQuestionIndex();
         Boolean result = request.getResult();
-        String callId = request.getCallId();
-        String callerId = request.getCallerId();
 
-        if(InteractionKeys.StartCertificationCourseInteraction.equals(interactionKey)) {
+        if (request.isStartCertificationCourseInteraction()) {
             resetAllScores(callerId);
-        } else if(InteractionKeys.StartQuizInteraction.equals(interactionKey)) {
+        } else if (request.isStartQuizInteraction()) {
             resetScoresForChapterIndex(callerId, chapterIndex);
-        } else if (InteractionKeys.PlayAnswerExplanationInteraction.equals(interactionKey)) {
+        } else if (request.isPlayAnswerExplanationInteraction()) {
             final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, callId);
             addScore(callerId, score);
-        } else if (InteractionKeys.PlayCourseResultInteraction.equals(interactionKey)) {
-            FrontLineWorker frontLineWorker = getFrontLineWorker(callerId);
+        } else if (request.isPlayCourseResultInteraction()) {
+            FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
             int totalScore = totalScore(frontLineWorker);
             int currentCertificateCourseAttempts = incrementCertificateCourseAttempts(frontLineWorker);
 
-            if(totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
+            if (totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
                 sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
             }
         }
@@ -158,25 +141,21 @@ public class FrontLineWorkerService {
 
     public CallerDataResponse createCallerData(String msisdn, String operator) {
         String bookmark = getBookmark(msisdn).asJson();
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        if(frontLineWorker == null){
-            frontLineWorker = createNew(msisdn , operator);
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker == null) {
+            frontLineWorker = createNew(msisdn, operator);
         }
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
         Boolean reachedMaxUsageForMonth = hasReachedMaxUsageForMonth(msisdn);
 
-        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter,reachedMaxUsageForMonth);
+        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter, reachedMaxUsageForMonth);
     }
 
     private Boolean hasReachedMaxUsageForMonth(String msisdn) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
-        if (frontLineWorker == null)
-            return false;
-
-        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null? 0 : frontLineWorker.getCurrentJobAidUsage();
-        //TODO:should FLWService talk to operator domain? [Imdad/Sush]
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker == null) return false;
+        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null ? 0 : frontLineWorker.getCurrentJobAidUsage();
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
-
         return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
     }
 }
