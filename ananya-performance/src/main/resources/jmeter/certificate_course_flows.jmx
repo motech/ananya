@@ -285,9 +285,9 @@ var Utility = function() {
 
 var utility = new Utility();
 
-var i = 0;
-for(i = 0; i &lt; tokens.length; i++) {
-  vars.put(&quot;token_&quot; + i, utility.stringify(tokens[i]));
+var i = 1;
+for(i = 1; i &lt; tokens.length; i++) {
+  vars.put(&quot;token_&quot; + i, utility.stringify(tokens[i-1]));
 }
 </stringProp>
       </BSFPreProcessor>
@@ -635,11 +635,18 @@ vars.put(&quot;dataToPost&quot;, dataToPost);
             <stringProp name="script">var thread = ctx.getThreadNum();
 var callerId = &quot;9999&quot;+thread;
 var callId=callerId+new Date().valueOf();
-//var dataToPost = vars.get(&quot;token-0&quot;);
 
 vars.put(&quot;callId&quot;, callId);
 vars.put(&quot;callerId&quot;, callerId);
-//vars.put(&quot;dataToPost&quot;, dataToPost);
+
+var start_chap = 1, end_chap = 5;
+for(start_chap= 1; start_chap &lt; end_chap; start_chap++) {   
+   if(vars.get(&quot;token_&quot;+start_chap)) {
+      vars.put(&quot;loopPost_&quot; + start_chap, vars.get(&quot;token_&quot;+start_chap) );    	
+   }   
+}
+
+
 </stringProp>
             <stringProp name="scriptLanguage">javascript</stringProp>
           </BSFPreProcessor>
@@ -745,7 +752,7 @@ vars.put(&quot;callerId&quot;, callerId);
           </HTTPSampler>
           <hashTree/>
           <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="true">
-            <stringProp name="ForeachController.inputVal">token</stringProp>
+            <stringProp name="ForeachController.inputVal">loopPost</stringProp>
             <stringProp name="ForeachController.returnVal">dataToPost</stringProp>
             <boolProp name="ForeachController.useSeparator">true</boolProp>
           </ForeachController>
