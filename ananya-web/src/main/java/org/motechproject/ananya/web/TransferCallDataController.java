@@ -3,7 +3,8 @@ package org.motechproject.ananya.web;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.CallDuration;
+import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -21,36 +22,24 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Controller
 public class TransferCallDataController {
+
     private static Logger log = LoggerFactory.getLogger(TransferCallDataController.class);
+    public static final String DUMMY = "<dummy/>";
+
     private CallLoggerService callLoggerService;
     private CertificateCourseService certificateCourseService;
     private CallLogCounterService callLogCounterService;
     private ReportPublisherService reportPublisherService;
 
-    private static enum CourseStateDataKeys {
-        CHAPTER_INDEX("chapterIndex", Integer.class),
-        LESSON_OR_QUESTION_INDEX("lessonOrQuestionIndex", Integer.class),
-        QUESTION_RESPONSE("questionResponse", Integer.class),
-        RESULT("result", Boolean.class),
-        INTERACTION_KEY("interactionKey", String.class);
-
-        public final String value;
-        public final Class klass;
-
-        CourseStateDataKeys(String key, Class klass) {
-            this.value = key;
-            this.klass = klass;
-        }
-    }
-
-    ;
-
     @Autowired
     public TransferCallDataController(CallLoggerService callLoggerService,
-                                      CertificateCourseService certificateCourseService, CallLogCounterService callLogCounterService, ReportPublisherService reportPublisherService) {
+                                      CertificateCourseService certificateCourseService,
+                                      CallLogCounterService callLogCounterService,
+                                      ReportPublisherService reportPublisherService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
         this.callLogCounterService = callLogCounterService;
@@ -60,42 +49,28 @@ public class TransferCallDataController {
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
     @ResponseBody
     public String receiveIVRData(HttpServletRequest request) {
+
         final String callerId = request.getParameter("callerId");
         final String callId = request.getParameter("callId");
-        // TODO: get called number here
+        final String jsonData = request.getParameter("dataToPost");
+        log.info("callId=" + callId + "|callerId=" + callerId + "|jsonData=" + jsonData);
 
-        String jsonData = request.getParameter("dataToPost");
-        log.info("callId=" + callId + "|callerId=" + callerId + "|json=" + jsonData);
+        List<TransferData> transferDataList = extractDataTransferList(jsonData);
+        List<CertificationCourseStateRequest> stateRequests = new ArrayList<CertificationCourseStateRequest>();
+        List<CallDuration> durations = new ArrayList<CallDuration>();
 
-        // TODO: annotate transfer data to implement deserialization information itself
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(TransferData.class, new TransferData());
-        Gson gson = gsonBuilder.create();
+        callLogCounterService.purgeRedundantPackets(callId, transferDataList);
 
-        Type collectionType = new TypeToken<Collection<TransferData>>() {
-        }.getType();
-        Collection<TransferData> dataCollection = gson.fromJson(jsonData, collectionType);
-
-        callLogCounterService.purgeRedundantPackets(callId, dataCollection);
-
-        ArrayList<CertificationCourseStateRequest> certificationCourseStateRequests = new ArrayList<CertificationCourseStateRequest>();
-        Collection<CallDuration> durations = new ArrayList<CallDuration>();
-
-        for (TransferData transferData : dataCollection) {
-            if (transferData.getType().equals(TransferData.TYPE_CC_STATE))
-                certificationCourseStateRequests.add(
-                        CertificationCourseStateRequest.makeObjectFromJson(
-                                callerId, callId, transferData.getToken(), transferData.getData()));
+        for (TransferData transferData : transferDataList) {
+            if (transferData.isCCState())
+                stateRequests.add(CertificationCourseStateRequest.makeObjectFromJson(
+                        callerId, callId, transferData.getToken(), transferData.getData()));
             else
-                durations.add(CaptureCallLog(transferData.getData(), callId, callerId));
+                durations.add(captureCallLog(callId, callerId, transferData.getData()));
         }
-
-        certificateCourseService.saveState(certificationCourseStateRequests);
-
-
-        HandleCallDuration(durations);
-
-        return "<dummy/>";
+        certificateCourseService.saveState(stateRequests);
+        handleCallDuration(durations);
+        return DUMMY;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
@@ -104,12 +79,19 @@ public class TransferCallDataController {
         final String callId = request.getParameter("callId");
         receiveIVRData(request);
         reportPublisherService.publishCallDisconnectEvent(callId);
-
-        return "<dummy/>";
+        return DUMMY;
     }
 
+    private List<TransferData> extractDataTransferList(String jsonData) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(TransferData.class, new TransferData());
+        Gson gson = gsonBuilder.create();
+        Type collectionType = new TypeToken<Collection<TransferData>>() {
+        }.getType();
+        return gson.fromJson(jsonData, collectionType);
+    }
 
-    private CallDuration CaptureCallLog(String data, String callId, String callerId) {
+    private CallDuration captureCallLog(String callId, String callerId, String data) {
         Gson gson = new Gson();
         Type collectionType = new TypeToken<CallDuration>() {
         }.getType();
@@ -119,8 +101,8 @@ public class TransferCallDataController {
         return callDuration;
     }
 
-    private void HandleCallDuration(Collection<CallDuration> deatilLogs) {
-        for (CallDuration duration : deatilLogs) {
+    private void handleCallDuration(List<CallDuration> detailLogs) {
+        for (CallDuration duration : detailLogs) {
             callLoggerService.save(duration);
         }
     }

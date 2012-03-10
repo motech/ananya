@@ -26,16 +26,14 @@ public class CertificationCourseStateRequest extends BaseRequest {
     public CertificationCourseStateRequest() {
     }
 
-    public static CertificationCourseStateRequest makeObjectFromJson(String callerId, String callId,
-                                                                     String dataToken, String certificateCourseJson) {
+    public static CertificationCourseStateRequest makeObjectFromJson(String callerId, String callId, String token, String json) {
         Gson gson = new Gson();
-        Type type = new TypeToken<CertificationCourseStateRequest>(){}.getType();
-        CertificationCourseStateRequest certificationCourseStateRequest = gson.fromJson(certificateCourseJson, type);
-        
+        Type type = new TypeToken<CertificationCourseStateRequest>() {
+        }.getType();
+        CertificationCourseStateRequest certificationCourseStateRequest = gson.fromJson(json, type);
         certificationCourseStateRequest.callerId = callerId;
         certificationCourseStateRequest.callId = callId;
-        certificationCourseStateRequest.token = dataToken;
-        
+        certificationCourseStateRequest.token = token;
         return certificationCourseStateRequest;
     }
 
@@ -90,10 +88,9 @@ public class CertificationCourseStateRequest extends BaseRequest {
     public String getTime() {
         return time;
     }
-    
+
     public DateTime getTimeAsDateTime() {
         if (StringUtils.isBlank(time)) return null;
-
         return DateTime.parse(time);
     }
 

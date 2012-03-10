@@ -46,4 +46,8 @@ public class TransferData implements JsonDeserializer<TransferData> {
 
         return transferData;
     }
+
+    public boolean isCCState(){
+        return type.equals(TYPE_CC_STATE);
+    }
 }
