@@ -31,8 +31,8 @@ public class TransferCallDataController {
     public static final String DUMMY = "<dummy/>";
 
     private CallLoggerService callLoggerService;
-    private CertificateCourseService certificateCourseService;
     private CallLogCounterService callLogCounterService;
+    private CertificateCourseService certificateCourseService;
     private ReportPublisherService reportPublisherService;
 
     @Autowired
@@ -69,7 +69,9 @@ public class TransferCallDataController {
                 durations.add(captureCallLog(callId, callerId, transferData.getData()));
         }
         certificateCourseService.saveState(stateRequests);
-        handleCallDuration(durations);
+        for (CallDuration duration : durations) {
+            callLoggerService.save(duration);
+        }
         return DUMMY;
     }
 
@@ -101,9 +103,4 @@ public class TransferCallDataController {
         return callDuration;
     }
 
-    private void handleCallDuration(List<CallDuration> detailLogs) {
-        for (CallDuration duration : detailLogs) {
-            callLoggerService.save(duration);
-        }
-    }
 }
