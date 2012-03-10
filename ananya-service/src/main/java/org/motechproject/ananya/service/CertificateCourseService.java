@@ -18,8 +18,9 @@ public class CertificateCourseService {
     private SendSMSService sendSMSService;
 
     @Autowired
-    public CertificateCourseService(
-            AllCertificateCourseLogs allCertificateCourseLogs, FrontLineWorkerService frontLineWorkerService, SendSMSService sendSMSService) {
+    public CertificateCourseService(AllCertificateCourseLogs allCertificateCourseLogs,
+                                    FrontLineWorkerService frontLineWorkerService,
+                                    SendSMSService sendSMSService) {
         this.allCertificateCourseLogs = allCertificateCourseLogs;
         this.frontLineWorkerService = frontLineWorkerService;
         this.sendSMSService = sendSMSService;
@@ -27,20 +28,9 @@ public class CertificateCourseService {
 
     private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
         final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
-                courseStateRequest.getChapterIndex(), courseStateRequest.getLessonOrQuestionIndex());
-
+                                               courseStateRequest.getChapterIndex(),
+                                               courseStateRequest.getLessonOrQuestionIndex());
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
-    }
-
-    private CertificateCourseStateFlwRequest getCertificateCourseStateFlwRequest(final CertificationCourseStateRequest courseStateRequest) {
-
-        final Integer chapterIndex = courseStateRequest.getChapterIndex();
-        final Integer lessonOrQuestionIndex = courseStateRequest.getLessonOrQuestionIndex();
-        final Boolean result = courseStateRequest.isResult();
-        final String callerId = courseStateRequest.getCallerId();
-        final String callId = courseStateRequest.getCallId();
-        final String interactionKey = courseStateRequest.getInteractionKey();
-        return new CertificateCourseStateFlwRequest(chapterIndex, lessonOrQuestionIndex, result, interactionKey, callId, callerId);
     }
 
     public void saveState(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
@@ -49,18 +39,27 @@ public class CertificateCourseService {
             return;
 
         for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
-            CertificateCourseStateFlwRequest certificateCourseStateFlwRequest = getCertificateCourseStateFlwRequest(certificationCourseStateRequest);
+            CertificateCourseStateFlwRequest certificateCourseStateFlwRequest = createCertificateCourseStateFlwRequest(certificationCourseStateRequest);
             frontLineWorkerService.saveScore(certificateCourseStateFlwRequest);
         }
 
         CertificationCourseStateRequest recentCourseRequest =
                 certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
         saveBookmark(recentCourseRequest);
-
-        SaveCourseCertificateLog(certificationCourseStateRequestCollection);
+        saveCourseCertificateLog(certificationCourseStateRequestCollection);
     }
 
-    private void SaveCourseCertificateLog(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
+    private CertificateCourseStateFlwRequest createCertificateCourseStateFlwRequest(final CertificationCourseStateRequest courseStateRequest) {
+        return new CertificateCourseStateFlwRequest(
+                courseStateRequest.getChapterIndex(),
+                courseStateRequest.getLessonOrQuestionIndex(),
+                courseStateRequest.isResult(),
+                courseStateRequest.getInteractionKey(),
+                courseStateRequest.getCallId(),
+                courseStateRequest.getCallerId());
+    }
+
+    private void saveCourseCertificateLog(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
         CertificationCourseLog courseLogDocument;
         CertificationCourseStateRequest courseStateRequest = certificationCourseStateRequestCollection.get(0);
         final String callId = courseStateRequest.getCallId();

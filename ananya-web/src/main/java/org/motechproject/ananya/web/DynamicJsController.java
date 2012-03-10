@@ -40,24 +40,9 @@ public class DynamicJsController {
         response.setContentType("application/javascript");
         String operator = operatorFromURL(request);
 
-        return new ModelAndView("metadata"+operator).
-            addObject("urlVersion", properties.getProperty("url.version")).
-            addObject("contextPath", request.getContextPath());
-    }
-
-    private String operatorFromURL(HttpServletRequest request) {
-        String urlVersion = properties.getProperty("url.version");
-        String currentPath = "/" + urlVersion;
-        boolean versionedUrl = request.getServletPath().contains(urlVersion);
-        
-        String operator = "";
-        if(versionedUrl) {
-            operator = StringUtils.remove(request.getServletPath(), currentPath);
-            if(!operator.isEmpty()) {
-                operator = operator.substring(1);
-            }
-        }
-        return operator;
+        return new ModelAndView("metadata" + operator).
+                addObject("urlVersion", properties.getProperty("url.version")).
+                addObject("contextPath", request.getContextPath());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data.js")
@@ -79,13 +64,26 @@ public class DynamicJsController {
         String msisdn = request.getParameter("callerId");
         String operator = request.getParameter("operator");
         response.setContentType("application/javascript");
-        log.info("fetching caller data for: "+msisdn);
+        log.info("fetching caller data for: " + msisdn);
 
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn , operator);
+        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, operator);
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("scoresByChapter", callerData.getScoresByChapter())
                 .addObject("hasReachedMaxUsageForMonth", callerData.hasReachedMaxUsageForMonth());
+    }
+
+    private String operatorFromURL(HttpServletRequest request) {
+        String urlVersion = properties.getProperty("url.version");
+        String currentPath = "/" + urlVersion;
+        boolean versionedUrl = request.getServletPath().contains(urlVersion);
+
+        String operator = "";
+        if (versionedUrl) { 
+            operator = StringUtils.remove(request.getServletPath(), currentPath);
+            if (!operator.isEmpty()) operator = operator.substring(1);
+        }
+        return operator;
     }
 }

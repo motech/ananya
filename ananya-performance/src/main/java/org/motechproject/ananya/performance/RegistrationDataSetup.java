@@ -1,4 +1,4 @@
-package org.motechproject.ananya.performance.dataSetup;
+package org.motechproject.ananya.performance;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.ektorp.CouchDbConnector;

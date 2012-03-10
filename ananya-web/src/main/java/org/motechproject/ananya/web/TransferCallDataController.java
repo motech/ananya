@@ -48,10 +48,9 @@ public class TransferCallDataController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
     @ResponseBody
-    public String receiveIVRData(HttpServletRequest request) {
-
-        final String callerId = request.getParameter("callerId");
+    public String receiveCallData(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
+        final String callerId = request.getParameter("callerId");
         final String jsonData = request.getParameter("dataToPost");
         log.info("callId=" + callId + "|callerId=" + callerId + "|jsonData=" + jsonData);
 
@@ -79,8 +78,11 @@ public class TransferCallDataController {
     @ResponseBody
     public String receiveIVRDataAtDisconnect(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
-        receiveIVRData(request);
+        receiveCallData(request);
+
         reportPublisherService.publishCallDisconnectEvent(callId);
+
+        log.info("Call ended: "+callId);
         return DUMMY;
     }
 

@@ -70,7 +70,7 @@ public class TransferCallDataControllerTest {
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("dataToPost")).thenReturn(postedData());
         
-        transferCallDataController.receiveIVRData(request);
+        transferCallDataController.receiveCallData(request);
 
         verify(callLogCounterService).purgeRedundantPackets(argThat(is(callId)), argThat(new TransferDataCollectionMatcher(
                 new ArrayList<TransferData>() {
@@ -263,7 +263,7 @@ public class TransferCallDataControllerTest {
 
         when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{\"time\":1330320462000,\"callEvent\":\"CALL_START\"}}]");
 
-        String s = transferCallDataController.receiveIVRData(request);
+        String s = transferCallDataController.receiveCallData(request);
 
         verify(callLoggerService).save(argThat(callDurationMatcher("123", "456",CallEvent.CALL_START, 1330320462000L )));
     }
@@ -278,7 +278,7 @@ public class TransferCallDataControllerTest {
 
         when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{\"time\":1330320462000,\"callEvent\":\"REGISTRATION_START\"}},{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{\"time\":1330320480000,\"callEvent\":\"REGISTRATION_END\"}}]");
 
-        String s = transferCallDataController.receiveIVRData(request);
+        String s = transferCallDataController.receiveCallData(request);
 
         verify(callLoggerService).save(argThat(callDurationMatcher("123", "456",CallEvent.REGISTRATION_START, 1330320462000L )));
         verify(callLoggerService).save(argThat(callDurationMatcher("123", "456",CallEvent.REGISTRATION_END, 1330320480000L )));
