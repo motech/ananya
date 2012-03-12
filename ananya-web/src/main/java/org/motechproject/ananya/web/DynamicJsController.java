@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CallerDataResponse;
+import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,19 @@ public class DynamicJsController {
         return String.format("var courseData = %s;", allNodes.nodeAsJson("CertificationCourse"));
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/dynamic/jobaid/caller_data.js")
+    public ModelAndView getCallerDataForJobAid(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String msisdn = request.getParameter("callerId");
+        String operator = request.getParameter("operator");
+        response.setContentType("application/javascript");
+        log.info("fetching caller data for: " + msisdn);
+
+        JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, operator);
+        return new ModelAndView("job_aid_caller_data")
+                .addObject("isCallerRegistered", callerData.isCallerRegistered())
+                .addObject("hasReachedMaxUsageForMonth", callerData.hasReachedMaxUsageForMonth());
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/caller_data.js")
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
@@ -70,8 +84,7 @@ public class DynamicJsController {
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
-                .addObject("scoresByChapter", callerData.getScoresByChapter())
-                .addObject("hasReachedMaxUsageForMonth", callerData.hasReachedMaxUsageForMonth());
+                .addObject("scoresByChapter", callerData.getScoresByChapter());
     }
 
     private String operatorFromURL(HttpServletRequest request) {

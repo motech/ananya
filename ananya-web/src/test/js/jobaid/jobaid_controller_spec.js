@@ -12,8 +12,7 @@ describe("Controller for jobaid ", function () {
 
     it("should return 'registered' form for registered caller in jobaid", function() {
         var callerData = {
-            "isRegistered" : "true",
-            "bookmark" : "{}"
+            "isRegistered" : "true"
         };
         controller = new JobAidController(callerData);
         expect(controller.decideFlowForJobAid()).toEqual("#registered");
@@ -22,7 +21,6 @@ describe("Controller for jobaid ", function () {
     it("should return 'max_usage' form for registered caller in jobaid with max usage reached", function() {
         var callerData = {
             "isRegistered" : "true",
-            "bookmark" : "{}" ,
             "hasReachedMaxUsageForMonth" : true
         };
         controller = new JobAidController(callerData);
@@ -32,18 +30,15 @@ describe("Controller for jobaid ", function () {
     it("should tell if the caller is registered", function () {
         var registeredCaller = {
             "isRegistered" : "true",
-            "bookmark" : "{}"
         };
         controller = new JobAidController(registeredCaller);
         expect(controller.isCallerRegistered()).toEqual(true);
 
         var unRegisteredCaller = {
-            "isRegistered" : "false",
-            "bookmark" : "{}"
+            "isRegistered" : "false"
         };
         controller = new JobAidController(unRegisteredCaller);
         expect(controller.isCallerRegistered()).toEqual(false);
-
     });
 
     it("should return jobaid welcome prompt for registered users", function() {

@@ -5,13 +5,12 @@
       application="root.vxml">
 
     <!-- Todo: remove hard coded airtel -->
-    <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/dynamic/caller_data.js?callerId=' + session.connection.remote.uri+ '&amp;operator=airtel')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/dynamic/jobaid/caller_data.js?callerId=' + session.connection.remote.uri+ '&amp;operator=' + session.site)"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/course.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/call_context.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/controller.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/prompt_context.js')"/>
-    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?'+  (new Date()).valueOf())"/>
     <script>
         <![CDATA[
             callDetailLogger.jobaid_start();

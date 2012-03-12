@@ -6,13 +6,11 @@ public class CallerDataResponse {
     private String bookmark;
     private boolean isCallerRegistered;
     private Map<String,Integer> scoresByChapter;
-    private Boolean hasReachedMaxUsageForMonth;
 
-    public CallerDataResponse(String bookmark, boolean callerRegistered, Map<String, Integer> scoresByChapter, Boolean hasReachedMaxUsageForMonth) {
+    public CallerDataResponse(String bookmark, boolean callerRegistered, Map<String, Integer> scoresByChapter) {
         this.bookmark = bookmark;
         isCallerRegistered = callerRegistered;
         this.scoresByChapter = scoresByChapter;
-        this.hasReachedMaxUsageForMonth = hasReachedMaxUsageForMonth;
     }
 
     public String getBookmark() {
@@ -25,9 +23,5 @@ public class CallerDataResponse {
 
     public Map<String, Integer> getScoresByChapter() {
         return scoresByChapter;
-    }
-
-    public Boolean hasReachedMaxUsageForMonth() {
-        return hasReachedMaxUsageForMonth;
     }
 }

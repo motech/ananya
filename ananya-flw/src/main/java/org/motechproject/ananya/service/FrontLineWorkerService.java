@@ -6,6 +6,7 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
+import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,15 @@ public class FrontLineWorkerService {
         }
     }
 
+    public JobAidCallerDataResponse createJobAidCallerData(String msisdn, String operator) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker == null) {
+            frontLineWorker = createNew(msisdn, operator);
+        }
+
+        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(), hasReachedMaxUsageForMonth(msisdn));
+    }
+
     public CallerDataResponse createCallerData(String msisdn, String operator) {
         String bookmark = getBookmark(msisdn).asJson();
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
@@ -146,9 +156,8 @@ public class FrontLineWorkerService {
             frontLineWorker = createNew(msisdn, operator);
         }
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
-        Boolean reachedMaxUsageForMonth = hasReachedMaxUsageForMonth(msisdn);
 
-        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter, reachedMaxUsageForMonth);
+        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter);
     }
 
     private Boolean hasReachedMaxUsageForMonth(String msisdn) {

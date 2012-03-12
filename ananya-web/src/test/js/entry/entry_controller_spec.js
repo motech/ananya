@@ -28,4 +28,20 @@ describe("Controller for certificate/jobaid course entry", function () {
         controller = new EntryController(callerData, metadata);
         expect(controller.decideFlowForCertificateCourse()).toEqual("#unregistered");
     });
+
+    it("should tell if the caller is registered", function () {
+        var registeredCaller = {
+            "isRegistered" : "true",
+            "bookmark" : "{}"
+        };
+        controller = new JobAidController(registeredCaller);
+        expect(controller.isCallerRegistered()).toEqual(true);
+
+        var unRegisteredCaller = {
+            "isRegistered" : "false",
+            "bookmark" : "{}"
+        };
+        controller = new JobAidController(unRegisteredCaller);
+        expect(controller.isCallerRegistered()).toEqual(false);
+    });
 });

@@ -10,11 +10,9 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
-
-import java.io.StreamCorruptedException;
+import org.motechproject.ananya.response.JobAidCallerDataResponse;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -209,14 +207,27 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldPopulateCallerDataWithMaxUsageBeingTrueWhenUsageHasMaxedOut() {
+    public void shouldTellThatUserIsRegisteredBasedOnStatusOnTheJobAidCallerData() {
+        String registeredMsisdn = "123";
+        FrontLineWorker registeredFrontLineWorker = FrontLineWorker();
+        registeredFrontLineWorker.status(RegistrationStatus.REGISTERED);
+        when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
+        when(allOperators.findByName("operator")).thenReturn(new Operator("operator",registeredFrontLineWorker.getCurrentJobAidUsage()-1));
+
+        JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(registeredMsisdn, "airtel");
+
+        assertThat(callerData.isCallerRegistered(), is(true));
+    }
+
+    @Test
+    public void shouldPopulateJobAidCallerDataWithMaxUsageBeingTrueWhenUsageHasMaxedOut() {
         String msisdn = "9876543210";
         String operator = "operator";
         FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ASHA, "location", operator);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(flw);
         when(allOperators.findByName(operator)).thenReturn(new Operator(operator,flw.getCurrentJobAidUsage() - 1));
 
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, "airtel");
+        JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, "airtel");
 
         assertEquals(true,(boolean) callerData.hasReachedMaxUsageForMonth());
     }
