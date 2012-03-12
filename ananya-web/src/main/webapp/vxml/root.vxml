@@ -9,7 +9,6 @@
 
     <script>
         var pathToRoot = "../";
-        operator = "airtel";
     </script>
     <script src="../js/utility.js"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/metadata.js?'+  (new Date()).valueOf())"/>
