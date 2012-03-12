@@ -32,7 +32,7 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
             "/ananya/jobaid/updateprompt?callId=1234&callerId=#{0}&['prompt1', 'prompt2']", frontLineWorker.getMsisdn()));
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorker.getMsisdn());
-        Map<String, Integer> prompts = frontLineWorker.getPromptsHeard();
+        Map<String, Integer> prompts = updatedFrontLineWorker.getPromptsHeard();
         
         assertEquals((int)prompts.get(prompt1), 2);
         assertEquals((int)prompts.get(prompt2), 1);

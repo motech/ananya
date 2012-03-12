@@ -282,6 +282,8 @@ public class FrontLineWorkerServiceTest {
         // TODO: trap call on FLW with prompt arguments
 //        verify(frontLineWorker).markPromptHeard(promptIds.get(0));
 //        verify(frontLineWorker).markPromptHeard(promptIds.get(1));
+
+        verify(allFrontLineWorkers).update(frontLineWorker);
     }
     
     @Test(expected = WorkerDoesNotExistException.class)

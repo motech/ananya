@@ -174,6 +174,7 @@ public class FrontLineWorkerService {
         for(String prompt: promptList) {
             frontLineWorker.markPromptHeard(prompt);
         }
+        allFrontLineWorkers.update(frontLineWorker);
     }
 
 }
