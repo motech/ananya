@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Operator;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllOperators;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,20 +25,15 @@ public class OperatorSeedTest {
     @Autowired
     private AllOperators allOperators;
 
-    @Autowired
-    private DataAccessTemplate template;
-
     //TODO:Find a cleaner(transactional) way to run this test[Imdad/Sush]
     @Before
     public void setUp() {
         allOperators.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
     @After
     public void tearDown() {
         allOperators.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
     @Test
@@ -51,5 +44,11 @@ public class OperatorSeedTest {
         String airtelOperator = "airtel";
         Operator airtel = allOperators.findByName(airtelOperator);
         assertEquals(airtel.getAllowedUsagePerMonth(), OperatorSeed.operator_usage.get(airtelOperator));
+    }
+
+    @Test
+    public void shouldConvertMinutesToMiliSeconds(){
+        assertEquals(OperatorSeed.convertMinutesToMilliSeconds(1), Integer.valueOf(60000));
+        assertEquals(OperatorSeed.convertMinutesToMilliSeconds(0), Integer.valueOf(0));
     }
 }

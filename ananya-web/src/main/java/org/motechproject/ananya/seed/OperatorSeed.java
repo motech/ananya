@@ -18,12 +18,16 @@ public class OperatorSeed {
     public final static HashMap<String,Integer> operator_usage = new HashMap<String, Integer>();
 
     {
-        operator_usage.put("airtel",39);
-        operator_usage.put("tata",48);
-        operator_usage.put("vodafone",39);
-        operator_usage.put("idea",38);
-        operator_usage.put("reliance",34);
-        operator_usage.put("bsnl",28);
+        operator_usage.put("airtel",convertMinutesToMilliSeconds(39));
+        operator_usage.put("tata",convertMinutesToMilliSeconds(48));
+        operator_usage.put("vodafone",convertMinutesToMilliSeconds(39));
+        operator_usage.put("idea",convertMinutesToMilliSeconds(38));
+        operator_usage.put("reliance",convertMinutesToMilliSeconds(34));
+        operator_usage.put("bsnl",convertMinutesToMilliSeconds(28));
+    }
+
+    public static Integer convertMinutesToMilliSeconds(int minutes) {
+        return minutes*60*1000;
     }
 
     @Seed(priority = 0)
