@@ -59,7 +59,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker(String msisdn , String operator) {
         this.msisdn = msisdn;
         this.operator = operator;
-        this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]
     }
 
     @Override
