@@ -12,36 +12,9 @@ var EntryController = function(callerData , metadata) {
             return "#registered_bookmark_absent";
     };
 
-    this.decideFlowForJobAid = function(operator) {
-        if (this.isCallerRegistered()){
-            if(this.hasReachedMaxUsage(operator))
-                return "#max_usage";
-            else
-                return "#registered";
-        }
-        else
-            return "#partially_registered";
-    };
-
-    this.hasReachedMaxUsage = function() {
-        return (callerData.hasReachedMaxUsageForMonth);
-    };
-
     this.isCallerRegistered = function() {
         return callerData.isRegistered == "true";
     };
-
-    this.maxUsagePrompt = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["max.usage.prompt"];
-    }
-
-    this.jobAidWelcomePromptRegistered = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome.registered"];
-    }
-
-    this.jobAidWelcomePromptPartiallyRegistered = function() {
-        return metadata["audio.url"] +  metadata["jobaid.audio.url"] + metadata["jobaid.welcome.partially.registered"];
-    }
 
     this.certificateNeedToRegisterPrompt = function() {
         return metadata["audio.url"] +  metadata["certificate.audio.url"] + metadata["certificate.need.to.register"];

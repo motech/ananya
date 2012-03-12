@@ -2,8 +2,8 @@ var LandingController = function(metadata) {
 
     var metadata = metadata;
 
-    this.jobAidEnterURL = function() {
-        return metadata["url.version"] + "/vxml/jobaid_enter.vxml";
+    this.jobAidURL = function() {
+        return metadata["url.version"] + "/vxml/jobaid.vxml";
     };
 
     this.certificateEnterURL = function() {

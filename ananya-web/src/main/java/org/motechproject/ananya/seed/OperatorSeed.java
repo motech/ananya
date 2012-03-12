@@ -16,7 +16,6 @@ public class OperatorSeed {
     AllOperators allOperators;
 
     public final static HashMap<String,Integer> operator_usage = new HashMap<String, Integer>();
-
     {
         operator_usage.put("airtel",convertMinutesToMilliSeconds(39));
         operator_usage.put("tata",convertMinutesToMilliSeconds(48));

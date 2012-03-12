@@ -14,7 +14,7 @@
     </script>
     <form id="landing_page">
         <block>
-            <goto expr="Utility.relativePath(pathToRoot, controller.jobAidEnterURL())"/>
+            <goto expr="Utility.relativePath(pathToRoot, controller.jobAidURL())"/>
         </block>
     </form>
 </vxml>
