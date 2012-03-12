@@ -11,9 +11,11 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -79,11 +81,13 @@ public class DynamicJsControllerTest {
         request.setServletPath("/dynamic/jobaid/caller_data.js");
         DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
 
-        when(frontLineWorkerService.createJobAidCallerData("12345", "airtel")).thenReturn(new JobAidCallerDataResponse(true,true));
+        when(frontLineWorkerService.createJobAidCallerData("12345", "airtel")).thenReturn(
+                new JobAidCallerDataResponse(true,true, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
         assertEquals("job_aid_caller_data",callerDataForJobAid.getViewName() );
         assertTrue((Boolean) callerDataForJobAid.getModel().get("isCallerRegistered"));
         assertTrue((Boolean) callerDataForJobAid.getModel().get("hasReachedMaxUsageForMonth"));
+        assertNotNull((HashMap<String, Integer>) callerDataForJobAid.getModel().get("promptsHeard"));
     }
 }

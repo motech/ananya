@@ -236,6 +236,24 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
+    public void shouldPopulateJobAidCallerDataWithPromptsHeardForUser() {
+        String msisdn = "9876543210";
+        String operator = "operator";
+        FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ASHA, "location", operator);
+        flw.markPromptHeard("prompt1"); flw.markPromptHeard("prompt1");
+        flw.markPromptHeard("prompt2");
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(flw);
+        when(allOperators.findByName(operator)).thenReturn(new Operator(operator,flw.getCurrentJobAidUsage() - 1));
+
+        JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, "airtel");
+
+        assertEquals(callerData.getPromptsHeard().size(), 2);
+        assertEquals((int)callerData.getPromptsHeard().get("prompt1"), 2);
+        assertEquals((int)callerData.getPromptsHeard().get("prompt2"), 1);
+    }
+
+    @Test
     public void shouldResetScoresAtCertificationCourseStartInteractionWhileSavingScores(){
         String callerId = "callerId";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator");

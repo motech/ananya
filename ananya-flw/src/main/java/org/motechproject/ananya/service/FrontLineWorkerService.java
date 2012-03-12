@@ -144,7 +144,8 @@ public class FrontLineWorkerService {
             frontLineWorker = createNew(msisdn, operator);
         }
 
-        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(), hasReachedMaxUsageForMonth(msisdn));
+        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(),
+                hasReachedMaxUsageForMonth(msisdn), frontLineWorker.getPromptsHeard());
     }
 
     public CallerDataResponse createCallerData(String msisdn, String operator) {
