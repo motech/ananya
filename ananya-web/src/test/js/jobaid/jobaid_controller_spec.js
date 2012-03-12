@@ -1,21 +1,76 @@
 describe("Controller for jobaid ", function () {
     var controller;
 
-    it("should return 'unregistered' form for unregistered caller in jobaid", function() {
+    it("should return 'partially_registered' form for partially registered caller in jobaid when not dialled in via short code", function() {
         var callerData = {
             "isRegistered" : "false"
         };
         var metadata = {'usage.general' : 50};
-        controller = new JobAidController(callerData, metadata);
+        var callContext = { "dialedViaShortCode" : false };
+        controller = new JobAidController(callerData, metadata, callContext);
         expect(controller.decideFlowForJobAid()).toEqual("#partially_registered");
     });
 
-    it("should return 'registered' form for registered caller in jobaid", function() {
+    it("should return 'registered' form for registered caller in jobaid when not dialled in via short code", function() {
         var callerData = {
             "isRegistered" : "true"
         };
-        controller = new JobAidController(callerData);
+        var metadata = {'usage.general' : 50};
+        var callContext = { "dialedViaShortCode" : false };
+        controller = new JobAidController(callerData, metadata, callContext);
         expect(controller.decideFlowForJobAid()).toEqual("#registered");
+    });
+
+    it("should return 'registered' form for registered caller in jobaid when dialled in via short code and not listened to registered user welcome prompt", function() {
+        var callerData = {
+            "isRegistered" : "true",
+            "promptsHeard" : {
+            }
+        };
+        var metadata = {'usage.general' : 50};
+        var callContext = { "dialedViaShortCode" : true };
+        controller = new JobAidController(callerData, metadata, callContext);
+        expect(controller.decideFlowForJobAid()).toEqual("#registered");
+    });
+
+    it("should return 'partially_registered' form for partially registered caller in jobaid when dialled in via short code and not listened to partially registered user welcome prompt", function() {
+        var callerData = {
+            "isRegistered" : "false",
+            "promptsHeard" : {
+            }
+        };
+        var metadata = {'usage.general' : 50};
+        var callContext = { "dialedViaShortCode" : true };
+        controller = new JobAidController(callerData, metadata, callContext);
+        expect(controller.decideFlowForJobAid()).toEqual("#partially_registered");
+    });
+
+    it("should return 'controller' form for partially registered caller in jobaid when dialled in via short code and listened to partially registered user welcome prompt", function() {
+        var callerData = {
+            "isRegistered" : "false",
+            "promptsHeard" : {
+                "unregistered_welcome_message" : 1,
+                "registered_welcome_message" : 1
+            }
+        };
+        var metadata = {'usage.general' : 50};
+        var callContext = { "dialedViaShortCode" : true };
+        controller = new JobAidController(callerData, metadata, callContext);
+        expect(controller.decideFlowForJobAid()).toEqual("#controller");
+    });
+
+    it("should return 'controller' form for registered caller in jobaid when dialled in via short code and listened to registered user welcome prompt", function() {
+        var callerData = {
+            "isRegistered" : "true",
+            "promptsHeard" : {
+                "unregistered_welcome_message" : 1,
+                "registered_welcome_message" : 1
+            }
+        };
+        var metadata = {'usage.general' : 50};
+        var callContext = { "dialedViaShortCode" : true };
+        controller = new JobAidController(callerData, metadata, callContext);
+        expect(controller.decideFlowForJobAid()).toEqual("#controller");
     });
 
     it("should return 'max_usage' form for registered caller in jobaid with max usage reached", function() {
@@ -29,7 +84,7 @@ describe("Controller for jobaid ", function () {
 
     it("should tell if the caller is registered", function () {
         var registeredCaller = {
-            "isRegistered" : "true",
+            "isRegistered" : "true"
         };
         controller = new JobAidController(registeredCaller);
         expect(controller.isCallerRegistered()).toEqual(true);

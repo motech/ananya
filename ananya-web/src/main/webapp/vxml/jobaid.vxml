@@ -16,7 +16,7 @@
             callDetailLogger.jobaid_start();
             var promptContext = new PromptContext(metaData);
             var callContext = new CallContext(courseData, metaData, promptContext);
-            var controller = new JobAidController(callerData, metaData);
+            var controller = new JobAidController(callerData, metaData, callContext);
             callContext.navigateTo(session.connection.local.uri);
           ]]>
     </script>
@@ -42,6 +42,7 @@
     <form id="partially_registered">
         <block>
             <log>TW::<value expr="callerId"/> partially registered</log>
+            <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['unregistered_welcome_message'])"/>
             <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptPartiallyRegistered())"/>
             <goto next="#controller"/>
         </block>
@@ -50,7 +51,8 @@
     <form id="registered">
         <block>
             <log>TW::<value expr="callerId"/> moved into jobaid</log>
-            <audio expr="Utility.relativePath(pathToRoot,controller.jobAidWelcomePromptRegistered())"/>
+            <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['registered_welcome_message'])"/>
+            <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptRegistered())"/>
             <goto next="#controller"/>
         </block>
     </form>
