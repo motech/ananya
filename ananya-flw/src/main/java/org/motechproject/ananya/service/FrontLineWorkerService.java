@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
@@ -12,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FrontLineWorkerService {
@@ -167,4 +165,14 @@ public class FrontLineWorkerService {
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
         return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
     }
+    
+    public void updatePromptsForFLW(String msisdn, List<String> promptList) throws WorkerDoesNotExistException{
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker == null) throw new WorkerDoesNotExistException();
+        
+        for(String prompt: promptList) {
+            frontLineWorker.markPromptHeard(prompt);
+        }
+    }
+
 }

@@ -53,6 +53,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Integer currentJobAidUsage;
 
+    @JsonProperty
+    private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
+    
     public FrontLineWorker() {
     }
 
@@ -168,5 +171,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public Integer getCurrentJobAidUsage() {
         return this.currentJobAidUsage;
+    }
+    
+    public void markPromptHeard(String promptKey) {
+        this.promptsHeard.put(promptKey,
+                this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
+    }
+    
+    public Map<String, Integer> getPromptsHeard() {
+        return this.promptsHeard;
     }
 }

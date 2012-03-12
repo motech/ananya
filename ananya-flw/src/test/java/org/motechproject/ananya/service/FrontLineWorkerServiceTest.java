@@ -5,12 +5,15 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -244,5 +247,32 @@ public class FrontLineWorkerServiceTest {
         frontLineWorkerService.saveScore(request);
 
         assertEquals(0, frontLineWorker.reportCard().scores().size());
+    }
+
+    @Test
+    public void shouldUpdatePromptsForFLW() {
+        String callerId = "callerId";
+        List<String> promptIds = Arrays.asList("prompt1", "prompt2");
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator");
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        try {
+            frontLineWorkerService.updatePromptsForFLW(callerId, promptIds);
+        } catch (Exception e) {}
+
+        // TODO: trap call on FLW with prompt arguments
+//        verify(frontLineWorker).markPromptHeard(promptIds.get(0));
+//        verify(frontLineWorker).markPromptHeard(promptIds.get(1));
+    }
+    
+    @Test(expected = WorkerDoesNotExistException.class)
+    public void shouldThrowExceptionWhileUpdatingPromptsWhenFLWNotPresent() throws WorkerDoesNotExistException {
+        String callerId = "callerId";
+        List<String> promptIds = Arrays.asList("prompt1", "prompt2");
+
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
+
+        frontLineWorkerService.updatePromptsForFLW(callerId, promptIds);
     }
 }
