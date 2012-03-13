@@ -5,6 +5,7 @@ import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.JobAidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,14 @@ public class DynamicJsController {
     private AllNodes allNodes;
     private FrontLineWorkerService frontLineWorkerService;
     private Properties properties;
+    private JobAidService jobAidService;
 
     @Autowired
-    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService, @Qualifier("ananyaProperties") Properties properties) {
+    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService, @Qualifier("ananyaProperties") Properties properties, JobAidService jobAidService) {
         this.allNodes = allNodes;
         this.frontLineWorkerService = frontLineWorkerService;
         this.properties = properties;
+        this.jobAidService = jobAidService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
@@ -67,7 +70,7 @@ public class DynamicJsController {
         response.setContentType("application/javascript");
         log.info("fetching caller data for: " + msisdn);
 
-        JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, operator);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator);
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())

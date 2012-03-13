@@ -6,7 +6,6 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
-import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,15 +137,6 @@ public class FrontLineWorkerService {
                 sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
             }
         }
-    }
-
-    public JobAidCallerDataResponse createJobAidCallerData(String msisdn, String operator) {
-        FrontLineWorker frontLineWorker = createNew(msisdn, operator);
-
-        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null ? 0 : frontLineWorker.getCurrentJobAidUsage();
-        Integer allowedUsagePerMonthForOperator = allOperators.findByName(frontLineWorker.getOperator()).getAllowedUsagePerMonth();
-
-        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(), currentJobAidUsage, allowedUsagePerMonthForOperator, frontLineWorker.getPromptsHeard());
     }
 
     public CallerDataResponse createCallerData(String msisdn, String operator) {

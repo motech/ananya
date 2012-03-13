@@ -7,6 +7,7 @@ import org.motechproject.ananya.functional.MyWebClient;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.JobAidService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +32,9 @@ public class DynamicJsControllerTest {
     FrontLineWorkerService frontLineWorkerService;
 
     @Mock
+    private JobAidService jobAidService;
+    
+    @Mock
     Properties properties;
 
     @Before
@@ -45,7 +49,7 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/v1/generated/js/metadata.js");
         request.setServletPath("/v1");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
+        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadata", modelAndView.getViewName());
@@ -56,7 +60,7 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
         request.setServletPath("/airtel/v1");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
+        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadataairtel", modelAndView.getViewName());
@@ -67,7 +71,7 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/metadata.js");
         request.setServletPath("/generated/js/metadata.js");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
+        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadata", modelAndView.getViewName());
@@ -79,9 +83,9 @@ public class DynamicJsControllerTest {
         request.addParameter("callerId", "12345");
         request.addParameter("operator", "airtel");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
+        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
 
-        when(frontLineWorkerService.createJobAidCallerData("12345", "airtel")).thenReturn(
+        when(jobAidService.createCallerData("12345", "airtel")).thenReturn(
                 new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
