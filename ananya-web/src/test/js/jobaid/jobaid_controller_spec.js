@@ -142,7 +142,7 @@ describe("Controller for jobaid ", function () {
         expect(controller.playRemainingTimePromptStart()).toEqual("audio/jobaid/time_remaining/Total_Minute_Start.wav");
     });
 
-    it("should return remaining time prompt", function() {
+    it("should return remaining time prompt when minutes >= 10", function() {
         var minutes_10_point_5_as_milliseconds = 630000;
         var minutes_30_as_milliseconds = 1800000;
         var minutes_5_as_milliseconds = 300000;
@@ -161,6 +161,27 @@ describe("Controller for jobaid ", function () {
         spyOn(controller, "currentCallDuration").andReturn(minutes_5_as_milliseconds);
 
         expect(controller.playRemainingTimePrompt()).toEqual("audio/jobaid/time_remaining/14.wav")
+    });
+
+    it("should return remaining time prompt when minutes < 10", function() {
+        var minutes_20_point_5_as_milliseconds = 1230000;
+        var minutes_30_as_milliseconds = 1800000;
+        var minutes_5_as_milliseconds = 300000;
+
+        var registeredCaller = {
+            "currentJobAidUsage" : minutes_20_point_5_as_milliseconds,
+            "maxAllowedUsageForOperator" : minutes_30_as_milliseconds
+        };
+        var metaData = {
+            "audio.url" : "audio/",
+            "jobaid.audio.url" : "jobaid/",
+            "jobaid.time.remaining.url" : "time_remaining/"
+        };
+
+        controller = new JobAidController(registeredCaller , metaData);
+        spyOn(controller, "currentCallDuration").andReturn(minutes_5_as_milliseconds);
+
+        expect(controller.playRemainingTimePrompt()).toEqual("audio/jobaid/time_remaining/04.wav")
     });
 
     it("should return remaining call duration rounded off in minutes", function() {

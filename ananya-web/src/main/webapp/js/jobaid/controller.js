@@ -79,7 +79,8 @@ var JobAidController = function(callerData , metadata, callContext) {
     }
 
     this.playRemainingTimePrompt = function() {
-        return this.timeRemainingFileBase() + this.remainingCallDurationAsRoundedMinutes() + ".wav";
+        var minutes = this.remainingCallDurationAsRoundedMinutes();
+        return this.timeRemainingFileBase() + ( minutes < 10 ? "0" + minutes : minutes )  + ".wav";
     }
 
     this.playRemainingTimePromptStart = function() {
