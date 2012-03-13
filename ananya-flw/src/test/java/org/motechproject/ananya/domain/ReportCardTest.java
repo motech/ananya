@@ -1,16 +1,11 @@
 package org.motechproject.ananya.domain;
 
-import ch.lambdaj.group.Group;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static ch.lambdaj.Lambda.forEach;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.group.Groups.by;
-import static ch.lambdaj.group.Groups.group;
+import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -21,7 +16,7 @@ public class ReportCardTest {
         ReportCard reportCard = new ReportCard();
         String chapterIndex = "0";
         String questionIndex = "3";
-        Boolean result  = true;
+        Boolean result = true;
         ReportCard.Score score1 = new ReportCard.Score(chapterIndex, questionIndex, result);
         reportCard.addScore(score1);
         assertThat(reportCard.scores(), hasItems(score1));
@@ -43,31 +38,7 @@ public class ReportCardTest {
 
     @Test
     public void shouldReturnScoresByChapter() {
-        ReportCard reportCard = new ReportCard();
-
-        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
-        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
-        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
-
-        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
-        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
-        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
-
-        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
-        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
-        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
-
-        reportCard.addScore(ch1q1score);
-        reportCard.addScore(ch1q2score);
-        reportCard.addScore(ch1q3score);
-
-        reportCard.addScore(ch2q1score);
-        reportCard.addScore(ch2q2score);
-        reportCard.addScore(ch2q3score);
-
-        reportCard.addScore(ch3q1score);
-        reportCard.addScore(ch3q2score);
-        reportCard.addScore(ch3q3score);
+        ReportCard reportCard = makeTestReportCard();
 
         Map<String, Integer> expectedScoresByChapter = new HashMap();
 
@@ -80,32 +51,7 @@ public class ReportCardTest {
 
     @Test
     public void shouldClearScoresForAChapterIndex() {
-        ReportCard reportCard = new ReportCard();
-
-        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
-        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
-        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
-
-        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
-        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
-        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
-
-        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
-        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
-        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
-
-        reportCard.addScore(ch1q1score);
-        reportCard.addScore(ch1q2score);
-        reportCard.addScore(ch1q3score);
-
-        reportCard.addScore(ch2q1score);
-        reportCard.addScore(ch2q2score);
-        reportCard.addScore(ch2q3score);
-
-        reportCard.addScore(ch3q1score);
-        reportCard.addScore(ch3q2score);
-        reportCard.addScore(ch3q3score);
-
+        ReportCard reportCard = makeTestReportCard();
 
         Map<String, Integer> expectedScoresByChapter = new HashMap();
         expectedScoresByChapter.put("0", 2);
@@ -128,6 +74,40 @@ public class ReportCardTest {
         reportCard.clearScoresForChapterIndex("2");
         expectedScoresByChapter.remove("2");
         assertThat(reportCard.scoresByChapterIndex(), is(expectedScoresByChapter));
+    }
+
+    @Test
+    public void shouldCalculateTotalScore() {
+        ReportCard reportCard = makeTestReportCard();
+
+        Integer totalScore = reportCard.totalScore();
+
+        assertEquals(new Integer(3), totalScore);
+    }
+
+    private ReportCard makeTestReportCard() {
+        ReportCard reportCard = new ReportCard();
+
+        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
+        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
+        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
+        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
+        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
+        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
+        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
+        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
+        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
+
+        reportCard.addScore(ch1q1score);
+        reportCard.addScore(ch1q2score);
+        reportCard.addScore(ch1q3score);
+        reportCard.addScore(ch2q1score);
+        reportCard.addScore(ch2q2score);
+        reportCard.addScore(ch2q3score);
+        reportCard.addScore(ch3q1score);
+        reportCard.addScore(ch3q2score);
+        reportCard.addScore(ch3q3score);
+        return reportCard;
     }
 
 }

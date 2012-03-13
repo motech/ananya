@@ -1,6 +1,9 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
@@ -41,59 +44,10 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    private void addScore(String callerId, ReportCard.Score score) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-        frontLineWorker.reportCard().addScore(score);
-        allFrontLineWorkers.update(frontLineWorker);
-    }
-
-    private BookMark getBookmark(String msisdn) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        return frontLineWorker == null ? new EmptyBookmark() : frontLineWorker.bookMark();
-    }
-
-    private Map<String, Integer> scoresByChapter(String msisdn) {
-        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        return getScoresByChapterFor(frontLineWorker);
-    }
-
-    private void resetScoresForChapterIndex(String callerId, Integer chapterIndex) {
-        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-        frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
-        allFrontLineWorkers.update(frontLineWorker);
-    }
-
-    private int totalScore(FrontLineWorker frontLineWorker) {
-        int totalScore = 0;
-        Collection<Integer> scores = this.getScoresByChapterFor(frontLineWorker).values();
-        Iterator<Integer> scoresIterator = scores.iterator();
-        while (scoresIterator.hasNext())
-            totalScore += scoresIterator.next();
-        return totalScore;
-    }
-
-    private Map<String, Integer> getScoresByChapterFor(FrontLineWorker frontLineWorker) {
-        return frontLineWorker == null ? new HashMap() : frontLineWorker.reportCard().scoresByChapterIndex();
-    }
-
-    private int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
-        int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
-        allFrontLineWorkers.update(frontLineWorker);
-        return certificateCourseAttempts;
-    }
-
     public void addBookMark(String callerId, BookMark bookMark) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.addBookMark(bookMark);
         allFrontLineWorkers.update(frontLineWorker);
-    }
-
-    private void resetAllScores(String msisdn) {
-        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker != null) {
-            frontLineWorker.reportCard().clearAllScores();
-            allFrontLineWorkers.update(frontLineWorker);
-        }
     }
 
     public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
@@ -129,7 +83,8 @@ public class FrontLineWorkerService {
             addScore(callerId, score);
         } else if (request.isPlayCourseResultInteraction()) {
             FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-            int totalScore = totalScore(frontLineWorker);
+
+            int totalScore = frontLineWorker.reportCard().totalScore();
             int currentCertificateCourseAttempts = incrementCertificateCourseAttempts(frontLineWorker);
 
             if (totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
@@ -138,18 +93,38 @@ public class FrontLineWorkerService {
         }
     }
 
-    private Boolean hasReachedMaxUsageForMonth(String msisdn) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker == null) return false;
-        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null ? 0 : frontLineWorker.getCurrentJobAidUsage();
-        Operator operator = allOperators.findByName(frontLineWorker.getOperator());
-        return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
-    }
-
     public void updatePromptsForFLW(String msisdn, List<String> promptList) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
         allFrontLineWorkers.update(frontLineWorker);
     }
+
+    private void addScore(String callerId, ReportCard.Score score) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        frontLineWorker.reportCard().addScore(score);
+        allFrontLineWorkers.update(frontLineWorker);
+    }
+
+    private void resetScoresForChapterIndex(String callerId, Integer chapterIndex) {
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
+        allFrontLineWorkers.update(frontLineWorker);
+    }
+
+    private int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
+        int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
+        allFrontLineWorkers.update(frontLineWorker);
+        return certificateCourseAttempts;
+    }
+
+    private void resetAllScores(String msisdn) {
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker != null) {
+            frontLineWorker.reportCard().clearAllScores();
+            allFrontLineWorkers.update(frontLineWorker);
+        }
+    }
+
+
 }

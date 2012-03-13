@@ -7,7 +7,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-
 import java.util.*;
 
 import static ch.lambdaj.Lambda.filter;
@@ -22,6 +21,7 @@ public class ReportCard {
     public ReportCard() {
         scores = new ArrayList<Score>();
     }
+
     public void addScore(Score score) {
         Object matchedScore = CollectionUtils.find(scores, Score.findByChapterIdAndQuestionId(score.chapterIndex(), score.questionIndex()));
         scores.remove(matchedScore);
@@ -43,16 +43,22 @@ public class ReportCard {
 
     public Map<String, Integer> scoresByChapterIndex() {
         Map<String, Integer> scoresByChapterIndex = new HashMap();
-
         Group<Score> groupByChapter = group(scores(), by(on(Score.class).chapterIndex()));
-        for(String currentChapter : groupByChapter.keySet())
-        {
-            final List<ReportCard.Score> scoresForCurrentChapter = groupByChapter.find(currentChapter);
-            List<ReportCard.Score> correctAnswers = filter(new CorrectAnswerMatcher(), scoresForCurrentChapter);
-            scoresByChapterIndex.put(currentChapter, correctAnswers.size());
+
+        for (String chapter : groupByChapter.keySet()) {
+            final List<ReportCard.Score> scoresForChapter = groupByChapter.find(chapter);
+            List<ReportCard.Score> correctAnswers = filter(new CorrectAnswerMatcher(), scoresForChapter);
+            scoresByChapterIndex.put(chapter, correctAnswers.size());
         }
-        
         return scoresByChapterIndex;
+    }
+
+    public Integer totalScore() {
+        Collection<Integer> scores = scoresByChapterIndex().values();
+        int totalScore = 0;
+        for (Integer score : scores)
+            totalScore += score;
+        return totalScore;
     }
 
     public static class Score {
@@ -79,7 +85,7 @@ public class ReportCard {
         public Score(String chapterIndex, String questionIndex, Boolean result) {
             this(chapterIndex, questionIndex, result, null);
         }
-        
+
         public String questionIndex() {
             return questionIndex;
         }
@@ -138,14 +144,14 @@ public class ReportCard {
     }
 
 
-    private class CorrectAnswerMatcher extends BaseMatcher<Score>{
+    private class CorrectAnswerMatcher extends BaseMatcher<Score> {
         @Override
         public void describeTo(Description description) {
         }
 
         @Override
         public boolean matches(Object o) {
-            Score scoreToMatch = (Score)o;
+            Score scoreToMatch = (Score) o;
             return scoreToMatch.result();
         }
     }
