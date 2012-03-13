@@ -1,7 +1,7 @@
-package org.motechproject.ananya.performance.jobaid;
+package org.motechproject.ananya.performance.datasetup;
 
 import org.motechproject.ananya.domain.Operator;
-import org.motechproject.ananya.performance.DataSetup;
+import org.motechproject.ananya.performance.PerformanceData;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class JobAidDataSetup implements DataSetup {
+public class JobAidDataSetup{
+
+    public static final int NUMBER_OF_THREADS = 20;
 
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
@@ -21,12 +23,11 @@ public class JobAidDataSetup implements DataSetup {
         this.operatorService = operatorService;
     }
 
-    @Override
-    public void loadTestData() {
+    @PerformanceData(testName = "jobaid", description = "create worker groups of different operators, msisdn incremented by jmeter thread count")
+    public void loadData() {
         List<Operator> allOperators = operatorService.getAllOperators();
-        int threads = 2000;
         for (int i = 0; i < allOperators.size(); i++)
-            for (int j = 0; j < threads; j++) {
+            for (int j = 0; j < NUMBER_OF_THREADS; j++) {
                 String msisdn = i + "" + j;
                 frontLineWorkerService.createNew(msisdn, allOperators.get(i).getName());
                 frontLineWorkerService.updateCurrentUsageForUser(msisdn, j%(allOperators.get(i).getAllowedUsagePerMonth()+1));
