@@ -74,6 +74,7 @@ public class DynamicJsController {
         log.info("fetching caller data for: " + msisdn);
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator);
+
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())

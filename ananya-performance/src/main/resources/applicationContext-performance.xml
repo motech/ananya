@@ -13,14 +13,15 @@
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
     <context:property-placeholder location="classpath*:*.properties"/>
+    <context:annotation-config/>
+    <context:spring-configured/>
 
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <context:component-scan base-package="org.motechproject.ananya"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
 
-    <context:annotation-config/>
-    <context:spring-configured/>
-    <context:component-scan base-package="org.motechproject.ananya"/>
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
