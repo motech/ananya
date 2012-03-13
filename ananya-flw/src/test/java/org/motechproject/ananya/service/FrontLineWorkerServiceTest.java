@@ -5,13 +5,13 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.exceptions.WorkerDoesNotExistException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.response.CallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,6 +34,8 @@ public class FrontLineWorkerServiceTest {
     private SMSPublisherService publisherService;
     @Mock
     private AllOperators allOperators;
+    @Mock
+    private FrontLineWorker mockedFrontLineWorker;
 
     @Before
     public void setUp() {
@@ -274,27 +276,14 @@ public class FrontLineWorkerServiceTest {
         String callerId = "callerId";
         List<String> promptIds = Arrays.asList("prompt1", "prompt2");
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator");
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(mockedFrontLineWorker);
 
         try {
             frontLineWorkerService.updatePromptsForFLW(callerId, promptIds);
         } catch (Exception e) {}
 
-        // TODO: trap call on FLW with prompt arguments
-//        verify(frontLineWorker).markPromptHeard(promptIds.get(0));
-//        verify(frontLineWorker).markPromptHeard(promptIds.get(1));
-
-        verify(allFrontLineWorkers).update(frontLineWorker);
-    }
-    
-    @Test(expected = WorkerDoesNotExistException.class)
-    public void shouldThrowExceptionWhileUpdatingPromptsWhenFLWNotPresent() throws WorkerDoesNotExistException {
-        String callerId = "callerId";
-        List<String> promptIds = Arrays.asList("prompt1", "prompt2");
-
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
-
-        frontLineWorkerService.updatePromptsForFLW(callerId, promptIds);
+        verify(mockedFrontLineWorker).markPromptHeard(promptIds.get(0));
+        verify(mockedFrontLineWorker).markPromptHeard(promptIds.get(1));
+        verify(allFrontLineWorkers).update(mockedFrontLineWorker);
     }
 }
