@@ -44,6 +44,10 @@
             <log>TW::<value expr="callerId"/> partially registered</log>
             <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['unregistered_welcome_message']))"/>
             <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptPartiallyRegistered())"/>
+            <if cond="!callContext.dialedViaShortCode">
+                <audio expr="controller.playRemainingTimePromptStart()" />
+                <audio expr="controller.playRemainingTimePrompt()" />
+            </if>
             <goto next="#controller"/>
         </block>
     </form>
@@ -53,6 +57,10 @@
             <log>TW::<value expr="callerId"/> moved into jobaid</log>
             <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['registered_welcome_message']))"/>
             <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptRegistered())"/>
+            <if cond="!callContext.dialedViaShortCode">
+                <audio expr="controller.playRemainingTimePromptStart()" />
+                <audio expr="controller.playRemainingTimePrompt()" />
+            </if>
             <goto next="#controller"/>
         </block>
     </form>

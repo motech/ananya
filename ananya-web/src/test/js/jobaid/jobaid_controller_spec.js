@@ -127,4 +127,47 @@ describe("Controller for jobaid ", function () {
          controller = new JobAidController(registeredCaller , metaData);
          expect(controller.jobAidWelcomePromptRegistered()).toEqual("audio/jobaid/0001_welcome_job_aid_not_reg.wav")
     });
+
+    it("should return remaining time prompt start message", function() {
+        var caller = {};
+        var metaData = {
+            "audio.url" : "audio/",
+            "jobaid.audio.url" : "jobaid/",
+            "jobaid.time.remaining.url" : "time_remaining/",
+            "jobaid.time.remaining.start" : "Total_Minute_Start.wav"
+        };
+
+        controller = new JobAidController(caller, metaData);
+
+        expect(controller.playRemainingTimePromptStart()).toEqual("audio/jobaid/time_remaining/Total_Minute_Start.wav");
+    });
+
+    it("should return remaining time prompt", function() {
+        var minutes_10_point_5_as_milliseconds = 630000;
+        var minutes_30_as_milliseconds = 1800000;
+        var minutes_5_as_milliseconds = 300000;
+
+        var registeredCaller = {
+            "currentJobAidUsage" : minutes_10_point_5_as_milliseconds,
+            "maxAllowedUsageForOperator" : minutes_30_as_milliseconds
+        };
+        var metaData = {
+            "audio.url" : "audio/",
+            "jobaid.audio.url" : "jobaid/",
+            "jobaid.time.remaining.url" : "time_remaining/"
+        };
+
+        controller = new JobAidController(registeredCaller , metaData);
+        spyOn(controller, "currentCallDuration").andReturn(minutes_5_as_milliseconds);
+
+        expect(controller.playRemainingTimePrompt()).toEqual("audio/jobaid/time_remaining/14.wav")
+    });
+
+    it("should return remaining call duration rounded off in minutes", function() {
+        controller = new JobAidController();
+        var minutes_30_point_5_as_milliseconds = 1830000;
+        spyOn(controller, "remainingCallDuration").andReturn(minutes_30_point_5_as_milliseconds);
+
+        expect(controller.remainingCallDurationAsRoundedMinutes()).toEqual(30);
+    });
 });

@@ -3,6 +3,9 @@ var JobAidController = function(callerData , metadata, callContext) {
     var metadata = metadata;
     var callerData = callerData;
     var callContext = callContext;
+    var startTime = new Date().valueOf();
+
+    var MILLISECONDS_PER_MINUTE = 60000
 
     this.decideFlowForJobAid = function(operator) {
 
@@ -53,5 +56,33 @@ var JobAidController = function(callerData , metadata, callContext) {
 
     this.maxUsagePrompt = function() {
         return this.audioFileBase() + metadata["max.usage.prompt"];
+    }
+
+    this.timeRemainingFileBase = function() {
+        return this.audioFileBase() + metadata["jobaid.time.remaining.url"];
+    }
+
+    this.currentCallDuration = function() {
+        return new Date().valueOf() - startTime;
+    }
+
+    this.totalCallDuration = function() {
+        return callerData.currentJobAidUsage + this.currentCallDuration();
+    }
+
+    this.remainingCallDuration = function() {
+        return callerData.maxAllowedUsageForOperator - this.totalCallDuration();
+    }
+
+    this.remainingCallDurationAsRoundedMinutes = function() {
+        return Math.floor(this.remainingCallDuration() / MILLISECONDS_PER_MINUTE);
+    }
+
+    this.playRemainingTimePrompt = function() {
+        return this.timeRemainingFileBase() + this.remainingCallDurationAsRoundedMinutes() + ".wav";
+    }
+
+    this.playRemainingTimePromptStart = function() {
+        return this.timeRemainingFileBase() + metadata["jobaid.time.remaining.start"];
     }
 };
