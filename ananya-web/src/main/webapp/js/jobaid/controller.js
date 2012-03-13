@@ -55,7 +55,7 @@ var JobAidController = function(callerData , metadata, callContext) {
     }
 
     this.maxUsagePrompt = function() {
-        return this.audioFileBase() + metadata["max.usage.prompt"];
+        return this.timeRemainingFileBase() + metadata["max.usage.prompt"];
     }
 
     this.timeRemainingFileBase = function() {
