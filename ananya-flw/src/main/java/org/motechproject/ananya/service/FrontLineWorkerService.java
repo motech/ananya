@@ -144,8 +144,10 @@ public class FrontLineWorkerService {
             frontLineWorker = createNew(msisdn, operator);
         }
 
-        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(),
-                hasReachedMaxUsageForMonth(msisdn), frontLineWorker.getPromptsHeard());
+        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null ? 0 : frontLineWorker.getCurrentJobAidUsage();
+        Integer allowedUsagePerMonthForOperator = allOperators.findByName(frontLineWorker.getOperator()).getAllowedUsagePerMonth();
+
+        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(),currentJobAidUsage, allowedUsagePerMonthForOperator, frontLineWorker.getPromptsHeard());
     }
 
     public CallerDataResponse createCallerData(String msisdn, String operator) {

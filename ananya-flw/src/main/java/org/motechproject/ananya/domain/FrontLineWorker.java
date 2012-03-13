@@ -93,6 +93,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]
     }
 
+    public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
+        this.currentJobAidUsage = currentJobAidUsage;
+    }
+
     public String getOperator() {
         //TODO: only for #1344, assuming the operator information is already present [Imdad/Sush]
         return StringUtils.isEmpty(operator) ? "airtel" : operator;

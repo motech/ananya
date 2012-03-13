@@ -82,12 +82,13 @@ public class DynamicJsControllerTest {
         DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties);
 
         when(frontLineWorkerService.createJobAidCallerData("12345", "airtel")).thenReturn(
-                new JobAidCallerDataResponse(true,true, new HashMap<String, Integer>()));
+                new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
         assertEquals("job_aid_caller_data",callerDataForJobAid.getViewName() );
         assertTrue((Boolean) callerDataForJobAid.getModel().get("isCallerRegistered"));
-        assertTrue((Boolean) callerDataForJobAid.getModel().get("hasReachedMaxUsageForMonth"));
-        assertNotNull((HashMap<String, Integer>) callerDataForJobAid.getModel().get("promptsHeard"));
+        assertEquals(1000, callerDataForJobAid.getModel().get("currentJobAidUsage"));
+        assertEquals(2000, callerDataForJobAid.getModel().get("maxAllowedUsageForOperator"));
+        assertNotNull(callerDataForJobAid.getModel().get("promptsHeard"));
     }
 }

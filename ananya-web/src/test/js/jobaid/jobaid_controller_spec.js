@@ -3,7 +3,9 @@ describe("Controller for jobaid ", function () {
 
     it("should return 'partially_registered' form for partially registered caller in jobaid when not dialled in via short code", function() {
         var callerData = {
-            "isRegistered" : "false"
+            "isRegistered" : "false",
+            "currentJobAidUsage" : 1,
+            "maxAllowedUsageForOperator" : 999
         };
         var metadata = {'usage.general' : 50};
         var callContext = { "dialedViaShortCode" : false };
@@ -13,7 +15,9 @@ describe("Controller for jobaid ", function () {
 
     it("should return 'registered' form for registered caller in jobaid when not dialled in via short code", function() {
         var callerData = {
-            "isRegistered" : "true"
+            "isRegistered" : "true",
+           "currentJobAidUsage" : 1,
+           "maxAllowedUsageForOperator" : 999
         };
         var metadata = {'usage.general' : 50};
         var callContext = { "dialedViaShortCode" : false };
@@ -24,8 +28,9 @@ describe("Controller for jobaid ", function () {
     it("should return 'registered' form for registered caller in jobaid when dialled in via short code and not listened to registered user welcome prompt", function() {
         var callerData = {
             "isRegistered" : "true",
-            "promptsHeard" : {
-            }
+            "promptsHeard" : {},
+            "currentJobAidUsage" : 1,
+            "maxAllowedUsageForOperator" : 999
         };
         var metadata = {'usage.general' : 50};
         var callContext = { "dialedViaShortCode" : true };
@@ -51,7 +56,9 @@ describe("Controller for jobaid ", function () {
             "promptsHeard" : {
                 "unregistered_welcome_message" : 1,
                 "registered_welcome_message" : 1
-            }
+            },
+             "currentJobAidUsage" : 1,
+             "maxAllowedUsageForOperator" : 999
         };
         var metadata = {'usage.general' : 50};
         var callContext = { "dialedViaShortCode" : true };
@@ -65,7 +72,9 @@ describe("Controller for jobaid ", function () {
             "promptsHeard" : {
                 "unregistered_welcome_message" : 1,
                 "registered_welcome_message" : 1
-            }
+            },
+             "currentJobAidUsage" : 1,
+             "maxAllowedUsageForOperator" : 999
         };
         var metadata = {'usage.general' : 50};
         var callContext = { "dialedViaShortCode" : true };
@@ -76,7 +85,8 @@ describe("Controller for jobaid ", function () {
     it("should return 'max_usage' form for registered caller in jobaid with max usage reached", function() {
         var callerData = {
             "isRegistered" : "true",
-            "hasReachedMaxUsageForMonth" : true
+            "currentJobAidUsage" : 1000,
+            "maxAllowedUsageForOperator" : 999
         };
         controller = new JobAidController(callerData);
         expect(controller.decideFlowForJobAid()).toEqual("#max_usage");

@@ -1,7 +1,7 @@
 var callerData = {
     "isRegistered" : "${isCallerRegistered}",
-
-    "hasReachedMaxUsageForMonth" : ${hasReachedMaxUsageForMonth},
+    "currentJobAidUsage" : ${currentJobAidUsage},
+    "maxAllowedUsageForOperator" : ${maxAllowedUsageForOperator},
 
     "promptsHeard" : {
         #set($promptsCount = $promptsHeard.size())

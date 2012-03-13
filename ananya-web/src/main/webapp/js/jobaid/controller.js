@@ -24,7 +24,7 @@ var JobAidController = function(callerData , metadata, callContext) {
     };
 
     this.hasReachedMaxUsage = function() {
-        return (callerData.hasReachedMaxUsageForMonth);
+        return (callerData.currentJobAidUsage >= callerData.maxAllowedUsageForOperator);
     };
 
     this.isCallerRegistered = function() {

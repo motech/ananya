@@ -70,7 +70,8 @@ public class DynamicJsController {
         JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, operator);
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
-                .addObject("hasReachedMaxUsageForMonth", callerData.hasReachedMaxUsageForMonth())
+                .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())
+                .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
                 .addObject("promptsHeard", callerData.getPromptsHeard());
     }
 

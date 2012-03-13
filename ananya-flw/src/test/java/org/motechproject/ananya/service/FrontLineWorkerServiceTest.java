@@ -223,16 +223,18 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldPopulateJobAidCallerDataWithMaxUsageBeingTrueWhenUsageHasMaxedOut() {
+    public void shouldPopulateJobAidCallerDataWithUsageDetails() {
         String msisdn = "9876543210";
         String operator = "operator";
         FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ASHA, "location", operator);
+        flw.setCurrentJobAidUsage(1000);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(flw);
-        when(allOperators.findByName(operator)).thenReturn(new Operator(operator,flw.getCurrentJobAidUsage() - 1));
+        when(allOperators.findByName(operator)).thenReturn(new Operator(operator,999));
 
         JobAidCallerDataResponse callerData = frontLineWorkerService.createJobAidCallerData(msisdn, "airtel");
 
-        assertEquals(true,(boolean) callerData.hasReachedMaxUsageForMonth());
+        assertEquals(Integer.valueOf(1000),callerData.getCurrentJobAidUsage());
+        assertEquals(Integer.valueOf(999),callerData.getMaxAllowedUsageForOperator());
     }
 
     @Test
