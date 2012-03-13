@@ -22,6 +22,7 @@ var CallContext = function(course, metadata, promptContext) {
 
     this.navigateTo = function(shortCode) {
          this.shouldPlayNextIntroduction = true;
+         var trimmedShortCode = new ShortCode().getCode(shortCode);
          var levels = this.course.children;
          for(var levelNo=0; levelNo < levels.length ; levelNo++){
             var chapters = levels[levelNo].children;
@@ -30,7 +31,7 @@ var CallContext = function(course, metadata, promptContext) {
                 var lessons = chapters[chapterNo].children;
 
                 for(var lessonNo=0;lessonNo < lessons.length ; lessonNo++){
-                    if (lessons[lessonNo].data.shortcode == shortCode)
+                    if (lessons[lessonNo].data.shortcode == trimmedShortCode)
                         {
                             this.currentInteraction = lessons[lessonNo];
                             this.dialedViaShortCode = true;

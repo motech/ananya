@@ -67,7 +67,7 @@ var PromptContext = function (metadata) {
 
 var ShortCode = function () {
 
-    this.getCode = function(baseNumber, phoneNumber) {
-        return(phoneNumber.search(baseNumber) == 0) ? phoneNumber.replace(baseNumber, '') : '';
+    this.getCode = function(phoneNumber) {
+        return phoneNumber.substr(5);
     };
 };

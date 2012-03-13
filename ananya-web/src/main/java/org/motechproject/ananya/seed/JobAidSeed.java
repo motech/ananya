@@ -58,22 +58,22 @@ public class JobAidSeed {
         for (Node level : asList(level4Chap1, level4Chap2, level4Chap3, level4Chap4))
             level4.addChild(level);
 
-        addLessonsToChapter(level1Chap1, new String[][]{{"5771111","0001_prep_for_child_birth"}, {"5771112","0002_ifa_and_tt"}, {"5771113","0003_planning"}, {"5771114","0004_planning_and_saving"}} );
-        addLessonsToChapter(level1Chap2, new String[][]{{"5771121","0005_inst_delivery"}, {"5771122","0006_six_cleans"}, {"5771123","0007_emereg_for_mother"}} );
-        addLessonsToChapter(level1Chap3, new String[][]{{"5771124","0008_handling_newborn"}, {"5771131","0009_cord_care"}, {"5771132","0010_thermal_care"}, {"5771133","0011_early_initiation_bf"}} );
-        addLessonsToChapter(level1Chap4, new String[][]{{"5771151","0017_need_fp"}, {"5771152","0018_spacing_and_y"}, {"5771153","0019_limiting_and_y"}, {"5771154","0020_options_ppfp"}} );
-        addLessonsToChapter(level2Chap1, new String[][]{{"5771131","0009_cord_care"}, {"5771132","0010_thermal_care"}, {"5771133","0011_early_initiation_bf"}, {"5771134","0012_pnc_visits"}} );
-        addLessonsToChapter(level2Chap2, new String[][]{{"5771141","0013_emerg_for_mother_after_child_birth"}, {"5771142","0014_danger_signs_preterm_baby"}, {"5771143","0015_kangaroo_care_preterm_baby"},{"5771144","0016_danger_signs_sepsis"}});
-        addLessonsToChapter(level2Chap3, new String[][]{{"5771174","0028_exclusive_bf"}, {"5771181","0029_howto_bf"}, {"5771171","0025_immonization_imp_and_res"}, {"5771172","0026_immunization_doses"}} );
-        addLessonsToChapter(level2Chap4, new String[][]{{"5771151","0017_need_fp"}, {"5771154","0020_options_ppfp"}, {"5771193","0035_hand_Washing_risk_perc"},{"5771194","0036_hand_washing_when_and_how"}} );
-        addLessonsToChapter(level3Chap1, new String[][]{{"5771151","0017_need_fp"}, {"5771152","0018_spacing_and_y"}, {"5771153","0019_limiting_and_y"},{"5771154","0020_options_ppfp"}} );
-        addLessonsToChapter(level3Chap2, new String[][]{{"5771161","0021_tubal_ligation"}, {"5771162","0022_iud"}, {"5771163","0015_kangaroo_care_preterm_baby"},{"5771164","0016_danger_signs_sepsis"}} );
-        addLessonsToChapter(level3Chap3, new String[][]{{"5771174","0028_exclusive_bf"}, {"5771181","0029_howto_bf"}, {"5771182","0030_benefits_mother_bf"},{"5771183","0031_comp_feeding"}} );
-        addLessonsToChapter(level3Chap4, new String[][]{{"5771171","0025_immonization_imp_and_res"}, {"5771172","0026_immunization_doses"}, {"5771173","0027_immunization_comp"},{"5771194","0028_exclusive_bf"}} );
-        addLessonsToChapter(level4Chap1, new String[][]{{"5771151","0017_need_fp"}, {"5771152","0018_spacing_and_y"}, {"5771153","0019_limiting_and_y"},{"5771154","0020_options_ppfp"}} );
-        addLessonsToChapter(level4Chap2, new String[][]{{"5771161","0021_tubal_ligation"}, {"5771162","0022_iud"}, {"5771163","0023_injectable"},{"5771164","0024_condoms_and_ocp"}} );
-        addLessonsToChapter(level4Chap3, new String[][]{{"5771183","0031_comp_feeding"}, {"5771184","0032_active_feeding"}, {"5771191","0033_quality_food_hand_washing"},{"5771192","0034_quantity_food_hand_washing"}} );
-        addLessonsToChapter(level4Chap4, new String[][]{{"5771171","0025_immonization_imp_and_res"}, {"5771173","0027_immunization_comp"}, {"5771193","0035_hand_Washing_risk_perc"},{"5771194","0036_hand_washing_when_and_how"}} );
+        addLessonsToChapter(level1Chap1, new String[][]{{"11","0001_prep_for_child_birth"}, {"12","0002_ifa_and_tt"}, {"13","0003_planning"}, {"14","0004_planning_and_saving"}} );
+        addLessonsToChapter(level1Chap2, new String[][]{{"21","0005_inst_delivery"}, {"22","0006_six_cleans"}, {"23","0007_emereg_for_mother"}} );
+        addLessonsToChapter(level1Chap3, new String[][]{{"24","0008_handling_newborn"}, {"31","0009_cord_care"}, {"32","0010_thermal_care"}, {"33","0011_early_initiation_bf"}} );
+        addLessonsToChapter(level1Chap4, new String[][]{{"51","0017_need_fp"}, {"52","0018_spacing_and_y"}, {"53","0019_limiting_and_y"}, {"54","0020_options_ppfp"}} );
+        addLessonsToChapter(level2Chap1, new String[][]{{"31","0009_cord_care"}, {"32","0010_thermal_care"}, {"33","0011_early_initiation_bf"}, {"34","0012_pnc_visits"}} );
+        addLessonsToChapter(level2Chap2, new String[][]{{"41","0013_emerg_for_mother_after_child_birth"}, {"42","0014_danger_signs_preterm_baby"}, {"43","0015_kangaroo_care_preterm_baby"},{"44","0016_danger_signs_sepsis"}});
+        addLessonsToChapter(level2Chap3, new String[][]{{"74","0028_exclusive_bf"}, {"81","0029_howto_bf"}, {"71","0025_immonization_imp_and_res"}, {"72","0026_immunization_doses"}} );
+        addLessonsToChapter(level2Chap4, new String[][]{{"51","0017_need_fp"}, {"54","0020_options_ppfp"}, {"93","0035_hand_Washing_risk_perc"},{"94","0036_hand_washing_when_and_how"}} );
+        addLessonsToChapter(level3Chap1, new String[][]{{"51","0017_need_fp"}, {"52","0018_spacing_and_y"}, {"53","0019_limiting_and_y"},{"54","0020_options_ppfp"}} );
+        addLessonsToChapter(level3Chap2, new String[][]{{"61","0021_tubal_ligation"}, {"62","0022_iud"}, {"63","0015_kangaroo_care_preterm_baby"},{"64","0016_danger_signs_sepsis"}} );
+        addLessonsToChapter(level3Chap3, new String[][]{{"74","0028_exclusive_bf"}, {"81","0029_howto_bf"}, {"82","0030_benefits_mother_bf"},{"83","0031_comp_feeding"}} );
+        addLessonsToChapter(level3Chap4, new String[][]{{"71","0025_immonization_imp_and_res"}, {"72","0026_immunization_doses"}, {"73","0027_immunization_comp"},{"94","0028_exclusive_bf"}} );
+        addLessonsToChapter(level4Chap1, new String[][]{{"51","0017_need_fp"}, {"52","0018_spacing_and_y"}, {"53","0019_limiting_and_y"},{"54","0020_options_ppfp"}} );
+        addLessonsToChapter(level4Chap2, new String[][]{{"61","0021_tubal_ligation"}, {"62","0022_iud"}, {"63","0023_injectable"},{"64","0024_condoms_and_ocp"}} );
+        addLessonsToChapter(level4Chap3, new String[][]{{"83","0031_comp_feeding"}, {"84","0032_active_feeding"}, {"91","0033_quality_food_hand_washing"},{"92","0034_quantity_food_hand_washing"}} );
+        addLessonsToChapter(level4Chap4, new String[][]{{"71","0025_immonization_imp_and_res"}, {"73","0027_immunization_comp"}, {"93","0035_hand_Washing_risk_perc"},{"94","0036_hand_washing_when_and_how"}} );
 
         return course;
     }
