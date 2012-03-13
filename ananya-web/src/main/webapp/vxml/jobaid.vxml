@@ -4,7 +4,6 @@
       xsi:schemaLocation="http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd"
       application="root.vxml">
 
-    <!-- Todo: remove hard coded airtel -->
     <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/dynamic/jobaid/caller_data.js?callerId=' + session.connection.remote.uri+ '&amp;operator=' + session.site)"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/jobaid_course_data.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/jobaid/course.js')"/>
@@ -68,7 +67,10 @@
 
     <form id="controller">
         <script>
-            promptContext.resetCounts();
+            if(!callContext.isBlankOrInvalidInput()){
+                promptContext.resetCounts();
+            }
+            callContext.setBlankOrInvalidInput(false);
         </script>
         <block>
             <if cond="callContext.isAtALesson()">
@@ -114,16 +116,12 @@
             <noinput>
                 <script>
                     promptContext.gotNoInput();
+                    callContext.setBlankOrInvalidInput(true);
                 </script>
                 <if cond="promptContext.hasExceededMaxNoInputs()">
                     <disconnect/>
                     <else/>
-                    <prompt>
-                        <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionMenu())"/>
-                    </prompt>
-                    <prompt cond="!callContext.isAtCourseRoot()">
-                        <audio expr="Utility.relativePath(pathToRoot,controller.audioForOptionToGoToTopLevel())"/>
-                    </prompt>
+                    <goto next="#controller"/>
                 </if>
             </noinput>
 
@@ -142,12 +140,13 @@
         <block name="invalidInputAction">
             <script>
                 promptContext.gotInvalidInput();
+                callContext.setBlankOrInvalidInput(true);
             </script>
             <if cond="promptContext.hasExceededMaxInvalidInputs()">
                 <disconnect/>
                 <else/>
                 <audio expr="Utility.relativePath(pathToRoot,callContext.audioForInvalidInputRetry(promptContext))"/>
-                <goto nextitem="nextLevelSelection"/>
+                <goto next="#controller"/>
             </if>
         </block>
     </form>

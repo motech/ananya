@@ -7,6 +7,7 @@ var CallContext = function(course, metadata, promptContext) {
         this.metadata = metadata;
         this.shouldPlayNextIntroduction = true;
         this.dialedViaShortCode = false;
+        this.blankOrInvalidInput = false;
     };
 
     this.handleInput = function(input) {
@@ -71,7 +72,7 @@ var CallContext = function(course, metadata, promptContext) {
     };
 
     this.shouldPlayIntroduction = function() {
-        return this.findContentByName("introduction") != null && this.shouldPlayNextIntroduction;
+        return this.findContentByName("introduction") != null && this.shouldPlayNextIntroduction && !this.blankOrInvalidInput;
     };
 
     this.currentInteractionMenu = function() {
@@ -108,6 +109,15 @@ var CallContext = function(course, metadata, promptContext) {
     this.audioForOptionToGoToTopLevel = function() {
         return this.audioFileBase() + this.metadata['option.to.top.level.audio'];
     };
+
+    this.setBlankOrInvalidInput = function(value){
+        this.blankOrInvalidInput = value;
+    };
+
+    this.isBlankOrInvalidInput = function(){
+        return this.blankOrInvalidInput;
+    };
+
 
     this.init(course, metadata,promptContext);
 };

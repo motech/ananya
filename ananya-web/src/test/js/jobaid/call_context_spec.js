@@ -200,6 +200,21 @@ describe("Call Context", function() {
         expect(callContext.shouldPlayIntroduction()).toEqual(false);
     });
 
+    it("should not play next introduction if handling Blank or Invalid inputs", function() {
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        callContext.setBlankOrInvalidInput(true);
+        expect(callContext.shouldPlayIntroduction()).toEqual(false);
+    });
+
+    it("should play next introduction when in the chapter", function() {
+        var level = course.children[0].children[0];
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        expect(callContext.currentInteraction).toEqual(level);
+        expect(callContext.shouldPlayIntroduction()).toEqual(true);
+    });
+
     it("should provide the URLs for the audio files for the top-level menu option", function() {
         expect(callContext.audioForOptionToGoToTopLevel()).toEqual("../audio/jobaid/option.to.go.to.top.level.wav")
     });
@@ -219,5 +234,11 @@ describe("Call Context", function() {
         callContext.navigateTo("555550000");
         expect(callContext.currentInteraction).toEqual(course);
         expect(callContext.dialedViaShortCode).toEqual(false);
+    });
+
+    it("should get and set Blank or Invalid Input", function(){
+        expect(callContext.isBlankOrInvalidInput()).toEqual(false);
+        callContext.setBlankOrInvalidInput(true);
+        expect(callContext.isBlankOrInvalidInput()).toEqual(true);
     });
 })
