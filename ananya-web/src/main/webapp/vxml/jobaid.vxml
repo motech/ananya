@@ -45,8 +45,8 @@
             <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['unregistered_welcome_message']))"/>
             <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptPartiallyRegistered())"/>
             <if cond="!callContext.dialedViaShortCode">
-                <audio expr="controller.playRemainingTimePromptStart()" />
-                <audio expr="controller.playRemainingTimePrompt()" />
+                <audio expr="Utility.relativePath(pathToRoot, controller.playRemainingTimePromptStart())" />
+                <audio expr="Utility.relativePath(pathToRoot, controller.playRemainingTimePrompt())" />
             </if>
             <goto next="#controller"/>
         </block>
@@ -58,8 +58,8 @@
             <script srcexpr="Utility.relativePath(pathToRoot, '/jobaid/updateprompt?callerId=' + session.connection.remote.uri + '&amp;promptList=' + Utility.stringify(['registered_welcome_message']))"/>
             <audio expr="Utility.relativePath(pathToRoot, controller.jobAidWelcomePromptRegistered())"/>
             <if cond="!callContext.dialedViaShortCode">
-                <audio expr="controller.playRemainingTimePromptStart()" />
-                <audio expr="controller.playRemainingTimePrompt()" />
+                <audio expr="Utility.relativePath(pathToRoot, controller.playRemainingTimePromptStart())" />
+                <audio expr="Utility.relativePath(pathToRoot, controller.playRemainingTimePrompt())" />
             </if>
             <goto next="#controller"/>
         </block>
