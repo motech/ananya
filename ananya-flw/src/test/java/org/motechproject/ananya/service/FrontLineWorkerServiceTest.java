@@ -184,4 +184,18 @@ public class FrontLineWorkerServiceTest {
         verify(mockedFrontLineWorker).markPromptHeard(promptIds.get(1));
         verify(allFrontLineWorkers).update(mockedFrontLineWorker);
     }
+
+    @Test
+    public void shouldUpdateTheFrontLineWorkerWithUsage(){
+        String callerId = "callerId";
+        String operator = "airtel";
+        Integer currentUsage = 20;
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        frontLineWorkerService.updateCurrentUsageForUser(callerId, currentUsage);
+
+        assertEquals(currentUsage,frontLineWorker.getCurrentJobAidUsage());
+        verify(allFrontLineWorkers).update(frontLineWorker);
+    }
 }

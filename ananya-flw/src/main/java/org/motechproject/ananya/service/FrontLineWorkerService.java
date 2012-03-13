@@ -100,6 +100,12 @@ public class FrontLineWorkerService {
         allFrontLineWorkers.update(frontLineWorker);
     }
 
+    public void updateCurrentUsageForUser(String msisdn, Integer currentUsage) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        frontLineWorker.setCurrentJobAidUsage(currentUsage);
+        allFrontLineWorkers.update(frontLineWorker);
+    }
+
     private void addScore(String callerId, ReportCard.Score score) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.reportCard().addScore(score);
@@ -125,6 +131,4 @@ public class FrontLineWorkerService {
             allFrontLineWorkers.update(frontLineWorker);
         }
     }
-
-
 }

@@ -59,4 +59,14 @@ public class JobAidServiceTest {
         assertEquals(callerData.isCallerRegistered(),false);
     }
 
+    @Test
+    public void shouldUpdateTheFrontLineWorkerWithTheNewUsage(){
+        int currentUsage = 10;
+        String callerId = "callerId";
+
+        jobAidService.updateCurrentUsageForUser(callerId, currentUsage);
+
+        verify(frontLineWorkerService).updateCurrentUsageForUser(callerId, currentUsage);
+    }
+
 }

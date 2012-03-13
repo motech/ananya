@@ -34,4 +34,8 @@ public class JobAidService {
                 allowedUsagePerMonthForOperator,
                 frontLineWorker.getPromptsHeard());
     }
+
+    public void updateCurrentUsageForUser(String msisdn, Integer currentUsage) {
+        frontLineWorkerService.updateCurrentUsageForUser(msisdn, currentUsage);
+    }
 }
