@@ -34,6 +34,15 @@ public class FrontLineWorkerService {
         this.allOperators = allOperators;
     }
 
+    public FrontLineWorker createNew(String msisdn, String operator) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        if (frontLineWorker != null)
+            return frontLineWorker;
+        frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
+        allFrontLineWorkers.add(frontLineWorker);
+        return frontLineWorker;
+    }
+
     private void addScore(String callerId, ReportCard.Score score) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.reportCard().addScore(score);
@@ -73,12 +82,6 @@ public class FrontLineWorkerService {
         int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
         allFrontLineWorkers.update(frontLineWorker);
         return certificateCourseAttempts;
-    }
-
-    private FrontLineWorker createNew(String msisdn, String operator) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
-        allFrontLineWorkers.add(frontLineWorker);
-        return frontLineWorker;
     }
 
     public void addBookMark(String callerId, BookMark bookMark) {
@@ -138,23 +141,17 @@ public class FrontLineWorkerService {
     }
 
     public JobAidCallerDataResponse createJobAidCallerData(String msisdn, String operator) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker == null) {
-            frontLineWorker = createNew(msisdn, operator);
-        }
+        FrontLineWorker frontLineWorker = createNew(msisdn, operator);
 
         int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage() == null ? 0 : frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = allOperators.findByName(frontLineWorker.getOperator()).getAllowedUsagePerMonth();
 
-        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(),currentJobAidUsage, allowedUsagePerMonthForOperator, frontLineWorker.getPromptsHeard());
+        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(), currentJobAidUsage, allowedUsagePerMonthForOperator, frontLineWorker.getPromptsHeard());
     }
 
     public CallerDataResponse createCallerData(String msisdn, String operator) {
         String bookmark = getBookmark(msisdn).asJson();
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker == null) {
-            frontLineWorker = createNew(msisdn, operator);
-        }
+        FrontLineWorker frontLineWorker = createNew(msisdn, operator);
         Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
 
         return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter);
@@ -167,14 +164,11 @@ public class FrontLineWorkerService {
         Operator operator = allOperators.findByName(frontLineWorker.getOperator());
         return (currentJobAidUsage >= operator.getAllowedUsagePerMonth());
     }
-    
+
     public void updatePromptsForFLW(String msisdn, List<String> promptList) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-
-        for(String prompt: promptList) {
+        for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
-        }
-        
         allFrontLineWorkers.update(frontLineWorker);
     }
 }

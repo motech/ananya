@@ -55,11 +55,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
-    
+
     public FrontLineWorker() {
     }
 
-    public FrontLineWorker(String msisdn , String operator) {
+    public FrontLineWorker(String msisdn, String operator) {
         this.msisdn = msisdn;
         this.operator = operator;
     }
@@ -150,11 +150,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public DateTime registeredDate() {
-       return registeredDate;
+        return registeredDate;
     }
 
     public void setRegisteredDate(DateTime registeredDate) {
-       this.registeredDate = registeredDate;
+        this.registeredDate = registeredDate;
     }
 
     public Integer incrementCertificateCourseAttempts() {
@@ -174,14 +174,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public Integer getCurrentJobAidUsage() {
-        return this.currentJobAidUsage;
+        return this.currentJobAidUsage != null ? this.currentJobAidUsage : 0;
     }
-    
+
     public void markPromptHeard(String promptKey) {
         this.promptsHeard.put(promptKey,
                 this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
     }
-    
+
     public Map<String, Integer> getPromptsHeard() {
         return this.promptsHeard;
     }
