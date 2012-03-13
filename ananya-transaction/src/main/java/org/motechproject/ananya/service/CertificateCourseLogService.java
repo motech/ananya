@@ -21,4 +21,12 @@ public class CertificateCourseLogService {
     public void deleteCertificateCourseLogsFor(String callId) {
         allCertificateCourseLogs.deleteFor(callId);
     }
+
+    public void createNew(CertificationCourseLog courseLogDocument) {
+        allCertificateCourseLogs.add(courseLogDocument);
+    }
+
+    public void update(CertificationCourseLog courseLogDocument) {
+        allCertificateCourseLogs.update(courseLogDocument);
+    }
 }

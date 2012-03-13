@@ -1,10 +1,11 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,40 +14,41 @@ import java.util.List;
 
 @Service
 public class CertificateCourseService {
-    private AllCertificateCourseLogs allCertificateCourseLogs;
+
+    private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
-    private SendSMSService sendSMSService;
 
     @Autowired
-    public CertificateCourseService(AllCertificateCourseLogs allCertificateCourseLogs,
-                                    FrontLineWorkerService frontLineWorkerService,
-                                    SendSMSService sendSMSService) {
-        this.allCertificateCourseLogs = allCertificateCourseLogs;
+    public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
+                                    FrontLineWorkerService frontLineWorkerService) {
+        this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.sendSMSService = sendSMSService;
     }
 
     private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
         final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
-                                               courseStateRequest.getChapterIndex(),
-                                               courseStateRequest.getLessonOrQuestionIndex());
+                courseStateRequest.getChapterIndex(),
+                courseStateRequest.getLessonOrQuestionIndex());
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 
-    public void saveState(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
-
-        if (certificationCourseStateRequestCollection == null || certificationCourseStateRequestCollection.size() == 0)
+    public void saveState(List<CertificationCourseStateRequest> stateRequestList) {
+        if (CollectionUtils.isEmpty(stateRequestList))
             return;
+        for (CertificationCourseStateRequest stateRequest : stateRequestList)
+            frontLineWorkerService.saveScore(createCertificateCourseStateFlwRequest(stateRequest));
 
-        for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
-            CertificateCourseStateFlwRequest certificateCourseStateFlwRequest = createCertificateCourseStateFlwRequest(certificationCourseStateRequest);
-            frontLineWorkerService.saveScore(certificateCourseStateFlwRequest);
-        }
-
-        CertificationCourseStateRequest recentCourseRequest =
-                certificationCourseStateRequestCollection.get(certificationCourseStateRequestCollection.size() - 1);
+        CertificationCourseStateRequest recentCourseRequest = stateRequestList.get(stateRequestList.size() - 1);
         saveBookmark(recentCourseRequest);
-        saveCourseCertificateLog(certificationCourseStateRequestCollection);
+        saveCourseCertificateLog(stateRequestList);
+    }
+
+    public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(msisdn, operator);
+        return new CertificateCourseCallerDataResponse(
+                frontLineWorker.bookMark().asJson(),
+                frontLineWorker.status().isRegistered(),
+                frontLineWorker.reportCard().scoresByChapterIndex());
     }
 
     private CertificateCourseStateFlwRequest createCertificateCourseStateFlwRequest(final CertificationCourseStateRequest courseStateRequest) {
@@ -59,34 +61,32 @@ public class CertificateCourseService {
                 courseStateRequest.getCallerId());
     }
 
-    private void saveCourseCertificateLog(List<CertificationCourseStateRequest> certificationCourseStateRequestCollection) {
+    private void saveCourseCertificateLog(List<CertificationCourseStateRequest> stateRequestList) {
         CertificationCourseLog courseLogDocument;
-        CertificationCourseStateRequest courseStateRequest = certificationCourseStateRequestCollection.get(0);
+        CertificationCourseStateRequest courseStateRequest = stateRequestList.get(0);
         final String callId = courseStateRequest.getCallId();
 
-        courseLogDocument = allCertificateCourseLogs.findByCallId(callId);
+        courseLogDocument = certificateCourseLogService.getCertificateCourseLogFor(callId);
         if (courseLogDocument == null) {
-            courseLogDocument = new CertificationCourseLog(courseStateRequest.getCallerId(),
-                    courseStateRequest.getCalledNumber(), null, null, "", callId, courseStateRequest.getCertificateCourseId()
-            );
-            allCertificateCourseLogs.add(courseLogDocument);
+            courseLogDocument = new CertificationCourseLog(
+                    courseStateRequest.getCallerId(),
+                    courseStateRequest.getCalledNumber(), null, null, "", callId,
+                    courseStateRequest.getCertificateCourseId());
+            certificateCourseLogService.createNew(courseLogDocument);
         }
-
-        for (CertificationCourseStateRequest certificationCourseStateRequest : certificationCourseStateRequestCollection) {
-            // Only a bookmark, not a log item. continue
-            if (!StringUtils.isBlank(certificationCourseStateRequest.getContentId())) {
+        for (CertificationCourseStateRequest stateRequest : stateRequestList) {
+            if (StringUtils.isNotBlank(stateRequest.getContentId())) {
                 CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(
-                        certificationCourseStateRequest.getContentId(),
-                        CourseItemType.valueOf(certificationCourseStateRequest.getContentType().toUpperCase()),
-                        certificationCourseStateRequest.getContentName(),
-                        certificationCourseStateRequest.getContentData(),
-                        CourseItemState.valueOf(certificationCourseStateRequest.getCourseItemState().toUpperCase()),
-                        certificationCourseStateRequest.getTimeAsDateTime()
+                        stateRequest.getContentId(),
+                        CourseItemType.valueOf(stateRequest.getContentType().toUpperCase()),
+                        stateRequest.getContentName(),
+                        stateRequest.getContentData(),
+                        CourseItemState.valueOf(stateRequest.getCourseItemState().toUpperCase()),
+                        stateRequest.getTimeAsDateTime()
                 );
-
                 courseLogDocument.addCourseLogItem(courseLogItem);
             }
         }
-        allCertificateCourseLogs.update(courseLogDocument);
+        certificateCourseLogService.update(courseLogDocument);
     }
 }

@@ -5,7 +5,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.functional.MyWebClient;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
+import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.JobAidService;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -32,16 +34,21 @@ public class DynamicJsControllerTest {
     FrontLineWorkerService frontLineWorkerService;
 
     @Mock
+    private CertificateCourseService certificateCourseService;
+
+    @Mock
     private JobAidService jobAidService;
     
     @Mock
     Properties properties;
+    private DynamicJsController controller;
 
     @Before
     public void setUp(){
         initMocks(this);
         myWebClient = new MyWebClient();
         when(properties.getProperty("url.version")).thenReturn("v1");
+        controller = new DynamicJsController(allNodes, jobAidService, certificateCourseService, properties);
     }
 
     @Test
@@ -49,7 +56,6 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/v1/generated/js/metadata.js");
         request.setServletPath("/v1");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadata", modelAndView.getViewName());
@@ -60,7 +66,6 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
         request.setServletPath("/airtel/v1");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadataairtel", modelAndView.getViewName());
@@ -71,7 +76,6 @@ public class DynamicJsControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/metadata.js");
         request.setServletPath("/generated/js/metadata.js");
 
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
 
         assertEquals("metadata", modelAndView.getViewName());
@@ -83,7 +87,6 @@ public class DynamicJsControllerTest {
         request.addParameter("callerId", "12345");
         request.addParameter("operator", "airtel");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
-        DynamicJsController controller = new DynamicJsController(allNodes, frontLineWorkerService, properties, jobAidService);
 
         when(jobAidService.createCallerData("12345", "airtel")).thenReturn(
                 new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
@@ -94,5 +97,27 @@ public class DynamicJsControllerTest {
         assertEquals(1000, callerDataForJobAid.getModel().get("currentJobAidUsage"));
         assertEquals(2000, callerDataForJobAid.getModel().get("maxAllowedUsageForOperator"));
         assertNotNull(callerDataForJobAid.getModel().get("promptsHeard"));
+    }
+    
+    @Test
+    public void shouldReturnCallerDataForCertificateCourseWithUsageValues() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
+        String current_bookmark = "current_bookmark";
+        boolean isUserRegistered = true;
+        String callerId = "12345";
+        String operator = "airtel";
+        HashMap<String, Integer> scoresByChapter = new HashMap<String, Integer>();
+        request.addParameter("callerId", callerId);
+        request.addParameter("operator", operator);
+        request.setServletPath("/dynamic/caller_data.js");
+        when(certificateCourseService.createCallerData(callerId, operator)).thenReturn(
+                new CertificateCourseCallerDataResponse(current_bookmark, isUserRegistered, scoresByChapter));
+
+        ModelAndView callerDataForJobAid = controller.getCallerData(request, new MockHttpServletResponse());
+
+        assertEquals("caller_data",callerDataForJobAid.getViewName() );
+        assertEquals(current_bookmark, callerDataForJobAid.getModel().get("bookmark"));
+        assertEquals(isUserRegistered, callerDataForJobAid.getModel().get("isCallerRegistered"));
+        assertEquals(scoresByChapter, callerDataForJobAid.getModel().get("scoresByChapter"));
     }
 }

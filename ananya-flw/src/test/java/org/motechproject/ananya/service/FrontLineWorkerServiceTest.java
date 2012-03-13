@@ -9,14 +9,11 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
-import org.motechproject.ananya.response.CallerDataResponse;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -74,48 +71,6 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers,never()).add(frontLineWorker);
         assertEquals(frontLineWorker,frontLineWorkerFromDb);
-    }
-
-    @Test
-    public void shouldTellThatUserIsRegisteredBasedOnStatusOnTheCallerData() {
-        String registeredMsisdn = "123";
-        FrontLineWorker registeredFrontLineWorker = makeFrontLineWorker();
-        registeredFrontLineWorker.status(RegistrationStatus.REGISTERED);
-        when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
-        when(allOperators.findByName("operator")).thenReturn(new Operator("operator", registeredFrontLineWorker.getCurrentJobAidUsage() - 1));
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(registeredMsisdn, "airtel");
-
-        assertThat(callerData.isCallerRegistered(), is(true));
-    }
-
-    @Test
-    public void shouldTellThatUserIsPartiallyRegisteredAndCreateTheFLWIfUserIsNotPresent() {
-        String newMsisdn = "123";
-        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(null);
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(newMsisdn, "airtel");
-
-        assertThat(callerData.isCallerRegistered(), is(false));
-        ArgumentCaptor<FrontLineWorker> frontLineWorkerArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).add(frontLineWorkerArgumentCaptor.capture());
-        String msisdn = frontLineWorkerArgumentCaptor.getValue().getMsisdn();
-        assertEquals(newMsisdn, msisdn);
-    }
-
-    @Test
-    public void shouldNotCreateANewUserIfTheUserIsAlreadyPresentAndPartiallyRegistered() {
-        String registeredMsisdn = "123";
-        FrontLineWorker registeredFrontLineWorker = makeFrontLineWorker();
-        registeredFrontLineWorker.status(RegistrationStatus.PARTIALLY_REGISTERED);
-        when(allFrontLineWorkers.findByMsisdn(registeredMsisdn)).thenReturn(registeredFrontLineWorker);
-        when(allOperators.findByName("operator")).thenReturn(new Operator("operator", registeredFrontLineWorker.getCurrentJobAidUsage() - 1));
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(registeredMsisdn, "airtel");
-
-        assertThat(callerData.isCallerRegistered(), is(false));
-        ArgumentCaptor<FrontLineWorker> frontLineWorkerArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers, times(0)).add(frontLineWorkerArgumentCaptor.capture());
     }
 
     @Test
@@ -189,45 +144,6 @@ public class FrontLineWorkerServiceTest {
         assertEquals(1, (int) courseAttemptNumber);
         verify(allFrontLineWorkers).update(expectedFrontLineWorker);
         verify(sendSMSService, never()).buildAndSendSMS(callerId, expectedFrontLineWorker.getLocationId(), courseAttemptNumber);
-    }
-
-    @Test
-    public void shouldReturnEmptyBookmarkInCallerDataIfFrontLineWorkerDoesNotExist() {
-        String msisdn = "999";
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, "airtel");
-
-        assertEquals("{}", callerData.getBookmark());
-    }
-
-    @Test
-    public void shouldReturnBookmarkOfFrontLineWorkerInCallerData() {
-        String msisdn = "999";
-        FrontLineWorker frontLineWorker = makeFrontLineWorker();
-        BookMark bookMark = new BookMark("leson", 0, 2);
-        frontLineWorker.addBookMark(bookMark);
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-        when(allOperators.findByName("operator")).thenReturn(new Operator("operator", frontLineWorker.getCurrentJobAidUsage() - 1));
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, "airtel");
-
-        assertThat(callerData.getBookmark(), is(bookMark.asJson()));
-    }
-
-    @Test
-    public void shouldReturnTheCorrectScoresByChapterMapWithTheCallerData() {
-        String callerId = "callerId";
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(10, 0, null, InteractionKeys.PlayCourseResultInteraction, "callId", callerId);
-        FrontLineWorker expectedFrontLineWorker = makeFrontLineWorker();
-        setUpTestScoreSet(expectedFrontLineWorker, true);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
-        when(allOperators.findByName("operator")).thenReturn(new Operator("operator", expectedFrontLineWorker.getCurrentJobAidUsage() - 1));
-
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(callerId, "airtel");
-
-        assertEquals(9, callerData.getScoresByChapter().size());
-        assertEquals(4, (int) callerData.getScoresByChapter().get("0"));
     }
 
     private void setUpTestScoreSet(FrontLineWorker frontLineWorker, boolean result) {

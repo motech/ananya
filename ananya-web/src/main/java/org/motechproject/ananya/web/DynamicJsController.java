@@ -2,9 +2,9 @@ package org.motechproject.ananya.web;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
-import org.motechproject.ananya.response.CallerDataResponse;
+import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
-import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.JobAidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,17 @@ public class DynamicJsController {
     private static Logger log = LoggerFactory.getLogger(DynamicJsController.class);
 
     private AllNodes allNodes;
-    private FrontLineWorkerService frontLineWorkerService;
     private Properties properties;
     private JobAidService jobAidService;
+    private CertificateCourseService certificateCourseService;
 
     @Autowired
-    public DynamicJsController(AllNodes allNodes, FrontLineWorkerService frontLineWorkerService, @Qualifier("ananyaProperties") Properties properties, JobAidService jobAidService) {
+    public DynamicJsController(AllNodes allNodes,
+                               JobAidService jobAidService,
+                               CertificateCourseService certificateCourseService,
+                               @Qualifier("ananyaProperties") Properties properties) {
         this.allNodes = allNodes;
-        this.frontLineWorkerService = frontLineWorkerService;
+        this.certificateCourseService = certificateCourseService;
         this.properties = properties;
         this.jobAidService = jobAidService;
     }
@@ -85,7 +88,8 @@ public class DynamicJsController {
         response.setContentType("application/javascript");
         log.info("fetching caller data for: " + msisdn);
 
-        CallerDataResponse callerData = frontLineWorkerService.createCallerData(msisdn, operator);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator);
+
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())

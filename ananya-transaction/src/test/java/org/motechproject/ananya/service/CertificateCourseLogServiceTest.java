@@ -41,4 +41,22 @@ public class CertificateCourseLogServiceTest {
         certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
         verify(allCertificateCourseLogs).deleteFor(callId);
     }
+
+    @Test
+    public void shouldCreateNewCertificateCourseLog(){
+        CertificationCourseLog courseLogDocument = new CertificationCourseLog();
+
+        certificateCourseLogService.createNew(courseLogDocument);
+
+        verify(allCertificateCourseLogs).add(courseLogDocument);
+    }
+
+    @Test
+    public void shouldUpdateCertificateCourseLog(){
+        CertificationCourseLog courseLogDocument = new CertificationCourseLog();
+
+        certificateCourseLogService.update(courseLogDocument);
+
+        verify(allCertificateCourseLogs).update(courseLogDocument);
+    }
 }

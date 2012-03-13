@@ -5,7 +5,6 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
-import org.motechproject.ananya.response.CallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,14 +136,6 @@ public class FrontLineWorkerService {
                 sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
             }
         }
-    }
-
-    public CallerDataResponse createCallerData(String msisdn, String operator) {
-        String bookmark = getBookmark(msisdn).asJson();
-        FrontLineWorker frontLineWorker = createNew(msisdn, operator);
-        Map<String, Integer> scoresByChapter = scoresByChapter(msisdn);
-
-        return new CallerDataResponse(bookmark, frontLineWorker.status().isRegistered(), scoresByChapter);
     }
 
     private Boolean hasReachedMaxUsageForMonth(String msisdn) {
