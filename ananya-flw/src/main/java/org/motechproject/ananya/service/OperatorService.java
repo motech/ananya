@@ -1,8 +1,11 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.repository.AllOperators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class OperatorService {
@@ -16,5 +19,10 @@ public class OperatorService {
 
     public Integer findMaximumUsageFor(String operator) {
         return allOperators.findByName(operator).getAllowedUsagePerMonth();
+    }
+
+    //only used in perf test
+    public List<Operator> getAllOperators() {
+        return allOperators.getAll();
     }
 }
