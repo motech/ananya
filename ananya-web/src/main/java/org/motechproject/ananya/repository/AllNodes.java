@@ -24,7 +24,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     private ConcurrentHashMap<String, String> cachedTreeJsons = new ConcurrentHashMap();
 
     static {
-        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("revision", "parentId", "contentIds"));
+        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
         GSON = gsonBuilder.create();
     }
 
@@ -37,7 +37,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     @GenerateView
     public Node findByName(String treeName) {
         Node rootNode = findNode(treeName, "by_name");
-        return addDescendantsAndContent(rootNode);
+        return assembleDescendantsAndContent(rootNode);
     }
 
     @GenerateView
@@ -48,15 +48,15 @@ public class AllNodes extends MotechBaseRepository<Node> {
     @Override
     public Node get(String id) {
         Node node = super.get(id);
-        return addDescendantsAndContent(node);
+        return assembleDescendantsAndContent(node);
     }
 
-    private Node addDescendantsAndContent(Node node) {
+    private Node assembleDescendantsAndContent(Node node) {
         List<Node> children = findByParentId(node.getId());
         if (children.size() != 0) {
             for (Node childNode : children) {
                 node.addChild(childNode);
-                addDescendantsAndContent(childNode);
+                assembleDescendantsAndContent(childNode);
             }
         }
         addContentToNode(node);
@@ -80,9 +80,21 @@ public class AllNodes extends MotechBaseRepository<Node> {
     public String nodeAsJson(String treeName) throws IOException {
         String nodeAsJson = cachedTreeJsons.get(treeName);
         if(nodeAsJson == null){
-             Node node = findByName(treeName);
+            Node node = findByName(treeName);
+            nodeAsJson = GSON.toJson(node);
+            cachedTreeJsons.putIfAbsent(treeName, nodeAsJson);
+        }
+        return nodeAsJson;
+    }
+
+    public String nodeWithoutChildrenAsJson(String nodeName) throws  IOException {
+        final String mapKey = nodeName + "_without_children";
+        String nodeAsJson = cachedTreeJsons.get(mapKey);
+        if(nodeAsJson == null){
+             Node node = findNode(nodeName, "by_name");
+             addContentToNode(node);
              nodeAsJson = GSON.toJson(node);
-             cachedTreeJsons.putIfAbsent(treeName, nodeAsJson);
+             cachedTreeJsons.putIfAbsent(mapKey, nodeAsJson);
         }
         return nodeAsJson;
     }

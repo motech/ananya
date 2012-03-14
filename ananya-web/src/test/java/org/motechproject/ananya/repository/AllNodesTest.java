@@ -87,6 +87,14 @@ public class AllNodesTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void shouldReturnTreeWithoutChildrenAsJson() throws Exception {
+        String treeAsJson = allNodes.nodeWithoutChildrenAsJson(COURSE_NAME);
+        Node from = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);
+        assertEquals(0,from.children().size());
+        assertEquals("Welcome to the course.",from.data().get("message"));
+    }
+
+    @Test
     public void nodeAsJsonShouldAlwaysReturnCorrectTree() throws Exception {
         String treeAsJson = allNodes.nodeAsJson(COURSE_NAME);
         Node from = (Node) new MotechJsonReader().readFromString(treeAsJson, Node.class);

@@ -20,6 +20,7 @@ import java.util.Properties;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -38,13 +39,13 @@ public class DynamicJsControllerTest {
 
     @Mock
     private JobAidService jobAidService;
-    
+
     @Mock
     Properties properties;
     private DynamicJsController controller;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
         myWebClient = new MyWebClient();
         when(properties.getProperty("url.version")).thenReturn("v1");
@@ -53,7 +54,7 @@ public class DynamicJsControllerTest {
 
     @Test
     public void shouldGetMetadataWhenURIDoesNotContainAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/v1/generated/js/metadata.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/v1/generated/js/metadata.js");
         request.setServletPath("/v1");
 
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
@@ -63,7 +64,7 @@ public class DynamicJsControllerTest {
 
     @Test
     public void shouldGetAirtelMetadataWhenURIContainsAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
         request.setServletPath("/airtel/v1");
 
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
@@ -73,7 +74,7 @@ public class DynamicJsControllerTest {
 
     @Test
     public void shouldGetMetadataEvenWhenURIDoesNotHaveVersionAndVendor() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/metadata.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/metadata.js");
         request.setServletPath("/generated/js/metadata.js");
 
         ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
@@ -83,7 +84,7 @@ public class DynamicJsControllerTest {
 
     @Test
     public void shouldReturnCallerDataForJobAidWithUsageValues() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/dynamic/joabaid/caller_data.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/joabaid/caller_data.js");
         request.addParameter("callerId", "12345");
         request.addParameter("operator", "airtel");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
@@ -92,16 +93,16 @@ public class DynamicJsControllerTest {
                 new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
-        assertEquals("job_aid_caller_data",callerDataForJobAid.getViewName() );
+        assertEquals("job_aid_caller_data", callerDataForJobAid.getViewName());
         assertTrue((Boolean) callerDataForJobAid.getModel().get("isCallerRegistered"));
         assertEquals(1000, callerDataForJobAid.getModel().get("currentJobAidUsage"));
         assertEquals(2000, callerDataForJobAid.getModel().get("maxAllowedUsageForOperator"));
         assertNotNull(callerDataForJobAid.getModel().get("promptsHeard"));
     }
-    
+
     @Test
     public void shouldReturnCallerDataForCertificateCourseWithUsageValues() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET","http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
         String current_bookmark = "current_bookmark";
         boolean isUserRegistered = true;
         String callerId = "12345";
@@ -115,9 +116,34 @@ public class DynamicJsControllerTest {
 
         ModelAndView callerDataForJobAid = controller.getCallerData(request, new MockHttpServletResponse());
 
-        assertEquals("caller_data",callerDataForJobAid.getViewName() );
+        assertEquals("caller_data", callerDataForJobAid.getViewName());
         assertEquals(current_bookmark, callerDataForJobAid.getModel().get("bookmark"));
         assertEquals(isUserRegistered, callerDataForJobAid.getModel().get("isCallerRegistered"));
         assertEquals(scoresByChapter, callerDataForJobAid.getModel().get("scoresByChapter"));
+    }
+
+    @Test
+    public void shouldServeJobAidCourseDataWithoutLevels() throws Exception {
+        String testNodeWithoutChildren = "TestNodeWithoutChildren";
+        String expectedNodeWithoutLevels = "var courseData = " + testNodeWithoutChildren + ";";
+        when(allNodes.nodeWithoutChildrenAsJson("JobAidCourse")).thenReturn(testNodeWithoutChildren);
+
+        String actualNodeWithoutLevels = controller.serveJobAidCourseDataWithoutLevels(new MockHttpServletResponse());
+
+        assertEquals(expectedNodeWithoutLevels, actualNodeWithoutLevels);
+    }
+
+    @Test
+    public void shouldServeJobAidLevelData() throws Exception {
+        String testLevelData = "TestNodeWithoutChildren";
+        String levelNumber = "1";
+        String expectedLevelData = "courseData.children[0] = " + testLevelData;
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("levelNumber", levelNumber);
+        when(allNodes.nodeAsJson("level " + levelNumber)).thenReturn(testLevelData);
+
+        String actualLevelData = controller.serveJobAidLevelData(request, new MockHttpServletResponse());
+
+        assertEquals(expectedLevelData, actualLevelData);
     }
 }

@@ -23,6 +23,7 @@ public class Node extends MotechBaseDataObject {
 
     private List<Node> children;
     private List<StringContent> contents;
+    private List<String> childrenIds;
 
     public Node() {
         this(null);
@@ -42,6 +43,7 @@ public class Node extends MotechBaseDataObject {
         this.data = new HashMap<String, String>();
         this.contents = new ArrayList<StringContent>();
         this.contentIds = new ArrayList<String>();
+        this.childrenIds = new ArrayList<String>();
     }
 
     public Node addChild(Node child) {
