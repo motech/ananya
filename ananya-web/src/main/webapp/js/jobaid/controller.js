@@ -8,8 +8,7 @@ var JobAidController = function(callerData , metadata, callContext) {
     var MILLISECONDS_PER_MINUTE = 60000
 
     this.decideFlowForJobAid = function(operator) {
-
-        if(this.hasReachedMaxUsage(operator))
+        if(this.hasReachedMaxUsage(operator) )
             return "#max_usage";
 
         if (callContext.dialedViaShortCode) {
@@ -26,9 +25,15 @@ var JobAidController = function(callerData , metadata, callContext) {
             return "#partially_registered";
     };
 
+
     this.hasReachedMaxUsage = function() {
         return (callerData.currentJobAidUsage >= callerData.maxAllowedUsageForOperator);
     };
+
+    this.hasSufficientUsageLeftToPlayNextPrompt = function(){
+
+    };
+
 
     this.isCallerRegistered = function() {
         return callerData.isRegistered == "true";

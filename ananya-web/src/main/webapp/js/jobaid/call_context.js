@@ -83,6 +83,18 @@ var CallContext = function(course, metadata, promptContext) {
         return this.audioFileBase() + this.findContentByName("lesson").value;
     };
 
+    this.timeRequiredForCurrentInteraction = function(){
+        var contents = this.currentInteraction.contents;
+        var contentLength = contents.length;
+        var totalLength = this.isAtCourseRoot()? 0 : this.lengthOfAudioForOptionToGoToTopLevel() ;
+        for (var i = 0; i < contentLength; i++) {
+            if(contents[i].name == "introduction" && !this.shouldPlayIntroduction())
+                continue;
+            totalLength += parseInt(contents[i].metadata.duration);
+        }
+        return totalLength;
+    };
+
     this.audioFileBase = function() {
         return this.metadata['audio.url']+this.metadata['jobaid.audio.url'];
     };
@@ -108,6 +120,10 @@ var CallContext = function(course, metadata, promptContext) {
 
     this.audioForOptionToGoToTopLevel = function() {
         return this.audioFileBase() + this.metadata['option.to.top.level.audio'];
+    };
+
+    this.lengthOfAudioForOptionToGoToTopLevel = function() {
+        return parseInt(this.metadata['length.of.option.to.top.level.audio']);
     };
 
     this.setBlankOrInvalidInput = function(value){

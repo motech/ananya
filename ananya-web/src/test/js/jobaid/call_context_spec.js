@@ -8,7 +8,8 @@ describe("Call Context", function() {
                         "audio.url": audioFileBase,
                         "jobaid.audio.url":jobaidFileBase,
                         "option.to.top.level.audio" : "option.to.go.to.top.level.wav",
-                        "invalid.input.retry.audio" : "0000_error_in_pressing_number.wav"
+                        "invalid.input.retry.audio" : "0000_error_in_pressing_number.wav",
+                        "length.of.option.to.top.level.audio" : "8"
                         };
         course = jobAidCourseWithTwoLessonsInEveryChapter();
         promptContext = new PromptContext(metadata);
@@ -240,5 +241,34 @@ describe("Call Context", function() {
         expect(callContext.isBlankOrInvalidInput()).toEqual(false);
         callContext.setBlankOrInvalidInput(true);
         expect(callContext.isBlankOrInvalidInput()).toEqual(true);
+    });
+
+    it("should get total time required for a level", function(){
+        callContext.handleInput(1);
+        expect(callContext.timeRequiredForCurrentInteraction()).toEqual(11);
+    });
+
+    it("should get total time required for a chapter when introduction is to be played", function(){
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        expect(callContext.timeRequiredForCurrentInteraction()).toEqual(17);
+    });
+
+    it("should get total time required for a chapter if introduction will not be played", function(){
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        callContext.setBlankOrInvalidInput(true);
+        expect(callContext.timeRequiredForCurrentInteraction()).toEqual(12);
+    });
+
+    it("should get total time required for a lesson", function(){
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        callContext.handleInput(1);
+        expect(callContext.timeRequiredForCurrentInteraction()).toEqual(14);
+    });
+
+    it("should get total time required for course", function(){
+        expect(callContext.timeRequiredForCurrentInteraction()).toEqual(3);
     });
 })
