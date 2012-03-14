@@ -1,5 +1,7 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 import org.motechproject.ananya.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class SendSMSService {
     private static final String COURSE_COMPLETION_SMS_MESSAGE_KEY = "course.completion.sms.message";
     private Properties ananyaServiceProperties;
     private EventContext eventContext;
+
+    private static final Logger logger = Logger.getLogger(SendSMSService.class);
+
 
     @Autowired
     public SendSMSService(Properties ananyaServiceProperties, @Qualifier("eventContext") EventContext eventContext) {
@@ -34,6 +39,7 @@ public class SendSMSService {
         parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);
         parameters.put(SendSMSHandler.PARAMETER_SMS_REFERENCE_NUMBER, referenceNumber);
 
+        logger.info("Sending SMS event : Key SUBJECT_SEND_SINGLE_SMS " + ToStringBuilder.reflectionToString(parameters));
         eventContext.send(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS, parameters);
     }
 
