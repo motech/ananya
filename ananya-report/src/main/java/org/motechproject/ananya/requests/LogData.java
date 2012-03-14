@@ -19,4 +19,11 @@ public class LogData implements Serializable {
         return dataId;
     }
 
+    @Override
+    public String toString() {
+        return "LogData{" +
+                "type=" + type +
+                ", dataId='" + dataId + '\'' +
+                '}';
+    }
 }

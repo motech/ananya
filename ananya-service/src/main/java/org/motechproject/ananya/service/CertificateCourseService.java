@@ -2,10 +2,13 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,9 @@ public class CertificateCourseService {
     private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
 
+    private static Logger log = LoggerFactory.getLogger(CertificateCourseService.class);
+
+
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
                                     FrontLineWorkerService frontLineWorkerService) {
@@ -29,10 +35,15 @@ public class CertificateCourseService {
         final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
                 courseStateRequest.getChapterIndex(),
                 courseStateRequest.getLessonOrQuestionIndex());
+
+        log.info("Saving bookmark " + bookMark);
+
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 
     public void saveState(List<CertificationCourseStateRequest> stateRequestList) {
+        log.info("State Request List " + ToStringBuilder.reflectionToString(stateRequestList));
+
         if (CollectionUtils.isEmpty(stateRequestList))
             return;
         for (CertificationCourseStateRequest stateRequest : stateRequestList)
@@ -44,6 +55,8 @@ public class CertificateCourseService {
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
+        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
+
         FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(msisdn, operator);
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),

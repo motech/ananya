@@ -16,7 +16,7 @@ public class AnanyaExceptionResolver extends SimpleMappingExceptionResolver {
     @Override
     protected ModelAndView doResolveException(
             HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        log.info(getExceptionString(ex));
+        log.error(getExceptionString(ex));
 
         return super.doResolveException(request, response, handler, ex);
     }
