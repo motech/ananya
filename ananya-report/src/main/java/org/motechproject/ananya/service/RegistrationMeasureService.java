@@ -30,12 +30,13 @@ public class RegistrationMeasureService {
     private AllTimeDimensions allTimeDimensions;
 
     private ReportDB reportDB;
+    private FrontLineWorkerService frontLineWorkerService;
 
     @Autowired
     public RegistrationMeasureService(
             AllRegistrationLogs allRegistrationLogs, AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations,
             AllLocationDimensions allLocationDimensions, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-            AllTimeDimensions allTimeDimensions, ReportDB reportDB) {
+            AllTimeDimensions allTimeDimensions, ReportDB reportDB, FrontLineWorkerService frontLineWorkerService) {
 
         this.allRegistrationLogs = allRegistrationLogs;
         this.allFrontLineWorkers = allFrontLineWorkers;
@@ -45,17 +46,13 @@ public class RegistrationMeasureService {
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
         this.reportDB = reportDB;
+        this.frontLineWorkerService = frontLineWorkerService;
     }
 
     
     public void createRegistrationMeasure(LogData logData) {
-        //TODO:should not access the repos directly [sush/rahul]
-        RegistrationLog registrationLog = allRegistrationLogs.get(logData.getDataId());
-        createRegistrationMeasureWith(registrationLog.getCallerId());
-    }
-
-    public void createRegistrationMeasureWith(String msisdn) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        String callerId = logData.getDataId();
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         Location location = allLocations.get(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(

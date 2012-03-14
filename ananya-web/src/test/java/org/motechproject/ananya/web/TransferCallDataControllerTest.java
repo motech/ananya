@@ -17,7 +17,7 @@ import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.ReportPublisherService;
+import org.motechproject.ananya.service.ReportPublishService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -54,7 +54,7 @@ public class TransferCallDataControllerTest {
     private CallLogCounterService callLogCounterService;
 
     @Mock
-    private ReportPublisherService reportPublisherService;
+    private ReportPublishService reportPublisherService;
     @Before
     public void Setup() {
         initMocks(this);

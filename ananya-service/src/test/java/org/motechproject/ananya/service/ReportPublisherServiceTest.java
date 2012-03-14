@@ -18,14 +18,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReportPublisherServiceTest {
 
-    private ReportPublisherService reportPublisherService;
+    private ReportPublishService reportPublisherService;
     @Mock
     private EventContext eventContext;
 
     @Before
     public void setUp() {
         initMocks(this);
-        reportPublisherService = new ReportPublisherService(eventContext);
+        reportPublisherService = new ReportPublishService(eventContext);
     }
 
     @Test

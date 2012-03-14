@@ -20,11 +20,13 @@ public class JobAidServiceTest {
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
     private OperatorService operatorService;
+    @Mock
+    private ReportPublishService reportPublishService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        jobAidService = new JobAidService(frontLineWorkerService, operatorService);
+        jobAidService = new JobAidService(frontLineWorkerService, operatorService, reportPublishService);
     }
 
     @Test
@@ -40,7 +42,7 @@ public class JobAidServiceTest {
     }
 
     @Test
-    public void shouldCreateCallerData(){
+    public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule(){
         String operator = "airtel";
         String callId = "callid";
         String promptKey = "prompt";

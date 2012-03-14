@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReportPublisherService {
+public class ReportPublishService {
 
     private EventContext eventContext;
 
     @Autowired
-    public ReportPublisherService(@Qualifier("eventContext") EventContext eventContext) {
+    public ReportPublishService(@Qualifier("eventContext") EventContext eventContext) {
         this.eventContext = eventContext;
     }
 
@@ -33,5 +33,9 @@ public class ReportPublisherService {
 
     private void publishCertificateCourseData(LogData logData) {
         eventContext.send(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY, logData);
+    }
+
+    public void publishNewRegistration(String callerId) {
+        eventContext.send(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY, new LogData(LogType.REGISTRATION, callerId));
     }
 }

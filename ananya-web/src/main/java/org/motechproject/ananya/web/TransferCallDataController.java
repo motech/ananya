@@ -9,7 +9,7 @@ import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.ReportPublisherService;
+import org.motechproject.ananya.service.ReportPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,13 @@ public class TransferCallDataController {
     private CallLoggerService callLoggerService;
     private CallLogCounterService callLogCounterService;
     private CertificateCourseService certificateCourseService;
-    private ReportPublisherService reportPublisherService;
+    private ReportPublishService reportPublisherService;
 
     @Autowired
     public TransferCallDataController(CallLoggerService callLoggerService,
                                       CertificateCourseService certificateCourseService,
                                       CallLogCounterService callLogCounterService,
-                                      ReportPublisherService reportPublisherService) {
+                                      ReportPublishService reportPublisherService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
         this.callLogCounterService = callLogCounterService;

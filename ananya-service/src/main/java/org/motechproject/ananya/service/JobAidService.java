@@ -11,11 +11,13 @@ public class JobAidService {
 
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
+    private ReportPublishService reportPublishService;
 
     @Autowired
-    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService) {
+    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, ReportPublishService reportPublishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
+        this.reportPublishService = reportPublishService;
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
@@ -26,8 +28,11 @@ public class JobAidService {
 
     public JobAidCallerDataResponse createCallerData(String msisdn, String operator) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(msisdn, operator);
-        int currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+        reportPublishService.publishNewRegistration(msisdn);
+
+        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
+
         return new JobAidCallerDataResponse(
                 frontLineWorker.status().isRegistered(),
                 currentJobAidUsage,

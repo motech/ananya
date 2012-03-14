@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.service.ReportPublisherService;
+import org.motechproject.ananya.service.ReportPublishService;
 import org.motechproject.ananya.service.SMSPublisherService;
 import org.motechproject.model.MotechEvent;
 
@@ -19,7 +19,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class SMSSentHandlerTest {
 
     @Mock
-    private ReportPublisherService reportPublisherService;
+    private ReportPublishService reportPublisherService;
     private SMSSentHandler smsSentHandler;
 
     @Before
