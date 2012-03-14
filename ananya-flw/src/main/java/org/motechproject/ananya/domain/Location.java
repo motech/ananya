@@ -5,7 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'Location'")
-public class Location extends MotechBaseDataObject{
+public class Location extends MotechBaseDataObject {
 
     @JsonProperty
     public String externalId;
@@ -17,6 +17,10 @@ public class Location extends MotechBaseDataObject{
     public String panchayat;
 
     public Location() {
+    }
+
+    public Location(String externalId) {
+        this.externalId = externalId;
     }
 
     public Location(String externalId, String district, String blockName, String panchayat) {
@@ -49,7 +53,7 @@ public class Location extends MotechBaseDataObject{
         this.panchayat = location.panchayat;
         return this;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

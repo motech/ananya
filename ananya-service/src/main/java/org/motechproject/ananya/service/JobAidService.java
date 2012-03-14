@@ -26,9 +26,9 @@ public class JobAidService {
                 jobAidPromptRequest.getPromptList());
     }
 
-    public JobAidCallerDataResponse createCallerData(String msisdn, String operator) {
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(msisdn, operator);
-        reportPublishService.publishNewRegistration(msisdn);
+    public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(callerId, operator);
+        reportPublishService.publishNewRegistration(callerId);
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);

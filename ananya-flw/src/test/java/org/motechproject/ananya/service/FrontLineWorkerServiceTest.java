@@ -69,8 +69,8 @@ public class FrontLineWorkerServiceTest {
 
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createNew(msisdn, frontLineWorker.getOperator());
 
-        verify(allFrontLineWorkers,never()).add(frontLineWorker);
-        assertEquals(frontLineWorker,frontLineWorkerFromDb);
+        verify(allFrontLineWorkers, never()).add(frontLineWorker);
+        assertEquals(frontLineWorker, frontLineWorkerFromDb);
     }
 
     @Test
@@ -186,7 +186,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateTheFrontLineWorkerWithUsage(){
+    public void shouldUpdateTheFrontLineWorkerWithUsage() {
         String callerId = "callerId";
         String operator = "airtel";
         Integer currentUsage = 20;
@@ -195,7 +195,17 @@ public class FrontLineWorkerServiceTest {
 
         frontLineWorkerService.updateCurrentUsageForUser(callerId, currentUsage);
 
-        assertEquals(currentUsage,frontLineWorker.getCurrentJobAidUsage());
+        assertEquals(currentUsage, frontLineWorker.getCurrentJobAidUsage());
         verify(allFrontLineWorkers).update(frontLineWorker);
+    }
+
+    @Test
+    public void shouldFindByCallerId() {
+        FrontLineWorker expectedFrontLineWorker = new FrontLineWorker();
+        when(allFrontLineWorkers.findByMsisdn("123")).thenReturn(expectedFrontLineWorker);
+
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId("123");
+        assertEquals(expectedFrontLineWorker, frontLineWorker);
+
     }
 }

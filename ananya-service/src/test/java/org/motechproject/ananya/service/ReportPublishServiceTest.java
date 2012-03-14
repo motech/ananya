@@ -16,22 +16,22 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ReportPublisherServiceTest {
+public class ReportPublishServiceTest {
 
-    private ReportPublishService reportPublisherService;
+    private ReportPublishService reportPublishService;
     @Mock
     private EventContext eventContext;
 
     @Before
     public void setUp() {
         initMocks(this);
-        reportPublisherService = new ReportPublishService(eventContext);
+        reportPublishService = new ReportPublishService(eventContext);
     }
 
     @Test
     public void shouldPublishDisconnectEvent(){
         String callId = "callID";
-        reportPublisherService.publishCallDisconnectEvent(callId);
+        reportPublishService.publishCallDisconnectEvent(callId);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
@@ -48,11 +48,24 @@ public class ReportPublisherServiceTest {
     public void shouldPublishSMSSent() {
         LogData reportData = new LogData(LogType.SMS_SENT, "callerId");
 
-        reportPublisherService.publishSMSSent(reportData);
+        reportPublishService.publishSMSSent(reportData);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY), captor.capture());
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
+
+    @Test
+    public void shouldPublishRegistration() {
+        String callerId = "123";
+
+        reportPublishService.publishNewRegistration(callerId);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY), captor.capture());
+        LogData captured = captor.getValue();
+        assertEquals(captured.getDataId(), callerId);
+    }
+
 }

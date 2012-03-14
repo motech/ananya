@@ -50,6 +50,10 @@ public class FrontLineWorkerService {
         allFrontLineWorkers.update(frontLineWorker);
     }
 
+    public FrontLineWorker findByCallerId(String callerId) {
+        return allFrontLineWorkers.findByMsisdn(callerId);
+    }
+
     public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         frontLineWorker.addSMSReferenceNumber(smsReferenceNumber);

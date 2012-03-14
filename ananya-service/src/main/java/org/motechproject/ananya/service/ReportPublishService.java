@@ -36,6 +36,6 @@ public class ReportPublishService {
     }
 
     public void publishNewRegistration(String callerId) {
-        eventContext.send(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY, new LogData(LogType.REGISTRATION, callerId));
+        eventContext.send(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY, new LogData(LogType.REGISTRATION, callerId));
     }
 }

@@ -44,17 +44,19 @@ public class JobAidServiceTest {
     @Test
     public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule(){
         String operator = "airtel";
-        String callId = "callid";
+        String callerId = "callerId";
         String promptKey = "prompt";
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        when(frontLineWorkerService.createNew(callId, operator)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.createNew(callerId, operator)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callId, operator);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
-        verify(frontLineWorkerService).createNew(callId, operator);
+        verify(frontLineWorkerService).createNew(callerId, operator);
+        verify(reportPublishService).publishNewRegistration(callerId);
+
         assertEquals(callerData.getCurrentJobAidUsage(),new Integer(9));
         assertEquals(callerData.getMaxAllowedUsageForOperator(),new Integer(10));
         assertEquals(callerData.getPromptsHeard().get(promptKey), new Integer(1));

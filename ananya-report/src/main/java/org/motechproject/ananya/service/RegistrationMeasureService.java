@@ -2,7 +2,6 @@ package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -49,17 +48,16 @@ public class RegistrationMeasureService {
         this.frontLineWorkerService = frontLineWorkerService;
     }
 
-    
+
     public void createRegistrationMeasure(LogData logData) {
         String callerId = logData.getDataId();
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         Location location = allLocations.get(frontLineWorker.getLocationId());
+        LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
                 frontLineWorker.msisdn(), frontLineWorker.getOperator(),
                 frontLineWorker.name(), frontLineWorker.status().toString());
-
-        LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.registeredDate());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);

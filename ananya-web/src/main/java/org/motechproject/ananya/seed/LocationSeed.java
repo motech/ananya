@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @Component
 public class LocationSeed {
+
 
     @Autowired
     private AllLocations allLocations;
@@ -32,6 +34,14 @@ public class LocationSeed {
     public void load() throws IOException {
         String path = environment.equals("prod") ? fileName : getClass().getResource(fileName).getPath();
         loadFromCsv(path);
+        loadDefaultLocation();
+    }
+
+    private void loadDefaultLocation() {
+        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION);
+        LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
+        allLocations.addOrUpdate(location);
+        allLocationDimensions.addOrUpdate(locationDimension);
     }
 
     /*
