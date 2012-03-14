@@ -52,7 +52,7 @@ public class RegistrationMeasureService {
     public void createRegistrationMeasure(LogData logData) {
         String callerId = logData.getDataId();
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
-        Location location = allLocations.get(frontLineWorker.getLocationId());
+        Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
 
         LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
 

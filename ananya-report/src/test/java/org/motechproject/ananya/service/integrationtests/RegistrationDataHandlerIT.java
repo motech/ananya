@@ -122,7 +122,7 @@ public class RegistrationDataHandlerIT {
 
         DateTime registeredDate = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, location.getId(),"");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, locationCode,"");
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
