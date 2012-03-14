@@ -3,7 +3,6 @@ package org.motechproject.ananya.service.integrationtests;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.*;
@@ -113,7 +112,6 @@ public class RegistrationDataHandlerIT {
     }
 
     @Test
-    @Ignore
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
 
         String locationCode = "S001D002B002V001";
@@ -128,18 +126,13 @@ public class RegistrationDataHandlerIT {
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
-
         allFrontLineWorkers.add(frontLineWorker);
-
-        DateTime dateTime = DateTime.now().plusDays(3);
-        RegistrationLog registrationLog = new RegistrationLog(msisdn, "123", dateTime, dateTime.plusMinutes(1), "");
-        allRegistrationLogs.add(registrationLog);
 
         LocationDimension locationDimension = new LocationDimension(locationCode, "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
         allTimeDimensions.addOrUpdate(registeredDate);
 
-        LogData logData = new LogData(LogType.REGISTRATION, registrationLog.getId());
+        LogData logData = new LogData(LogType.REGISTRATION, msisdn);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

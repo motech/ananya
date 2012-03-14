@@ -18,6 +18,8 @@ import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.ReportPublishService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -39,7 +41,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
 public class TransferCallDataControllerTest {
-    
+
+    private static Logger log = LoggerFactory.getLogger(TransferCallDataControllerTest.class);
+
     private TransferCallDataController transferCallDataController;
 
     @Mock
@@ -122,7 +126,7 @@ public class TransferCallDataControllerTest {
         Collection<TransferData> dataCollection = gson.fromJson(jsonString, collectionType);
         
         for(TransferData item : dataCollection) {
-            System.out.println(item.getData());
+            log.info(item.getData());
         }
     }
     
