@@ -45,8 +45,11 @@ public class DynamicJsController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
     public ModelAndView serveMetaData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
         response.setContentType("application/javascript");
         String operator = operatorFromURL(request);
+
+        log.info("fetching metadata: operator is " + operator);
 
         return new ModelAndView("metadata" + operator).
                 addObject("urlVersion", properties.getProperty("url.version")).
@@ -57,6 +60,9 @@ public class DynamicJsController {
     @ResponseBody
     public String serveJobAidCourseDataWithoutLevels(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
+
+        log.info("Fetching JobAid course data");
+
         return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("JobAidCourse"));
     }
 
@@ -65,6 +71,9 @@ public class DynamicJsController {
     public String serveJobAidLevelData(HttpServletRequest request,
                                        HttpServletResponse response) throws Exception {
         String levelNumber = request.getParameter("levelNumber");
+
+        log.info("Fetching JobAid level data " + levelNumber);
+
         response.setContentType("application/javascript");
         return String.format("courseData.children[%s] = %s", Integer.parseInt(levelNumber)-1, allNodes.nodeAsJson("level " + levelNumber));
     }
@@ -73,6 +82,9 @@ public class DynamicJsController {
     @ResponseBody
     public String serveCertificationCourseData(HttpServletResponse response) throws Exception {
         response.setContentType("application/javascript");
+
+        log.info("Fetching certificate course data");
+
         return String.format("var courseData = %s;", allNodes.nodeAsJson("CertificationCourse"));
     }
 
@@ -81,7 +93,8 @@ public class DynamicJsController {
         String msisdn = request.getParameter("callerId");
         String operator = request.getParameter("operator");
         response.setContentType("application/javascript");
-        log.info("fetching caller data for: " + msisdn);
+
+        log.info("fetching caller data for: " + msisdn + " for operator: " + operator);
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator);
 
@@ -97,7 +110,8 @@ public class DynamicJsController {
         String msisdn = request.getParameter("callerId");
         String operator = request.getParameter("operator");
         response.setContentType("application/javascript");
-        log.info("fetching caller data for: " + msisdn);
+
+        log.info("fetching caller data for: " + msisdn + " for operator: " + operator);
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator);
 

@@ -37,6 +37,8 @@ public class AdminController {
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/admin/")
     public ModelAndView showTestPage(HttpServletRequest request) {
+        log.info("Fetching workers" );
+
         List<FrontLineWorkerPresenter> workerPresenters = new ArrayList<FrontLineWorkerPresenter>();
         List<FrontLineWorker> workers = allFrontLineWorkers.getAll();
         try {
@@ -48,6 +50,7 @@ public class AdminController {
         } catch (Exception e) {
             log.error("Exception:", e);
         }
+
         return new ModelAndView("admin")
                 .addObject("workerPresenters", workerPresenters)
                 .addObject("contextPathWithVersion", contextWithVersion(request));
@@ -56,7 +59,10 @@ public class AdminController {
     @RequestMapping(method = RequestMethod.POST, value = "/admin/flw/delete")
     @ResponseBody
     public String removeFlw(String id) {
+        log.info("Removing FLW with id " + id );
+
         FrontLineWorker flwToDelete = allFrontLineWorkers.get(id);
+
         if (flwToDelete != null) {
             allFrontLineWorkers.remove(flwToDelete);
             log.info("Deleted : " + flwToDelete);

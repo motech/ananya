@@ -60,6 +60,8 @@ public class TransferCallDataController {
 
         callLogCounterService.purgeRedundantPackets(callId, transferDataList);
 
+        log.info("Purged Redundant Packets");
+
         for (TransferData transferData : transferDataList) {
             if (transferData.isCCState())
                 stateRequests.add(CertificationCourseStateRequest.makeObjectFromJson(
@@ -68,6 +70,9 @@ public class TransferCallDataController {
                 durations.add(captureCallLog(callId, callerId, transferData.getData()));
         }
         certificateCourseService.saveState(stateRequests);
+
+        log.info("Saved state");
+
         for (CallDuration duration : durations) {
             callLoggerService.save(duration);
         }

@@ -7,7 +7,7 @@
         <param name="MaxFileSize" value="4096KB"/>
         <param name="maxBackupIndex" value="5"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param value="%d %p [%c] - %m%n" name="ConversionPattern"/>
+            <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
         </layout>
     </appender>
     <logger name="org.springframework">
