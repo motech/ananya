@@ -9,6 +9,7 @@ import org.motechproject.ananya.service.OperatorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class JobAidDataSetup {
     public JobAidDataSetup(FrontLineWorkerService frontLineWorkerService,
                            OperatorService operatorService,
                            JobAidService jobAidService,
-                           PerformanceDataPublishService publishService) {
+                           @Qualifier("performanceDataPublishService")PerformanceDataPublishService publishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;

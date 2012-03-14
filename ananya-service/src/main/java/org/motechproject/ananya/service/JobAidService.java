@@ -6,6 +6,7 @@ import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +19,7 @@ public class JobAidService {
     private PublishService publishService;
 
     @Autowired
-    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, PublishService publishService) {
+    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, @Qualifier("reportPublishService") PublishService publishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.publishService = publishService;
