@@ -36,6 +36,15 @@
         </bean>
     </mvc:interceptors>
 
+    <bean class="org.motechproject.ananya.web.AnanyaExceptionResolver"
+          p:defaultErrorView="exceptionView">
+        <property name="exceptionMappings">
+            <props>
+                <prop key=".Exception">exceptionView</prop>
+            </props>
+        </property>
+    </bean>
+
     <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource"
           p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application" p:fallbackToSystemLocale="false"/>
     <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale"/>

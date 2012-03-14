@@ -8,4 +8,12 @@ public class AnanyaException extends Exception {
         
         // TODO: Log and email exceptions here.
     }
+    
+    public AnanyaException(Exception e) {
+        super(e);
+    }
+    
+    public AnanyaException(String message, Exception e) {
+        super(message, e);
+    }
 }
