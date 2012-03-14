@@ -1,5 +1,17 @@
 describe("Controller for jobaid ", function () {
     var controller;
+    var callContext;
+    var metadata;
+    var callerData;
+
+    beforeEach(function() {
+        metadata = {};
+        callContext =new Object();
+        callContext.isAtALesson = new function(){};
+        callContext.timeRequiredForCurrentInteraction = new function(){};
+        callerData = { };
+        controller = new JobAidController(callerData, metadata, callContext);
+    });
 
     it("should return 'partially_registered' form for partially registered caller in jobaid when not dialled in via short code", function() {
         var callerData = {
@@ -187,8 +199,29 @@ describe("Controller for jobaid ", function () {
     it("should return remaining call duration rounded off in minutes", function() {
         controller = new JobAidController();
         var minutes_30_point_5_as_milliseconds = 1830000;
-        spyOn(controller, "remainingCallDuration").andReturn(minutes_30_point_5_as_milliseconds);
+        spyOn(controller, "_remainingCallDuration").andReturn(minutes_30_point_5_as_milliseconds);
 
         expect(controller.remainingCallDurationAsRoundedMinutes()).toEqual(30);
+    });
+
+    it("should decide next interaction as lesson", function(){
+        spyOn(callContext, "isAtALesson").andReturn(true);
+        spyOn(callContext, "timeRequiredForCurrentInteraction").andReturn(50);
+        spyOn(controller, "_remainingCallDuration").andReturn(100);
+        expect(controller.decideNextInteraction()).toEqual("#lesson")
+    });
+
+    it("should decide next interaction as generic level for a non lesson", function(){
+        spyOn(callContext, "isAtALesson").andReturn(false);
+        spyOn(callContext, "timeRequiredForCurrentInteraction").andReturn(50);
+        spyOn(controller, "_remainingCallDuration").andReturn(100);
+        expect(controller.decideNextInteraction()).toEqual("#genericLevel")
+    });
+
+    it("should decide next interaction as max usage when not enough time to play next interaction", function(){
+        spyOn(callContext, "isAtALesson").andReturn(true);
+        spyOn(callContext, "timeRequiredForCurrentInteraction").andReturn(100);
+        spyOn(controller, "_remainingCallDuration").andReturn(99);
+        expect(controller.decideNextInteraction()).toEqual("#max_usage")
     });
 });

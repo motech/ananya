@@ -25,15 +25,15 @@ var JobAidController = function(callerData , metadata, callContext) {
             return "#partially_registered";
     };
 
+    this.decideNextInteraction = function(){
+        if(callContext.timeRequiredForCurrentInteraction() > this._remainingCallDuration())
+            return "#max_usage";
+        return callContext.isAtALesson() ? "#lesson" :"#genericLevel";
+    };
 
     this.hasReachedMaxUsage = function() {
         return (callerData.currentJobAidUsage >= callerData.maxAllowedUsageForOperator);
     };
-
-    this.hasSufficientUsageLeftToPlayNextPrompt = function(){
-
-    };
-
 
     this.isCallerRegistered = function() {
         return callerData.isRegistered == "true";
@@ -71,16 +71,16 @@ var JobAidController = function(callerData , metadata, callContext) {
         return new Date().valueOf() - startTime;
     }
 
-    this.totalCallDuration = function() {
+    this._totalCallDuration = function() {
         return callerData.currentJobAidUsage + this.currentCallDuration();
     }
 
-    this.remainingCallDuration = function() {
-        return callerData.maxAllowedUsageForOperator - this.totalCallDuration();
+    this._remainingCallDuration = function() {
+        return callerData.maxAllowedUsageForOperator - this._totalCallDuration();
     }
 
     this.remainingCallDurationAsRoundedMinutes = function() {
-        return Math.floor(this.remainingCallDuration() / MILLISECONDS_PER_MINUTE);
+        return Math.floor(this._remainingCallDuration() / MILLISECONDS_PER_MINUTE);
     }
 
     this.playRemainingTimePrompt = function() {

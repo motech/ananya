@@ -100,11 +100,7 @@
             callContext.setBlankOrInvalidInput(false);
         </script>
         <block>
-            <if cond="callContext.isAtALesson()">
-                <goto next="#lesson"/>
-                <else/>
-                <goto next="#genericLevel"/>
-            </if>
+            <goto expr="controller.decideNextInteraction()"/>
         </block>
     </form>
 
@@ -179,19 +175,51 @@
     </form>
 
     <form id="lesson">
-        <block>
-            <prompt bargein="false">
+        <field name="dummyField">
+            <prompt timeout="1ms" bargein="false">
                 <audio expr="Utility.relativePath(pathToRoot,callContext.currentInteractionLesson())"/>
             </prompt>
-            <if cond="callContext.dialedViaShortCode">
-                <disconnect/>
-            <else/>
-                <script>
-                    callContext.lessonFinished();
-                </script>
-            </if>
-            <goto next="#controller"/>
-        </block>
+            <grammar mode="dtmf" version="1.0" root="dummyGrammar">
+                <rule id="dummyGrammar">
+                    <one-of>
+                        <item>0</item>
+                        <item>1</item>
+                        <item>2</item>
+                        <item>3</item>
+                        <item>4</item>
+                        <item>5</item>
+                        <item>6</item>
+                        <item>7</item>
+                        <item>8</item>
+                        <item>9</item>
+                        <item>*</item>
+                        <item>#</item>
+                    </one-of>
+                </rule>
+            </grammar>
+            <nomatch>
+                <goto next="#lessonFinished"/>
+            </nomatch>
+            <noinput>
+                <goto next="#lessonFinished"/>
+            </noinput>
+            <filled>
+                <goto next="#lessonFinished"/>
+            </filled>
+        </field>
+    </form>
+
+    <form id="lessonFinished">
+         <block>
+             <if cond="callContext.dialedViaShortCode">
+                 <disconnect/>
+                 <else/>
+                 <script>
+                     callContext.lessonFinished();
+                 </script>
+             </if>
+             <goto next="#controller"/>
+         </block>
     </form>
 
     <catch event = "connection.disconnect.hangup">
