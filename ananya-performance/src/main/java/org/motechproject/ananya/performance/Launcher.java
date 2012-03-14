@@ -15,5 +15,6 @@ public class Launcher {
         AllDataSetups allDataSetups = (AllDataSetups) context.getBean("allDataSetups");
         allDataSetups.run();
         log.info("Performance data setup: END");
+        System.out.println("done");
     }
 }

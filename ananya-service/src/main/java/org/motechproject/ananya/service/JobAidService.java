@@ -11,17 +11,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class JobAidService {
 
+    private static Logger log = LoggerFactory.getLogger(JobAidService.class);
+    
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
-    private ReportPublishService reportPublishService;
-    private static Logger log = LoggerFactory.getLogger(JobAidService.class);
-
+    private PublishService publishService;
 
     @Autowired
-    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, ReportPublishService reportPublishService) {
+    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, PublishService publishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
-        this.reportPublishService = reportPublishService;
+        this.publishService = publishService;
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
@@ -34,7 +34,7 @@ public class JobAidService {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(callerId, operator);
-        reportPublishService.publishNewRegistration(callerId);
+        publishService.publishNewRegistration(callerId);
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
@@ -48,5 +48,9 @@ public class JobAidService {
 
     public void updateCurrentUsageForUser(String msisdn, Integer currentUsage) {
         frontLineWorkerService.updateCurrentUsageForUser(msisdn, currentUsage);
+    }
+
+    public void setPublishService(PublishService publishService) {
+        this.publishService = publishService;
     }
 }

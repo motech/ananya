@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReportPublishService {
+public class ReportPublishService implements PublishService {
 
     private EventContext eventContext;
     private static Logger log = LoggerFactory.getLogger(ReportPublishService.class);
@@ -22,11 +22,13 @@ public class ReportPublishService {
         this.eventContext = eventContext;
     }
 
+    @Override
     public void publishSMSSent(LogData logData) {
         log.info("Log Data is: " + logData + "for publish key SEND_SMS_SENT_DATA_KEY");
         eventContext.send(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY, logData);
     }
 
+    @Override
     public void publishCallDisconnectEvent(String callId) {
         log.info("Call Id is: " + callId + "for publish key CERTIFICATE_COURSE_DATA");
 
