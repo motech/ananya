@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -53,7 +54,7 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     @Test
     public void shouldLogSMSSentMeasure() {
         String msisdn = "9" + System.currentTimeMillis();
-        FrontLineWorker flw = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D001B012V001", null).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location()).status(RegistrationStatus.REGISTERED);
         flw.incrementCertificateCourseAttempts();
         flw.addSMSReferenceNumber("001012" + msisdn + "01");
         allFrontLineWorkers.add(flw);

@@ -63,12 +63,12 @@ public class RegistrationDataHandlerIT {
     private DataAccessTemplate template;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         cleanDB();
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         cleanDB();
     }
 
@@ -92,8 +92,8 @@ public class RegistrationDataHandlerIT {
         Method handler = (Method) declaredField.get(motechListenerAbstractProxy);
 
         assertEquals(1, listeners.size());
-        assertEquals(RegistrationDataHandler.class,handler.getDeclaringClass());
-        assertEquals("handleRegistration",handler.getName());
+        assertEquals(RegistrationDataHandler.class, handler.getDeclaringClass());
+        assertEquals("handleRegistration", handler.getName());
     }
 
     @Test
@@ -107,8 +107,8 @@ public class RegistrationDataHandlerIT {
         Method handler = (Method) declaredField.get(motechListenerAbstractProxy);
 
         assertEquals(1, listeners.size());
-        assertEquals(RegistrationDataHandler.class,handler.getDeclaringClass());
-        assertEquals("handleRegistrationCompletion",handler.getName());
+        assertEquals(RegistrationDataHandler.class, handler.getDeclaringClass());
+        assertEquals("handleRegistrationCompletion", handler.getName());
     }
 
     @Test
@@ -117,12 +117,12 @@ public class RegistrationDataHandlerIT {
         String locationCode = "S01D002B002V001";
         String msisdn = "555";
 
-        Location location = new Location("district", "block", "panchayat",2,2,1);
+        Location location = new Location("district", "block", "panchayat", 2, 2, 1);
         allLocations.add(location);
 
         DateTime registeredDate = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, locationCode,"");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANGANWADI, location);
         frontLineWorker.name("Name");
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
@@ -166,8 +166,10 @@ public class RegistrationDataHandlerIT {
     @Test
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, Designation.ANGANWADI, "S001D002B002V001","");
-        frontLineWorker.name("Name");
+        Location location = new Location("district", "block", "panchayat", 2, 2, 1);
+        allLocations.add(location);
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANGANWADI, location);
         frontLineWorker.status(RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 

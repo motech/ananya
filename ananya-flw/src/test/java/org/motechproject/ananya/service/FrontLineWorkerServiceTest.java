@@ -35,17 +35,17 @@ public class FrontLineWorkerServiceTest {
     }
 
     private FrontLineWorker makeFrontLineWorker() {
-        return new FrontLineWorker("123", Designation.ANM, "123", "operator");
+        return new FrontLineWorker("123", "name",Designation.ANM, new Location());
     }
 
     @Test
     public void shouldCreateNewFLWIfNotPresentInDB() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", Designation.ANM, "123", "operator");
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name",Designation.ANM, new Location());
         String msisdn = frontLineWorker.getMsisdn();
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        frontLineWorkerService.createNew(msisdn, frontLineWorker.getOperator());
+        frontLineWorkerService.createOrUpdate(msisdn, frontLineWorker.getOperator());
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
@@ -57,12 +57,12 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDB() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", Designation.ANM, "123", "operator");
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name",Designation.ANM, new Location());
         String msisdn = frontLineWorker.getMsisdn();
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createNew(msisdn, frontLineWorker.getOperator());
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdate(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         assertEquals(frontLineWorker, frontLineWorkerFromDb);

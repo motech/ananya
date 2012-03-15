@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllOperators;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class FrontLineWorkerService {
@@ -27,14 +28,19 @@ public class FrontLineWorkerService {
         this.smsPublisherService = smsPublisherService;
     }
 
-    public FrontLineWorker createNew(String msisdn, String name, Location location) {
-       throw new RuntimeException("Not implemented");
+    public FrontLineWorker createNew(String msisdn, String name, String designation, Location location) {
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, name, Designation.valueOf(designation), location);
+        allFrontLineWorkers.add(frontLineWorker);
+        return frontLineWorker;
     }
 
-    public FrontLineWorker createNew(String msisdn, String operator) {
+    public FrontLineWorker createOrUpdate(String msisdn, String operator) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker != null)
+        if (frontLineWorker != null && !StringUtils.equals(frontLineWorker.getOperator(), operator)) {
+            frontLineWorker.setOperator(operator);
+            allFrontLineWorkers.update(frontLineWorker);
             return frontLineWorker;
+        }
         frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
         return frontLineWorker;

@@ -1,6 +1,5 @@
 package org.motechproject.ananya.domain;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -15,7 +14,6 @@ import java.util.Map;
 public class FrontLineWorker extends MotechBaseDataObject {
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
-    public static final int DUMMY_MAX_JOB_AID_USAGE = 50;
     public static final String DEFAULT_LOCATION = "C00";
 
     @JsonProperty
@@ -65,6 +63,16 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.operator = operator;
     }
 
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location) {
+        this.msisdn = msisdn;
+        this.name = name;
+        this.designation = designation;
+        this.locationId = location.getExternalId();
+        this.certificateCourseAttempts = 0;
+        this.smsReferenceNumbers = new HashMap<Integer, String>();
+        this.currentJobAidUsage = 0;
+    }
+
     @Override
     public String toString() {
         return "FrontLineWorker{" +
@@ -82,25 +90,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
                 '}';
     }
 
-
-    //Used only in tests
-    public FrontLineWorker(String msisdn, Designation designation, String locationId, String operator) {
-        this.msisdn = msisdn;
-        this.designation = designation;
-        this.locationId = locationId;
-        this.operator = operator;
-        this.certificateCourseAttempts = 0;
-        this.smsReferenceNumbers = new HashMap<Integer, String>();
-        this.currentJobAidUsage = DUMMY_MAX_JOB_AID_USAGE; //TODO This is just set to satisfy story #1344, and needs to be determined and set[Imdad/Sush]
-    }
-
     public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
         this.currentJobAidUsage = currentJobAidUsage;
     }
 
     public String getOperator() {
-        //TODO: only for #1344, assuming the operator information is already present [Imdad/Sush]
-        return StringUtils.isEmpty(operator) ? "airtel" : operator;
+        return operator;
     }
 
     public String getLocationId() {
@@ -189,5 +184,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void updateLocation(Location location) {
         locationId = location.getExternalId();
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

@@ -36,7 +36,7 @@ public class JobAidService {
     public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(callerId, operator);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(callerId, operator);
         publishService.publishNewRegistration(callerId);
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();

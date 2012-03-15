@@ -57,7 +57,7 @@ public class CertificateCourseService {
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createNew(msisdn, operator);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, operator);
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),
                 frontLineWorker.status().isRegistered(),

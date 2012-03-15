@@ -49,12 +49,12 @@ public class JobAidServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        when(frontLineWorkerService.createNew(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.createOrUpdate(callerId, operator)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
-        verify(frontLineWorkerService).createNew(callerId, operator);
+        verify(frontLineWorkerService).createOrUpdate(callerId, operator);
         verify(reportPublishService).publishNewRegistration(callerId);
 
         assertEquals(callerData.getCurrentJobAidUsage(),new Integer(9));
