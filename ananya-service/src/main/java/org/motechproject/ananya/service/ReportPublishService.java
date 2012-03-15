@@ -24,20 +24,19 @@ public class ReportPublishService implements PublishService {
 
     @Override
     public void publishSMSSent(LogData logData) {
-        log.info("Log Data is: " + logData + "for publish key SEND_SMS_SENT_DATA_KEY");
+        log.info("Log Data is: " + logData);
         eventContext.send(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY, logData);
     }
 
     @Override
     public void publishCallDisconnectEvent(String callId) {
-        log.info("Call Id is: " + callId + "for publish key CERTIFICATE_COURSE_DATA");
-
+        log.info("Call Id is: " + callId);
         publishCertificateCourseData(new LogData(LogType.CERTIFICATE_COURSE_DATA, callId));
         publishCallDuration(new LogData(LogType.CALL_DURATION, callId));
     }
 
     public void publishNewRegistration(String callerId) {
-        log.info("Caller Id is : " + callerId + " for publish key SEND_REGISTRATION_DATA_KEY");
+        log.info("Caller Id is : " + callerId);
         eventContext.send(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY, new LogData(LogType.REGISTRATION, callerId));
     }
 

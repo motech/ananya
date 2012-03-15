@@ -18,7 +18,7 @@ import java.util.List;
 public class JobAidDataSetup {
 
     private static Logger log = LoggerFactory.getLogger(JobAidDataSetup.class);
-    private static final int NUMBER_OF_THREADS = 20;
+    private final int usersPerOperator = 2000;
 
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
@@ -41,10 +41,10 @@ public class JobAidDataSetup {
         jobAidService.setPublishService(publishService);
         List<Operator> allOperators = operatorService.getAllOperators();
         for (int i = 0; i < allOperators.size(); i++)
-            for (int j = 0; j < NUMBER_OF_THREADS; j++) {
+            for (int j = 0; j < usersPerOperator; j++) {
                 String msisdn = i + "" + j;
                 jobAidService.createCallerData(msisdn, allOperators.get(i).getName());
-//                frontLineWorkerService.updateCurrentUsageForUser(msisdn, j % (allOperators.get(i).getAllowedUsagePerMonth() + 1));
+                jobAidService.updateCurrentUsageForUser(msisdn, j % (allOperators.get(i).getAllowedUsagePerMonth() + 1));
             }
         log.info("Loaded jobaid performance data");
     }

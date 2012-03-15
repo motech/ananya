@@ -19,7 +19,9 @@ public class JobAidService {
     private PublishService publishService;
 
     @Autowired
-    public JobAidService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, @Qualifier("reportPublishService") PublishService publishService) {
+    public JobAidService(FrontLineWorkerService frontLineWorkerService,
+                         OperatorService operatorService,
+                         @Qualifier("reportPublishService") PublishService publishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.publishService = publishService;
