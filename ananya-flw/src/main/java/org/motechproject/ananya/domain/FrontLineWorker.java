@@ -187,4 +187,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.promptsHeard;
     }
 
+    public void updateLocation(Location location) {
+        locationId = location.getExternalId();
+    }
 }

@@ -29,7 +29,7 @@ public class JobAidDataSetup {
     public JobAidDataSetup(FrontLineWorkerService frontLineWorkerService,
                            OperatorService operatorService,
                            JobAidService jobAidService,
-                           @Qualifier("performanceDataPublishService")PerformanceDataPublishService publishService) {
+                           @Qualifier("performanceDataPublishService") PerformanceDataPublishService publishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;

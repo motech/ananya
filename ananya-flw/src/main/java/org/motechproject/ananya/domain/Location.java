@@ -8,13 +8,13 @@ import org.motechproject.model.MotechBaseDataObject;
 public class Location extends MotechBaseDataObject {
 
     @JsonProperty
-    public String externalId;
+    private String externalId;
     @JsonProperty
-    public String district;
+    private String district;
     @JsonProperty
-    public String blockName;
+    private String blockName;
     @JsonProperty
-    public String panchayat;
+    private String panchayat;
 
     public Location() {
     }

@@ -1,9 +1,6 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
@@ -33,6 +30,10 @@ public class FrontLineWorkerService {
         this.sendSMSService = sendSMSService;
         this.smsPublisherService = smsPublisherService;
         this.allOperators = allOperators;
+    }
+
+    public FrontLineWorker createNew(String msisdn, String name, Location location) {
+       throw new RuntimeException("Not implemented");
     }
 
     public FrontLineWorker createNew(String msisdn, String operator) {
@@ -134,5 +135,11 @@ public class FrontLineWorkerService {
             frontLineWorker.reportCard().clearAllScores();
             allFrontLineWorkers.update(frontLineWorker);
         }
+    }
+
+    public void updateLocation(String msisdn, Location location) {
+        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        frontLineWorker.updateLocation(location);
+        allFrontLineWorkers.update(frontLineWorker);
     }
 }

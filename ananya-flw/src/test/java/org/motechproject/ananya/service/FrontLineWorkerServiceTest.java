@@ -208,4 +208,24 @@ public class FrontLineWorkerServiceTest {
         assertEquals(expectedFrontLineWorker, frontLineWorker);
 
     }
+
+    @Test
+    public void shouldUpdateTheFLWWithLocation(){
+        String callerId = "callerId";
+        String operator = "airtel";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        Location location = new Location("112233");
+        frontLineWorkerService.updateLocation(callerId, location);
+
+        ArgumentCaptor<FrontLineWorker> flwCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
+
+        verify(allFrontLineWorkers).update(flwCaptor.capture());
+
+        FrontLineWorker flwPassedToUpdate = flwCaptor.getValue();
+
+        assertEquals(location.getExternalId(), flwPassedToUpdate.getLocationId());
+        assertEquals(frontLineWorker, flwPassedToUpdate);
+    }
 }
