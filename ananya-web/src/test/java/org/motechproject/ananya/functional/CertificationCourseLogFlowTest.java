@@ -8,7 +8,6 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -28,9 +27,6 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
     @Autowired
     private AllCallLogCounters allCallLogCounters;
-
-    @Autowired
-    private AllLocations allLocations;
 
     @Before
     public void setUp() throws Exception {

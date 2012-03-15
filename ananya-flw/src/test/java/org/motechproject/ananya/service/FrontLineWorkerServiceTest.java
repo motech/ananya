@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 
@@ -23,20 +22,16 @@ public class FrontLineWorkerServiceTest {
     @Mock
     private AllFrontLineWorkers allFrontLineWorkers;
     @Mock
-    private AllLocations allLocations;
-    @Mock
     private SendSMSService sendSMSService;
     @Mock
     private SMSPublisherService publisherService;
-    @Mock
-    private AllOperators allOperators;
     @Mock
     private FrontLineWorker mockedFrontLineWorker;
 
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, allLocations, sendSMSService, publisherService, allOperators);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, sendSMSService, publisherService);
     }
 
     private FrontLineWorker makeFrontLineWorker() {

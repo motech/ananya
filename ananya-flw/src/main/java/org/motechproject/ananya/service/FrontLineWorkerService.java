@@ -2,7 +2,6 @@ package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.slf4j.Logger;
@@ -18,18 +17,14 @@ public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
-    private AllLocations allLocations;
-    private AllOperators allOperators;
     private SendSMSService sendSMSService;
     private SMSPublisherService smsPublisherService;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, SendSMSService sendSMSService, SMSPublisherService smsPublisherService, AllOperators allOperators) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, SendSMSService sendSMSService, SMSPublisherService smsPublisherService) {
         this.allFrontLineWorkers = allFrontLineWorkers;
-        this.allLocations = allLocations;
         this.sendSMSService = sendSMSService;
         this.smsPublisherService = smsPublisherService;
-        this.allOperators = allOperators;
     }
 
     public FrontLineWorker createNew(String msisdn, String name, Location location) {

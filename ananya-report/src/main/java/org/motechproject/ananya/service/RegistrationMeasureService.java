@@ -22,7 +22,7 @@ public class RegistrationMeasureService {
 
     private AllRegistrationLogs allRegistrationLogs;
     private AllFrontLineWorkers allFrontLineWorkers;
-    private AllLocations allLocations;
+    private LocationService locationService;
 
     private AllLocationDimensions allLocationDimensions;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -33,13 +33,13 @@ public class RegistrationMeasureService {
 
     @Autowired
     public RegistrationMeasureService(
-            AllRegistrationLogs allRegistrationLogs, AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations,
+            AllRegistrationLogs allRegistrationLogs, AllFrontLineWorkers allFrontLineWorkers, LocationService locationService,
             AllLocationDimensions allLocationDimensions, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
             AllTimeDimensions allTimeDimensions, ReportDB reportDB, FrontLineWorkerService frontLineWorkerService) {
 
         this.allRegistrationLogs = allRegistrationLogs;
         this.allFrontLineWorkers = allFrontLineWorkers;
-        this.allLocations = allLocations;
+        this.locationService = locationService;
 
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
@@ -52,7 +52,7 @@ public class RegistrationMeasureService {
     public void createRegistrationMeasure(LogData logData) {
         String callerId = logData.getDataId();
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
-        Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
+        Location location = locationService.findByExternalId(frontLineWorker.getLocationId());
 
         LocationDimension locationDimension = allLocationDimensions.getFor(location.getExternalId());
 

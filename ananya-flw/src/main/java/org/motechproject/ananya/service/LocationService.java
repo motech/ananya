@@ -5,6 +5,8 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LocationService {
 
@@ -20,6 +22,18 @@ public class LocationService {
     }
 
     public Location findByExternalId(String locationId) {
-        throw new RuntimeException("Not implemented.");
+        return allLocations.findByExternalId(locationId);
+    }
+
+    public List<Location> getAll() {
+        return allLocations.getAll();
+    }
+
+    public void add(Location location) {
+        allLocations.add(location);
+    }
+
+    public void removeAll() {
+        allLocations.removeAll();
     }
 }

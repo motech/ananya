@@ -5,8 +5,8 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.Locations;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.service.LocationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ public class LocationSeed {
 
 
     @Autowired
-    private AllLocations allLocations;
+    private LocationService locationService;
 
     @Autowired
     private AllLocationDimensions allLocationDimensions;
@@ -42,14 +42,14 @@ public class LocationSeed {
         int defaultCode = 0;
         Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
         LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
-        allLocations.add(location);
+        locationService.add(location);
         allLocationDimensions.add(locationDimension);
     }
 
     public void loadFromCsv(String path) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
-        Locations locations = new Locations(allLocations.getAll());
+        Locations locations = new Locations(locationService.getAll());
         String[] currentRow;
 
         //skip header
@@ -78,7 +78,7 @@ public class LocationSeed {
         Location location = createNewLocation(currentLocation, locations);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
-        allLocations.add(location);
+        locationService.add(location);
         allLocationDimensions.add(locationDimension);
         locations.add(location);
     }

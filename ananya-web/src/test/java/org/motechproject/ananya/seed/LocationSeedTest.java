@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,7 +26,7 @@ public class LocationSeedTest {
     private LocationSeed locationSeed;
 
     @Autowired
-    private AllLocations allLocations;
+    private LocationService locationService;
 
     @Autowired
     private AllLocationDimensions allLocationDimensions;
@@ -36,7 +36,7 @@ public class LocationSeedTest {
 
     @Before
     public void setUp() {
-        allLocations.removeAll();
+        locationService.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
@@ -45,7 +45,7 @@ public class LocationSeedTest {
         String path = getClass().getResource("/locations_with_codes.csv").getPath();
         locationSeed.loadFromCsv(path);
 
-        List<Location> allLocations = this.allLocations.getAll();
+        List<Location> allLocations = this.locationService.getAll();
         Location location = allLocations.get(1);
         String externalId = location.getExternalId();
         LocationDimension locationDimension = allLocationDimensions.getFor(externalId);
@@ -58,7 +58,7 @@ public class LocationSeedTest {
 
     @After
     public void tearDown() {
-//        allLocations.removeAll();
-//        template.deleteAll(template.loadAll(LocationDimension.class));
+        locationService.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 }
