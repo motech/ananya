@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.service.LocationDimensionService;
 import org.motechproject.ananya.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,7 +29,7 @@ public class LocationSeedTest {
     private LocationService locationService;
 
     @Autowired
-    private AllLocationDimensions allLocationDimensions;
+    private LocationDimensionService locationDimensionService;
 
     @Autowired
     private DataAccessTemplate template;
@@ -48,7 +48,7 @@ public class LocationSeedTest {
         List<Location> allLocations = this.locationService.getAll();
         Location location = allLocations.get(1);
         String externalId = location.getExternalId();
-        LocationDimension locationDimension = allLocationDimensions.getFor(externalId);
+        LocationDimension locationDimension = locationDimensionService.getFor(externalId);
 
         assertEquals(16, allLocations.size());
         assertEquals(location.getDistrict(), locationDimension.getDistrict());

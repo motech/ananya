@@ -5,7 +5,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.Locations;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.service.LocationDimensionService;
 import org.motechproject.ananya.service.LocationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class LocationSeed {
     private LocationService locationService;
 
     @Autowired
-    private AllLocationDimensions allLocationDimensions;
+    private LocationDimensionService locationDimensionService;
 
     @Value("#{ananyaProperties['seed.location.file']}")
     private String fileName;
@@ -43,7 +43,7 @@ public class LocationSeed {
         Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
         LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
         locationService.add(location);
-        allLocationDimensions.add(locationDimension);
+        locationDimensionService.add(locationDimension);
     }
 
     public void loadFromCsv(String path) throws IOException {
@@ -79,7 +79,7 @@ public class LocationSeed {
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
         locationService.add(location);
-        allLocationDimensions.add(locationDimension);
+        locationDimensionService.add(locationDimension);
         locations.add(location);
     }
 
