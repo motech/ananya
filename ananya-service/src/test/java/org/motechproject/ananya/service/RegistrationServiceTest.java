@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.response.RegistrationResponse;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -50,5 +50,66 @@ public class RegistrationServiceTest {
         LogData logData = logDataArgumentCaptor.getValue();
         assertEquals(callerId, logData.getDataId());
         assertEquals(LogType.REGISTRATION, logData.getType());
+    }
+
+    @Test
+    public void shouldNotSaveFLWForInvalidLocation() {
+        String callerId = "123";
+        String name = "name";
+
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "district", "block", "village");
+
+        assertFalse(registrationResponse.isRegistered());
+        assertEquals("Invalid Location", registrationResponse.message());
+
+        verify(frontLineWorkerService, never()).createNew(eq(callerId), eq(name), any(Location.class));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+    }
+
+    @Test
+    public void shouldNotSaveFLWForInvalidCallerId() {
+        String callerId = "";
+        String name = "name";
+
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "district", "block", "village");
+
+        assertFalse(registrationResponse.isRegistered());
+        assertEquals("Invalid CallerId", registrationResponse.message());
+
+        verify(frontLineWorkerService, never()).createNew(eq(callerId), eq(name), any(Location.class));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+    }
+
+    @Test
+    public void shouldNotSaveFLWForInvalidName() {
+        String callerId = "123";
+        String name = "";
+
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "district", "block", "village");
+
+        assertFalse(registrationResponse.isRegistered());
+        assertEquals("Invalid Name", registrationResponse.message());
+
+        verify(frontLineWorkerService, never()).createNew(eq(callerId), eq(name), any(Location.class));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+    }
+
+    @Test
+    public void shouldUpdateLocationForAnExistingFlw() {
+        String callerId = "123";
+        String name = "name";
+        Location location = new Location();
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+
+        when(locationService.fetchFor("district", "block", "village")).thenReturn(location);
+        when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
+
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "district", "block", "village");
+
+        assertTrue(registrationResponse.isRegistered());
+        assertEquals("Location details updated", registrationResponse.message());
+
+        verify(frontLineWorkerService).updateLocation(callerId, location);
+
     }
 }
