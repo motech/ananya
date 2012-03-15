@@ -60,10 +60,6 @@ public class LocationDimension {
         return locationId;
     }
 
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
-    }
-
     public String getDistrict() {
         return district;
     }

@@ -3,9 +3,10 @@ package org.motechproject.ananya.seed;
 import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.Locations;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,62 +34,64 @@ public class LocationSeed {
     @Seed(priority = 0)
     public void load() throws IOException {
         String path = environment.equals("prod") ? fileName : getClass().getResource(fileName).getPath();
-        loadFromCsv(path);
         loadDefaultLocation();
+        loadFromCsv(path);
     }
 
     private void loadDefaultLocation() {
-        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION);
+        int defaultCode = 0;
+        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
         LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
-        allLocations.addOrUpdate(location);
-        allLocationDimensions.addOrUpdate(locationDimension);
+        allLocations.add(location);
+        allLocationDimensions.add(locationDimension);
     }
 
-    /*
-    * CSV Structure :
-    * District	District Code	Block Name	    Block Code	Panchayat Village	Village Code	Result
-    *  Patna	S01D001         Dulhin Bazar	S01D001B001	Aainkha Vimanichak	S01D001B001V001
-    *                                                       Achhuya Rakasiya	S01D001B001V002
-    *                                                       Bharatpura          S01D001B001V003
-    */
     public void loadFromCsv(String path) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(path));
-        String currentDistrict = "", currentDistrictCode, currentBlock = "", currentBlockCode, currentPanchayat, currentPanchayatCode;
+        String currentDistrict, currentBlock, currentPanchayat;
+        Locations locations = new Locations(allLocations.getAll());
+        String[] currentRow;
 
-        Location location;
-        LocationDimension locationDimension;
-        String[] row;
-        int rowNumber = 0;
-        while (true) {
-            row = csvReader.readNext();
-            rowNumber++;
-            // Skip header line
-            if (1 == rowNumber) continue;
-            // Read complete.
-            if (null == row) break;
-            if (!"".equals(row[0].trim())) {
-                currentDistrict = row[0];
-                currentDistrictCode = row[1];
-                currentBlock = row[2];
-                currentBlockCode = row[3];
+        //skip header
+        csvReader.readNext();
 
-                // Create extra locations for district and block
-                location = new Location(currentDistrictCode, currentDistrict, "", "");
-                locationDimension = new LocationDimension(currentDistrictCode, currentDistrict, "", "");
-                allLocations.addOrUpdate(location);
-                allLocationDimensions.addOrUpdate(locationDimension);
+        //first row data
+        currentRow = csvReader.readNext();
 
-                location = new Location(currentBlockCode, currentDistrict, currentBlock, "");
-                locationDimension = new LocationDimension(currentBlockCode, currentDistrict, currentBlock, "");
-                allLocations.addOrUpdate(location);
-                allLocationDimensions.addOrUpdate(locationDimension);
+        while (currentRow != null) {
+            currentDistrict = currentRow[0];
+            currentBlock = currentRow[1];
+            currentPanchayat = currentRow[2];
+
+            Location location = new Location(currentDistrict, currentBlock, currentPanchayat, 0, 0, 0);
+            if (shouldNotCreateNewLocation(location, locations)) {
+                currentRow = csvReader.readNext();
+                continue;
             }
-            currentPanchayat = row[4];
-            currentPanchayatCode = row[5];
-            location = new Location(currentPanchayatCode, currentDistrict, currentBlock, currentPanchayat);
-            locationDimension = new LocationDimension(currentPanchayatCode, currentDistrict, currentBlock, currentPanchayat);
-            allLocations.addOrUpdate(location);
-            allLocationDimensions.addOrUpdate(locationDimension);
+
+            saveNewLocation(location, locations);
+            currentRow = csvReader.readNext();
         }
+    }
+
+    private void saveNewLocation(Location currentLocation, Locations locations) {
+        Location location = createNewLocation(currentLocation, locations);
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
+
+        allLocations.add(location);
+        allLocationDimensions.add(locationDimension);
+        locations.add(location);
+    }
+
+    private Location createNewLocation(Location currentLocation, Locations locations) {
+        Integer districtCodeFor = locations.getDistrictCodeFor(currentLocation);
+        Integer blockCodeFor = locations.getBlockCodeFor(currentLocation);
+        Integer panchayatCodeFor = locations.getPanchayatCodeFor(currentLocation);
+        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor);
+        return locationToSave;
+    }
+
+    private boolean shouldNotCreateNewLocation(Location location, Locations locations) {
+        return location.isMissingDetails() || locations.isAlreadyPresent(location);
     }
 }

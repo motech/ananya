@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.model.MotechBaseDataObject;
@@ -8,50 +9,69 @@ import org.motechproject.model.MotechBaseDataObject;
 public class Location extends MotechBaseDataObject {
 
     @JsonProperty
-    private String externalId;
-    @JsonProperty
     private String district;
     @JsonProperty
-    private String blockName;
+    private String block;
     @JsonProperty
     private String panchayat;
+    @JsonProperty
+    private int blockCode;
+    @JsonProperty
+    private int districtCode;
+    @JsonProperty
+    private int panchayatCode;
+    @JsonProperty
+    private String externalId;
 
     public Location() {
     }
 
-    public Location(String externalId) {
-        this.externalId = externalId;
-    }
-
-    public Location(String externalId, String district, String blockName, String panchayat) {
-        this.externalId = externalId;
+    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode) {
+        this.block = block;
+        this.blockCode = blockCode;
         this.district = district;
-        this.blockName = blockName;
+        this.districtCode = districtCode;
         this.panchayat = panchayat;
+        this.panchayatCode = panchayatCode;
+        this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
     }
 
-    public String getExternalId() {
-        return externalId;
+    public int getBlockCode() {
+        return blockCode;
     }
 
-    public String district() {
+    public int getDistrictCode() {
+        return districtCode;
+    }
+
+    public int getPanchayatCode() {
+        return panchayatCode;
+    }
+
+    public String getDistrict() {
         return district;
     }
 
-    public String blockName() {
-        return blockName;
+    public String getBlock() {
+        return block;
     }
 
-    public String panchayat() {
+    public String getPanchayat() {
         return panchayat;
     }
 
-    public Location cloneFrom(Location location) {
-        this.externalId = location.externalId;
-        this.district = location.district;
-        this.blockName = location.blockName;
-        this.panchayat = location.panchayat;
-        return this;
+    public String getExternalId() {
+        return  externalId;
+    }
+
+    @JsonIgnore
+    public boolean isMissingDetails() {
+        String emptyString = "";
+        return district.trim().equals(emptyString) || block.trim().equals(emptyString) || panchayat.trim().equals(emptyString);
+    }
+
+    private String prependZeros(int code) {
+        return String.format("%03d", code);
     }
 
     @Override
@@ -61,9 +81,8 @@ public class Location extends MotechBaseDataObject {
 
         Location location = (Location) o;
 
-        if (blockName != null ? !blockName.equals(location.blockName) : location.blockName != null) return false;
+        if (block != null ? !block.equals(location.block) : location.block != null) return false;
         if (district != null ? !district.equals(location.district) : location.district != null) return false;
-        if (externalId != null ? !externalId.equals(location.externalId) : location.externalId != null) return false;
         if (panchayat != null ? !panchayat.equals(location.panchayat) : location.panchayat != null) return false;
 
         return true;
@@ -71,10 +90,13 @@ public class Location extends MotechBaseDataObject {
 
     @Override
     public int hashCode() {
-        int result = externalId != null ? externalId.hashCode() : 0;
-        result = 31 * result + (district != null ? district.hashCode() : 0);
-        result = 31 * result + (blockName != null ? blockName.hashCode() : 0);
+        int result = district != null ? district.hashCode() : 0;
+        result = 31 * result + (block != null ? block.hashCode() : 0);
         result = 31 * result + (panchayat != null ? panchayat.hashCode() : 0);
+        result = 31 * result + blockCode;
+        result = 31 * result + districtCode;
+        result = 31 * result + panchayatCode;
         return result;
     }
 }
+

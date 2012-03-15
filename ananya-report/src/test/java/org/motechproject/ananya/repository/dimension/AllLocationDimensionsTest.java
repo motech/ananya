@@ -24,25 +24,24 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
         deleteAllLocations();
     }
 
+    @Test
+    public void shouldGetTheLocationBasedOnTheExternalId() {
+        String district = "Mandwa";
+        String block = "Algarh";
+        String panchayat = "Gujarat";
+        LocationDimension initialLocationDimension = new LocationDimension("ZZZ999", district, block, panchayat);
+        allLocationDimensions.add(initialLocationDimension);
+
+        LocationDimension locationDimension = allLocationDimensions.getFor("ZZZ999");
+
+        assertNotNull(locationDimension);
+        assertEquals(district, locationDimension.getDistrict());
+        assertEquals(block, locationDimension.getBlock());
+        assertEquals(panchayat, locationDimension.getPanchayat());
+    }
+
     @After
     public void clearAllLocations() {
         deleteAllLocations();
     }
-
-
-    @Test
-    public void shouldUpdateLocationIfExistsInDB(){
-        LocationDimension initialLocationDimension = new LocationDimension("ZZZ999", "Mandwa", "Algarh", "Gujarat");
-
-        allLocationDimensions.add(initialLocationDimension);
-        assertNotNull(allLocationDimensions.getFor("ZZZ999"));
-
-        LocationDimension updatedLocationDimension = new LocationDimension("ZZZ999", "Patna", "Jila", "Panchayat");
-        updatedLocationDimension = allLocationDimensions.addOrUpdate(updatedLocationDimension);
-
-        LocationDimension existingDbLocationDimension = allLocationDimensions.getFor("ZZZ999");
-
-        assertEquals(updatedLocationDimension, existingDbLocationDimension);
-    }
-
 }

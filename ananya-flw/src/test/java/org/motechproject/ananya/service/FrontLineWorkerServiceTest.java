@@ -210,13 +210,14 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateTheFLWWithLocation(){
+    public void shouldUpdateTheFLWWithLocation() {
         String callerId = "callerId";
         String operator = "airtel";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        Location location = new Location("112233");
+        int defaultCode = 0;
+        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
         frontLineWorkerService.updateLocation(callerId, location);
 
         ArgumentCaptor<FrontLineWorker> flwCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);

@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -40,42 +41,24 @@ public class LocationSeedTest {
     }
 
     @Test
-    public void shouldLoadDataFromCSVToTransactionalAndReportingDBs() throws IOException {
-
+    public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
         String path = getClass().getResource("/locations_with_codes.csv").getPath();
         locationSeed.loadFromCsv(path);
 
-        assertEquals(allLocations.getAll().size(), 56);
-        assertEquals(allLocationDimensions.getCount(), 56);
+        List<Location> allLocations = this.allLocations.getAll();
+        Location location = allLocations.get(1);
+        String externalId = location.getExternalId();
+        LocationDimension locationDimension = allLocationDimensions.getFor(externalId);
 
-        Location location = allLocations.findByExternalId("S01D001");
-        assertEquals(location.district(), "Patna");
-
-        location = allLocations.findByExternalId("S01D001B001");
-        assertEquals(location.district(), "Patna");
-        assertEquals(location.blockName(), "Dulhin Bazar");
-
-        location = allLocations.findByExternalId("S01D001B001V003");
-        assertEquals(location.district(), "Patna");
-        assertEquals(location.blockName(), "Dulhin Bazar");
-        assertEquals(location.panchayat(), "Bharatpura");
-
-        location = allLocations.findByExternalId("S01D003");
-        assertEquals(location.district(), "West Champaran");
-
-        location = allLocations.findByExternalId("S01D003B001");
-        assertEquals(location.district(), "West Champaran");
-        assertEquals(location.blockName(), "Majhhaulia");
-
-        location = allLocations.findByExternalId("S01D003B001V003");
-        assertEquals(location.district(), "West Champaran");
-        assertEquals(location.blockName(), "Majhhaulia");
-        assertEquals(location.panchayat(), "Bahuarawa");
+        assertEquals(16, allLocations.size());
+        assertEquals(location.getDistrict(), locationDimension.getDistrict());
+        assertEquals(location.getBlock(), locationDimension.getBlock());
+        assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
     }
 
     @After
     public void tearDown() {
-        allLocations.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
+//        allLocations.removeAll();
+//        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 }

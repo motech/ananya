@@ -20,20 +20,4 @@ public class AllLocationDimensions {
         template.save(locationDimension);
         return locationDimension;
     }
-
-    public LocationDimension addOrUpdate(LocationDimension locationDimension) {
-        LocationDimension existingLocationDimension = getFor(locationDimension.getLocationId());
-        if (existingLocationDimension == null) {
-            template.save(locationDimension);
-            return locationDimension;
-        }
-        existingLocationDimension.cloneValues(locationDimension);
-        template.update(existingLocationDimension);
-        return existingLocationDimension;
-    }
-    
-    public int getCount() {
-        return DataAccessUtils.intResult(template.find("select count(*) from LocationDimension"));
-    }
-
 }

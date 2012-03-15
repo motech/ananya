@@ -114,10 +114,10 @@ public class RegistrationDataHandlerIT {
     @Test
     public void shouldMapRegistrationTransactionDataToReportMeasure() {
 
-        String locationCode = "S001D002B002V001";
+        String locationCode = "S01D002B002V001";
         String msisdn = "555";
 
-        Location location = new Location(locationCode, "district", "block", "panchayat");
+        Location location = new Location("district", "block", "panchayat",2,2,1);
         allLocations.add(location);
 
         DateTime registeredDate = DateTime.now();
