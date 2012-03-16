@@ -9,6 +9,8 @@ import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.response.RegistrationResponse;
 
+import java.util.Arrays;
+
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -34,9 +36,9 @@ public class RegistrationServiceTest {
     public void shouldSaveNewFLWAndPublishForReport() {
         String callerId = "123";
         String name = "name";
-        Location location = new Location();
+        Location location = new Location("district", "block", "village", 1, 1, 1);
 
-        when(locationService.fetchFor("district", "block", "village")).thenReturn(location);
+        when(locationService.getAll()).thenReturn(Arrays.asList(location));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 

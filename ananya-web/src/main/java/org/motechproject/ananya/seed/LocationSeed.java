@@ -3,7 +3,7 @@ package org.motechproject.ananya.seed;
 import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.Locations;
+import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.service.LocationDimensionService;
 import org.motechproject.ananya.service.LocationService;
@@ -49,7 +49,7 @@ public class LocationSeed {
     public void loadFromCsv(String path) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
-        Locations locations = new Locations(locationService.getAll());
+        LocationList locations = new LocationList(locationService.getAll());
         String[] currentRow;
 
         //skip header
@@ -74,7 +74,7 @@ public class LocationSeed {
         }
     }
 
-    private void saveNewLocation(Location currentLocation, Locations locations) {
+    private void saveNewLocation(Location currentLocation, LocationList locations) {
         Location location = createNewLocation(currentLocation, locations);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
@@ -83,7 +83,7 @@ public class LocationSeed {
         locations.add(location);
     }
 
-    private Location createNewLocation(Location currentLocation, Locations locations) {
+    private Location createNewLocation(Location currentLocation, LocationList locations) {
         Integer districtCodeFor = locations.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locations.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locations.getPanchayatCodeFor(currentLocation);
@@ -91,7 +91,7 @@ public class LocationSeed {
         return locationToSave;
     }
 
-    private boolean shouldNotCreateNewLocation(Location location, Locations locations) {
+    private boolean shouldNotCreateNewLocation(Location location, LocationList locations) {
         return location.isMissingDetails() || locations.isAlreadyPresent(location);
     }
 }

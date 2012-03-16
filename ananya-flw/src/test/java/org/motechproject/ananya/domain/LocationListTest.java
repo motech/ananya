@@ -4,14 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-public class LocationsTest {
+public class LocationListTest {
 
-    private Locations locations;
+    private LocationList locationList;
 
     @Before
     public void setUp() {
@@ -20,14 +19,14 @@ public class LocationsTest {
         allLocations.add(new Location("D1", "B1", "P2", 1, 1, 2));
         allLocations.add(new Location("D1", "B2", "P1", 1, 2, 1));
         allLocations.add(new Location("D2", "B1", "P1", 2, 1, 1));
-        locations = new Locations(allLocations);
+        locationList = new LocationList(allLocations);
     }
 
     @Test
     public void shouldReturnThatLocationIsAlreadyPresentIfItIsAlreadyPresent() {
         Location currentLocation = new Location("D1", "B1", "P1", 1, 1, 1);
 
-        boolean alreadyPresent = locations.isAlreadyPresent(currentLocation);
+        boolean alreadyPresent = locationList.isAlreadyPresent(currentLocation);
 
         assertTrue(alreadyPresent);
     }
@@ -36,7 +35,7 @@ public class LocationsTest {
     public void shouldReturnThatLocationIsNotPresentIfItIsNotAlreadyPresent() {
         Location currentLocation = new Location("UnknownD1", "UnknownB1", "UnknownP1", 0, 0, 0);
 
-        boolean alreadyPresent = locations.isAlreadyPresent(currentLocation);
+        boolean alreadyPresent = locationList.isAlreadyPresent(currentLocation);
 
         assertFalse(alreadyPresent);
     }
@@ -45,7 +44,7 @@ public class LocationsTest {
     public void shouldReturnTheDistrictCodeForTheGivenLocation() {
         Location currentLocation = new Location("D1", "B1", "P2", 0, 0, 0);
 
-        Integer districtCode = locations.getDistrictCodeFor(currentLocation);
+        Integer districtCode = locationList.getDistrictCodeFor(currentLocation);
 
         assertEquals(new Integer(1), districtCode);
     }
@@ -54,7 +53,7 @@ public class LocationsTest {
     public void shouldReturnTheNextDistrictCodeIfTheGivenDistrictIsNotPresent() {
         Location currentLocation = new Location("D3", "B1", "P2", 0, 0, 0);
 
-        Integer districtCode = locations.getDistrictCodeFor(currentLocation);
+        Integer districtCode = locationList.getDistrictCodeFor(currentLocation);
 
         assertEquals(new Integer(3), districtCode);
     }
@@ -63,7 +62,7 @@ public class LocationsTest {
     public void shouldReturnTheNextBlockCodeIfTheGivenBlockIsNotPresent() {
         Location currentLocation = new Location("D1", "B3", "P2", 0, 0, 0);
 
-        Integer blockCode = locations.getBlockCodeFor(currentLocation);
+        Integer blockCode = locationList.getBlockCodeFor(currentLocation);
 
         assertEquals(new Integer(3), blockCode);
     }
@@ -72,7 +71,7 @@ public class LocationsTest {
     public void shouldReturnTheBlockCodeForTheGivenLocation() {
         Location currentLocation = new Location("D1", "B1", "P2", 0, 0, 0);
 
-        Integer blockCode = locations.getBlockCodeFor(currentLocation);
+        Integer blockCode = locationList.getBlockCodeFor(currentLocation);
 
         assertEquals(new Integer(1), blockCode);
     }
@@ -81,8 +80,27 @@ public class LocationsTest {
     public void shouldReturnTheNextPanchayatCodeForTheGivenLocation() {
         Location currentLocation = new Location("D1", "B1", "P3", 0, 0, 0);
 
-        Integer blockCode = locations.getPanchayatCodeFor(currentLocation);
+        Integer blockCode = locationList.getPanchayatCodeFor(currentLocation);
 
         assertEquals(new Integer(3), blockCode);
+    }
+
+    @Test
+    public void shouldFetchForGivenDistrictBlockAndPanchayat() {
+        List<Location> locations = new ArrayList<Location>();
+        Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);
+        locations.add(location1);
+        Location location2 = new Location("D2", "B2", "P5", 1, 1, 1);
+        locations.add(location2);
+        Location location3 = new Location("D1", "B3", "P2", 1, 1, 1);
+        locations.add(location3);
+
+        LocationList locationList = new LocationList(locations);
+
+        assertEquals(location1, locationList.findFor("D1", "b1", "P1 " +
+                ""));
+        assertEquals(location2, locationList.findFor("D2", "b2", "P5"));
+        assertNull(locationList.findFor("D1", "b1", "P45"));
+
     }
 }

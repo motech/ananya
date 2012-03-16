@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -98,5 +99,10 @@ public class Location extends MotechBaseDataObject {
         result = 31 * result + panchayatCode;
         return result;
     }
-}
 
+    public boolean isSameAs(String district, String block, String village) {
+        return (StringUtils.equalsIgnoreCase(this.district,district)
+                && StringUtils.equalsIgnoreCase(this.block,block)
+                && StringUtils.equalsIgnoreCase(this.panchayat,village));
+    }
+}

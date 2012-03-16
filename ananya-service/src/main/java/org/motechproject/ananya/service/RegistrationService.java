@@ -2,6 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.response.RegistrationResponse;
@@ -35,7 +36,8 @@ public class RegistrationService {
         if (StringUtils.isBlank(name))
             return registrationResponse.withInvalidName();
 
-        Location location = locationService.fetchFor(district, block, village);
+        LocationList locationList = new LocationList(locationService.getAll());
+        Location location = locationList.findFor(district, block, village);
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 

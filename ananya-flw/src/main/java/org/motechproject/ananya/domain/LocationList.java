@@ -1,12 +1,14 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Locations {
-    private ArrayList<Location> locations;
+public class LocationList {
+    private List<Location> locations;
 
-    public Locations(List<Location> locations) {
+    public LocationList(List<Location> locations) {
         this.locations = new ArrayList<Location>();
         for (Location location : locations) {
             this.locations.add(location);
@@ -73,8 +75,19 @@ public class Locations {
         return maxBlockCode + 1;
     }
 
-
     public void add(Location location) {
         locations.add(location);
+    }
+
+    public Location findFor(String district, String block, String village) {
+        for (Location location : locations) {
+            if (location.isSameAs(
+                    StringUtils.trimToEmpty(district),
+                    StringUtils.trimToEmpty(block),
+                    StringUtils.trimToEmpty(village)))
+                return location;
+        }
+        return null;
+
     }
 }
