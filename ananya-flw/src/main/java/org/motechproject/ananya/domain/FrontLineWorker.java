@@ -94,6 +94,22 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = currentJobAidUsage;
     }
 
+    public void setLocation(Location location) {
+        locationId = location.getExternalId();
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = Designation.valueOf(designation);
+    }
+
     public String getOperator() {
         return operator;
     }
@@ -104,6 +120,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public String getMsisdn() {
         return msisdn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Designation getDesignation() {
+        return designation;
     }
 
     public Long msisdn() {
@@ -180,13 +204,5 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public Map<String, Integer> getPromptsHeard() {
         return this.promptsHeard;
-    }
-
-    public void updateLocation(Location location) {
-        locationId = location.getExternalId();
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
     }
 }

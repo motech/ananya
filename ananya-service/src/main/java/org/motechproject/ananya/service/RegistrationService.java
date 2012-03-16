@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
@@ -40,14 +39,7 @@ public class RegistrationService {
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
-        if (frontLineWorker != null) {
-            frontLineWorkerService.updateLocation(callerId, location);
-            log.info("Updated location for FLW:" + callerId);
-            return registrationResponse.withLocationUpdated();
-        }
-
-        frontLineWorkerService.createNew(callerId, name, designation, location);
+        frontLineWorkerService.createOrUpdate(callerId, name, designation, location);
         registrationMeasureService.createRegistrationMeasure(new LogData(LogType.REGISTRATION, callerId));
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();

@@ -28,21 +28,31 @@ public class FrontLineWorkerService {
         this.smsPublisherService = smsPublisherService;
     }
 
-    public FrontLineWorker createNew(String msisdn, String name, String designation, Location location) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, name, Designation.valueOf(designation), location);
-        allFrontLineWorkers.add(frontLineWorker);
+    public FrontLineWorker createOrUpdate(String msisdn, String name, String designation, Location location) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+
+        if (frontLineWorker == null) {
+            frontLineWorker = new FrontLineWorker(msisdn, name, Designation.valueOf(designation), location);
+            allFrontLineWorkers.add(frontLineWorker);
+        } else {
+            frontLineWorker = this.updateFrontLineWorker(frontLineWorker, name, designation, location);
+        }
         return frontLineWorker;
     }
 
     public FrontLineWorker createOrUpdate(String msisdn, String operator) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if (frontLineWorker != null && !StringUtils.equals(frontLineWorker.getOperator(), operator)) {
-            frontLineWorker.setOperator(operator);
-            allFrontLineWorkers.update(frontLineWorker);
+
+        if (frontLineWorker == null) {
+            frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
+            allFrontLineWorkers.add(frontLineWorker);
             return frontLineWorker;
         }
-        frontLineWorker = new FrontLineWorker(msisdn, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
-        allFrontLineWorkers.add(frontLineWorker);
+
+        if (StringUtils.equalsIgnoreCase(operator, frontLineWorker.getOperator())) return frontLineWorker;
+
+        frontLineWorker.setOperator(operator);
+        allFrontLineWorkers.update(frontLineWorker);
         return frontLineWorker;
     }
 
@@ -138,9 +148,13 @@ public class FrontLineWorkerService {
         }
     }
 
-    public void updateLocation(String msisdn, Location location) {
-        final FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        frontLineWorker.updateLocation(location);
+    private FrontLineWorker updateFrontLineWorker(FrontLineWorker frontLineWorker, String name,
+                                       String designation, Location location) {
+        frontLineWorker.setName(name);
+        frontLineWorker.setDesignation(designation);
+        frontLineWorker.setLocation(location);
         allFrontLineWorkers.update(frontLineWorker);
+        
+        return frontLineWorker;
     }
 }

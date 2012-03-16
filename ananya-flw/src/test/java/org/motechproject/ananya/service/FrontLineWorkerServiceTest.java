@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 
 import java.util.Arrays;
@@ -54,17 +53,33 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.status());
     }
-
+    
     @Test
-    public void shouldNotCreateNewFLWIfAlreadyPresentInDB() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name",Designation.ANM, new Location());
-        String msisdn = frontLineWorker.getMsisdn();
-
+    public void shouldNotCreateFLWIfExistsInDBAndNotUpdateFLWIfOperatorIsNotModified() {
+        String msisdn = "123";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name",Designation.ANM, new Location());
+        frontLineWorker.setOperator("airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdate(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
+        verify(allFrontLineWorkers, never()).update(frontLineWorker);
+        assertEquals(frontLineWorker, frontLineWorkerFromDb);
+    }
+
+    @Test
+    public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenOperatorIsDifferent() {
+        String msisdn = "123";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name",Designation.ANM, new Location());
+        frontLineWorker.setOperator("vodafone");
+        
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdate(msisdn, "airtel");
+
+        verify(allFrontLineWorkers, never()).add(frontLineWorker);
+        verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker, frontLineWorkerFromDb);
     }
 
@@ -200,28 +215,41 @@ public class FrontLineWorkerServiceTest {
         when(allFrontLineWorkers.findByMsisdn("123")).thenReturn(expectedFrontLineWorker);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId("123");
-        assertEquals(expectedFrontLineWorker, frontLineWorker);
 
+        assertEquals(expectedFrontLineWorker, frontLineWorker);
     }
 
     @Test
-    public void shouldUpdateTheFLWWithLocation() {
-        String callerId = "callerId";
-        String operator = "airtel";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+    public void shouldCreateFLWIfNotExists() {
+        String msisdn = "123";
+        String name = "name";
+        String designation = Designation.ANGANWADI.toString();
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        int defaultCode = 0;
-        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
-        frontLineWorkerService.updateLocation(callerId, location);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location);
 
-        ArgumentCaptor<FrontLineWorker> flwCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).add(frontLineWorker);
+        assertEquals(frontLineWorker.getMsisdn(), msisdn);
+        assertEquals(frontLineWorker.getName(), name);
+        assertEquals(frontLineWorker.getDesignation(), Designation.valueOf(designation));
+        assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
+    }
 
-        verify(allFrontLineWorkers).update(flwCaptor.capture());
+    @Test
+    public void shouldUpdateFLWIfExists() {
+        String msisdn = "123";
+        String name = "name";
+        String designation = Designation.ANGANWADI.toString();
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location());
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker flwPassedToUpdate = flwCaptor.getValue();
+        frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location);
 
-        assertEquals(location.getExternalId(), flwPassedToUpdate.getLocationId());
-        assertEquals(frontLineWorker, flwPassedToUpdate);
+        verify(allFrontLineWorkers).update(frontLineWorker);
+        assertEquals(frontLineWorker.getName(), name);
+        assertEquals(frontLineWorker.getDesignation(), Designation.valueOf(designation));
+        assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
     }
 }
