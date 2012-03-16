@@ -40,11 +40,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
-public class TransferCallDataControllerTest {
+public class CertificateCourseCallDataControllerTest {
 
-    private static Logger log = LoggerFactory.getLogger(TransferCallDataControllerTest.class);
+    private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataControllerTest.class);
 
-    private TransferCallDataController transferCallDataController;
+    private CertificateCourseCallDataController transferCallDataController;
 
     @Mock
     private HttpServletRequest request;
@@ -62,7 +62,7 @@ public class TransferCallDataControllerTest {
     @Before
     public void Setup() {
         initMocks(this);
-        transferCallDataController = new TransferCallDataController(callLoggerService, certificateCourseService, callLogCounterService, reportPublisherService);
+        transferCallDataController = new CertificateCourseCallDataController(callLoggerService, certificateCourseService, callLogCounterService, reportPublisherService);
     }
 
     @Test

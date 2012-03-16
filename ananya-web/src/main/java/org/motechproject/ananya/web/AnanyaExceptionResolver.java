@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AnanyaExceptionResolver extends SimpleMappingExceptionResolver {
 
-    private static Logger log = LoggerFactory.getLogger(TransferCallDataController.class);
+    private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
 
     @Override
     protected ModelAndView doResolveException(

@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Controller
-public class TransferCallDataController {
+public class CertificateCourseCallDataController {
 
-    private static Logger log = LoggerFactory.getLogger(TransferCallDataController.class);
+    private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
     public static final String DUMMY = "<dummy/>";
 
     private CallLoggerService callLoggerService;
@@ -36,10 +36,10 @@ public class TransferCallDataController {
     private ReportPublishService reportPublisherService;
 
     @Autowired
-    public TransferCallDataController(CallLoggerService callLoggerService,
-                                      CertificateCourseService certificateCourseService,
-                                      CallLogCounterService callLogCounterService,
-                                      ReportPublishService reportPublisherService) {
+    public CertificateCourseCallDataController(CallLoggerService callLoggerService,
+                                               CertificateCourseService certificateCourseService,
+                                               CallLogCounterService callLogCounterService,
+                                               ReportPublishService reportPublisherService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
         this.callLogCounterService = callLogCounterService;

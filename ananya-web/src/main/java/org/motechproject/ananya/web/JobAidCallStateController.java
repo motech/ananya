@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.exceptions.AnanyaException;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.service.JobAidService;
 import org.slf4j.Logger;
@@ -10,14 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class JobAidCallStateController {
 
-    private static Logger log = LoggerFactory.getLogger(TransferCallDataController.class);
+    private static Logger log = LoggerFactory.getLogger(JobAidCallStateController.class);
     
     private JobAidService jobAidService;
 
