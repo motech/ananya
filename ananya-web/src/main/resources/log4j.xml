@@ -12,7 +12,7 @@
     </appender>
     <appender name="emailappender" class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="5" />
-        <param name="SMTPHost" value="gmail-smtp-in.l.google.com" />
+        <param name="SMTPHost" value="" />
         <param name="From" value="" />
         <param name="To" value="" />
         <param name="Subject" value="Ananya Error" />
