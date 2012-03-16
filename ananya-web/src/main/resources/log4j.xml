@@ -10,6 +10,20 @@
             <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
         </layout>
     </appender>
+    <appender name="emailappender" class="org.apache.log4j.net.SMTPAppender">
+        <param name="BufferSize" value="5" />
+        <param name="SMTPHost" value="gmail-smtp-in.l.google.com" />
+        <param name="From" value="" />
+        <param name="To" value="" />
+        <param name="Subject" value="Ananya Error" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="error" />
+            <param name="LevelMax" value="fatal" />
+        </filter>
+    </appender>
     <logger name="org.springframework">
         <level value="error"/>
     </logger>
@@ -28,5 +42,6 @@
     <root>
         <priority value="info"/>
         <appender-ref ref="logfile"/>
+        <appender-ref ref="emailappender"/>
     </root>
 </log4j:configuration>
