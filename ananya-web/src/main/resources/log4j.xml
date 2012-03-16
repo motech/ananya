@@ -42,6 +42,5 @@
     <root>
         <priority value="info"/>
         <appender-ref ref="logfile"/>
-        <appender-ref ref="emailappender"/>
     </root>
 </log4j:configuration>
