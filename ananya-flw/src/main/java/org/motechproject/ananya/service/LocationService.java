@@ -32,8 +32,4 @@ public class LocationService {
     public void add(Location location) {
         allLocations.add(location);
     }
-
-    public void removeAll() {
-        allLocations.removeAll();
-    }
 }

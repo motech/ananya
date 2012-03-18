@@ -2,6 +2,7 @@ package org.motechproject.ananya.response;
 
 import org.motechproject.ananya.domain.RegistrationStatus;
 
+
 public class RegistrationResponse {
 
     private String message;
@@ -37,7 +38,7 @@ public class RegistrationResponse {
         return this;
     }
 
-    public String message() {
+    public String getMessage() {
         return message;
     }
 

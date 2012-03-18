@@ -1,12 +1,10 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.service.LocationDimensionService;
-import org.motechproject.ananya.service.LocationService;
+import org.motechproject.ananya.response.LocationRegistrationResponse;
+import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +16,7 @@ import java.util.Date;
 @Component
 public class LocationSeed {
     @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private LocationDimensionService locationDimensionService;
+    private LocationRegistrationService locationRegistrationService;
 
     @Value("#{ananyaProperties['seed.location.file']}")
     private String inputFileName;
@@ -49,18 +44,13 @@ public class LocationSeed {
     }
 
     private void loadDefaultLocation() {
-        int defaultCode = 0;
-        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
-        LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
-        locationService.add(location);
-        locationDimensionService.add(locationDimension);
+        locationRegistrationService.loadDefaultLocation();
     }
 
     private void loadFromCsv(String path) throws IOException {
 
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
-        LocationList locations = new LocationList(locationService.getAll());
         String[] currentRow;
 
         //skip header
@@ -74,42 +64,17 @@ public class LocationSeed {
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            Location location = new Location(currentDistrict, currentBlock, currentPanchayat, 0, 0, 0);
-            if (shouldNotCreateNewLocation(location, locations)) {
-                currentRow = csvReader.readNext();
-                log(currentDistrict, currentBlock, currentPanchayat);
-                continue;
-            }
+            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict, currentBlock, currentPanchayat);
+            log(currentDistrict, currentBlock, currentPanchayat, response);
 
-            saveNewLocation(location, locations);
             currentRow = csvReader.readNext();
         }
         writer.close();
     }
 
-    private void saveNewLocation(Location currentLocation, LocationList locations) {
-        Location location = createNewLocation(currentLocation, locations);
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
-        locationService.add(location);
-        locationDimensionService.add(locationDimension);
-        locations.add(location);
-    }
-
-    private Location createNewLocation(Location currentLocation, LocationList locations) {
-        Integer districtCodeFor = locations.getDistrictCodeFor(currentLocation);
-        Integer blockCodeFor = locations.getBlockCodeFor(currentLocation);
-        Integer panchayatCodeFor = locations.getPanchayatCodeFor(currentLocation);
-        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor);
-        return locationToSave;
-    }
-
-    private boolean shouldNotCreateNewLocation(Location location, LocationList locations) {
-        return location.isMissingDetails() || locations.isAlreadyPresent(location);
-    }
-
-    private void log(String district, String block, String panchayat) throws IOException {
-        String failureLogMessage = "Ignoring record with District: " + district + " Block: "+ block + " Panchayat : " + panchayat;
+    private void log(String district, String block, String panchayat, LocationRegistrationResponse response) throws IOException {
+        String failureLogMessage = response.getMessage() +" => District: " + district + " Block: "+ block + " Panchayat : " + panchayat;
         writer.write(failureLogMessage);
         writer.newLine();
     }

@@ -5,15 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -62,9 +59,9 @@ public class FrontLineWorkerSeedTest {
         assertEquals(6, frontLineWorkers.size());
         FrontLineWorker frontLineWorker = frontLineWorkers.get(1);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getName(),frontLineWorker.name());
-        assertEquals(frontLineWorkerDimension.getMsisdn(),frontLineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getOperator(),frontLineWorker.getOperator());
+        assertEquals(frontLineWorkerDimension.getName(), frontLineWorker.name());
+        assertEquals(frontLineWorkerDimension.getMsisdn(), frontLineWorker.msisdn());
+        assertEquals(frontLineWorkerDimension.getOperator(), frontLineWorker.getOperator());
     }
 
     @After
@@ -74,5 +71,4 @@ public class FrontLineWorkerSeedTest {
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();
     }
-
 }

@@ -62,7 +62,6 @@ public class FrontLineWorkerSeed {
             currentPanchayat = currentRow[5];
 
             RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat);
-
             log(msisdn, registrationResponse);
 
             currentRow = csvReader.readNext();
@@ -71,8 +70,8 @@ public class FrontLineWorkerSeed {
     }
 
     private void log(String msisdn, RegistrationResponse registrationResponse) throws IOException {
-        String failureLogMessage = msisdn + " : " + registrationResponse.message();
-        writer.write(failureLogMessage);
+        String logMessage = msisdn + " : " + registrationResponse.getMessage();
+        writer.write(logMessage);
         writer.newLine();
     }
 }

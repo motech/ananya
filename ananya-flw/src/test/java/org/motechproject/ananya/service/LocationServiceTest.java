@@ -49,12 +49,6 @@ public class LocationServiceTest {
     }
 
     @Test
-    public void shouldRemoveAllLocations() {
-        locationService.removeAll();
-        verify(allLocations).removeAll();
-    }
-
-    @Test
     public void shouldFindLocationByExternalId() {
         String locationId = "S01D001B001V001";
         Location location = new Location();

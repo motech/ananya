@@ -43,7 +43,7 @@ public class RegistrationServiceTest {
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 
         assertTrue(registrationResponse.isRegistered());
-        assertEquals("New FrontlineWorker added", registrationResponse.message());
+        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
 
         verify(frontLineWorkerService).createOrUpdate(callerId, name, "ANM", location);
         ArgumentCaptor<LogData> logDataArgumentCaptor = ArgumentCaptor.forClass(LogData.class);
@@ -61,7 +61,7 @@ public class RegistrationServiceTest {
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 
         assertFalse(registrationResponse.isRegistered());
-        assertEquals("Invalid Location", registrationResponse.message());
+        assertEquals("Invalid Location", registrationResponse.getMessage());
 
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
@@ -75,7 +75,7 @@ public class RegistrationServiceTest {
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 
         assertFalse(registrationResponse.isRegistered());
-        assertEquals("Invalid CallerId", registrationResponse.message());
+        assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
@@ -89,7 +89,7 @@ public class RegistrationServiceTest {
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 
         assertFalse(registrationResponse.isRegistered());
-        assertEquals("Invalid Name", registrationResponse.message());
+        assertEquals("Invalid Name", registrationResponse.getMessage());
 
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));

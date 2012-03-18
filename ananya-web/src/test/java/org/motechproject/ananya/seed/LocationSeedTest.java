@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.service.LocationDimensionService;
-import org.motechproject.ananya.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,7 +26,7 @@ public class LocationSeedTest {
     private LocationSeed locationSeed;
 
     @Autowired
-    private LocationService locationService;
+    private AllLocations allLocations;
 
     @Autowired
     private LocationDimensionService locationDimensionService;
@@ -36,21 +36,20 @@ public class LocationSeedTest {
 
     @Before
     public void setUp() {
-        locationService.removeAll();
+        allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
     @Test
     public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
-        String path = getClass().getResource("/locations_with_codes.csv").getPath();
         locationSeed.load();
 
-        List<Location> allLocations = this.locationService.getAll();
-        Location location = allLocations.get(1);
+        List<Location> locations = allLocations.getAll();
+        Location location = locations.get(1);
         String externalId = location.getExternalId();
         LocationDimension locationDimension = locationDimensionService.getFor(externalId);
 
-        assertEquals(17, allLocations.size());
+        assertEquals(17, locations.size());
         assertEquals(location.getDistrict(), locationDimension.getDistrict());
         assertEquals(location.getBlock(), locationDimension.getBlock());
         assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
@@ -58,7 +57,7 @@ public class LocationSeedTest {
 
     @After
     public void tearDown() {
-        locationService.removeAll();
+        allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
     }
 }
