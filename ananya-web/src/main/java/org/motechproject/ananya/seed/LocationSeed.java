@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.Date;
 
 @Component
 public class LocationSeed {
-
-
     @Autowired
     private LocationService locationService;
 
@@ -26,16 +24,28 @@ public class LocationSeed {
     private LocationDimensionService locationDimensionService;
 
     @Value("#{ananyaProperties['seed.location.file']}")
-    private String fileName;
+    private String inputFileName;
+
+    @Value("#{ananyaProperties['seed.location.file.out']}")
+    private String outputFileName;
 
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
+    private BufferedWriter writer;
+
     @Seed(priority = 0)
     public void load() throws IOException {
-        String path = environment.equals("prod") ? fileName : getClass().getResource(fileName).getPath();
+        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+        String outputFilePath = new File(inputCSVFile).getParent();
+        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+        File file = new File(outputCSVFile);
+        file.createNewFile();
+
+        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+
         loadDefaultLocation();
-        loadFromCsv(path);
+        loadFromCsv(inputCSVFile);
     }
 
     private void loadDefaultLocation() {
@@ -46,7 +56,8 @@ public class LocationSeed {
         locationDimensionService.add(locationDimension);
     }
 
-    public void loadFromCsv(String path) throws IOException {
+    private void loadFromCsv(String path) throws IOException {
+
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         LocationList locations = new LocationList(locationService.getAll());
@@ -66,12 +77,14 @@ public class LocationSeed {
             Location location = new Location(currentDistrict, currentBlock, currentPanchayat, 0, 0, 0);
             if (shouldNotCreateNewLocation(location, locations)) {
                 currentRow = csvReader.readNext();
+                log(currentDistrict, currentBlock, currentPanchayat);
                 continue;
             }
 
             saveNewLocation(location, locations);
             currentRow = csvReader.readNext();
         }
+        writer.close();
     }
 
     private void saveNewLocation(Location currentLocation, LocationList locations) {
@@ -93,5 +106,11 @@ public class LocationSeed {
 
     private boolean shouldNotCreateNewLocation(Location location, LocationList locations) {
         return location.isMissingDetails() || locations.isAlreadyPresent(location);
+    }
+
+    private void log(String district, String block, String panchayat) throws IOException {
+        String failureLogMessage = "Ignoring record with District: " + district + " Block: "+ block + " Panchayat : " + panchayat;
+        writer.write(failureLogMessage);
+        writer.newLine();
     }
 }

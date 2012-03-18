@@ -43,14 +43,14 @@ public class LocationSeedTest {
     @Test
     public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
         String path = getClass().getResource("/locations_with_codes.csv").getPath();
-        locationSeed.loadFromCsv(path);
+        locationSeed.load();
 
         List<Location> allLocations = this.locationService.getAll();
         Location location = allLocations.get(1);
         String externalId = location.getExternalId();
         LocationDimension locationDimension = locationDimensionService.getFor(externalId);
 
-        assertEquals(16, allLocations.size());
+        assertEquals(17, allLocations.size());
         assertEquals(location.getDistrict(), locationDimension.getDistrict());
         assertEquals(location.getBlock(), locationDimension.getBlock());
         assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
