@@ -318,10 +318,10 @@ var callId=callerId+new Date().valueOf();
 vars.put(&quot;callId&quot;, callId);
 vars.put(&quot;callerId&quot;, callerId);
 
-var start_chap = 1, end_chap = 5;
-for(start_chap= 1; start_chap &lt; end_chap; start_chap++) {   
-   if(vars.get(&quot;token_&quot;+start_chap) != null) {
-      vars.put(&quot;loopPost_&quot; + start_chap, vars.get(&quot;token_&quot;+start_chap) );    	
+var start_token = 1, end_token = 5;
+for(start_token= 1; start_token &lt; end_token; start_token++) {   
+   if(vars.get(&quot;token_&quot;+token) != null) {
+      vars.put(&quot;loopPost_&quot; + start_token, vars.get(&quot;token_&quot;+start_token) );    	
    }   
 }
 
