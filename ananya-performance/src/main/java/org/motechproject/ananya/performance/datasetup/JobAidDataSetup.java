@@ -18,19 +18,16 @@ import java.util.List;
 public class JobAidDataSetup {
 
     private static Logger log = LoggerFactory.getLogger(JobAidDataSetup.class);
-    private final int usersPerOperator = 2000;
+    private final int usersPerOperator = 100;
 
-    private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
     private JobAidService jobAidService;
     private PerformanceDataPublishService publishService;
 
     @Autowired
-    public JobAidDataSetup(FrontLineWorkerService frontLineWorkerService,
-                           OperatorService operatorService,
+    public JobAidDataSetup(OperatorService operatorService,
                            JobAidService jobAidService,
                            @Qualifier("performanceDataPublishService") PerformanceDataPublishService publishService) {
-        this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;
         this.publishService = publishService;
