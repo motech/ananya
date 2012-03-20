@@ -228,8 +228,8 @@
             root_disconnect();
         </script>
         <var name="dataToPost" expr="dataTransferList.dataToPost()"/>
-        <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/></log>
-        <!--<data name="rootHangup" srcexpr="Utility.relativePath(dataTransferList.dataPostUrl())" method="post" namelist="dataToPost callerId callId"/>-->
+        <log> Data to post:<value expr="dataToPost"/>|caller id:<value expr="callerId"/>|call id:<value expr="callId"/>|url:<value expr="Utility.relativePath(pathToRoot, dataTransferList.dataPostUrl())"/></log>
+        <data name="rootHangup" srcexpr="Utility.relativePath(pathToRoot, dataTransferList.dataPostUrl())" method="post" namelist="dataToPost callerId callId"/>
         <script>
             <![CDATA[
                 dataTransferList.drain();
