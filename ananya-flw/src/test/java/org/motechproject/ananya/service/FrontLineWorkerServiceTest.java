@@ -300,9 +300,9 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldResetLastAccessTimeForJobAidAndMaxUsagePromptHeardAtBeginningOfTheMonth(){
         String callerId = "callerId";
+        String randomPromptKey = "random";
         String operator = "airtel";
         String promptKey = "Max_Usage";
-        String randomPromptKey = "random";
         DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
@@ -315,5 +315,21 @@ public class FrontLineWorkerServiceTest {
         
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
+    }
+
+    @Test
+    public void shouldResetCurrentUsageAtBeginningOfMonthEvenThoughMaxUsageIsNotReached(){
+        String callerId = "callerId";
+        String operator = "airtel";
+        DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setLastJobAidAccessTime(DateTime.now().minusMonths(2));
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.getFLWForJobAidCallerData("callerId", "operator");
+
+        assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
+        assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey("Max_Usage"));
     }
 }

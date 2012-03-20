@@ -2,10 +2,8 @@ var callerData = {
     "isRegistered" : "${isCallerRegistered}",
     "currentJobAidUsage" : ${currentJobAidUsage},
     "maxAllowedUsageForOperator" : ${maxAllowedUsageForOperator},
-
     "promptsHeard" : {
         #set($promptsCount = $promptsHeard.size())
-
         #foreach($entry in $promptsHeard.entrySet())
         "$entry.key" : $entry.value
             #if($foreach.count < $promptsCount)
