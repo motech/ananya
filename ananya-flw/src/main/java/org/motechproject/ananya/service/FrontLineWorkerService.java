@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FrontLineWorkerService {
@@ -164,5 +165,19 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
         allFrontLineWorkers.update(frontLineWorker);
+    }
+
+    public FrontLineWorker getFLWForJobAidCallerData(String msisdn, String operator) {
+        FrontLineWorker frontLineWorker = createOrUpdate(msisdn, operator);
+        DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
+        if(lastJobAidAccessTime != null &&
+                (lastJobAidAccessTime.getMonthOfYear() != DateTime.now().getMonthOfYear() ||
+                lastJobAidAccessTime.getYear() != DateTime.now().getYear())){
+            frontLineWorker.setCurrentJobAidUsage(0);
+            Map<String,Integer> promptsHeard = frontLineWorker.getPromptsHeard();
+            promptsHeard.remove("Max_Usage");
+            allFrontLineWorkers.update(frontLineWorker);
+        }
+        return frontLineWorker;
     }
 }

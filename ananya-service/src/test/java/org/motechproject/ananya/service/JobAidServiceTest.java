@@ -1,9 +1,12 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 
@@ -22,6 +25,8 @@ public class JobAidServiceTest {
     private OperatorService operatorService;
     @Mock
     private ReportPublishService reportPublishService;
+    @Mock
+    private AllFrontLineWorkers allFrontLineWorkers;
 
     @Before
     public void setUp() {
@@ -49,12 +54,12 @@ public class JobAidServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        when(frontLineWorkerService.createOrUpdate(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
-        verify(frontLineWorkerService).createOrUpdate(callerId, operator);
+        verify(frontLineWorkerService).getFLWForJobAidCallerData(callerId, operator);
         verify(reportPublishService).publishNewRegistration(callerId);
 
         assertEquals(callerData.getCurrentJobAidUsage(),new Integer(9));
@@ -73,5 +78,4 @@ public class JobAidServiceTest {
         verify(frontLineWorkerService).updateCurrentUsageForUser(callerId, currentUsage);
         verify(frontLineWorkerService).updateLastJobAidAccessTime(callerId);
     }
-
 }

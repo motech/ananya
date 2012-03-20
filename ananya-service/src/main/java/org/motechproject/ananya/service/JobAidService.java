@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
@@ -8,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class JobAidService {
@@ -36,7 +39,7 @@ public class JobAidService {
     public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(callerId, operator);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
         publishService.publishNewRegistration(callerId);
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();

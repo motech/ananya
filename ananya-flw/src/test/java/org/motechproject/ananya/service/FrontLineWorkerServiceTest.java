@@ -1,18 +1,23 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -290,5 +295,25 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker captorValue = captor.getValue();
         assertEquals(captorValue.getLastJobAidAccessTime().getMonthOfYear(), DateTime.now().getMonthOfYear());
         assertEquals(captorValue.getLastJobAidAccessTime().getYear(), DateTime.now().getYear());
+    }
+
+    @Test
+    public void shouldResetLastAccessTimeForJobAidAndMaxUsagePromptHeardAtBeginningOfTheMonth(){
+        String callerId = "callerId";
+        String operator = "airtel";
+        String promptKey = "Max_Usage";
+        String randomPromptKey = "random";
+        DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setLastJobAidAccessTime(DateTime.now().minusMonths(2));
+        frontLineWorker.markPromptHeard(promptKey);
+        frontLineWorker.markPromptHeard(randomPromptKey);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.getFLWForJobAidCallerData("callerId", "operator");
+        
+        assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
+        assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
     }
 }
