@@ -12,7 +12,7 @@ var CertificateCourseController = function(course, metaData, courseState, dataTr
         this.setInteraction(CertificateCourse.interactions[this.courseState.interactionKey].resumeCall());
     };
 
-    //TODO: This should be pulled out.
+
     this.initializeInteractionsArray = function(metaData, course, courseState) {
         CertificateCourse.interactions[StartCertificationCourseInteraction.KEY] = new StartCertificationCourseInteraction(metaData, course, courseState);
         CertificateCourse.interactions[StartNextChapterInteraction.KEY] = new StartNextChapterInteraction(metaData, course, courseState);
