@@ -29,7 +29,7 @@ public class LocationSeed {
 
     private BufferedWriter writer;
 
-    @Seed(priority = 0)
+    @Seed(priority = 1)
     public void load() throws IOException {
         String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();
