@@ -39,4 +39,19 @@ public class JobAidCallStateController {
         return "";
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/jobaid/updateusage")
+    @ResponseBody
+    public String updateJobAidUsage(HttpServletRequest request) {
+        final String callId = request.getParameter("callId");
+        final String callerId = request.getParameter("callerId");
+        final Integer currentUsage = Integer.valueOf(request.getParameter("currentUsage"));
+
+        log.info("Jobaid usage update - callId = " + callId +
+                " | callerId = " + callerId + " | currentUSage = " + currentUsage);
+
+        jobAidService.updateCurrentUsageForUser(callerId, currentUsage);
+
+        return "";
+    }
+
 }

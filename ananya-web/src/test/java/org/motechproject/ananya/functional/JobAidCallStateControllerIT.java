@@ -37,4 +37,24 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         assertEquals((int)prompts.get(prompt1), 2);
         assertEquals((int)prompts.get(prompt2), 1);
     }
+    
+    @Test
+    public void shouldUpdateCurrentUsageForFLWs() throws IOException {
+        Integer currentJobAidUsage = 12;
+        Integer currentCallDuration = 23;
+        FrontLineWorker frontLineWorker = TestUtils.getSampleFLW();
+        frontLineWorker.setCurrentJobAidUsage(currentJobAidUsage);
+
+        allFrontLineWorkers.add(frontLineWorker);
+        markForDeletion(frontLineWorker);
+
+        new WebClient().getPage(getAppServerHostUrl() + String.format(
+            "/ananya/jobaid/updateusage?callId=1234&callerId=#{0}&currentUsage={1}", frontLineWorker.getMsisdn(), currentCallDuration));
+
+        FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorker.getMsisdn());
+        Integer updatedJobAidUsage = updatedFrontLineWorker.getCurrentJobAidUsage();
+
+        Integer newCallDuration = currentJobAidUsage + currentCallDuration;
+        assertEquals(newCallDuration,updatedJobAidUsage);
+    }
 }

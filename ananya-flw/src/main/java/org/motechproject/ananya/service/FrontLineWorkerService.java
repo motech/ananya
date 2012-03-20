@@ -116,9 +116,10 @@ public class FrontLineWorkerService {
         allFrontLineWorkers.update(frontLineWorker);
     }
 
-    public void updateCurrentUsageForUser(String msisdn, Integer currentUsage) {
+    public void updateCurrentUsageForUser(String msisdn, Integer currentCallDuration) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        frontLineWorker.setCurrentJobAidUsage(currentUsage);
+        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+        frontLineWorker.setCurrentJobAidUsage(currentCallDuration+currentJobAidUsage);
         allFrontLineWorkers.update(frontLineWorker);
     }
 

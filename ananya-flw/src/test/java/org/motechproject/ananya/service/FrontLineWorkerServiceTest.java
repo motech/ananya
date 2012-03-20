@@ -252,4 +252,24 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker.getDesignation(), Designation.valueOf(designation));
         assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
     }
+
+    @Test
+    public void shouldUpdateFLWUsageByAddingCurrentCallDuration(){
+        String callerId = "callerId";
+        String operator = "airtel";
+        Integer currentUsage = 20;
+        int callDuration = 15;
+        int newUsage = currentUsage + callDuration;
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setCurrentJobAidUsage(currentUsage);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        frontLineWorkerService.updateCurrentUsageForUser(callerId, callDuration);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+
+        FrontLineWorker captorValue = captor.getValue();
+        assertEquals((Object) newUsage,captorValue.getCurrentJobAidUsage());
+    }
 }
