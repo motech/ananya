@@ -52,8 +52,8 @@ public class JobAidService {
                 frontLineWorker.getPromptsHeard());
     }
 
-    public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer currentUsage) {
-        frontLineWorkerService.updateCurrentUsageForUser(msisdn, currentUsage);
+    public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer callDuration) {
+        frontLineWorkerService.updateCurrentUsageForUser(msisdn, callDuration);
         frontLineWorkerService.updateLastJobAidAccessTime(msisdn);
     }
 

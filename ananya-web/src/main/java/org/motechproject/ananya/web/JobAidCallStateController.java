@@ -44,12 +44,12 @@ public class JobAidCallStateController {
     public String updateJobAidUsage(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
         final String callerId = request.getParameter("callerId");
-        final Integer currentUsage = Integer.valueOf(request.getParameter("currentUsage"));
+        final Integer callDuration = Integer.valueOf(request.getParameter("callDuration"));
 
         log.info("Jobaid usage update - callId = " + callId +
-                " | callerId = " + callerId + " | currentUSage = " + currentUsage);
+                " | callerId = " + callerId + " | currentUsage = " + callDuration);
 
-        jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
+        jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, callDuration);
 
         return "";
     }
