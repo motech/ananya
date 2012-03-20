@@ -313,7 +313,7 @@ for(i = 1; i &lt; tokens.length; i++) {
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">var thread = ctx.getThreadNum();
-var callerId = &quot;9999&quot;+thread;
+var callerId = &quot;1&quot;+thread;
 var callId=callerId+new Date().valueOf();
 var operator = &quot;airtel&quot;;
 
@@ -324,6 +324,7 @@ vars.put(&quot;level1&quot;, &quot;1&quot;);
 vars.put(&quot;level2&quot;, &quot;2&quot;);
 vars.put(&quot;level3&quot;, &quot;3&quot;);
 vars.put(&quot;level4&quot;, &quot;4&quot;);
+vars.put(&quot;callDuration&quot;, 10 + thread);
 
 var start_token = 1, end_token = 5;
 for(start_token= 1; start_token &lt; end_token; start_token++) {   
@@ -568,59 +569,7 @@ for(start_token= 1; start_token &lt; end_token; start_token++) {
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           </HTTPSampler>
           <hashTree/>
-          <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="true">
-            <stringProp name="ForeachController.inputVal">loopPost</stringProp>
-            <stringProp name="ForeachController.returnVal">dataToPost</stringProp>
-            <boolProp name="ForeachController.useSeparator">true</boolProp>
-          </ForeachController>
-          <hashTree>
-            <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="send_transfer_data_during_call" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="callId" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                    <stringProp name="Argument.value">${callId}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                    <stringProp name="Argument.name">callId</stringProp>
-                  </elementProp>
-                  <elementProp name="callerId" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                    <stringProp name="Argument.value">${callerId}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                    <stringProp name="Argument.name">callerId</stringProp>
-                  </elementProp>
-                  <elementProp name="dataToPost" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                    <stringProp name="Argument.value">${dataToPost}</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                    <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                    <stringProp name="Argument.name">dataToPost</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/ananya/transferdata</stringProp>
-              <stringProp name="HTTPSampler.method">POST</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.FILE_NAME"></stringProp>
-              <stringProp name="HTTPSampler.FILE_FIELD"></stringProp>
-              <stringProp name="HTTPSampler.mimetype"></stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-            </HTTPSampler>
-            <hashTree/>
-          </hashTree>
-          <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="send_transfer_data_for_disconnect" enabled="true">
+          <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="send_usage_data_at_disconnect" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="callId" elementType="HTTPArgument">
@@ -637,12 +586,12 @@ for(start_token= 1; start_token &lt; end_token; start_token++) {
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                   <stringProp name="Argument.name">callerId</stringProp>
                 </elementProp>
-                <elementProp name="dataToPost" elementType="HTTPArgument">
+                <elementProp name="callDuration" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">${disconnectPost}</stringProp>
+                  <stringProp name="Argument.value">${callDuration}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">dataToPost</stringProp>
+                  <stringProp name="Argument.name">callDuration</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
@@ -652,7 +601,7 @@ for(start_token= 1; start_token &lt; end_token; start_token++) {
             <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path">/ananya/transferdata</stringProp>
+            <stringProp name="HTTPSampler.path">/ananya/jobaid/updateusage</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
             <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
             <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
