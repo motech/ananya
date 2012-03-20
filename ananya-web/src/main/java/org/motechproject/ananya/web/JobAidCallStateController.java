@@ -49,7 +49,7 @@ public class JobAidCallStateController {
         log.info("Jobaid usage update - callId = " + callId +
                 " | callerId = " + callerId + " | currentUSage = " + currentUsage);
 
-        jobAidService.updateCurrentUsageForUser(callerId, currentUsage);
+        jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
 
         return "";
     }

@@ -1,6 +1,7 @@
 package org.motechproject.ananya.functional;
 
 import com.gargoylesoftware.htmlunit.WebClient;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestUtils;
@@ -39,7 +40,7 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
     }
     
     @Test
-    public void shouldUpdateCurrentUsageForFLWs() throws IOException {
+    public void shouldUpdateCurrentUsageAndLastJobAidAccessTimeForFLWs() throws IOException {
         Integer currentJobAidUsage = 12;
         Integer currentCallDuration = 23;
         FrontLineWorker frontLineWorker = TestUtils.getSampleFLW();
@@ -53,8 +54,12 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorker.getMsisdn());
         Integer updatedJobAidUsage = updatedFrontLineWorker.getCurrentJobAidUsage();
+        DateTime lastJobAidAccessTime = updatedFrontLineWorker.getLastJobAidAccessTime();
 
         Integer newCallDuration = currentJobAidUsage + currentCallDuration;
         assertEquals(newCallDuration,updatedJobAidUsage);
+        
+        assertEquals(DateTime.now().getMonthOfYear(),lastJobAidAccessTime.getMonthOfYear());
+        assertEquals(DateTime.now().getYear(),lastJobAidAccessTime.getYear());
     }
 }

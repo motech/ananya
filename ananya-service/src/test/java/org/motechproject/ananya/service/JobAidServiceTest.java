@@ -68,9 +68,10 @@ public class JobAidServiceTest {
         int currentUsage = 10;
         String callerId = "callerId";
 
-        jobAidService.updateCurrentUsageForUser(callerId, currentUsage);
+        jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
 
         verify(frontLineWorkerService).updateCurrentUsageForUser(callerId, currentUsage);
+        verify(frontLineWorkerService).updateLastJobAidAccessTime(callerId);
     }
 
 }

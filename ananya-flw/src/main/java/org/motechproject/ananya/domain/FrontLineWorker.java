@@ -53,6 +53,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Integer currentJobAidUsage;
 
     @JsonProperty
+    private DateTime lastJobAidAccessTime;
+
+    @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
     public FrontLineWorker() {
@@ -204,5 +207,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public Map<String, Integer> getPromptsHeard() {
         return this.promptsHeard;
+    }
+
+    public void setLastJobAidAccessTime(DateTime lastJobAidAccessTime) {
+        this.lastJobAidAccessTime = lastJobAidAccessTime;
+    }
+
+    public DateTime getLastJobAidAccessTime() {
+        return lastJobAidAccessTime;
     }
 }

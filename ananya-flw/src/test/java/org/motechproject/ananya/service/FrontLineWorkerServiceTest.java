@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -271,5 +272,23 @@ public class FrontLineWorkerServiceTest {
 
         FrontLineWorker captorValue = captor.getValue();
         assertEquals((Object) newUsage,captorValue.getCurrentJobAidUsage());
+    }
+
+    @Test
+    public void shouldUpdateTheLastAccessTimeForFlw(){
+        String callerId = "callerId";
+        String operator = "airtel";
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        frontLineWorkerService.updateLastJobAidAccessTime(callerId);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+
+        FrontLineWorker captorValue = captor.getValue();
+        assertEquals(captorValue.getLastJobAidAccessTime().getMonthOfYear(), DateTime.now().getMonthOfYear());
+        assertEquals(captorValue.getLastJobAidAccessTime().getYear(), DateTime.now().getYear());
     }
 }

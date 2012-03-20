@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllOperators;
@@ -157,5 +158,11 @@ public class FrontLineWorkerService {
         allFrontLineWorkers.update(frontLineWorker);
         
         return frontLineWorker;
+    }
+
+    public void updateLastJobAidAccessTime(String msisdn) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+        frontLineWorker.setLastJobAidAccessTime(DateTime.now());
+        allFrontLineWorkers.update(frontLineWorker);
     }
 }

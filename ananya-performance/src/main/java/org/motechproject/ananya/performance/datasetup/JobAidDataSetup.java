@@ -3,7 +3,6 @@ package org.motechproject.ananya.performance.datasetup;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.performance.PerformanceData;
 import org.motechproject.ananya.performance.PerformanceDataPublishService;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
 import org.slf4j.Logger;
@@ -41,7 +40,7 @@ public class JobAidDataSetup {
             for (int j = 0; j < usersPerOperator; j++) {
                 String msisdn = i + "" + j;
                 jobAidService.createCallerData(msisdn, allOperators.get(i).getName());
-                jobAidService.updateCurrentUsageForUser(msisdn, j % (allOperators.get(i).getAllowedUsagePerMonth() + 1));
+                jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(msisdn, j % (allOperators.get(i).getAllowedUsagePerMonth() + 1));
             }
         log.info("Loaded jobaid performance data");
     }

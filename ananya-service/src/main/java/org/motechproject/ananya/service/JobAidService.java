@@ -49,8 +49,9 @@ public class JobAidService {
                 frontLineWorker.getPromptsHeard());
     }
 
-    public void updateCurrentUsageForUser(String msisdn, Integer currentUsage) {
+    public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer currentUsage) {
         frontLineWorkerService.updateCurrentUsageForUser(msisdn, currentUsage);
+        frontLineWorkerService.updateLastJobAidAccessTime(msisdn);
     }
 
     public void setPublishService(PublishService publishService) {
