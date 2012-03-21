@@ -5,6 +5,18 @@
       application="root.vxml">
 
     <script srcexpr="Utility.relativePath(pathToRoot, 'generated/js/certification_course_data.js')"/>
+
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_data_without_chapters.js')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=1')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=2')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=3')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=4')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=5')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=6')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=7')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=8')"/>
+    <script srcexpr="Utility.relativePath(pathToRoot,'generated/js/certification_course_chapter.js?chapterNumber=9')"/>
+
     <script srcexpr="Utility.relativePath(pathToRoot,'js/prompt_context.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/certificatecourse/abstract_interactions.js')"/>
     <script srcexpr="Utility.relativePath(pathToRoot,'js/certificatecourse/interactions.js')"/>

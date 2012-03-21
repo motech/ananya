@@ -26,7 +26,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class DynamicJsControllerTest {
 
-    private MyWebClient myWebClient;
 
     @Mock
     AllNodes allNodes;
@@ -47,9 +46,8 @@ public class DynamicJsControllerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        myWebClient = new MyWebClient();
         when(properties.getProperty("url.version")).thenReturn("v1");
-        controller = new DynamicJsController(allNodes, jobAidService, certificateCourseService, properties);
+        controller = new DynamicJsController(jobAidService, certificateCourseService, properties);
     }
 
     @Test
@@ -122,28 +120,5 @@ public class DynamicJsControllerTest {
         assertEquals(scoresByChapter, callerDataForJobAid.getModel().get("scoresByChapter"));
     }
 
-    @Test
-    public void shouldServeJobAidCourseDataWithoutLevels() throws Exception {
-        String testNodeWithoutChildren = "TestNodeWithoutChildren";
-        String expectedNodeWithoutLevels = "var courseData = " + testNodeWithoutChildren + ";";
-        when(allNodes.nodeWithoutChildrenAsJson("JobAidCourse")).thenReturn(testNodeWithoutChildren);
 
-        String actualNodeWithoutLevels = controller.serveJobAidCourseDataWithoutLevels(new MockHttpServletResponse());
-
-        assertEquals(expectedNodeWithoutLevels, actualNodeWithoutLevels);
-    }
-
-    @Test
-    public void shouldServeJobAidLevelData() throws Exception {
-        String testLevelData = "TestNodeWithoutChildren";
-        String levelNumber = "1";
-        String expectedLevelData = "courseData.children[0] = " + testLevelData;
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.addParameter("levelNumber", levelNumber);
-        when(allNodes.nodeAsJson("level " + levelNumber)).thenReturn(testLevelData);
-
-        String actualLevelData = controller.serveJobAidLevelData(request, new MockHttpServletResponse());
-
-        assertEquals(expectedLevelData, actualLevelData);
-    }
 }

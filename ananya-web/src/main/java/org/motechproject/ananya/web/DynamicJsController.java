@@ -27,17 +27,14 @@ public class DynamicJsController {
 
     private static Logger log = LoggerFactory.getLogger(DynamicJsController.class);
 
-    private AllNodes allNodes;
     private Properties properties;
     private JobAidService jobAidService;
     private CertificateCourseService certificateCourseService;
 
     @Autowired
-    public DynamicJsController(AllNodes allNodes,
-                               JobAidService jobAidService,
+    public DynamicJsController(JobAidService jobAidService,
                                CertificateCourseService certificateCourseService,
                                @Qualifier("ananyaProperties") Properties properties) {
-        this.allNodes = allNodes;
         this.certificateCourseService = certificateCourseService;
         this.properties = properties;
         this.jobAidService = jobAidService;
@@ -56,37 +53,7 @@ public class DynamicJsController {
                 addObject("contextPath", request.getContextPath());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data_without_levels.js")
-    @ResponseBody
-    public String serveJobAidCourseDataWithoutLevels(HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
 
-        log.info("Fetching JobAid course data");
-
-        return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("JobAidCourse"));
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/jobaid_level_data.js")
-    @ResponseBody
-    public String serveJobAidLevelData(HttpServletRequest request,
-                                       HttpServletResponse response) throws Exception {
-        String levelNumber = request.getParameter("levelNumber");
-
-        log.info("Fetching JobAid level data " + levelNumber);
-
-        response.setContentType("application/javascript");
-        return String.format("courseData.children[%s] = %s", Integer.parseInt(levelNumber)-1, allNodes.nodeAsJson("level " + levelNumber));
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/certification_course_data.js")
-    @ResponseBody
-    public String serveCertificationCourseData(HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
-
-        log.info("Fetching certificate course data");
-
-        return String.format("var courseData = %s;", allNodes.nodeAsJson("CertificationCourse"));
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/jobaid/caller_data.js")
     public ModelAndView getCallerDataForJobAid(HttpServletRequest request, HttpServletResponse response) throws Exception {
