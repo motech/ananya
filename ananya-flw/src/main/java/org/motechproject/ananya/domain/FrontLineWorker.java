@@ -15,6 +15,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
     public static final String DEFAULT_LOCATION = "C00";
+    public static final String DEFAULT_LOCATION_ID = "S01D000B000V000";
+
 
     @JsonProperty
     private String name;
@@ -38,7 +40,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Designation designation;
 
     @JsonProperty
-    private String locationId = DEFAULT_LOCATION;
+    private String locationId = DEFAULT_LOCATION_ID;
 
     @JsonProperty
     private DateTime registeredDate = DateUtil.now();

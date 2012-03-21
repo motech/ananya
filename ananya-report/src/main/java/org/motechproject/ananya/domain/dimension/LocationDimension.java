@@ -29,10 +29,6 @@ public class LocationDimension {
     public LocationDimension() {
     }
 
-    public LocationDimension(String locationId) {
-        this.locationId = locationId;
-    }
-
     public LocationDimension(String locationId, String district, String block, String panchayat) {
         this.locationId = locationId;
         this.district = district;

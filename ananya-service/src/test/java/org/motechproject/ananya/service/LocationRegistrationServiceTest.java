@@ -81,4 +81,20 @@ public class LocationRegistrationServiceTest {
         assertEquals(panchayat, locationDimension.getPanchayat());
         assertEquals(externalId, locationDimension.getLocationId());
     }
+
+    @Test
+    public void shouldSaveDefaultLocationAndDefaultLocationDimension(){
+        locationRegistrationService.loadDefaultLocation();
+
+        ArgumentCaptor<Location> locationCaptor = ArgumentCaptor.forClass(Location.class);
+        ArgumentCaptor<LocationDimension> locationDimensionCaptor = ArgumentCaptor.forClass(LocationDimension.class);
+        verify(locationService).add(locationCaptor.capture());
+        verify(locationDimensionService).add(locationDimensionCaptor.capture());
+
+        Location location = locationCaptor.getValue();
+        LocationDimension locationDimension = locationDimensionCaptor.getValue();
+
+        assertEquals("S01D000B000V000",location.getExternalId());
+        assertEquals("S01D000B000V000", locationDimension.getLocationId());
+    }
 }

@@ -39,7 +39,8 @@ public class LocationRegistrationService {
     public void loadDefaultLocation() {
         int defaultCode = 0;
         Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
-        LocationDimension locationDimension = new LocationDimension(FrontLineWorker.DEFAULT_LOCATION);
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(),
+                FrontLineWorker.DEFAULT_LOCATION,FrontLineWorker.DEFAULT_LOCATION,FrontLineWorker.DEFAULT_LOCATION);
         locationService.add(location);
         locationDimensionService.add(locationDimension);
     }
