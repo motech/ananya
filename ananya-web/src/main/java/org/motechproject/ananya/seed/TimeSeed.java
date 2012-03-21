@@ -13,7 +13,7 @@ public class TimeSeed {
     @Autowired
     private AllTimeDimensions allTimeDimensions;
 
-    @Seed(priority = 0)
+    @Seed(priority = 2)
     public void load() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
