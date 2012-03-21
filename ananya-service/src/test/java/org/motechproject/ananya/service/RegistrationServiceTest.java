@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
@@ -12,6 +13,7 @@ import org.motechproject.ananya.response.RegistrationResponse;
 import java.util.Arrays;
 
 import static junit.framework.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -92,6 +94,24 @@ public class RegistrationServiceTest {
         assertEquals("Invalid Name", registrationResponse.getMessage());
 
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+    }
+
+    @Test
+    public void shouldNotSaveFLWForInvalidDesignation() {
+        String callerId = "123";
+        String name = "name";
+        String designation = "invalid_designation";
+        Location location = new Location("district", "block", "village", 1, 1, 1);
+
+        when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village");
+
+        assertFalse(registrationResponse.isRegistered());
+        assertEquals("Invalid Designation", registrationResponse.getMessage());
+
+        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 }

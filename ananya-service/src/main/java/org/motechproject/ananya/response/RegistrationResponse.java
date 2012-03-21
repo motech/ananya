@@ -45,5 +45,11 @@ public class RegistrationResponse {
     public boolean isRegistered() {
         return status.isRegistered();
     }
+
+    public RegistrationResponse withInvalidDesignation() {
+        status = RegistrationStatus.NOT_REGISTERED;
+        message = "Invalid Designation";
+        return this;
+    }
 }
    

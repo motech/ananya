@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.requests.LogData;
@@ -35,6 +36,8 @@ public class RegistrationService {
             return registrationResponse.withInvalidCallerId();
         if (StringUtils.isBlank(name))
             return registrationResponse.withInvalidName();
+        if (!Designation.contains(designation))
+            return registrationResponse.withInvalidDesignation();
 
         LocationList locationList = new LocationList(locationService.getAll());
         Location location = locationList.findFor(district, block, village);
