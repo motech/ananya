@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
@@ -37,12 +36,6 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
         String expectedPageResponse = callerDataFor(true, "lesson", 0, 2);
         Assert.assertEquals(trim(expectedPageResponse), trim(page.getWebResponse().getContentAsString()));
-    }
-
-    @Test
-    public void should() throws IOException {
-        Page page = new MyWebClient().getPage(getAppServerHostUrl() + "/ananya/generated/js/metadata.js");
-
     }
 
     @Test

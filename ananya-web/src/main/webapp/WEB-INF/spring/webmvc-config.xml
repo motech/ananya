@@ -28,8 +28,6 @@
             <property name="useCacheControlNoStore" value="true"/>
             <property name="cacheMappings">
                 <props>
-                    <prop key="/vxml/test_gateway.vxml">1</prop>
-                    <prop key="/vxml/**/landing.vxml">1</prop>
                     <prop key="/generated/js/**">900</prop>
                     <prop key="/generated/js/dynamic/**">1</prop>
                 </props>

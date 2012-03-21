@@ -1,7 +1,0 @@
-var metaData = {
-    #foreach($key in $bundle-airtel.keys)
-     "$key" : "$bundle-airtel.get($key)",
-    #end
-    "url.version" : "$urlVersion",
-    "context.path" : "$contextPath"
-};
