@@ -54,12 +54,11 @@ public class CertificateCourseCallDataController {
         final String jsonData = request.getParameter("dataToPost");
         log.info("callId=" + callId + "|callerId=" + callerId + "|jsonData=" + jsonData);
 
-        List<TransferData> transferDataList = extractDataTransferList(jsonData);
         List<CertificationCourseStateRequest> stateRequests = new ArrayList<CertificationCourseStateRequest>();
         List<CallDuration> durations = new ArrayList<CallDuration>();
+        List<TransferData> transferDataList = extractDataTransferList(jsonData);
 
         callLogCounterService.purgeRedundantPackets(callId, transferDataList);
-
         log.info("Purged Redundant Packets");
 
         for (TransferData transferData : transferDataList) {
@@ -70,7 +69,6 @@ public class CertificateCourseCallDataController {
                 durations.add(captureCallLog(callId, callerId, transferData.getData()));
         }
         certificateCourseService.saveState(stateRequests);
-
         log.info("Saved state");
 
         for (CallDuration duration : durations) {

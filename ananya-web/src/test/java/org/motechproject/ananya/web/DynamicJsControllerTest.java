@@ -3,7 +3,6 @@ package org.motechproject.ananya.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.functional.MyWebClient;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
@@ -17,10 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.HashMap;
 import java.util.Properties;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -48,36 +44,6 @@ public class DynamicJsControllerTest {
         initMocks(this);
         when(properties.getProperty("url.version")).thenReturn("v1");
         controller = new DynamicJsController(jobAidService, certificateCourseService, properties);
-    }
-
-    @Test
-    public void shouldGetMetadataWhenURIDoesNotContainAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/v1/generated/js/metadata.js");
-        request.setServletPath("/v1");
-
-        ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
-
-        assertEquals("metadata", modelAndView.getViewName());
-    }
-
-    @Test
-    public void shouldGetAirtelMetadataWhenURIContainsAirtel() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/airtel/v1/generated/js/metadata.js");
-        request.setServletPath("/airtel/v1");
-
-        ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
-
-        assertEquals("metadataairtel", modelAndView.getViewName());
-    }
-
-    @Test
-    public void shouldGetMetadataEvenWhenURIDoesNotHaveVersionAndVendor() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/metadata.js");
-        request.setServletPath("/generated/js/metadata.js");
-
-        ModelAndView modelAndView = controller.serveMetaData(request, new MockHttpServletResponse());
-
-        assertEquals("metadata", modelAndView.getViewName());
     }
 
     @Test

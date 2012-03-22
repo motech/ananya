@@ -1,7 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.apache.commons.lang.StringUtils;
-import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -11,10 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,21 +35,6 @@ public class DynamicJsController {
         this.properties = properties;
         this.jobAidService = jobAidService;
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/metadata.js")
-    public ModelAndView serveMetaData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        response.setContentType("application/javascript");
-        String operator = operatorFromURL(request);
-
-        log.info("fetching metadata: operator is " + operator);
-
-        return new ModelAndView("metadata" + operator).
-                addObject("urlVersion", properties.getProperty("url.version")).
-                addObject("contextPath", request.getContextPath());
-    }
-
-
 
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/jobaid/caller_data.js")
     public ModelAndView getCallerDataForJobAid(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -86,18 +67,5 @@ public class DynamicJsController {
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("scoresByChapter", callerData.getScoresByChapter());
-    }
-
-    private String operatorFromURL(HttpServletRequest request) {
-        String urlVersion = properties.getProperty("url.version");
-        String currentPath = "/" + urlVersion;
-        boolean versionedUrl = request.getServletPath().contains(urlVersion);
-
-        String operator = "";
-        if (versionedUrl) { 
-            operator = StringUtils.remove(request.getServletPath(), currentPath);
-            if (!operator.isEmpty()) operator = operator.substring(1);
-        }
-        return operator;
     }
 }
