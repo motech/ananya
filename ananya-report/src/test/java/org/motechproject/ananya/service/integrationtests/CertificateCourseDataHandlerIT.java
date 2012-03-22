@@ -105,6 +105,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.END, now.plusDays(26)));
         allCertificateCourseLogs.add(courseLog);
         allCertificateCourseLogs.add(new CertificationCourseLog(msisdn, calledNumber, null, null, "", "someOtherCallId", ""));
+        allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, CourseItemType.CHAPTER));
 
         TimeDimension timeDimension1 = allTimeDimensions.addOrUpdate(now);
         TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));

@@ -1,13 +1,17 @@
 package org.motechproject.ananya.seed;
 
+import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Node;
+import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -17,11 +21,25 @@ public class CertificationCourseSeed {
     public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
     @Autowired
     private AllNodes allNodes;
+    @Autowired
+    private AllCourseItemDimensions allCourseItemDimensions;
 
     @Seed(priority = 0)
     public void loadSeed(){
         Node certificateCourse = createNodeForCourse();
         allNodes.addNodeWithDescendants(certificateCourse);
+        recursivelySaveContentsInPostgres(certificateCourse);
+    }
+
+    private void recursivelySaveContentsInPostgres(Node node) {
+        String type = node.data().get("type");
+        CourseItemDimension courseItemDimension = new CourseItemDimension(node.getName(), node.getId(), CourseItemType.valueOf(type.toUpperCase()));
+        List<Node> children = node.children();
+        allCourseItemDimensions.add(courseItemDimension);
+        if(children.isEmpty()) return;
+        for( Node child :children){
+            recursivelySaveContentsInPostgres(child);
+        }
     }
 
     private Node createNodeForCourse() {
