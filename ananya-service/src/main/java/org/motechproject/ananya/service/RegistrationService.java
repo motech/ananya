@@ -32,7 +32,7 @@ public class RegistrationService {
     public RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String village) {
         RegistrationResponse registrationResponse = new RegistrationResponse();
 
-        if (StringUtils.isBlank(callerId))
+        if (isInvalidCallerId(callerId))
             return registrationResponse.withInvalidCallerId();
         if (StringUtils.isBlank(name))
             return registrationResponse.withInvalidName();
@@ -48,5 +48,9 @@ public class RegistrationService {
         registrationMeasureService.createRegistrationMeasure(new LogData(LogType.REGISTRATION, callerId));
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
+    }
+
+    private boolean isInvalidCallerId(String callerId) {
+        return StringUtils.isBlank(callerId) || !StringUtils.isNumeric(callerId);
     }
 }

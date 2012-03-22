@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
@@ -75,6 +74,15 @@ public class RegistrationServiceTest {
         String name = "name";
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+
+        assertFalse(registrationResponse.isRegistered());
+        assertEquals("Invalid CallerId", registrationResponse.getMessage());
+
+        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+
+        callerId = "abcdef";
+        registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
 
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
