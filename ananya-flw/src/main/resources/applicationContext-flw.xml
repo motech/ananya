@@ -11,7 +11,7 @@
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
-    <util:properties id="ananyaServiceProperties" location="classpath:/ananya-service.properties"/>
+    <util:properties id="ananyaServiceProperties" location="classpath:/ananya-sms-related.properties"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
@@ -32,10 +32,10 @@
           class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
         <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
         <property name="wsdlDocumentUrl"
-                  value="http://localhost:9979/ananya/services/MockOnMobileSendSMSService?wsdl"/>
-        <property name="namespaceUri" value="http://webservice.ananya.motechproject.org/"/>
-        <property name="serviceName" value="MockOnMobileSendSMSServiceService"/>
-        <property name="portName" value="MockOnMobileSendSMSServicePort"/>
+                  value="${sms.service.wsdl.url}"/>
+        <property name="namespaceUri" value="${sms.service.namespace.uri}"/>
+        <property name="serviceName" value="${sms.service.service.name}"/>
+        <property name="portName" value="${sms.service.port.name}"/>
         <property name="lookupServiceOnStartup" value="false"/>
     </bean>
 
