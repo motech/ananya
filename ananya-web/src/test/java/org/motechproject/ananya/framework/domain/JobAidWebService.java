@@ -16,11 +16,8 @@ public class JobAidWebService {
     @Autowired
     protected Properties ananyaProperties;
 
-    MyWebClient webClient;
+    private MyWebClient webClient = new MyWebClient();
 
-    public JobAidWebService() {
-        webClient = new MyWebClient();
-    }
 
     public JobAidResponse whenRequestedForCallerData(JobAidRequest request) throws IOException {
         String webPage = "/ananya/generated/js/dynamic/jobaid/caller_data.js?calledId=" + request.getCallerId() + "&operator=" + request.getOperator();

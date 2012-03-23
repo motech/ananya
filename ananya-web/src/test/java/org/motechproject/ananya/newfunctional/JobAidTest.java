@@ -5,26 +5,31 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.domain.JobAidRequest;
 import org.motechproject.ananya.framework.domain.JobAidResponse;
 import org.motechproject.ananya.framework.domain.JobAidWebService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class JobAidTest extends SpringIntegrationTest {
+
+    @Autowired
+    private JobAidWebService service;
+
     
     @Test
     public void shouldRegisterFLWIfNotRegistered() throws IOException {
 
         String callerId = "123456";
-        String operator = "Airtel";
+        String operator = "airtel";
         JobAidRequest request = new JobAidRequest(callerId, operator);
 
-        JobAidResponse response = new JobAidWebService().whenRequestedForCallerData(request);
+        JobAidResponse response = service.whenRequestedForCallerData(request);
         response.verifyUserIsRegistered();
 
-//                confirmMaxUsage(48).confirmCurrentUsage(0).verifyMaxUsagePromptsHeard(0);
+//      confirmMaxUsage(48).confirmCurrentUsage(0).verifyMaxUsagePromptsHeard(0);
 //
 //
-//        verifyCouchWithFLWData(request);
-//        verifyPostgres(request);
+//      verifyCouchWithFLWData(request);
+//      verifyPostgres(request);
     }
 
 
