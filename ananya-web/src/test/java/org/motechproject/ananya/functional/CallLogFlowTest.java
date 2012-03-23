@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
+import org.motechproject.ananya.framework.MyWebClient;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +20,7 @@ import java.util.Collection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
-import static org.motechproject.ananya.functional.MyWebClient.PostParam.param;
+import static org.motechproject.ananya.framework.MyWebClient.PostParam.param;
 
 public class CallLogFlowTest extends SpringIntegrationTest{
 
@@ -61,11 +62,6 @@ public class CallLogFlowTest extends SpringIntegrationTest{
         assertThat(allCallLogsByCallId, hasItems(callLogMatcher(jobAidStartTime, CallFlowType.JOBAID, disconnectTime, callId)));
     }
 
-
-    @Test
-    public void ssss(){
-
-    }
 
     private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType callFlowType, final DateTime endTime, final String callId) {
         return new BaseMatcher<CallLog>() {

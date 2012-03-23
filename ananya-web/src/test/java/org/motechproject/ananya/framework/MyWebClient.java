@@ -1,10 +1,11 @@
-package org.motechproject.ananya.functional;
+package org.motechproject.ananya.framework;
 
 import com.gargoylesoftware.htmlunit.HttpMethod;
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
+import org.motechproject.ananya.functional.CallFlow;
 
 import java.io.IOException;
 import java.net.URL;

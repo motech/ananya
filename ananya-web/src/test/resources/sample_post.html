@@ -1,0 +1,62 @@
+<html>
+
+<head>
+	<title>Testing services</title>
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<p>Please enter the test data for certificate course</p>
+	
+	<form id="cc_data_post" action="http://192.168.42.37:8080/ananya/v1/transferdata" method="POST">
+		Call Id: <input type="text" name="callId" value="1414134134"/> <br/>
+		Caller Id: <input type="text" name="callerId" value="9988776661"/> <br/>
+		Token #:<input type="text" id="t" value="0"/> <br/>
+		Chapter Index: <input type="text" id="ci" value="0"/> <br/>
+		Lesson or Question index: <input type="text" id="qi" value="0"/> <br/>
+		Result: <input type="text" id="r" value="true"/> <br/>
+		Interaction key: 
+		<select id="k">
+			<option value="lesson">lesson</option>
+			<option value="lessonEndMenu">lessonEndMenu</option>
+			<option value="startQuiz">startQuiz</option>
+			<option value="poseQuestion">poseQuestion</option>
+			<option value="playAnswerExplanation">playAnswerExplanation</option>
+			<option value="reportChapterScore">reportChapterScore</option>
+			<option value="endOfChapterMenu">endOfChapterMenu</option>
+			<option value="playThanks">playThanks</option>
+			<option value="playFinalScore">playFinalScore</option>
+			<option value="playCourseResult">playCourseResult</option>
+		</select>
+		<input type="hidden" name="dataToPost" id="dataToPost"/>
+		<input type="button" name="submit_button" id="submit_button" value="Submit"/>
+	</form>
+	
+	<script type="text/javascript">
+		constructData = function(t, ci, qi, qr, r, k){
+		    var data ={
+		        "token": t,
+		        "type" : "ccState",
+		        "data" :{
+		            "chapterIndex":ci,
+		            "lessonOrQuestionIndex":qi,
+		            "questionResponse":qr,
+		            "result":r,
+		            "interactionKey":k,
+		        }
+		    }
+		    return data;
+		}
+		
+		$("#submit_button").click(function(){
+			var dataToPost = new Array();
+			dataToPost.push(constructData($("#t").val(),$("#ci").val(),$("#qi").val(),1,$("#r").val(),$("#k").find(":selected").val()));
+			$("#dataToPost").val(JSON.stringify(dataToPost));
+			$("#cc_data_post").submit();
+		});
+	</script>
+
+</body>
+
+</html>

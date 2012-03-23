@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.framework.MyWebClient;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestUtils;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.framework.MyWebClient;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
-import static org.motechproject.ananya.functional.MyWebClient.PostParam.param;
+import static org.motechproject.ananya.framework.MyWebClient.PostParam.param;
 
 public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
