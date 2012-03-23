@@ -30,8 +30,8 @@
                 <configuration>
                     <printSummary>true</printSummary>
                     <excludes>
-                        <exclude>**/*_Roo_*</exclude>
                         <exclude>**/functional/**/*.java</exclude>
+                        <exclude>**/newfunctional/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -112,38 +112,12 @@
                             <argLine>-XX:MaxPermSize=1024M</argLine>
                             <includes>
                                 <include>**/functional/**/*Test.java</include>
+                                <include>**/newfunctional/**/*Test.java</include>
                             </includes>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.0.2-beta-5</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jsSrcDir>
-                        ${project.basedir}/src/main/webapp/js
-                    </jsSrcDir>
-                    <specIncludes>
-                        <include>**/*_mother.js</include>
-                        <include>**/*_spec.js</include>
-                    </specIncludes>
-                    <jsTestSrcDir>
-                        ${project.basedir}/src/test/js
-                    </jsTestSrcDir>
-                    <sourceExcludes>
-                        <include>**/admin/*.js</include>
-                    </sourceExcludes>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

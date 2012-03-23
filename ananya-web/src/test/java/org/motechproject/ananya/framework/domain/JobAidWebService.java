@@ -20,7 +20,7 @@ public class JobAidWebService {
 
 
     public JobAidResponse whenRequestedForCallerData(JobAidRequest request) throws IOException {
-        String webPage = "/ananya/generated/js/dynamic/jobaid/caller_data.js?calledId=" + request.getCallerId() + "&operator=" + request.getOperator();
+        String webPage = "/ananya/generated/js/dynamic/jobaid/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
         Page page = webClient.getPage(getAppServerUrl() + webPage);
         return JobAidResponse.make(page.getWebResponse().getContentAsString());
     }

@@ -23,7 +23,10 @@ public class JobAidTest extends SpringIntegrationTest {
         JobAidRequest request = new JobAidRequest(callerId, operator);
 
         JobAidResponse response = service.whenRequestedForCallerData(request);
-        response.verifyUserIsRegistered();
+        response.verifyUserIsPartiallyRegistered();
+//                .confirmMaxUsage(48l)
+//                .confirmCurrentUsage(0l);
+
 
 //      confirmMaxUsage(48).confirmCurrentUsage(0).verifyMaxUsagePromptsHeard(0);
 //
