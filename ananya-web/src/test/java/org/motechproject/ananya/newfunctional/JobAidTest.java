@@ -2,6 +2,8 @@ package org.motechproject.ananya.newfunctional;
 
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
+import org.motechproject.ananya.framework.CouchDb;
+import org.motechproject.ananya.framework.ReportDb;
 import org.motechproject.ananya.framework.domain.JobAidRequest;
 import org.motechproject.ananya.framework.domain.JobAidResponse;
 import org.motechproject.ananya.framework.domain.JobAidWebService;
@@ -14,27 +16,30 @@ public class JobAidTest extends SpringIntegrationTest {
     @Autowired
     private JobAidWebService service;
 
-    
-    @Test
-    public void shouldRegisterFLWIfNotRegistered() throws IOException {
+    @Autowired
+    private CouchDb couchDb;
 
+    @Autowired
+    private ReportDb reportDb;
+
+
+    @Test
+    public void onFetchingCallerData_shouldPartiallyRegisterFLW_andPersistInCouchAndPostgres() throws IOException {
         String callerId = "123456";
         String operator = "airtel";
+        int expectedMaxUsage = 39;
+        int expectedCurrentUsage = 0;
+
         JobAidRequest request = new JobAidRequest(callerId, operator);
-
         JobAidResponse response = service.whenRequestedForCallerData(request);
-        response.verifyUserIsPartiallyRegistered();
-//                .confirmMaxUsage(48l)
-//                .confirmCurrentUsage(0l);
 
+        response.confirmPartiallyRegistered().
+                confirmMaxUsage(expectedMaxUsage).
+                confirmCurrentUsage(expectedCurrentUsage);
 
-//      confirmMaxUsage(48).confirmCurrentUsage(0).verifyMaxUsagePromptsHeard(0);
-//
-//
-//      verifyCouchWithFLWData(request);
-//      verifyPostgres(request);
+        couchDb.confirmPartiallyRegistered(callerId, operator).
+                confirmUsage(callerId, expectedCurrentUsage, expectedMaxUsage);
     }
-
 
 
 }

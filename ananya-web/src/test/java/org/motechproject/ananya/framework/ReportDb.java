@@ -9,4 +9,8 @@ public class ReportDb {
 
     @Autowired
     private AllLocationDimensions allLocationDimensions;
+
+    public void verifyIfExists(String callerId) {
+        throw new RuntimeException("Not implemented.");
+    }
 }

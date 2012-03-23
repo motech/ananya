@@ -23,7 +23,7 @@ public class JobAidResponse {
         return (JobAidResponse) jsonReader.readFromString(callerData, JobAidResponse.class);
     }
 
-    public JobAidResponse verifyUserIsPartiallyRegistered() {
+    public JobAidResponse confirmPartiallyRegistered() {
         assertFalse(isRegistered);
         return this;
     }
@@ -33,16 +33,15 @@ public class JobAidResponse {
         return this;
     }
 
-    public JobAidResponse confirmMaxUsage(Long expected){
-        assertEquals(expected, maxAllowedUsageForOperator);
+    public JobAidResponse confirmMaxUsage(int expected) {
+        assertEquals(new Long(expected * 60 * 1000), maxAllowedUsageForOperator);
         return this;
     }
 
-    public JobAidResponse confirmCurrentUsage(Long expected){
-        assertEquals(expected, currentJobAidUsage);
+    public JobAidResponse confirmCurrentUsage(int expected) {
+        assertEquals(new Long(expected * 60 * 1000), currentJobAidUsage);
         return this;
     }
-
 
 
 }
