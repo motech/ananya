@@ -1,4 +1,4 @@
-package org.motechproject.ananya.performance;
+package org.motechproject.ananya.performance.framework;
 
 
 import java.lang.annotation.*;

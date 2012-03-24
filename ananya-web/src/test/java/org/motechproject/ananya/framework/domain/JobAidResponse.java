@@ -33,14 +33,18 @@ public class JobAidResponse {
         return this;
     }
 
-    public JobAidResponse confirmMaxUsage(int expected) {
-        assertEquals(new Long(expected * 60 * 1000), maxAllowedUsageForOperator);
+    public JobAidResponse confirmMaxUsage(int expectedMinutes) {
+        assertEquals(convertToMilliSec(expectedMinutes), maxAllowedUsageForOperator);
         return this;
     }
 
-    public JobAidResponse confirmCurrentUsage(int expected) {
-        assertEquals(new Long(expected * 60 * 1000), currentJobAidUsage);
+    public JobAidResponse confirmCurrentUsage(int expectedMinutes) {
+        assertEquals(convertToMilliSec(expectedMinutes), currentJobAidUsage);
         return this;
+    }
+
+    private Long convertToMilliSec(int expected) {
+        return new Long(expected * 60 * 1000);
     }
 
 

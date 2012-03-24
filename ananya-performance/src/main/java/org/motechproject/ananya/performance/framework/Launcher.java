@@ -1,6 +1,5 @@
-package org.motechproject.ananya.performance;
+package org.motechproject.ananya.performance.framework;
 
-import org.motechproject.ananya.performance.datasetup.AllDataSetups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
