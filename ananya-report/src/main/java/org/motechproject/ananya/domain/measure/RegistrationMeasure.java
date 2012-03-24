@@ -8,9 +8,18 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "registration_measure")
-@NamedQuery(name = RegistrationMeasure.FIND_BY_FLW_LOCATION_TIME,
-        query = "select r from RegistrationMeasure r where r.frontLineWorkerDimension.id=:flw_id and r.timeDimension.id=:time_id and r.locationDimension.id=:location_id")
+@NamedQueries(value = {
+        @NamedQuery(name = RegistrationMeasure.FIND_BY_FLW_LOCATION_TIME,
+                query = "select r from RegistrationMeasure r where r.frontLineWorkerDimension.id=:flw_id " +
+                        "and r.timeDimension.id=:time_id and r.locationDimension.id=:location_id"),
+        @NamedQuery(name = RegistrationMeasure.FIND_BY_FLW,
+                query = "select r from RegistrationMeasure r where r.frontLineWorkerDimension.id=:flw_id")
+}
+)
+
 public class RegistrationMeasure {
+
+    public static final String FIND_BY_FLW = "find.by.flw";
 
     public static final String FIND_BY_FLW_LOCATION_TIME = "find.by.flw.location.time";
 
@@ -26,7 +35,6 @@ public class RegistrationMeasure {
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)
     private LocationDimension locationDimension;
-    
     @ManyToOne
     @JoinColumn(name = "flw_id", nullable = false)
     private FrontLineWorkerDimension frontLineWorkerDimension;

@@ -81,4 +81,11 @@ public class TimeDimension {
     public void setYear(Integer year) {
         this.year = year;
     }
+
+    public Boolean matches(DateTime time) {
+        return this.day.equals(time.getDayOfYear())
+                && this.week.equals(time.getWeekOfWeekyear())
+                && this.month.equals(time.getMonthOfYear())
+                && this.year.equals(time.getYear());
+    }
 }

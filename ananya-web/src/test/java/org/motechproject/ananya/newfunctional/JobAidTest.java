@@ -22,7 +22,6 @@ public class JobAidTest extends SpringIntegrationTest {
     @Autowired
     private ReportDb reportDb;
 
-
     @Test
     public void onFetchingCallerData_shouldPartiallyRegisterFLW_andPersistInCouchAndPostgres() throws IOException {
         String callerId = "123456";
@@ -33,12 +32,15 @@ public class JobAidTest extends SpringIntegrationTest {
         JobAidRequest request = new JobAidRequest(callerId, operator);
         JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
 
-        response.confirmPartiallyRegistered().
-                confirmMaxUsage(expectedMaxUsage).
-                confirmCurrentUsage(expectedCurrentUsage);
+        response.confirmPartiallyRegistered()
+                .confirmMaxUsage(expectedMaxUsage)
+                .confirmCurrentUsage(expectedCurrentUsage);
 
-        couchDb.confirmPartiallyRegistered(callerId, operator).
-                confirmUsage(callerId, expectedCurrentUsage, expectedMaxUsage);
+        couchDb.confirmPartiallyRegistered(callerId, operator)
+                .confirmUsage(callerId, expectedCurrentUsage, expectedMaxUsage);
+
+        reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
+                .confirmRegistrationMeasureForPartiallyRegistered(callerId);
     }
 
 
