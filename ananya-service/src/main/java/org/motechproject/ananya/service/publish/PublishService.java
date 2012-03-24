@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.requests.LogData;
 

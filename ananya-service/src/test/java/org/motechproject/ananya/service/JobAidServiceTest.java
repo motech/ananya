@@ -1,14 +1,13 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
+import org.motechproject.ananya.service.publish.DataPublishService;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -24,14 +23,14 @@ public class JobAidServiceTest {
     @Mock
     private OperatorService operatorService;
     @Mock
-    private ReportPublishService reportPublishService;
+    private DataPublishService dataPublishService;
     @Mock
     private AllFrontLineWorkers allFrontLineWorkers;
 
     @Before
     public void setUp() {
         initMocks(this);
-        jobAidService = new JobAidService(frontLineWorkerService, operatorService, reportPublishService);
+        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService);
     }
 
     @Test
@@ -60,7 +59,7 @@ public class JobAidServiceTest {
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
         verify(frontLineWorkerService).getFLWForJobAidCallerData(callerId, operator);
-        verify(reportPublishService).publishNewRegistration(callerId);
+        verify(dataPublishService).publishNewRegistration(callerId);
 
         assertEquals(callerData.getCurrentJobAidUsage(),new Integer(9));
         assertEquals(callerData.getMaxAllowedUsageForOperator(),new Integer(10));

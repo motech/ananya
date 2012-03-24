@@ -1,16 +1,13 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
+import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class JobAidService {
@@ -19,15 +16,15 @@ public class JobAidService {
     
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
-    private PublishService publishService;
+    private DataPublishService dataPublishService;
 
     @Autowired
     public JobAidService(FrontLineWorkerService frontLineWorkerService,
                          OperatorService operatorService,
-                         @Qualifier("reportPublishService") PublishService publishService) {
+                         DataPublishService dataPublishService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
-        this.publishService = publishService;
+        this.dataPublishService = dataPublishService;
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
@@ -40,7 +37,7 @@ public class JobAidService {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
-        publishService.publishNewRegistration(callerId);
+        dataPublishService.publishNewRegistration(callerId);
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
@@ -57,7 +54,4 @@ public class JobAidService {
         frontLineWorkerService.updateLastJobAidAccessTime(msisdn);
     }
 
-    public void setPublishService(PublishService publishService) {
-        this.publishService = publishService;
-    }
 }

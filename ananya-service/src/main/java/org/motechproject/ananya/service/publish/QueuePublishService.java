@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReportPublishService implements PublishService {
+public class QueuePublishService implements PublishService {
 
     private EventContext eventContext;
-    private static Logger log = LoggerFactory.getLogger(ReportPublishService.class);
+    private static Logger log = LoggerFactory.getLogger(QueuePublishService.class);
 
 
     @Autowired
-    public ReportPublishService(@Qualifier("eventContext") EventContext eventContext) {
+    public QueuePublishService(@Qualifier("eventContext") EventContext eventContext) {
         this.eventContext = eventContext;
     }
 

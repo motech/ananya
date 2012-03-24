@@ -3,7 +3,7 @@ package org.motechproject.ananya.handler;
 import org.apache.log4j.Logger;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
-import org.motechproject.ananya.service.ReportPublishService;
+import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.ananya.service.SMSPublisherService;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
@@ -14,10 +14,10 @@ import java.util.Map;
 public class SMSSentHandler {
     private static final Logger log = Logger.getLogger(SendSMSHandler.class);
 
-    private ReportPublishService reportPublisherService;
+    private QueuePublishService reportPublisherService;
 
     @Autowired
-    public SMSSentHandler(ReportPublishService reportPublisherService) {
+    public SMSSentHandler(QueuePublishService reportPublisherService) {
         this.reportPublisherService = reportPublisherService;
     }
 

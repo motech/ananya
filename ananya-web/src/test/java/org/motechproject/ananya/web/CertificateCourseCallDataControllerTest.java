@@ -12,12 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallDuration;
 import org.motechproject.ananya.domain.CallEvent;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.ReportPublishService;
+import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,13 +56,14 @@ public class CertificateCourseCallDataControllerTest {
     private CallLoggerService callLoggerService;
     @Mock
     private CallLogCounterService callLogCounterService;
-
     @Mock
-    private ReportPublishService reportPublisherService;
+    private DataPublishService dataPublishService;
+
     @Before
     public void Setup() {
         initMocks(this);
-        transferCallDataController = new CertificateCourseCallDataController(callLoggerService, certificateCourseService, callLogCounterService, reportPublisherService);
+        transferCallDataController = new CertificateCourseCallDataController(callLoggerService,
+                certificateCourseService, callLogCounterService, dataPublishService);
     }
 
     @Test
@@ -111,7 +112,7 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("dataToPost")).thenReturn("[]");
         
         transferCallDataController.receiveIVRDataAtDisconnect(request);
-        verify(reportPublisherService).publishCallDisconnectEvent(callId);
+        verify(dataPublishService).publishCallDisconnectEvent(callId);
     }
 
     @Test

@@ -14,7 +14,7 @@ import java.io.IOException;
 public class JobAidTest extends SpringIntegrationTest {
 
     @Autowired
-    private JobAidWebService service;
+    private JobAidWebService jobAidService;
 
     @Autowired
     private CouchDb couchDb;
@@ -31,7 +31,7 @@ public class JobAidTest extends SpringIntegrationTest {
         int expectedCurrentUsage = 0;
 
         JobAidRequest request = new JobAidRequest(callerId, operator);
-        JobAidResponse response = service.whenRequestedForCallerData(request);
+        JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
 
         response.confirmPartiallyRegistered().
                 confirmMaxUsage(expectedMaxUsage).

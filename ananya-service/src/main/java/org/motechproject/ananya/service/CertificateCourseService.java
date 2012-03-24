@@ -18,11 +18,10 @@ import java.util.List;
 @Service
 public class CertificateCourseService {
 
-    private CertificateCourseLogService certificateCourseLogService;
-    private FrontLineWorkerService frontLineWorkerService;
-
     private static Logger log = LoggerFactory.getLogger(CertificateCourseService.class);
 
+    private CertificateCourseLogService certificateCourseLogService;
+    private FrontLineWorkerService frontLineWorkerService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
@@ -37,7 +36,6 @@ public class CertificateCourseService {
                 courseStateRequest.getLessonOrQuestionIndex());
 
         log.info("Saving bookmark " + bookMark);
-
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 

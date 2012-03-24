@@ -2,13 +2,11 @@ package org.motechproject.ananya.performance.datasetup;
 
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.performance.PerformanceData;
-import org.motechproject.ananya.performance.PerformanceDataPublishService;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,20 +19,15 @@ public class JobAidDataSetup {
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
-    private PerformanceDataPublishService publishService;
 
     @Autowired
-    public JobAidDataSetup(OperatorService operatorService,
-                           JobAidService jobAidService,
-                           @Qualifier("performanceDataPublishService") PerformanceDataPublishService publishService) {
+    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService) {
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;
-        this.publishService = publishService;
     }
 
-    @PerformanceData(testName = "jobaid", description = "create worker groups of different operators, msisdn incremented by jmeter thread count")
+    @PerformanceData(testName = "jobaid", description = "create worker groups of different operators")
     public void loadData() {
-        jobAidService.setPublishService(publishService);
         List<Operator> allOperators = operatorService.getAllOperators();
         for (int i = 0; i < allOperators.size(); i++)
             for (int j = 0; j < usersPerOperator; j++) {

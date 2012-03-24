@@ -9,7 +9,7 @@ import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.ReportPublishService;
+import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +33,17 @@ public class CertificateCourseCallDataController {
     private CallLoggerService callLoggerService;
     private CallLogCounterService callLogCounterService;
     private CertificateCourseService certificateCourseService;
-    private ReportPublishService reportPublisherService;
+    private DataPublishService dataPublishService;
 
     @Autowired
     public CertificateCourseCallDataController(CallLoggerService callLoggerService,
                                                CertificateCourseService certificateCourseService,
                                                CallLogCounterService callLogCounterService,
-                                               ReportPublishService reportPublisherService) {
+                                               DataPublishService dataPublishService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
         this.callLogCounterService = callLogCounterService;
-        this.reportPublisherService = reportPublisherService;
+        this.dataPublishService = dataPublishService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
@@ -83,7 +83,7 @@ public class CertificateCourseCallDataController {
         final String callId = request.getParameter("callId");
         receiveCallData(request);
 
-        reportPublisherService.publishCallDisconnectEvent(callId);
+        dataPublishService.publishCallDisconnectEvent(callId);
 
         log.info("Call ended: "+callId);
         return DUMMY;

@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
+import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.context.EventContext;
 
 import java.util.List;
@@ -18,14 +19,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ReportPublishServiceTest {
 
-    private ReportPublishService reportPublishService;
+    private QueuePublishService reportPublishService;
     @Mock
     private EventContext eventContext;
 
     @Before
     public void setUp() {
         initMocks(this);
-        reportPublishService = new ReportPublishService(eventContext);
+        reportPublishService = new QueuePublishService(eventContext);
     }
 
     @Test
