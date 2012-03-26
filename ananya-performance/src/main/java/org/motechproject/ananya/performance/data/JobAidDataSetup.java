@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobAidDataSetup {
 
-    private static Logger log = LoggerFactory.getLogger(JobAidDataSetup.class);
-    private final int usersPerOperator = 10;
+    private final int usersPerOperator = 21500;
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
@@ -67,6 +66,7 @@ public class JobAidDataSetup {
             Operator airtel = getOperatorFor(operatorName);
             jobAidService.createCallerData(callerId, airtel.getName());
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (airtel.getAllowedUsagePerMonth() + 1));
+            System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId()+"|count="+j);
         }
     }
 
