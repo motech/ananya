@@ -54,6 +54,7 @@ public class JobAidServiceTest {
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
         when(frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.isNewFLW(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
