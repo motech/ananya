@@ -36,8 +36,12 @@ public class JobAidService {
     public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
+        boolean isNewFLW = frontLineWorkerService.isNewFLW(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
-        dataPublishService.publishNewRegistration(callerId);
+
+        if(isNewFLW) {
+            dataPublishService.publishNewRegistration(callerId);
+        }
 
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);

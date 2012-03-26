@@ -180,4 +180,9 @@ public class FrontLineWorkerService {
         }
         return frontLineWorker;
     }
+
+    public boolean isNewFLW(String callerId) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        return frontLineWorker == null;
+    }
 }

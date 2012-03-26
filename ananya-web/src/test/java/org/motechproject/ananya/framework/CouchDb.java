@@ -38,4 +38,7 @@ public class CouchDb {
         return this;
     }
 
+    public void clearFLWData(String callerId) {
+        allFrontLineWorkers.remove(allFrontLineWorkers.findByMsisdn(callerId));
+    }
 }

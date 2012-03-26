@@ -6,6 +6,7 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -25,6 +26,8 @@ public class ReportDb {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Autowired
     private AllRegistrationMeasures allRegistrationMeasures;
+    @Autowired
+    private DataAccessTemplate template;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
@@ -50,5 +53,12 @@ public class ReportDb {
         assertTrue(locationDimension.getDistrict().equals(FrontLineWorker.DEFAULT_LOCATION));
         assertTrue(locationDimension.getPanchayat().equals(FrontLineWorker.DEFAULT_LOCATION));
         return this;
+    }
+
+    public void clearDimensionAndMeasures(String callerId) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
+        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+        template.delete(registrationMeasure);
+        template.delete(frontLineWorkerDimension);
     }
 }

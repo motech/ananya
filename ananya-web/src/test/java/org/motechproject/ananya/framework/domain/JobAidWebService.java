@@ -1,6 +1,7 @@
 package org.motechproject.ananya.framework.domain;
 
 import com.gargoylesoftware.htmlunit.Page;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.framework.MyWebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,15 +19,37 @@ public class JobAidWebService {
 
     private MyWebClient webClient = new MyWebClient();
 
-
     public JobAidResponse whenRequestedForCallerData(JobAidRequest request) throws IOException {
         String webPage = "/ananya/generated/js/dynamic/jobaid/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
-        Page page = webClient.getPage(getAppServerUrl() + webPage);
-        return JobAidResponse.make(page.getWebResponse().getContentAsString());
+        return makeRequest(webPage);
     }
+
+    //API to create FLW in functional tests
+    public JobAidResponse createFLW(JobAidRequest request) throws IOException{
+        return whenRequestedForCallerData(request);
+    }
+
+    public JobAidResponse updatePromptsHeard(JobAidRequest request) throws IOException {
+        String webPage = "/ananya/jobaid/updateprompt?callId=1234&callerId=" + request.getCallerId() + promptsHeard(request);
+        return makeRequest(webPage);
+    }
+
+
 
     protected String getAppServerUrl() {
         return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }
 
+    private JobAidResponse makeRequest(String webPage) throws IOException {
+        Page page = webClient.getPage(getAppServerUrl() + webPage);
+        return JobAidResponse.make(page.getWebResponse().getContentAsString());
+    }
+    
+    private String promptsHeard(JobAidRequest request){
+        String promptsHeard = StringUtils.join(request.getPromptsHeard(), "','");
+        if(!promptsHeard.isEmpty()){
+            return "&promptList=['" + promptsHeard + "']";
+        }
+        return "";
+    }
 }

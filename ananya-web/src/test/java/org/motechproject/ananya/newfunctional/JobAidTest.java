@@ -1,5 +1,6 @@
 package org.motechproject.ananya.newfunctional;
 
+import org.junit.After;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.CouchDb;
@@ -22,10 +23,21 @@ public class JobAidTest extends SpringIntegrationTest {
     @Autowired
     private ReportDb reportDb;
 
+    String callerId = "123456";
+    String operator = "airtel";
+
+    @After
+    public void after() {
+        clearFLWData();
+    }
+
+    private void clearFLWData() {
+        reportDb.clearDimensionAndMeasures(callerId);
+        couchDb.clearFLWData(callerId);
+    }
+
     @Test
     public void onFetchingCallerData_shouldPartiallyRegisterFLW_andPersistInCouchAndPostgres() throws IOException {
-        String callerId = "123456";
-        String operator = "airtel";
         int expectedMaxUsage = 39;
         int expectedCurrentUsage = 0;
 
@@ -41,6 +53,21 @@ public class JobAidTest extends SpringIntegrationTest {
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId);
+    }
+
+    @Test
+    public void shouldUpdatePromptCountersForFLW() throws IOException {
+        JobAidRequest request = new JobAidRequest(callerId, operator);
+        JobAidResponse response = jobAidService.createFLW(request);
+        String maxUsagePrompt = "MaxUsage";
+
+        response.confirmNoPromptsHeard();
+        request.addPromptHeard(maxUsagePrompt);
+        jobAidService.updatePromptsHeard(request);
+        response = jobAidService.whenRequestedForCallerData(request);
+        
+        response.verifyPromptHeard(maxUsagePrompt, 1);
+
     }
 
 

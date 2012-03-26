@@ -48,4 +48,13 @@ public class JobAidResponse {
     }
 
 
+    public JobAidResponse confirmNoPromptsHeard() {
+        assertTrue(promptsHeard.isEmpty());
+        return this;
+    }
+
+    public JobAidResponse verifyPromptHeard(String maxUsagePrompt, Integer times) {
+        assertEquals(promptsHeard.get(maxUsagePrompt), times);
+        return this;
+    }
 }
