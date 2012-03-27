@@ -259,4 +259,14 @@ for(i = 1; i <= tokens.length; i++) {
     vars.put("token_" + i, utility.stringify(tokens[i-1]));
 }
 
+var flattened_tokens = []
+var j = 0;
+for (i = 0; i < tokens.length; i++) {
+    for (j = 0; j < tokens[i].length; j++) {
+        flattened_tokens.push(tokens[i][j]);
+    }
+}
+
+vars.put("tokens_block", utility.stringify(flattened_tokens));
+
 vars.put("tokens_length", tokens.length);
