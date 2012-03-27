@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
@@ -47,7 +48,9 @@ public class SMSSentMeasureServiceTest {
         String smsRefNum = "41413";
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
-        when(frontLineWorkerService.getSMSReferenceNumber(callerId, courseAttemptNum)).thenReturn(smsRefNum);
+        SMSReference smsReference = new SMSReference(callerId);
+        smsReference.add(smsRefNum, courseAttemptNum);
+        when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
 

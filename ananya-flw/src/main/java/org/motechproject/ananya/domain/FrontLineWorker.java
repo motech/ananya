@@ -49,9 +49,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Integer certificateCourseAttempts;
 
     @JsonProperty
-    private Map<Integer, String> smsReferenceNumbers;
-
-    @JsonProperty
     private Integer currentJobAidUsage;
 
     @JsonProperty
@@ -74,7 +71,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
         this.locationId = location.getExternalId();
         this.certificateCourseAttempts = 0;
-        this.smsReferenceNumbers = new HashMap<Integer, String>();
         this.currentJobAidUsage = 0;
     }
 
@@ -91,7 +87,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
                 ", locationId='" + locationId + '\'' +
                 ", registeredDate=" + registeredDate +
                 ", certificateCourseAttempts=" + certificateCourseAttempts +
-                ", smsReferenceNumbers=" + smsReferenceNumbers +
                 '}';
     }
 
@@ -186,16 +181,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return ++certificateCourseAttempts;
     }
 
-    public void addSMSReferenceNumber(String smsReferenceNumber) {
-        this.smsReferenceNumbers.put(this.certificateCourseAttempts, smsReferenceNumber);
-    }
-
     public Integer currentCourseAttempt() {
         return certificateCourseAttempts;
-    }
-
-    public String smsReferenceNumber(int courseAttempt) {
-        return this.smsReferenceNumbers.get(courseAttempt);
     }
 
     public Integer getCurrentJobAidUsage() {

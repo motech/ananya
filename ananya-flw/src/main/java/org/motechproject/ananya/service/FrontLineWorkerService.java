@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllOperators;
+import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +20,16 @@ public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
+    private AllSMSReferences allSMSReferences;
     private SendSMSService sendSMSService;
     private SMSPublisherService smsPublisherService;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, SendSMSService sendSMSService, SMSPublisherService smsPublisherService) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, SendSMSService sendSMSService, SMSPublisherService smsPublisherService, AllSMSReferences allSMSReferences) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.sendSMSService = sendSMSService;
         this.smsPublisherService = smsPublisherService;
+        this.allSMSReferences = allSMSReferences;
     }
 
     public FrontLineWorker createOrUpdate(String msisdn, String name, String designation, Location location) {
@@ -69,9 +71,12 @@ public class FrontLineWorkerService {
     }
 
     public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
+        SMSReference smsReference = allSMSReferences.findByMsisdn(msisdn);
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        frontLineWorker.addSMSReferenceNumber(smsReferenceNumber);
-        allFrontLineWorkers.update(frontLineWorker);
+        if(smsReference == null)
+            smsReference = new SMSReference(msisdn);
+        smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
+        allSMSReferences.update(smsReference);
         smsPublisherService.publishSMSSent(msisdn);
     }
 
@@ -80,9 +85,8 @@ public class FrontLineWorkerService {
         return frontLineWorker.currentCourseAttempt();
     }
 
-    public String getSMSReferenceNumber(String msisdn, int courseAttempt) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        return frontLineWorker.smsReferenceNumber(courseAttempt);
+    public SMSReference getSMSReferenceNumber(String msisdn) {
+        return allSMSReferences.findByMsisdn(msisdn);
     }
 
     public void saveScore(CertificateCourseStateFlwRequest request) {

@@ -5,14 +5,12 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.requests.LogData;
@@ -44,6 +42,9 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     AllFrontLineWorkers allFrontLineWorkers;
 
+    @Autowired
+    AllSMSReferences allSMSReferences;
+
     @After
     public void tearDown(){
         allFrontLineWorkers.removeAll();
@@ -55,8 +56,8 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     public void shouldLogSMSSentMeasure() {
         String msisdn = "9" + System.currentTimeMillis();
         FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location()).status(RegistrationStatus.REGISTERED);
+
         flw.incrementCertificateCourseAttempts();
-        flw.addSMSReferenceNumber("001012" + msisdn + "01");
         allFrontLineWorkers.add(flw);
 
         DateTime now = DateTime.now();
