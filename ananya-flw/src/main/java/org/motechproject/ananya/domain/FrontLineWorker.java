@@ -62,16 +62,16 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorker(String msisdn, String operator) {
         this.msisdn = msisdn;
-        this.operator = operator;
+        this.operator = (operator == null ? this.operator : operator);
+        this.certificateCourseAttempts = 0;
+        this.currentJobAidUsage = 0;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location) {
-        this.msisdn = msisdn;
+        this(msisdn, null);
         this.name = name;
         this.designation = designation;
         this.locationId = location.getExternalId();
-        this.certificateCourseAttempts = 0;
-        this.currentJobAidUsage = 0;
     }
 
     @Override
