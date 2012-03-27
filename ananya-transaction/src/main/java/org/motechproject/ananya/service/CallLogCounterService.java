@@ -58,10 +58,11 @@ public class CallLogCounterService {
             for(TransferData transferData : dataCollection) {
                 if(currentCallCounter.getToken() >= transferData.tokenIntValue()) {
                     packetsToPurge.add(transferData);
+                    log.info("Purged Redundant Packet" + transferData.tokenIntValue());
                 }
             }
+
             dataCollection.removeAll(packetsToPurge);
-            log.info("Purged Redundant Packets");
 
             currentCallCounter.setToken(maxTokenValue);
             allCallLogCounters.update(currentCallCounter);
