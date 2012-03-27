@@ -64,11 +64,31 @@ public class JobAidTest extends SpringIntegrationTest {
         response.confirmNoPromptsHeard();
         request.addPromptHeard(maxUsagePrompt);
         jobAidService.updatePromptsHeard(request);
+
         response = jobAidService.whenRequestedForCallerData(request);
-        
         response.verifyPromptHeard(maxUsagePrompt, 1);
 
+        jobAidService.updatePromptsHeard(request);
+        response = jobAidService.whenRequestedForCallerData(request);
+        response.verifyPromptHeard(maxUsagePrompt, 2);
     }
+
+    @Test
+    public void shouldUpdateCurrentUsageForFLW() throws IOException {
+        int currentUsage = 5;
+        JobAidRequest request = new JobAidRequest(callerId, operator);
+        jobAidService.createFLW(request);
+
+        request.setCallDuration(currentUsage*60*1000);
+        jobAidService.updateCurrentUsage(request);
+
+        JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
+        response.confirmCurrentUsage(currentUsage);
+    }
+
+
+
+
 
 
 }

@@ -7,6 +7,7 @@ public class JobAidRequest {
     private String callerId;
     private String operator;
     private List<String> promptsHeard;
+    private Integer callDuration;
 
     public JobAidRequest(String callerId, String operator) {
         this.callerId = callerId;
@@ -30,4 +31,11 @@ public class JobAidRequest {
         return promptsHeard;
     }
 
+    public void setCallDuration(Integer callDuration) {
+        this.callDuration = callDuration;
+    }
+
+    public Integer getCallDuration() {
+        return callDuration;
+    }
 }

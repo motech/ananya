@@ -2,6 +2,7 @@ package org.motechproject.ananya.framework.domain;
 
 import com.gargoylesoftware.htmlunit.Page;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.framework.MyWebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,16 +25,20 @@ public class JobAidWebService {
         return makeRequest(webPage);
     }
 
-    //API to create FLW in functional tests
+    //Facade to create FLW in functional tests
     public JobAidResponse createFLW(JobAidRequest request) throws IOException{
         return whenRequestedForCallerData(request);
     }
 
     public JobAidResponse updatePromptsHeard(JobAidRequest request) throws IOException {
-        String webPage = "/ananya/jobaid/updateprompt?callId=1234&callerId=" + request.getCallerId() + promptsHeard(request);
+        String webPage = "/ananya/jobaid/updateprompt?callId=" + getCallID() + "&callerId=" + request.getCallerId() + promptsHeard(request);
         return makeRequest(webPage);
     }
 
+    public JobAidResponse updateCurrentUsage(JobAidRequest request) throws IOException {
+        String webPage = "/ananya/jobaid/updateusage?callId=" + getCallID() + "&callerId=" + request.getCallerId() + "&callDuration=" + request.getCallDuration();
+        return makeRequest(webPage);
+    }
 
 
     protected String getAppServerUrl() {
@@ -52,4 +57,9 @@ public class JobAidWebService {
         }
         return "";
     }
+    
+    private String getCallID(){
+        return new DateTime().toString();
+    }
+
 }
