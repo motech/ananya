@@ -14,6 +14,8 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,9 +44,9 @@ public class SMSSentMeasureServiceTest {
     }
 
     @Test
-    public void shouldCreateSMSSentMeasure() {
+    public void shouldCreateSMSSentMeasureWhenSMSIsSent() {
         String callerId = "9876543210";
-        int courseAttemptNum = 1;
+        Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
@@ -62,6 +64,31 @@ public class SMSSentMeasureServiceTest {
         SMSSentMeasure smsSentMeasure = captor.getValue();
         assertEquals(smsSentMeasure.getSmsReferenceNumber(), smsRefNum);
         assertEquals(smsSentMeasure.getFrontLineWorkerDimension().getMsisdn(), Long.valueOf(callerId));
+        assertTrue(smsSentMeasure.getSmsSent());
+        assertEquals(smsSentMeasure.getCourseAttempt(),courseAttemptNum);
+    }
 
+    @Test
+    public void shouldCreateSMSSentMeasureWhenSMSIsNotSent() {
+        String callerId = "9876543210";
+        Integer courseAttemptNum = 1;
+
+        when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
+        SMSReference smsReference = new SMSReference(callerId);
+
+        when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
+        when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
+        when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
+
+        service.createSMSSentMeasure(callerId);
+
+        ArgumentCaptor<SMSSentMeasure> captor = ArgumentCaptor.forClass(SMSSentMeasure.class);
+        verify(db).add(captor.capture());
+
+        SMSSentMeasure smsSentMeasure = captor.getValue();
+        assertEquals(null ,smsSentMeasure.getSmsReferenceNumber());
+        assertEquals(Long.valueOf(callerId) , smsSentMeasure.getFrontLineWorkerDimension().getMsisdn());
+        assertFalse(smsSentMeasure.getSmsSent());
+        assertEquals(smsSentMeasure.getCourseAttempt(),courseAttemptNum);
     }
 }

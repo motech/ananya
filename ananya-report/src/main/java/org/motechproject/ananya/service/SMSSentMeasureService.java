@@ -31,10 +31,10 @@ public class SMSSentMeasureService {
         boolean smsSent = false;
         final int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);
         final SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
-        String referenceNumber = "";
+        String referenceNumber = null;
         if(smsReference != null) {
             referenceNumber = smsReference.referenceNumbers(courseAttempt);
-            if(referenceNumber != null) {
+            if(referenceNumber != null ) {
                 smsSent = true;
             }
         }

@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 
 import java.util.Arrays;
@@ -22,7 +23,9 @@ public class FrontLineWorkerServiceTest {
 
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
-    private AllFrontLineWorkers allFrontLineWorkers;
+    private AllFrontLineWorkers allFrontLineWorkers; 
+    @Mock
+    private AllSMSReferences allSMSReferences;
     @Mock
     private SendSMSService sendSMSService;
     @Mock
@@ -33,7 +36,7 @@ public class FrontLineWorkerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, sendSMSService, publisherService, null);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, sendSMSService, publisherService, allSMSReferences);
     }
 
     private FrontLineWorker makeFrontLineWorker() {
@@ -328,5 +331,27 @@ public class FrontLineWorkerServiceTest {
 
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey("Max_Usage"));
+    }
+
+    @Test
+    public void shouldAddSMSReference() throws Exception {
+        String callerId = "9876543210";
+        String operator = "airtel";
+        String smsReferenceNumber = "0102987654321001";
+
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator , Designation.ANGANWADI , new Location());
+        frontLineWorker.incrementCertificateCourseAttempts();
+        
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+        frontLineWorkerService.addSMSReferenceNumber(callerId, smsReferenceNumber);
+        
+        ArgumentCaptor<SMSReference> smsReference = ArgumentCaptor.forClass(SMSReference.class);
+        verify(allSMSReferences).update(smsReference.capture());
+
+        SMSReference smsReferenceValue = smsReference.getValue();
+        assertEquals(smsReferenceValue.getMsisdn() , callerId);
+        assertEquals(smsReferenceValue.referenceNumbers(1) , smsReferenceNumber);
+        verify(publisherService).publishSMSSent(callerId);
     }
 }
