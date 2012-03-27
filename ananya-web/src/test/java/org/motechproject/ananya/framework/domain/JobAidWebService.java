@@ -40,7 +40,6 @@ public class JobAidWebService {
         return makeRequest(webPage);
     }
 
-
     protected String getAppServerUrl() {
         return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }

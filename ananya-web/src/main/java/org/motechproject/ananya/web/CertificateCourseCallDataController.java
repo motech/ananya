@@ -1,10 +1,10 @@
 package org.motechproject.ananya.web;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.motechproject.ananya.domain.CallDuration;
 import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.TransferDataList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -56,15 +55,16 @@ public class CertificateCourseCallDataController {
 
         List<CertificationCourseStateRequest> stateRequests = new ArrayList<CertificationCourseStateRequest>();
         List<CallDuration> durations = new ArrayList<CallDuration>();
-        List<TransferData> transferDataList = extractDataTransferList(jsonData);
+        List<TransferData> transferDataList = new TransferDataList(jsonData).getAll();
 
         callLogCounterService.purgeRedundantPackets(callId, transferDataList);
 
         for (TransferData transferData : transferDataList) {
-            if (transferData.isCCState())
-                stateRequests.add(CertificationCourseStateRequest.makeObjectFromJson(
-                        callerId, callId, transferData.getToken(), transferData.getData()));
-            else
+            if (transferData.isCCState()) {
+                CertificationCourseStateRequest stateRequest = CertificationCourseStateRequest.makeObjectFromJson(
+                        callerId, callId, transferData.getToken(), transferData.getData());
+                stateRequests.add(stateRequest);
+            } else
                 durations.add(captureCallLog(callId, callerId, transferData.getData()));
         }
         certificateCourseService.saveState(stateRequests);
@@ -84,17 +84,8 @@ public class CertificateCourseCallDataController {
 
         dataPublishService.publishCallDisconnectEvent(callId);
 
-        log.info("Call ended: "+callId);
+        log.info("Call ended: " + callId);
         return DUMMY;
-    }
-
-    private List<TransferData> extractDataTransferList(String jsonData) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(TransferData.class, new TransferData());
-        Gson gson = gsonBuilder.create();
-        Type collectionType = new TypeToken<Collection<TransferData>>() {
-        }.getType();
-        return gson.fromJson(jsonData, collectionType);
     }
 
     private CallDuration captureCallLog(String callId, String callerId, String data) {
