@@ -7,13 +7,11 @@ import org.mockito.Mock;
 import org.motechproject.ananya.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -27,12 +25,12 @@ public class SendSMSServiceTest {
     EventContext context;
 
     @Mock
-    Properties ananyaServiceProperties;
+    Properties smsProperties;
 
     @Before
     public void setUp(){
         initMocks(this);
-        sendSMSService = new SendSMSService(ananyaServiceProperties, context);
+        sendSMSService = new SendSMSService(smsProperties, context);
     }
 
     @Test
@@ -47,7 +45,7 @@ public class SendSMSServiceTest {
         String refNum = "001012987654321001";
         String message = "Hello";
 
-        when(ananyaServiceProperties.getProperty(argThat(is("course.completion.sms.message")))).thenReturn(message);
+        when(smsProperties.getProperty(argThat(is("course.completion.sms.message")))).thenReturn(message);
 
         sendSMSService.buildAndSendSMS(callerId, locationId, courseAttempts);
 

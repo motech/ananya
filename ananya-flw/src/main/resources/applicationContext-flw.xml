@@ -11,7 +11,7 @@
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
-    <util:properties id="ananyaServiceProperties" location="classpath:/ananya-sms-related.properties"/>
+    <util:properties id="smsProperties" location="classpath:/sms.properties"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
