@@ -3,6 +3,8 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.CallLogCounter;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.repository.AllCallLogCounters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ public class CallLogCounterService {
 
     private AllCallLogCounters allCallLogCounters;
     private static Object lockObject = new Object();
+    private static Logger log = LoggerFactory.getLogger(CallLogCounterService.class);
+
 
     @Autowired
     public CallLogCounterService(AllCallLogCounters allCallLogCounters) {
@@ -57,6 +61,7 @@ public class CallLogCounterService {
                 }
             }
             dataCollection.removeAll(packetsToPurge);
+            log.info("Purged Redundant Packets");
 
             currentCallCounter.setToken(maxTokenValue);
             allCallLogCounters.update(currentCallCounter);

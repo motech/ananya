@@ -73,8 +73,10 @@ public class FrontLineWorkerService {
     public void addSMSReferenceNumber(String msisdn, String smsReferenceNumber) {
         SMSReference smsReference = allSMSReferences.findByMsisdn(msisdn);
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
-        if(smsReference == null)
+        if(smsReference == null){
             smsReference = new SMSReference(msisdn);
+            allSMSReferences.add(smsReference);
+        }
         smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
         allSMSReferences.update(smsReference);
         smsPublisherService.publishSMSSent(msisdn);

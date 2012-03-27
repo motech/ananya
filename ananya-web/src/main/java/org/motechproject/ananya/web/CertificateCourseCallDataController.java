@@ -59,7 +59,6 @@ public class CertificateCourseCallDataController {
         List<TransferData> transferDataList = extractDataTransferList(jsonData);
 
         callLogCounterService.purgeRedundantPackets(callId, transferDataList);
-        log.info("Purged Redundant Packets");
 
         for (TransferData transferData : transferDataList) {
             if (transferData.isCCState())
