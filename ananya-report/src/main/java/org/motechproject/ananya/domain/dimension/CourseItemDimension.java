@@ -6,11 +6,19 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "course_item_dimension")
-@NamedQuery(name = CourseItemDimension.FIND_BY_NAME_AND_TYPE, query = "select cid from CourseItemDimension cid where cid.name=:name and cid.type=:type")
+@NamedQueries(value = {
+        @NamedQuery(
+                name = CourseItemDimension.FIND_BY_NAME_AND_TYPE,
+                query = "select cid from CourseItemDimension cid where cid.name=:name and cid.type=:type"),
+        @NamedQuery(
+                name = CourseItemDimension.FIND_BY_CONTENT_ID,
+                query = "select cid from CourseItemDimension cid where cid.contentId=:content_id")
+})
 public class CourseItemDimension {
 
     public static final String FIND_BY_NAME_AND_TYPE = "find.by.name.and.type";
-
+    public static final String FIND_BY_CONTENT_ID = "find.by.contentId";
+    
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

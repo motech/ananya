@@ -25,7 +25,21 @@
         <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_data_posts" enabled="true">
+      <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="utility" enabled="false">
+        <stringProp name="scriptLanguage">javascript</stringProp>
+        <stringProp name="parameters"></stringProp>
+        <stringProp name="filename">/Users/pulkitb/work/code/ananya/ananya-performance/src/main/resources/jmeter/js/utility.js</stringProp>
+        <stringProp name="script"></stringProp>
+      </BSFPreProcessor>
+      <hashTree/>
+      <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_data_posts_from_file" enabled="true">
+        <stringProp name="scriptLanguage">javascript</stringProp>
+        <stringProp name="parameters"></stringProp>
+        <stringProp name="filename">/Users/pulkitb/work/code/ananya/ananya-performance/target/classes/jmeter/js/all_data_posts_jmeter.js</stringProp>
+        <stringProp name="script"></stringProp>
+      </BSFPreProcessor>
+      <hashTree/>
+      <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_data_posts" enabled="false">
         <stringProp name="scriptLanguage">javascript</stringProp>
         <stringProp name="parameters"></stringProp>
         <stringProp name="filename"></stringProp>
@@ -294,7 +308,7 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
 </stringProp>
       </BSFPreProcessor>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="unregistered_users_from_chap0_to_chap1" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="unregistered_users_from_chap0_to_end_of_course" enabled="true">
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
@@ -311,10 +325,30 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
       <hashTree>
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="simple_controller" enabled="true"/>
         <hashTree>
-          <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="js_preprocessor" enabled="true">
-            <stringProp name="filename"></stringProp>
-            <stringProp name="parameters"></stringProp>
-            <stringProp name="script">var thread = ctx.getThreadNum();
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path"></stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="js_preprocessor" enabled="true">
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">var thread = ctx.getThreadNum();
 var callerId = &quot;9999&quot;+thread;
 var callId=callerId+new Date().valueOf();
 vars.put(&quot;callId&quot;, callId);
@@ -339,9 +373,10 @@ add(96, 174, &quot;loopPost3_&quot;);
 
 vars.put(&quot;dataForDisconnect&quot;, vars.get(&quot;token_175&quot;));
 </stringProp>
-            <stringProp name="scriptLanguage">javascript</stringProp>
-          </BSFPreProcessor>
-          <hashTree/>
+              <stringProp name="scriptLanguage">javascript</stringProp>
+            </BSFPreProcessor>
+            <hashTree/>
+          </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="fetch_utility.js" enabled="false">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
@@ -491,7 +526,7 @@ vars.put(&quot;dataForDisconnect&quot;, vars.get(&quot;token_175&quot;));
             </HTTPSamplerProxy>
             <hashTree/>
           </hashTree>
-          <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="false">
+          <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="true">
             <stringProp name="ForeachController.inputVal">loopPost2</stringProp>
             <stringProp name="ForeachController.returnVal">dataToPost</stringProp>
             <boolProp name="ForeachController.useSeparator">true</boolProp>
@@ -541,7 +576,7 @@ vars.put(&quot;dataForDisconnect&quot;, vars.get(&quot;token_175&quot;));
             </HTTPSamplerProxy>
             <hashTree/>
           </hashTree>
-          <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="false">
+          <ForeachController guiclass="ForeachControlPanel" testclass="ForeachController" testname="for_each_controller" enabled="true">
             <stringProp name="ForeachController.inputVal">loopPost3</stringProp>
             <stringProp name="ForeachController.returnVal">dataToPost</stringProp>
             <boolProp name="ForeachController.useSeparator">true</boolProp>

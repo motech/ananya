@@ -24,7 +24,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     private ConcurrentHashMap<String, String> cachedTreeJsons = new ConcurrentHashMap();
 
     static {
-        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("id", "revision", "parentId", "contentIds"));
+        GsonBuilder gsonBuilder = new GsonBuilder().addSerializationExclusionStrategy(new AttributeExclusionDeterminer("revision", "parentId", "contentIds"));
         GSON = gsonBuilder.create();
     }
 

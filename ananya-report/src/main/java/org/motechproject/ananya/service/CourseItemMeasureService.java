@@ -46,7 +46,7 @@ public class CourseItemMeasureService {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(courseLog.getCallerId()),"","","");
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
         for(CertificationCourseLogItem logItem:courseLogItems){
-            CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentName(), logItem.getContentType());
+            CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
             TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
             Integer score = courseItemContentIsNullOrEmpty(logItem) ? null :  Integer.valueOf(logItem.getContentData());
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, score, logItem.getCourseItemState());
