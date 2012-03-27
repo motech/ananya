@@ -44,7 +44,7 @@ public class RegistrationService {
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 
-        frontLineWorkerService.createOrUpdate(callerId, name, designation, location);
+        frontLineWorkerService.createOrUpdateRegistered(callerId, name, designation, location);
         registrationMeasureService.createRegistrationMeasure(new LogData(LogType.REGISTRATION, callerId));
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();

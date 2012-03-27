@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -204,5 +205,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public DateTime getLastJobAidAccessTime() {
         return lastJobAidAccessTime;
+    }
+
+    public boolean operatorIs(String operator) {
+        return StringUtils.equalsIgnoreCase(this.operator, operator);
     }
 }

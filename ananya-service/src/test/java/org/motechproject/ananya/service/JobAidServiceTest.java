@@ -42,7 +42,7 @@ public class JobAidServiceTest {
 
         jobAidService.updateJobAidPrompts(jobAidPromptRequest);
 
-        verify(frontLineWorkerService).updatePromptsForFLW(jobAidPromptRequest.getCallerId(),jobAidPromptRequest.getPromptList());
+        verify(frontLineWorkerService).updatePromptsFor(jobAidPromptRequest.getCallerId(), jobAidPromptRequest.getPromptList());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class JobAidServiceTest {
 
         jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
 
-        verify(frontLineWorkerService).updateCurrentUsageForUser(callerId, currentUsage);
+        verify(frontLineWorkerService).updateJobAidCurrentUsageFor(callerId, currentUsage);
         verify(frontLineWorkerService).updateLastJobAidAccessTime(callerId);
     }
 }

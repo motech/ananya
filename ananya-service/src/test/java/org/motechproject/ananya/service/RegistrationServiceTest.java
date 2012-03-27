@@ -46,7 +46,7 @@ public class RegistrationServiceTest {
         assertTrue(registrationResponse.isRegistered());
         assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService).createOrUpdate(callerId, name, "ANM", location);
+        verify(frontLineWorkerService).createOrUpdateRegistered(callerId, name, "ANM", location);
         ArgumentCaptor<LogData> logDataArgumentCaptor = ArgumentCaptor.forClass(LogData.class);
         verify(registrationMeasureService).createRegistrationMeasure(logDataArgumentCaptor.capture());
         LogData logData = logDataArgumentCaptor.getValue();
@@ -64,7 +64,7 @@ public class RegistrationServiceTest {
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid Location", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 
@@ -78,7 +78,7 @@ public class RegistrationServiceTest {
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
 
         callerId = "abcdef";
@@ -87,7 +87,7 @@ public class RegistrationServiceTest {
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 
@@ -101,7 +101,7 @@ public class RegistrationServiceTest {
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid Name", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 
@@ -119,7 +119,7 @@ public class RegistrationServiceTest {
         assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid Designation", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq(designation), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 }

@@ -50,7 +50,7 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        frontLineWorkerService.createOrUpdate(msisdn, frontLineWorker.getOperator());
+        frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, frontLineWorker.getOperator());
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
@@ -67,7 +67,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setOperator("airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdate(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers, never()).update(frontLineWorker);
@@ -82,7 +82,7 @@ public class FrontLineWorkerServiceTest {
         
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdate(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).update(frontLineWorker);
@@ -192,7 +192,7 @@ public class FrontLineWorkerServiceTest {
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(mockedFrontLineWorker);
 
         try {
-            frontLineWorkerService.updatePromptsForFLW(callerId, promptIds);
+            frontLineWorkerService.updatePromptsFor(callerId, promptIds);
         } catch (Exception e) {
         }
 
@@ -209,7 +209,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateCurrentUsageForUser(callerId, currentUsage);
+        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, currentUsage);
 
         assertEquals(currentUsage, frontLineWorker.getCurrentJobAidUsage());
         verify(allFrontLineWorkers).update(frontLineWorker);
@@ -233,7 +233,7 @@ public class FrontLineWorkerServiceTest {
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateRegistered(msisdn, name, designation, location);
 
         verify(allFrontLineWorkers).add(frontLineWorker);
         assertEquals(frontLineWorker.getMsisdn(), msisdn);
@@ -251,7 +251,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location());
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location);
+        frontLineWorker = frontLineWorkerService.createOrUpdateRegistered(msisdn, name, designation, location);
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker.getName(), name);
@@ -270,7 +270,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setCurrentJobAidUsage(currentUsage);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateCurrentUsageForUser(callerId, callDuration);
+        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());

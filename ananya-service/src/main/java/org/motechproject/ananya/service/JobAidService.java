@@ -28,7 +28,7 @@ public class JobAidService {
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
-        frontLineWorkerService.updatePromptsForFLW(
+        frontLineWorkerService.updatePromptsFor(
                 jobAidPromptRequest.getCallerId(),
                 jobAidPromptRequest.getPromptList());
     }
@@ -54,7 +54,7 @@ public class JobAidService {
     }
 
     public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer callDuration) {
-        frontLineWorkerService.updateCurrentUsageForUser(msisdn, callDuration);
+        frontLineWorkerService.updateJobAidCurrentUsageFor(msisdn, callDuration);
         frontLineWorkerService.updateLastJobAidAccessTime(msisdn);
     }
 
