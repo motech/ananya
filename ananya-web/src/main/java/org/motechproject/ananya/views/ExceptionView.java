@@ -13,7 +13,7 @@ public class ExceptionView extends AbstractView {
             Map<String, Object> stringObjectMap,
             HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception {
 
-        httpServletResponse.getOutputStream().print("ANANYA_ERROR");
+        httpServletResponse.getOutputStream().print("var ananyaResponse = ANANYA_ERROR");
 
     }
 }
