@@ -15,6 +15,7 @@ import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.CallEvent;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -194,7 +195,7 @@ public class CertificateCourseCallDataControllerTest {
                 "]";
     }
 
-    private static class CertificationCourseStateRequestListMatcher extends BaseMatcher<List<CertificationCourseStateRequest>> {
+    private static class CertificationCourseStateRequestListMatcher extends BaseMatcher<CertificationCourseStateRequestList> {
         private List<CertificationCourseStateRequest> certificationCourseStateRequests;
 
         public CertificationCourseStateRequestListMatcher(List<CertificationCourseStateRequest> certificationCourseStateRequests) {
@@ -203,18 +204,19 @@ public class CertificateCourseCallDataControllerTest {
 
         @Override
         public boolean matches(Object o) {
-            List<CertificationCourseStateRequest> courseRequests = (List<CertificationCourseStateRequest>) o;
+            List<CertificationCourseStateRequest> matchRequests = ((CertificationCourseStateRequestList) o).all();
 
-            if (this.certificationCourseStateRequests.size() != courseRequests.size()) {
+            if (this.certificationCourseStateRequests.size() != matchRequests.size())
                 return false;
-            }
-            for (int i = 0; i < courseRequests.size(); ++i) {
-                CertificationCourseStateRequest thisRequest = this.certificationCourseStateRequests.get(i);
-                CertificationCourseStateRequest request = courseRequests.get(i);
 
-                if (!(thisRequest.getCallId().equals(request.getCallId()) || thisRequest.getToken().equals(request.getToken()))) {
+            for (int i = 0; i < matchRequests.size(); ++i) {
+                CertificationCourseStateRequest thisRequest = this.certificationCourseStateRequests.get(i);
+                CertificationCourseStateRequest request = matchRequests.get(i);
+
+                if (!(thisRequest.getCallId().equals(request.getCallId())
+                        || thisRequest.getToken().equals(request.getToken())))
                     return false;
-                }
+
             }
             return true;
         }

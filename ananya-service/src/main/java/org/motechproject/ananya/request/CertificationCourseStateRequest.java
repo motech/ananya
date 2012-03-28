@@ -26,7 +26,7 @@ public class CertificationCourseStateRequest extends BaseRequest {
     public CertificationCourseStateRequest() {
     }
 
-    public static CertificationCourseStateRequest makeObjectFromJson(String callerId, String callId, String token, String json) {
+    public static CertificationCourseStateRequest createFrom(String callerId, String callId, String token, String json) {
         Gson gson = new Gson();
         Type type = new TypeToken<CertificationCourseStateRequest>() {
         }.getType();

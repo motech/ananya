@@ -60,7 +60,7 @@ public class CertificateCourseCallDataController {
             else
                 callDurationList.add(callId, callerId, transferData.getData());
         }
-        certificateCourseService.saveState(stateRequestList.all());
+        certificateCourseService.saveState(stateRequestList);
         callLoggerService.saveAll(callDurationList);
 
         log.info("Saved state for : callId=" + callId + "|callerId=" + callerId);

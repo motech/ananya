@@ -24,7 +24,10 @@ public class FrontLineWorkerService {
     private SMSPublisherService smsPublisherService;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, SendSMSService sendSMSService, SMSPublisherService smsPublisherService, AllSMSReferences allSMSReferences) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers,
+                                  SendSMSService sendSMSService,
+                                  SMSPublisherService smsPublisherService,
+                                  AllSMSReferences allSMSReferences) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.sendSMSService = sendSMSService;
         this.smsPublisherService = smsPublisherService;

@@ -1,11 +1,10 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,17 +38,15 @@ public class CertificateCourseService {
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 
-    public void saveState(List<CertificationCourseStateRequest> stateRequestList) {
-        log.info("State Request List " + ToStringBuilder.reflectionToString(stateRequestList));
+    public void saveState(CertificationCourseStateRequestList stateRequestList) {
+        log.info("State Request List " + stateRequestList);
+        if (stateRequestList.isEmpty()) return;
 
-        if (CollectionUtils.isEmpty(stateRequestList))
-            return;
-        for (CertificationCourseStateRequest stateRequest : stateRequestList)
+        for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
             frontLineWorkerService.saveScore(createCertificateCourseStateFlwRequest(stateRequest));
 
-        CertificationCourseStateRequest recentCourseRequest = stateRequestList.get(stateRequestList.size() - 1);
-        saveBookmark(recentCourseRequest);
-        saveCourseCertificateLog(stateRequestList);
+        saveBookmark(stateRequestList.recentRequest());
+        saveCourseCertificateLog(stateRequestList.all());
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
