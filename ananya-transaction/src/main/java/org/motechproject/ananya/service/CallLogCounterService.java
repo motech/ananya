@@ -1,21 +1,19 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.CallLogCounter;
-import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.TransferDataList;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
 @Service
 public class CallLogCounterService {
 
+    private static Logger log = LoggerFactory.getLogger(CallLogCounterService.class);
     private AllCallLogCounters allCallLogCounters;
     private static Object lockObject = new Object();
-    private static Logger log = LoggerFactory.getLogger(CallLogCounterService.class);
 
 
     @Autowired
@@ -32,40 +30,25 @@ public class CallLogCounterService {
      * call. Since there is a very low possibility of the same call being accessed through multiple threads, it
      * doesn't create a blocking issue and prevents duplication of data.
      */
-    public void purgeRedundantPackets(final String callId, final List<TransferData> transferDataList) {
+    public void purgeRedundantTokens(final String callId, final TransferDataList transferDataList) {
+
         String callIdLockObject;
+        Integer maxToken = transferDataList.maxToken();
 
-        int maxTokenValue = Collections.max(transferDataList, new Comparator<TransferData>() {
-            @Override
-            public int compare(TransferData transferData1, TransferData transferData2) {
-                return transferData1.tokenIntValue() - transferData2.tokenIntValue();
-            }
-        }).tokenIntValue();
-
-        List<TransferData> packetsToPurge = new ArrayList<TransferData>();
         synchronized (lockObject) {
             callIdLockObject = callId.intern();
         }
         synchronized (callIdLockObject) {
-            CallLogCounter currentCallCounter = allCallLogCounters.findByCallId(callId);
-
-            if(currentCallCounter == null) {
-                currentCallCounter = new CallLogCounter(callId, maxTokenValue);
-                allCallLogCounters.add(currentCallCounter);
+            CallLogCounter currentCallLogCounter = allCallLogCounters.findByCallId(callId);
+            if (currentCallLogCounter == null) {
+                currentCallLogCounter = new CallLogCounter(callId, maxToken);
+                allCallLogCounters.add(currentCallLogCounter);
                 return;
             }
-
-            for(TransferData transferData : transferDataList) {
-                if(currentCallCounter.getToken() >= transferData.tokenIntValue()) {
-                    packetsToPurge.add(transferData);
-                    log.info("Purged Redundant Packet" + transferData.tokenIntValue());
-                }
-            }
-
-            transferDataList.removeAll(packetsToPurge);
-
-            currentCallCounter.setToken(maxTokenValue);
-            allCallLogCounters.update(currentCallCounter);
+            transferDataList.removeTokensOlderThan(currentCallLogCounter.getToken());
+            currentCallLogCounter.setToken(maxToken);
+            allCallLogCounters.update(currentCallLogCounter);
+            log.info("updated token counter for " + callId);
         }
 
     }

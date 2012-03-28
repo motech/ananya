@@ -10,10 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.CallDuration;
-import org.motechproject.ananya.domain.CallDurationList;
-import org.motechproject.ananya.domain.CallEvent;
-import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLogCounterService;
@@ -80,7 +77,7 @@ public class CertificateCourseCallDataControllerTest {
         transferCallDataController.receiveCallData(request);
 
         List<TransferData> expectedTransferDataList = Arrays.asList((new TransferData("0", TransferData.TYPE_CC_STATE)));
-        verify(callLogCounterService).purgeRedundantPackets(argThat(is(callId)), argThat(new TransferDataListMatcher(expectedTransferDataList)));
+        verify(callLogCounterService).purgeRedundantTokens(argThat(is(callId)), argThat(new TransferDataListMatcher(expectedTransferDataList)));
 
         CertificationCourseStateRequest stateRequest = new CertificationCourseStateRequest();
         stateRequest.setCallId(callId);
@@ -227,7 +224,7 @@ public class CertificateCourseCallDataControllerTest {
         }
     }
 
-    private static class TransferDataListMatcher extends BaseMatcher<List<TransferData>> {
+    private static class TransferDataListMatcher extends BaseMatcher<TransferDataList> {
 
         private List<TransferData> transferDataList;
 
@@ -237,7 +234,7 @@ public class CertificateCourseCallDataControllerTest {
 
         @Override
         public boolean matches(Object o) {
-            Collection<TransferData> matchCollection = (List<TransferData>) o;
+            Collection<TransferData> matchCollection = ((TransferDataList) o).all();
 
             if (this.transferDataList.size() != transferDataList.size()) {
                 return false;

@@ -52,7 +52,7 @@ public class CertificateCourseCallDataController {
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList();
         CallDurationList callDurationList = new CallDurationList();
 
-        callLogCounterService.purgeRedundantPackets(callId, transferDataList.all());
+        callLogCounterService.purgeRedundantTokens(callId, transferDataList);
 
         for (TransferData transferData : transferDataList.all()) {
             if (transferData.isCCState())
