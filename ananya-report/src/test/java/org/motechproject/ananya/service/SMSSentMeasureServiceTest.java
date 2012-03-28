@@ -48,9 +48,10 @@ public class SMSSentMeasureServiceTest {
         String callerId = "9876543210";
         Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
+        String flwId = "77abcd";
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
-        SMSReference smsReference = new SMSReference(callerId);
+        SMSReference smsReference = new SMSReference(callerId,flwId);
         smsReference.add(smsRefNum, courseAttemptNum);
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
@@ -72,9 +73,10 @@ public class SMSSentMeasureServiceTest {
     public void shouldCreateSMSSentMeasureWhenSMSIsNotSent() {
         String callerId = "9876543210";
         Integer courseAttemptNum = 1;
+        String flwId = "77abcd";
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
-        SMSReference smsReference = new SMSReference(callerId);
+        SMSReference smsReference = new SMSReference(callerId, flwId);
 
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));

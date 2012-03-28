@@ -14,16 +14,19 @@ public class SMSReference extends MotechBaseDataObject {
     private String msisdn;
 
     @JsonProperty
+    private String flwDocId;
+
+    @JsonProperty
     private Map<Integer, String> referenceNumbers;
 
     public SMSReference() {
     }
 
-    public SMSReference(String msisdn) {
+    public SMSReference(String msisdn, String flwId) {
         this.msisdn = msisdn;
         this.referenceNumbers = new HashMap<Integer, String>();
+        flwDocId = flwId;
     }
-
 
     public String getMsisdn() {
         return msisdn;

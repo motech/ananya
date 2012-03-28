@@ -74,10 +74,9 @@ public class FrontLineWorkerService {
 
     public void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
         SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
-        if (smsReference == null) {
-            smsReference = new SMSReference(callerId);
+        if(smsReference == null){
+            smsReference = new SMSReference(callerId , frontLineWorker.getId());
             allSMSReferences.add(smsReference);
         }
         smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
