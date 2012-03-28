@@ -14,7 +14,7 @@ import java.io.IOException;
 public class CertificateCourseTest extends SpringIntegrationTest {
 
     @Autowired
-    private CertificateCourseWebService certificateCourseWebService;
+    private CertificateCourseWebservice certificateCourseWebService;
 
     @Autowired
     private CouchDb couchDb;

@@ -10,17 +10,12 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Service
-public class CertificateCourseWebService {
+public class CertificateCourseWebservice {
     @Qualifier("ananyaProperties")
     @Autowired
     protected Properties ananyaProperties;
 
     private MyWebClient webClient = new MyWebClient();
-
-    public CertificateCourseResponse requestForCallerData(CertificateCourseRequest request) throws IOException {
-        String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
-        return makeRequest(webPage);
-    }
 
     public CertificateCourseResponse requestForCallerData(CertificateCourseRequest request) throws IOException {
         String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
