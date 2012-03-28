@@ -32,11 +32,17 @@ public class CertificationCourseSeed {
     }
 
     private void recursivelySaveContentsInPostgres(Node node) {
-        String type = node.data().get("type");
-        CourseItemDimension courseItemDimension = new CourseItemDimension(node.getName(), node.getId(), CourseItemType.valueOf(type.toUpperCase()));
+        CourseItemType type = CourseItemType.valueOf(node.data().get("type").toUpperCase());
+        CourseItemDimension courseItemDimension = new CourseItemDimension(node.getName(), node.getId(), type);
         List<Node> children = node.children();
         allCourseItemDimensions.add(courseItemDimension);
         if(children.isEmpty()) return;
+
+        if (type.equals(CourseItemType.CHAPTER)){
+            CourseItemDimension quizCourseItemDimension = new CourseItemDimension(node.getName(), node.getId(), CourseItemType.QUIZ);
+            allCourseItemDimensions.add(quizCourseItemDimension);
+        }
+
         for( Node child :children){
             recursivelySaveContentsInPostgres(child);
         }
