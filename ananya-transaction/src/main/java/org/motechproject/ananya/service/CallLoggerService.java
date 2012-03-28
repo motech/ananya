@@ -17,6 +17,10 @@ public class CallLoggerService {
         this.allCallLogs = allCallLogs;
     }
 
+    public void saveAll(CallDurationList callDurationList) {
+        for (CallDuration callDuration : callDurationList.all())
+            save(callDuration);
+    }
 
     public void save(CallDuration callDuration) {
         DateTime time = new DateTime(callDuration.getTime());

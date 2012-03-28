@@ -32,10 +32,10 @@ public class CallLogCounterService {
      * call. Since there is a very low possibility of the same call being accessed through multiple threads, it
      * doesn't create a blocking issue and prevents duplication of data.
      */
-    public void purgeRedundantPackets(final String callId, final Collection<TransferData> dataCollection) {
+    public void purgeRedundantPackets(final String callId, final List<TransferData> transferDataList) {
         String callIdLockObject;
 
-        int maxTokenValue = Collections.max(dataCollection, new Comparator<TransferData>() {
+        int maxTokenValue = Collections.max(transferDataList, new Comparator<TransferData>() {
             @Override
             public int compare(TransferData transferData1, TransferData transferData2) {
                 return transferData1.tokenIntValue() - transferData2.tokenIntValue();
@@ -55,14 +55,14 @@ public class CallLogCounterService {
                 return;
             }
 
-            for(TransferData transferData : dataCollection) {
+            for(TransferData transferData : transferDataList) {
                 if(currentCallCounter.getToken() >= transferData.tokenIntValue()) {
                     packetsToPurge.add(transferData);
                     log.info("Purged Redundant Packet" + transferData.tokenIntValue());
                 }
             }
 
-            dataCollection.removeAll(packetsToPurge);
+            transferDataList.removeAll(packetsToPurge);
 
             currentCallCounter.setToken(maxTokenValue);
             allCallLogCounters.update(currentCallCounter);

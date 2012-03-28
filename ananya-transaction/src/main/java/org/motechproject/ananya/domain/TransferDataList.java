@@ -21,7 +21,7 @@ public class TransferDataList {
         list = gson.fromJson(jsonData, collectionType);
     }
 
-    public List<TransferData> getAll() {
+    public List<TransferData> all() {
         return list;
     }
 
