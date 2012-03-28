@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.service.publish.DataPublishService;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -19,12 +20,14 @@ public class CertificateCourseServiceTest {
     private FrontLineWorkerService frontlineWorkerService;
     @Mock
     private CertificateCourseLogService certificateCourseLogService;
+    @Mock
+    private DataPublishService dataPublishService;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, frontlineWorkerService);
+        certificateCourseService = new CertificateCourseService(certificateCourseLogService, frontlineWorkerService, dataPublishService);
     }
 
     @Test

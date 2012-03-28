@@ -6,6 +6,7 @@ import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ public class CertificateCourseService {
 
     private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
+    private DataPublishService dataPublishService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
-                                    FrontLineWorkerService frontLineWorkerService) {
+                                    FrontLineWorkerService frontLineWorkerService, DataPublishService dataPublishService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
+        this.dataPublishService = dataPublishService;
     }
 
     private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
@@ -51,8 +54,11 @@ public class CertificateCourseService {
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
-
+        boolean isNewFLW = frontLineWorkerService.isNewFLW(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, operator);
+        if(isNewFLW) {
+            dataPublishService.publishNewRegistration(msisdn);
+        }
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),
                 frontLineWorker.status().isRegistered(),
