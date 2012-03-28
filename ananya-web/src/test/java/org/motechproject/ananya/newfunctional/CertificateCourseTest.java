@@ -48,8 +48,8 @@ public class CertificateCourseTest extends SpringIntegrationTest {
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId);
     }
 
-    @Test
-    public void shouldCreateTransferDataList_toSaveCertificateCourseState() throws Exception {
-        
-    }
+//    @Test
+//    public void shouldCreateTransferDataList_toSaveCertificateCourseState() throws Exception {
+//
+//    }
 }
