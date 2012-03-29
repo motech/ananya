@@ -1,7 +1,9 @@
 package org.motechproject.ananya.framework;
 
+import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Operator;
+import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
@@ -37,8 +39,22 @@ public class CouchDb {
         assertEquals(new Integer(maxUsage * 60 * 1000), operator.getAllowedUsagePerMonth());
         return this;
     }
+    
+    
 
     public void clearFLWData(String callerId) {
         allFrontLineWorkers.remove(allFrontLineWorkers.findByMsisdn(callerId));
+    }
+
+    public CouchDb confirmBookmarkUpdated(String callerId, BookMark playCourseResultBookMark) {
+        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
+        assertEquals(playCourseResultBookMark , worker.bookMark());
+        return this;
+    }
+
+    public CouchDb confirmScoresSaved(String callerId, ReportCard reportCard) {
+        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
+        assertEquals(reportCard.scores(), worker.reportCard().scores());
+        return this;
     }
 }

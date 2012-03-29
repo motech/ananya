@@ -10,6 +10,7 @@ public class CertificateCourseResponse {
 
     private boolean isRegistered;
 
+
     public CertificateCourseResponse confirmPartiallyRegistered() {
         assertFalse(isRegistered);
         return this;
@@ -19,5 +20,11 @@ public class CertificateCourseResponse {
         MotechJsonReader jsonReader = new MotechJsonReader();
         String callerData = removeEnd(removeStart(json, "var callerData = "), ";");
         return (CertificateCourseResponse) jsonReader.readFromString(callerData, CertificateCourseResponse.class);
+    }
+
+    public static CertificateCourseResponse makeForNonJson(String asString) {
+        if(asString == "<dummy/>")
+            return new CertificateCourseResponse();
+        return null;
     }
 }

@@ -22,12 +22,26 @@ public class CertificateCourseWebservice {
         return makeRequest(webPage);
     }
 
+    public CertificateCourseResponse requestForTransferData(CertificateCourseRequest request) throws IOException {
+        String webPage ="/ananya/transferdata.js";
+        MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
+        MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
+        MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
+        return makePostRequest(webPage, callerId , callId , dataToPost);
+    }
+
     private CertificateCourseResponse makeRequest(String webPage) throws IOException {
         Page page = webClient.getPage(getAppServerUrl() + webPage);
         return CertificateCourseResponse.make(page.getWebResponse().getContentAsString());
     }
 
+    private CertificateCourseResponse makePostRequest(String webPage, MyWebClient.PostParam callerId, MyWebClient.PostParam callId, MyWebClient.PostParam dataToPost) throws IOException {
+        Page page = webClient.post(getAppServerUrl() + webPage, callerId, callId , dataToPost);
+        return CertificateCourseResponse.makeForNonJson(page.getWebResponse().getContentAsString());
+    }
+
     protected String getAppServerUrl() {
         return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }
+
 }
