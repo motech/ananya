@@ -4,14 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.response.RegistrationResponse;
 
 import java.util.Arrays;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -38,15 +40,15 @@ public class RegistrationServiceTest {
         String callerId = "123";
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
+        Designation designation = Designation.ANGANWADI;
 
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
 
-        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
-        assertTrue(registrationResponse.isRegistered());
         assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService).createOrUpdateRegistered(callerId, name, "ANM", location);
+        verify(frontLineWorkerService).createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED);
         ArgumentCaptor<LogData> logDataArgumentCaptor = ArgumentCaptor.forClass(LogData.class);
         verify(registrationMeasureService).createRegistrationMeasure(logDataArgumentCaptor.capture());
         LogData logData = logDataArgumentCaptor.getValue();
@@ -58,13 +60,13 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidLocation() {
         String callerId = "123";
         String name = "name";
+        Designation designation = Designation.ANGANWADI;
 
-        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
-        assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid Location", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.REGISTERED));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 
@@ -72,54 +74,51 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidCallerId() {
         String callerId = "";
         String name = "name";
+        Designation designation = Designation.ANGANWADI;
 
-        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
-        assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
 
         callerId = "abcdef";
-        registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+        registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
-        assertFalse(registrationResponse.isRegistered());
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
-        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
+        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
     }
 
     @Test
-    public void shouldNotSaveFLWForInvalidName() {
+    public void shouldSaveFLWWithInvalidNameAsPartiallyRegistered() {
         String callerId = "123";
         String name = "";
+        Designation designation = Designation.ANGANWADI;
+        Location location = new Location("district", "block", "village", 1, 1, 1);
 
-        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, "ANM", "district", "block", "village");
+        when(locationService.getAll()).thenReturn(Arrays.asList(location));
 
-        assertFalse(registrationResponse.isRegistered());
-        assertEquals("Invalid Name", registrationResponse.getMessage());
+        RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
-        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq("ANM"), any(Location.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
+        verify(frontLineWorkerService).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED));
     }
 
     @Test
-    public void shouldNotSaveFLWForInvalidDesignation() {
+    public void shouldSaveFLWWithInvalidDesignationAsPartiallyRegistered() {
         String callerId = "123";
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
 
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
-        
+
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village");
 
-        assertFalse(registrationResponse.isRegistered());
-        assertEquals("Invalid Designation", registrationResponse.getMessage());
-
-        verify(frontLineWorkerService, never()).createOrUpdateRegistered(eq(callerId), eq(name), eq(designation), any(Location.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
+        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
+        verify(frontLineWorkerService).createOrUpdate(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED));
     }
 }

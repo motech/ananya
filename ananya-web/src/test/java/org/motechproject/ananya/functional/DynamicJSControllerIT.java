@@ -28,7 +28,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithBookmarkDetailsWhenThereIsABookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", "name", Designation.ASHA, new Location()).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", "name", Designation.ASHA, new Location(), RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("lesson", 0, 2));
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
@@ -41,7 +41,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithScoresIfThereAreScores() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", "name", Designation.ANM, new Location()).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
 
         ReportCard reportCard = flw.reportCard();
         flw.addBookMark(new BookMark("lesson", 3, 0));
@@ -109,7 +109,7 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetCallerDataWithoutBookmarkDetailsWhenThereIsNoBookmark() throws IOException {
-        FrontLineWorker flw = new FrontLineWorker("999", "name",Designation.ASHA, new Location()).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("999", "name", Designation.ASHA, new Location(), RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(flw);
         markForDeletion(flw);
 
@@ -136,13 +136,13 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
     }
 
     private String callerDataForJobAid() {
-        return trim("var callerData = {\n"+
+        return trim("var callerData = {\n" +
                 "\"isRegistered\" : \"false\",\n" +
                 "\"currentJobAidUsage\" : 0,\n" +
                 "\"maxAllowedUsageForOperator\" : 2340000,\n" +
                 "\"promptsHeard\" : {\n" +
-        "}\n" +
-        "};");
+                "}\n" +
+                "};");
     }
 
     private String callerDataFor(final boolean isRegistered, final String typeOfBookmark, final int chapter, final int lesson) {

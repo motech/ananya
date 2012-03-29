@@ -122,9 +122,8 @@ public class RegistrationDataHandlerIT {
 
         DateTime registeredDate = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANGANWADI, location);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANGANWADI, location, RegistrationStatus.REGISTERED);
         frontLineWorker.name("Name");
-        frontLineWorker.status(RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -169,8 +168,7 @@ public class RegistrationDataHandlerIT {
         Location location = new Location("district", "block", "panchayat", 2, 2, 1);
         allLocations.add(location);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANGANWADI, location);
-        frontLineWorker.status(RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANGANWADI, location, RegistrationStatus.REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.REGISTERED.toString());

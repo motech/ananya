@@ -38,14 +38,14 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.findByMsisdn(callerId);
     }
 
-    public FrontLineWorker createOrUpdateRegistered(String callerId, String name, String designation, Location location) {
+    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
         if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, name, Designation.valueOf(designation), location);
+            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
             allFrontLineWorkers.add(frontLineWorker);
         } else {
-            frontLineWorker = this.updateFrontLineWorker(frontLineWorker, name, designation, location);
+            frontLineWorker = updateFrontLineWorker(frontLineWorker, name, designation, location, registrationStatus);
         }
         return frontLineWorker;
     }
@@ -54,7 +54,8 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
         if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, operator).status(RegistrationStatus.PARTIALLY_REGISTERED);
+            frontLineWorker = new FrontLineWorker(callerId, operator);
+            frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
             allFrontLineWorkers.add(frontLineWorker);
             return frontLineWorker;
         }
@@ -75,8 +76,8 @@ public class FrontLineWorkerService {
     public void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
-        if(smsReference == null){
-            smsReference = new SMSReference(callerId , frontLineWorker.getId());
+        if (smsReference == null) {
+            smsReference = new SMSReference(callerId, frontLineWorker.getId());
             allSMSReferences.add(smsReference);
         }
         smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
@@ -160,10 +161,11 @@ public class FrontLineWorkerService {
     }
 
     private FrontLineWorker updateFrontLineWorker(FrontLineWorker frontLineWorker, String name,
-                                                  String designation, Location location) {
+                                                  Designation designation, Location location, RegistrationStatus registrationStatus) {
         frontLineWorker.setName(name);
         frontLineWorker.setDesignation(designation);
         frontLineWorker.setLocation(location);
+        frontLineWorker.setRegistrationStatus(registrationStatus);
         allFrontLineWorkers.update(frontLineWorker);
         return frontLineWorker;
     }

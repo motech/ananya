@@ -55,7 +55,7 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     @Test
     public void shouldLogSMSSentMeasure() {
         String msisdn = "9" + System.currentTimeMillis();
-        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location()).status(RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
 
         flw.incrementCertificateCourseAttempts();
         allFrontLineWorkers.add(flw);
