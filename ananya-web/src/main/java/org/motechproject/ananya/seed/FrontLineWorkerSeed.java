@@ -26,7 +26,6 @@ public class FrontLineWorkerSeed {
     private String environment;
 
     private String inputCSVFile;
-    private String outputCSVFile;
     private BufferedWriter writer;
 
     @Seed(priority = 0)

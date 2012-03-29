@@ -34,9 +34,26 @@ public class LocationRegistrationServiceTest {
     public void shouldNotRegisterALocationIfItIsMissingDetails() {
         LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "", "V1");
 
-        assertEquals("One or more of District, Block, Panchayat details are missing", response.getMessage());
+        assertEquals("One or more of District, Block details are missing", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
         verify(locationService, never()).add(captor.capture());
+    }
+    
+    @Test
+    public void shouldRegisterALocationIfItIsMissingPanchayatInformation() {
+        String block = "B1";
+        String district = "D1";
+        String panchayat = "";
+
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat);
+        
+        assertEquals("Successfully registered location",response.getMessage());
+        ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
+        verify(locationService).add(captor.capture());
+        Location location = captor.getValue();
+        assertEquals(location.getBlock(), block);
+        assertEquals(location.getDistrict(), district);
+        assertEquals(location.getPanchayat(), panchayat);
     }
 
     @Test

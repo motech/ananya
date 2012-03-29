@@ -13,11 +13,13 @@ public class LocationRegistrationService {
 
     private LocationService locationService;
     private LocationDimensionService locationDimensionService;
+    private final LocationList locations;
 
     @Autowired
     public LocationRegistrationService(LocationDimensionService locationDimensionService, LocationService locationService) {
         this.locationService = locationService;
         this.locationDimensionService = locationDimensionService;
+        locations = new LocationList(locationService.getAll());
     }
 
     public LocationRegistrationResponse registerLocation(String district, String block, String panchayat) {
@@ -27,11 +29,10 @@ public class LocationRegistrationService {
         if (location.isMissingDetails())
             return response.withIncompleteDetails();
 
-        LocationList locations = new LocationList(locationService.getAll());
         if (locations.isAlreadyPresent(location))
             return response.withAlreadyPresent();
 
-        saveNewLocation(location, locations);
+        saveNewLocation(location);
 
         return response.withSuccessfulRegistration();
     }
@@ -45,8 +46,8 @@ public class LocationRegistrationService {
         locationDimensionService.add(locationDimension);
     }
 
-    private void saveNewLocation(Location currentLocation, LocationList locations) {
-        Location location = createNewLocation(currentLocation, locations);
+    private void saveNewLocation(Location currentLocation) {
+        Location location = createNewLocation(currentLocation);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
         locationService.add(location);
@@ -54,7 +55,7 @@ public class LocationRegistrationService {
         locations.add(location);
     }
 
-    private Location createNewLocation(Location currentLocation, LocationList locations) {
+    private Location createNewLocation(Location currentLocation) {
         Integer districtCodeFor = locations.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locations.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locations.getPanchayatCodeFor(currentLocation);

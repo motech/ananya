@@ -5,7 +5,7 @@ public class LocationRegistrationResponse {
     private String message;
 
     public LocationRegistrationResponse withIncompleteDetails() {
-        message = "One or more of District, Block, Panchayat details are missing";
+        message = "One or more of District, Block details are missing";
         return this;
     }
 

@@ -20,6 +20,7 @@ public class RegistrationService {
     private FrontLineWorkerService frontLineWorkerService;
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
+    private final LocationList locationList;
 
     @Autowired
     public RegistrationService(FrontLineWorkerService frontLineWorkerService,
@@ -28,6 +29,7 @@ public class RegistrationService {
         this.frontLineWorkerService = frontLineWorkerService;
         this.registrationMeasureService = registrationMeasureService;
         this.locationService = locationService;
+        locationList = new LocationList(locationService.getAll());
     }
 
     public RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String village) {
@@ -36,7 +38,7 @@ public class RegistrationService {
         if (isInvalidCallerId(callerId))
             return registrationResponse.withInvalidCallerId();
 
-        LocationList locationList = new LocationList(locationService.getAll());
+
         Location location = locationList.findFor(district, block, village);
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();

@@ -17,10 +17,6 @@ public class LocationService {
         this.allLocations = allLocations;
     }
 
-    public Location fetchFor(String district, String block, String village) {
-        throw new RuntimeException("Not implemented.");
-    }
-
     public Location findByExternalId(String locationId) {
         return allLocations.findByExternalId(locationId);
     }
