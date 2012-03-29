@@ -37,13 +37,13 @@ public class LocationTest {
     }
 
     @Test
-    public void shouldTellThatDetailsAreMissingIfPanchayatIsEmpty()
+    public void shouldTellThatDetailsAreNotMissingIfPanchayatIsEmpty()
     {
         Location location = new Location("Dis", "Blo", "",0,0,0);
 
         boolean missingDetails = location.isMissingDetails();
 
-        assertEquals(true,missingDetails);
+        assertEquals(false,missingDetails);
     }
 
 

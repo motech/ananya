@@ -61,6 +61,7 @@ public class LocationRegistrationServiceTest {
         ArrayList<Location> locations = new ArrayList<Location>();
         locations.add(new Location("D1", "B1", "V1", 1, 1, 1));
         when(locationService.getAll()).thenReturn(locations);
+        locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService);
 
         LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "B1", "V1");
 

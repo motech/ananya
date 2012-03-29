@@ -41,13 +41,12 @@ public class RegistrationServiceTest {
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.ANGANWADI;
-
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
         assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
-
         verify(frontLineWorkerService).createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED);
         ArgumentCaptor<LogData> logDataArgumentCaptor = ArgumentCaptor.forClass(LogData.class);
         verify(registrationMeasureService).createRegistrationMeasure(logDataArgumentCaptor.capture());
@@ -75,14 +74,10 @@ public class RegistrationServiceTest {
         String callerId = "";
         String name = "name";
         Designation designation = Designation.ANGANWADI;
-
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
-
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
-
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(any(LogData.class));
-
         callerId = "abcdef";
         registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
@@ -98,8 +93,8 @@ public class RegistrationServiceTest {
         String name = "";
         Designation designation = Designation.ANGANWADI;
         Location location = new Location("district", "block", "village", 1, 1, 1);
-
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village");
 
@@ -113,8 +108,8 @@ public class RegistrationServiceTest {
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village");
 
