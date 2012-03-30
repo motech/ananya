@@ -1,7 +1,10 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.service.LocationService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +13,15 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class FrontLineWorkerSeed {
     @Autowired
     private RegistrationService registrationService;
+
+    @Autowired
+    private LocationService locationService;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
@@ -45,7 +52,7 @@ public class FrontLineWorkerSeed {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-
+        LocationList locationList = new LocationList(locationService.getAll());
         //skip header
         csvReader.readNext();
 
@@ -60,7 +67,7 @@ public class FrontLineWorkerSeed {
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
 
-            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat);
+            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
             log(msisdn, registrationResponse);
 
             currentRow = csvReader.readNext();

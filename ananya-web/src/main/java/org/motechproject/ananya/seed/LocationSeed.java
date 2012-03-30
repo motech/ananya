@@ -5,6 +5,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
+import org.motechproject.ananya.service.LocationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,10 @@ import java.util.Date;
 public class LocationSeed {
     @Autowired
     private LocationRegistrationService locationRegistrationService;
-
+    
+    @Autowired
+    private LocationService locationService;
+    
     @Value("#{ananyaProperties['seed.location.file']}")
     private String inputFileName;
 
@@ -48,7 +52,7 @@ public class LocationSeed {
     }
 
     private void loadFromCsv(String path) throws IOException {
-
+        LocationList locationList = new LocationList(locationService.getAll());
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
@@ -64,7 +68,7 @@ public class LocationSeed {
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict, currentBlock, currentPanchayat);
+            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict, currentBlock, currentPanchayat,locationList);
             log(currentDistrict, currentBlock, currentPanchayat, response);
 
             currentRow = csvReader.readNext();

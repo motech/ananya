@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 
@@ -32,7 +33,7 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldNotRegisterALocationIfItIsMissingDetails() {
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "", "V1");
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "", "V1",new LocationList(new ArrayList<Location>()));
 
         assertEquals("One or more of District, Block details are missing", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -45,7 +46,7 @@ public class LocationRegistrationServiceTest {
         String district = "D1";
         String panchayat = "";
 
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat);
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat,new LocationList(new ArrayList<Location>()));
         
         assertEquals("Successfully registered location",response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -60,10 +61,9 @@ public class LocationRegistrationServiceTest {
     public void shouldNotRegisterALocationIfItIsAlreadyPresent() {
         ArrayList<Location> locations = new ArrayList<Location>();
         locations.add(new Location("D1", "B1", "V1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
         locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService);
 
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "B1", "V1");
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "B1", "V1",new LocationList(locations));
 
         assertEquals("The location is already present", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -72,14 +72,12 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldSaveTheLocationWhenRegisteringIt() {
-        when(locationService.getAll()).thenReturn(new ArrayList<Location>());
-
         String district = "D1";
         String block = "B1";
         String panchayat = "V1";
         String externalId = "S01D001B001V001";
 
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat);
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat,new LocationList(new ArrayList<Location>()));
 
         assertEquals("Successfully registered location", response.getMessage());
 

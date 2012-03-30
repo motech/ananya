@@ -50,7 +50,6 @@ public class FrontLineWorkerSeedTest {
     }
 
     @Test
-    @Ignore
     public void shouldRegisterFrontLineWorkersThroughTheFrontLineWorkerSeed() throws IOException {
         frontLineWorkerSeed.load();
 
@@ -65,7 +64,7 @@ public class FrontLineWorkerSeedTest {
 
     @After
     public void tearDown() {
-        allLocations.removeAll();
+//        allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();

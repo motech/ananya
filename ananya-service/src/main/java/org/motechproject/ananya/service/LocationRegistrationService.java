@@ -13,26 +13,24 @@ public class LocationRegistrationService {
 
     private LocationService locationService;
     private LocationDimensionService locationDimensionService;
-    private final LocationList locations;
 
     @Autowired
     public LocationRegistrationService(LocationDimensionService locationDimensionService, LocationService locationService) {
         this.locationService = locationService;
         this.locationDimensionService = locationDimensionService;
-        locations = new LocationList(locationService.getAll());
     }
 
-    public LocationRegistrationResponse registerLocation(String district, String block, String panchayat) {
+    public LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
         LocationRegistrationResponse response = new LocationRegistrationResponse();
         Location location = new Location(district, block, panchayat, 0, 0, 0);
 
         if (location.isMissingDetails())
             return response.withIncompleteDetails();
 
-        if (locations.isAlreadyPresent(location))
+        if (locationList.isAlreadyPresent(location))
             return response.withAlreadyPresent();
 
-        saveNewLocation(location);
+        saveNewLocation(location,locationList);
 
         return response.withSuccessfulRegistration();
     }
@@ -46,19 +44,19 @@ public class LocationRegistrationService {
         locationDimensionService.add(locationDimension);
     }
 
-    private void saveNewLocation(Location currentLocation) {
-        Location location = createNewLocation(currentLocation);
+    private void saveNewLocation(Location currentLocation, LocationList locationList) {
+        Location location = createNewLocation(currentLocation, locationList);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
         locationService.add(location);
         locationDimensionService.add(locationDimension);
-        locations.add(location);
+        locationList.add(location);
     }
 
-    private Location createNewLocation(Location currentLocation) {
-        Integer districtCodeFor = locations.getDistrictCodeFor(currentLocation);
-        Integer blockCodeFor = locations.getBlockCodeFor(currentLocation);
-        Integer panchayatCodeFor = locations.getPanchayatCodeFor(currentLocation);
+    private Location createNewLocation(Location currentLocation, LocationList locationList) {
+        Integer districtCodeFor = locationList.getDistrictCodeFor(currentLocation);
+        Integer blockCodeFor = locationList.getBlockCodeFor(currentLocation);
+        Integer panchayatCodeFor = locationList.getPanchayatCodeFor(currentLocation);
         Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor);
         return locationToSave;
     }
