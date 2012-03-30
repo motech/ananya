@@ -26,7 +26,7 @@ public class AllRegistrationMeasures {
     }
 
     public void add(RegistrationMeasure registrationMeasure) {
-        template.save(registrationMeasure);
+        template.saveOrUpdate(registrationMeasure);
     }
 
     public void removeAll() {

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class RegistrationMeasureService {
 
     private FrontLineWorkerService frontLineWorkerService;
-
     private AllLocationDimensions allLocationDimensions;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
@@ -29,9 +28,7 @@ public class RegistrationMeasureService {
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                       AllTimeDimensions allTimeDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures) {
-
         this.frontLineWorkerService = frontLineWorkerService;
-
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
