@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 public class CertificateCourseCallDataController {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
-    public static final String DUMMY = "<dummy/>";
 
     private CallLoggerService callLoggerService;
     private CallLogCounterService callLogCounterService;
@@ -64,7 +63,7 @@ public class CertificateCourseCallDataController {
         callLoggerService.saveAll(callDurationList);
 
         log.info("Saved state for : callId=" + callId + "|callerId=" + callerId);
-        return DUMMY;
+        return getReturnVxml();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
@@ -76,7 +75,16 @@ public class CertificateCourseCallDataController {
         dataPublishService.publishCallDisconnectEvent(callId);
 
         log.info("Call ended: " + callId);
-        return DUMMY;
+        return getReturnVxml();
+    }
+
+    private String getReturnVxml() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
+        builder.append("<form id=\"endCall\">");
+        builder.append("<block><disconnect/></block>");
+        builder.append("/form></vxml>");
+        return builder.toString();
     }
 
 }

@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 public class JobAidCallStateController {
 
     private static Logger log = LoggerFactory.getLogger(JobAidCallStateController.class);
-    
+
     private JobAidService jobAidService;
 
     @Autowired
     public JobAidCallStateController(JobAidService jobAidService) {
         this.jobAidService = jobAidService;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid/updateprompt")
     @ResponseBody
     public String updateJobAidPrompts(HttpServletRequest request) {
@@ -31,7 +31,7 @@ public class JobAidCallStateController {
         final String callerId = request.getParameter("callerId");
         final String promptIds = request.getParameter("promptList");
 
-        log.info("Jobaid prompt update - callId = " + callId + 
+        log.info("Jobaid prompt update - callId = " + callId +
                 " | callerId = " + callerId + " | promptList = " + promptIds);
 
         jobAidService.updateJobAidPrompts(new JobAidPromptRequest(callId, callerId, promptIds));
