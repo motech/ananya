@@ -173,7 +173,7 @@ public class RegistrationDataHandlerIT {
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "", "", RegistrationStatus.REGISTERED.toString());
 
-        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, frontLineWorker.getId());
+        LogData logData = new LogData(LogType.REGISTRATION_SAVE_NAME, frontLineWorker.getMsisdn());
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
