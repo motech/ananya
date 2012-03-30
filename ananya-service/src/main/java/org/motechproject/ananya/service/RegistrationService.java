@@ -48,6 +48,7 @@ public class RegistrationService {
 
         frontLineWorkerService.createOrUpdate(callerId, name, desgn, location, registrationStatus);
         registrationMeasureService.createRegistrationMeasure(new LogData(LogType.REGISTRATION, callerId));
+
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }

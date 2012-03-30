@@ -249,6 +249,7 @@ public class FrontLineWorkerServiceTest {
         Designation designation = Designation.ANGANWADI;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED);
+
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
         frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location, RegistrationStatus.REGISTERED);

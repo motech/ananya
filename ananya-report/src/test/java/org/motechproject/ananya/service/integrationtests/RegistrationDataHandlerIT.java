@@ -162,7 +162,7 @@ public class RegistrationDataHandlerIT {
         assertEquals(registeredDate.getDayOfYear(), (int) registrationMeasure.getTimeDimension().getDay());
     }
 
-    @Test
+        @Test
     public void shouldUpdateRegistrationStatusAndNameOnRegistrationCompletionEvent() {
         String msisdn = "555";
         Location location = new Location("district", "block", "panchayat", 2, 2, 1);

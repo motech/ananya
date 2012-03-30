@@ -52,10 +52,6 @@ public class FrontLineWorkerDimension {
         return status;
     }
 
-    public static String getFindByMsisdn() {
-        return FIND_BY_MSISDN;
-    }
-
     public Integer getId() {
         return this.id;
     }
@@ -77,6 +73,12 @@ public class FrontLineWorkerDimension {
     }
 
     public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void update(String operator, String name, String status) {
+        this.operator = operator;
+        this.name = name;
         this.status = status;
     }
 }

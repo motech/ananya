@@ -12,11 +12,15 @@ public class AllFrontLineWorkerDimensions {
     private DataAccessTemplate template;
 
     public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String name, String status) {
-        FrontLineWorkerDimension dimension = (FrontLineWorkerDimension) template.getUniqueResult(FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
+        FrontLineWorkerDimension dimension = (FrontLineWorkerDimension) template.getUniqueResult(
+                FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
         if (dimension == null) {
             dimension = new FrontLineWorkerDimension(msisdn, operator, name, status);
             template.save(dimension);
+            return dimension;
         }
+        dimension.update(operator,name,status);
+        template.saveOrUpdate(dimension);
         return dimension;
     }
 

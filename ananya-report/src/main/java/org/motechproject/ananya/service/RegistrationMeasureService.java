@@ -7,7 +7,6 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;

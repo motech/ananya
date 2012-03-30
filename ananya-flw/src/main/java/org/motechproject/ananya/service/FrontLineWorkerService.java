@@ -44,9 +44,12 @@ public class FrontLineWorkerService {
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
             allFrontLineWorkers.add(frontLineWorker);
-        } else {
-            frontLineWorker = updateFrontLineWorker(frontLineWorker, name, designation, location, registrationStatus);
+            log.info("Created:" + frontLineWorker);
         }
+
+        frontLineWorker.update(name, designation, location);
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated:" + frontLineWorker);
         return frontLineWorker;
     }
 
@@ -57,6 +60,7 @@ public class FrontLineWorkerService {
             frontLineWorker = new FrontLineWorker(callerId, operator);
             frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
             allFrontLineWorkers.add(frontLineWorker);
+            log.info("Created:" + frontLineWorker);
             return frontLineWorker;
         }
         if (frontLineWorker.operatorIs(operator))
@@ -64,24 +68,33 @@ public class FrontLineWorkerService {
 
         frontLineWorker.setOperator(operator);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated:" + frontLineWorker);
         return frontLineWorker;
     }
 
     public void addBookMark(String callerId, BookMark bookMark) {
+
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.addBookMark(bookMark);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated bookmark for:" + frontLineWorker);
     }
 
     public void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
+
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
+
+        SMSReference smsReference = getSMSReferenceNumber(callerId);
+
         if (smsReference == null) {
             smsReference = new SMSReference(callerId, frontLineWorker.getId());
             allSMSReferences.add(smsReference);
+            log.info("Created SMS reference for:" + frontLineWorker);
         }
         smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
         allSMSReferences.update(smsReference);
+        log.info("Updated SMS reference for:" + frontLineWorker);
+
         smsPublisherService.publishSMSSent(callerId);
     }
 
@@ -116,6 +129,7 @@ public class FrontLineWorkerService {
 
             if (totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
                 sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
+                log.info("Course completion SMS sent for " + frontLineWorker);
             }
         }
     }
@@ -125,6 +139,7 @@ public class FrontLineWorkerService {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated prompts heard for " + frontLineWorker);
     }
 
     public void updateJobAidCurrentUsageFor(String callerId, Integer currentCallDuration) {
@@ -132,23 +147,27 @@ public class FrontLineWorkerService {
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated jobaid usage for " + frontLineWorker);
     }
 
     private void addScore(String callerId, ReportCard.Score score) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.reportCard().addScore(score);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Added scores for " + frontLineWorker);
     }
 
     private void resetScoresForChapterIndex(String callerId, Integer chapterIndex) {
         final FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated scores for " + frontLineWorker);
     }
 
     private int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
         int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated course attempts for " + frontLineWorker);
         return certificateCourseAttempts;
     }
 
@@ -157,35 +176,31 @@ public class FrontLineWorkerService {
         if (frontLineWorker != null) {
             frontLineWorker.reportCard().clearAllScores();
             allFrontLineWorkers.update(frontLineWorker);
+            log.info("Scores reset for " + frontLineWorker);
         }
-    }
-
-    private FrontLineWorker updateFrontLineWorker(FrontLineWorker frontLineWorker, String name,
-                                                  Designation designation, Location location, RegistrationStatus registrationStatus) {
-        frontLineWorker.setName(name);
-        frontLineWorker.setDesignation(designation);
-        frontLineWorker.setLocation(location);
-        frontLineWorker.setRegistrationStatus(registrationStatus);
-        allFrontLineWorkers.update(frontLineWorker);
-        return frontLineWorker;
     }
 
     public void updateLastJobAidAccessTime(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated last jobaid access time " + frontLineWorker);
     }
 
     public FrontLineWorker getFLWForJobAidCallerData(String callerId, String operator) {
         FrontLineWorker frontLineWorker = createOrUpdatePartiallyRegistered(callerId, operator);
         DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
+
         if (lastJobAidAccessTime != null &&
                 (lastJobAidAccessTime.getMonthOfYear() != DateTime.now().getMonthOfYear() ||
                         lastJobAidAccessTime.getYear() != DateTime.now().getYear())) {
+
             frontLineWorker.setCurrentJobAidUsage(0);
             Map<String, Integer> promptsHeard = frontLineWorker.getPromptsHeard();
             promptsHeard.remove("Max_Usage");
+
             allFrontLineWorkers.update(frontLineWorker);
+            log.info("Reset last jobaid usage for " + frontLineWorker);
         }
         return frontLineWorker;
     }

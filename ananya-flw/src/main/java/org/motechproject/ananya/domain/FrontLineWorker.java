@@ -210,4 +210,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void setRegistrationStatus(RegistrationStatus status) {
         this.status = status;
     }
+
+    public void update(String name, Designation designation, Location location) {
+        this.name = name;
+        this.locationId = location.getExternalId();
+        this.designation = designation;
+    }
 }
