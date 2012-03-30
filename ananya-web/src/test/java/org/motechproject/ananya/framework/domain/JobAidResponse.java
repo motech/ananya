@@ -1,5 +1,6 @@
 package org.motechproject.ananya.framework.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.dao.MotechJsonReader;
 
 import java.util.Map;
@@ -18,6 +19,8 @@ public class JobAidResponse {
     private Map<String, Integer> promptsHeard;
 
     public static JobAidResponse make(String json) {
+        if (StringUtils.equalsIgnoreCase(json, "var ananyaResponse = ANANYA_SUCCESS"))
+            return new JobAidResponse();
         MotechJsonReader jsonReader = new MotechJsonReader();
         String callerData = removeEnd(removeStart(json, "var callerData = "), ";");
         return (JobAidResponse) jsonReader.readFromString(callerData, JobAidResponse.class);

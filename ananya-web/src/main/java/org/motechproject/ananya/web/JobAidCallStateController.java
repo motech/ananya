@@ -35,8 +35,7 @@ public class JobAidCallStateController {
                 " | callerId = " + callerId + " | promptList = " + promptIds);
 
         jobAidService.updateJobAidPrompts(new JobAidPromptRequest(callId, callerId, promptIds));
-
-        return "";
+        return validECMAResponse();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid/updateusage")
@@ -50,8 +49,11 @@ public class JobAidCallStateController {
                 " | callerId = " + callerId + " | currentUsage = " + callDuration);
 
         jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, callDuration);
+        return validECMAResponse();
+    }
 
-        return "";
+    private String validECMAResponse() {
+        return "var ananyaResponse = ANANYA_SUCCESS";
     }
 
 }
