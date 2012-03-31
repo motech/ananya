@@ -97,4 +97,8 @@ public class CertificationCourseStateRequest extends BaseRequest {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    public boolean hasContentId(){
+        return StringUtils.isNotBlank(getContentId());
+    }
 }
