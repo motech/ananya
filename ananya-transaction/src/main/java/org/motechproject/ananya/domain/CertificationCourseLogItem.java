@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 
@@ -51,5 +52,9 @@ public class CertificationCourseLogItem {
 
     public String getContentName() {
         return contentName;
+    }
+
+    public Integer giveScore() {
+        return StringUtils.isEmpty(contentData) ? null : Integer.valueOf(getContentData());
     }
 }

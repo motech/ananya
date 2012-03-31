@@ -19,14 +19,14 @@ import java.util.List;
 
 @Service
 public class CourseItemMeasureService {
+    private static final Logger LOG = LoggerFactory.getLogger(CourseItemMeasureService.class);
 
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
-    private static final Logger logger = LoggerFactory.getLogger(CourseItemMeasureService.class);
-    
+
     @Autowired
     public CourseItemMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                     AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions,
@@ -40,23 +40,29 @@ public class CourseItemMeasureService {
 
     public void createCourseItemMeasure(String callId) {
         CertificationCourseLog courseLog = certificateCourseLogService.getCertificateCourseLogFor(callId);
+        if (courseLog == null) return;
 
-        if(courseLog == null) return;
-
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(courseLog.getCallerId()),"","","");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(courseLog.callerIdAsLong());
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
-        for(CertificationCourseLogItem logItem:courseLogItems){
-            CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentName(),logItem.getContentType());
+
+        for (CertificationCourseLogItem logItem : courseLogItems) {
+            CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(
+                    logItem.getContentName(),
+                    logItem.getContentType());
+
             TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
-            Integer score = courseItemContentIsNullOrEmpty(logItem) ? null :  Integer.valueOf(logItem.getContentData());
-            CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, score, logItem.getCourseItemState());
+
+            CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
+                    timeDimension,
+                    courseItemDimension,
+                    frontLineWorkerDimension,
+                    logItem.giveScore(),
+                    logItem.getCourseItemState());
+
             reportDB.add(courseItemMeasure);
         }
-
         certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
+        LOG.info("Added CourseItemMeasures for CallId="+callId);
     }
 
-    private boolean courseItemContentIsNullOrEmpty(CertificationCourseLogItem logItem) {
-        return logItem.getContentData() == null || logItem.getContentData().isEmpty();
-    }
 }

@@ -55,7 +55,7 @@ public class CourseItemMeasureServiceTest {
     }
 
     @Test
-    public void shouldSaveCourseItemMeasure(){
+    public void shouldSaveCourseItemMeasure() {
         String contentName = "Chapter 1";
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.CHAPTER;
@@ -68,7 +68,7 @@ public class CourseItemMeasureServiceTest {
 
         when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
-        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
@@ -85,7 +85,7 @@ public class CourseItemMeasureServiceTest {
     }
 
     @Test
-    public void shouldSaveCourseItemWithScore(){
+    public void shouldSaveCourseItemWithScore() {
         String contentName = "Chapter 1";
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.QUIZ;
@@ -98,7 +98,7 @@ public class CourseItemMeasureServiceTest {
 
         when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
-        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
@@ -111,7 +111,7 @@ public class CourseItemMeasureServiceTest {
     }
 
     @Test
-    public void shouldSaveMultipleCourseItem(){
+    public void shouldSaveMultipleCourseItem() {
         String contentName1 = "Chapter 1", contentId1 = "contentId1";
         CourseItemType contentType1 = CourseItemType.QUIZ;
         String contentName2 = "Chapter 2", contentId2 = "contentI21";
@@ -129,11 +129,10 @@ public class CourseItemMeasureServiceTest {
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId2, contentType2, contentName2, "", event, now.plusDays(5)));
 
 
-
         when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension1);
         when(allTimeDimensions.getFor(now.plusDays(5))).thenReturn(timeDimension2);
-        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(frontLineWorkerDimension).thenReturn(frontLineWorkerDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName1, contentType1)).thenReturn(courseItemDimension1);
         when(allCourseItemDimensions.getFor(contentName2, contentType2)).thenReturn(courseItemDimension2);
 
@@ -159,7 +158,7 @@ public class CourseItemMeasureServiceTest {
     }
 
     @Test
-    public void shouldDeleteCertificateCourseLogAfterSavingTheCourseItemMeasure(){
+    public void shouldDeleteCertificateCourseLogAfterSavingTheCourseItemMeasure() {
         String contentName = "Chapter 1";
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.CHAPTER;
@@ -181,10 +180,10 @@ public class CourseItemMeasureServiceTest {
     }
 
     @Test
-    public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId(){
+    public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId() {
         when(certificateCourseLogService.getCertificateCourseLogFor(callId)).thenReturn(null);
         courseItemMeasureService.createCourseItemMeasure("callId");
-        verify(reportDB,never()).add(any(CourseItemMeasure.class));
+        verify(reportDB, never()).add(any(CourseItemMeasure.class));
 
     }
 }

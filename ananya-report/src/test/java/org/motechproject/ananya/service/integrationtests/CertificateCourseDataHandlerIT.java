@@ -95,20 +95,22 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     public void shouldMapCallLogToCallDurationMeasure() {
         String callId = "callId";
         String calledNumber = "123";
-        String msisdn = "1923456";
+        String callerId = "1923456";
         String contentName = "Chapter 1";
         String contentId = "contentId";
 
         DateTime now = DateTime.now();
-        CertificationCourseLog courseLog = new CertificationCourseLog(msisdn, calledNumber, null, null, "", callId, "");
+        CertificationCourseLog courseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.START, now));
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.END, now.plusDays(26)));
         allCertificateCourseLogs.add(courseLog);
-        allCertificateCourseLogs.add(new CertificationCourseLog(msisdn, calledNumber, null, null, "", "someOtherCallId", ""));
+        allCertificateCourseLogs.add(new CertificationCourseLog(callerId, calledNumber, null, null, "", "someOtherCallId", ""));
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, CourseItemType.CHAPTER));
 
         TimeDimension timeDimension1 = allTimeDimensions.addOrUpdate(now);
         TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));
+
+        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "");
 
         LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -120,8 +122,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
 
         assertEquals(2, courseItemMeasures.size());
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, msisdn, timeDimension1.getId(),contentName)));
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, msisdn, timeDimension2.getId(),contentName)));
+        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, callerId, timeDimension1.getId(),contentName)));
+        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, callerId, timeDimension2.getId(),contentName)));
 
         List<CourseItemDimension> courseItemDimensions = template.loadAll(CourseItemDimension.class);
         assertEquals(1, courseItemDimensions.size());
@@ -132,7 +134,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = template.loadAll(FrontLineWorkerDimension.class);
         FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensions.get(0);
-        assertEquals(Long.valueOf(msisdn),frontLineWorkerDimension.getMsisdn());
+        assertEquals(Long.valueOf(callerId),frontLineWorkerDimension.getMsisdn());
         assertNull(allCertificateCourseLogs.findByCallId(callId));
     }
 

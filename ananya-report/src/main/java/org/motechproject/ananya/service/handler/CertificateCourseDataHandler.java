@@ -13,11 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CertificateCourseDataHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
     private CourseItemMeasureService courseItemMeasureService;
-    private static final Logger logger = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
-
-    public CertificateCourseDataHandler() {
-    }
 
     @Autowired
     public CertificateCourseDataHandler(CourseItemMeasureService courseItemMeasureService) {
@@ -26,10 +23,9 @@ public class CertificateCourseDataHandler {
 
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
     public void handleCertificateCourseData(MotechEvent event) {
-        logger.info("Inside Certificate course data handler");
         for (Object log : event.getParameters().values()) {
             String callId = ((LogData) log).getDataId();
-            logger.info("Call Id is: " + callId);
+            LOG.info("CallId is: " + callId);
             this.courseItemMeasureService.createCourseItemMeasure(callId);
         }
     }
