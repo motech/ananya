@@ -34,7 +34,7 @@ public class CallDurationMeasureService {
             if (callLog.getStartTime() == null || callLog.getEndTime() == null)
                 continue;
 
-            Long callerId = Long.valueOf(callLog.getCallerId());
+            Long callerId = callLog.callerIdAsLong();
             FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
             if (flwDimension == null)
                 flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(callerId, callLog.getOperator(), "", "");

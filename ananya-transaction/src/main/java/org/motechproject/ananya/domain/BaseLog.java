@@ -64,4 +64,8 @@ public class BaseLog extends MotechBaseDataObject {
         this.endTime = endTime;
     }
 
+    public Long callerIdAsLong() {
+        return Long.valueOf(callerId);
+    }
+
 }
