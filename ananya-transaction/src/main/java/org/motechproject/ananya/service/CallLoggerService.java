@@ -3,6 +3,8 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllCallLogs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,8 @@ import java.util.Collection;
 
 @Service
 public class CallLoggerService {
+    private static Logger log = LoggerFactory.getLogger(CallLoggerService.class);
+
     private AllCallLogs allCallLogs;
 
     @Autowired
@@ -20,11 +24,13 @@ public class CallLoggerService {
     public void saveAll(CallDurationList callDurationList) {
         for (CallDuration callDuration : callDurationList.all())
             save(callDuration);
+        log.info("Saved call duration logs");
+
     }
 
     public void save(CallDuration callDuration) {
         DateTime time = new DateTime(callDuration.getTime());
-        if (callDuration.getCallEvent() == CallEvent.DISCONNECT) {
+        if (callDuration.isDisconnect()) {
             handleDisconnect(callDuration, time);
             return;
         }
@@ -32,7 +38,6 @@ public class CallLoggerService {
     }
 
     private void handleDisconnect(CallDuration callDuration, DateTime time) {
-
         Collection<CallLog> allCallLogsByCallId = allCallLogs.findByCallId(callDuration.getCallId());
         for (CallLog log : allCallLogsByCallId) {
             if (log.getEndTime() == null) {

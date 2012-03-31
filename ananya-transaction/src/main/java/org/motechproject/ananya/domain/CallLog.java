@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
+import org.joda.time.Seconds;
 
 @TypeDiscriminator("doc.type == 'CallLog'")
 public class CallLog extends BaseLog{
@@ -20,6 +21,10 @@ public class CallLog extends BaseLog{
 
     public CallFlowType getCallFlowType() {
         return callFlowType;
+    }
+
+    public Integer duration(){
+        return Seconds.secondsBetween(getStartTime(), getEndTime()).getSeconds();
     }
 
 }

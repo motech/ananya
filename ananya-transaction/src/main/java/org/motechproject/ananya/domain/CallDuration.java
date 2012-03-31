@@ -72,4 +72,8 @@ public class CallDuration {
         result = 31 * result + (callEvent != null ? callEvent.hashCode() : 0);
         return result;
     }
+
+    public boolean isDisconnect() {
+        return callEvent == CallEvent.DISCONNECT;
+    }
 }

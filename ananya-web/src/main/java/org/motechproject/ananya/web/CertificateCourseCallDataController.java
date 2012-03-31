@@ -62,7 +62,7 @@ public class CertificateCourseCallDataController {
         certificateCourseService.saveState(stateRequestList);
         callLoggerService.saveAll(callDurationList);
 
-        log.info("Saved state for : callId=" + callId + "|callerId=" + callerId);
+        log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
         return getReturnVxml();
     }
 
