@@ -54,7 +54,7 @@ public class SMSSentMeasureServiceTest {
         SMSReference smsReference = new SMSReference(callerId,flwId);
         smsReference.add(smsRefNum, courseAttemptNum);
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
-        when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
+        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
 
         service.createSMSSentMeasure(callerId);
@@ -79,7 +79,7 @@ public class SMSSentMeasureServiceTest {
         SMSReference smsReference = new SMSReference(callerId, flwId);
 
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
-        when(frontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "")).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
+        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
 
         service.createSMSSentMeasure(callerId);

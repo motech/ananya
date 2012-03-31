@@ -29,20 +29,18 @@ public class SMSSentMeasureService {
 
     public void createSMSSentMeasure(String callerId) {
         boolean smsSent = false;
-        final int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);
-        final SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
+        int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);
+        SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
+
         String referenceNumber = null;
         if(smsReference != null) {
             referenceNumber = smsReference.referenceNumbers(courseAttempt);
-            if(referenceNumber != null ) {
+            if(referenceNumber != null )
                 smsSent = true;
-            }
         }
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId),"","","");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
-
         SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent, frontLineWorkerDimension, timeDimension);
-
         reportDB.add(smsSentMeasure);
     }
 }

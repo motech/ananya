@@ -29,7 +29,6 @@ public class CallDurationMeasureService {
 
     public void createCallDurationMeasure(String callId) {
         Collection<CallLog> allCallLogs = callLoggerService.getAllCallLogs(callId);
-
         for (CallLog callLog : allCallLogs) {
             if (callLog.getStartTime() == null || callLog.getEndTime() == null)
                 continue;
@@ -44,10 +43,8 @@ public class CallDurationMeasureService {
                     callId,
                     callLog.duration(),
                     callLog.getCallFlowType().name());
-
             reportDB.add(callDurationMeasure);
         }
-
         callLoggerService.delete(allCallLogs);
         log.info("Added CallDurationMeasures for callId=" + callId);
     }
