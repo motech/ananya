@@ -19,7 +19,7 @@ public class JobAidResponse {
     private Map<String, Integer> promptsHeard;
 
     public static JobAidResponse make(String json) {
-        if (StringUtils.equalsIgnoreCase(json, "var ananyaResponse = ANANYA_SUCCESS"))
+        if (StringUtils.equalsIgnoreCase(json, "var ananyaResponse = \"ANANYA_SUCCESS\";"))
             return new JobAidResponse();
         MotechJsonReader jsonReader = new MotechJsonReader();
         String callerData = removeEnd(removeStart(json, "var callerData = "), ";");

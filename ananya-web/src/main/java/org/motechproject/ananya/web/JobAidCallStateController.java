@@ -53,7 +53,7 @@ public class JobAidCallStateController {
     }
 
     private String validECMAResponse() {
-        return "var ananyaResponse = ANANYA_SUCCESS";
+        return "var ananyaResponse = \"ANANYA_SUCCESS\";";
     }
 
 }
