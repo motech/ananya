@@ -52,4 +52,14 @@ public class LocationTest {
 
         assertFalse(missingDetails);
     }
+    
+    @Test
+    public void shouldGetDefaultLocation() {
+        Location defaultLocation = Location.getDefaultLocation();
+
+        assertEquals("C00",defaultLocation.getDistrict());
+        assertEquals("C00",defaultLocation.getBlock());
+        assertEquals("",defaultLocation.getPanchayat());
+        assertEquals("S01D000B000V000",defaultLocation.getExternalId());
+    }
 }

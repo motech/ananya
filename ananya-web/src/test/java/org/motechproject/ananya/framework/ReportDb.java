@@ -1,7 +1,7 @@
 package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -31,7 +31,6 @@ public class ReportDb {
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
-
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
 
         assertNotNull(frontLineWorkerDimension);
@@ -49,9 +48,10 @@ public class ReportDb {
         assertTrue(registrationMeasure.getTimeDimension().matches(new DateTime()));
 
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        assertTrue(locationDimension.getBlock().equals(FrontLineWorker.DEFAULT_LOCATION));
-        assertTrue(locationDimension.getDistrict().equals(FrontLineWorker.DEFAULT_LOCATION));
-        assertTrue(locationDimension.getPanchayat().equals(""));
+        Location defaultLocation = Location.getDefaultLocation();
+        assertTrue(locationDimension.getBlock().equals(defaultLocation.getBlock()));
+        assertTrue(locationDimension.getDistrict().equals(defaultLocation.getDistrict()));
+        assertTrue(locationDimension.getPanchayat().equals(defaultLocation.getPanchayat()));
         return this;
     }
 

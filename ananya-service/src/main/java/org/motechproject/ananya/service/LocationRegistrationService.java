@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -38,11 +37,8 @@ public class LocationRegistrationService {
     }
 
     public void loadDefaultLocation() {
-        int defaultCode = 0;
-        String emptyPanchayat = "";
-        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, emptyPanchayat, defaultCode, defaultCode, defaultCode);
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(),
-                FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, emptyPanchayat);
+        Location location = Location.getDefaultLocation();
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
         locationService.add(location);
         locationDimensionService.add(locationDimension);
     }

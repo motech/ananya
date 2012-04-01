@@ -8,9 +8,9 @@ import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'Location'")
 public class Location extends MotechBaseDataObject {
-
     @JsonProperty
     private String district;
+
     @JsonProperty
     private String block;
     @JsonProperty
@@ -35,6 +35,10 @@ public class Location extends MotechBaseDataObject {
         this.panchayat = panchayat;
         this.panchayatCode = panchayatCode;
         this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
+    }
+
+    public static Location getDefaultLocation() {
+        return new Location("C00", "C00", "", 0, 0, 0);
     }
 
     public int getBlockCode() {
@@ -62,7 +66,7 @@ public class Location extends MotechBaseDataObject {
     }
 
     public String getExternalId() {
-        return  externalId;
+        return externalId;
     }
 
     @JsonIgnore
@@ -101,8 +105,8 @@ public class Location extends MotechBaseDataObject {
     }
 
     public boolean isSameAs(String district, String block, String village) {
-        return (StringUtils.equalsIgnoreCase(this.district,district)
-                && StringUtils.equalsIgnoreCase(this.block,block)
-                && StringUtils.equalsIgnoreCase(this.panchayat,village));
+        return (StringUtils.equalsIgnoreCase(this.district, district)
+                && StringUtils.equalsIgnoreCase(this.block, block)
+                && StringUtils.equalsIgnoreCase(this.panchayat, village));
     }
 }
