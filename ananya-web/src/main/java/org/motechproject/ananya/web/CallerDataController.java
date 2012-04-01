@@ -19,18 +19,18 @@ import java.util.Properties;
 
 @Controller
 @RequestMapping(value = "/generated/js")
-public class DynamicJsController {
+public class CallerDataController {
 
-    private static Logger log = LoggerFactory.getLogger(DynamicJsController.class);
+    private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
 
     private Properties properties;
     private JobAidService jobAidService;
     private CertificateCourseService certificateCourseService;
 
     @Autowired
-    public DynamicJsController(JobAidService jobAidService,
-                               CertificateCourseService certificateCourseService,
-                               @Qualifier("ananyaProperties") Properties properties) {
+    public CallerDataController(JobAidService jobAidService,
+                                CertificateCourseService certificateCourseService,
+                                @Qualifier("ananyaProperties") Properties properties) {
         this.certificateCourseService = certificateCourseService;
         this.properties = properties;
         this.jobAidService = jobAidService;

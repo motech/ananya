@@ -20,8 +20,7 @@ import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class DynamicJsControllerTest {
-
+public class CallerDataControllerTest {
 
     @Mock
     AllNodes allNodes;
@@ -37,13 +36,13 @@ public class DynamicJsControllerTest {
 
     @Mock
     Properties properties;
-    private DynamicJsController controller;
+    private CallerDataController controller;
 
     @Before
     public void setUp() {
         initMocks(this);
         when(properties.getProperty("url.version")).thenReturn("v1");
-        controller = new DynamicJsController(jobAidService, certificateCourseService, properties);
+        controller = new CallerDataController(jobAidService, certificateCourseService, properties);
     }
 
     @Test
