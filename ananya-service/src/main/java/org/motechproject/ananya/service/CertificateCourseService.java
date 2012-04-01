@@ -39,10 +39,9 @@ public class CertificateCourseService {
 
         boolean isNewFLW = frontLineWorkerService.isNewFLW(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, operator);
-
-        if (isNewFLW) {
+        if (isNewFLW)
             dataPublishService.publishNewRegistration(msisdn);
-        }
+
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),
                 frontLineWorker.status().isRegistered(),
@@ -50,29 +49,31 @@ public class CertificateCourseService {
     }
 
     public void saveState(CertificationCourseStateRequestList stateRequestList) {
-
         log.info("State Request List " + stateRequestList);
-        if (stateRequestList.isEmpty()) return;
+        if (stateRequestList.isEmpty())
+            return;
+        saveScore(stateRequestList);
+        saveBookmark(stateRequestList);
+        saveCourseLog(stateRequestList);
+    }
 
+    private void saveScore(CertificationCourseStateRequestList stateRequestList) {
         CertificateCourseStateFlwRequestMapper flwRequestMapper = new CertificateCourseStateFlwRequestMapper();
-
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
             frontLineWorkerService.saveScore(flwRequestMapper.mapFrom(stateRequest));
-
-        saveBookmark(stateRequestList.lastRequest());
-        saveCourseCertificateLog(stateRequestList);
     }
 
-    private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
+    private void saveBookmark(CertificationCourseStateRequestList stateRequestList) {
+        CertificationCourseStateRequest stateRequest = stateRequestList.lastRequest();
         final BookMark bookMark = new BookMark(
-                courseStateRequest.getInteractionKey(),
-                courseStateRequest.getChapterIndex(),
-                courseStateRequest.getLessonOrQuestionIndex());
+                stateRequest.getInteractionKey(),
+                stateRequest.getChapterIndex(),
+                stateRequest.getLessonOrQuestionIndex());
         log.info("Saving bookmark " + bookMark);
-        frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
+        frontLineWorkerService.addBookMark(stateRequest.getCallerId(), bookMark);
     }
 
-    private void saveCourseCertificateLog(CertificationCourseStateRequestList stateRequestList) {
+    private void saveCourseLog(CertificationCourseStateRequestList stateRequestList) {
         CertificationCourseStateRequest firstRequest = stateRequestList.firstRequest();
         CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
@@ -82,10 +83,10 @@ public class CertificateCourseService {
             courseLog = logMapper.mapFrom(firstRequest);
             certificateCourseLogService.createNew(courseLog);
         }
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
+        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
             if (stateRequest.hasContentId())
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
-
+        }
         certificateCourseLogService.update(courseLog);
     }
 }
