@@ -51,7 +51,7 @@ public class ReportDb {
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
         assertTrue(locationDimension.getBlock().equals(FrontLineWorker.DEFAULT_LOCATION));
         assertTrue(locationDimension.getDistrict().equals(FrontLineWorker.DEFAULT_LOCATION));
-        assertTrue(locationDimension.getPanchayat().equals(FrontLineWorker.DEFAULT_LOCATION));
+        assertTrue(locationDimension.getPanchayat().equals(""));
         return this;
     }
 

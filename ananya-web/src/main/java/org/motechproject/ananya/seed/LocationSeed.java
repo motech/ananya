@@ -73,6 +73,8 @@ public class LocationSeed {
 
             currentRow = csvReader.readNext();
         }
+
+        locationRegistrationService.registerDefaultLocationForDistrictBlock(locationList);
         writer.close();
     }
 

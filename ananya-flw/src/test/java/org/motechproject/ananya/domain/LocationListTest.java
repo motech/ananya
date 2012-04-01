@@ -101,6 +101,54 @@ public class LocationListTest {
                 ""));
         assertEquals(location2, locationList.findFor("D2", "b2", "P5"));
         assertNull(locationList.findFor("D1", "b1", "P45"));
+    }
 
+    @Test
+    public void shouldFetchTheDefaultLocationForAGivenBlockIfPanchayatIsNotPresent() {
+        List<Location> locations = new ArrayList<Location>();
+        Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);
+        locations.add(location1);
+        Location defaultLocation = new Location("D1", "B1", "", 1, 1, 0);
+        locations.add(defaultLocation);
+
+        LocationList locationList = new LocationList(locations);
+
+        assertEquals(defaultLocation, locationList.findFor("D1","B1","P2"));
+    }
+
+    @Test
+    public void shouldGetUniqueDistrictBlockDefaultLocation(){
+        List<Location> locations = new ArrayList<Location>();
+        Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);
+        locations.add(location1);
+        Location location1Panchayat2 = new Location("D1", "B1", "P2", 1, 1, 2);
+        locations.add(location1Panchayat2);
+        Location location2 = new Location("D1", "B2", "P3", 1, 2, 1);
+        locations.add(location2);
+        LocationList locationList = new LocationList(locations);
+
+        List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
+
+        assertEquals(2,uniqueDistrictBlockLocations.size());
+        Location firstDefaultLocation = uniqueDistrictBlockLocations.get(0);
+        Location expectedFirstDefaultLocation = new Location("D1","B1","",1,1,0);
+        assertEquals(expectedFirstDefaultLocation, firstDefaultLocation);
+        Location secondDefaultLocation = uniqueDistrictBlockLocations.get(1);
+        Location expectedSecondDefaultLocation = new Location("D1","B2","",1,2,0);
+        assertEquals(expectedSecondDefaultLocation, secondDefaultLocation);
+    }
+
+    @Test
+    public void shouldNotAddADefaultLocationIfTheDefaultLocationIsAlreadyPresentInTheLocationList() {
+        List<Location> locations = new ArrayList<Location>();
+        Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);
+        locations.add(location1);
+        Location defaultLocation = new Location("D1", "B1", "", 1, 1, 0);
+        locations.add(defaultLocation);
+        LocationList locationList = new LocationList(locations);
+
+        List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
+
+        assertEquals(0, uniqueDistrictBlockLocations.size());
     }
 }

@@ -8,6 +8,8 @@ import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LocationRegistrationService {
 
@@ -30,18 +32,28 @@ public class LocationRegistrationService {
         if (locationList.isAlreadyPresent(location))
             return response.withAlreadyPresent();
 
-        saveNewLocation(location,locationList);
+        saveNewLocation(location, locationList);
 
         return response.withSuccessfulRegistration();
     }
 
     public void loadDefaultLocation() {
         int defaultCode = 0;
-        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, defaultCode, defaultCode, defaultCode);
+        String emptyPanchayat = "";
+        Location location = new Location(FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, emptyPanchayat, defaultCode, defaultCode, defaultCode);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(),
-                FrontLineWorker.DEFAULT_LOCATION,FrontLineWorker.DEFAULT_LOCATION,FrontLineWorker.DEFAULT_LOCATION);
+                FrontLineWorker.DEFAULT_LOCATION, FrontLineWorker.DEFAULT_LOCATION, emptyPanchayat);
         locationService.add(location);
         locationDimensionService.add(locationDimension);
+    }
+
+    public void registerDefaultLocationForDistrictBlock(LocationList locationList) {
+        List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
+        for (Location location : uniqueDistrictBlockLocations) {
+            LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
+            locationService.add(location);
+            locationDimensionService.add(locationDimension);
+        }
     }
 
     private void saveNewLocation(Location currentLocation, LocationList locationList) {

@@ -80,14 +80,31 @@ public class LocationList {
     }
 
     public Location findFor(String district, String block, String village) {
+        Location defaultLocation = null;
+        String emptyPanchayat = "";
         for (Location location : locations) {
             if (location.isSameAs(
                     StringUtils.trimToEmpty(district),
                     StringUtils.trimToEmpty(block),
                     StringUtils.trimToEmpty(village)))
                 return location;
+            if (location.isSameAs(StringUtils.trimToEmpty(district), StringUtils.trimToEmpty(block), emptyPanchayat))
+                defaultLocation = location;
         }
-        return null;
+        return defaultLocation;
 
+    }
+
+    public List<Location> getUniqueDistrictBlockLocations() {
+        ArrayList<Location> uniqueDistrictBlockList = new ArrayList<Location>();
+        String emptyPanchayat = "";
+
+        for (Location location : locations) {
+            Location defaultLocation = new Location(StringUtils.trimToEmpty(location.getDistrict()), StringUtils.trimToEmpty(location.getBlock()), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0);
+            if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
+                uniqueDistrictBlockList.add(defaultLocation);
+            }
+        }
+        return uniqueDistrictBlockList;
     }
 }

@@ -10,6 +10,7 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -33,28 +34,11 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldNotRegisterALocationIfItIsMissingDetails() {
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "", "V1",new LocationList(new ArrayList<Location>()));
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "", "V1", new LocationList(new ArrayList<Location>()));
 
         assertEquals("One or more of District, Block details are missing", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
         verify(locationService, never()).add(captor.capture());
-    }
-    
-    @Test
-    public void shouldRegisterALocationIfItIsMissingPanchayatInformation() {
-        String block = "B1";
-        String district = "D1";
-        String panchayat = "";
-
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat,new LocationList(new ArrayList<Location>()));
-        
-        assertEquals("Successfully registered location",response.getMessage());
-        ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
-        verify(locationService).add(captor.capture());
-        Location location = captor.getValue();
-        assertEquals(location.getBlock(), block);
-        assertEquals(location.getDistrict(), district);
-        assertEquals(location.getPanchayat(), panchayat);
     }
 
     @Test
@@ -63,7 +47,7 @@ public class LocationRegistrationServiceTest {
         locations.add(new Location("D1", "B1", "V1", 1, 1, 1));
         locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService);
 
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "B1", "V1",new LocationList(locations));
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation("D1", "B1", "V1", new LocationList(locations));
 
         assertEquals("The location is already present", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -77,7 +61,7 @@ public class LocationRegistrationServiceTest {
         String panchayat = "V1";
         String externalId = "S01D001B001V001";
 
-        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat,new LocationList(new ArrayList<Location>()));
+        LocationRegistrationResponse response = locationRegistrationService.registerLocation(district, block, panchayat, new LocationList(new ArrayList<Location>()));
 
         assertEquals("Successfully registered location", response.getMessage());
 
@@ -99,7 +83,7 @@ public class LocationRegistrationServiceTest {
     }
 
     @Test
-    public void shouldSaveDefaultLocationAndDefaultLocationDimension(){
+    public void shouldSaveDefaultLocationAndDefaultLocationDimension() {
         locationRegistrationService.loadDefaultLocation();
 
         ArgumentCaptor<Location> locationCaptor = ArgumentCaptor.forClass(Location.class);
@@ -110,7 +94,32 @@ public class LocationRegistrationServiceTest {
         Location location = locationCaptor.getValue();
         LocationDimension locationDimension = locationDimensionCaptor.getValue();
 
-        assertEquals("S01D000B000V000",location.getExternalId());
+        assertEquals("S01D000B000V000", location.getExternalId());
         assertEquals("S01D000B000V000", locationDimension.getLocationId());
+    }
+
+    @Test
+    public void shouldSaveDefaultLocationForAllLocations() {
+        ArrayList<Location> locations = new ArrayList<Location>();
+        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
+        locations.add(new Location("D1", "B1", "P2", 1, 1, 2));
+        locations.add(new Location("D1", "B2", "P2", 1, 2, 2));
+        locations.add(new Location("D2", "B3", "P3", 2, 1, 1));
+        LocationList locationList = new LocationList(locations);
+
+        locationRegistrationService.registerDefaultLocationForDistrictBlock(locationList);
+
+        ArgumentCaptor<Location> locationCaptor = ArgumentCaptor.forClass(Location.class);
+        ArgumentCaptor<LocationDimension> locationDimensionCaptor = ArgumentCaptor.forClass(LocationDimension.class);
+        verify(locationService, times(3)).add(locationCaptor.capture());
+        verify(locationDimensionService, times(3)).add(locationDimensionCaptor.capture());
+        List<Location> defaultLocations = locationCaptor.getAllValues();
+        List<LocationDimension> defaultLocationDimensions = locationDimensionCaptor.getAllValues();
+        assertEquals("S01D001B001V000", defaultLocations.get(0).getExternalId());
+        assertEquals("S01D001B001V000", defaultLocationDimensions.get(0).getLocationId());
+        assertEquals("S01D001B002V000", defaultLocations.get(1).getExternalId());
+        assertEquals("S01D001B002V000", defaultLocationDimensions.get(1).getLocationId());
+        assertEquals("S01D002B001V000", defaultLocations.get(2).getExternalId());
+        assertEquals("S01D002B001V000", defaultLocationDimensions.get(2).getLocationId());
     }
 }

@@ -49,7 +49,7 @@ public class LocationSeedTest {
         String externalId = location.getExternalId();
         LocationDimension locationDimension = locationDimensionService.getFor(externalId);
 
-        assertEquals(17, locations.size());
+        assertEquals(19, locations.size());
         assertEquals(location.getDistrict(), locationDimension.getDistrict());
         assertEquals(location.getBlock(), locationDimension.getBlock());
         assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
