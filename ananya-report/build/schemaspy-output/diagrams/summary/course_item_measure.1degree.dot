@@ -1,0 +1,35 @@
+// dot 2.26.3 on Linux 2.6.38-11-generic-pae
+// SchemaSpy rev 590
+digraph "course_item_measure" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "course_item_measure" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">course_item_measure</TD></TR>
+      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="flw_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">flw_id</TD></TR>
+      <TR><TD PORT="course_item_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">course_item_id</TD></TR>
+      <TR><TD PORT="time_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">time_id</TD></TR>
+      <TR><TD PORT="score" COLSPAN="3" ALIGN="LEFT">score</TD></TR>
+      <TR><TD PORT="event" COLSPAN="3" ALIGN="LEFT">event</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/course_item_measure.html"
+    tooltip="course_item_measure"
+  ];
+}

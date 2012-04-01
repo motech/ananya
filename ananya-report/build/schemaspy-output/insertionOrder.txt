@@ -1,0 +1,10 @@
+call_duration_measure
+course_item_dimension
+course_item_measure
+databasechangelog
+databasechangeloglock
+front_line_worker_dimension
+location_dimension
+registration_measure
+sms_sent_measure
+time_dimension
