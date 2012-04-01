@@ -31,7 +31,7 @@ public class CertificateCourseLogServiceTest {
         String callId = "callId";
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog("callerId", "calledNumber", DateTime.now(), DateTime.now(), "", callId, "courseId");
         when(allCertificateCourseLogs.findByCallId(callId)).thenReturn(certificationCourseLog);
-        CertificationCourseLog courseLog = certificateCourseLogService.getCertificateCourseLogFor(callId);
+        CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         assertEquals(certificationCourseLog, courseLog);
     }
 

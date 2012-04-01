@@ -53,15 +53,11 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
                 "    \"contentData\" : 6,                                      " +
                 "    \"certificateCourseId\" : \"e79139b5540bf3fc8d96635bc2926f90\"  " +
                 "}";
-        String packet2 = "{" +
-                "   \"event\" : \"CALL_START\"," +
-                "   \"time\"  : 1231413" +
-                "}";
-        MyWebClient.PostParam callerId = param("callerId", "9986574000");
+
         String callId = "99865740001234567890";
+        MyWebClient.PostParam callerId = param("callerId", "9986574000");
         MyWebClient.PostParam callIdParam = param("callId", callId);
-        MyWebClient.PostParam dataToPost = param("dataToPost",
-                "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
+        MyWebClient.PostParam dataToPost = param("dataToPost", "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
         myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata",callIdParam, callerId, dataToPost);
 
@@ -77,7 +73,6 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
         assertEquals(frontLineWorker.reportCard().scores().size(), 1);
         assertEquals(frontLineWorker.reportCard().scores().get(0).result(), true);
-
 
         CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
 

@@ -20,12 +20,16 @@ public class CertificationCourseStateRequestList {
         return list.isEmpty();
     }
 
-    public CertificationCourseStateRequest recentRequest() {
+    public CertificationCourseStateRequest lastRequest() {
         return list.get(list.size() - 1);
     }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(list);
+    }
+
+    public CertificationCourseStateRequest firstRequest() {
+        return list.isEmpty() ? null : list.get(0);
     }
 }

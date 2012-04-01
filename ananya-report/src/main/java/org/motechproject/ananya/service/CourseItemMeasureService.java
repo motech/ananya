@@ -39,7 +39,7 @@ public class CourseItemMeasureService {
     }
 
     public void createCourseItemMeasure(String callId) {
-        CertificationCourseLog courseLog = certificateCourseLogService.getCertificateCourseLogFor(callId);
+        CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         if (courseLog == null) return;
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(courseLog.callerIdAsLong());

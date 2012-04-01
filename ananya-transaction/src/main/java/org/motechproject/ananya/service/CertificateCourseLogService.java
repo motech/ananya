@@ -14,7 +14,7 @@ public class CertificateCourseLogService {
         this.allCertificateCourseLogs = allCertificateCourseLogs;
     }
 
-    public CertificationCourseLog getCertificateCourseLogFor(String callId) {
+    public CertificationCourseLog getLogFor(String callId) {
         return allCertificateCourseLogs.findByCallId(callId);
     }
 
@@ -22,11 +22,11 @@ public class CertificateCourseLogService {
         allCertificateCourseLogs.deleteFor(callId);
     }
 
-    public void createNew(CertificationCourseLog courseLogDocument) {
-        allCertificateCourseLogs.add(courseLogDocument);
+    public void createNew(CertificationCourseLog courseLog) {
+        allCertificateCourseLogs.add(courseLog);
     }
 
-    public void update(CertificationCourseLog courseLogDocument) {
-        allCertificateCourseLogs.update(courseLogDocument);
+    public void update(CertificationCourseLog courseLog) {
+        allCertificateCourseLogs.update(courseLog);
     }
 }

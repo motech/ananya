@@ -50,40 +50,42 @@ public class CertificateCourseService {
     }
 
     public void saveState(CertificationCourseStateRequestList stateRequestList) {
+
         log.info("State Request List " + stateRequestList);
         if (stateRequestList.isEmpty()) return;
 
         CertificateCourseStateFlwRequestMapper flwRequestMapper = new CertificateCourseStateFlwRequestMapper();
+
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
             frontLineWorkerService.saveScore(flwRequestMapper.mapFrom(stateRequest));
 
-        saveBookmark(stateRequestList.recentRequest());
+        saveBookmark(stateRequestList.lastRequest());
         saveCourseCertificateLog(stateRequestList);
     }
 
     private void saveBookmark(CertificationCourseStateRequest courseStateRequest) {
-        final BookMark bookMark = new BookMark(courseStateRequest.getInteractionKey(),
+        final BookMark bookMark = new BookMark(
+                courseStateRequest.getInteractionKey(),
                 courseStateRequest.getChapterIndex(),
                 courseStateRequest.getLessonOrQuestionIndex());
-
         log.info("Saving bookmark " + bookMark);
         frontLineWorkerService.addBookMark(courseStateRequest.getCallerId(), bookMark);
     }
 
     private void saveCourseCertificateLog(CertificationCourseStateRequestList stateRequestList) {
-        CertificationCourseStateRequest courseStateRequest = stateRequestList.all().get(0);
-        String callId = courseStateRequest.getCallId();
+        CertificationCourseStateRequest firstRequest = stateRequestList.firstRequest();
         CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
 
-        CertificationCourseLog courseLogDocument = certificateCourseLogService.getCertificateCourseLogFor(callId);
-        if (courseLogDocument == null)
-            certificateCourseLogService.createNew(logMapper.mapFrom(courseStateRequest, callId));
-
+        CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(firstRequest.getCallId());
+        if (courseLog == null) {
+            courseLog = logMapper.mapFrom(firstRequest);
+            certificateCourseLogService.createNew(courseLog);
+        }
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
             if (stateRequest.hasContentId())
-                courseLogDocument.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
+                courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
 
-        certificateCourseLogService.update(courseLogDocument);
+        certificateCourseLogService.update(courseLog);
     }
 }

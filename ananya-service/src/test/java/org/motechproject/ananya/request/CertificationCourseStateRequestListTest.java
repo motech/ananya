@@ -34,7 +34,7 @@ public class CertificationCourseStateRequestListTest {
         assertThat(courseStateRequestList.all().size(), is(2));
         assertFalse(courseStateRequestList.isEmpty());
 
-        CertificationCourseStateRequest recentRequest = courseStateRequestList.recentRequest();
+        CertificationCourseStateRequest recentRequest = courseStateRequestList.lastRequest();
         assertThat(recentRequest.getContentName(),is("Chapter 1 Lesson 2"));
     }
 }
