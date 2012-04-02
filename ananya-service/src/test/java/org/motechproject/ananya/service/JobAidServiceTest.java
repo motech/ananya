@@ -76,6 +76,6 @@ public class JobAidServiceTest {
         jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
 
         verify(frontLineWorkerService).updateJobAidCurrentUsageFor(callerId, currentUsage);
-        verify(frontLineWorkerService).updateLastJobAidAccessTime(callerId);
+        verify(frontLineWorkerService).updateJobAidLastAccessTime(callerId);
     }
 }

@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,14 +71,6 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public void addBookMark(String callerId, BookMark bookMark) {
-
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        frontLineWorker.addBookMark(bookMark);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated bookmark for:" + frontLineWorker);
-    }
-
     public void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         SMSReference smsReference = getSMSReferenceNumber(callerId);
@@ -121,20 +112,19 @@ public class FrontLineWorkerService {
         log.info("Updated jobaid usage for " + frontLineWorker);
     }
 
-    public void update(CertificateCourseStateFlwRequest certificateCourseStateFlwRequest) {
-        FrontLineWorker frontLineWorker = certificateCourseStateFlwRequest.getFrontLineWorker();
-        allFrontLineWorkers.update(frontLineWorker);
-        if (certificateCourseStateFlwRequest.shouldSendSMS()) {
-            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
-            log.info("Course completion SMS sent for " + frontLineWorker);
-        }
-    }
-
-    public void updateLastJobAidAccessTime(String callerId) {
+    public void updateJobAidLastAccessTime(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
         allFrontLineWorkers.update(frontLineWorker);
         log.info("Updated last jobaid access time " + frontLineWorker);
+    }
+
+    public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {
+        allFrontLineWorkers.update(frontLineWorker);
+        if (frontLineWorker.hasCompletedCertificateCourse()) {
+            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
+            log.info("Course completion SMS sent for " + frontLineWorker);
+        }
     }
 
     public FrontLineWorker getFLWForJobAidCallerData(String callerId, String operator) {

@@ -55,7 +55,7 @@ public class JobAidService {
 
     public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer callDuration) {
         frontLineWorkerService.updateJobAidCurrentUsageFor(msisdn, callDuration);
-        frontLineWorkerService.updateLastJobAidAccessTime(msisdn);
+        frontLineWorkerService.updateJobAidLastAccessTime(msisdn);
     }
 
 }

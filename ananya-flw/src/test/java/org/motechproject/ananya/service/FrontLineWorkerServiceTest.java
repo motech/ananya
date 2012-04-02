@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class FrontLineWorkerServiceTest {
 
@@ -189,7 +190,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateLastJobAidAccessTime(callerId);
+        frontLineWorkerService.updateJobAidLastAccessTime(callerId);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -260,8 +261,11 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldUpdateTheFrontLineWorkerAndNotSendSMS() {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
+        ReportCard reportCard = mock(ReportCard.class);
+        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE - 1);
+        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
 
-        frontLineWorkerService.update(new CertificateCourseStateFlwRequest(frontLineWorker, false));
+        frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -272,13 +276,16 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldUpdateTheFrontLineWorkerAndSendSMS() {
         Location location = Location.getDefaultLocation();
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123","name",Designation.ASHA,location,RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name", Designation.ASHA, location, RegistrationStatus.REGISTERED);
+        ReportCard reportCard = mock(ReportCard.class);
+        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
+        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
 
-        frontLineWorkerService.update(new CertificateCourseStateFlwRequest(frontLineWorker, true));
+        frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
         assertEquals(frontLineWorker, captor.getValue());
-        verify(sendSMSService).buildAndSendSMS(frontLineWorker.getMsisdn(),location.getExternalId(),frontLineWorker.currentCourseAttempt());
+        verify(sendSMSService).buildAndSendSMS(frontLineWorker.getMsisdn(), location.getExternalId(), frontLineWorker.currentCourseAttempt());
     }
 }

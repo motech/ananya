@@ -5,8 +5,6 @@ public class AnanyaException extends Exception {
     
     public AnanyaException() {
         super();
-        
-        // TODO: Log and email exceptions here.
     }
     
     public AnanyaException(Exception e) {

@@ -8,14 +8,12 @@ import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
-import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,11 +67,10 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        ArgumentCaptor<CertificateCourseStateFlwRequest> captor = ArgumentCaptor.forClass(CertificateCourseStateFlwRequest.class);
-        verify(frontlineWorkerService).update(captor.capture());
-        CertificateCourseStateFlwRequest captured = captor.getValue();
-        assertTrue(captured.getFrontLineWorker().reportCard().scores().isEmpty());
-        assertFalse(captured.shouldSendSMS());
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        FrontLineWorker captured = captor.getValue();
+        assertTrue(captured.reportCard().scores().isEmpty());
     }
 
     @Test
@@ -93,12 +90,11 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        ArgumentCaptor<CertificateCourseStateFlwRequest> captor = ArgumentCaptor.forClass(CertificateCourseStateFlwRequest.class);
-        verify(frontlineWorkerService).update(captor.capture());
-        CertificateCourseStateFlwRequest captured = captor.getValue();
-        assertEquals(1, captured.getFrontLineWorker().reportCard().scores().size());
-        assertEquals(chapterIndexWhoseScoresShouldNotBeCleared, captured.getFrontLineWorker().reportCard().scores().get(0).chapterIndex());
-        assertFalse(captured.shouldSendSMS());
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        FrontLineWorker captured = captor.getValue();
+        assertEquals(1, captured.reportCard().scores().size());
+        assertEquals(chapterIndexWhoseScoresShouldNotBeCleared, captured.reportCard().scores().get(0).chapterIndex());
     }
 
     @Test
@@ -116,16 +112,17 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        ArgumentCaptor<CertificateCourseStateFlwRequest> captor = ArgumentCaptor.forClass(CertificateCourseStateFlwRequest.class);
-        verify(frontlineWorkerService).update(captor.capture());
-        CertificateCourseStateFlwRequest captured = captor.getValue();
-        ReportCard reportCard = captured.getFrontLineWorker().reportCard();
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+
+        FrontLineWorker captured = captor.getValue();
+        ReportCard reportCard = captured.reportCard();
         assertEquals(1, reportCard.scores().size());
+
         Score score = reportCard.scores().get(0);
         assertEquals("1", score.chapterIndex());
         assertEquals("0", score.questionIndex());
         assertTrue(score.result());
-        assertFalse(captured.shouldSendSMS());
     }
 
     @Test
@@ -146,18 +143,16 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        ArgumentCaptor<CertificateCourseStateFlwRequest> captor = ArgumentCaptor.forClass(CertificateCourseStateFlwRequest.class);
-        verify(frontlineWorkerService).update(captor.capture());
-        CertificateCourseStateFlwRequest captured = captor.getValue();
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        FrontLineWorker captured = captor.getValue();
 
-        assertEquals(new Integer(1), frontLineWorker.currentCourseAttempt());
-        assertTrue(captured.shouldSendSMS());
+        assertEquals(new Integer(1), captured.currentCourseAttempt());
     }
 
     @Test
     public void shouldModifyFLWAggregateFromTheCertificateCourseStateRequestList() {
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
-
         FrontLineWorker frontLineWorker = new FrontLineWorker();
 
         when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
@@ -180,18 +175,17 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        ArgumentCaptor<CertificateCourseStateFlwRequest> captor = ArgumentCaptor.forClass(CertificateCourseStateFlwRequest.class);
-        verify(frontlineWorkerService).update(captor.capture());
-        CertificateCourseStateFlwRequest captured = captor.getValue();
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        FrontLineWorker captured = captor.getValue();
 
-        ReportCard reportCard = captured.getFrontLineWorker().reportCard();
+        ReportCard reportCard = captured.reportCard();
         assertEquals(1, reportCard.scores().size());
 
         Score score = reportCard.scores().get(0);
         assertEquals("1", score.chapterIndex());
         assertEquals("0", score.questionIndex());
         assertTrue(score.result());
-        assertFalse(captured.shouldSendSMS());
     }
 
 }

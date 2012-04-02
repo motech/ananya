@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendSMSClient {
 
-    public static final String SENDER_ID = "correctSenderIDHere"; //TODO
+    public static final String SENDER_ID = "bbc-ananya";
+
     private OnMobileSendSMSService smsService;
     private FrontLineWorkerService frontLineWorkerService;
 
@@ -20,10 +21,8 @@ public class SendSMSClient {
     public void sendSingleSMS(String mobileNumber, String smsMessage, String smsReferenceNumber) {
         String result = smsService.singlePush(mobileNumber, SENDER_ID, smsMessage);
 
-        if("failure".equals(result)) {
+        if("failure".equals(result))
             throw new RuntimeException("SMS failed to deliver");
-        }
-
         try {
             frontLineWorkerService.addSMSReferenceNumber(mobileNumber, smsReferenceNumber);
         } catch (Exception e){
