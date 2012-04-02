@@ -56,13 +56,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
     public FrontLineWorker() {
+        this.certificateCourseAttempts = 0;
+        this.currentJobAidUsage = 0;
     }
 
     public FrontLineWorker(String msisdn, String operator) {
+        this();
         this.msisdn = msisdn;
         this.operator = (operator == null ? this.operator : operator);
-        this.certificateCourseAttempts = 0;
-        this.currentJobAidUsage = 0;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {

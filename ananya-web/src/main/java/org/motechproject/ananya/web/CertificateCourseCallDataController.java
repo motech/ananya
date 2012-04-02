@@ -45,7 +45,6 @@ public class CertificateCourseCallDataController {
         final String callId = request.getParameter("callId");
         final String callerId = request.getParameter("callerId");
         final String jsonData = request.getParameter("dataToPost");
-        log.info("callId=" + callId + "|callerId=" + callerId + "|jsonData=" + jsonData);
 
         TransferDataList transferDataList = new TransferDataList(jsonData);
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList();
