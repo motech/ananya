@@ -87,6 +87,66 @@ public class CertificateCourseTest extends SpringIntegrationTest {
                .confirmScoresSaved(callerId, reportCard);
     }
 
+
+    @Test
+    public void shouldPostDisconnectEvent() throws Exception {
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, callId);
+        certificateCourseWebService.requestForCallerData(request);
+
+        CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, callId);
+        int token = GenerateToken(callId);
+
+
+        String jsonData = String.format("[{\"token\":%d,\"type\":\"ccState\"," +
+                "\"data\":{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6b9eb2\"," +
+                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\"," +
+                "\"courseItemState\":\"end\",\"contentName\":\"Chapter 2 Lesson 1\",\"time\":\"2012-03-08T12:56:25Z\"," +
+                "\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}}," +
+                "{\"token\":%d,\"type\":\"callDuration\"," +
+                "\"data\":{\"callEvent\":\"DISCONNECT\",\"time\":1331211652263}}]",token,token+1);
+
+        transferDataRequest.setJsonPostData(jsonData);
+
+        certificateCourseWebService.requestForDisconnect(transferDataRequest);
+
+        BookMark bookMark = new BookMark("lessonEndMenu",1,0);
+        reportDb.confirmCourseItemMeasureForDisconnectEvent(callerId, bookMark, "END");
+
+    }
+
+//    @Test
+//    public void shouldCreateTransferDataList_toSaveCertificateCourseResult() throws IOException {
+//        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, callId);
+//        certificateCourseWebService.requestForCallerData(request);
+//
+//        String newCallId = callId + "1";
+//        CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, newCallId);
+//
+//        int token = GenerateToken(newCallId);
+//
+//        String jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\" token\":%d ,\" type\":\" ccState\",\" data\":{\" chapterIndex\":7,\" lessonOrQuestionIndex\":8,\" questionResponse\":1,\" result\":true,\" interactionKey\":\" playAnswerExplanation\"}} ]", token, token+1);
+//        transferDataRequest.setJsonPostData(jsonData);
+//
+//        certificateCourseWebService.requestForTransferData(transferDataRequest);
+//
+//        ReportCard reportCard = new ReportCard();
+//        reportCard.addScore(new ReportCard.Score("7", "7", true, newCallId));
+//        reportCard.addScore(new ReportCard.Score("8", "7", true, newCallId));
+//
+//        couchDb.confirmBookmarkUpdated(callerId,new BookMark("playAnswerExplanation",8,7))
+//               .confirmScoresSaved(callerId, reportCard);
+//
+//        jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playCourseResult\"}}]", token+2);
+//        transferDataRequest.setJsonPostData(jsonData);
+//
+//        certificateCourseWebService.requestForTransferData(transferDataRequest);
+//
+//        couchDb.confirmBookmarkUpdated(callerId,new BookMark("playCourseResult",8,7))
+//                .confirmScoresSaved(callerId, reportCard);
+//
+//    }
+
+
     private int GenerateToken(String callId) {
         CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
         int token;

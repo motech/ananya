@@ -25,9 +25,9 @@ public class CertificateCourseWebservice {
     public CertificateCourseResponse requestForTransferData(CertificateCourseRequest request) throws IOException {
         String webPage ="/ananya/transferdata.js";
         MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
-        MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
         MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
-        return makePostRequest(webPage, callerId , callId , dataToPost);
+        MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
+        return makePostRequest(webPage, callerId, callId , dataToPost);
     }
 
     private CertificateCourseResponse makeRequest(String webPage) throws IOException {
@@ -44,4 +44,16 @@ public class CertificateCourseWebservice {
         return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }
 
+    public CertificateCourseResponse requestForDisconnect(CertificateCourseRequest request) throws IOException {
+        String webPage ="/ananya/transferdata/disconnect.js";
+        MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
+        MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
+        MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
+        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost);
+    }
+
+    private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost) throws IOException {
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost);
+        return CertificateCourseResponse.makeForNonJson(page.getWebResponse().getContentAsString());
+    }
 }

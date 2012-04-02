@@ -9,7 +9,20 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "course_item_measure")
+@NamedQueries(value = {
+        @NamedQuery(name = CourseItemMeasure.FIND_BY_FLW_AND_EVENT,
+                query = "select r from CourseItemMeasure r where r.frontLineWorkerDimension.id=:flw_id and r.event=:event"),
+        @NamedQuery(name = CourseItemMeasure.FIND_BY_FLW_AND_COURSE_ITEM_MEASURE_AND_EVENT,
+                query = "select r from CourseItemMeasure r where r.frontLineWorkerDimension.id=:flw_id and r.courseItemDimension.id=:course_item_id and r.event=:event")
+
+
+}
+)
+
 public class CourseItemMeasure {
+
+    public static final String FIND_BY_FLW_AND_EVENT = "find.by.flw.and.event";
+    public static final String FIND_BY_FLW_AND_COURSE_ITEM_MEASURE_AND_EVENT = "find.by.flw.and.course.item.measure.and.event";
 
     @Id
     @Column(name = "id")
