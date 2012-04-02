@@ -59,7 +59,6 @@ public class CertificateCourseService {
     private void saveBookmarkAndScore(CertificationCourseStateRequestList stateRequestList) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
         addBookmark(frontLineWorker, stateRequestList);
-
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
             ServiceAction serviceAction = ServiceAction.findFor(stateRequest.getInteractionKey());
             serviceAction.update(frontLineWorker, stateRequest);
@@ -69,10 +68,7 @@ public class CertificateCourseService {
 
     private void addBookmark(FrontLineWorker frontLineWorker, CertificationCourseStateRequestList stateRequestList) {
         CertificationCourseStateRequest lastRequest = stateRequestList.lastRequest();
-        final BookMark bookMark = new BookMark(
-                lastRequest.getInteractionKey(),
-                lastRequest.getChapterIndex(),
-                lastRequest.getLessonOrQuestionIndex());
+        final BookMark bookMark = new BookMark(lastRequest.getInteractionKey(), lastRequest.getChapterIndex(), lastRequest.getLessonOrQuestionIndex());
         frontLineWorker.addBookMark(bookMark);
     }
 

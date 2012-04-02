@@ -5,18 +5,23 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.InteractionKeys;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum ServiceAction {
+
     CourseCompletion(InteractionKeys.PlayCourseResultInteraction) {
         @Override
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             frontLineWorker.incrementCertificateCourseAttempts();
+            log.info("Incremented course attempts for "+frontLineWorker);
         }
     },
     StartCourse(InteractionKeys.StartCertificationCourseInteraction) {
         @Override
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             frontLineWorker.reportCard().clearAllScores();
+            log.info("Cleared all scores for "+frontLineWorker);
         }
     },
     StartQuiz(InteractionKeys.StartQuizInteraction) {
@@ -24,6 +29,7 @@ public enum ServiceAction {
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             String chapterIndex = stateRequest.getChapterIndex().toString();
             frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex);
+            log.info("Cleared scores for chapter "+chapterIndex +" for "+frontLineWorker);
         }
     },
     PlayAnswerExplanation(InteractionKeys.PlayAnswerExplanationInteraction) {
@@ -35,9 +41,11 @@ public enum ServiceAction {
                     stateRequest.getResult(),
                     stateRequest.getCallId());
             frontLineWorker.reportCard().addScore(score);
+            log.info("Added scores for chapter for "+frontLineWorker);
         }
     };
 
+    private static Logger log = LoggerFactory.getLogger(ServiceAction.class);
     private String interactionKey;
 
     ServiceAction(String interactionKey) {

@@ -125,6 +125,7 @@ public class FrontLineWorkerService {
             sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
             log.info("Course completion SMS sent for " + frontLineWorker);
         }
+        log.info("Updated certificate course state for " + frontLineWorker);
     }
 
     public FrontLineWorker getFLWForJobAidCallerData(String callerId, String operator) {
