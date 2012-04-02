@@ -4,7 +4,6 @@ package org.motechproject.ananya.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
-import org.motechproject.util.DateUtil;
 
 public class BaseLog extends MotechBaseDataObject {
     @JsonProperty
@@ -36,32 +35,12 @@ public class BaseLog extends MotechBaseDataObject {
         return callId;
     }
 
-    public String getCalledNumber() {
-        return calledNumber;
-    }
-
     public String getCallerId() {
         return this.callerId;
     }
 
     public String getOperator() {
         return operator;
-    }
-
-    public DateTime getStartTime() {
-        return DateUtil.setTimeZone(this.startTime);
-    }
-
-    public DateTime getEndTime() {
-        return DateUtil.setTimeZone(this.endTime);
-    }
-
-    public void setStartTime(DateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(DateTime endTime) {
-        this.endTime = endTime;
     }
 
     public Long callerIdAsLong() {

@@ -22,6 +22,14 @@ public class CallDurationList {
         return list;
     }
 
+    public String getCallId() {
+        return callId;
+    }
+
+    public String getCallerId() {
+        return callerId;
+    }
+
     public void add(String data) {
         Gson gson = new Gson();
         Type collectionType = new TypeToken<CallDuration>() {

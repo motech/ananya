@@ -1,30 +1,26 @@
 package org.motechproject.ananya.service;
 
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCallLogs;
+import org.motechproject.ananya.repository.AllCallLogList;
 
-import java.util.*;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CallLoggerServiceTest {
     private CallLoggerService callLoggerService;
 
     @Mock
-    private AllCallLogs allCallLogs;
+    private AllCallLogList allCallLogs;
 
     @Before
     public void setUp() {
@@ -33,126 +29,63 @@ public class CallLoggerServiceTest {
     }
 
     @Test
-    public void shouldSaveCallLogForCallStartEvent() {
+    public void shouldSaveCallLogFromCallDurations() {
         final DateTime start = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CALL_START, start.getMillis()));
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CALL, null);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+        CallDurationList callDurationList = new CallDurationList("callId", "callerId");
+        List<CallDuration> callDurations = callDurationList.all();
+
+        long callStartTime = start.getMillis();
+        long courseStartTime = start.plusSeconds(2).getMillis();
+        long courseEndTime = start.plus(10).getMillis();
+        long callEndTime = start.plus(12).getMillis();
+
+        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CALL_START, callStartTime));
+        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_START, courseStartTime));
+        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_END, courseEndTime));
+        callDurations.add(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, callEndTime));
+
+        callLoggerService.saveAll(callDurationList);
+
+        ArgumentCaptor<CallLogList> captor = ArgumentCaptor.forClass(CallLogList.class);
+        verify(allCallLogs).add(captor.capture());
+        CallLogList callLogList = captor.getValue();
+
+        assertEquals("callId", callLogList.getCallId());
+        assertEquals("callerId", callLogList.getCallerId());
+
+        List<CallLog> callLogs = callLogList.getCallLogs();
+        assertEquals(2, callLogs.size());
+
+        CallLog callLogForCallType = callLogs.get(0);
+        assertEquals(CallFlowType.CALL, callLogForCallType.getCallFlowType());
+        assertEquals(callStartTime, callLogForCallType.getStartTime().getMillis());
+        assertEquals(callEndTime, callLogForCallType.getEndTime().getMillis());
+
+        CallLog callLogForCourseType = callLogs.get(1);
+        assertEquals(CallFlowType.CERTIFICATECOURSE, callLogForCourseType.getCallFlowType());
+        assertEquals(courseStartTime, callLogForCourseType.getStartTime().getMillis());
+        assertEquals(courseEndTime, callLogForCourseType.getEndTime().getMillis());
+
     }
 
     @Test
-    public void shouldSaveCallLogForRegStartEvent() {
-        final DateTime start = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.REGISTRATION_START, start.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.REGISTRATION, null);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+    public void shouldCallAllLogsRepoToDelete(){
+        CallLogList callLogList = new CallLogList("123456","123");
+        callLoggerService.delete(callLogList);
+        verify(allCallLogs).remove(callLogList);
     }
 
     @Test
-    public void shouldSaveCallLogForRegEndEvent() {
-        final DateTime end = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.REGISTRATION_END, end.getMillis()));
+    public void shouldFetchCallLogListFromRepo(){
+        String callId = "123456";
+        String callerId = "123";
+        CallLogList callLogList = new CallLogList(callId, callerId);
+        when(allCallLogs.findByCallId(callId)).thenReturn(callLogList);
 
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.REGISTRATION, end);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
+        CallLogList callLogListFromDB = callLoggerService.getCallLogList(callId);
+        assertEquals(callLogList,callLogListFromDB);
     }
 
-    @Test
-    public void shouldSaveCallLogForCCStartEvent() {
-        final DateTime start = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_START, start.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.CERTIFICATECOURSE, null);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-    }
-
-    @Test
-    public void shouldSaveCallLogForCCEndEvent() {
-        final DateTime end = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_END, end.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.CERTIFICATECOURSE, end);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-    }
-
-    @Test
-    public void shouldSaveCallLogForJobAidStartEvent() {
-        final DateTime start = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_START, start.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(start, CallFlowType.JOBAID, null);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-    }
-
-    @Test
-    public void shouldSaveCallLogForJobAidEndEvent() {
-        final DateTime end = DateTime.now();
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.JOBAID_END, end.getMillis()));
-
-        Matcher<CallLog> callLogMatcher = callLogMatcher(null, CallFlowType.JOBAID, end);
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher));
-    }
-
-    @Test
-    public void shouldSaveAllCallLogWithUpdatedEndTimeForDisconnectEvent() {
-        final DateTime end = new DateTime(2011,1,1,1,10);
-        DateTime callStart = new DateTime(2011, 1, 1, 1, 1);
-        DateTime regStart = new DateTime(2011, 1, 1, 1, 5);
-        DateTime regEnd = new DateTime(2011, 1, 1, 1, 6);
-
-        ArrayList<CallLog> callLogs = new ArrayList<CallLog>() {};
-        callLogs.add(new CallLog("callId", "callerId", CallFlowType.CALL, callStart,null));
-        callLogs.add(new CallLog("callId", "callerId", CallFlowType.REGISTRATION, regStart, regEnd));
-
-        stub(allCallLogs.findByCallId("callId")).toReturn(callLogs);
-
-        callLoggerService.save(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, end.getMillis()));
-
-        verify(allCallLogs).addOrUpdate(argThat(callLogMatcher(callStart, CallFlowType.CALL, end)));
-    }
-
-    @Test
-    public void shouldGetAllCallLogsForAGivenCallId(){
-        String callid = "callid";
-        Collection<CallLog> callLogs = new ArrayList<CallLog>();
-        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlowType.CALL, DateTime.now(), DateTime.now());
-        callLogs.add(mockCallLog);
-        when(allCallLogs.findByCallId(callid)).thenReturn(callLogs);
-
-        Collection<CallLog> allCallLogsForCallId = callLoggerService.getAllCallLogs(callid);
-
-        assertEquals(1, allCallLogsForCallId.size());
-        assertTrue(allCallLogsForCallId.contains(mockCallLog));
-    }
-
-    @Test
-    public void shouldDeleteAllGivenCallLogs(){
-        Collection<CallLog> callLogs = new ArrayList<CallLog>();
-        CallLog mockCallLog = new CallLog("callId", "callerId", CallFlowType.CALL, DateTime.now(), DateTime.now());
-        callLogs.add(mockCallLog);
-
-        callLoggerService.delete(callLogs);
-
-        verify(allCallLogs).delete(callLogs);
-    }
-
-    private Matcher<CallLog> callLogMatcher(final DateTime startTime, final CallFlowType callFlowType, final DateTime endTime) {
-        return new BaseMatcher<CallLog>() {
-                @Override
-                public boolean matches(Object o) {
-                    CallLog o1 = (CallLog) o;
-                    return ((o1.getStartTime() == null && startTime == null) ||o1.getStartTime().equals(startTime))
-                        && o1.getCallFlowType() == callFlowType
-                        && ((o1.getEndTime() == null && endTime == null) || o1.getEndTime().equals(endTime))
-                        && o1.getCallId() == "callId";
-                }
-
-                @Override
-                public void describeTo(Description description) {
-                }
-            };
-    }
 
 }

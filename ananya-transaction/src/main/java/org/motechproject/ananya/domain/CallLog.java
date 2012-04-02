@@ -1,30 +1,50 @@
 package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
-@TypeDiscriminator("doc.type == 'CallLog'")
-public class CallLog extends BaseLog{
+public class CallLog {
 
     @JsonProperty
     private CallFlowType callFlowType;
 
+    @JsonProperty
+    private DateTime startTime;
+
+    @JsonProperty
+    private DateTime endTime;
+
     public CallLog() {
     }
 
-    public CallLog(String callId, String callerId, CallFlowType callFlowType, DateTime startTime, DateTime endTime) {
-        super(callerId, "", startTime, endTime, "", callId);
+    public CallLog(CallFlowType callFlowType, DateTime startTime, DateTime endTime) {
         this.callFlowType = callFlowType;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public CallFlowType getCallFlowType() {
         return callFlowType;
     }
 
-    public Integer duration(){
-        return Seconds.secondsBetween(getStartTime(), getEndTime()).getSeconds();
+    public DateTime getEndTime() {
+        return endTime;
     }
 
+    public DateTime getStartTime() {
+        return startTime;
+    }
+
+    public Integer duration() {
+        return Seconds.secondsBetween(startTime, endTime).getSeconds();
+    }
+
+    public void setEndTime(DateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
+    }
 }
