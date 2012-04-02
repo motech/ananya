@@ -13,7 +13,7 @@ public class CertificationCourseStateRequestListTest {
 
     @Before
     public void setUp() {
-        courseStateRequestList = new CertificationCourseStateRequestList();
+        courseStateRequestList = new CertificationCourseStateRequestList("123","12345");
     }
 
     @Test
@@ -28,8 +28,8 @@ public class CertificationCourseStateRequestListTest {
                 "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"2012-03-08T12:55:18Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
 
-        courseStateRequestList.add("123456", "123", token1, "1");
-        courseStateRequestList.add("123456", "123", token2, "2");
+        courseStateRequestList.add(token1, "1");
+        courseStateRequestList.add(token2, "2");
 
         assertThat(courseStateRequestList.all().size(), is(2));
         assertFalse(courseStateRequestList.isEmpty());

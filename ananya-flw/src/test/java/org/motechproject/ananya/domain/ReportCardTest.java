@@ -17,7 +17,7 @@ public class ReportCardTest {
         String chapterIndex = "0";
         String questionIndex = "3";
         Boolean result = true;
-        ReportCard.Score score1 = new ReportCard.Score(chapterIndex, questionIndex, result);
+        Score score1 = new Score(chapterIndex, questionIndex, result);
         reportCard.addScore(score1);
         assertThat(reportCard.scores(), hasItems(score1));
     }
@@ -26,10 +26,10 @@ public class ReportCardTest {
     public void shouldOverwriteScoreIfScoreExistsForTheSameQuestionInAChapter() {
         ReportCard reportCard = new ReportCard();
 
-        ReportCard.Score scoreForChap1Que4 = new ReportCard.Score("0", "3", true);
+        Score scoreForChap1Que4 = new Score("0", "3", true);
         reportCard.addScore(scoreForChap1Que4);
 
-        ReportCard.Score newScoreForChap1Que4 = new ReportCard.Score("0", "3", false);
+        Score newScoreForChap1Que4 = new Score("0", "3", false);
         reportCard.addScore(newScoreForChap1Que4);
 
         assertThat(reportCard.scores().size(), is(1));
@@ -88,15 +88,15 @@ public class ReportCardTest {
     private ReportCard makeTestReportCard() {
         ReportCard reportCard = new ReportCard();
 
-        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
-        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
-        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
-        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
-        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
-        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
-        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
-        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
-        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
+        final Score ch1q1score = new Score("0", "4", true);
+        final Score ch1q2score = new Score("0", "5", false);
+        final Score ch1q3score = new Score("0", "6", true);
+        final Score ch2q1score = new Score("1", "4", false);
+        final Score ch2q2score = new Score("1", "5", false);
+        final Score ch2q3score = new Score("1", "6", true);
+        final Score ch3q1score = new Score("2", "4", false);
+        final Score ch3q2score = new Score("2", "5", false);
+        final Score ch3q3score = new Score("2", "6", false);
 
         reportCard.addScore(ch1q1score);
         reportCard.addScore(ch1q2score);

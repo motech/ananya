@@ -7,8 +7,16 @@ import java.util.List;
 
 public class CertificationCourseStateRequestList {
     private List<CertificationCourseStateRequest> list = new ArrayList<CertificationCourseStateRequest>();
+    private String callId;
+    private String callerId;
 
-    public void add(String callId, String callerId, String json, String token) {
+    public CertificationCourseStateRequestList(String callId, String callerId) {
+
+        this.callId = callId;
+        this.callerId = callerId;
+    }
+
+    public void add(String json, String token) {
         list.add(CertificationCourseStateRequest.createFrom(callerId, callId, token, json));
     }
 
@@ -22,6 +30,10 @@ public class CertificationCourseStateRequestList {
 
     public CertificationCourseStateRequest lastRequest() {
         return list.get(list.size() - 1);
+    }
+
+    public String getCallerId() {
+        return callerId;
     }
 
     @Override

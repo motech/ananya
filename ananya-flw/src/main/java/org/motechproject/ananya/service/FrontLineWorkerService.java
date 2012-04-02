@@ -105,33 +105,6 @@ public class FrontLineWorkerService {
         return allSMSReferences.findByMsisdn(callerId);
     }
 
-    public void saveScore(CertificateCourseStateFlwRequest request) {
-        String callId = request.getCallId();
-        String callerId = request.getCallerId();
-        Integer chapterIndex = request.getChapterIndex();
-        Integer lessonOrQuestionIndex = request.getLessonOrQuestionIndex();
-        Boolean result = request.getResult();
-
-        if (request.isStartCertificationCourseInteraction()) {
-            resetAllScores(callerId);
-        } else if (request.isStartQuizInteraction()) {
-            resetScoresForChapterIndex(callerId, chapterIndex);
-        } else if (request.isPlayAnswerExplanationInteraction()) {
-            final ReportCard.Score score = new ReportCard.Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, callId);
-            addScore(callerId, score);
-        } else if (request.isPlayCourseResultInteraction()) {
-            FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
-            int totalScore = frontLineWorker.reportCard().totalScore();
-            int currentCertificateCourseAttempts = incrementCertificateCourseAttempts(frontLineWorker);
-
-            if (totalScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
-                sendSMSService.buildAndSendSMS(callerId, frontLineWorker.getLocationId(), currentCertificateCourseAttempts);
-                log.info("Course completion SMS sent for " + frontLineWorker);
-            }
-        }
-    }
-
     public void updatePromptsFor(String callerId, List<String> promptList) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         for (String prompt : promptList)
@@ -148,33 +121,12 @@ public class FrontLineWorkerService {
         log.info("Updated jobaid usage for " + frontLineWorker);
     }
 
-    private void addScore(String callerId, ReportCard.Score score) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        frontLineWorker.reportCard().addScore(score);
+    public void update(CertificateCourseStateFlwRequest certificateCourseStateFlwRequest) {
+        FrontLineWorker frontLineWorker = certificateCourseStateFlwRequest.getFrontLineWorker();
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Added scores for " + frontLineWorker);
-    }
-
-    private void resetScoresForChapterIndex(String callerId, Integer chapterIndex) {
-        final FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated scores for " + frontLineWorker);
-    }
-
-    private int incrementCertificateCourseAttempts(FrontLineWorker frontLineWorker) {
-        int certificateCourseAttempts = frontLineWorker.incrementCertificateCourseAttempts();
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated course attempts for " + frontLineWorker);
-        return certificateCourseAttempts;
-    }
-
-    private void resetAllScores(String msisdn) {
-        final FrontLineWorker frontLineWorker = findByCallerId(msisdn);
-        if (frontLineWorker != null) {
-            frontLineWorker.reportCard().clearAllScores();
-            allFrontLineWorkers.update(frontLineWorker);
-            log.info("Scores reset for " + frontLineWorker);
+        if (certificateCourseStateFlwRequest.shouldSendSMS()) {
+            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
+            log.info("Course completion SMS sent for " + frontLineWorker);
         }
     }
 

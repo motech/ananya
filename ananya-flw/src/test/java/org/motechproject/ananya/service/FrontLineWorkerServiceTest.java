@@ -23,7 +23,7 @@ public class FrontLineWorkerServiceTest {
 
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
-    private AllFrontLineWorkers allFrontLineWorkers; 
+    private AllFrontLineWorkers allFrontLineWorkers;
     @Mock
     private AllSMSReferences allSMSReferences;
     @Mock
@@ -39,13 +39,9 @@ public class FrontLineWorkerServiceTest {
         frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, sendSMSService, publisherService, allSMSReferences);
     }
 
-    private FrontLineWorker makeFrontLineWorker() {
-        return new FrontLineWorker("123", "name",Designation.ANM, new Location(),RegistrationStatus.REGISTERED);
-    }
-
     @Test
     public void shouldCreateNewFLWIfNotPresentInDB() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name",Designation.ANM, new Location(),RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
         String msisdn = frontLineWorker.getMsisdn();
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
@@ -59,11 +55,11 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.status());
     }
-    
+
     @Test
     public void shouldNotCreateFLWIfExistsInDBAndNotUpdateFLWIfOperatorIsNotModified() {
         String msisdn = "123";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name",Designation.ANM, new Location(),RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.setOperator("airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
@@ -77,9 +73,9 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenOperatorIsDifferent() {
         String msisdn = "123";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name",Designation.ANM, new Location(),RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.setOperator("vodafone");
-        
+
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, "airtel");
@@ -87,101 +83,6 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker, frontLineWorkerFromDb);
-    }
-
-    @Test
-    public void shouldClearTheScoresOfTheChapterOnStartingAQuizForThatChapter() {
-        String callerId = "callerId";
-        int chapterIndex = 1;
-        int questionIndex = 3;
-        int anotherChapterIndex = 0;
-        int anotherQuestionIndex = 3;
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(chapterIndex, questionIndex, null, InteractionKeys.StartQuizInteraction, "callId", callerId);
-        FrontLineWorker expectedFrontLineWorker = makeFrontLineWorker();
-        expectedFrontLineWorker.reportCard().addScore(new ReportCard.Score(Integer.toString(chapterIndex), Integer.toString(questionIndex), true));
-        expectedFrontLineWorker.reportCard().addScore(new ReportCard.Score(Integer.toString(anotherChapterIndex), Integer.toString(anotherQuestionIndex), true));
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
-
-        frontLineWorkerService.saveScore(request);
-
-        assertEquals(1, expectedFrontLineWorker.reportCard().scores().size());
-        verify(allFrontLineWorkers).update(expectedFrontLineWorker);
-    }
-
-    @Test
-    public void shouldAddTheScoreForTheChapterOnPlayAnswerInteraction() {
-        String callerId = "callerId";
-        int chapterIndex = 1;
-        int questionIndex = 3;
-        int anotherChapterIndex = 0;
-        int anotherQuestionIndex = 3;
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(chapterIndex, questionIndex, true, InteractionKeys.PlayAnswerExplanationInteraction, "callId", callerId);
-        FrontLineWorker expectedFrontLineWorker = makeFrontLineWorker();
-        expectedFrontLineWorker.reportCard().addScore(new ReportCard.Score(Integer.toString(anotherChapterIndex), Integer.toString(anotherQuestionIndex), true));
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
-
-        frontLineWorkerService.saveScore(request);
-
-        int actualChapterIndex = Integer.parseInt(expectedFrontLineWorker.reportCard().scores().get(1).chapterIndex());
-        int actualQuestionIndex = Integer.parseInt(expectedFrontLineWorker.reportCard().scores().get(1).questionIndex());
-        assertEquals(2, expectedFrontLineWorker.reportCard().scores().size());
-        assertEquals(chapterIndex, actualChapterIndex);
-        assertEquals(questionIndex, actualQuestionIndex);
-        verify(allFrontLineWorkers).update(expectedFrontLineWorker);
-    }
-
-    @Test
-    public void shouldIncrementTheCourseAttemptAndSendAnSMSIfScoreIsGreaterThan18OnCourseCompletion() {
-        String callerId = "callerId";
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(10, 0, null, InteractionKeys.PlayCourseResultInteraction, "callId", callerId);
-        FrontLineWorker expectedFrontLineWorker = makeFrontLineWorker();
-        setUpTestScoreSet(expectedFrontLineWorker, true);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
-
-        frontLineWorkerService.saveScore(request);
-
-        Integer courseAttemptNumber = expectedFrontLineWorker.currentCourseAttempt();
-        assertEquals(1, (int) courseAttemptNumber);
-        verify(allFrontLineWorkers).update(expectedFrontLineWorker);
-        verify(sendSMSService).buildAndSendSMS(callerId, expectedFrontLineWorker.getLocationId(), courseAttemptNumber);
-    }
-
-    @Test
-    public void shouldIncrementTheCourseAttemptButShouldNotSendAnSMSIfScoreIsLessThan18OnCourseCompletion() {
-        String callerId = "callerId";
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(10, 0, null, InteractionKeys.PlayCourseResultInteraction, "callId", callerId);
-        FrontLineWorker expectedFrontLineWorker = makeFrontLineWorker();
-        setUpTestScoreSet(expectedFrontLineWorker, false);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(expectedFrontLineWorker);
-
-        frontLineWorkerService.saveScore(request);
-
-        Integer courseAttemptNumber = expectedFrontLineWorker.currentCourseAttempt();
-        assertEquals(1, (int) courseAttemptNumber);
-        verify(allFrontLineWorkers).update(expectedFrontLineWorker);
-        verify(sendSMSService, never()).buildAndSendSMS(callerId, expectedFrontLineWorker.getLocationId(), courseAttemptNumber);
-    }
-
-    private void setUpTestScoreSet(FrontLineWorker frontLineWorker, boolean result) {
-        for (int chapterIndex = 0; chapterIndex < 9; chapterIndex++) {
-            for (int questionIndex = 0; questionIndex < 4; questionIndex++) {
-                frontLineWorker.reportCard().addScore(new ReportCard.Score(Integer.toString(chapterIndex), Integer.toString(questionIndex), result));
-            }
-        }
-    }
-
-    @Test
-    public void shouldResetScoresAtCertificationCourseStartInteractionWhileSavingScores() {
-        String callerId = "callerId";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator");
-        frontLineWorker.reportCard().addScore(new ReportCard.Score("1", "1", true));
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-
-        CertificateCourseStateFlwRequest request = new CertificateCourseStateFlwRequest(1, 1, false, InteractionKeys.StartCertificationCourseInteraction, "callId", callerId);
-
-        frontLineWorkerService.saveScore(request);
-
-        assertEquals(0, frontLineWorker.reportCard().scores().size());
     }
 
     @Test
@@ -261,7 +162,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateFLWUsageByAddingCurrentCallDuration(){
+    public void shouldUpdateFLWUsageByAddingCurrentCallDuration() {
         String callerId = "callerId";
         String operator = "airtel";
         Integer currentUsage = 20;
@@ -277,11 +178,11 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).update(captor.capture());
 
         FrontLineWorker captorValue = captor.getValue();
-        assertEquals((Object) newUsage,captorValue.getCurrentJobAidUsage());
+        assertEquals((Object) newUsage, captorValue.getCurrentJobAidUsage());
     }
 
     @Test
-    public void shouldUpdateTheLastAccessTimeForFlw(){
+    public void shouldUpdateTheLastAccessTimeForFlw() {
         String callerId = "callerId";
         String operator = "airtel";
 
@@ -299,7 +200,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldResetLastAccessTimeForJobAidAndMaxUsagePromptHeardAtBeginningOfTheMonth(){
+    public void shouldResetLastAccessTimeForJobAidAndMaxUsagePromptHeardAtBeginningOfTheMonth() {
         String callerId = "callerId";
         String randomPromptKey = "random";
         String operator = "airtel";
@@ -313,13 +214,13 @@ public class FrontLineWorkerServiceTest {
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
         FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.getFLWForJobAidCallerData("callerId", "operator");
-        
+
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
     }
 
     @Test
-    public void shouldResetCurrentUsageAtBeginningOfMonthEvenThoughMaxUsageIsNotReached(){
+    public void shouldResetCurrentUsageAtBeginningOfMonthEvenThoughMaxUsageIsNotReached() {
         String callerId = "callerId";
         String operator = "airtel";
         DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
@@ -341,18 +242,43 @@ public class FrontLineWorkerServiceTest {
         String smsReferenceNumber = "0102987654321001";
 
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator , Designation.ANGANWADI , new Location(), RegistrationStatus.REGISTERED    );
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.incrementCertificateCourseAttempts();
-        
+
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
         frontLineWorkerService.addSMSReferenceNumber(callerId, smsReferenceNumber);
-        
+
         ArgumentCaptor<SMSReference> smsReference = ArgumentCaptor.forClass(SMSReference.class);
         verify(allSMSReferences).update(smsReference.capture());
 
         SMSReference smsReferenceValue = smsReference.getValue();
-        assertEquals(smsReferenceValue.getMsisdn() , callerId);
-        assertEquals(smsReferenceValue.referenceNumbers(1) , smsReferenceNumber);
+        assertEquals(smsReferenceValue.getMsisdn(), callerId);
+        assertEquals(smsReferenceValue.referenceNumbers(1), smsReferenceNumber);
         verify(publisherService).publishSMSSent(callerId);
+    }
+
+    @Test
+    public void shouldUpdateTheFrontLineWorkerAndNotSendSMS() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+
+        frontLineWorkerService.update(new CertificateCourseStateFlwRequest(frontLineWorker, false));
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        assertEquals(frontLineWorker, captor.getValue());
+        verify(sendSMSService, never()).buildAndSendSMS(anyString(), anyString(), anyInt());
+    }
+
+    @Test
+    public void shouldUpdateTheFrontLineWorkerAndSendSMS() {
+        Location location = Location.getDefaultLocation();
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123","name",Designation.ASHA,location,RegistrationStatus.REGISTERED);
+
+        frontLineWorkerService.update(new CertificateCourseStateFlwRequest(frontLineWorker, true));
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        assertEquals(frontLineWorker, captor.getValue());
+        verify(sendSMSService).buildAndSendSMS(frontLineWorker.getMsisdn(),location.getExternalId(),frontLineWorker.currentCourseAttempt());
     }
 }

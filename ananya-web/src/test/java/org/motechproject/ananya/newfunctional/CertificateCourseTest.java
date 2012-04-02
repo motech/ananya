@@ -8,6 +8,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.CallLogCounter;
 import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
 import org.motechproject.ananya.framework.domain.CertificateCourseRequest;
@@ -80,7 +81,7 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         CertificateCourseResponse response =  certificateCourseWebService.requestForTransferData(transferDataRequest);
 
         ReportCard reportCard = new ReportCard();
-        reportCard.addScore(new ReportCard.Score("8", "7", true, newCallId));
+        reportCard.addScore(new Score("8", "7", true, newCallId));
 
         couchDb.confirmBookmarkUpdated(callerId,new BookMark("playAnswerExplanation",8,7))
                .confirmScoresSaved(callerId, reportCard);

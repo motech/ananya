@@ -82,37 +82,37 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
 
         ReportCard reportCard = flw.reportCard();
 
-        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
-        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
-        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
+        final Score ch1q1score = new Score("0", "4", true);
+        final Score ch1q2score = new Score("0", "5", false);
+        final Score ch1q3score = new Score("0", "6", true);
 
-        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", true);
-        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", true);
-        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
+        final Score ch2q1score = new Score("1", "4", true);
+        final Score ch2q2score = new Score("1", "5", true);
+        final Score ch2q3score = new Score("1", "6", true);
 
-        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", true);
-        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", true);
-        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", true);
+        final Score ch3q1score = new Score("2", "4", true);
+        final Score ch3q2score = new Score("2", "5", true);
+        final Score ch3q3score = new Score("2", "6", true);
 
-        final ReportCard.Score ch4q1score = new ReportCard.Score("3", "4", true);
-        final ReportCard.Score ch4q2score = new ReportCard.Score("3", "5", true);
-        final ReportCard.Score ch4q3score = new ReportCard.Score("3", "6", true);
+        final Score ch4q1score = new Score("3", "4", true);
+        final Score ch4q2score = new Score("3", "5", true);
+        final Score ch4q3score = new Score("3", "6", true);
 
-        final ReportCard.Score ch5q1score = new ReportCard.Score("4", "4", true);
-        final ReportCard.Score ch5q2score = new ReportCard.Score("4", "5", true);
-        final ReportCard.Score ch5q3score = new ReportCard.Score("4", "6", true);
+        final Score ch5q1score = new Score("4", "4", true);
+        final Score ch5q2score = new Score("4", "5", true);
+        final Score ch5q3score = new Score("4", "6", true);
 
-        final ReportCard.Score ch6q1score = new ReportCard.Score("5", "4", true);
-        final ReportCard.Score ch6q2score = new ReportCard.Score("5", "5", true);
-        final ReportCard.Score ch6q3score = new ReportCard.Score("5", "6", true);
+        final Score ch6q1score = new Score("5", "4", true);
+        final Score ch6q2score = new Score("5", "5", true);
+        final Score ch6q3score = new Score("5", "6", true);
 
-        final ReportCard.Score ch7q1score = new ReportCard.Score("6", "4", true);
-        final ReportCard.Score ch7q2score = new ReportCard.Score("6", "5", true);
-        final ReportCard.Score ch7q3score = new ReportCard.Score("6", "6", true);
+        final Score ch7q1score = new Score("6", "4", true);
+        final Score ch7q2score = new Score("6", "5", true);
+        final Score ch7q3score = new Score("6", "6", true);
 
-        final ReportCard.Score ch8q1score = new ReportCard.Score("7", "4", false);
-        final ReportCard.Score ch8q2score = new ReportCard.Score("7", "5", false);
-        final ReportCard.Score ch8q3score = new ReportCard.Score("7", "6", false);
+        final Score ch8q1score = new Score("7", "4", false);
+        final Score ch8q2score = new Score("7", "5", false);
+        final Score ch8q3score = new Score("7", "6", false);
 
         reportCard.addScore(ch1q1score);
         reportCard.addScore(ch1q2score);

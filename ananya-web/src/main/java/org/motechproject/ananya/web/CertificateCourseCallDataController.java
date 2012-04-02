@@ -43,14 +43,14 @@ public class CertificateCourseCallDataController {
         final String jsonData = request.getParameter("dataToPost");
 
         TransferDataList transferDataList = new TransferDataList(jsonData);
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList();
-        CallDurationList callDurationList = new CallDurationList();
+        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
+        CallDurationList callDurationList = new CallDurationList(callId, callerId);
 
         for (TransferData transferData : transferDataList.all()) {
             if (transferData.isCCState())
-                stateRequestList.add(callId, callerId, transferData.getData(), transferData.getToken());
+                stateRequestList.add(transferData.getData(), transferData.getToken());
             else
-                callDurationList.add(callId, callerId, transferData.getData());
+                callDurationList.add(transferData.getData());
         }
         certificateCourseService.saveState(stateRequestList);
         callLoggerService.saveAll(callDurationList);

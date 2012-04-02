@@ -214,4 +214,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.locationId = location.getExternalId();
         this.designation = designation;
     }
+
+    public boolean hasCompletedCertificateCourse() {
+        return reportCard().totalScore() > CERTIFICATE_COURSE_PASSING_SCORE;
+    }
 }

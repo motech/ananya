@@ -14,14 +14,14 @@ public class CallDurationListTest {
 
     @Before
     public void setUp() {
-        callDurationList = new CallDurationList();
+        callDurationList = new CallDurationList("123456","123");
     }
 
     @Test
     public void shouldConvertJsonAndAddToList() {
 
-        callDurationList.add("123456", "123", "{\"callEvent\":\"CALL_START\",\"time\":1331211295810}");
-        callDurationList.add("123456", "123", "{\"callEvent\":\"CERTIFICATECOURSE_START\",\"time\":1331211297476}");
+        callDurationList.add("{\"callEvent\":\"CALL_START\",\"time\":1331211295810}");
+        callDurationList.add("{\"callEvent\":\"CERTIFICATECOURSE_START\",\"time\":1331211297476}");
 
         List<CallDuration> callDurations = callDurationList.all();
 

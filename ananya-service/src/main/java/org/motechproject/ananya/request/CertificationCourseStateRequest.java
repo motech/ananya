@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
+import org.motechproject.ananya.domain.InteractionKeys;
 
 import java.lang.reflect.Type;
 
@@ -100,5 +101,21 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     public boolean hasContentId(){
         return StringUtils.isNotBlank(getContentId());
+    }
+
+    public boolean isStartCertificationCourseInteraction() {
+        return InteractionKeys.StartCertificationCourseInteraction.equals(interactionKey);
+    }
+
+    public boolean isStartQuizInteraction() {
+        return InteractionKeys.StartQuizInteraction.equals(interactionKey);
+    }
+
+    public boolean isPlayAnswerExplanationInteraction() {
+        return InteractionKeys.PlayAnswerExplanationInteraction.equals(interactionKey);
+    }
+
+    public boolean isPlayCourseResultInteraction() {
+        return InteractionKeys.PlayCourseResultInteraction.equals(interactionKey);
     }
 }

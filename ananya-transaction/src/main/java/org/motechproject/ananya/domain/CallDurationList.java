@@ -10,12 +10,19 @@ import java.util.List;
 public class CallDurationList {
 
     private List<CallDuration> list = new ArrayList<CallDuration>();
+    private String callId;
+    private String callerId;
+
+    public CallDurationList(String callId, String callerId) {
+        this.callId = callId;
+        this.callerId = callerId;
+    }
 
     public List<CallDuration> all() {
         return list;
     }
 
-    public void add(String callId, String callerId, String data) {
+    public void add(String data) {
         Gson gson = new Gson();
         Type collectionType = new TypeToken<CallDuration>() {
         }.getType();

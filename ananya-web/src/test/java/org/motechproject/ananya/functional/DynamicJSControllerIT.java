@@ -46,17 +46,17 @@ public class DynamicJSControllerIT extends SpringIntegrationTest {
         ReportCard reportCard = flw.reportCard();
         flw.addBookMark(new BookMark("lesson", 3, 0));
 
-        final ReportCard.Score ch1q1score = new ReportCard.Score("0", "4", true);
-        final ReportCard.Score ch1q2score = new ReportCard.Score("0", "5", false);
-        final ReportCard.Score ch1q3score = new ReportCard.Score("0", "6", true);
+        final Score ch1q1score = new Score("0", "4", true);
+        final Score ch1q2score = new Score("0", "5", false);
+        final Score ch1q3score = new Score("0", "6", true);
 
-        final ReportCard.Score ch2q1score = new ReportCard.Score("1", "4", false);
-        final ReportCard.Score ch2q2score = new ReportCard.Score("1", "5", false);
-        final ReportCard.Score ch2q3score = new ReportCard.Score("1", "6", true);
+        final Score ch2q1score = new Score("1", "4", false);
+        final Score ch2q2score = new Score("1", "5", false);
+        final Score ch2q3score = new Score("1", "6", true);
 
-        final ReportCard.Score ch3q1score = new ReportCard.Score("2", "4", false);
-        final ReportCard.Score ch3q2score = new ReportCard.Score("2", "5", false);
-        final ReportCard.Score ch3q3score = new ReportCard.Score("2", "6", false);
+        final Score ch3q1score = new Score("2", "4", false);
+        final Score ch3q2score = new Score("2", "5", false);
+        final Score ch3q3score = new Score("2", "6", false);
 
         reportCard.addScore(ch1q1score);
         reportCard.addScore(ch1q2score);

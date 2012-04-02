@@ -1,11 +1,9 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.mapper.CertificateCourseStateFlwRequestMapper;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
+import org.motechproject.ananya.request.CertificateCourseStateFlwRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
@@ -58,9 +56,32 @@ public class CertificateCourseService {
     }
 
     private void saveScore(CertificationCourseStateRequestList stateRequestList) {
-        CertificateCourseStateFlwRequestMapper flwRequestMapper = new CertificateCourseStateFlwRequestMapper();
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all())
-            frontLineWorkerService.saveScore(flwRequestMapper.mapFrom(stateRequest));
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
+        boolean sendSMS = false;
+
+        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
+            String callId = stateRequest.getCallId();
+            Integer chapterIndex = stateRequest.getChapterIndex();
+            Integer lessonOrQuestionIndex = stateRequest.getLessonOrQuestionIndex();
+            Boolean result = stateRequest.getResult();
+
+            if (stateRequest.isStartCertificationCourseInteraction())
+                frontLineWorker.reportCard().clearAllScores();
+            if (stateRequest.isStartQuizInteraction())
+                frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex.toString());
+            if (stateRequest.isPlayAnswerExplanationInteraction()) {
+                final Score score = new Score(chapterIndex.toString(), lessonOrQuestionIndex.toString(), result, callId);
+                frontLineWorker.reportCard().addScore(score);
+            }
+            if (stateRequest.isPlayCourseResultInteraction()) {
+                frontLineWorker.incrementCertificateCourseAttempts();
+                if (frontLineWorker.hasCompletedCertificateCourse()) {
+                    sendSMS = true;
+                    log.info("Course completion SMS sent for " + frontLineWorker);
+                }
+            }
+        }
+        frontLineWorkerService.update(new CertificateCourseStateFlwRequest(frontLineWorker, sendSMS));
     }
 
     private void saveBookmark(CertificationCourseStateRequestList stateRequestList) {
