@@ -14,14 +14,14 @@ public enum ServiceAction {
         @Override
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             frontLineWorker.incrementCertificateCourseAttempts();
-            log.info("Incremented course attempts for "+frontLineWorker);
+            log.info("Incremented course attempts for " + frontLineWorker);
         }
     },
     StartCourse(InteractionKeys.StartCertificationCourseInteraction) {
         @Override
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             frontLineWorker.reportCard().clearAllScores();
-            log.info("Cleared all scores for "+frontLineWorker);
+            log.info("Cleared all scores for " + frontLineWorker);
         }
     },
     StartQuiz(InteractionKeys.StartQuizInteraction) {
@@ -29,7 +29,7 @@ public enum ServiceAction {
         public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
             String chapterIndex = stateRequest.getChapterIndex().toString();
             frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex);
-            log.info("Cleared scores for chapter "+chapterIndex +" for "+frontLineWorker);
+            log.info("Cleared scores for chapter " + chapterIndex + " for " + frontLineWorker);
         }
     },
     PlayAnswerExplanation(InteractionKeys.PlayAnswerExplanationInteraction) {
@@ -41,7 +41,13 @@ public enum ServiceAction {
                     stateRequest.getResult(),
                     stateRequest.getCallId());
             frontLineWorker.reportCard().addScore(score);
-            log.info("Added scores for chapter for "+frontLineWorker);
+            log.info("Added scores for chapter for " + frontLineWorker);
+        }
+    },
+    Default("") {
+        @Override
+        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+            //do nothing for other interactions
         }
     };
 
@@ -58,7 +64,7 @@ public enum ServiceAction {
             if (StringUtils.endsWithIgnoreCase(serviceAction.interactionKey, interactionKey))
                 return serviceAction;
         }
-        return null;
+        return ServiceAction.Default;
     }
 
     public abstract void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest);
