@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
-import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.publish.DataPublishService;
@@ -30,7 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -54,15 +52,13 @@ public class CertificateCourseCallDataControllerTest {
     @Mock
     private CallLoggerService callLoggerService;
     @Mock
-    private CallLogCounterService callLogCounterService;
-    @Mock
     private DataPublishService dataPublishService;
 
     @Before
     public void Setup() {
         initMocks(this);
         transferCallDataController = new CertificateCourseCallDataController(callLoggerService,
-                certificateCourseService, callLogCounterService, dataPublishService);
+                certificateCourseService, dataPublishService);
     }
 
     @Test
@@ -77,7 +73,6 @@ public class CertificateCourseCallDataControllerTest {
         transferCallDataController.receiveCallData(request);
 
         List<TransferData> expectedTransferDataList = Arrays.asList((new TransferData("0", TransferData.TYPE_CC_STATE)));
-        verify(callLogCounterService).purgeRedundantTokens(argThat(is(callId)), argThat(new TransferDataListMatcher(expectedTransferDataList)));
 
         CertificationCourseStateRequest stateRequest = new CertificationCourseStateRequest();
         stateRequest.setCallId(callId);

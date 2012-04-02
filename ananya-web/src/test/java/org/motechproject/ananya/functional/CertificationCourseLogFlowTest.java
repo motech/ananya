@@ -6,7 +6,6 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.framework.MyWebClient;
-import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
-
-    @Autowired
-    private AllCallLogCounters allCallLogCounters;
 
     @Before
     public void setUp() throws Exception {
@@ -74,11 +70,8 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         assertEquals(frontLineWorker.reportCard().scores().size(), 1);
         assertEquals(frontLineWorker.reportCard().scores().get(0).result(), true);
 
-        CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
-
         markForDeletion(frontLineWorker);
         markForDeletion(byCallId);
-        markForDeletion(callLogCounter);
     }
 
     @Test

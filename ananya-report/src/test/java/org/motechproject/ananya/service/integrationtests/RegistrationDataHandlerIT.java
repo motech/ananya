@@ -44,8 +44,6 @@ public class RegistrationDataHandlerIT {
     @Autowired
     private RegistrationDataHandler handler;
     @Autowired
-    private AllRegistrationLogs allRegistrationLogs;
-    @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
     private AllLocations allLocations;
@@ -74,7 +72,6 @@ public class RegistrationDataHandlerIT {
 
     private void cleanDB() {
         allFrontLineWorkers.removeAll();
-        allRegistrationLogs.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
         template.flush();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));

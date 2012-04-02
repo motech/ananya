@@ -4,7 +4,6 @@ import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
-import org.motechproject.ananya.service.CallLogCounterService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.publish.DataPublishService;
@@ -24,18 +23,15 @@ public class CertificateCourseCallDataController {
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
 
     private CallLoggerService callLoggerService;
-    private CallLogCounterService callLogCounterService;
     private CertificateCourseService certificateCourseService;
     private DataPublishService dataPublishService;
 
     @Autowired
     public CertificateCourseCallDataController(CallLoggerService callLoggerService,
                                                CertificateCourseService certificateCourseService,
-                                               CallLogCounterService callLogCounterService,
                                                DataPublishService dataPublishService) {
         this.callLoggerService = callLoggerService;
         this.certificateCourseService = certificateCourseService;
-        this.callLogCounterService = callLogCounterService;
         this.dataPublishService = dataPublishService;
     }
 
@@ -49,8 +45,6 @@ public class CertificateCourseCallDataController {
         TransferDataList transferDataList = new TransferDataList(jsonData);
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList();
         CallDurationList callDurationList = new CallDurationList();
-
-        callLogCounterService.purgeRedundantTokens(callId, transferDataList);
 
         for (TransferData transferData : transferDataList.all()) {
             if (transferData.isCCState())
