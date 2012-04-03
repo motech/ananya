@@ -21,7 +21,7 @@ public class CertificationCourseLog extends BaseLog {
 
     public CertificationCourseLog(String callerId, String calledNumber, DateTime startTime, DateTime endTime,
                                   String operator, String callId, String certificateCourseId) {
-        super(callerId, calledNumber, startTime, endTime, operator, callId);
+        super(callerId, calledNumber, operator, callId);
         this.certificateCourseId = certificateCourseId;
     }
 

@@ -2,13 +2,12 @@ package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.model.MotechBaseDataObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @TypeDiscriminator("doc.type === 'CallLog'")
-public class CallLog extends MotechBaseDataObject {
+public class CallLog extends BaseLog {
 
     @JsonProperty
     List<CallLogItem> callLogItems = new ArrayList<CallLogItem>();
