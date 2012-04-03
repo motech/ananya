@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
@@ -27,23 +27,23 @@ public class CallDurationMeasureService {
     }
 
     public void createCallDurationMeasure(String callId) {
-        CallLogList callLogsList = callLoggerService.getCallLogList(callId);
+        CallLog callLog = callLoggerService.getCallLogFor(callId);
 
-        for (CallLog callLog : callLogsList.getCallLogs()) {
-            if (callLog.getStartTime() == null || callLog.getEndTime() == null)
+        for (CallLogItem callLogItem : callLog.getCallLogItems()) {
+            if (callLogItem.getStartTime() == null || callLogItem.getEndTime() == null)
                 continue;
 
-            Long callerId = callLogsList.callerIdAsLong();
+            Long callerId = callLog.callerIdAsLong();
             FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
 
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension,
                     callId,
-                    callLog.duration(),
-                    callLog.getCallFlowType().name());
+                    callLogItem.duration(),
+                    callLogItem.getCallFlowType().name());
             reportDB.add(callDurationMeasure);
         }
-        callLoggerService.delete(callLogsList);
+        callLoggerService.delete(callLog);
         log.info("Added CallDurationMeasures for callId=" + callId);
     }
 }

@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CallFlowType;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogList;
 import org.motechproject.ananya.framework.MyWebClient;
-import org.motechproject.ananya.repository.AllCallLogList;
+import org.motechproject.ananya.repository.AllCallLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class CallLogFlowTest extends SpringIntegrationTest {
 
     private MyWebClient myWebClient;
     @Autowired
-    private AllCallLogList allCallLogs;
+    private AllCallLogs allCallLogs;
 
     @Before
     public void setUp() throws Exception {
@@ -58,25 +58,25 @@ public class CallLogFlowTest extends SpringIntegrationTest {
 
         myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata", callIdParam, callerIdParam, dataToPost);
 
-        CallLogList callLogList = allCallLogs.findByCallId(callId);
-        assertEquals(callId, callLogList.getCallId());
-        assertEquals(callerId, callLogList.getCallerId());
+        CallLog callLog = allCallLogs.findByCallId(callId);
+        assertEquals(callId, callLog.getCallId());
+        assertEquals(callerId, callLog.getCallerId());
 
-        List<CallLog> callLogs = callLogList.getCallLogs();
+        List<CallLogItem> callLogItems = callLog.getCallLogItems();
 
-        assertEquals(3, callLogs.size());
+        assertEquals(3, callLogItems.size());
 
-        CallLog callLogForCall = callLogs.get(0);
+        CallLogItem callLogForCall = callLogItems.get(0);
         assertEquals(callStartTime.toDateTime(DateTimeZone.UTC), callLogForCall.getStartTime().toDateTime(DateTimeZone.UTC));
         assertEquals(disconnectTime.toDateTime(DateTimeZone.UTC), callLogForCall.getEndTime().toDateTime(DateTimeZone.UTC));
         assertEquals(CallFlowType.CALL, callLogForCall.getCallFlowType());
 
-        CallLog callLogForRegistration = callLogs.get(1);
+        CallLogItem callLogForRegistration = callLogItems.get(1);
         assertEquals(regStartTime.toDateTime(DateTimeZone.UTC), callLogForRegistration.getStartTime().toDateTime(DateTimeZone.UTC));
         assertEquals(regEndTime.toDateTime(DateTimeZone.UTC), callLogForRegistration.getEndTime().toDateTime(DateTimeZone.UTC));
         assertEquals(CallFlowType.REGISTRATION, callLogForRegistration.getCallFlowType());
 
-        CallLog callLogForJobAid = callLogs.get(2);
+        CallLogItem callLogForJobAid = callLogItems.get(2);
         assertEquals(jobAidStartTime.toDateTime(DateTimeZone.UTC), callLogForJobAid.getStartTime().toDateTime(DateTimeZone.UTC));
         assertEquals(disconnectTime.toDateTime(DateTimeZone.UTC), callLogForJobAid.getEndTime());
         assertEquals(CallFlowType.JOBAID, callLogForJobAid.getCallFlowType());

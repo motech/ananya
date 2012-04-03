@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCallLogList;
+import org.motechproject.ananya.repository.AllCallLogs;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class CallLoggerServiceTest {
     private CallLoggerService callLoggerService;
 
     @Mock
-    private AllCallLogList allCallLogs;
+    private AllCallLogs allCallLogs;
 
     @Before
     public void setUp() {
@@ -47,22 +47,22 @@ public class CallLoggerServiceTest {
 
         callLoggerService.saveAll(callDurationList);
 
-        ArgumentCaptor<CallLogList> captor = ArgumentCaptor.forClass(CallLogList.class);
+        ArgumentCaptor<CallLog> captor = ArgumentCaptor.forClass(CallLog.class);
         verify(allCallLogs).add(captor.capture());
-        CallLogList callLogList = captor.getValue();
+        CallLog callLog = captor.getValue();
 
-        assertEquals("callId", callLogList.getCallId());
-        assertEquals("callerId", callLogList.getCallerId());
+        assertEquals("callId", callLog.getCallId());
+        assertEquals("callerId", callLog.getCallerId());
 
-        List<CallLog> callLogs = callLogList.getCallLogs();
+        List<CallLogItem> callLogs = callLog.getCallLogItems();
         assertEquals(2, callLogs.size());
 
-        CallLog callLogForCallType = callLogs.get(0);
+        CallLogItem callLogForCallType = callLogs.get(0);
         assertEquals(CallFlowType.CALL, callLogForCallType.getCallFlowType());
         assertEquals(callStartTime, callLogForCallType.getStartTime().getMillis());
         assertEquals(callEndTime, callLogForCallType.getEndTime().getMillis());
 
-        CallLog callLogForCourseType = callLogs.get(1);
+        CallLogItem callLogForCourseType = callLogs.get(1);
         assertEquals(CallFlowType.CERTIFICATECOURSE, callLogForCourseType.getCallFlowType());
         assertEquals(courseStartTime, callLogForCourseType.getStartTime().getMillis());
         assertEquals(courseEndTime, callLogForCourseType.getEndTime().getMillis());
@@ -71,20 +71,20 @@ public class CallLoggerServiceTest {
 
     @Test
     public void shouldCallAllLogsRepoToDelete(){
-        CallLogList callLogList = new CallLogList("123456","123");
-        callLoggerService.delete(callLogList);
-        verify(allCallLogs).remove(callLogList);
+        CallLog callLog = new CallLog("123456","123");
+        callLoggerService.delete(callLog);
+        verify(allCallLogs).remove(callLog);
     }
 
     @Test
-    public void shouldFetchCallLogListFromRepo(){
+    public void shouldFetchCallLogFromRepo(){
         String callId = "123456";
         String callerId = "123";
-        CallLogList callLogList = new CallLogList(callId, callerId);
-        when(allCallLogs.findByCallId(callId)).thenReturn(callLogList);
+        CallLog callLog = new CallLog(callId, callerId);
+        when(allCallLogs.findByCallId(callId)).thenReturn(callLog);
 
-        CallLogList callLogListFromDB = callLoggerService.getCallLogList(callId);
-        assertEquals(callLogList,callLogListFromDB);
+        CallLog callLogFromDB = callLoggerService.getCallLogFor(callId);
+        assertEquals(callLog,callLogFromDB);
     }
 
 

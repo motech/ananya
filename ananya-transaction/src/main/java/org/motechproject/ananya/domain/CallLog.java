@@ -1,50 +1,62 @@
 package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.joda.time.DateTime;
-import org.joda.time.Seconds;
+import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechBaseDataObject;
 
-public class CallLog {
+import java.util.ArrayList;
+import java.util.List;
 
-    @JsonProperty
-    private CallFlowType callFlowType;
-
-    @JsonProperty
-    private DateTime startTime;
+@TypeDiscriminator("doc.type === 'CallLog'")
+public class CallLog extends MotechBaseDataObject {
 
     @JsonProperty
-    private DateTime endTime;
+    List<CallLogItem> callLogItems = new ArrayList<CallLogItem>();
+
+    @JsonProperty
+    private String callId;
+
+    @JsonProperty
+    private String callerId;
 
     public CallLog() {
     }
 
-    public CallLog(CallFlowType callFlowType, DateTime startTime, DateTime endTime) {
-        this.callFlowType = callFlowType;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public CallLog(String callId, String callerId) {
+        this.callerId = callerId;
+        this.callId = callId;
     }
 
-    public CallFlowType getCallFlowType() {
-        return callFlowType;
+    public void addItem(CallLogItem callLogItem) {
+        callLogItems.add(callLogItem);
     }
 
-    public DateTime getEndTime() {
-        return endTime;
+    public List<CallLogItem> getCallLogItems() {
+        return callLogItems;
     }
 
-    public DateTime getStartTime() {
-        return startTime;
+    public void addOrUpdate(CallLogItem callLogItem) {
+        for (CallLogItem c : callLogItems) {
+            if (c.getCallFlowType().equals(callLogItem.getCallFlowType())) {
+                if (callLogItem.getStartTime() != null)
+                    c.setStartTime(callLogItem.getStartTime());
+                if (callLogItem.getEndTime() != null)
+                    c.setEndTime(callLogItem.getEndTime());
+                return;
+            }
+        }
+        callLogItems.add(callLogItem);
     }
 
-    public Integer duration() {
-        return Seconds.secondsBetween(startTime, endTime).getSeconds();
+    public String getCallId() {
+        return callId;
     }
 
-    public void setEndTime(DateTime endTime) {
-        this.endTime = endTime;
+    public String getCallerId() {
+        return callerId;
     }
 
-    public void setStartTime(DateTime startTime) {
-        this.startTime = startTime;
+    public Long callerIdAsLong() {
+        return Long.parseLong(callerId);
     }
 }

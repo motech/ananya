@@ -2,7 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllCallLogList;
+import org.motechproject.ananya.repository.AllCallLogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,48 +14,48 @@ import java.util.List;
 public class CallLoggerService {
     private static Logger log = LoggerFactory.getLogger(CallLoggerService.class);
 
-    private AllCallLogList allCallLogs;
+    private AllCallLogs allCallLogs;
 
     @Autowired
-    public CallLoggerService(AllCallLogList allCallLogs) {
+    public CallLoggerService(AllCallLogs allCallLogs) {
         this.allCallLogs = allCallLogs;
     }
 
     public void saveAll(CallDurationList callDurationList) {
-        CallLogList callLogList = new CallLogList(callDurationList.getCallId(), callDurationList.getCallerId());
+        CallLog callLog = new CallLog(callDurationList.getCallId(), callDurationList.getCallerId());
         for (CallDuration callDuration : callDurationList.all())
-            save(callDuration, callLogList);
-        allCallLogs.add(callLogList);
+            save(callDuration, callLog);
+        allCallLogs.add(callLog);
         log.info("Saved call duration logs");
     }
 
-    public CallLogList getCallLogList(String callId) {
+    public CallLog getCallLogFor(String callId) {
         return allCallLogs.findByCallId(callId);
     }
 
-    public void delete(CallLogList callLogList) {
-        allCallLogs.remove(callLogList);
+    public void delete(CallLog callLog) {
+        allCallLogs.remove(callLog);
     }
 
-    private void save(CallDuration callDuration, CallLogList callLogList) {
+    private void save(CallDuration callDuration, CallLog callLog) {
         DateTime time = new DateTime(callDuration.getTime());
         if (callDuration.isDisconnect()) {
-            handleDisconnect(time, callLogList);
+            handleDisconnect(time, callLog);
             return;
         }
-        handleNormalFlow(callDuration, time, callLogList);
+        handleNormalFlow(callDuration, time, callLog);
     }
 
-    private void handleDisconnect(DateTime endTime, CallLogList callLogList) {
-        List<CallLog> allCallLogsByCallId = callLogList.getCallLogs();
-        for (CallLog log : allCallLogsByCallId) {
+    private void handleDisconnect(DateTime endTime, CallLog callLog) {
+        List<CallLogItem> callLogItems = callLog.getCallLogItems();
+        for (CallLogItem log : callLogItems) {
             if (log.getEndTime() == null) {
                 log.setEndTime(endTime);
             }
         }
     }
 
-    private void handleNormalFlow(CallDuration callDuration, DateTime time, CallLogList callLogList) {
+    private void handleNormalFlow(CallDuration callDuration, DateTime time, CallLog callLog) {
         DateTime startTime = null, endTime = null;
         String[] split = callDuration.getCallEvent().toString().split("_");
         CallFlowType callFlowType;
@@ -68,7 +68,7 @@ public class CallLoggerService {
         else if (split[1].equalsIgnoreCase("end")) endTime = time;
         else return;
 
-        CallLog callLog = new CallLog(callFlowType, startTime, endTime);
-        callLogList.addOrUpdate(callLog);
+        CallLogItem callLogItem = new CallLogItem(callFlowType, startTime, endTime);
+        callLog.addOrUpdate(callLogItem);
     }
 }

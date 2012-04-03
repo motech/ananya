@@ -6,11 +6,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CallFlowType;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
-import org.motechproject.ananya.repository.AllCallLogList;
+import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
@@ -44,7 +44,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
     private CallDurationHandler handler;
 
     @Autowired
-    AllCallLogList allCallLogs;
+    AllCallLogs allCallLogs;
 
     @Autowired
     AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -83,11 +83,11 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
 
-        CallLogList callLogList = new CallLogList(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, callerId.toString());
 
-        callLogList.add(new CallLog(CallFlowType.CALL, callStartTime, callEndTime));
-        callLogList.add(new CallLog(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
-        allCallLogs.add(callLogList);
+        callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
+        callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
+        allCallLogs.add(callLog);
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
 

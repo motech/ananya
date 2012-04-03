@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallFlowType;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
@@ -39,10 +39,10 @@ public class CallDurationMeasureServiceTest {
         String callId = "callId";
         Long callerId = 123456789L;
 
-        CallLogList callLogList = new CallLogList(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, callerId.toString());
         DateTime now = DateTime.now();
-        callLogList.add(new CallLog(CallFlowType.CERTIFICATECOURSE, now, now.plusSeconds(10)));
-        when(callLoggerService.getCallLogList(callId)).thenReturn(callLogList);
+        callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, now, now.plusSeconds(10)));
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
@@ -57,21 +57,21 @@ public class CallDurationMeasureServiceTest {
         assertEquals(callId, callDurationMeasure.getCallId());
         assertEquals(10, callDurationMeasure.getDuration());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasure.getType());
-        verify(callLoggerService).delete(callLogList);
+        verify(callLoggerService).delete(callLog);
     }
 
     @Test
     public void shouldNotSaveCallDurationMeasureWhenDurationDataISIncorrect() {
         String callId = "callId";
         Long callerId = 123456789L;
-        CallLogList callLogList = new CallLogList(callId, callerId.toString());
-        when(callLoggerService.getCallLogList(callId)).thenReturn(callLogList);
+        CallLog callLog = new CallLog(callId, callerId.toString());
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
         callDurationMeasureService.createCallDurationMeasure(callId);
 
         verify(reportDB, never()).add(any());
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
-        verify(callLoggerService).delete(callLogList);
+        verify(callLoggerService).delete(callLog);
     }
 
     @Test
@@ -84,11 +84,11 @@ public class CallDurationMeasureServiceTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
 
-        CallLogList callLogList = new CallLogList(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, callerId.toString());
 
-        callLogList.add(new CallLog(CallFlowType.CALL, callStartTime, callEndTime));
-        callLogList.add(new CallLog(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
-        when(callLoggerService.getCallLogList(callId)).thenReturn(callLogList);
+        callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
+        callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
