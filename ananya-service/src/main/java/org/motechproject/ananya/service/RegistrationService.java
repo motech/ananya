@@ -33,7 +33,6 @@ public class RegistrationService {
         if (isInvalidCallerId(callerId))
             return registrationResponse.withInvalidCallerId();
 
-
         Location location = locationList.findFor(district, block, village);
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
