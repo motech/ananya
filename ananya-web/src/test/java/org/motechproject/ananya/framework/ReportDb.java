@@ -1,22 +1,23 @@
 package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.CourseItemType;
-import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -37,6 +38,8 @@ public class ReportDb {
     private AllCourseItemDimensions allCourseItemDimensions;
     @Autowired
     private AllCourseItemMeasures allCourseItemMeasures;
+    @Autowired
+    private AllSMSSentMeasures allSMSSentMeasures;
     @Autowired
     private DataAccessTemplate template;
 
@@ -73,6 +76,12 @@ public class ReportDb {
         template.delete(frontLineWorkerDimension);
     }
     
+    public void clearSMSSentMeasure(String callerId) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
+        SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
+        template.delete(smsSentMeasure);
+    }
+    
     public ReportDb confirmCourseItemMeasureForDisconnectEvent(String callerId, BookMark bookMark, String eventType){
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         int questionIndex = bookMark.getLessonIndex()+1;
@@ -83,6 +92,14 @@ public class ReportDb {
         CourseItemMeasure courseItemMeasure = allCourseItemMeasures.fetchFor(frontLineWorkerDimension.getId(), courseItemDimension, eventType);
 
         assertNotNull(courseItemMeasure);
+        return this;
+    }
+
+    public ReportDb confirmSMSSent(String callerId, String smsReferenceNumber) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
+        SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
+        assertNotSame(null,smsSentMeasure);
+        assertEquals(smsReferenceNumber,smsSentMeasure.getSmsReferenceNumber());
         return this;
     }
 }

@@ -17,4 +17,12 @@ public class AllSMSSentMeasures {
     public void save(SMSSentMeasure smsSentMeasure) {
         template.save(smsSentMeasure);
     }
+
+    public SMSSentMeasure fetchFor(Integer flwId) {
+        return (SMSSentMeasure) template.getUniqueResult(
+                SMSSentMeasure.FIND_SMS_SENT_MEASURE_BY_FLW,
+                new String[]{"flw_id"},
+                new Object[]{flwId});
+    }
+
 }

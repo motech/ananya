@@ -11,7 +11,6 @@
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
-    <util:properties id="smsProperties" location="classpath:/sms.properties"/>
 
     <context:annotation-config/>
     <context:spring-configured/>
@@ -26,17 +25,6 @@
     <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
-    </bean>
-
-    <bean id="smsService"
-          class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
-        <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
-        <property name="wsdlDocumentUrl"
-                  value="${sms.service.wsdl.url}"/>
-        <property name="namespaceUri" value="${sms.service.namespace.uri}"/>
-        <property name="serviceName" value="${sms.service.service.name}"/>
-        <property name="portName" value="${sms.service.port.name}"/>
-        <property name="lookupServiceOnStartup" value="false"/>
     </bean>
 
 </beans>

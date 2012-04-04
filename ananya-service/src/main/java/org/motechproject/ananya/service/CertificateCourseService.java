@@ -24,14 +24,16 @@ public class CertificateCourseService {
     private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
     private DataPublishService dataPublishService;
+    private SendSMSService sendSMSService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
                                     FrontLineWorkerService frontLineWorkerService,
-                                    DataPublishService dataPublishService) {
+                                    DataPublishService dataPublishService, SendSMSService sendSMSService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.dataPublishService = dataPublishService;
+        this.sendSMSService = sendSMSService;
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
@@ -64,6 +66,11 @@ public class CertificateCourseService {
             serviceAction.update(frontLineWorker, stateRequest);
         }
         frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
+
+        if (frontLineWorker.hasCompletedCertificateCourse()) {
+            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
+            log.info("Course completion SMS sent for " + frontLineWorker);
+        }
     }
 
     private void addBookmark(FrontLineWorker frontLineWorker, CertificationCourseStateRequestList stateRequestList) {

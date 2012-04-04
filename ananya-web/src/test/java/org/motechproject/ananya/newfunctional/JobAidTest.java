@@ -85,10 +85,4 @@ public class JobAidTest extends SpringIntegrationTest {
         JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
         response.confirmCurrentUsage(currentUsage);
     }
-
-
-
-
-
-
 }

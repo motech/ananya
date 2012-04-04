@@ -28,7 +28,6 @@ public class SendSMSHandlerTest {
 
     @Test
     public void shouldSendSingleSMS(){
-
         Map<String, Object> eventParams = new HashMap<String, Object>();
         Map<String, String> myParams = new HashMap<String, String>();
         String mobileNumber = "9876543210";

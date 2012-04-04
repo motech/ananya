@@ -29,12 +29,14 @@ public class CertificateCourseServiceTest {
     private CertificateCourseLogService certificateCourseLogService;
     @Mock
     private DataPublishService dataPublishService;
+    @Mock
+    private SendSMSService sendSMSService;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, frontlineWorkerService, dataPublishService);
+        certificateCourseService = new CertificateCourseService(certificateCourseLogService, frontlineWorkerService, dataPublishService, sendSMSService);
     }
 
     @Test

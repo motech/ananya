@@ -1,12 +1,10 @@
 package org.motechproject.ananya.framework;
 
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Operator;
-import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.AllOperators;
+import org.motechproject.ananya.repository.AllSMSReferences;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +22,9 @@ public class CouchDb {
 
     @Autowired
     private AllOperators allOperators;
+
+    @Autowired
+    private AllSMSReferences allSMSReferences;
 
     public CouchDb confirmPartiallyRegistered(String callerId, String operator) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
@@ -44,6 +45,11 @@ public class CouchDb {
 
     public void clearFLWData(String callerId) {
         allFrontLineWorkers.remove(allFrontLineWorkers.findByMsisdn(callerId));
+    }
+
+    public void clearSMSReferences(String callerId) {
+        SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
+        allSMSReferences.remove(smsReference);
     }
 
     public CouchDb confirmBookmarkUpdated(String callerId, BookMark playCourseResultBookMark) {

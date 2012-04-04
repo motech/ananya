@@ -5,6 +5,7 @@ import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.RegistrationMeasureService;
+import org.motechproject.ananya.service.SMSSentMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,13 @@ public class DbPublishService implements PublishService {
     private CourseItemMeasureService courseItemMeasureService;
     @Autowired
     private CallDurationMeasureService callDurationMeasureService;
+    @Autowired
+    private SMSSentMeasureService smsSentMeasureService;
 
     @Override
     public void publishSMSSent(LogData logData) {
-        throw new RuntimeException("Not implemented");
+        String callerId = logData.getDataId();
+        this.smsSentMeasureService.createSMSSentMeasure(callerId);
     }
 
     @Override

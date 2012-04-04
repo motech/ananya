@@ -28,16 +28,12 @@ public class FrontLineWorkerServiceTest {
     @Mock
     private AllSMSReferences allSMSReferences;
     @Mock
-    private SendSMSService sendSMSService;
-    @Mock
-    private SMSPublisherService publisherService;
-    @Mock
     private FrontLineWorker mockedFrontLineWorker;
 
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, sendSMSService, publisherService, allSMSReferences);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, allSMSReferences);
     }
 
     @Test
@@ -237,55 +233,20 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldAddSMSReference() throws Exception {
-        String callerId = "9876543210";
-        String operator = "airtel";
-        String smsReferenceNumber = "0102987654321001";
+    public void shouldAddSMSReferenceNumber() {
+        SMSReference smsReference = new SMSReference("1234","123456");
 
+        frontLineWorkerService.addSMSReferenceNumber(smsReference);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
-        frontLineWorker.incrementCertificateCourseAttempts();
-
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-        frontLineWorkerService.addSMSReferenceNumber(callerId, smsReferenceNumber);
-
-        ArgumentCaptor<SMSReference> smsReference = ArgumentCaptor.forClass(SMSReference.class);
-        verify(allSMSReferences).update(smsReference.capture());
-
-        SMSReference smsReferenceValue = smsReference.getValue();
-        assertEquals(smsReferenceValue.getMsisdn(), callerId);
-        assertEquals(smsReferenceValue.referenceNumbers(1), smsReferenceNumber);
-        verify(publisherService).publishSMSSent(callerId);
+        verify(allSMSReferences).add(smsReference);
     }
 
     @Test
-    public void shouldUpdateTheFrontLineWorkerAndNotSendSMS() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        ReportCard reportCard = mock(ReportCard.class);
-        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE - 1);
-        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
+    public void shouldUpdateSMSReferenceNumber() {
+        SMSReference smsReference = new SMSReference("1234","123456");
 
-        frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
+        frontLineWorkerService.updateSMSReferenceNumber(smsReference);
 
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-        assertEquals(frontLineWorker, captor.getValue());
-        verify(sendSMSService, never()).buildAndSendSMS(anyString(), anyString(), anyInt());
-    }
-
-    @Test
-    public void shouldUpdateTheFrontLineWorkerAndSendSMS() {
-        Location location = Location.getDefaultLocation();
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name", Designation.ASHA, location, RegistrationStatus.REGISTERED);
-        ReportCard reportCard = mock(ReportCard.class);
-        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
-        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
-
-        frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-        assertEquals(frontLineWorker, captor.getValue());
-        verify(sendSMSService).buildAndSendSMS(frontLineWorker.getMsisdn(), location.getExternalId(), frontLineWorker.currentCourseAttempt());
+        verify(allSMSReferences).update(smsReference);
     }
 }

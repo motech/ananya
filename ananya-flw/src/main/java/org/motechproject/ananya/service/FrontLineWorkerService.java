@@ -19,17 +19,11 @@ public class FrontLineWorkerService {
 
     private AllFrontLineWorkers allFrontLineWorkers;
     private AllSMSReferences allSMSReferences;
-    private SendSMSService sendSMSService;
-    private SMSPublisherService smsPublisherService;
 
     @Autowired
     public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers,
-                                  SendSMSService sendSMSService,
-                                  SMSPublisherService smsPublisherService,
                                   AllSMSReferences allSMSReferences) {
         this.allFrontLineWorkers = allFrontLineWorkers;
-        this.sendSMSService = sendSMSService;
-        this.smsPublisherService = smsPublisherService;
         this.allSMSReferences = allSMSReferences;
     }
 
@@ -71,22 +65,6 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        SMSReference smsReference = getSMSReferenceNumber(callerId);
-
-        if (smsReference == null) {
-            smsReference = new SMSReference(callerId, frontLineWorker.getId());
-            allSMSReferences.add(smsReference);
-            log.info("Created SMS reference for:" + frontLineWorker);
-        }
-        smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
-        allSMSReferences.update(smsReference);
-        log.info("Updated SMS reference for:" + frontLineWorker);
-
-        smsPublisherService.publishSMSSent(callerId);
-    }
-
     public int getCurrentCourseAttempt(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         return frontLineWorker.currentCourseAttempt();
@@ -94,6 +72,16 @@ public class FrontLineWorkerService {
 
     public SMSReference getSMSReferenceNumber(String callerId) {
         return allSMSReferences.findByMsisdn(callerId);
+    }
+
+    public void addSMSReferenceNumber(SMSReference smsReference) {
+        allSMSReferences.add(smsReference);
+        log.info("Created SMS reference for:" + smsReference.getMsisdn());
+    }
+
+    public void updateSMSReferenceNumber(SMSReference smsReference) {
+        allSMSReferences.update(smsReference);
+        log.info("Updated SMS reference for:" + smsReference.getMsisdn());
     }
 
     public void updatePromptsFor(String callerId, List<String> promptList) {
@@ -121,10 +109,6 @@ public class FrontLineWorkerService {
 
     public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {
         allFrontLineWorkers.update(frontLineWorker);
-        if (frontLineWorker.hasCompletedCertificateCourse()) {
-            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
-            log.info("Course completion SMS sent for " + frontLineWorker);
-        }
         log.info("Updated certificate course state for " + frontLineWorker);
     }
 

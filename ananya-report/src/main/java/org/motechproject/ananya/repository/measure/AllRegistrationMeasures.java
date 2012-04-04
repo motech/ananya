@@ -32,5 +32,4 @@ public class AllRegistrationMeasures {
     public void removeAll() {
         template.bulkUpdate("delete from RegistrationMeasure");
     }
-
 }
