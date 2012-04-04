@@ -114,38 +114,21 @@ public class CertificateCourseTest extends SpringIntegrationTest {
 
     }
 
-//    @Test
-//    public void shouldCreateTransferDataList_toSaveCertificateCourseResult() throws IOException {
-//        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, callId);
-//        certificateCourseWebService.requestForCallerData(request);
-//
-//        String newCallId = callId + "1";
-//        CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, newCallId);
-//
-//        int token = GenerateToken(newCallId);
-//
-//        String jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\" token\":%d ,\" type\":\" ccState\",\" data\":{\" chapterIndex\":7,\" lessonOrQuestionIndex\":8,\" questionResponse\":1,\" result\":true,\" interactionKey\":\" playAnswerExplanation\"}} ]", token, token+1);
-//        transferDataRequest.setJsonPostData(jsonData);
-//
-//        certificateCourseWebService.requestForTransferData(transferDataRequest);
-//
-//        ReportCard reportCard = new ReportCard();
-//        reportCard.addScore(new ReportCard.Score("7", "7", true, newCallId));
-//        reportCard.addScore(new ReportCard.Score("8", "7", true, newCallId));
-//
-//        couchDb.confirmBookmarkUpdated(callerId,new BookMark("playAnswerExplanation",8,7))
-//               .confirmScoresSaved(callerId, reportCard);
-//
-//        jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playCourseResult\"}}]", token+2);
-//        transferDataRequest.setJsonPostData(jsonData);
-//
-//        certificateCourseWebService.requestForTransferData(transferDataRequest);
-//
-//        couchDb.confirmBookmarkUpdated(callerId,new BookMark("playCourseResult",8,7))
-//                .confirmScoresSaved(callerId, reportCard);
-//
-//    }
+    @Test
+    public void shouldSendSmsAtTheEndOfTheCourse() throws Exception {
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, callId);
+        certificateCourseWebService.requestForCallerData(request);
 
+        CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, callId);
+
+        String jsonDataWithScoresForFullCCFlow = "[{\"token\":23890,\"type\":\"ccState\",\"data\":{\"chapterIndex\":0,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23891,\"type\":\"ccState\",\"data\":{\"chapterIndex\":0,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23892,\"type\":\"ccState\",\"data\":{\"chapterIndex\":0,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23893,\"type\":\"ccState\",\"data\":{\"chapterIndex\":0,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23894,\"type\":\"ccState\",\"data\":{\"chapterIndex\":1,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23895,\"type\":\"ccState\",\"data\":{\"chapterIndex\":1,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23896,\"type\":\"ccState\",\"data\":{\"chapterIndex\":1,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23897,\"type\":\"ccState\",\"data\":{\"chapterIndex\":1,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23898,\"type\":\"ccState\",\"data\":{\"chapterIndex\":2,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":23899,\"type\":\"ccState\",\"data\":{\"chapterIndex\":2,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238910,\"type\":\"ccState\",\"data\":{\"chapterIndex\":2,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238911,\"type\":\"ccState\",\"data\":{\"chapterIndex\":2,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238912,\"type\":\"ccState\",\"data\":{\"chapterIndex\":3,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238913,\"type\":\"ccState\",\"data\":{\"chapterIndex\":3,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238914,\"type\":\"ccState\",\"data\":{\"chapterIndex\":3,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238915,\"type\":\"ccState\",\"data\":{\"chapterIndex\":3,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238916,\"type\":\"ccState\",\"data\":{\"chapterIndex\":4,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238917,\"type\":\"ccState\",\"data\":{\"chapterIndex\":4,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238918,\"type\":\"ccState\",\"data\":{\"chapterIndex\":4,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238919,\"type\":\"ccState\",\"data\":{\"chapterIndex\":4,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238920,\"type\":\"ccState\",\"data\":{\"chapterIndex\":5,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238921,\"type\":\"ccState\",\"data\":{\"chapterIndex\":5,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238922,\"type\":\"ccState\",\"data\":{\"chapterIndex\":5,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238923,\"type\":\"ccState\",\"data\":{\"chapterIndex\":5,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238924,\"type\":\"ccState\",\"data\":{\"chapterIndex\":6,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238925,\"type\":\"ccState\",\"data\":{\"chapterIndex\":6,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238926,\"type\":\"ccState\",\"data\":{\"chapterIndex\":6,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238927,\"type\":\"ccState\",\"data\":{\"chapterIndex\":6,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238928,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238929,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238930,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238931,\"type\":\"ccState\",\"data\":{\"chapterIndex\":7,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238932,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238933,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":5,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238934,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":6,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":238935,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":false,\"interactionKey\":\"playAnswerExplanation\"}},{\"token\":235999,\"type\":\"ccState\",\"data\":{\"chapterIndex\":0,\"lessonOrQuestionIndex\":4,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playCourseResult\"}}]";
+
+        transferDataRequest.setJsonPostData(jsonDataWithScoresForFullCCFlow);
+        certificateCourseWebService.requestForDisconnect(transferDataRequest);
+        String smsReferenceNumber= "000098765401";
+        reportDb.confirmSMSSent(callerId, smsReferenceNumber);
+
+    }
 
     private int GenerateToken(String callId) {
         CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
