@@ -28,11 +28,11 @@ public class Location extends MotechBaseDataObject {
     }
 
     public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode) {
-        this.block = block;
-        this.blockCode = blockCode;
-        this.district = district;
+        this.district = StringUtils.trimToEmpty(district);
+        this.block = StringUtils.trimToEmpty(block);
+        this.panchayat = StringUtils.trimToEmpty(panchayat);
         this.districtCode = districtCode;
-        this.panchayat = panchayat;
+        this.blockCode = blockCode;
         this.panchayatCode = panchayatCode;
         this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
     }
@@ -86,9 +86,9 @@ public class Location extends MotechBaseDataObject {
 
         Location location = (Location) o;
 
-        if (block != null ? !block.equals(location.block) : location.block != null) return false;
-        if (district != null ? !district.equals(location.district) : location.district != null) return false;
-        if (panchayat != null ? !panchayat.equals(location.panchayat) : location.panchayat != null) return false;
+        if (block != null ? !StringUtils.equalsIgnoreCase(district, location.district) : location.block != null) return false;
+        if (district != null ? !StringUtils.equalsIgnoreCase(block, location.block) : location.district != null) return false;
+        if (panchayat != null ? !StringUtils.equalsIgnoreCase(panchayat, location.panchayat) : location.panchayat != null) return false;
 
         return true;
     }
@@ -102,11 +102,5 @@ public class Location extends MotechBaseDataObject {
         result = 31 * result + districtCode;
         result = 31 * result + panchayatCode;
         return result;
-    }
-
-    public boolean isSameAs(String district, String block, String village) {
-        return (StringUtils.equalsIgnoreCase(this.district, district)
-                && StringUtils.equalsIgnoreCase(this.block, block)
-                && StringUtils.equalsIgnoreCase(this.panchayat, village));
     }
 }

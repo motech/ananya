@@ -11,15 +11,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DbPublishService implements PublishService {
+    private RegistrationMeasureService registrationMeasureService;
+    private CourseItemMeasureService courseItemMeasureService;
+    private CallDurationMeasureService callDurationMeasureService;
+    private SMSSentMeasureService smsSentMeasureService;
 
     @Autowired
-    private RegistrationMeasureService registrationMeasureService;
-    @Autowired
-    private CourseItemMeasureService courseItemMeasureService;
-    @Autowired
-    private CallDurationMeasureService callDurationMeasureService;
-    @Autowired
-    private SMSSentMeasureService smsSentMeasureService;
+    public DbPublishService(RegistrationMeasureService registrationMeasureService, CourseItemMeasureService courseItemMeasureService, CallDurationMeasureService callDurationMeasureService, SMSSentMeasureService smsSentMeasureService) {
+        this.registrationMeasureService = registrationMeasureService;
+        this.courseItemMeasureService = courseItemMeasureService;
+        this.callDurationMeasureService = callDurationMeasureService;
+        this.smsSentMeasureService = smsSentMeasureService;
+    }
 
     @Override
     public void publishSMSSent(LogData logData) {

@@ -1,7 +1,5 @@
 package org.motechproject.ananya.domain;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,16 +81,12 @@ public class LocationList {
         Location defaultLocation = null;
         String emptyPanchayat = "";
         for (Location location : locations) {
-            if (location.isSameAs(
-                    StringUtils.trimToEmpty(district),
-                    StringUtils.trimToEmpty(block),
-                    StringUtils.trimToEmpty(village)))
+            if (location.equals(new Location(district, block, village, 0, 0, 0)))
                 return location;
-            if (location.isSameAs(StringUtils.trimToEmpty(district), StringUtils.trimToEmpty(block), emptyPanchayat))
+            if (location.equals(new Location(district, block, emptyPanchayat, 0, 0, 0)))
                 defaultLocation = location;
         }
         return defaultLocation;
-
     }
 
     public List<Location> getUniqueDistrictBlockLocations() {
@@ -100,7 +94,7 @@ public class LocationList {
         String emptyPanchayat = "";
 
         for (Location location : locations) {
-            Location defaultLocation = new Location(StringUtils.trimToEmpty(location.getDistrict()), StringUtils.trimToEmpty(location.getBlock()), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0);
+            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0);
             if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
                 uniqueDistrictBlockList.add(defaultLocation);
             }

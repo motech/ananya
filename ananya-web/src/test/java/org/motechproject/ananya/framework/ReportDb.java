@@ -98,7 +98,7 @@ public class ReportDb {
     public ReportDb confirmSMSSent(String callerId, String smsReferenceNumber) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
-        assertNotSame(null,smsSentMeasure);
+        assertNotNull(smsSentMeasure);
         assertEquals(smsReferenceNumber,smsSentMeasure.getSmsReferenceNumber());
         return this;
     }
