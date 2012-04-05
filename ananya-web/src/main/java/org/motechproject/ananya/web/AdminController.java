@@ -43,7 +43,7 @@ public class AdminController {
         List<FrontLineWorker> workers = allFrontLineWorkers.getAll();
         try {
             for (FrontLineWorker worker : workers) {
-                Location location = allLocations.get(worker.getLocationId());
+                Location location = allLocations.findByExternalId(worker.getLocationId());
                 workerPresenters.add(new FrontLineWorkerPresenter(worker.getId(), worker.getMsisdn(), worker.status().toString(),
                         location.getBlock(), location.getDistrict(), location.getPanchayat(), worker.registeredDate()));
             }
