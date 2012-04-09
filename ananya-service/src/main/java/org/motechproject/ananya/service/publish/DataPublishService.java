@@ -1,6 +1,10 @@
 package org.motechproject.ananya.service.publish;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.requests.LogData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataPublishService implements PublishService {
 
+    private static Logger log = LoggerFactory.getLogger(DataPublishService.class);
+    
     public static final String DB = "db";
 
     private PublishService publishService;
@@ -22,16 +28,41 @@ public class DataPublishService implements PublishService {
 
     @Override
     public void publishSMSSent(LogData logData) {
-        publishService.publishSMSSent(logData);
+        try {
+            publishService.publishSMSSent(logData);
+        }
+        catch (Exception e) {
+            handlePublishServiceException(e);
+        }
     }
 
     @Override
     public void publishCallDisconnectEvent(String callId) {
-        publishService.publishCallDisconnectEvent(callId);
+        try {
+            publishService.publishCallDisconnectEvent(callId);
+        }
+        catch (Exception e) {
+            handlePublishServiceException(e);
+        }
     }
 
     @Override
     public void publishNewRegistration(String callerId) {
-        publishService.publishNewRegistration(callerId);
+        try{
+            publishService.publishNewRegistration(callerId);
+        }
+        catch (Exception e) {
+            handlePublishServiceException(e);
+        }
+    }
+
+    private void handlePublishServiceException(Exception e) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(ExceptionUtils.getMessage(e));
+        sb.append(ExceptionUtils.getStackTrace(e));
+        sb.append(ExceptionUtils.getRootCauseMessage(e));
+        sb.append(ExceptionUtils.getRootCauseStackTrace(e));
+        String exceptionString = sb.toString();
+        log.error(exceptionString);
     }
 }
