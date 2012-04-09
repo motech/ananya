@@ -121,7 +121,7 @@
                                      userid="${postgres.user}"
                                      classpathref="dependencies"
                                      password="${postgres.password}">
-                                    DROP SCHEMA ${postgres.schema} CASCADE;
+                                     DROP SCHEMA IF EXISTS ${postgres.schema} CASCADE;
                                     CREATE SCHEMA ${postgres.schema} AUTHORIZATION ${postgres.user};
                                     GRANT ALL ON SCHEMA ${postgres.schema} TO ${postgres.user};
                                 </sql>
