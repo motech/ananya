@@ -29,7 +29,7 @@
             <property name="cacheMappings">
                 <props>
                     <prop key="/generated/js/**">86400</prop>
-                    <prop key="/generated/js/dynamic/**">1</prop>
+                    <prop key="/generated/js/dynamic/**">0</prop>
                 </props>
             </property>
         </bean>
