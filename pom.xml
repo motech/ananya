@@ -65,6 +65,11 @@
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
         </repository>
+         <repository>
+            <id>motech.nexus.release</id>
+            <name>Motech Snapshots Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/releases</url>
+        </repository>
         <repository>
             <id>javax.transaction</id>
             <name>Repository for javax transaction API</name>
@@ -173,12 +178,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-common</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
