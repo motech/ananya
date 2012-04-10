@@ -57,7 +57,7 @@ public class DataPublishService implements PublishService {
     }
 
     private void handlePublishServiceException(Exception e) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(ExceptionUtils.getMessage(e));
         sb.append(ExceptionUtils.getStackTrace(e));
         sb.append(ExceptionUtils.getRootCauseMessage(e));
