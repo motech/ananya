@@ -21,7 +21,7 @@ public class AnanyaExceptionResolver extends SimpleMappingExceptionResolver {
     }
 
     private String getExceptionString(Exception ex) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append(ExceptionUtils.getMessage(ex));
         sb.append(ExceptionUtils.getStackTrace(ex));
         sb.append(ExceptionUtils.getRootCauseMessage(ex));
