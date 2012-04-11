@@ -46,7 +46,7 @@ public class JobAidCallStateController {
         final Integer callDuration = Integer.valueOf(request.getParameter("callDuration"));
 
         log.info("Jobaid usage update - callId = " + callId +
-                " | callerId = " + callerId + " | currentUsage = " + callDuration);
+                " | callerId = " + callerId + " | callDuration = " + callDuration);
 
         jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, callDuration);
         return validECMAResponse();

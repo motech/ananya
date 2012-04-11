@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class CourseItemMeasureService {
-    private static final Logger LOG = LoggerFactory.getLogger(CourseItemMeasureService.class);
+    private static final Logger log = LoggerFactory.getLogger(CourseItemMeasureService.class);
 
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -62,7 +62,7 @@ public class CourseItemMeasureService {
             reportDB.add(courseItemMeasure);
         }
         certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
-        LOG.info("Added CourseItemMeasures for CallId="+callId);
+        log.info("Added CourseItemMeasures for CallId="+callId);
     }
 
 }

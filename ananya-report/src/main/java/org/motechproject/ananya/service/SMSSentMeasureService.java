@@ -8,11 +8,15 @@ import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SMSSentMeasureService {
+
+    private static final Logger log = LoggerFactory.getLogger(SMSSentMeasureService.class);
 
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -33,14 +37,16 @@ public class SMSSentMeasureService {
         SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
 
         String referenceNumber = null;
-        if(smsReference != null) {
+        if (smsReference != null) {
             referenceNumber = smsReference.referenceNumbers(courseAttempt);
-            if(referenceNumber != null )
+            if (referenceNumber != null)
                 smsSent = true;
         }
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
         SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent, frontLineWorkerDimension, timeDimension);
         reportDB.add(smsSentMeasure);
+
+        log.info("Added SMS measure for " + callerId + "[smsRefNumber" + referenceNumber + "|attempt=" + courseAttempt + "]");
     }
 }

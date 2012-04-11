@@ -10,11 +10,14 @@ import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.LogData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RegistrationMeasureService {
+    private static final Logger log = LoggerFactory.getLogger(RegistrationMeasureService.class);
 
     private FrontLineWorkerService frontLineWorkerService;
     private AllLocationDimensions allLocationDimensions;
@@ -49,6 +52,10 @@ public class RegistrationMeasureService {
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         allRegistrationMeasures.add(registrationMeasure);
+
+        log.info("Added registration measure for "
+                + callerId + "[Location=" + locationDimension.getId() +
+                "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
     }
 
     public void updateRegistrationStatusAndName(LogData logData) {
@@ -58,5 +65,8 @@ public class RegistrationMeasureService {
         existingFlwDimension.setName(existingFlw.name());
         existingFlwDimension.setStatus(existingFlw.status().toString());
         this.allFrontLineWorkerDimensions.update(existingFlwDimension);
+
+        log.info("Updated flw dimension for " + existingFlw.getMsisdn()
+                + "[name=" + existingFlw.getName() + "|status=" + existingFlw.status() + "]");
     }
 }

@@ -38,8 +38,8 @@ public class FrontLineWorkerService {
             frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
             allFrontLineWorkers.add(frontLineWorker);
             log.info("Created:" + frontLineWorker);
+            return frontLineWorker;
         }
-
         frontLineWorker.update(name, designation, location);
         allFrontLineWorkers.update(frontLineWorker);
         log.info("Updated:" + frontLineWorker);
