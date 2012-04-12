@@ -13,6 +13,7 @@
         <module>ananya-service</module>
         <module>ananya-performance</module>
         <module>ananya-web</module>
+        <module>ananya-tool</module>
     </modules>
     <name>Ananya</name>
 

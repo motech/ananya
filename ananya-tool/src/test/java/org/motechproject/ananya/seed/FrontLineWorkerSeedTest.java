@@ -1,6 +1,9 @@
 package org.motechproject.ananya.seed;
 
-import org.junit.*;
+import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -19,7 +22,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-tool.xml")
 public class FrontLineWorkerSeedTest {
 
     @Autowired
@@ -57,9 +60,9 @@ public class FrontLineWorkerSeedTest {
         assertEquals(6, frontLineWorkers.size());
         FrontLineWorker frontLineWorker = frontLineWorkers.get(1);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getName(), frontLineWorker.name());
-        assertEquals(frontLineWorkerDimension.getMsisdn(), frontLineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getOperator(), frontLineWorker.getOperator());
+        junit.framework.Assert.assertEquals(frontLineWorkerDimension.getName(), frontLineWorker.name());
+        Assert.assertEquals(frontLineWorkerDimension.getMsisdn(), frontLineWorker.msisdn());
+        Assert.assertEquals(frontLineWorkerDimension.getOperator(), frontLineWorker.getOperator());
     }
 
     @After

@@ -11,5 +11,12 @@
     <name>Ananya Transaction</name>
     <artifactId>ananya-transaction</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-cmslite-api</artifactId>
+            <version>0.9</version>
+        </dependency>
+    </dependencies>
 
 </project>

@@ -1,7 +1,6 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
-import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
@@ -22,13 +21,13 @@ public class LocationSeed {
     @Autowired
     private LocationService locationService;
     
-    @Value("#{ananyaProperties['seed.location.file']}")
+    @Value("#{toolProperties['seed.location.file']}")
     private String inputFileName;
 
-    @Value("#{ananyaProperties['seed.location.file.out']}")
+    @Value("#{toolProperties['seed.location.file.out']}")
     private String outputFileName;
 
-    @Value("#{ananyaProperties['environment']}")
+    @Value("#{toolProperties['environment']}")
     private String environment;
 
     private BufferedWriter writer;

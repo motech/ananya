@@ -1,5 +1,6 @@
 package org.motechproject.ananya.seed;
 
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-tool.xml")
 public class LocationSeedTest {
 
     @Autowired
@@ -50,9 +51,9 @@ public class LocationSeedTest {
         LocationDimension locationDimension = locationDimensionService.getFor(externalId);
 
         assertEquals(19, locations.size());
-        assertEquals(location.getDistrict(), locationDimension.getDistrict());
-        assertEquals(location.getBlock(), locationDimension.getBlock());
-        assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
+        Assert.assertEquals(location.getDistrict(), locationDimension.getDistrict());
+        Assert.assertEquals(location.getBlock(), locationDimension.getBlock());
+        Assert.assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
     }
 
     @After

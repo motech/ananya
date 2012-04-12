@@ -1,5 +1,6 @@
 package org.motechproject.ananya.seed;
 
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-tool.xml")
 public class OperatorSeedTest {
 
     @Autowired
@@ -43,7 +44,7 @@ public class OperatorSeedTest {
 
         String airtelOperator = "airtel";
         Operator airtel = allOperators.findByName(airtelOperator);
-        assertEquals(airtel.getAllowedUsagePerMonth(), OperatorSeed.operator_usage.get(airtelOperator));
+        Assert.assertEquals(airtel.getAllowedUsagePerMonth(), OperatorSeed.operator_usage.get(airtelOperator));
     }
 
     @Test

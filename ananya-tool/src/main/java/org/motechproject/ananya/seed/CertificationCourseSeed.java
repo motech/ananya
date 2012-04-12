@@ -16,9 +16,11 @@ import java.util.Map;
 
 @Component
 public class CertificationCourseSeed {
+
     public static final int NUMBER_OF_LESSONS_IN_A_CHAPTER = 4;
     public static final int NUMBER_OF_QUESTIONS_IN_A_CHAPTER = 4;
     public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
+
     @Autowired
     private AllNodes allNodes;
     @Autowired

@@ -185,6 +185,11 @@
             <artifactId>ananya-performance</artifactId>
             <version>${project.version}</version>
         </dependency>
+         <dependency>
+            <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-tool</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>

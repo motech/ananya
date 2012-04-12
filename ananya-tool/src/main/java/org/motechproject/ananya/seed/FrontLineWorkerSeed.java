@@ -1,7 +1,6 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
-import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.LocationService;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class FrontLineWorkerSeed {
@@ -23,13 +21,13 @@ public class FrontLineWorkerSeed {
     @Autowired
     private LocationService locationService;
 
-    @Value("#{ananyaProperties['seed.flw.file']}")
+    @Value("#{toolProperties['seed.flw.file']}")
     private String inputFileName;
 
-    @Value("#{ananyaProperties['seed.flw.file.out']}")
+    @Value("#{toolProperties['seed.flw.file.out']}")
     private String outputFileName;
 
-    @Value("#{ananyaProperties['environment']}")
+    @Value("#{toolProperties['environment']}")
     private String environment;
 
     private String inputCSVFile;
