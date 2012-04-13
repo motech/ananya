@@ -1,8 +1,7 @@
-package org.motechproject.ananya.support;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.support.synchroniser.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")

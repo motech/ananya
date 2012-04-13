@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support;
+package org.motechproject.ananya.support.synchroniser;
 
 
 import org.joda.time.DateTime;
@@ -17,7 +17,6 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.support.log.SynchroniserLog;
 import org.motechproject.ananya.support.log.SynchroniserLogItem;
-import org.motechproject.ananya.support.synchroniser.CertificateCourseItemSynchroniser;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -82,20 +81,25 @@ public class CertificateCourseItemSynchroniserIT {
         DateTime toDate = fromDate.plusHours(8);
 
         SynchroniserLog synchroniserLog = certificateCourseItemSychroniser.replicate(fromDate, toDate);
-        List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
 
+        verifyCourseItemMeasureInReportDb(contentId, frontLineWorkerDimension);
+        verifySynchroniserLog(synchroniserLog);
+    }
+
+    private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
+        List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
+        assertThat(synchroniserLogItems.size(), is(1));
+        assertThat(synchroniserLogItems.get(0).print(), is("1234-5678: Success"));
+    }
+
+    private void verifyCourseItemMeasureInReportDb(String contentId, FrontLineWorkerDimension frontLineWorkerDimension) {
+        List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
         CourseItemMeasure courseItemMeasureFromDb = null;
         for (CourseItemMeasure courseItemMeasure : courseItemMeasures)
             if (courseItemMeasure.getCourseItemDimension().getContentId().equals(contentId))
                 courseItemMeasureFromDb = courseItemMeasure;
-
         assertNotNull(courseItemMeasureFromDb);
         assertThat(courseItemMeasureFromDb.getFrontLineWorkerDimension().getMsisdn(), is(frontLineWorkerDimension.getMsisdn()));
-
-
-        List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
-        assertThat(synchroniserLogItems.size(), is(1));
-        assertThat(synchroniserLogItems.get(0).print(), is("1234-5678: Success"));
     }
 
 }

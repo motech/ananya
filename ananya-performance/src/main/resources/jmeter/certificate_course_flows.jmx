@@ -35,7 +35,7 @@
       <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="all_data_posts_from_file" enabled="true">
         <stringProp name="scriptLanguage">javascript</stringProp>
         <stringProp name="parameters"></stringProp>
-        <stringProp name="filename">/Users/pulkitb/work/code/ananya/ananya-performance/target/classes/jmeter/js/all_data_posts_jmeter.js</stringProp>
+        <stringProp name="filename">/home/vijayrc/Projs/TW/Motech/Code/ananya/ananya-performance/target/classes/jmeter/js/all_data_posts_jmeter.js</stringProp>
         <stringProp name="script"></stringProp>
       </BSFPreProcessor>
       <hashTree/>
@@ -692,7 +692,7 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">7</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1331194313000</longProp>
         <longProp name="ThreadGroup.end_time">1331194313000</longProp>
@@ -725,7 +725,7 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
           </HTTPSamplerProxy>
           <hashTree>
             <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="setup_users" enabled="true">
-              <stringProp name="filename">/Users/pulkitb/work/code/ananya/ananya-performance/src/main/resources/jmeter/js/setup_users.js</stringProp>
+              <stringProp name="filename">/home/vijayrc/Projs/TW/Motech/Code/ananya/ananya-performance/src/main/resources/jmeter/js/setup_users.js</stringProp>
               <stringProp name="parameters"></stringProp>
               <stringProp name="script"></stringProp>
               <stringProp name="scriptLanguage">javascript</stringProp>
@@ -915,8 +915,8 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">3</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">2</stringProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1332864260000</longProp>
         <longProp name="ThreadGroup.end_time">1332864260000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -927,7 +927,7 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
         <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="simple_controller" enabled="true"/>
         <hashTree>
           <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="setup_new_users" enabled="true">
-            <stringProp name="filename">/Users/pulkitb/work/code/ananya/ananya-performance/src/main/resources/jmeter/js/setup_new_users.js</stringProp>
+            <stringProp name="filename">/home/vijayrc/Projs/TW/Motech/Code/ananya/ananya-performance/src/main/resources/jmeter/js/setup_new_users.js</stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script"></stringProp>
             <stringProp name="scriptLanguage">javascript</stringProp>
