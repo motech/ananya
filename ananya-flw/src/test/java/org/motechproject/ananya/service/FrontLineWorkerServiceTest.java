@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.motechproject.util.DateUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +18,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class FrontLineWorkerServiceTest {
 
@@ -234,7 +233,7 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldAddSMSReferenceNumber() {
-        SMSReference smsReference = new SMSReference("1234","123456");
+        SMSReference smsReference = new SMSReference("1234", "123456");
 
         frontLineWorkerService.addSMSReferenceNumber(smsReference);
 
@@ -243,10 +242,23 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldUpdateSMSReferenceNumber() {
-        SMSReference smsReference = new SMSReference("1234","123456");
+        SMSReference smsReference = new SMSReference("1234", "123456");
 
         frontLineWorkerService.updateSMSReferenceNumber(smsReference);
 
         verify(allSMSReferences).update(smsReference);
+    }
+
+    @Test
+    public void shouldFetchByRegisteredDate() {
+        DateTime registeredDate = DateUtil.now();
+        List<FrontLineWorker> expectedFrontLineWorkers = Arrays.asList(new FrontLineWorker());
+        when(allFrontLineWorkers.findByRegisteredDate(registeredDate)).thenReturn(expectedFrontLineWorkers);
+
+        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(registeredDate);
+
+        assertEquals(expectedFrontLineWorkers, frontLineWorkers);
+        verify(allFrontLineWorkers).findByRegisteredDate(registeredDate);
+
     }
 }

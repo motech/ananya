@@ -34,19 +34,14 @@ public class CertificateCourseItemSynchroniserIT {
 
     @Autowired
     private CertificateCourseItemSynchroniser certificateCourseItemSychroniser;
-
     @Autowired
     private AllCertificateCourseLogs allCertificateCourseLogs;
-
     @Autowired
     private DataAccessTemplate template;
-
     @Autowired
     private AllTimeDimensions allTimeDimensions;
-
     @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-
     @Autowired
     private AllCourseItemDimensions allCourseItemDimensions;
 
@@ -86,12 +81,6 @@ public class CertificateCourseItemSynchroniserIT {
         verifySynchroniserLog(synchroniserLog);
     }
 
-    private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
-        List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
-        assertThat(synchroniserLogItems.size(), is(1));
-        assertThat(synchroniserLogItems.get(0).print(), is("1234-5678: Success"));
-    }
-
     private void verifyCourseItemMeasureInReportDb(String contentId, FrontLineWorkerDimension frontLineWorkerDimension) {
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
         CourseItemMeasure courseItemMeasureFromDb = null;
@@ -100,6 +89,12 @@ public class CertificateCourseItemSynchroniserIT {
                 courseItemMeasureFromDb = courseItemMeasure;
         assertNotNull(courseItemMeasureFromDb);
         assertThat(courseItemMeasureFromDb.getFrontLineWorkerDimension().getMsisdn(), is(frontLineWorkerDimension.getMsisdn()));
+    }
+
+    private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
+        List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
+        assertThat(synchroniserLogItems.size(), is(1));
+        assertThat(synchroniserLogItems.get(0).print(), is("1234-5678: Success"));
     }
 
 }

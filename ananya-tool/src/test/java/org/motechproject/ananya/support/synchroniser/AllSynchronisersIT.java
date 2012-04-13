@@ -18,16 +18,12 @@ public class AllSynchronisersIT {
 
     @Autowired
     private AllSynchronisers allSynchronisers;
-
     @Autowired
     private CallDurationSychroniser callDurationSychroniser;
-
     @Autowired
     private FrontLineWorkerSynchroniser frontLineWorkerSynchroniser;
-
     @Autowired
     private SMSSynchroniser smsSynchroniser;
-
     @Autowired
     private CertificateCourseItemSynchroniser certificateCourseItemSynchroniser;
 

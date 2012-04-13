@@ -134,4 +134,8 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         return frontLineWorker == null;
     }
+
+    public List<FrontLineWorker> findByRegisteredDate(DateTime registeredDate) {
+        return allFrontLineWorkers.findByRegisteredDate(registeredDate);
+    }
 }

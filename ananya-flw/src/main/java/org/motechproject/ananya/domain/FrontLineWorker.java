@@ -164,7 +164,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.designation.equals(Designation.ANGANWADI);
     }
 
-    public DateTime registeredDate() {
+    public DateTime getRegisteredDate() {
         return registeredDate;
     }
 

@@ -48,7 +48,8 @@ public class RegistrationMeasureService {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
                 frontLineWorker.msisdn(), frontLineWorker.getOperator(),
                 frontLineWorker.name(), frontLineWorker.status().toString());
-        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.registeredDate());
+
+        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
         allRegistrationMeasures.add(registrationMeasure);

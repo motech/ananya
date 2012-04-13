@@ -32,10 +32,8 @@ public class CallDurationSynchroniserIT {
 
     @Autowired
     private CallDurationSychroniser callDurationSychroniser;
-
     @Autowired
     private AllCallLogs allCallLogs;
-
     @Autowired
     private DataAccessTemplate template;
 
