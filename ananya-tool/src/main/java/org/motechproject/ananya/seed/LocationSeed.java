@@ -55,32 +55,25 @@ public class LocationSeed {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-
         //skip header
         csvReader.readNext();
-
-        //first row data
         currentRow = csvReader.readNext();
-
         while (currentRow != null) {
             currentDistrict = currentRow[0];
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict, currentBlock, currentPanchayat,locationList);
-            log(currentDistrict, currentBlock, currentPanchayat, response);
+            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict,
+                    currentBlock, currentPanchayat,locationList);
 
+            writer.write(response.getMessage() +" => District: " + currentDistrict + " Block: "+ currentBlock
+                    + " Panchayat : " + currentPanchayat);
+            writer.newLine();
             currentRow = csvReader.readNext();
         }
-
         locationRegistrationService.registerDefaultLocationForDistrictBlock(locationList);
         writer.close();
     }
 
 
-    private void log(String district, String block, String panchayat, LocationRegistrationResponse response) throws IOException {
-        String failureLogMessage = response.getMessage() +" => District: " + district + " Block: "+ block + " Panchayat : " + panchayat;
-        writer.write(failureLogMessage);
-        writer.newLine();
-    }
 }

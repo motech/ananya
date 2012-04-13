@@ -26,7 +26,6 @@ public class OperatorSeedTest {
     @Autowired
     private AllOperators allOperators;
 
-    //TODO:Find a cleaner(transactional) way to run this test[Imdad/Sush]
     @Before
     public void setUp() {
         allOperators.removeAll();
@@ -48,7 +47,7 @@ public class OperatorSeedTest {
     }
 
     @Test
-    public void shouldConvertMinutesToMiliSeconds(){
+    public void shouldConvertMinutesToMilliSeconds(){
         assertEquals(OperatorSeed.convertMinutesToMilliSeconds(1), Integer.valueOf(60000));
         assertEquals(OperatorSeed.convertMinutesToMilliSeconds(0), Integer.valueOf(0));
     }

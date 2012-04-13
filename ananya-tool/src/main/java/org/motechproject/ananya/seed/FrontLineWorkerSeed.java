@@ -53,10 +53,7 @@ public class FrontLineWorkerSeed {
         LocationList locationList = new LocationList(locationService.getAll());
         //skip header
         csvReader.readNext();
-
-        //first row data
         currentRow = csvReader.readNext();
-
         while (currentRow != null) {
             msisdn = currentRow[0];
             name = currentRow[1];
@@ -65,17 +62,14 @@ public class FrontLineWorkerSeed {
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
 
-            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
-            log(msisdn, registrationResponse);
+            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation,
+                    currentDistrict, currentBlock, currentPanchayat, locationList);
 
+            writer.write(msisdn + " : " + registrationResponse.getMessage());
+            writer.newLine();
             currentRow = csvReader.readNext();
         }
         writer.close();
     }
 
-    private void log(String msisdn, RegistrationResponse registrationResponse) throws IOException {
-        String logMessage = msisdn + " : " + registrationResponse.getMessage();
-        writer.write(logMessage);
-        writer.newLine();
-    }
 }

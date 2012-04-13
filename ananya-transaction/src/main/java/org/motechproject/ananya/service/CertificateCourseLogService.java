@@ -5,6 +5,8 @@ import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CertificateCourseLogService {
     private AllCertificateCourseLogs allCertificateCourseLogs;
@@ -28,5 +30,9 @@ public class CertificateCourseLogService {
 
     public void update(CertificationCourseLog courseLog) {
         allCertificateCourseLogs.update(courseLog);
+    }
+
+    public List<CertificationCourseLog> getAll() {
+        return allCertificateCourseLogs.getAll();
     }
 }

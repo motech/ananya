@@ -71,4 +71,8 @@ public class CallLoggerService {
         CallLogItem callLogItem = new CallLogItem(callFlowType, startTime, endTime);
         callLog.addOrUpdate(callLogItem);
     }
+
+    public List<CallLog> getAll() {
+        return allCallLogs.getAll();
+    }
 }
