@@ -2,6 +2,7 @@ package org.motechproject.ananya.support.synchroniser;
 
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +48,15 @@ public class CertificateCourseItemSynchroniserIT {
 
     @Before
     public void setUp() {
+        resetDB();
+    }
+
+    @After
+    public void tearDown() {
+        resetDB();
+    }
+
+    private void resetDB() {
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
         template.deleteAll(template.loadAll(CourseItemDimension.class));

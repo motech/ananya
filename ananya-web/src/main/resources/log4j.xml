@@ -10,6 +10,15 @@
             <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
         </layout>
     </appender>
+    <appender class="org.apache.log4j.RollingFileAppender" name="synchroniserLogfile">
+    	<param value="ananya-synchroniser.log" name="File"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="4096KB"/>
+        <param name="maxBackupIndex" value="5"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
+        </layout>
+    </appender>
     <appender name="emailappender" class="org.apache.log4j.net.SMTPAppender">
         <param name="BufferSize" value="5" />
         <param name="SMTPHost" value="" />
@@ -38,6 +47,10 @@
     </logger>	
     <logger name="org.motechproject">
         <level value="info"/>
+    </logger>
+    <logger name="org.motechproject.ananya.support">
+        <level value="info"/>
+        <appender-ref ref="synchroniserLogfile"/>
     </logger>
     <root>
         <priority value="info"/>

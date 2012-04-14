@@ -1,6 +1,7 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,13 +10,16 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.support.log.SynchroniserLog;
 import org.motechproject.ananya.support.log.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
@@ -39,20 +43,35 @@ public class FrontLineWorkerSynchroniserIT {
     @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Autowired
-    private AllRegistrationMeasures allRegistrationMeasures;
+    private LocationRegistrationService locationRegistrationService;
     @Autowired
-    private FrontLineWorkerSynchroniser frontLineWorkerSynchroniser;
+    private AllRegistrationMeasures allRegistrationMeasures;
     @Autowired
     private AllTimeDimensions allTimeDimensions;
     @Autowired
+    private FrontLineWorkerSynchroniser frontLineWorkerSynchroniser;
+    @Autowired
     private DataAccessTemplate template;
+    @Autowired
+    private AllLocations allLocations;
 
     @Before
     public void setUp() {
+        resetDB();
+    }
+
+    @After
+    public void tearDown() {
+        resetDB();
+    }
+
+    private void resetDB() {
         allFrontLineWorkers.removeAll();
+        allLocations.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
+        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
     @Test
@@ -60,6 +79,7 @@ public class FrontLineWorkerSynchroniserIT {
         DateTime fromDate = DateUtil.now();
         DateTime toDate = DateUtil.now().plusDays(2);
 
+        locationRegistrationService.loadDefaultLocation();
         setUpTestFLW("111", fromDate);
         setUpTestFLW("222", fromDate.plusDays(1));
         setUpTestFLW("333", fromDate.plusDays(2));
@@ -80,6 +100,7 @@ public class FrontLineWorkerSynchroniserIT {
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
         allTimeDimensions.addOrUpdate(registeredDate);
+
     }
 
     private void verifyFLWExistsInReportDbFor(String msisdn) {
