@@ -10,10 +10,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Launcher {
 
-    private static Logger log = LoggerFactory.getLogger(Launcher.class);
-
     public static void main(String[] args) throws Exception {
-        log.info("Synchronising data: START:");
+        System.out.println("Synchronising data: START:");
 
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
         DateTime fromDate = formatter.parseDateTime(args[0]);
@@ -22,6 +20,6 @@ public class Launcher {
         AllSynchronisers allSynchronisers = (AllSynchronisers) context.getBean("allSynchronisers");
         allSynchronisers.run(fromDate, toDate);
 
-        log.info("Synchronising data: END:");
+        System.out.println("Synchronising data: END:");
     }
 }
