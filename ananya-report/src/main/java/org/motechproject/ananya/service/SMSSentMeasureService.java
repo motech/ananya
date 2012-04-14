@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SMSSentMeasureService {
@@ -23,6 +25,9 @@ public class SMSSentMeasureService {
     private AllTimeDimensions allTimeDimensions;
     private FrontLineWorkerService frontLineWorkerService;
 
+    public SMSSentMeasureService() {
+    }
+
     @Autowired
     public SMSSentMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, AllTimeDimensions allTimeDimensions, FrontLineWorkerService frontLineWorkerService) {
         this.reportDB = reportDB;
@@ -31,6 +36,7 @@ public class SMSSentMeasureService {
         this.frontLineWorkerService = frontLineWorkerService;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void createSMSSentMeasure(String callerId) {
         boolean smsSent = false;
         int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);

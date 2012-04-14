@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class CourseItemMeasureService {
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
 
+    public CourseItemMeasureService() {
+    }
+
     @Autowired
     public CourseItemMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                     AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions,
@@ -38,6 +43,7 @@ public class CourseItemMeasureService {
         this.certificateCourseLogService = certificateCourseLogService;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void createCourseItemMeasure(String callId) {
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         if (courseLog == null) return;

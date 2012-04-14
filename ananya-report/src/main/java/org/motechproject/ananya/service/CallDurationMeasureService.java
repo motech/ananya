@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CallDurationMeasureService {
@@ -19,6 +21,9 @@ public class CallDurationMeasureService {
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
+    public CallDurationMeasureService() {
+    }
+
     @Autowired
     public CallDurationMeasureService(CallLoggerService callLoggerService, ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
         this.callLoggerService = callLoggerService;
@@ -26,6 +31,7 @@ public class CallDurationMeasureService {
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void createCallDurationMeasure(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 

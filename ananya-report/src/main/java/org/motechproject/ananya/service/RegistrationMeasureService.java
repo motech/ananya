@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RegistrationMeasureService {
@@ -24,6 +26,9 @@ public class RegistrationMeasureService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
+
+    public RegistrationMeasureService() {
+    }
 
     @Autowired
     public RegistrationMeasureService(FrontLineWorkerService frontLineWorkerService,
@@ -38,7 +43,7 @@ public class RegistrationMeasureService {
         this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
-
+    @Transactional(propagation = Propagation.REQUIRED)
     public void createRegistrationMeasure(LogData logData) {
         String callerId = logData.getDataId();
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
@@ -59,6 +64,7 @@ public class RegistrationMeasureService {
                 "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)    
     public void updateRegistrationStatusAndName(LogData logData) {
         FrontLineWorker existingFlw = frontLineWorkerService.findByCallerId(logData.getDataId());
         FrontLineWorkerDimension existingFlwDimension = allFrontLineWorkerDimensions.fetchFor(existingFlw.msisdn());

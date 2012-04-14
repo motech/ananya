@@ -16,6 +16,7 @@ public class SMSSentDataHandler {
     
     private SMSSentMeasureService smsSentMeasureService;
 
+ 
     @Autowired
     public SMSSentDataHandler(SMSSentMeasureService smsSentMeasureService) {
         this.smsSentMeasureService = smsSentMeasureService;

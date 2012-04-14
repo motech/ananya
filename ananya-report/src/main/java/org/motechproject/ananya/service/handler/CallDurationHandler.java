@@ -14,9 +14,6 @@ public class CallDurationHandler {
     private CallDurationMeasureService callDurationMeasureService;
     private static final Logger LOG = Logger.getLogger(CallDurationHandler.class);
 
-    public CallDurationHandler() {
-    }
-
     @Autowired
     public CallDurationHandler(CallDurationMeasureService callDurationMeasureService) {
         this.callDurationMeasureService = callDurationMeasureService;
