@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
@@ -13,11 +14,11 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.support.log.SynchroniserLog;
 import org.motechproject.ananya.support.log.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -36,7 +37,8 @@ public class CallDurationSynchroniserIT {
     @Autowired
     private AllCallLogs allCallLogs;
     @Autowired
-    private DataAccessTemplate template;
+    @Qualifier("testDataAccessTemplate")
+    private TestDataAccessTemplate template;
 
     @Before
     public void setUp() {

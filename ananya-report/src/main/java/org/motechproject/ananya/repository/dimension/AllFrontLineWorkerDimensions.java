@@ -4,12 +4,17 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class AllFrontLineWorkerDimensions {
 
     @Autowired
     private DataAccessTemplate template;
+
+    public AllFrontLineWorkerDimensions() {
+    }
 
     public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String name, String status) {
         FrontLineWorkerDimension dimension = (FrontLineWorkerDimension) template.getUniqueResult(

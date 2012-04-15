@@ -5,10 +5,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.service.LocationDimensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -33,7 +33,7 @@ public class LocationSeedTest {
     private LocationDimensionService locationDimensionService;
 
     @Autowired
-    private DataAccessTemplate template;
+    private TestDataAccessTemplate template;
 
     @Before
     public void setUp() {

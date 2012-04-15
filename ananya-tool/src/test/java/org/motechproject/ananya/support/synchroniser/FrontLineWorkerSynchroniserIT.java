@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
@@ -15,7 +16,6 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -24,6 +24,7 @@ import org.motechproject.ananya.support.log.SynchroniserLog;
 import org.motechproject.ananya.support.log.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -51,7 +52,8 @@ public class FrontLineWorkerSynchroniserIT {
     @Autowired
     private FrontLineWorkerSynchroniser frontLineWorkerSynchroniser;
     @Autowired
-    private DataAccessTemplate template;
+    @Qualifier("testDataAccessTemplate")
+    private TestDataAccessTemplate template;
     @Autowired
     private AllLocations allLocations;
 

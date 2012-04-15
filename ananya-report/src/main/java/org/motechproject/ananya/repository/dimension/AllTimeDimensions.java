@@ -5,12 +5,17 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class AllTimeDimensions {
 
     @Autowired
     private DataAccessTemplate template;
+
+    public AllTimeDimensions() {
+    }
 
     public TimeDimension makeFor(DateTime dateTime) {
         TimeDimension timeDimension = new TimeDimension(dateTime);

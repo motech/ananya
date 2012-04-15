@@ -6,13 +6,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
@@ -20,6 +20,7 @@ import org.motechproject.ananya.support.log.SynchroniserLog;
 import org.motechproject.ananya.support.log.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -37,8 +38,9 @@ public class CertificateCourseItemSynchroniserIT {
     private CertificateCourseItemSynchroniser certificateCourseItemSychroniser;
     @Autowired
     private AllCertificateCourseLogs allCertificateCourseLogs;
+    @Qualifier("testDataAccessTemplate")
     @Autowired
-    private DataAccessTemplate template;
+    private TestDataAccessTemplate template;
     @Autowired
     private AllTimeDimensions allTimeDimensions;
     @Autowired

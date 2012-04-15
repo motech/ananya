@@ -1,6 +1,7 @@
 package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Location;
@@ -11,7 +12,6 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -41,7 +41,7 @@ public class ReportDb {
     @Autowired
     private AllSMSSentMeasures allSMSSentMeasures;
     @Autowired
-    private DataAccessTemplate template;
+    private TestDataAccessTemplate template;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {

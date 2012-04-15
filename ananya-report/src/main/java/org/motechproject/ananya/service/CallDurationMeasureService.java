@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -31,7 +30,7 @@ public class CallDurationMeasureService {
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void createCallDurationMeasure(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 

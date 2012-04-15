@@ -1,6 +1,7 @@
-package org.motechproject.ananya.repository;
+package org.motechproject.ananya;
 
 import org.hibernate.SessionFactory;
+import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -10,12 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = "prototype")
-public class DataAccessTemplate extends HibernateTemplate {
+@Ignore
+public class TestDataAccessTemplate extends HibernateTemplate {
 
     @Autowired
-    public DataAccessTemplate(@Qualifier(value = "sessionFactory") SessionFactory sessionFactory) {
+    public TestDataAccessTemplate(@Qualifier(value = "sessionFactory") SessionFactory sessionFactory) {
         super(sessionFactory);
-        setAllowCreate(false);
+        setAllowCreate(true);
     }
 
     public Object getUniqueResult(String namedQueryName, String[] parameterNames, Object[] parameterValues) {
