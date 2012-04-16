@@ -692,7 +692,7 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">5</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1331194313000</longProp>
         <longProp name="ThreadGroup.end_time">1331194313000</longProp>
@@ -915,8 +915,8 @@ vars.put(&quot;tokens_length&quot;, tokens.length);
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">3</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">3</stringProp>
         <longProp name="ThreadGroup.start_time">1332864260000</longProp>
         <longProp name="ThreadGroup.end_time">1332864260000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>

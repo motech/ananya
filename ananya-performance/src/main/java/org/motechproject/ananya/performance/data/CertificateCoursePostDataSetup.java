@@ -1,9 +1,6 @@
 package org.motechproject.ananya.performance.data;
 
-import com.google.gson.Gson;
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.CourseItemType;
-import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.performance.framework.PerformanceData;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +8,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +63,7 @@ public class CertificateCoursePostDataSetup {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
         CertificateCoursePostDataSetup certificateCoursePostDataSetup = (CertificateCoursePostDataSetup) context.getBean("certificateCoursePostDataSetup");
         certificateCoursePostDataSetup.setupAllDataPostsWithContentIds();
+        System.out.println("done");
     }
     
 }
