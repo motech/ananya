@@ -2,11 +2,15 @@ package org.motechproject.ananya.support.log;
 
 import org.joda.time.DateTime;
 import org.motechproject.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SynchroniserLog {
+    private static Logger log = LoggerFactory.getLogger(SynchroniserLog.class);
+
     private List<SynchroniserLogItem> items = new ArrayList<SynchroniserLogItem>();
     private String name;
 
@@ -20,7 +24,10 @@ public class SynchroniserLog {
 
     public void print() {
         DateTime now = DateUtil.now();
-        System.out.println(name + "_" + now);
+        log.info(name + "records: " + now);
+        for (SynchroniserLogItem logItem : items)
+            log.info(logItem.print());
+        log.info("-------------------------------------------------------------");
     }
 
     public List<SynchroniserLogItem> getItems() {
