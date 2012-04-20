@@ -54,7 +54,11 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
             }
         }
         return synchroniserLog;
+    }
 
+    @Override
+    public Priority runPriority() {
+        return Priority.high;
     }
 
 }

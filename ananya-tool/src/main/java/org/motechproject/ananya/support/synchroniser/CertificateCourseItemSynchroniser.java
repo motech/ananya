@@ -37,4 +37,9 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
         }
         return synchroniserLog;
     }
+
+    @Override
+    public Priority runPriority() {
+        return Priority.low;
+    }
 }

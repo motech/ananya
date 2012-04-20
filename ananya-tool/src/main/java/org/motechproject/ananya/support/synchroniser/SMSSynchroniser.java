@@ -45,4 +45,9 @@ public class SMSSynchroniser implements Synchroniser {
         }
         return synchroniserLog;
     }
+
+    @Override
+    public Priority runPriority() {
+        return Priority.medium;
+    }
 }

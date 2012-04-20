@@ -6,9 +6,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class AllSynchronisers implements BeanPostProcessor {
@@ -36,6 +34,12 @@ public class AllSynchronisers implements BeanPostProcessor {
     }
 
     public List<Synchroniser> getAll() {
+        Collections.sort(synchronisers, new Comparator<Synchroniser>() {
+            @Override
+            public int compare(Synchroniser synchroniser, Synchroniser synchroniser1) {
+                return synchroniser1.runPriority().compareTo(synchroniser.runPriority());
+            }
+        });
         return synchronisers;
     }
 }

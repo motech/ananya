@@ -7,4 +7,6 @@ public interface Synchroniser {
 
     SynchroniserLog replicate(DateTime fromDate, DateTime toDate);
 
+    Priority runPriority();
+
 }
