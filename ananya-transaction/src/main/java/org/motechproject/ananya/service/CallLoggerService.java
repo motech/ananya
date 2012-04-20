@@ -75,4 +75,8 @@ public class CallLoggerService {
     public List<CallLog> getAll() {
         return allCallLogs.getAll();
     }
+
+    public void removeAll() {
+        allCallLogs.removeAll();
+    }
 }

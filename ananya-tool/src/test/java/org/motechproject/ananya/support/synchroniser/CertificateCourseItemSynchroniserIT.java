@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -91,6 +92,7 @@ public class CertificateCourseItemSynchroniserIT {
 
         verifyCourseItemMeasureInReportDb(contentId, frontLineWorkerDimension);
         verifySynchroniserLog(synchroniserLog);
+        assertTrue(allCertificateCourseLogs.getAll().isEmpty());
     }
 
     private void verifyCourseItemMeasureInReportDb(String contentId, FrontLineWorkerDimension frontLineWorkerDimension) {

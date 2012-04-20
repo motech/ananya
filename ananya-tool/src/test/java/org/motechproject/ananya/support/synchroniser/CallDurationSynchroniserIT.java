@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -71,6 +72,7 @@ public class CallDurationSynchroniserIT {
 
         verifyCallDurationMeasureInReportDB(callId);
         verifySynchroniserLog(synchroniserLog);
+        assertTrue(allCallLogs.getAll().isEmpty());
     }
 
     private void setUpReportData(String callerId, String callId) {

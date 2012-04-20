@@ -35,4 +35,8 @@ public class CertificateCourseLogService {
     public List<CertificationCourseLog> getAll() {
         return allCertificateCourseLogs.getAll();
     }
+
+    public void removeAll() {
+        allCertificateCourseLogs.removeAll();
+    }
 }
