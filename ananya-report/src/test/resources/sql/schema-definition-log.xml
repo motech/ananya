@@ -61,6 +61,19 @@
         <createIndex tableName="registration_measure" indexName="idx_registration_measure_flw_id">
             <column name="flw_id"/>
         </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_registration_measure_flw_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_registration_measure_time_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_registration_measure_location_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="5">
@@ -97,6 +110,19 @@
         <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_flw_id">
             <column name="flw_id"/>
         </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_flw_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_time_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_course_item_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="course_item_id"
+                                 referencedTableName="course_item_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks" id="7">
@@ -113,6 +139,11 @@
         <createIndex tableName="call_duration_measure" indexName="idx_call_duration_measure_flw_id">
             <column name="flw_id"/>
         </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_flw_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
     <changeSet context="setup" author="ThoughtWorks" id="8">
         <createTable tableName="sms_sent_measure" schemaName="report">
@@ -132,6 +163,15 @@
         <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_time_id">
             <column name="time_id"/>
         </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_flw_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_time_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>
