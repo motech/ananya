@@ -135,7 +135,7 @@ public class FrontLineWorkerService {
         return frontLineWorker == null;
     }
 
-    public List<FrontLineWorker> findByRegisteredDate(DateTime registeredDate) {
-        return allFrontLineWorkers.findByRegisteredDate(registeredDate);
+    public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
+        return allFrontLineWorkers.findByRegisteredDate(startDate, endDate);
     }
 }

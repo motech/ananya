@@ -35,7 +35,6 @@ public class CallDurationSychroniser implements Synchroniser {
                 synchroniserLog.add(callLog.getCallId(), "Error:" + e.getMessage());
             }
         }
-        callLoggerService.removeAll();
         return synchroniserLog;
     }
 

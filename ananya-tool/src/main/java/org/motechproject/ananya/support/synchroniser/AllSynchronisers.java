@@ -27,7 +27,7 @@ public class AllSynchronisers implements BeanPostProcessor {
     }
 
     public void run(DateTime fromDate, DateTime toDate) {
-        for (Synchroniser synchroniser : synchronisers) {
+        for (Synchroniser synchroniser : getAll()) {
             SynchroniserLog synchroniserLog = synchroniser.replicate(fromDate, toDate);
             synchroniserLog.print();
         }

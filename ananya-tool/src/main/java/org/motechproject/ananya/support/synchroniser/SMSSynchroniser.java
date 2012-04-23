@@ -29,8 +29,8 @@ public class SMSSynchroniser implements Synchroniser {
     @Override
     public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
         SynchroniserLog synchroniserLog = new SynchroniserLog("SMS");
-
         List<SMSReference> smsReferences = allSMSReferences.getAll();
+        
         for (SMSReference smsReference : smsReferences) {
             String callerId = smsReference.getMsisdn();
             try {

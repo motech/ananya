@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.requests.LogData;
@@ -33,24 +32,18 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
     @Override
     public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
         SynchroniserLog synchroniserLog = new SynchroniserLog("FrontLineWorker");
+        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(fromDate, toDate);
 
-        Period period = new Period(fromDate, toDate);
-        for (int dayCount = 0; dayCount < period.getDays() + 1; dayCount++) {
-
-            DateTime registeredDate = fromDate.plusDays(dayCount);
-            List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(registeredDate);
-
-            for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-                Long msisdn = frontLineWorker.msisdn();
-                try {
-                    if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
-                        LogData logData = new LogData(LogType.REGISTRATION, msisdn.toString());
-                        registrationMeasureService.createRegistrationMeasure(logData);
-                        synchroniserLog.add(msisdn.toString(), "Success");
-                    }
-                } catch (Exception e) {
-                    synchroniserLog.add(msisdn.toString(), "Error: " + e.getMessage());
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
+            Long msisdn = frontLineWorker.msisdn();
+            try {
+                if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
+                    LogData logData = new LogData(LogType.REGISTRATION, msisdn.toString());
+                    registrationMeasureService.createRegistrationMeasure(logData);
+                    synchroniserLog.add(msisdn.toString(), "Success");
                 }
+            } catch (Exception e) {
+                synchroniserLog.add(msisdn.toString(), "Error: " + e.getMessage());
             }
         }
         return synchroniserLog;

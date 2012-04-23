@@ -251,14 +251,15 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldFetchByRegisteredDate() {
-        DateTime registeredDate = DateUtil.now();
+        DateTime startDate = DateUtil.now();
+        DateTime endDate = startDate.plusDays(2);
         List<FrontLineWorker> expectedFrontLineWorkers = Arrays.asList(new FrontLineWorker());
-        when(allFrontLineWorkers.findByRegisteredDate(registeredDate)).thenReturn(expectedFrontLineWorkers);
+        when(allFrontLineWorkers.findByRegisteredDate(startDate, endDate)).thenReturn(expectedFrontLineWorkers);
 
-        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(registeredDate);
+        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(startDate, endDate);
 
         assertEquals(expectedFrontLineWorkers, frontLineWorkers);
-        verify(allFrontLineWorkers).findByRegisteredDate(registeredDate);
+        verify(allFrontLineWorkers).findByRegisteredDate(startDate, endDate);
 
     }
 }

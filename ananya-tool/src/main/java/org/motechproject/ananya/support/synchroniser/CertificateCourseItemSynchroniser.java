@@ -35,7 +35,6 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
                 synchroniserLog.add(courseLog.getCallId(), "Error:" + e.getMessage());
             }
         }
-        certificateCourseLogService.removeAll();
         return synchroniserLog;
     }
 

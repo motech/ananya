@@ -30,9 +30,9 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
     }
 
     @GenerateView
-    public List<FrontLineWorker> findByRegisteredDate(DateTime registeredDate) {
-        ViewQuery viewQuery = createQuery("by_registeredDate").key(registeredDate).includeDocs(true);
-        List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
-        return workers;
+    public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
+         ViewQuery viewQuery = createQuery("by_registeredDate").startKey(startDate).endKey(endDate).includeDocs(true);
+        return db.queryView(viewQuery, FrontLineWorker.class);
     }
+
 }
