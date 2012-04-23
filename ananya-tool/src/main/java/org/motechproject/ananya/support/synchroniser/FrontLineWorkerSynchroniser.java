@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
@@ -43,7 +44,7 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
                     synchroniserLog.add(msisdn.toString(), "Success");
                 }
             } catch (Exception e) {
-                synchroniserLog.add(msisdn.toString(), "Error: " + e.getMessage());
+                synchroniserLog.add(msisdn.toString(), "Error: " + ExceptionUtils.getFullStackTrace(e));
             }
         }
         return synchroniserLog;

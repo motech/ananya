@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
@@ -32,7 +33,7 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
                 courseItemMeasureService.createCourseItemMeasure(courseLog.getCallId());
                 synchroniserLog.add(courseLog.getCallId(), "Success");
             } catch (Exception e) {
-                synchroniserLog.add(courseLog.getCallId(), "Error:" + e.getMessage());
+                synchroniserLog.add(courseLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));
             }
         }
         return synchroniserLog;
