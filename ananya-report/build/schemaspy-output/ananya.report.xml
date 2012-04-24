@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<database name="ananya" schema="report" type="PostgreSQL - 8.4.8">
+<database name="ananya" schema="report" type="PostgreSQL - 9.1.3">
    <tables>
       <table name="call_duration_measure" numRows="0" remarks="" schema="report" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('report.call_duration_measure_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
-         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8">
+            <parent column="id" foreignKey="fk_call_duration_measure_flw_dimension" implied="false" onDeleteCascade="true" table="front_line_worker_dimension"/>
+         </column>
          <column autoUpdated="false" digits="0" id="2" name="call_id" nullable="true" remarks="" size="255" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="duration" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="0" id="4" name="type" nullable="true" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="6" id="4" name="start_time" nullable="true" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="5" name="end_time" nullable="true" remarks="" size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="6" name="type" nullable="true" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="location_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_call_duration_measure_location_dimension" implied="false" onDeleteCascade="true" table="location_dimension"/>
+         </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="pk_call_duration_measure" unique="true">
             <column ascending="true" name="id"/>
@@ -16,7 +23,9 @@
          </index>
       </table>
       <table name="course_item_dimension" numRows="91" remarks="" schema="report" type="TABLE">
-         <column autoUpdated="true" defaultValue="nextval('report.course_item_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="true" defaultValue="nextval('report.course_item_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="course_item_id" foreignKey="fk_course_item_measure_course_item_dimension" implied="false" onDeleteCascade="true" table="course_item_measure"/>
+         </column>
          <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="255" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="content_id" nullable="true" remarks="" size="255" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="type" nullable="true" remarks="" size="30" type="varchar"/>
@@ -29,13 +38,22 @@
             <column ascending="true" name="type"/>
          </index>
       </table>
-      <table name="course_item_measure" numRows="2" remarks="" schema="report" type="TABLE">
+      <table name="course_item_measure" numRows="0" remarks="" schema="report" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('report.course_item_measure_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
-         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8"/>
-         <column autoUpdated="false" digits="0" id="2" name="course_item_id" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="0" id="3" name="time_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8">
+            <parent column="id" foreignKey="fk_course_item_measure_flw_dimension" implied="false" onDeleteCascade="true" table="front_line_worker_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="course_item_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="fk_course_item_measure_course_item_dimension" implied="false" onDeleteCascade="true" table="course_item_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="time_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="fk_course_item_measure_time_dimension" implied="false" onDeleteCascade="true" table="time_dimension"/>
+         </column>
          <column autoUpdated="false" digits="0" id="4" name="score" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="5" name="event" nullable="true" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="location_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_course_item_measure_location_dimension" implied="false" onDeleteCascade="true" table="location_dimension"/>
+         </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="pk_course_item_measure" unique="true">
             <column ascending="true" name="id"/>
@@ -50,7 +68,7 @@
             <column ascending="true" name="time_id"/>
          </index>
       </table>
-      <table name="databasechangelog" numRows="8" remarks="" schema="report" type="TABLE">
+      <table name="databasechangelog" numRows="14" remarks="" schema="report" type="TABLE">
          <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="" size="63" type="varchar"/>
          <column autoUpdated="false" digits="0" id="1" name="author" nullable="false" remarks="" size="63" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="filename" nullable="false" remarks="" size="200" type="varchar"/>
@@ -82,7 +100,13 @@
          </index>
       </table>
       <table name="front_line_worker_dimension" numRows="6" remarks="" schema="report" type="TABLE">
-         <column autoUpdated="true" defaultValue="nextval('report.front_line_worker_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="true" defaultValue="nextval('report.front_line_worker_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="flw_id" foreignKey="fk_call_duration_measure_flw_dimension" implied="false" onDeleteCascade="true" table="call_duration_measure"/>
+            <child column="flw_id" foreignKey="fk_course_item_measure_flw_dimension" implied="false" onDeleteCascade="true" table="course_item_measure"/>
+            <child column="flw_id" foreignKey="fk_job_aid_content_measure_flw_dimension" implied="false" onDeleteCascade="true" table="job_aid_content_measure"/>
+            <child column="flw_id" foreignKey="fk_registration_measure_flw_dimension" implied="false" onDeleteCascade="true" table="registration_measure"/>
+            <child column="flw_id" foreignKey="fk_sms_sent_measure_flw_dimension" implied="false" onDeleteCascade="true" table="sms_sent_measure"/>
+         </column>
          <column autoUpdated="false" digits="0" id="1" name="msisdn" nullable="true" remarks="" size="19" type="int8"/>
          <column autoUpdated="false" digits="0" id="2" name="operator" nullable="true" remarks="" size="30" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="name" nullable="true" remarks="" size="255" type="varchar"/>
@@ -92,8 +116,44 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="location_dimension" numRows="17" remarks="" schema="report" type="TABLE">
-         <column autoUpdated="true" defaultValue="nextval('report.location_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+      <table name="job_aid_content_dimension" numRows="0" remarks="" schema="report" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('report.job_aid_content_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="job_aid_content_id" foreignKey="fk_ja_content_measure_ja_content_dimension" implied="false" onDeleteCascade="true" table="job_aid_content_measure"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="content_id" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="2" name="content_name" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="duration" nullable="true" remarks="" size="10" type="int4"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="pk_job_aid_content_dimension" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="job_aid_content_measure" numRows="0" remarks="" schema="report" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('report.job_aid_content_measure_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8">
+            <parent column="id" foreignKey="fk_job_aid_content_measure_flw_dimension" implied="false" onDeleteCascade="true" table="front_line_worker_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="location_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_job_aid_content_measure_location_dimension" implied="false" onDeleteCascade="true" table="location_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="job_aid_content_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_ja_content_measure_ja_content_dimension" implied="false" onDeleteCascade="true" table="job_aid_content_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="call_id" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="5" name="percentage_access" nullable="true" remarks="" size="5" type="int2"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="pk_job_aid_content_measure" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="location_dimension" numRows="19" remarks="" schema="report" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('report.location_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="location_id" foreignKey="fk_call_duration_measure_location_dimension" implied="false" onDeleteCascade="true" table="call_duration_measure"/>
+            <child column="location_id" foreignKey="fk_course_item_measure_location_dimension" implied="false" onDeleteCascade="true" table="course_item_measure"/>
+            <child column="location_id" foreignKey="fk_job_aid_content_measure_location_dimension" implied="false" onDeleteCascade="true" table="job_aid_content_measure"/>
+            <child column="location_id" foreignKey="fk_registration_measure_location_dimension" implied="false" onDeleteCascade="true" table="registration_measure"/>
+            <child column="location_id" foreignKey="fk_sms_sent_measure_location_dimension" implied="false" onDeleteCascade="true" table="sms_sent_measure"/>
+         </column>
          <column autoUpdated="false" digits="0" id="1" name="location_id" nullable="true" remarks="" size="30" type="varchar"/>
          <column autoUpdated="false" digits="0" id="2" name="district" nullable="true" remarks="" size="255" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="block" nullable="true" remarks="" size="255" type="varchar"/>
@@ -103,11 +163,17 @@
             <column ascending="true" name="id"/>
          </index>
       </table>
-      <table name="registration_measure" numRows="13" remarks="" schema="report" type="TABLE">
+      <table name="registration_measure" numRows="6" remarks="" schema="report" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('report.registration_measure_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
-         <column autoUpdated="false" digits="0" id="1" name="location_id" nullable="true" remarks="" size="5" type="int2"/>
-         <column autoUpdated="false" digits="0" id="2" name="time_id" nullable="true" remarks="" size="10" type="int4"/>
-         <column autoUpdated="false" digits="0" id="3" name="flw_id" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="1" name="location_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_registration_measure_location_dimension" implied="false" onDeleteCascade="true" table="location_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="time_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="fk_registration_measure_time_dimension" implied="false" onDeleteCascade="true" table="time_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="flw_id" nullable="true" remarks="" size="19" type="int8">
+            <parent column="id" foreignKey="fk_registration_measure_flw_dimension" implied="false" onDeleteCascade="true" table="front_line_worker_dimension"/>
+         </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="pk_registration_measure" unique="true">
             <column ascending="true" name="id"/>
@@ -122,13 +188,20 @@
             <column ascending="true" name="time_id"/>
          </index>
       </table>
-      <table name="sms_sent_measure" numRows="1" remarks="" schema="report" type="TABLE">
+      <table name="sms_sent_measure" numRows="0" remarks="" schema="report" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('report.sms_sent_measure_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
-         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8"/>
-         <column autoUpdated="false" digits="0" id="2" name="time_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="flw_id" nullable="true" remarks="" size="19" type="int8">
+            <parent column="id" foreignKey="fk_sms_sent_measure_flw_dimension" implied="false" onDeleteCascade="true" table="front_line_worker_dimension"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="time_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="fk_sms_sent_measure_time_dimension" implied="false" onDeleteCascade="true" table="time_dimension"/>
+         </column>
          <column autoUpdated="false" digits="0" id="3" name="course_attempt" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="4" name="sms_sent" nullable="true" remarks="" size="1" type="bool"/>
          <column autoUpdated="false" digits="0" id="5" name="sms_reference_number" nullable="true" remarks="" size="30" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="location_id" nullable="true" remarks="" size="5" type="int2">
+            <parent column="id" foreignKey="fk_sms_sent_measure_location_dimension" implied="false" onDeleteCascade="true" table="location_dimension"/>
+         </column>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="pk_sms_sent_measure" unique="true">
             <column ascending="true" name="id"/>
@@ -141,11 +214,16 @@
          </index>
       </table>
       <table name="time_dimension" numRows="732" remarks="" schema="report" type="TABLE">
-         <column autoUpdated="true" defaultValue="nextval('report.time_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="true" defaultValue="nextval('report.time_dimension_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="time_id" foreignKey="fk_course_item_measure_time_dimension" implied="false" onDeleteCascade="true" table="course_item_measure"/>
+            <child column="time_id" foreignKey="fk_registration_measure_time_dimension" implied="false" onDeleteCascade="true" table="registration_measure"/>
+            <child column="time_id" foreignKey="fk_sms_sent_measure_time_dimension" implied="false" onDeleteCascade="true" table="sms_sent_measure"/>
+         </column>
          <column autoUpdated="false" digits="0" id="1" name="day" nullable="true" remarks="" size="5" type="int2"/>
          <column autoUpdated="false" digits="0" id="2" name="week" nullable="true" remarks="" size="5" type="int2"/>
          <column autoUpdated="false" digits="0" id="3" name="month" nullable="true" remarks="" size="5" type="int2"/>
          <column autoUpdated="false" digits="0" id="4" name="year" nullable="true" remarks="" size="5" type="int2"/>
+         <column autoUpdated="false" digits="0" id="5" name="date" nullable="true" remarks="" size="13" type="date"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="pk_time_dimension" unique="true">
             <column ascending="true" name="id"/>

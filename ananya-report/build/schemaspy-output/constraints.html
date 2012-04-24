@@ -32,7 +32,7 @@
 <div class='indent'>
 <table width='100%'>
 <tr><td class='container' valign='bottom'><b>
-0 Foreign Key Constraints:</b>
+15 Foreign Key Constraints:</b>
 </td><td class='container' align='right'>
 <table>
   <tr><td class='container' align='right' valign='top'><a href='http://sourceforge.net' target='_blank'><img src='http://sourceforge.net/sflogo.php?group_id=137197&amp;type=1' alt='SourceForge.net' border='0' height='31' width='88'></a></td></tr>
@@ -71,8 +71,110 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody>
- <tr>
-  <td class='detail' valign='top' colspan='4'>None detected</td>
+  <tr class='even'>
+  <td class='detail'>fk_call_duration_measure_flw_dimension</td>
+  <td class='detail'><a href='tables/call_duration_measure.html'>call_duration_measure</a>.flw_id</td>
+  <td class='detail'><a href='tables/front_line_worker_dimension.html'>front_line_worker_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_call_duration_measure_location_dimension</td>
+  <td class='detail'><a href='tables/call_duration_measure.html'>call_duration_measure</a>.location_id</td>
+  <td class='detail'><a href='tables/location_dimension.html'>location_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_course_item_measure_course_item_dimension</td>
+  <td class='detail'><a href='tables/course_item_measure.html'>course_item_measure</a>.course_item_id</td>
+  <td class='detail'><a href='tables/course_item_dimension.html'>course_item_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_course_item_measure_flw_dimension</td>
+  <td class='detail'><a href='tables/course_item_measure.html'>course_item_measure</a>.flw_id</td>
+  <td class='detail'><a href='tables/front_line_worker_dimension.html'>front_line_worker_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_course_item_measure_location_dimension</td>
+  <td class='detail'><a href='tables/course_item_measure.html'>course_item_measure</a>.location_id</td>
+  <td class='detail'><a href='tables/location_dimension.html'>location_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_course_item_measure_time_dimension</td>
+  <td class='detail'><a href='tables/course_item_measure.html'>course_item_measure</a>.time_id</td>
+  <td class='detail'><a href='tables/time_dimension.html'>time_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_ja_content_measure_ja_content_dimension</td>
+  <td class='detail'><a href='tables/job_aid_content_measure.html'>job_aid_content_measure</a>.job_aid_content_id</td>
+  <td class='detail'><a href='tables/job_aid_content_dimension.html'>job_aid_content_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_job_aid_content_measure_flw_dimension</td>
+  <td class='detail'><a href='tables/job_aid_content_measure.html'>job_aid_content_measure</a>.flw_id</td>
+  <td class='detail'><a href='tables/front_line_worker_dimension.html'>front_line_worker_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_job_aid_content_measure_location_dimension</td>
+  <td class='detail'><a href='tables/job_aid_content_measure.html'>job_aid_content_measure</a>.location_id</td>
+  <td class='detail'><a href='tables/location_dimension.html'>location_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_registration_measure_flw_dimension</td>
+  <td class='detail'><a href='tables/registration_measure.html'>registration_measure</a>.flw_id</td>
+  <td class='detail'><a href='tables/front_line_worker_dimension.html'>front_line_worker_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_registration_measure_location_dimension</td>
+  <td class='detail'><a href='tables/registration_measure.html'>registration_measure</a>.location_id</td>
+  <td class='detail'><a href='tables/location_dimension.html'>location_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_registration_measure_time_dimension</td>
+  <td class='detail'><a href='tables/registration_measure.html'>registration_measure</a>.time_id</td>
+  <td class='detail'><a href='tables/time_dimension.html'>time_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_sms_sent_measure_flw_dimension</td>
+  <td class='detail'><a href='tables/sms_sent_measure.html'>sms_sent_measure</a>.flw_id</td>
+  <td class='detail'><a href='tables/front_line_worker_dimension.html'>front_line_worker_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='odd'>
+  <td class='detail'>fk_sms_sent_measure_location_dimension</td>
+  <td class='detail'><a href='tables/sms_sent_measure.html'>sms_sent_measure</a>.location_id</td>
+  <td class='detail'><a href='tables/location_dimension.html'>location_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
+ </tr>
+  <tr class='even'>
+  <td class='detail'>fk_sms_sent_measure_time_dimension</td>
+  <td class='detail'><a href='tables/sms_sent_measure.html'>sms_sent_measure</a>.time_id</td>
+  <td class='detail'><a href='tables/time_dimension.html'>time_dimension</a>.id</td>
+  <td class='detail'><span title='Cascade on delete:
+ Deletion of parent deletes child'>Cascade on delete&nbsp;</span></td>
  </tr>
 </tbody>
 </table>
