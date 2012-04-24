@@ -45,6 +45,8 @@ public class CallDurationMeasureService {
                     flwDimension,
                     callId,
                     callLogItem.duration(),
+                    callLogItem.getStartTime(),
+                    callLogItem.getEndTime(),
                     callLogItem.getCallFlowType().name());
             reportDB.add(callDurationMeasure);
         }

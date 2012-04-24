@@ -133,6 +133,8 @@
             <column name="flw_id" type="bigint"/>
             <column name="call_id" type="varchar(255)"/>
             <column name="duration" type="integer"/>
+            <column name="start_time" type="timestamp"/>
+            <column name="end_time" type="timestamp"/>
             <column name="type" type="varchar(30)"/>
         </createTable>
 

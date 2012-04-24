@@ -13,6 +13,7 @@ import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -111,5 +112,24 @@ public class CallDurationMeasureServiceTest {
         assertEquals(callId, callDurationMeasureForCourse.getCallId());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasureForCourse.getType());
         assertEquals(frontLineWorkerDimension, callDurationMeasureForCourse.getFrontLineWorkerDimension());
+    }
+
+    @Test
+    public void shouldSaveCallStartAndEndTimeToo() {
+        String callId = "9876543210";
+        final DateTime startTime = DateTime.now();
+        final DateTime endTime = DateTime.now().plusMinutes(4);
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(new CallLog(callId, "12345678"){
+            {
+                addItem(new CallLogItem(CallFlowType.CALL, startTime, endTime));
+            }
+        });
+        callDurationMeasureService.createCallDurationMeasure(callId);
+        ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
+        verify(reportDB).add(captor.capture());
+        CallDurationMeasure callDurationMeasure = captor.getValue();
+
+        assertEquals(new Timestamp(startTime.getMillis()), callDurationMeasure.getStartTime());
+        assertEquals(new Timestamp(endTime.getMillis()), callDurationMeasure.getEndTime());
     }
 }

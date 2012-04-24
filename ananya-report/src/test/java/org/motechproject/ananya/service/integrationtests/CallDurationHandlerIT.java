@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CallFlowType;
-import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
@@ -27,6 +27,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +81,8 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
         DateTime callEndTime = now.plusSeconds(20);
-        DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
+        DateTime certificateCourseEndTime = now.plusSeconds(15);
 
         CallLog callLog = new CallLog(callId, callerId.toString());
 
@@ -107,12 +108,15 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         assertEquals(callId, callDurationMeasureForCall.getCallId());
         assertEquals(CallFlowType.CALL.toString(), callDurationMeasureForCall.getType());
         assertEquals(callerId, callDurationMeasureForCall.getFrontLineWorkerDimension().getMsisdn());
+        assertEquals(new Timestamp(callStartTime.getMillis()), callDurationMeasureForCall.getStartTime());
+        assertEquals(new Timestamp(callEndTime.getMillis()), callDurationMeasureForCall.getEndTime());
 
         CallDurationMeasure callDurationMeasureForCourse = callDurationMeasures.get(1);
         assertEquals(10, callDurationMeasureForCourse.getDuration());
         assertEquals(callId, callDurationMeasureForCourse.getCallId());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasureForCourse.getType());
         assertEquals(callerId, callDurationMeasureForCall.getFrontLineWorkerDimension().getMsisdn());
-
+        assertEquals(new Timestamp(certificateCourseStartTime.getMillis()), callDurationMeasureForCourse.getStartTime());
+        assertEquals(new Timestamp(certificateCourseEndTime.getMillis()), callDurationMeasureForCourse.getEndTime());
     }
 }

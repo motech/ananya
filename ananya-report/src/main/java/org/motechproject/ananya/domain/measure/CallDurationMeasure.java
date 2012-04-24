@@ -1,9 +1,12 @@
 package org.motechproject.ananya.domain.measure;
 
 
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "call_duration_measure")
@@ -30,14 +33,22 @@ public class CallDurationMeasure {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "start_time")
+    private Timestamp startTime;
+
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
     public CallDurationMeasure() {
     }
 
-    public CallDurationMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId, int duration, String type) {
-        this.frontLineWorkerDimension = frontLineWorkerDimension;
+    public CallDurationMeasure(FrontLineWorkerDimension flwDimension, String callId, Integer duration, DateTime startTime, DateTime endTime, String type) {
+        this.frontLineWorkerDimension = flwDimension;
         this.callId = callId;
         this.duration = duration;
         this.type = type;
+        this.startTime = new Timestamp(startTime.getMillis());
+        this.endTime = new Timestamp(endTime.getMillis());
     }
 
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
@@ -54,5 +65,13 @@ public class CallDurationMeasure {
 
     public String getType() {
         return type;
+    }
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public Timestamp getEndTime() {
+        return endTime;
     }
 }
