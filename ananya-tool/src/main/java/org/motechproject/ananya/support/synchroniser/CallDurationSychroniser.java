@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.CallLoggerService;
-import org.motechproject.ananya.support.log.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

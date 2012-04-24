@@ -5,6 +5,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.support.diagnostics.DiagnosticService;
 import org.motechproject.ananya.views.FrontLineWorkerPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Properties;
 
 @Controller
-public class AdminController {
+public class AdminController{
     private static Logger log = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
@@ -30,6 +31,9 @@ public class AdminController {
 
     @Autowired
     private AllLocations allLocations;
+
+    @Autowired
+    private DiagnosticService diagnosticService;
 
     @Autowired
     @Qualifier("ananyaProperties")
@@ -69,6 +73,14 @@ public class AdminController {
         }
         return "Deleted : " + flwToDelete;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/diagnostics")
+    @ResponseBody
+    public String getDiagnostics() {
+        String diagnosisResult = diagnosticService.getDiagnostics();
+        return diagnosisResult;
+    }
+
 
     private String contextWithVersion(HttpServletRequest request) {
         return request.getContextPath() + "/" + properties.getProperty("url.version");

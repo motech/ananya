@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.log;
+package org.motechproject.ananya.support.synchroniser.log;
 
 import org.joda.time.DateTime;
 import org.motechproject.util.DateUtil;

@@ -20,8 +20,8 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.LocationRegistrationService;
-import org.motechproject.ananya.support.log.SynchroniserLog;
-import org.motechproject.ananya.support.log.SynchroniserLogItem;
+import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.log.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

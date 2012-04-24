@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.log;
+package org.motechproject.ananya.support.synchroniser.log;
 
 public class SynchroniserLogItem {
 
