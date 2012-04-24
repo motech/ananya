@@ -147,6 +147,7 @@
                                  referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
                                  onDelete="CASCADE"/>
     </changeSet>
+
     <changeSet context="setup" author="ThoughtWorks" id="8">
         <createTable tableName="sms_sent_measure" schemaName="report">
             <column name="id" type="serial">
@@ -175,5 +176,82 @@
                                  referencedTableName="time_dimension" referencedColumnNames="id"
                                  onDelete="CASCADE"/>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="9">
+        <addColumn tableName="course_item_measure">
+            <column name="location_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_location_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="10">
+        <addColumn tableName="call_duration_measure">
+            <column name="location_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_location_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="11">
+        <addColumn tableName="sms_sent_measure">
+            <column name="location_id" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_location_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="12">
+        <addColumn tableName="time_dimension">
+            <column name="date" type="date"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="14">
+        <createTable tableName="job_aid_content_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="content_id" type="bigint"/>
+            <column name="content_name" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="13">
+        <createTable tableName="job_aid_content_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="location_id" type="smallint"/>
+            <column name="job_aid_content_id" type="smallint"/>
+            <column name="call_id" type="varchar(255)"/>
+            <column name="percentage_access" type="smallint"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_flw_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_location_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint constraintName="fk_ja_content_measure_ja_content_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="job_aid_content_id"
+                                 referencedTableName="job_aid_content_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
 
 </databaseChangeLog>
