@@ -9,9 +9,13 @@ import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,24 +33,40 @@ public class CallDurationMeasureServiceTest {
     @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
+    @Mock
+    private AllRegistrationMeasures allRegistrationMeasures;
+
+    private String callId;
+    private long callerId;
+    private int flwId;
+    private TimeDimension timeDimension;
+    private LocationDimension locationDimension;
+    private FrontLineWorkerDimension frontLineWorkerDimension;
+    private RegistrationMeasure registrationMeasure;
+
     @Before
     public void setup() {
         initMocks(this);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures);
+        callId = "callId";
+        callerId = 123456789L;
+        flwId = 1;
+        timeDimension = new TimeDimension(DateTime.now());
+        locationDimension = new LocationDimension("", "", "", "");
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
+        frontLineWorkerDimension.setId(flwId);
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
     }
 
     @Test
     public void shouldSaveCallDurationsForACallId() {
-        String callId = "callId";
-        Long callerId = 123456789L;
-
-        CallLog callLog = new CallLog(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
         DateTime now = DateTime.now();
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, now, now.plusSeconds(10)));
-        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
 
         callDurationMeasureService.createCallDurationMeasure(callId);
 
@@ -77,22 +97,25 @@ public class CallDurationMeasureServiceTest {
 
     @Test
     public void shouldSaveCallDurationsForMultipleCallFlows() {
-        String callId = "callId";
-        Long callerId = 123456789L;
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
         DateTime callEndTime = now.plusSeconds(20);
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
+        LocationDimension locationDimension = new LocationDimension("","","","");
+        TimeDimension timeDimension = new TimeDimension(DateTime.now());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
+        frontLineWorkerDimension.setId(flwId);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
 
-        CallLog callLog = new CallLog(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
 
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
-
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "Registered");
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+
 
         callDurationMeasureService.createCallDurationMeasure(callId);
 
@@ -115,16 +138,18 @@ public class CallDurationMeasureServiceTest {
     }
 
     @Test
-    public void shouldSaveCallStartAndEndTimeToo() {
-        String callId = "9876543210";
+    public void shouldSaveCallStartAndEndTime() {
         final DateTime startTime = DateTime.now();
         final DateTime endTime = DateTime.now().plusMinutes(4);
-        when(callLoggerService.getCallLogFor(callId)).thenReturn(new CallLog(callId, "12345678"){
-            {
-                addItem(new CallLogItem(CallFlowType.CALL, startTime, endTime));
-            }
-        });
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
+        callLog.addItem(new CallLogItem(CallFlowType.CALL, startTime, endTime));
+
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
+        when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+
         callDurationMeasureService.createCallDurationMeasure(callId);
+
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB).add(captor.capture());
         CallDurationMeasure callDurationMeasure = captor.getValue();

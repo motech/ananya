@@ -8,7 +8,6 @@ import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 public class AllCourseItemDimensionsTest extends SpringIntegrationTest{
 

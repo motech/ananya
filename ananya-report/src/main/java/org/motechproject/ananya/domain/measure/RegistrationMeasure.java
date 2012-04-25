@@ -54,31 +54,15 @@ public class RegistrationMeasure {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public TimeDimension getTimeDimension() {
         return timeDimension;
-    }
-
-    public void setTimeDimension(TimeDimension timeDimension) {
-        this.timeDimension = timeDimension;
     }
 
     public LocationDimension getLocationDimension() {
         return locationDimension;
     }
 
-    public void setLocationDimension(LocationDimension locationDimension) {
-        this.locationDimension = locationDimension;
-    }
-
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
         return frontLineWorkerDimension;
-    }
-
-    public void setFrontLineWorkerDimension(FrontLineWorkerDimension frontLineWorkerDimension) {
-        this.frontLineWorkerDimension = frontLineWorkerDimension;
     }
 }

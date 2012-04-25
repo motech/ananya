@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain.dimension;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "time_dimension")
@@ -28,18 +29,22 @@ public class TimeDimension {
     @Column(name = "year")
     private Integer year;
 
+    @Column(name = "date")
+    private Date date;
+
     public TimeDimension() {
     }
 
     public TimeDimension(DateTime time) {
-        this(time.getDayOfYear(), time.getWeekOfWeekyear(), time.getMonthOfYear(), time.getYear());
+        this(time.getDayOfYear(), time.getWeekOfWeekyear(), time.getMonthOfYear(), time.getYear(), time.toDate());
     }
 
-    public TimeDimension(Integer day, Integer week, Integer month, Integer year) {
+    public TimeDimension(Integer day, Integer week, Integer month, Integer year, Date date) {
         this.day = day;
         this.week = week;
         this.month = month;
         this.year = year;
+        this.date = date;
     }
 
     public Integer getId() {

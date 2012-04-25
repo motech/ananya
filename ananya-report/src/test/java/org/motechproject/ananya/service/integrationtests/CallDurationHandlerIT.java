@@ -9,9 +9,15 @@ import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -49,6 +55,15 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
 
     @Autowired
     AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    
+    @Autowired
+    AllRegistrationMeasures allRegistrationMeasures;
+
+    @Autowired
+    AllLocationDimensions allLocationDimensions;
+    
+    @Autowired
+    AllTimeDimensions allTimeDimensions;
 
     @After
     public void tearDown() {
@@ -56,6 +71,10 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
         template.flush();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.flush();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.flush();
+        template.deleteAll(template.loadAll(RegistrationMeasure.class));
         template.flush();
     }
 
@@ -90,7 +109,11 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
         allCallLogs.add(callLog);
 
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
+        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        allLocationDimensions.add(locationDimension);
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
+        allRegistrationMeasures.add(new RegistrationMeasure(flwDimension, locationDimension, timeDimension));
 
         LogData logData = new LogData(LogType.CALL_DURATION, callId);
         Map<String, Object> map = new HashMap<String, Object>();
@@ -103,7 +126,17 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
 
         assertEquals(2, callDurationMeasures.size());
 
-        CallDurationMeasure callDurationMeasureForCall = callDurationMeasures.get(0);
+        CallDurationMeasure callDurationMeasureForCall = null;
+        CallDurationMeasure callDurationMeasureForCourse = null;
+
+        for( CallDurationMeasure callDurationMeasure : callDurationMeasures){
+            String type = callDurationMeasure.getType();
+            if(type.equals(CallFlowType.CALL.toString()))
+                 callDurationMeasureForCall = callDurationMeasure;
+            else
+                 callDurationMeasureForCourse = callDurationMeasure;
+        }
+
         assertEquals(20, callDurationMeasureForCall.getDuration());
         assertEquals(callId, callDurationMeasureForCall.getCallId());
         assertEquals(CallFlowType.CALL.toString(), callDurationMeasureForCall.getType());
@@ -111,7 +144,6 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         assertEquals(new Timestamp(callStartTime.getMillis()), callDurationMeasureForCall.getStartTime());
         assertEquals(new Timestamp(callEndTime.getMillis()), callDurationMeasureForCall.getEndTime());
 
-        CallDurationMeasure callDurationMeasureForCourse = callDurationMeasures.get(1);
         assertEquals(10, callDurationMeasureForCourse.getDuration());
         assertEquals(callId, callDurationMeasureForCourse.getCallId());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasureForCourse.getType());

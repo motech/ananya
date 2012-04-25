@@ -1,6 +1,7 @@
 package org.motechproject.ananya.domain.measure;
 
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
@@ -25,6 +26,10 @@ public class SMSSentMeasure {
     @JoinColumn(name = "time_id", nullable = false)
     private TimeDimension timeDimension;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = false)
+    private LocationDimension locationDimension;
+
     @Column(name = "course_attempt")
     private Integer courseAttempt;
 
@@ -37,12 +42,13 @@ public class SMSSentMeasure {
     public SMSSentMeasure(){
     }
 
-    public SMSSentMeasure(Integer courseAttempt, String smsReferenceNumber, Boolean smsSent, FrontLineWorkerDimension frontLineWorkerDimension, TimeDimension timeDimension) {
+    public SMSSentMeasure(Integer courseAttempt, String smsReferenceNumber, Boolean smsSent, FrontLineWorkerDimension frontLineWorkerDimension, TimeDimension timeDimension, LocationDimension locationDimension) {
         this.courseAttempt = courseAttempt;
         this.smsReferenceNumber = smsReferenceNumber;
         this.smsSent = smsSent;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.timeDimension = timeDimension;
+        this.locationDimension = locationDimension;
     }
 
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
@@ -63,5 +69,9 @@ public class SMSSentMeasure {
 
     public TimeDimension getTimeDimension() {
         return timeDimension;
+    }
+
+    public LocationDimension getLocationDimension() {
+        return locationDimension;
     }
 }

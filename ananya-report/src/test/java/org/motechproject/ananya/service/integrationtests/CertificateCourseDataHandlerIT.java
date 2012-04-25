@@ -14,12 +14,16 @@ import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -63,6 +67,12 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     @Autowired
     AllCertificateCourseLogs allCertificateCourseLogs;
+
+    @Autowired
+    AllLocationDimensions allLocationDimensions;
+
+    @Autowired
+    AllRegistrationMeasures allRegistrationMeasures;
 
     @After
     public void tearDown(){
@@ -111,6 +121,12 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "");
+
+        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        allLocationDimensions.add(locationDimension);
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
+        allRegistrationMeasures.add(new RegistrationMeasure(flwDimension, locationDimension, timeDimension));
 
         LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();

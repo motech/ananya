@@ -3,11 +3,14 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +26,18 @@ public class SMSSentMeasureService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private FrontLineWorkerService frontLineWorkerService;
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     public SMSSentMeasureService() {
     }
 
     @Autowired
-    public SMSSentMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, AllTimeDimensions allTimeDimensions, FrontLineWorkerService frontLineWorkerService) {
+    public SMSSentMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, AllTimeDimensions allTimeDimensions, FrontLineWorkerService frontLineWorkerService, AllRegistrationMeasures allRegistrationMeasures) {
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.frontLineWorkerService = frontLineWorkerService;
+        this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
     @Transactional
@@ -40,6 +45,7 @@ public class SMSSentMeasureService {
         boolean smsSent = false;
         int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);
         SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
+
 
         String referenceNumber = null;
         if (smsReference != null) {
@@ -49,7 +55,11 @@ public class SMSSentMeasureService {
         }
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
-        SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent, frontLineWorkerDimension, timeDimension);
+        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+        LocationDimension locationDimension = registrationMeasure.getLocationDimension();
+        SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent,
+                frontLineWorkerDimension, timeDimension,
+                locationDimension);
         reportDB.add(smsSentMeasure);
 
         log.info("Added SMS measure for " + callerId + "[smsRefNumber" + referenceNumber + "|attempt=" + courseAttempt + "]");

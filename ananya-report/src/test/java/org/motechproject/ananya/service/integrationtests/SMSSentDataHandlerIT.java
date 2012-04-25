@@ -10,11 +10,16 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -55,6 +60,12 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     AllSMSReferences allSMSReferences;
 
+    @Autowired
+    AllLocationDimensions allLocationDimensions;
+
+    @Autowired
+    AllRegistrationMeasures allRegistrationMeasures;
+
     @After
     public void tearDown(){
         allFrontLineWorkers.removeAll();
@@ -86,8 +97,12 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
         allFrontLineWorkers.add(flw);
 
         DateTime now = DateTime.now();
-        allTimeDimensions.addOrUpdate(now);
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "airtel", "Rani", "REGISTERED");
+        TimeDimension timeDimension= allTimeDimensions.addOrUpdate(now);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "airtel", "Rani", "REGISTERED");
+
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        allLocationDimensions.add(locationDimension);
+        allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
 
         LogData logData = new LogData(LogType.SMS_SENT, msisdn);
         Map<String, Object> map = new HashMap<String, Object>();

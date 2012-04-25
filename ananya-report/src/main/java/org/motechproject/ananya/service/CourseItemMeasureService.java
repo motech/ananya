@@ -4,12 +4,15 @@ import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,19 +30,24 @@ public class CourseItemMeasureService {
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     public CourseItemMeasureService() {
     }
 
     @Autowired
-    public CourseItemMeasureService(ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                    AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions,
-                                    CertificateCourseLogService certificateCourseLogService) {
+    public CourseItemMeasureService(ReportDB reportDB,
+                                    AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                    AllTimeDimensions allTimeDimensions,
+                                    AllCourseItemDimensions allCourseItemDimensions,
+                                    CertificateCourseLogService certificateCourseLogService,
+                                    AllRegistrationMeasures allRegistrationMeasures) {
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.allCourseItemDimensions = allCourseItemDimensions;
         this.certificateCourseLogService = certificateCourseLogService;
+        this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
     @Transactional
@@ -56,11 +64,13 @@ public class CourseItemMeasureService {
                     logItem.getContentType());
 
             TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
-
+            RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+            LocationDimension locationDimension = registrationMeasure.getLocationDimension();
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
                     timeDimension,
                     courseItemDimension,
                     frontLineWorkerDimension,
+                    locationDimension,
                     logItem.giveScore(),
                     logItem.getCourseItemState());
 

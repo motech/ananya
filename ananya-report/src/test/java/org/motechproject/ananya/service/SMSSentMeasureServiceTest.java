@@ -7,11 +7,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -35,12 +38,15 @@ public class SMSSentMeasureServiceTest {
     AllTimeDimensions timeDimensions;
 
     @Mock
+    AllRegistrationMeasures allRegistrationMeasures;
+
+    @Mock
     ReportDB db;
 
     @Before
     public void setUp() {
         initMocks(this);
-        service = new SMSSentMeasureService(db, frontLineWorkerDimensions, timeDimensions, frontLineWorkerService);
+        service = new SMSSentMeasureService(db, frontLineWorkerDimensions, timeDimensions, frontLineWorkerService, allRegistrationMeasures);
     }
 
     @Test
@@ -49,13 +55,19 @@ public class SMSSentMeasureServiceTest {
         Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
         String flwId = "77abcd";
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "");
+        frontLineWorkerDimension.setId(1);
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        TimeDimension timeDimension = new TimeDimension(DateTime.now());
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
         SMSReference smsReference = new SMSReference(callerId,flwId);
         smsReference.add(smsRefNum, courseAttemptNum);
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
-        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
-        when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
+        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        when(allRegistrationMeasures.fetchFor(1)).thenReturn(registrationMeasure);
 
         service.createSMSSentMeasure(callerId);
 
@@ -70,17 +82,26 @@ public class SMSSentMeasureServiceTest {
     }
 
     @Test
-    public void shouldCreateSMSSentMeasureWhenSMSIsNotSent() {
+    public void shouldCreateSMSSentMeasureWithUpdatedCourseAttemptWhenSMSIsNotSent() {
         String callerId = "9876543210";
         Integer courseAttemptNum = 1;
         String flwId = "77abcd";
+        int flwd_id = 1;
 
-        when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "");
+        frontLineWorkerDimension.setId(flwd_id);
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        TimeDimension timeDimension = new TimeDimension(DateTime.now());
         SMSReference smsReference = new SMSReference(callerId, flwId);
 
+
+        when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
-        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", ""));
-        when(timeDimensions.getFor(any(DateTime.class))).thenReturn(new TimeDimension(DateTime.now()));
+        when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
+
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        when(allRegistrationMeasures.fetchFor(flwd_id)).thenReturn(registrationMeasure);
 
         service.createSMSSentMeasure(callerId);
 

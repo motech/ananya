@@ -12,7 +12,10 @@ import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
 import org.motechproject.ananya.support.synchroniser.log.SynchroniserLogItem;
@@ -53,7 +56,10 @@ public class CallDurationSynchroniserIT {
 
     private void resetDB() {
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.deleteAll(template.loadAll(TimeDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
+        template.deleteAll(template.loadAll(RegistrationMeasure.class));
         allCallLogs.removeAll();
     }
 
@@ -82,7 +88,14 @@ public class CallDurationSynchroniserIT {
     }
 
     private void setUpTransactionData(String callerId) {
-        template.save(new FrontLineWorkerDimension(Long.valueOf(callerId), "airtel", "name", RegistrationStatus.PARTIALLY_REGISTERED.toString()));
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "airtel", "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
+        template.save(frontLineWorkerDimension);
+        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        template.save(locationDimension);
+        TimeDimension timeDimension = new TimeDimension(DateTime.now());
+        template.save(timeDimension);
+        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
+
     }
 
     private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {

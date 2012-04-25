@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain.measure;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
@@ -41,6 +42,10 @@ public class CourseItemMeasure {
     @JoinColumn(name = "flw_id", nullable = false)
     private FrontLineWorkerDimension frontLineWorkerDimension;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = false)
+    private LocationDimension locationDimension;
+
     @Column(name = "score")
     private Integer score;
 
@@ -63,6 +68,10 @@ public class CourseItemMeasure {
         return score;
     }
 
+    public LocationDimension getLocationDimension() {
+        return locationDimension;
+    }
+
     public CourseItemState getEvent() {
         return CourseItemState.valueOf(event);
     }
@@ -73,11 +82,13 @@ public class CourseItemMeasure {
     public CourseItemMeasure(TimeDimension timeDimension,
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
+                             LocationDimension locationDimension,
                              Integer score,
                              CourseItemState event) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
+        this.locationDimension = locationDimension;
         this.score = score;
         this.event = String.valueOf(event);
     }

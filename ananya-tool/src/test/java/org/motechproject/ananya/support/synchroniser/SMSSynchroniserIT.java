@@ -10,11 +10,14 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
 import org.motechproject.ananya.support.synchroniser.log.SynchroniserLogItem;
@@ -45,6 +48,9 @@ public class SMSSynchroniserIT {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
     @Autowired
+    private AllLocationDimensions allLocationDimensions;
+
+    @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 
     @Autowired
@@ -65,6 +71,7 @@ public class SMSSynchroniserIT {
 
     private void resetDB() {
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.deleteAll(template.loadAll(LocationDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
         template.deleteAll(template.loadAll(SMSSentMeasure.class));
         allFrontLineWorkers.removeAll();
@@ -79,13 +86,15 @@ public class SMSSynchroniserIT {
         DateTime toDate = fromDate.plusHours(8);
         String operator = "airtel";
 
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
-        allTimeDimensions.addOrUpdate(callStartTime);
-
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
+        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("locationId","district","block","panchayat"));
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.incrementCertificateCourseAttempts();
         allFrontLineWorkers.add(frontLineWorker);
+
+        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
 
         SMSReference smsReference = new SMSReference(callerId, frontLineWorker.getId());
         smsReference.add("S00V00", 1);

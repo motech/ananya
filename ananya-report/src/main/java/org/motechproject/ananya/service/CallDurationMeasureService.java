@@ -3,9 +3,12 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +22,23 @@ public class CallDurationMeasureService {
     private CallLoggerService callLoggerService;
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     public CallDurationMeasureService() {
     }
 
     @Autowired
-    public CallDurationMeasureService(CallLoggerService callLoggerService, ReportDB reportDB, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
+    public CallDurationMeasureService(CallLoggerService callLoggerService,
+                                      ReportDB reportDB,
+                                      AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                      AllRegistrationMeasures allRegistrationMeasures) {
         this.callLoggerService = callLoggerService;
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+        this.allRegistrationMeasures = allRegistrationMeasures;
     }
+
+
 
     @Transactional
     public void createCallDurationMeasure(String callId) {
@@ -40,9 +50,12 @@ public class CallDurationMeasureService {
 
             Long callerId = callLog.callerIdAsLong();
             FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
+            RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwDimension.getId());
+            LocationDimension locationDimension = registrationMeasure.getLocationDimension();
 
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension,
+                    locationDimension,
                     callId,
                     callLogItem.duration(),
                     callLogItem.getStartTime(),

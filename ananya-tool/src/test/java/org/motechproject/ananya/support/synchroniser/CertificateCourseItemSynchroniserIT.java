@@ -10,8 +10,10 @@ import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
@@ -62,6 +64,7 @@ public class CertificateCourseItemSynchroniserIT {
     private void resetDB() {
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
+        template.deleteAll(template.loadAll(LocationDimension.class));
         template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.deleteAll(template.loadAll(CourseItemMeasure.class));
         allCertificateCourseLogs.removeAll();
@@ -76,8 +79,11 @@ public class CertificateCourseItemSynchroniserIT {
         String contentName = "Chapter4";
         CourseItemType courseItemType = CourseItemType.CHAPTER;
 
+        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        template.save(locationDimension);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
-        allTimeDimensions.addOrUpdate(callStartTime);
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
+        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType));
 
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", callStartTime, callStartTime.plusSeconds(20), "airtel", callId, "1");

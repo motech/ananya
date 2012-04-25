@@ -11,12 +11,15 @@ import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.util.List;
 
@@ -37,12 +40,19 @@ public class CourseItemMeasureServiceTest {
     private AllCourseItemDimensions allCourseItemDimensions;
     @Mock
     private CertificateCourseLogService certificateCourseLogService;
+    @Mock
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     CourseItemMeasureService courseItemMeasureService;
     String callId;
     String callerId;
     String calledNumber;
     DateTime now;
+    private TimeDimension timeDimension;
+    private FrontLineWorkerDimension frontLineWorkerDimension;
+    private LocationDimension locationDimension;
+    private RegistrationMeasure registrationMeasure;
+    private int flw_id;
 
     @Before
     public void setUp() throws Exception {
@@ -51,7 +61,16 @@ public class CourseItemMeasureServiceTest {
         callerId = "123456789";
         calledNumber = "1234";
         now = DateTime.now();
-        courseItemMeasureService = new CourseItemMeasureService(reportDB, allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions, certificateCourseLogService);
+        courseItemMeasureService = new CourseItemMeasureService(reportDB,
+                allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions,
+                certificateCourseLogService, allRegistrationMeasures);
+
+        timeDimension = new TimeDimension();
+        frontLineWorkerDimension = new FrontLineWorkerDimension();
+        flw_id = 1;
+        frontLineWorkerDimension.setId(flw_id);
+        locationDimension= new LocationDimension();
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension);
     }
 
     @Test
@@ -60,16 +79,18 @@ public class CourseItemMeasureServiceTest {
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.CHAPTER;
         CourseItemState event = CourseItemState.START;
+
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now));
-        TimeDimension timeDimension = new TimeDimension();
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
+
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
@@ -92,14 +113,15 @@ public class CourseItemMeasureServiceTest {
         CourseItemState event = CourseItemState.START;
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, "3", event, now));
-        TimeDimension timeDimension = new TimeDimension();
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
+
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
@@ -120,7 +142,6 @@ public class CourseItemMeasureServiceTest {
 
         TimeDimension timeDimension1 = new TimeDimension();
         TimeDimension timeDimension2 = new TimeDimension();
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         CourseItemDimension courseItemDimension1 = new CourseItemDimension();
         CourseItemDimension courseItemDimension2 = new CourseItemDimension();
 
@@ -135,6 +156,8 @@ public class CourseItemMeasureServiceTest {
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName1, contentType1)).thenReturn(courseItemDimension1);
         when(allCourseItemDimensions.getFor(contentName2, contentType2)).thenReturn(courseItemDimension2);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
@@ -165,14 +188,14 @@ public class CourseItemMeasureServiceTest {
         CourseItemState event = CourseItemState.START;
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now));
-        TimeDimension timeDimension = new TimeDimension();
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
