@@ -133,8 +133,6 @@
             <column name="flw_id" type="bigint"/>
             <column name="call_id" type="varchar(255)"/>
             <column name="duration" type="integer"/>
-            <column name="start_time" type="timestamp"/>
-            <column name="end_time" type="timestamp"/>
             <column name="type" type="varchar(30)"/>
         </createTable>
 
@@ -252,6 +250,13 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-
+    <changeSet context="setup" author="ThoughtWorks" id="15">
+        <addColumn tableName="call_duration_measure">
+            <column name="start_time" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="end_time" type="timestamp"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
