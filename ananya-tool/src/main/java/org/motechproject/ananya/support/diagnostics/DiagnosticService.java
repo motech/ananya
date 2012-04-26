@@ -13,7 +13,7 @@ public class DiagnosticService {
     @Autowired
     private PostgresDiagnostic postgresDiagnostic;
 
-    public String getDiagnostics() {
+    public String getDiagnostics() throws Exception {
         StringBuilder sb = new StringBuilder();
         DiagnosticLog diagnosticLog;
 

@@ -1,5 +1,7 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import javax.jms.JMSException;
+
 public interface Diagnostic {
-    DiagnosticLog performDiagnosis();
+    DiagnosticLog performDiagnosis() throws JMSException;
 }

@@ -76,7 +76,7 @@ public class AdminController{
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/diagnostics")
     @ResponseBody
-    public String getDiagnostics() {
+    public String getDiagnostics() throws Exception {
         String diagnosisResult = diagnosticService.getDiagnostics();
         return diagnosisResult;
     }
