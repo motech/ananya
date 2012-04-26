@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CouchDBDiagnostic implements Diagnostic{
+public class CouchDBDiagnostic implements Diagnostic {
 
     @Autowired
     @Qualifier("ananyaDbInstance")
@@ -16,18 +16,15 @@ public class CouchDBDiagnostic implements Diagnostic{
 
     @Override
     public DiagnosticLog performDiagnosis() {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("couch");
-
+        DiagnosticLog diagnosticLog = new DiagnosticLog("couchdb");
         diagnosticLog.add("Checking couch db connection");
         try {
             ananyaDBInstance.getConnection().head("/");
+            diagnosticLog.add(ananyaDBInstance.getAllDatabases().toString());
         } catch (Exception e) {
             diagnosticLog.add("Couch DB connection failed");
             diagnosticLog.add(ExceptionUtils.getFullStackTrace(e));
-            return diagnosticLog;
         }
-
-        diagnosticLog.add(ananyaDBInstance.getAllDatabases().toString());
         return diagnosticLog;
     }
 }

@@ -39,7 +39,6 @@ public class ActiveMQDiagnostic implements Diagnostic {
 
             diagnosticLog.add("Opening browser for queue size");
             int queueSize = 0;
-
             browser = session.createBrowser(eventQueue);
             Enumeration messages = browser.getEnumeration();
             while (messages.hasMoreElements()) {
