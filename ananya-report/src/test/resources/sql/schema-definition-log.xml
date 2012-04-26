@@ -177,7 +177,13 @@
 
     <changeSet context="setup" author="ThoughtWorks" id="9">
         <addColumn tableName="course_item_measure">
-            <column name="location_id" type="smallint"/>
+            <column name="location_id" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="course_item_measure">
+            <column name="timestamp" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="course_item_measure">
+            <column name="percentage" type="smallint"/>
         </addColumn>
         <addForeignKeyConstraint constraintName="fk_course_item_measure_location_dimension"
                                  baseTableName="course_item_measure" baseColumnNames="location_id"
@@ -187,7 +193,16 @@
 
     <changeSet context="setup" author="ThoughtWorks" id="10">
         <addColumn tableName="call_duration_measure">
-            <column name="location_id" type="smallint"/>
+            <column name="location_id" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="start_time" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="end_time" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="called_number" type="bigint"/>
         </addColumn>
         <addForeignKeyConstraint constraintName="fk_call_duration_measure_location_dimension"
                                  baseTableName="call_duration_measure" baseColumnNames="location_id"
@@ -197,7 +212,7 @@
 
     <changeSet context="setup" author="ThoughtWorks" id="11">
         <addColumn tableName="sms_sent_measure">
-            <column name="location_id" type="smallint"/>
+            <column name="location_id" type="bigint"/>
         </addColumn>
         <addForeignKeyConstraint constraintName="fk_sms_sent_measure_location_dimension"
                                  baseTableName="sms_sent_measure" baseColumnNames="location_id"
@@ -211,27 +226,51 @@
         </addColumn>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="13">
+        <addColumn tableName="course_item_dimension">
+            <column name="parent_id" type="integer"/>
+        </addColumn>
+        <addColumn tableName="course_item_dimension">
+            <column name="file_name" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="course_item_dimension">
+            <column name="duration" type="integer"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_course_item_dimension_course_item_dimension"
+                                 baseTableName="course_item_dimension" baseColumnNames="parent_id"
+                                 referencedTableName="course_item_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
     <changeSet context="setup" author="ThoughtWorks" id="14">
         <createTable tableName="job_aid_content_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="content_id" type="bigint"/>
-            <column name="content_name" type="varchar(255)"/>
+            <column name="parent_id" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="type" type="varchar(255)"/>
             <column name="duration" type="integer"/>
         </createTable>
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_dimension_job_aid_content_dimension"
+                                 baseTableName="job_aid_content_dimension" baseColumnNames="parent_id"
+                                 referencedTableName="job_aid_content_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="13">
+    <changeSet context="setup" author="ThoughtWorks" id="15">
         <createTable tableName="job_aid_content_measure" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="flw_id" type="bigint"/>
-            <column name="location_id" type="smallint"/>
-            <column name="job_aid_content_id" type="smallint"/>
             <column name="call_id" type="varchar(255)"/>
-            <column name="percentage_access" type="smallint"/>
+            <column name="location_id" type="bigint"/>
+            <column name="job_aid_content_id" type="integer"/>
+            <column name="timestamp" type="timestamp"/>
+            <column name="percentage" type="smallint"/>
         </createTable>
 
         <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_flw_dimension"
@@ -250,13 +289,5 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="15">
-        <addColumn tableName="call_duration_measure">
-            <column name="start_time" type="timestamp"/>
-        </addColumn>
-        <addColumn tableName="call_duration_measure">
-            <column name="end_time" type="timestamp"/>
-        </addColumn>
-    </changeSet>
 
 </databaseChangeLog>

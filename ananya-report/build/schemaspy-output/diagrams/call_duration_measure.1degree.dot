@@ -1,4 +1,4 @@
-// dot 2.26.3 on Linux 2.6.38-11-generic-pae
+// dot 2.28.0 on Mac OS X 10.7.3
 // SchemaSpy rev 590
 digraph "oneDegreeRelationshipsDiagram" {
   graph [
@@ -29,10 +29,11 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="flw_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">flw_id</TD><TD PORT="flw_id.type" ALIGN="LEFT">int8[19]</TD></TR>
       <TR><TD PORT="call_id" COLSPAN="2" ALIGN="LEFT">call_id</TD><TD PORT="call_id.type" ALIGN="LEFT">varchar[255]</TD></TR>
       <TR><TD PORT="duration" COLSPAN="2" ALIGN="LEFT">duration</TD><TD PORT="duration.type" ALIGN="LEFT">int4[10]</TD></TR>
+      <TR><TD PORT="type" COLSPAN="2" ALIGN="LEFT">type</TD><TD PORT="type.type" ALIGN="LEFT">varchar[30]</TD></TR>
+      <TR><TD PORT="location_id" COLSPAN="2" ALIGN="LEFT">location_id</TD><TD PORT="location_id.type" ALIGN="LEFT">int8[19]</TD></TR>
       <TR><TD PORT="start_time" COLSPAN="2" ALIGN="LEFT">start_time</TD><TD PORT="start_time.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="end_time" COLSPAN="2" ALIGN="LEFT">end_time</TD><TD PORT="end_time.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
-      <TR><TD PORT="type" COLSPAN="2" ALIGN="LEFT">type</TD><TD PORT="type.type" ALIGN="LEFT">varchar[30]</TD></TR>
-      <TR><TD PORT="location_id" COLSPAN="2" ALIGN="LEFT">location_id</TD><TD PORT="location_id.type" ALIGN="LEFT">int2[5]</TD></TR>
+      <TR><TD PORT="called_number" COLSPAN="2" ALIGN="LEFT">called_number</TD><TD PORT="called_number.type" ALIGN="LEFT">int8[19]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
     </TABLE>>
     URL="call_duration_measure.html"

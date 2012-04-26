@@ -101,7 +101,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody valign='top'>
-<tr class='even'>
+<tr class='odd'>
  <td class='primaryKey' title='Primary Key'>id</td>
  <td class='detail'>serial</td>
  <td class='detail' align='right'>10</td>
@@ -110,7 +110,13 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail' align='right'>nextval('report.course_item_dimension_id_seq'::regclass)</td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="course_item_dimension.parent_id refs course_item_dimension.id via fk_course_item_dimension_course_item_dimension"><a href='course_item_dimension.html'>course_item_dimension</a><span class='relatedKey'>.parent_id</span>
+    </td>
+    <td class='constraint detail'>fk_course_item_dimension_course_item_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="course_item_measure.course_item_id refs course_item_dimension.id via fk_course_item_measure_course_item_dimension"><a href='course_item_measure.html'>course_item_measure</a><span class='relatedKey'>.course_item_id</span>
     </td>
     <td class='constraint detail'>fk_course_item_measure_course_item_dimension<span title='Cascade on delete:
@@ -121,7 +127,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='indexedColumn' title='Indexed'>name</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>255</td>
@@ -132,7 +138,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>content_id</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>255</td>
@@ -143,7 +149,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='indexedColumn' title='Indexed'>type</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>30</td>
@@ -154,8 +160,50 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
+<tr class='odd'>
+ <td class='detail'>parent_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="course_item_dimension.parent_id refs course_item_dimension.id via fk_course_item_dimension_course_item_dimension"><a href='course_item_dimension.html'>course_item_dimension</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>fk_course_item_dimension_course_item_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+  </table>
+ </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='even'>
+ <td class='detail'>file_name</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
+ <td class='detail'>duration</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
 </table>
-<p title='4 columns'>Table contained 91 rows at Tue Apr 24 14:29 IST 2012<p/>
+<p title='7 columns'>Table contained 91 rows at Thu Apr 26 15:55 GMT+05:30 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -190,16 +238,16 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from course_item_dimension'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="course_item_measure.html" title="course_item_measure" alt="" coords="281,5,457,221">
-<area shape="rect" id="node3" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="7,47,236,201">
+<area shape="rect" id="node1" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="30,48,261,269">
+<area shape="rect" id="node3" href="course_item_measure.html" title="course_item_measure" alt="" coords="306,5,481,267">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/course_item_dimension.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="course_item_measure.html" title="course_item_measure" alt="" coords="281,132,457,348">
-<area shape="rect" id="node3" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="7,102,236,255">
-<area shape="rect" id="node5" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="12,5,231,85">
-<area shape="rect" id="node7" href="location_dimension.html" title="location_dimension" alt="" coords="36,369,207,449">
-<area shape="rect" id="node9" href="time_dimension.html" title="time_dimension" alt="" coords="39,272,204,352">
+<area shape="rect" id="node1" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="30,127,261,348">
+<area shape="rect" id="node3" href="course_item_measure.html" title="course_item_measure" alt="" coords="306,192,481,453">
+<area shape="rect" id="node6" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="36,5,255,85">
+<area shape="rect" id="node8" href="location_dimension.html" title="location_dimension" alt="" coords="59,463,231,543">
+<area shape="rect" id="node10" href="time_dimension.html" title="time_dimension" alt="" coords="63,365,227,445">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/course_item_dimension.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

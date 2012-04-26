@@ -133,46 +133,6 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>location_id</td>
- <td class='detail'>int2</td>
- <td class='detail' align='right'>5</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'>
-  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative odd' valign='top'>
-    <td class='relatedTable detail' title="job_aid_content_measure.location_id refs location_dimension.id via fk_job_aid_content_measure_location_dimension"><a href='location_dimension.html'>location_dimension</a><span class='relatedKey'>.id</span>
-    </td>
-    <td class='constraint detail'>fk_job_aid_content_measure_location_dimension<span title='Cascade on delete:
- Deletion of parent deletes child'>&nbsp;C</span></td>
-   </tr>
-  </table>
- </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='even'>
- <td class='detail'>job_aid_content_id</td>
- <td class='detail'>int2</td>
- <td class='detail' align='right'>5</td>
- <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
- <td class='detail' align='center'></td>
- <td class='detail' align='right'>null</td>
- <td class='detail'></td>
- <td class='detail'>
-  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
-    <td class='relatedTable detail' title="job_aid_content_measure.job_aid_content_id refs job_aid_content_dimension.id via fk_ja_content_measure_ja_content_dimension"><a href='job_aid_content_dimension.html'>job_aid_content_dimension</a><span class='relatedKey'>.id</span>
-    </td>
-    <td class='constraint detail'>fk_ja_content_measure_ja_content_dimension<span title='Cascade on delete:
- Deletion of parent deletes child'>&nbsp;C</span></td>
-   </tr>
-  </table>
- </td>
- <td class='comment detail'></td>
-</tr>
-<tr class='odd'>
  <td class='detail'>call_id</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>255</td>
@@ -184,7 +144,58 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
- <td class='detail'>percentage_access</td>
+ <td class='detail'>location_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative even' valign='top'>
+    <td class='relatedTable detail' title="job_aid_content_measure.location_id refs location_dimension.id via fk_job_aid_content_measure_location_dimension"><a href='location_dimension.html'>location_dimension</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>fk_job_aid_content_measure_location_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+  </table>
+ </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
+ <td class='detail'>job_aid_content_id</td>
+ <td class='detail'>int4</td>
+ <td class='detail' align='right'>10</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="job_aid_content_measure.job_aid_content_id refs job_aid_content_dimension.id via fk_ja_content_measure_ja_content_dimension"><a href='job_aid_content_dimension.html'>job_aid_content_dimension</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>fk_ja_content_measure_ja_content_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+  </table>
+ </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='even'>
+ <td class='detail'>timestamp</td>
+ <td class='detail'>timestamptz</td>
+ <td class='detail' align='right'>35,6</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
+ <td class='detail'>percentage</td>
  <td class='detail'>int2</td>
  <td class='detail' align='right'>5</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
@@ -195,7 +206,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='6 columns'>Table contained 0 rows at Tue Apr 24 14:29 IST 2012<p/>
+<p title='7 columns'>Table contained 0 rows at Thu Apr 26 15:55 GMT+05:30 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -221,21 +232,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from job_aid_content_measure'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="268,145,519,343">
+<area shape="rect" id="node1" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="269,121,550,343">
 <area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,5,224,176">
-<area shape="rect" id="node5" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="12,381,217,529">
-<area shape="rect" id="node7" href="location_dimension.html" title="location_dimension" alt="" coords="29,193,200,364">
+<area shape="rect" id="node5" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="9,381,220,597">
+<area shape="rect" id="node7" href="location_dimension.html" title="location_dimension" alt="" coords="29,193,201,364">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/job_aid_content_measure.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="304,103,483,183">
-<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,104,224,275">
-<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,292,200,463">
-<area shape="rect" id="node6" href="course_item_measure.html" title="course_item_measure" alt="" coords="305,200,481,280">
-<area shape="rect" id="node9" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="268,394,519,593">
-<area shape="rect" id="node12" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="12,479,217,627">
-<area shape="rect" id="node14" href="registration_measure.html" title="registration_measure" alt="" coords="308,297,479,377">
-<area shape="rect" id="node17" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="311,5,476,85">
+<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="320,103,499,183">
+<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,107,224,277">
+<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,295,201,465">
+<area shape="rect" id="node6" href="course_item_measure.html" title="course_item_measure" alt="" coords="322,200,497,280">
+<area shape="rect" id="node9" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="269,395,550,616">
+<area shape="rect" id="node12" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="9,489,220,705">
+<area shape="rect" id="node14" href="registration_measure.html" title="registration_measure" alt="" coords="323,297,495,377">
+<area shape="rect" id="node17" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="327,5,491,85">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/job_aid_content_measure.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

@@ -101,7 +101,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody valign='top'>
-<tr class='even'>
+<tr class='odd'>
  <td class='primaryKey' title='Primary Key'>id</td>
  <td class='detail'>serial</td>
  <td class='detail' align='right'>10</td>
@@ -112,7 +112,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='indexedColumn' title='Indexed'>flw_id</td>
  <td class='detail'>int8</td>
  <td class='detail' align='right'>19</td>
@@ -122,7 +122,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative odd' valign='top'>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="sms_sent_measure.flw_id refs front_line_worker_dimension.id via fk_sms_sent_measure_flw_dimension"><a href='front_line_worker_dimension.html'>front_line_worker_dimension</a><span class='relatedKey'>.id</span>
     </td>
     <td class='constraint detail'>fk_sms_sent_measure_flw_dimension<span title='Cascade on delete:
@@ -132,7 +132,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='indexedColumn' title='Indexed'>time_id</td>
  <td class='detail'>int4</td>
  <td class='detail' align='right'>10</td>
@@ -142,7 +142,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="sms_sent_measure.time_id refs time_dimension.id via fk_sms_sent_measure_time_dimension"><a href='time_dimension.html'>time_dimension</a><span class='relatedKey'>.id</span>
     </td>
     <td class='constraint detail'>fk_sms_sent_measure_time_dimension<span title='Cascade on delete:
@@ -152,7 +152,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>course_attempt</td>
  <td class='detail'>int4</td>
  <td class='detail' align='right'>10</td>
@@ -163,7 +163,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>sms_sent</td>
  <td class='detail'>bool</td>
  <td class='detail' align='right'>1</td>
@@ -174,7 +174,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>sms_reference_number</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>30</td>
@@ -185,17 +185,17 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='detail'>location_id</td>
- <td class='detail'>int2</td>
- <td class='detail' align='right'>5</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
  <td class='detail' align='center'></td>
  <td class='detail' align='right'>null</td>
  <td class='detail'></td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="sms_sent_measure.location_id refs location_dimension.id via fk_sms_sent_measure_location_dimension"><a href='location_dimension.html'>location_dimension</a><span class='relatedKey'>.id</span>
     </td>
     <td class='constraint detail'>fk_sms_sent_measure_location_dimension<span title='Cascade on delete:
@@ -206,7 +206,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='7 columns'>Table contained 0 rows at Tue Apr 24 14:29 IST 2012<p/>
+<p title='7 columns'>Table contained 0 rows at Thu Apr 26 15:55 GMT+05:30 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -244,20 +244,20 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from sms_sent_measure'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="268,145,540,367">
+<area shape="rect" id="node1" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="268,147,540,368">
 <area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,5,224,176">
-<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,403,200,573">
-<area shape="rect" id="node7" href="time_dimension.html" title="time_dimension" alt="" coords="32,193,197,386">
+<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,405,201,576">
+<area shape="rect" id="node7" href="time_dimension.html" title="time_dimension" alt="" coords="33,194,197,387">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/sms_sent_measure.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
 <area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="315,103,493,183">
-<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,67,224,237">
-<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,255,200,425">
-<area shape="rect" id="node6" href="course_item_measure.html" title="course_item_measure" alt="" coords="316,200,492,280">
-<area shape="rect" id="node10" href="time_dimension.html" title="time_dimension" alt="" coords="32,442,197,635">
+<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,65,224,236">
+<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,253,201,424">
+<area shape="rect" id="node6" href="course_item_measure.html" title="course_item_measure" alt="" coords="317,200,491,280">
+<area shape="rect" id="node10" href="time_dimension.html" title="time_dimension" alt="" coords="33,442,197,635">
 <area shape="rect" id="node11" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="305,5,503,85">
-<area shape="rect" id="node14" href="registration_measure.html" title="registration_measure" alt="" coords="319,297,489,377">
+<area shape="rect" id="node14" href="registration_measure.html" title="registration_measure" alt="" coords="318,297,490,377">
 <area shape="rect" id="node18" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="268,395,540,616">
 </map>
 

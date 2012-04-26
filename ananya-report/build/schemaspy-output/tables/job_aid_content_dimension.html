@@ -111,6 +111,12 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
    <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="job_aid_content_dimension.parent_id refs job_aid_content_dimension.id via fk_job_aid_content_dimension_job_aid_content_dimension"><a href='job_aid_content_dimension.html'>job_aid_content_dimension</a><span class='relatedKey'>.parent_id</span>
+    </td>
+    <td class='constraint detail'>fk_job_aid_content_dimension_job_aid_content_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="job_aid_content_measure.job_aid_content_id refs job_aid_content_dimension.id via fk_ja_content_measure_ja_content_dimension"><a href='job_aid_content_measure.html'>job_aid_content_measure</a><span class='relatedKey'>.job_aid_content_id</span>
     </td>
     <td class='constraint detail'>fk_ja_content_measure_ja_content_dimension<span title='Cascade on delete:
@@ -133,7 +139,38 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='odd'>
- <td class='detail'>content_name</td>
+ <td class='detail'>parent_id</td>
+ <td class='detail'>int8</td>
+ <td class='detail' align='right'>19</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'>
+  <table border='0' width='100%' cellspacing='0' cellpadding='0'>
+   <tr class='relative odd' valign='top'>
+    <td class='relatedTable detail' title="job_aid_content_dimension.parent_id refs job_aid_content_dimension.id via fk_job_aid_content_dimension_job_aid_content_dimension"><a href='job_aid_content_dimension.html'>job_aid_content_dimension</a><span class='relatedKey'>.id</span>
+    </td>
+    <td class='constraint detail'>fk_job_aid_content_dimension_job_aid_content_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+  </table>
+ </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='even'>
+ <td class='detail'>name</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
+ <td class='detail'>file_name</td>
  <td class='detail'>varchar</td>
  <td class='detail' align='right'>255</td>
  <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
@@ -144,6 +181,17 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 <tr class='even'>
+ <td class='detail'>type</td>
+ <td class='detail'>varchar</td>
+ <td class='detail' align='right'>255</td>
+ <td class='detail' align='center' title='nullable'>&nbsp;&radic;&nbsp;</td>
+ <td class='detail' align='center'></td>
+ <td class='detail' align='right'>null</td>
+ <td class='detail'></td>
+ <td class='detail'> </td>
+ <td class='comment detail'></td>
+</tr>
+<tr class='odd'>
  <td class='detail'>duration</td>
  <td class='detail'>int4</td>
  <td class='detail' align='right'>10</td>
@@ -155,7 +203,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='4 columns'>Table contained 0 rows at Tue Apr 24 14:29 IST 2012<p/>
+<p title='7 columns'>Table contained 0 rows at Thu Apr 26 15:55 GMT+05:30 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -181,15 +229,15 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from job_aid_content_dimension'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="291,5,488,198">
-<area shape="rect" id="node3" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="5,71,245,225">
+<area shape="rect" id="node1" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="33,95,276,316">
+<area shape="rect" id="node3" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="321,5,519,221">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/job_aid_content_dimension.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="291,58,488,251">
-<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="16,5,235,85">
-<area shape="rect" id="node5" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="5,199,245,353">
-<area shape="rect" id="node7" href="location_dimension.html" title="location_dimension" alt="" coords="40,103,211,183">
+<area shape="rect" id="node1" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="33,224,276,445">
+<area shape="rect" id="node3" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="321,35,519,251">
+<area shape="rect" id="node5" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="45,5,264,85">
+<area shape="rect" id="node8" href="location_dimension.html" title="location_dimension" alt="" coords="69,103,241,183">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/job_aid_content_dimension.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
