@@ -215,7 +215,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
     }
 
-    public boolean hasCompletedCertificateCourse() {
+    public boolean hasPassedTheCourse() {
         return reportCard().totalScore() > CERTIFICATE_COURSE_PASSING_SCORE;
     }
 }

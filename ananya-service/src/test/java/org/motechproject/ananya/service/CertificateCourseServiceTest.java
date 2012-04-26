@@ -15,6 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -128,10 +129,10 @@ public class CertificateCourseServiceTest {
     }
 
     @Test
-    public void shouldIncrementCourseAttemptsAndSetSMSFlagToTrueForAGivenFLWWhenInteractionIsCourseCompletion() {
+    public void shouldIncrementCourseAttemptsAndSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
         ReportCard reportCard = mock(ReportCard.class);
         when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
         ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
@@ -150,7 +151,31 @@ public class CertificateCourseServiceTest {
         FrontLineWorker captured = captor.getValue();
 
         assertEquals(new Integer(1), captured.currentCourseAttempt());
+
+        verify(sendSMSService).buildAndSendSMS("123", "S01D000B000V000", 1);
     }
+
+    @Test
+    public void shouldNotSendSMSForAGivenFLWWhenInteractionIsNotCourseCompletionAndScoreIsPassingScore() {
+        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
+        ReportCard reportCard = mock(ReportCard.class);
+        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
+        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
+
+        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
+
+        String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
+                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playAnswerExplanation\",\"courseItemState\":\"end\"," +
+                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"2012-03-08T12:54:57Z\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
+        stateRequestList.add(json, "1");
+
+        certificateCourseService.saveState(stateRequestList);
+
+        verify(sendSMSService, never()).buildAndSendSMS("123", "S01D000B000V000", 1);
+    }
+
 
     @Test
     public void shouldModifyFLWAggregateFromTheCertificateCourseStateRequestList() {

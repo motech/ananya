@@ -67,8 +67,11 @@ public class CertificateCourseService {
         }
         frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
 
-        if (frontLineWorker.hasCompletedCertificateCourse()) {
-            sendSMSService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), frontLineWorker.currentCourseAttempt());
+        if (frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
+            sendSMSService.buildAndSendSMS(
+                    frontLineWorker.getMsisdn(),
+                    frontLineWorker.getLocationId(),
+                    frontLineWorker.currentCourseAttempt());
             log.info("Course completion SMS sent for " + frontLineWorker);
         }
     }
