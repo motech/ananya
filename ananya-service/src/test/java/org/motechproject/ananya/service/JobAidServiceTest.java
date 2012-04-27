@@ -26,11 +26,14 @@ public class JobAidServiceTest {
     private DataPublishService dataPublishService;
     @Mock
     private AllFrontLineWorkers allFrontLineWorkers;
+    @Mock
+    private AudioTrackerLogService audioTrackerLogService;
+
 
     @Before
     public void setUp() {
         initMocks(this);
-        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService);
+        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService, audioTrackerLogService);
     }
 
     @Test

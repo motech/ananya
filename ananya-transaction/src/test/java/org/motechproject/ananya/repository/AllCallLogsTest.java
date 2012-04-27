@@ -19,7 +19,7 @@ public class AllCallLogsTest extends SpringIntegrationTest{
     public void shouldFindByCallId() {
         String callerId = "123";
         String callId = "123456";
-        CallLog callLog = new CallLog(callId, callerId);
+        CallLog callLog = new CallLog(callId, callerId, "321");
         allCallLogs.add(callLog);
         markForDeletion(callLog);
 

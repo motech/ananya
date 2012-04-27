@@ -14,7 +14,7 @@ public class CallDurationListTest {
 
     @Before
     public void setUp() {
-        callDurationList = new CallDurationList("123456","123");
+        callDurationList = new CallDurationList("123456","123", "321");
     }
 
     @Test

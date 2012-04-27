@@ -32,7 +32,7 @@ public class CallLoggerServiceTest {
     public void shouldSaveCallLogFromCallDurations() {
         final DateTime start = DateTime.now();
 
-        CallDurationList callDurationList = new CallDurationList("callId", "callerId");
+        CallDurationList callDurationList = new CallDurationList("callId", "callerId", "calledNumber");
         List<CallDuration> callDurations = callDurationList.all();
 
         long callStartTime = start.getMillis();
@@ -71,7 +71,7 @@ public class CallLoggerServiceTest {
 
     @Test
     public void shouldCallAllLogsRepoToDelete(){
-        CallLog callLog = new CallLog("123456","123");
+        CallLog callLog = new CallLog("123456","123", "321");
         callLoggerService.delete(callLog);
         verify(allCallLogs).remove(callLog);
     }
@@ -80,7 +80,7 @@ public class CallLoggerServiceTest {
     public void shouldFetchCallLogFromRepo(){
         String callId = "123456";
         String callerId = "123";
-        CallLog callLog = new CallLog(callId, callerId);
+        CallLog callLog = new CallLog(callId, callerId, "321");
         when(allCallLogs.findByCallId(callId)).thenReturn(callLog);
 
         CallLog callLogFromDB = callLoggerService.getCallLogFor(callId);

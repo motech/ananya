@@ -113,7 +113,8 @@ public class CertificateCourseService {
     }
 
     private AudioTrackerLog createAudioTrackerLog(AudioTrackerRequestList audioTrackerRequestList) {
-        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(audioTrackerRequestList.getCallId(), audioTrackerRequestList.getCallerId());
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(audioTrackerRequestList.getCallId(),
+                audioTrackerRequestList.getCallerId(), ServiceType.CERTIFICATE_COURSE);
 
         for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll()) {
             audioTrackerLog.addItem(AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest));

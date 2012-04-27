@@ -22,7 +22,7 @@ public class CallLoggerService {
     }
 
     public void saveAll(CallDurationList callDurationList) {
-        CallLog callLog = new CallLog(callDurationList.getCallId(), callDurationList.getCallerId());
+        CallLog callLog = new CallLog(callDurationList.getCallId(), callDurationList.getCallerId(), callDurationList.getCalledNumber());
         for (CallDuration callDuration : callDurationList.all())
             save(callDuration, callLog);
         allCallLogs.add(callLog);

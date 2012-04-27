@@ -82,7 +82,7 @@ public class CallDurationSynchroniserIT {
     }
 
     private void setUpReportData(String callerId, String callId) {
-        CallLog callLog = new CallLog(callId, callerId);
+        CallLog callLog = new CallLog(callId, callerId,"321");
         callLog.addItem(new CallLogItem(CallFlowType.CALL, DateUtil.now(), DateUtil.now().plusSeconds(20)));
         allCallLogs.add(callLog);
     }

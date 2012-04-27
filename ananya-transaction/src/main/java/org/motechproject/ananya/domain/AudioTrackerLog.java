@@ -12,11 +12,15 @@ public class AudioTrackerLog extends BaseLog {
     @JsonProperty
     private List<AudioTrackerLogItem> audioTrackerLogItems = new ArrayList<AudioTrackerLogItem>();
 
+    @JsonProperty
+    private ServiceType serviceType;
+
     public AudioTrackerLog() {
     }
 
-    public AudioTrackerLog(String callId, String callerId) {
+    public AudioTrackerLog(String callId, String callerId, ServiceType serviceType) {
         super(callId, callerId);
+        this.serviceType = serviceType;
     }
 
     public void addItem(AudioTrackerLogItem audioTrackerLogItem) {

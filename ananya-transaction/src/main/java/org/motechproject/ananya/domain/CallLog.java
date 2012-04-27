@@ -12,18 +12,13 @@ public class CallLog extends BaseLog {
     @JsonProperty
     List<CallLogItem> callLogItems = new ArrayList<CallLogItem>();
 
-    @JsonProperty
-    private String callId;
-
-    @JsonProperty
-    private String callerId;
-
     public CallLog() {
+        super();
     }
 
-    public CallLog(String callId, String callerId) {
-        this.callerId = callerId;
-        this.callId = callId;
+    public CallLog(String callId, String callerId, String calledNumber) {
+        super(callId, callerId);
+        this.calledNumber = calledNumber;
     }
 
     public void addItem(CallLogItem callLogItem) {

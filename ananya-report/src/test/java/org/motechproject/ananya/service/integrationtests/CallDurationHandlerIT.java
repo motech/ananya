@@ -103,7 +103,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
-        CallLog callLog = new CallLog(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, callerId.toString(), "321");
 
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));

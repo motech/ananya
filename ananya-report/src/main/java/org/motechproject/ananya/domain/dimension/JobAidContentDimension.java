@@ -18,6 +18,10 @@ public class JobAidContentDimension {
     @JoinColumn(name = "parent_id")
     private JobAidContentDimension parent;
 
+//    @OneToMany
+//    @JoinColumn(name = "parent_id")
+//    private Set<JobAidContentDimension> children;
+//
     @Column(name = "name")
     private String name;
 

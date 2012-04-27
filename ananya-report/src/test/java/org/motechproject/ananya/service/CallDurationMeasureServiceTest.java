@@ -60,7 +60,7 @@ public class CallDurationMeasureServiceTest {
 
     @Test
     public void shouldSaveCallDurationsForACallId() {
-        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId), "321");
         DateTime now = DateTime.now();
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, now, now.plusSeconds(10)));
 
@@ -85,7 +85,7 @@ public class CallDurationMeasureServiceTest {
     public void shouldNotSaveCallDurationMeasureWhenDurationDataISIncorrect() {
         String callId = "callId";
         Long callerId = 123456789L;
-        CallLog callLog = new CallLog(callId, callerId.toString());
+        CallLog callLog = new CallLog(callId, callerId.toString(), "321");
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
         callDurationMeasureService.createCallDurationMeasure(callId);
@@ -108,7 +108,7 @@ public class CallDurationMeasureServiceTest {
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
 
-        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId), "321");
 
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
@@ -141,7 +141,7 @@ public class CallDurationMeasureServiceTest {
     public void shouldSaveCallStartAndEndTime() {
         final DateTime startTime = DateTime.now();
         final DateTime endTime = DateTime.now().plusMinutes(4);
-        CallLog callLog = new CallLog(callId, String.valueOf(callerId));
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId), "321");
         callLog.addItem(new CallLogItem(CallFlowType.CALL, startTime, endTime));
 
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);

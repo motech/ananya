@@ -3,7 +3,6 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
-import org.motechproject.ananya.request.AudioTrackerRequest;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
 public class CertificateCourseCallDataController {
@@ -44,12 +42,13 @@ public class CertificateCourseCallDataController {
     public String receiveCallData(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
         final String callerId = request.getParameter("callerId");
+        final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
 
         TransferDataList transferDataList = new TransferDataList(jsonData);
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
-        CallDurationList callDurationList = new CallDurationList(callId, callerId);
+        CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
 
         for (TransferData transferData : transferDataList.all()) {
             if (transferData.isCCState())
