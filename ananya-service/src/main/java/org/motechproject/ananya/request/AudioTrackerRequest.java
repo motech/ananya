@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 public class AudioTrackerRequest extends BaseRequest {
-
     private String contentId;
     private String timeStamp;
     private Integer duration;

@@ -9,8 +9,11 @@ import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.request.AudioTrackerRequest;
+import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -29,6 +32,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -72,8 +76,6 @@ public class CertificateCourseCallDataControllerTest {
 
         transferCallDataController.receiveCallData(request);
 
-        List<TransferData> expectedTransferDataList = Arrays.asList((new TransferData("0", TransferData.TYPE_CC_STATE)));
-
         CertificationCourseStateRequest stateRequest = new CertificationCourseStateRequest();
         stateRequest.setCallId(callId);
         stateRequest.setToken("0");
@@ -84,6 +86,16 @@ public class CertificateCourseCallDataControllerTest {
         List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(callId, callerId, CallEvent.CALL_START, 1231413));
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
 
+        ArgumentCaptor<AudioTrackerRequestList> captor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
+        verify(certificateCourseService).saveAudioTrackerState(captor.capture());
+        AudioTrackerRequestList audioTrackerRequestList = captor.getValue();
+        AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.getAll().get(0);
+        assertEquals(1, audioTrackerRequestList.getAll().size());
+        assertEquals(callId, audioTrackerRequestList.getCallId());
+        assertEquals(callerId, audioTrackerRequestList.getCallerId());
+        assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
+        assertEquals(123, (int)audioTrackerRequest.getDuration());
+        assertEquals("123456789", audioTrackerRequest.getTimeStamp());
     }
 
     @Test
@@ -172,6 +184,12 @@ public class CertificateCourseCallDataControllerTest {
                 "   \"time\"  : 1231413" +
                 "}";
 
+        String packet3 = "{" +
+                "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
+                "    \"duration\" : \"123\",                             " +
+                "    \"timeStamp\" : \"123456789\"                          " +
+                "}";
+
         return "[" +
                 "   {" +
                 "       \"token\" : 0," +
@@ -183,6 +201,12 @@ public class CertificateCourseCallDataControllerTest {
                 "       \"token\" : 1," +
                 "       \"type\"  : \"callDuration\", " +
                 "       \"data\"  : " + packet2 +
+                "   }," +
+                "" +
+                "   {" +
+                "       \"token\" : 1," +
+                "       \"type\"  : \"audioTracker\", " +
+                "       \"data\"  : " + packet3 +
                 "   }" +
                 "]";
     }
@@ -210,42 +234,6 @@ public class CertificateCourseCallDataControllerTest {
                     return false;
 
             }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-
-        }
-    }
-
-    private static class TransferDataListMatcher extends BaseMatcher<TransferDataList> {
-
-        private List<TransferData> transferDataList;
-
-        public TransferDataListMatcher(List<TransferData> transferDataList) {
-            this.transferDataList = transferDataList;
-        }
-
-        @Override
-        public boolean matches(Object o) {
-            Collection<TransferData> matchCollection = ((TransferDataList) o).all();
-
-            if (this.transferDataList.size() != transferDataList.size()) {
-                return false;
-            }
-
-            TransferData matchTransferData;
-            Iterator<TransferData> matchIterator = matchCollection.iterator();
-            for (TransferData transferData : this.transferDataList) {
-                matchTransferData = matchIterator.next();
-
-                if (!(transferData.getToken().equals(matchTransferData.getToken()) ||
-                        transferData.getType().equals(matchTransferData.getType()))) {
-                    return false;
-                }
-            }
-
             return true;
         }
 
