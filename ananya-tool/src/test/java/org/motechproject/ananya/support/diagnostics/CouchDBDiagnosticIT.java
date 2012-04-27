@@ -10,7 +10,7 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class CouchDBDiagnosticTest {
+public class CouchDBDiagnosticIT {
 
     @Autowired
     CouchDBDiagnostic couchDBDiagnostic;

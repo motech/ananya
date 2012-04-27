@@ -22,17 +22,17 @@ public class SendSMSClientTest {
 
     @Mock
     private OnMobileSendSMSService onMobileSendSMSService;
-
     @Mock
     private FrontLineWorkerService frontLineWorkerService;
-
     @Mock
     private SMSPublisherService smsPublisherService;
+    
+    private String senderId = "BI-577110";
 
     @Before
     public void setUp() {
         initMocks(this);
-        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, smsPublisherService);
+        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, smsPublisherService, senderId);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class SendSMSClientTest {
         String smsRefNum = "141241";
         SMSReference smsReference = new SMSReference(mobileNumber, smsRefNum);
         FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
-        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(SendSMSClient.SENDER_ID)), argThat(is(smsRefNum)))).thenReturn("success");
+        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
         when(frontLineWorkerService.getSMSReferenceNumber(mobileNumber)).thenReturn(null);
 
@@ -62,7 +62,7 @@ public class SendSMSClientTest {
         String smsRefNum = "141241";
         SMSReference smsReference = new SMSReference(mobileNumber, smsRefNum);
         FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
-        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(SendSMSClient.SENDER_ID)), argThat(is(smsRefNum)))).thenReturn("success");
+        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
         when(frontLineWorkerService.getSMSReferenceNumber(mobileNumber)).thenReturn(smsReference);
 
@@ -82,7 +82,7 @@ public class SendSMSClientTest {
         String smsMessage = "Hello";
         String smsRefNum = "141241";
 
-        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(SendSMSClient.SENDER_ID)), argThat(is(smsMessage)))).thenReturn("failure");
+        when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsMessage)))).thenReturn("failure");
         try {
             sendSMSClient.sendSingleSMS(mobileNumber, smsMessage, smsRefNum);
         } catch (RuntimeException e) {
