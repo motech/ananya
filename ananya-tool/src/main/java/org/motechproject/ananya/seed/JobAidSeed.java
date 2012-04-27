@@ -1,7 +1,9 @@
 package org.motechproject.ananya.seed;
 
 import org.motechproject.ananya.domain.Node;
+import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,50 @@ public class JobAidSeed {
     @Autowired
     private AllNodes allNodes;
 
+    @Autowired
+    private AllJobAidContentDimensions allJobAidContentDimensions;
+
     @Seed(priority = 0)
     public void load() {
-        allNodes.addNodeWithDescendants(createJobAidTree());
+        Node courseNode = createJobAidTree();
+        allNodes.addNodeWithDescendants(courseNode);
+        recursivelyAddNodesToReportDB(courseNode, null);
+    }
+
+    private void recursivelyAddNodesToReportDB(Node node, JobAidContentDimension parentDimension) {
+
+        JobAidContentDimension jobAidContentDimension = new JobAidContentDimension(
+                node.getId(),
+                parentDimension,
+                node.getName(),
+                null,
+                getNodeType(node),
+                null
+        );
+        allJobAidContentDimensions.add(jobAidContentDimension);
+
+        for(StringContent content : node.contents()) {
+            JobAidContentDimension audioContentDimension = new JobAidContentDimension(
+                    content.getId(),
+                    jobAidContentDimension,
+                    content.getName(),
+                    content.getValue(),
+                    "Audio",
+                    Integer.valueOf(content.getMetadata().get("duration"))
+            );
+            allJobAidContentDimensions.add(audioContentDimension);
+        }
+
+        List<Node> children = node.children();
+
+        if(children.isEmpty()) return;
+        for(Node child :children){
+            recursivelyAddNodesToReportDB(child, jobAidContentDimension);
+        }
+    }
+
+    private String getNodeType(Node node) {
+        return node.data().get("type");
     }
 
     private Node createJobAidTree() {

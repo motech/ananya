@@ -4,5 +4,6 @@ public enum CourseItemType {
     CHAPTER,
     LESSON,
     QUIZ,
-    COURSE
+    COURSE,
+    AUDIO
 }

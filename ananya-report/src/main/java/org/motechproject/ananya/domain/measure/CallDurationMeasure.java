@@ -43,6 +43,9 @@ public class CallDurationMeasure {
     @Column(name = "end_time")
     private Timestamp endTime;
 
+    @Column(name = "called_number")
+    private Long calledNumber;
+
     public CallDurationMeasure() {
     }
 

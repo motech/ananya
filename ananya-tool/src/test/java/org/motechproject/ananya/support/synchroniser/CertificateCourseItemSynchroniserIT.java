@@ -84,7 +84,7 @@ public class CertificateCourseItemSynchroniserIT {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
         template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
-        allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType));
+        allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType, null));
 
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", callStartTime, callStartTime.plusSeconds(20), "airtel", callId, "1");
         CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(contentId, courseItemType, contentName, "3", CourseItemState.START, DateUtil.now());

@@ -7,6 +7,7 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "course_item_measure")
@@ -48,6 +49,12 @@ public class CourseItemMeasure {
 
     @Column(name = "score")
     private Integer score;
+
+    @Column(name = "timestamp")
+    private Date timestamp;
+
+    @Column(name = "percentage")
+    private Integer percentage;
 
     @Column(name = "event")
     private String event;

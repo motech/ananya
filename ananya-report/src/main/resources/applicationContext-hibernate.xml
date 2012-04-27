@@ -16,10 +16,12 @@
                 <value>org.motechproject.ananya.domain.dimension.LocationDimension</value>
                 <value>org.motechproject.ananya.domain.dimension.TimeDimension</value>
                 <value>org.motechproject.ananya.domain.dimension.CourseItemDimension</value>
+                <value>org.motechproject.ananya.domain.dimension.JobAidContentDimension</value>
                 <value>org.motechproject.ananya.domain.measure.RegistrationMeasure</value>
                 <value>org.motechproject.ananya.domain.measure.CourseItemMeasure</value>
                 <value>org.motechproject.ananya.domain.measure.CallDurationMeasure</value>
                 <value>org.motechproject.ananya.domain.measure.SMSSentMeasure</value>
+                <value>org.motechproject.ananya.domain.measure.JobAidContentMeasure</value>
             </list>
         </property>
 

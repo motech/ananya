@@ -24,7 +24,7 @@ public class AllCourseItemDimensionsTest extends SpringIntegrationTest{
         String name = "chapter 1";
         String contentId = "contentId";
         CourseItemType type = CourseItemType.CHAPTER;
-        CourseItemDimension chapter = allCourseItemDimensions.add(new CourseItemDimension(name, contentId, type));
+        CourseItemDimension chapter = allCourseItemDimensions.add(new CourseItemDimension(name, contentId, type, null));
 
         CourseItemDimension chapterNew = allCourseItemDimensions.getFor(name, type);
 
