@@ -5,7 +5,6 @@ import org.hamcrest.Description;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,7 +39,7 @@ public class AllCertificateCourseLogsTest{
     @Test
     public void shouldDeleteCertificateCourseLogForAGivenCallId(){
         String callId = "callId";
-        CertificationCourseLog entity = new CertificationCourseLog("callerId","number", null, null, "", callId, "" );
+        CertificationCourseLog entity = new CertificationCourseLog("callerId","number", "", callId, "" );
         allCertificateCourseLogs.add(entity);
         assertNotNull(allCertificateCourseLogs.findByCallId(callId));
 

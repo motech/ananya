@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -29,7 +28,7 @@ public class CertificateCourseLogServiceTest {
     @Test
     public void shouldGetAllCertificateCourseLogsForACallId(){
         String callId = "callId";
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog("callerId", "calledNumber", DateTime.now(), DateTime.now(), "", callId, "courseId");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog("callerId", "calledNumber", "", callId, "courseId");
         when(allCertificateCourseLogs.findByCallId(callId)).thenReturn(certificationCourseLog);
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         assertEquals(certificationCourseLog, courseLog);

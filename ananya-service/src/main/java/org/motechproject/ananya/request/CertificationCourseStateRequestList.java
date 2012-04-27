@@ -12,7 +12,6 @@ public class CertificationCourseStateRequestList {
     private String callerId;
 
     public CertificationCourseStateRequestList(String callId, String callerId) {
-
         this.callId = callId;
         this.callerId = callerId;
     }

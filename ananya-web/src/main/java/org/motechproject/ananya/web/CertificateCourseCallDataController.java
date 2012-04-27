@@ -3,6 +3,8 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
+import org.motechproject.ananya.request.AudioTrackerRequest;
+import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class CertificateCourseCallDataController {
@@ -35,6 +38,7 @@ public class CertificateCourseCallDataController {
         this.dataPublishService = dataPublishService;
     }
 
+    //TODO Remove this request
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
     @ResponseBody
     public String receiveCallData(HttpServletRequest request) {
@@ -44,15 +48,19 @@ public class CertificateCourseCallDataController {
 
         TransferDataList transferDataList = new TransferDataList(jsonData);
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
+        AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         CallDurationList callDurationList = new CallDurationList(callId, callerId);
 
         for (TransferData transferData : transferDataList.all()) {
             if (transferData.isCCState())
                 stateRequestList.add(transferData.getData(), transferData.getToken());
+            else if (transferData.isAudioTrackerState())
+                audioTrackerList.add(transferData.getData(),transferData.getToken());
             else
                 callDurationList.add(transferData.getData());
         }
         certificateCourseService.saveState(stateRequestList);
+        certificateCourseService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
 
         log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);

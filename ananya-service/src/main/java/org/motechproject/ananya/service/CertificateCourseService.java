@@ -1,11 +1,12 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.action.ServiceAction;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.mapper.AudioTrackerLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
+import org.motechproject.ananya.request.AudioTrackerRequest;
+import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
@@ -25,15 +26,17 @@ public class CertificateCourseService {
     private FrontLineWorkerService frontLineWorkerService;
     private DataPublishService dataPublishService;
     private SendSMSService sendSMSService;
+    private AudioTrackerLogService audioTrackerLogService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
-                                    FrontLineWorkerService frontLineWorkerService,
+                                    AudioTrackerLogService audioTrackerLogService, FrontLineWorkerService frontLineWorkerService,
                                     DataPublishService dataPublishService, SendSMSService sendSMSService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.dataPublishService = dataPublishService;
         this.sendSMSService = sendSMSService;
+        this.audioTrackerLogService = audioTrackerLogService;
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
@@ -56,6 +59,16 @@ public class CertificateCourseService {
             return;
         saveBookmarkAndScore(stateRequestList);
         saveCourseLog(stateRequestList);
+    }
+
+    public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {
+        log.info("Audio Tracker Request List " + audioTrackerRequestList);
+        if (audioTrackerRequestList.isEmpty())
+            return;
+
+        AudioTrackerLog audioTrackerLog = createAudioTrackerLog(audioTrackerRequestList);
+
+        audioTrackerLogService.createNew(audioTrackerLog);
     }
 
     private void saveBookmarkAndScore(CertificationCourseStateRequestList stateRequestList) {
@@ -97,5 +110,15 @@ public class CertificateCourseService {
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
         }
         certificateCourseLogService.update(courseLog);
+    }
+
+    private AudioTrackerLog createAudioTrackerLog(AudioTrackerRequestList audioTrackerRequestList) {
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(audioTrackerRequestList.getCallId(), audioTrackerRequestList.getCallerId());
+
+        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll()) {
+            audioTrackerLog.addItem(AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest));
+        }
+
+        return audioTrackerLog;
     }
 }

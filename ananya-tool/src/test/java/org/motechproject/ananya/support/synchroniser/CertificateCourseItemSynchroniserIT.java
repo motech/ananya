@@ -86,7 +86,7 @@ public class CertificateCourseItemSynchroniserIT {
         template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType, null));
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", callStartTime, callStartTime.plusSeconds(20), "airtel", callId, "1");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", "airtel", callId, "1");
         CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(contentId, courseItemType, contentName, "3", CourseItemState.START, DateUtil.now());
         certificationCourseLog.addCourseLogItem(courseLogItem);
         allCertificateCourseLogs.add(certificationCourseLog);

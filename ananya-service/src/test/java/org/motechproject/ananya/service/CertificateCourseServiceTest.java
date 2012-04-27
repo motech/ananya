@@ -4,10 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.ReportCard;
-import org.motechproject.ananya.domain.Score;
+import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
@@ -15,6 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,12 +31,13 @@ public class CertificateCourseServiceTest {
     private DataPublishService dataPublishService;
     @Mock
     private SendSMSService sendSMSService;
-
+    @Mock
+    private AudioTrackerLogService audioTrackerLogService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, frontlineWorkerService, dataPublishService, sendSMSService);
+        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerLogService, frontlineWorkerService, dataPublishService, sendSMSService);
     }
 
     @Test
@@ -215,4 +215,37 @@ public class CertificateCourseServiceTest {
         assertTrue(score.result());
     }
 
+    @Test
+    public void shouldSaveAudioTrackerLogs() {
+        String callid = "callid";
+        String callerid = "callerid";
+        String dataToken = "1";
+        String jsonString =
+                "{" +
+                        "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
+                        "    \"duration\" : \"123\",                             " +
+                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "}";
+        AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callid, callerid);
+        audioTrackerRequestList.add(jsonString, dataToken);
+
+        certificateCourseService.saveAudioTrackerState(audioTrackerRequestList);
+
+        ArgumentCaptor<AudioTrackerLog> captor = ArgumentCaptor.forClass(AudioTrackerLog.class);
+        verify(audioTrackerLogService).createNew(captor.capture());
+        AudioTrackerLog audioTrackerLog = captor.getValue();
+        assertEquals(callid, audioTrackerLog.getCallId());
+        assertEquals(callerid, audioTrackerLog.getCallerId());
+    }
+
+    @Test
+    public void shouldNotProceedWithSaveAudioTrackerLogsIfTheRequestListIsEmpty() {
+        String callid = "callid";
+        String callerid = "callerid";
+        AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callid, callerid);
+
+        certificateCourseService.saveAudioTrackerState(audioTrackerRequestList);
+
+        verify(audioTrackerLogService,never()).createNew(null);
+    }
 }

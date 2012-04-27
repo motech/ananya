@@ -6,7 +6,7 @@ import org.motechproject.model.MotechBaseDataObject;
 
 public class BaseLog extends MotechBaseDataObject {
     @JsonProperty
-    private String callId;
+    protected String callId;
     @JsonProperty
     protected String callerId;
     @JsonProperty
@@ -15,6 +15,11 @@ public class BaseLog extends MotechBaseDataObject {
     protected String operator;
 
     public BaseLog() {
+    }
+
+    public BaseLog(String callId, String callerId) {
+        this.callId = callId;
+        this.callerId = callerId;
     }
 
     public BaseLog(String callerId, String calledNumber, String operator, String callId) {

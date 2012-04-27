@@ -80,7 +80,7 @@ public class CourseItemMeasureServiceTest {
         CourseItemType contentType = CourseItemType.CHAPTER;
         CourseItemState event = CourseItemState.START;
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now));
 
         CourseItemDimension courseItemDimension = new CourseItemDimension();
@@ -111,7 +111,7 @@ public class CourseItemMeasureServiceTest {
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.QUIZ;
         CourseItemState event = CourseItemState.START;
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, "3", event, now));
 
         CourseItemDimension courseItemDimension = new CourseItemDimension();
@@ -145,7 +145,7 @@ public class CourseItemMeasureServiceTest {
         CourseItemDimension courseItemDimension1 = new CourseItemDimension();
         CourseItemDimension courseItemDimension2 = new CourseItemDimension();
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId1, contentType1, contentName1, "3", event, now));
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId2, contentType2, contentName2, "", event, now.plusDays(5)));
 
@@ -186,7 +186,7 @@ public class CourseItemMeasureServiceTest {
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.CHAPTER;
         CourseItemState event = CourseItemState.START;
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, null, null, "", callId, "");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now));
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 

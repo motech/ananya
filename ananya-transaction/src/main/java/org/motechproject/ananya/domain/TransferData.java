@@ -11,6 +11,8 @@ public class TransferData implements JsonDeserializer<TransferData> {
 
     public static final String TYPE_CC_STATE = "ccState";
     public static final String TYPE_CALL_DURATION = "callDuration";
+    public static final String TYPE_AUDIO_TRACKER = "audioTracker";
+
 
     public TransferData() {}
     
@@ -49,5 +51,9 @@ public class TransferData implements JsonDeserializer<TransferData> {
 
     public boolean isCCState(){
         return type.equals(TYPE_CC_STATE);
+    }
+
+    public boolean isAudioTrackerState() {
+        return type.equals(TYPE_AUDIO_TRACKER);
     }
 }
