@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -97,14 +98,14 @@ public class JobAidServiceTest {
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                         "    \"duration\" : \"123\",                             " +
-                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "    \"timeStamp\" : \"2012-04-29T09:38:49Z\"                          " +
                         "}";
 
         String jsonString2 =
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926999\",     " +
                         "    \"duration\" : \"121\",                             " +
-                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "    \"timeStamp\" : \"2012-04-29T09:38:49Z\"                          " +
                         "}";
 
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId, callerId);
@@ -122,7 +123,7 @@ public class JobAidServiceTest {
         List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.getAudioTrackerLogItems();
         assertEquals(2, audioTrackerLogItems.size());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90",audioTrackerLogItems.get(0).getContentId());
-        assertEquals("123456789",audioTrackerLogItems.get(0).getTimeStamp());
+        assertEquals(DateTime.parse("2012-04-29T09:38:49Z"),audioTrackerLogItems.get(0).getTimeStamp());
         assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
     }
 }
