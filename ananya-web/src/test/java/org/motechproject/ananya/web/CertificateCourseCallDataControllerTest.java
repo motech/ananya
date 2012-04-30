@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.collections.CollectionUtils;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -97,7 +98,7 @@ public class CertificateCourseCallDataControllerTest {
         assertEquals(callerId, audioTrackerRequestList.getCallerId());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
         assertEquals(123, (int)audioTrackerRequest.getDuration());
-        assertEquals("123456789", audioTrackerRequest.getTimeStamp());
+        assertEquals(DateTime.parse("123456789"), audioTrackerRequest.getTimeAsDateTime());
     }
 
     @Test

@@ -2,6 +2,8 @@ package org.motechproject.ananya.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
 
@@ -31,5 +33,10 @@ public class AudioTrackerRequest extends BaseRequest {
 
     public Integer getDuration() {
         return duration;
+    }
+
+    public DateTime getTimeAsDateTime() {
+        if (StringUtils.isBlank(timeStamp)) return null;
+        return DateTime.parse(timeStamp);
     }
 }
