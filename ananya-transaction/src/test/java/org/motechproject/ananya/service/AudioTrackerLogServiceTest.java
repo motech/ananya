@@ -17,8 +17,7 @@ public class AudioTrackerLogServiceTest {
     private AudioTrackerLogService audioTrackerLogService;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         initMocks(this);
         audioTrackerLogService = new AudioTrackerLogService(allAudioTrackerLogs);
     }
@@ -30,5 +29,23 @@ public class AudioTrackerLogServiceTest {
         audioTrackerLogService.createNew(audioTrackerLog);
 
         verify(allAudioTrackerLogs).add(audioTrackerLog);
+    }
+
+    @Test
+    public void shouldFetchLogsBasedOnCallId() {
+        String callId = "callId";
+
+        audioTrackerLogService.getLogFor(callId);
+
+        verify(allAudioTrackerLogs).findByCallId(callId);
+    }
+
+    @Test
+    public void shouldDeleteAllCallLogsRelatedToACallId() {
+        String callId = "callId";
+
+        audioTrackerLogService.deleteLogsFor(callId);
+
+        verify(allAudioTrackerLogs).deleteFor(callId);
     }
 }

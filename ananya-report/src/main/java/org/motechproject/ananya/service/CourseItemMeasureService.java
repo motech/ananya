@@ -1,5 +1,7 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.AudioTrackerLog;
+import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
@@ -31,6 +33,7 @@ public class CourseItemMeasureService {
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
     private AllRegistrationMeasures allRegistrationMeasures;
+    private AudioTrackerLogService audioTrackerLogService;
 
     public CourseItemMeasureService() {
     }
@@ -41,21 +44,36 @@ public class CourseItemMeasureService {
                                     AllTimeDimensions allTimeDimensions,
                                     AllCourseItemDimensions allCourseItemDimensions,
                                     CertificateCourseLogService certificateCourseLogService,
+                                    AudioTrackerLogService audioTrackerLogService,
                                     AllRegistrationMeasures allRegistrationMeasures) {
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.allCourseItemDimensions = allCourseItemDimensions;
         this.certificateCourseLogService = certificateCourseLogService;
+        this.audioTrackerLogService = audioTrackerLogService;
         this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
     @Transactional
     public void createCourseItemMeasure(String callId) {
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
-        if (courseLog == null) return;
+        AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
+        Long callerId = getCallerId(courseLog, audioTrackerLog);
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(courseLog.callerIdAsLong());
+        if(callerId == null) return;
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
+        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+        LocationDimension locationDimension = registrationMeasure.getLocationDimension();
+
+        addCertificateCourseItemMeasure(callId, courseLog, frontLineWorkerDimension, locationDimension);
+        addAudioTrackerCourseItemMeasure(callId, audioTrackerLog, frontLineWorkerDimension, locationDimension);
+    }
+
+    private void addCertificateCourseItemMeasure(String callId, CertificationCourseLog courseLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
+        if(courseLog == null) return;
+
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
 
         for (CertificationCourseLogItem logItem : courseLogItems) {
@@ -64,8 +82,6 @@ public class CourseItemMeasureService {
                     logItem.getContentType());
 
             TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
-            RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
-            LocationDimension locationDimension = registrationMeasure.getLocationDimension();
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
                     timeDimension,
                     courseItemDimension,
@@ -77,7 +93,40 @@ public class CourseItemMeasureService {
             reportDB.add(courseItemMeasure);
         }
         certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
-        log.info("Added CourseItemMeasures for CallId="+callId);
+        log.info("Added Certificate CourseItemMeasures for CallId=" + callId);
     }
 
+    private void addAudioTrackerCourseItemMeasure(String callId, AudioTrackerLog audioTrackerLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
+        if(audioTrackerLog == null) return;
+
+        for (AudioTrackerLogItem logItem : audioTrackerLog.getAudioTrackerLogItems()) {
+            CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
+            Integer totalDuration = courseItemDimension.getDuration();
+            TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTimeStamp());
+            CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
+                    timeDimension,
+                    courseItemDimension,
+                    frontLineWorkerDimension,
+                    locationDimension,
+                    logItem.getTimeStamp(),
+                    getPercentage(logItem, totalDuration)
+                    );
+
+            reportDB.add(courseItemMeasure);
+        }
+        audioTrackerLogService.deleteLogsFor(callId);
+        log.info("Added AudioTrack CourseItemMeasures for CallId=" + callId);
+    }
+
+    private Long getCallerId(CertificationCourseLog courseLog, AudioTrackerLog audioTrackerLog) {
+        if (courseLog != null)
+            return courseLog.callerIdAsLong();
+        else if(audioTrackerLog != null)
+            return audioTrackerLog.callerIdAsLong();
+        return null;
+    }
+
+    private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
+        return (logItem.getDuration() * 100 )/totalDuration;
+    }
 }

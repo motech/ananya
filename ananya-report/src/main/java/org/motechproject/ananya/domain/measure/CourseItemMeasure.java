@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain.measure;
 
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -7,7 +8,7 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "course_item_measure")
@@ -51,7 +52,7 @@ public class CourseItemMeasure {
     private Integer score;
 
     @Column(name = "timestamp")
-    private Date timestamp;
+    private Timestamp timestamp;
 
     @Column(name = "percentage")
     private Integer percentage;
@@ -79,6 +80,14 @@ public class CourseItemMeasure {
         return locationDimension;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public Integer getPercentage() {
+        return percentage;
+    }
+
     public CourseItemState getEvent() {
         return CourseItemState.valueOf(event);
     }
@@ -98,5 +107,19 @@ public class CourseItemMeasure {
         this.locationDimension = locationDimension;
         this.score = score;
         this.event = String.valueOf(event);
+    }
+
+    public CourseItemMeasure(TimeDimension timeDimension,
+                             CourseItemDimension courseItemDimension,
+                             FrontLineWorkerDimension frontLineWorkerDimension,
+                             LocationDimension locationDimension,
+                             DateTime timestamp,
+                             Integer percentage) {
+        this.timeDimension = timeDimension;
+        this.courseItemDimension = courseItemDimension;
+        this.frontLineWorkerDimension = frontLineWorkerDimension;
+        this.locationDimension = locationDimension;
+        this.timestamp = new Timestamp(timestamp.getMillis());
+        this.percentage = percentage;
     }
 }

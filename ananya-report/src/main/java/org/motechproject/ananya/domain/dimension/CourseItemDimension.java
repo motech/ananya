@@ -7,10 +7,15 @@ import javax.persistence.*;
 @Entity
 
 @Table(name = "course_item_dimension")
-@NamedQuery(name = CourseItemDimension.FIND_BY_NAME_AND_TYPE, query = "select cid from CourseItemDimension cid where cid.name=:name and cid.type=:type")
+@NamedQueries({
+        @NamedQuery(name = CourseItemDimension.FIND_BY_NAME_AND_TYPE, query = "select cid from CourseItemDimension cid where cid.name=:name and cid.type=:type"),
+        @NamedQuery(name = CourseItemDimension.FIND_BY_CONTENT_ID, query = "select cid from CourseItemDimension cid where cid.contentId=:contentId")
+})
+
 public class CourseItemDimension {
 
     public static final String FIND_BY_NAME_AND_TYPE = "find.by.name.and.type";
+    public static final String FIND_BY_CONTENT_ID = "find.by.content.id";
 
     @Id
     @Column(name = "id")
@@ -66,7 +71,12 @@ public class CourseItemDimension {
         return contentId;
     }
 
+    public Integer getDuration() {
+        return duration;
+    }
+
     public CourseItemType getType() {
         return CourseItemType.valueOf(type);
+
     }
 }

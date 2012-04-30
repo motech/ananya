@@ -17,4 +17,12 @@ public class AudioTrackerLogService {
     public void createNew(AudioTrackerLog audioTrackerLog) {
         allAudioTrackerLogs.add(audioTrackerLog);
     }
+
+    public AudioTrackerLog getLogFor(String callId) {
+        return allAudioTrackerLogs.findByCallId(callId);
+    }
+
+    public void deleteLogsFor(String callId) {
+        allAudioTrackerLogs.deleteFor(callId);
+    }
 }

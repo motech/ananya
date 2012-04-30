@@ -5,10 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.CertificationCourseLogItem;
-import org.motechproject.ananya.domain.CourseItemState;
-import org.motechproject.ananya.domain.CourseItemType;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -21,6 +18,7 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -42,6 +40,8 @@ public class CourseItemMeasureServiceTest {
     private CertificateCourseLogService certificateCourseLogService;
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
+    @Mock
+    private AudioTrackerLogService audioTrackerLogService;
 
     CourseItemMeasureService courseItemMeasureService;
     String callId;
@@ -63,14 +63,14 @@ public class CourseItemMeasureServiceTest {
         now = DateTime.now();
         courseItemMeasureService = new CourseItemMeasureService(reportDB,
                 allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions,
-                certificateCourseLogService, allRegistrationMeasures);
+                certificateCourseLogService, audioTrackerLogService, allRegistrationMeasures);
 
         timeDimension = new TimeDimension();
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         flw_id = 1;
         frontLineWorkerDimension.setId(flw_id);
-        locationDimension= new LocationDimension();
-        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension);
+        locationDimension = new LocationDimension();
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
     }
 
     @Test
@@ -205,8 +205,50 @@ public class CourseItemMeasureServiceTest {
     @Test
     public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId() {
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(null);
-        courseItemMeasureService.createCourseItemMeasure("callId");
-        verify(reportDB, never()).add(any(CourseItemMeasure.class));
 
+        courseItemMeasureService.createCourseItemMeasure("callId");
+
+        verify(reportDB, never()).add(any(CourseItemMeasure.class));
+    }
+
+    @Test
+    public void shouldSaveAudioTrackerToCourseItemMeasure() {
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.CERTIFICATE_COURSE);
+        String timeStamp = "2012-04-29T09:38:49Z";
+        DateTime dateTime = DateTime.parse(timeStamp);
+        AudioTrackerLogItem audioTrackerLogItem = new AudioTrackerLogItem("contentid", dateTime, 10);
+        audioTrackerLog.addItem(audioTrackerLogItem);
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(null);
+        when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        TimeDimension timeDimension = new TimeDimension(dateTime);
+        when(allTimeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
+        CourseItemDimension courseItemDimension = new CourseItemDimension("blah", "contentid", CourseItemType.AUDIO, null, "filename", 100);
+        when(allCourseItemDimensions.getFor(audioTrackerLogItem.getContentId())).thenReturn(courseItemDimension);
+
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
+
+
+        courseItemMeasureService.createCourseItemMeasure(callId);
+
+        ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
+        verify(reportDB).add(captor.capture());
+        CourseItemMeasure courseItemMeasure = captor.getValue();
+        assertEquals(frontLineWorkerDimension, courseItemMeasure.getFrontLineWorkerDimension());
+        assertEquals(locationDimension, courseItemMeasure.getLocationDimension());
+        assertEquals(timeDimension, courseItemMeasure.getTimeDimension());
+        assertEquals(new Timestamp(dateTime.getMillis()), courseItemMeasure.getTimestamp());
+        assertEquals(10, (int) courseItemMeasure.getPercentage());
+        verify(audioTrackerLogService).deleteLogsFor(callId);
+    }
+
+    @Test
+    public void shouldDoNothingIfAudioTrackerLogIsNull() {
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(null);
+        when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);
+
+        courseItemMeasureService.createCourseItemMeasure(callId);
+
+        verify(reportDB, never()).add(any(CourseItemMeasure.class));
     }
 }

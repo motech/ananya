@@ -21,6 +21,10 @@ public class AllCourseItemDimensions {
         return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME_AND_TYPE, new String[]{"name", "type"}, new Object[]{name, type.name()});
     }
 
+    public CourseItemDimension getFor(String contentId) {
+        return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_CONTENT_ID, new String[]{"contentId"}, new Object[]{contentId});
+    }
+
     public CourseItemDimension add(CourseItemDimension courseItemDimension) {
         template.save(courseItemDimension);
         return courseItemDimension;
