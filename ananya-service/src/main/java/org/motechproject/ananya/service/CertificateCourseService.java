@@ -43,7 +43,7 @@ public class CertificateCourseService {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
 
         boolean isNewFLW = frontLineWorkerService.isNewFLW(msisdn);
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, operator);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator);
         if (isNewFLW)
             dataPublishService.publishNewRegistration(msisdn);
 

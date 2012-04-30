@@ -13,10 +13,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
@@ -49,7 +46,7 @@ public class CertificateCourseServiceTest {
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
 
-        when(frontlineWorkerService.createOrUpdatePartiallyRegistered(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator)).thenReturn(frontLineWorker);
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator);
         assertEquals(bookMark.asJson(), callerData.getBookmark());

@@ -22,6 +22,9 @@ public class FrontLineWorkerDimension {
 
     @Column(name="name")
     private String name;
+    
+    @Column (name="designation")
+    private String designation;
 
     @Column(name="status")
     private String status;
@@ -29,10 +32,11 @@ public class FrontLineWorkerDimension {
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String name, String status) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String name, String designation, String status) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
+        this.designation = designation;
         this.status = status;
     }
 
@@ -76,9 +80,18 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public void update(String operator, String name, String status) {
+    public void update(String operator, String name, String status, String designation) {
         this.operator = operator;
         this.name = name;
         this.status = status;
+        this.designation = designation;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 }

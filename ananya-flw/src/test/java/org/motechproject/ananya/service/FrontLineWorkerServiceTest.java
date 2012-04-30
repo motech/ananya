@@ -42,14 +42,14 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, frontLineWorker.getOperator());
+        frontLineWorkerService.createOrUpdateUnregistered(msisdn, frontLineWorker.getOperator());
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker savedFrontLineWorker = captor.getValue();
         assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.status());
+        assertEquals(RegistrationStatus.UNREGISTERED, savedFrontLineWorker.status());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setOperator("airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers, never()).update(frontLineWorker);
@@ -74,7 +74,7 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdatePartiallyRegistered(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, "airtel");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).update(frontLineWorker);

@@ -23,7 +23,7 @@ public class CertificateCourseWebservice {
     }
 
     public CertificateCourseResponse requestForTransferData(CertificateCourseRequest request) throws IOException {
-        String webPage ="/ananya/transferdata.js";
+        String webPage ="/ananya/transferdata";
         MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
         MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
         MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
@@ -45,7 +45,7 @@ public class CertificateCourseWebservice {
     }
 
     public CertificateCourseResponse requestForDisconnect(CertificateCourseRequest request) throws IOException {
-        String webPage ="/ananya/transferdata/disconnect.js";
+        String webPage ="/ananya/transferdata/disconnect";
         MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
         MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
         MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());

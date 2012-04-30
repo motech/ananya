@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.SMSReference;
@@ -86,7 +87,7 @@ public class SMSSynchroniserIT {
         DateTime toDate = fromDate.plusHours(8);
         String operator = "airtel";
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString());
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("locationId","district","block","panchayat"));
 

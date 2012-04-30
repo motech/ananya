@@ -32,7 +32,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private ReportCard reportCard = new ReportCard();
 
     @JsonProperty
-    private RegistrationStatus status = RegistrationStatus.PARTIALLY_REGISTERED;
+    private RegistrationStatus status = RegistrationStatus.UNREGISTERED;
 
     @JsonProperty
     private Designation designation;
@@ -128,6 +128,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public Designation getDesignation() {
         return designation;
+    }
+
+    public String designationName() {
+        return designation != null ? designation.name() : null;
     }
 
     public Long msisdn() {

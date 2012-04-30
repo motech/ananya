@@ -98,7 +98,7 @@ public class SMSSentDataHandlerIT extends SpringIntegrationTest {
 
         DateTime now = DateTime.now();
         TimeDimension timeDimension= allTimeDimensions.addOrUpdate(now);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "airtel", "Rani", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(msisdn), "airtel", "Rani", "ANGANWADI", "REGISTERED");
 
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         allLocationDimensions.add(locationDimension);

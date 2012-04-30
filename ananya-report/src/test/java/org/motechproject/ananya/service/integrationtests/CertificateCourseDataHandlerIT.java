@@ -119,9 +119,9 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         TimeDimension timeDimension1 = allTimeDimensions.addOrUpdate(now);
         TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));
 
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "");
+        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "", "");
 
-        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
+        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "", "");
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         allLocationDimensions.add(locationDimension);
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());

@@ -109,7 +109,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
         allCallLogs.add(callLog);
 
-        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "");
+        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "", "");
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         allLocationDimensions.add(locationDimension);
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());

@@ -46,12 +46,12 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public FrontLineWorker createOrUpdatePartiallyRegistered(String callerId, String operator) {
+    public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, operator);
-            frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
+            frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
             allFrontLineWorkers.add(frontLineWorker);
             log.info("Created:" + frontLineWorker);
             return frontLineWorker;
@@ -113,7 +113,7 @@ public class FrontLineWorkerService {
     }
 
     public FrontLineWorker getFLWForJobAidCallerData(String callerId, String operator) {
-        FrontLineWorker frontLineWorker = createOrUpdatePartiallyRegistered(callerId, operator);
+        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator);
         DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
 
         if (lastJobAidAccessTime != null &&

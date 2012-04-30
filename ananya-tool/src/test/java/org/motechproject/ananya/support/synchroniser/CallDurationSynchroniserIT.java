@@ -7,10 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.CallFlowType;
-import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogItem;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -88,7 +85,7 @@ public class CallDurationSynchroniserIT {
     }
 
     private void setUpTransactionData(String callerId) {
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "airtel", "name", RegistrationStatus.PARTIALLY_REGISTERED.toString());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "airtel", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString());
         template.save(frontLineWorkerDimension);
         LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         template.save(locationDimension);

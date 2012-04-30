@@ -289,5 +289,11 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="16">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="designation" type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>
