@@ -68,8 +68,7 @@ public class JobAidService {
 
     public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {
         log.info("Audio Tracker Request List " + audioTrackerRequestList);
-        if (audioTrackerRequestList.isEmpty())
-            return;
+        if (audioTrackerRequestList.isEmpty()) return;
 
         AudioTrackerLog audioTrackerLog = createAudioTrackerLog(audioTrackerRequestList);
 

@@ -11,7 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.CallDuration;
+import org.motechproject.ananya.domain.CallDurationList;
+import org.motechproject.ananya.domain.CallEvent;
+import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.request.AudioTrackerRequest;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
@@ -29,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -83,7 +85,7 @@ public class CertificateCourseCallDataControllerTest {
 
         verify(certificateCourseService).saveState(argThat(new CertificationCourseStateRequestListMatcher(expectedStateRequestList)));
 
-        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(callId, callerId, CallEvent.CALL_START, 1231413));
+        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1231413));
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
 
         ArgumentCaptor<AudioTrackerRequestList> captor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
@@ -140,7 +142,7 @@ public class CertificateCourseCallDataControllerTest {
 
         String s = transferCallDataController.receiveCallData(request);
 
-        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration("123", "456", CallEvent.CALL_START, 1330320462000L));
+        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1330320462000L));
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
     }
 
@@ -159,8 +161,8 @@ public class CertificateCourseCallDataControllerTest {
         transferCallDataController.receiveCallData(request);
 
         List<CallDuration> expectedCallDurations = Arrays.asList(
-                new CallDuration("123", "456", CallEvent.REGISTRATION_START, 1330320462000L),
-                new CallDuration("123", "456", CallEvent.REGISTRATION_END, 1330320480000L)
+                new CallDuration(CallEvent.REGISTRATION_START, 1330320462000L),
+                new CallDuration(CallEvent.REGISTRATION_END, 1330320480000L)
         );
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
     }

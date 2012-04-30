@@ -45,4 +45,7 @@ public class BaseLog extends MotechBaseDataObject {
         return Long.valueOf(callerId);
     }
 
+    public String getCalledNumber() {
+        return calledNumber;
+    }
 }

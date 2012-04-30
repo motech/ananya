@@ -26,4 +26,12 @@ public class AudioTrackerLog extends BaseLog {
     public void addItem(AudioTrackerLogItem audioTrackerLogItem) {
         audioTrackerLogItems.add(audioTrackerLogItem);
     }
+
+    public ServiceType getServiceType() {
+        return serviceType;
+    }
+
+    public List<AudioTrackerLogItem> getAudioTrackerLogItems() {
+        return audioTrackerLogItems;
+    }
 }

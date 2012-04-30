@@ -40,10 +40,10 @@ public class CallLoggerServiceTest {
         long courseEndTime = start.plus(10).getMillis();
         long callEndTime = start.plus(12).getMillis();
 
-        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CALL_START, callStartTime));
-        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_START, courseStartTime));
-        callDurations.add(new CallDuration("callId", "callerId", CallEvent.CERTIFICATECOURSE_END, courseEndTime));
-        callDurations.add(new CallDuration("callId", "callerId", CallEvent.DISCONNECT, callEndTime));
+        callDurations.add(new CallDuration(CallEvent.CALL_START, callStartTime));
+        callDurations.add(new CallDuration(CallEvent.CERTIFICATECOURSE_START, courseStartTime));
+        callDurations.add(new CallDuration(CallEvent.CERTIFICATECOURSE_END, courseEndTime));
+        callDurations.add(new CallDuration(CallEvent.DISCONNECT, callEndTime));
 
         callLoggerService.saveAll(callDurationList);
 

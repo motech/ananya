@@ -41,8 +41,6 @@ public class CallDurationList {
         Type collectionType = new TypeToken<CallDuration>() {
         }.getType();
         CallDuration callDuration = gson.fromJson(data, collectionType);
-        callDuration.setCallId(callId);
-        callDuration.setCallerId(callerId);
         list.add(callDuration);
     }
 }

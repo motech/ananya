@@ -2,12 +2,19 @@ package org.motechproject.ananya.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.AudioTrackerLog;
+import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
+
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -80,5 +87,42 @@ public class JobAidServiceTest {
 
         verify(frontLineWorkerService).updateJobAidCurrentUsageFor(callerId, currentUsage);
         verify(frontLineWorkerService).updateJobAidLastAccessTime(callerId);
+    }
+
+    @Test
+    public void shouldSaveAudioTrackerState(){
+        String callerId = "callerId";
+        String callId = "callId";
+        String jsonString1 =
+                "{" +
+                        "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
+                        "    \"duration\" : \"123\",                             " +
+                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "}";
+
+        String jsonString2 =
+                "{" +
+                        "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926999\",     " +
+                        "    \"duration\" : \"121\",                             " +
+                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "}";
+
+        AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId, callerId);
+        audioTrackerRequestList.add(jsonString1, "1");
+        audioTrackerRequestList.add(jsonString2, "2");
+        jobAidService.saveAudioTrackerState(audioTrackerRequestList);
+
+        ArgumentCaptor<AudioTrackerLog> captor = ArgumentCaptor.forClass(AudioTrackerLog.class);
+        verify(audioTrackerLogService).createNew(captor.capture());
+
+        AudioTrackerLog audioTrackerLog = captor.getValue();
+        assertEquals(callerId,audioTrackerLog.getCallerId());
+        assertEquals(callId,audioTrackerLog.getCallId());
+        assertEquals(ServiceType.JOB_AID,audioTrackerLog.getServiceType());
+        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.getAudioTrackerLogItems();
+        assertEquals(2, audioTrackerLogItems.size());
+        assertEquals("e79139b5540bf3fc8d96635bc2926f90",audioTrackerLogItems.get(0).getContentId());
+        assertEquals("123456789",audioTrackerLogItems.get(0).getTimeStamp());
+        assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
     }
 }
