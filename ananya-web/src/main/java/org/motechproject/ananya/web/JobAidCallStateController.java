@@ -26,11 +26,12 @@ public class JobAidCallStateController {
     private CallLoggerService callLoggerService;
 
     @Autowired
-    public JobAidCallStateController(JobAidService jobAidService) {
+    public JobAidCallStateController(JobAidService jobAidService, CallLoggerService callLoggerService) {
         this.jobAidService = jobAidService;
+        this.callLoggerService = callLoggerService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/jobaid/tranferdata/disconnect")
+    @RequestMapping(method = RequestMethod.GET, value = "/jobaid/transferdata/disconnect")
     @ResponseBody
     public String updateJobAidCallData(HttpServletRequest request){
         final String callId = request.getParameter("callId");
@@ -57,16 +58,6 @@ public class JobAidCallStateController {
 
     }
 
-    private String getReturnVxml() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
-        builder.append("<form id=\"endCall\">");
-        builder.append("<block><disconnect/></block>");
-        builder.append("/form></vxml>");
-        return builder.toString();
-    }
-
-
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid/updateprompt")
     @ResponseBody
     public String updateJobAidPrompts(HttpServletRequest request) {
@@ -80,6 +71,7 @@ public class JobAidCallStateController {
         jobAidService.updateJobAidPrompts(new JobAidPromptRequest(callId, callerId, promptIds));
         return validECMAResponse();
     }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid/updateusage")
     @ResponseBody
@@ -97,6 +89,15 @@ public class JobAidCallStateController {
 
     private String validECMAResponse() {
         return "var ananyaResponse = \"ANANYA_SUCCESS\";";
+    }
+
+    private String getReturnVxml() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
+        builder.append("<form id=\"endCall\">");
+        builder.append("<block><disconnect/></block>");
+        builder.append("/form></vxml>");
+        return builder.toString();
     }
 
 }

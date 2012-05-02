@@ -135,7 +135,7 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         MyWebClient.PostParam calledNumberParam = param("calledNumber", calledNumber);
         MyWebClient.PostParam jsonParam = param("dataToPost", postedData());
 
-        new MyWebClient().post(getAppServerHostUrl()+"/jobaid/tranferdata/disconnect",
+        new MyWebClient().post(getAppServerHostUrl()+"/jobaid/transferdata/disconnect",
                 callIdParam, callerIdParam, calledNumberParam, jsonParam);
 
         CallLog callLog =  allCallLogs.findByCallId(callId);

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class JobAidService {
 
     private static Logger log = LoggerFactory.getLogger(JobAidService.class);
-    
+
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
     private DataPublishService dataPublishService;
@@ -46,24 +46,21 @@ public class JobAidService {
 
         boolean isNewFLW = frontLineWorkerService.isNewFLW(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
-
-        if(isNewFLW) {
+        if (isNewFLW)
             dataPublishService.publishNewRegistration(callerId);
-        }
 
-        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
 
         return new JobAidCallerDataResponse(
                 frontLineWorker.status().isRegistered(),
-                currentJobAidUsage,
+                frontLineWorker.getCurrentJobAidUsage(),
                 allowedUsagePerMonthForOperator,
                 frontLineWorker.getPromptsHeard());
     }
 
-    public void updateCurrentUsageAndSetLastAccessTimeForUser(String msisdn, Integer callDuration) {
-        frontLineWorkerService.updateJobAidCurrentUsageFor(msisdn, callDuration);
-        frontLineWorkerService.updateJobAidLastAccessTime(msisdn);
+    public void updateCurrentUsageAndSetLastAccessTimeForUser(String callerId, Integer callDuration) {
+        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, callDuration);
+        frontLineWorkerService.updateJobAidLastAccessTime(callerId);
     }
 
     public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {
@@ -71,17 +68,17 @@ public class JobAidService {
         if (audioTrackerRequestList.isEmpty()) return;
 
         AudioTrackerLog audioTrackerLog = createAudioTrackerLog(audioTrackerRequestList);
-
         audioTrackerLogService.createNew(audioTrackerLog);
     }
 
     private AudioTrackerLog createAudioTrackerLog(AudioTrackerRequestList audioTrackerRequestList) {
-        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(audioTrackerRequestList.getCallId(),
-                audioTrackerRequestList.getCallerId(), ServiceType.JOB_AID);
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(
+                audioTrackerRequestList.getCallId(),
+                audioTrackerRequestList.getCallerId(),
+                ServiceType.JOB_AID);
 
-        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll()) {
+        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll())
             audioTrackerLog.addItem(AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest));
-        }
 
         return audioTrackerLog;
     }
