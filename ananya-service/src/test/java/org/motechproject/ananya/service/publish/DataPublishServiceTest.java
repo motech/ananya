@@ -3,6 +3,7 @@ package org.motechproject.ananya.service.publish;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.ServiceType;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -25,8 +26,8 @@ public class DataPublishServiceTest {
 
     @Test
     public void shouldPickTheRightImplementationBasedOnConfiguration() {
-        dataPublishService.publishCallDisconnectEvent("123");
-        verify(dbPublishService, never()).publishCallDisconnectEvent("123");
-        verify(queuePublishService).publishCallDisconnectEvent("123");
+        dataPublishService.publishCallDisconnectEvent("123", ServiceType.JOB_AID);
+        verify(dbPublishService, never()).publishCallDisconnectEvent("123", ServiceType.JOB_AID);
+        verify(queuePublishService).publishCallDisconnectEvent("123", ServiceType.JOB_AID);
     }
 }

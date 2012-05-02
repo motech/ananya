@@ -54,4 +54,8 @@ public class JobAidContentDimension {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+    public Integer getId() {
+        return id;
+    }
 }

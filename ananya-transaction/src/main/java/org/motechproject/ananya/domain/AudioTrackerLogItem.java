@@ -11,6 +11,8 @@ public class AudioTrackerLogItem {
     @JsonProperty
     private  Integer duration;
 
+    public AudioTrackerLogItem() {}
+
     public AudioTrackerLogItem(String contentId, DateTime timeStamp, Integer duration) {
         this.contentId = contentId;
         this.timeStamp = timeStamp;

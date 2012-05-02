@@ -15,6 +15,7 @@ import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ public class JobAidContentMeasureService {
 
     public JobAidContentMeasureService() { }
 
+    @Autowired
     public JobAidContentMeasureService(AudioTrackerLogService audioTrackerLogService,
                                        AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                        AllRegistrationMeasures allRegistrationMeasures,

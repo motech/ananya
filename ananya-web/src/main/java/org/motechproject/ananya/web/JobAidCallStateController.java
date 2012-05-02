@@ -1,12 +1,14 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.domain.CallDurationList;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.JobAidService;
+import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +26,14 @@ public class JobAidCallStateController {
 
     private JobAidService jobAidService;
     private CallLoggerService callLoggerService;
+    private DataPublishService dataPublishService;
 
     @Autowired
-    public JobAidCallStateController(JobAidService jobAidService, CallLoggerService callLoggerService) {
+    public JobAidCallStateController(JobAidService jobAidService, CallLoggerService callLoggerService,
+                                     DataPublishService dataPublishService) {
         this.jobAidService = jobAidService;
         this.callLoggerService = callLoggerService;
+        this.dataPublishService = dataPublishService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid/transferdata/disconnect")
@@ -52,6 +57,8 @@ public class JobAidCallStateController {
 
         jobAidService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
+
+        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
 
         log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
         return getReturnVxml();

@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
-import org.motechproject.ananya.service.CourseItemMeasureService;
+import org.motechproject.ananya.service.JobAidContentMeasureService;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;
@@ -14,27 +14,28 @@ import java.util.Map;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class CertificateCourseDataHandlerTest {
+public class JobAidDataHandlerTest {
 
-    private CertificateCourseDataHandler handler;
+
+    private JobAidDataHandler handler;
     @Mock
-    private CourseItemMeasureService courseItemMeasureService;
+    private JobAidContentMeasureService jobAidContentMeasureService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        handler = new CertificateCourseDataHandler(courseItemMeasureService);
+        handler = new JobAidDataHandler(jobAidContentMeasureService);
     }
 
     @Test
-    public void shouldHandleCertificateCourseData() {
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, "callId");
+    public void shouldHandleJobAidData() {
+        LogData logData = new LogData(LogType.JOBAID, "callId");
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        handler.handleCertificateCourseData(event);
+        handler.handleJobAidData(event);
 
-        verify(courseItemMeasureService).createCourseItemMeasure("callId");
+        verify(jobAidContentMeasureService).createJobAidContentMeasure("callId");
     }
 }

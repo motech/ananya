@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -30,15 +31,31 @@ public class ReportPublishServiceTest {
     }
 
     @Test
-    public void shouldPublishDisconnectEvent(){
+    public void shouldPublishCertificateCourseDisconnectEvent(){
         String callId = "callID";
-        reportPublishService.publishCallDisconnectEvent(callId);
+        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CALL_DURATION_DATA_KEY), captor.capture());
         List<LogData> captured = captor.getAllValues();
         
+        assertEquals(2, captured.size());
+        for(LogData logData: captured){
+            assertEquals(callId, logData.getDataId());
+        }
+    }
+
+    @Test
+    public void shouldPublishJobAidDisconnectEvent(){
+        String callId = "callID";
+        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+
+        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
+        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CALL_DURATION_DATA_KEY), captor.capture());
+        List<LogData> captured = captor.getAllValues();
+
         assertEquals(2, captured.size());
         for(LogData logData: captured){
             assertEquals(callId, logData.getDataId());

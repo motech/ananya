@@ -1,6 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.domain.CallDurationList;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
@@ -72,7 +73,7 @@ public class CertificateCourseCallDataController {
         final String callId = request.getParameter("callId");
         receiveCallData(request);
 
-        dataPublishService.publishCallDisconnectEvent(callId);
+        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         log.info("Call ended: " + callId);
         return getReturnVxml();

@@ -2,6 +2,7 @@ package org.motechproject.ananya.service.publish;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.LogData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +38,9 @@ public class DataPublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId) {
+    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
         try {
-            publishService.publishCallDisconnectEvent(callId);
+            publishService.publishCallDisconnectEvent(callId, serviceType);
         }
         catch (Exception e) {
             handlePublishServiceException(e);

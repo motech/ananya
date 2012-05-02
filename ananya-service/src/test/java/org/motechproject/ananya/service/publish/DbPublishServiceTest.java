@@ -4,12 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
-import org.motechproject.ananya.service.CallDurationMeasureService;
-import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.service.RegistrationMeasureService;
-import org.motechproject.ananya.service.SMSSentMeasureService;
+import org.motechproject.ananya.service.*;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -24,13 +22,16 @@ public class DbPublishServiceTest {
     private CallDurationMeasureService callDurationMeasureService;
     @Mock
     private SMSSentMeasureService smsSentMeasureService;
+    @Mock
+    private JobAidContentMeasureService jobAidContentMeasureService;
 
     private DbPublishService dbPublishService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        dbPublishService = new DbPublishService(registrationMeasureService, courseItemMeasureService, callDurationMeasureService, smsSentMeasureService);
+        dbPublishService = new DbPublishService(registrationMeasureService, courseItemMeasureService,
+                callDurationMeasureService, smsSentMeasureService, jobAidContentMeasureService);
     }
 
     @Test
@@ -44,12 +45,22 @@ public class DbPublishServiceTest {
     }
 
     @Test
-    public void shouldPublishCallDisconnectEvent() throws Exception {
+    public void shouldPublishCallDisconnectEventForCertificateCourse() throws Exception {
         String callId = "141414";
 
-        dbPublishService.publishCallDisconnectEvent(callId);
+        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         verify(courseItemMeasureService).createCourseItemMeasure(callId);
+        verify(callDurationMeasureService).createCallDurationMeasure(callId);
+    }
+
+    @Test
+    public void shouldPublishCallDisconnectEventForJobAidCourse() throws Exception {
+        String callId = "141414";
+
+        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+
+        verify(jobAidContentMeasureService).createJobAidContentMeasure(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
     }
 
