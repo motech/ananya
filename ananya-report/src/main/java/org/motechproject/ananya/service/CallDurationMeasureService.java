@@ -49,6 +49,7 @@ public class CallDurationMeasureService {
                 continue;
 
             Long callerId = callLog.callerIdAsLong();
+            Long calledNumber = callLog.calledNumberAsLong();
             FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
             RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwDimension.getId());
             LocationDimension locationDimension = registrationMeasure.getLocationDimension();
@@ -57,6 +58,7 @@ public class CallDurationMeasureService {
                     flwDimension,
                     locationDimension,
                     callId,
+                    calledNumber,
                     callLogItem.duration(),
                     callLogItem.getStartTime(),
                     callLogItem.getEndTime(),

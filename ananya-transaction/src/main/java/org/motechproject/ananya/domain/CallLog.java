@@ -53,4 +53,8 @@ public class CallLog extends BaseLog {
     public Long callerIdAsLong() {
         return Long.parseLong(callerId);
     }
+
+    public Long calledNumberAsLong() {
+        return Long.parseLong(calledNumber);
+    }
 }

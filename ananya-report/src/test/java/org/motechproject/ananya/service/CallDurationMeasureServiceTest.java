@@ -102,13 +102,14 @@ public class CallDurationMeasureServiceTest {
         DateTime callEndTime = now.plusSeconds(20);
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
+        String calledNumber = "321";
         LocationDimension locationDimension = new LocationDimension("","","","");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
 
-        CallLog callLog = new CallLog(callId, String.valueOf(callerId), "321");
+        CallLog callLog = new CallLog(callId, String.valueOf(callerId), calledNumber);
 
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
@@ -127,6 +128,7 @@ public class CallDurationMeasureServiceTest {
         CallDurationMeasure callDurationMeasureForCall = callDurationMeasures.get(0);
         assertEquals(20, callDurationMeasureForCall.getDuration());
         assertEquals(callId, callDurationMeasureForCall.getCallId());
+        assertEquals(Long.valueOf(calledNumber), callDurationMeasureForCall.getCalledNumber());
         assertEquals(CallFlowType.CALL.toString(), callDurationMeasureForCall.getType());
         assertEquals(frontLineWorkerDimension, callDurationMeasureForCall.getFrontLineWorkerDimension());
 

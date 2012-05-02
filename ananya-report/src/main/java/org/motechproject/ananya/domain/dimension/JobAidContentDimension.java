@@ -2,9 +2,13 @@ package org.motechproject.ananya.domain.dimension;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "job_aid_content_dimension")
+@NamedQuery(name = JobAidContentDimension.FIND_BY_CONTENT_ID, query = "select d from JobAidContentDimension d where d.contentId = :content_id")
 public class JobAidContentDimension {
+
+    public static final String FIND_BY_CONTENT_ID = "find.by.job.aid.content.id";
 
     @Id
     @Column(name = "id")
@@ -18,10 +22,6 @@ public class JobAidContentDimension {
     @JoinColumn(name = "parent_id")
     private JobAidContentDimension parent;
 
-//    @OneToMany
-//    @JoinColumn(name = "parent_id")
-//    private Set<JobAidContentDimension> children;
-//
     @Column(name = "name")
     private String name;
 
@@ -44,6 +44,14 @@ public class JobAidContentDimension {
         this.name = name;
         this.fileName = fileName;
         this.type = type;
+        this.duration = duration;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 }

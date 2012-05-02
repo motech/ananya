@@ -109,6 +109,7 @@ public class CourseItemMeasureService {
                     frontLineWorkerDimension,
                     locationDimension,
                     logItem.getTimeStamp(),
+                    logItem.getDuration(),
                     getPercentage(logItem, totalDuration)
                     );
 

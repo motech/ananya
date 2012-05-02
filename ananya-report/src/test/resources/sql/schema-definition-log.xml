@@ -295,5 +295,31 @@
         </addColumn>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="17">
+        <addColumn tableName="job_aid_content_measure">
+            <column name="time_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_time_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="18">
+        <addColumn tableName="course_item_measure">
+            <column name="call_id" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="19">
+        <addColumn tableName="course_item_measure">
+            <column name="duration" type="int"/>
+        </addColumn>
+
+        <addColumn tableName="job_aid_content_measure">
+            <column name="duration" type="int"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

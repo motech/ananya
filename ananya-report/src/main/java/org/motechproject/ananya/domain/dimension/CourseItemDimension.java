@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class CourseItemDimension {
 
     public static final String FIND_BY_NAME_AND_TYPE = "find.by.name.and.type";
-    public static final String FIND_BY_CONTENT_ID = "find.by.content.id";
+    public static final String FIND_BY_CONTENT_ID = "find.by.certificate.course.content.id";
 
     @Id
     @Column(name = "id")

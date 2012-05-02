@@ -49,10 +49,12 @@ public class CallDurationMeasure {
     public CallDurationMeasure() {
     }
 
-    public CallDurationMeasure(FrontLineWorkerDimension flwDimension, LocationDimension locationDimension, String callId, Integer duration, DateTime startTime, DateTime endTime, String type) {
+    public CallDurationMeasure(FrontLineWorkerDimension flwDimension, LocationDimension locationDimension, String callId,
+                               Long calledNumber, Integer duration, DateTime startTime, DateTime endTime, String type) {
         this.frontLineWorkerDimension = flwDimension;
         this.locationDimension = locationDimension;
         this.callId = callId;
+        this.calledNumber = calledNumber;
         this.duration = duration;
         this.type = type;
         this.startTime = new Timestamp(startTime.getMillis());
@@ -68,7 +70,6 @@ public class CallDurationMeasure {
     }
 
     public String getCallId() {
-
         return callId;
     }
 
@@ -86,5 +87,9 @@ public class CallDurationMeasure {
 
     public Timestamp getEndTime() {
         return endTime;
+    }
+
+    public Long getCalledNumber() {
+        return calledNumber;
     }
 }

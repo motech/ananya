@@ -17,11 +17,8 @@ import java.sql.Timestamp;
                 query = "select r from CourseItemMeasure r where r.frontLineWorkerDimension.id=:flw_id and r.event=:event"),
         @NamedQuery(name = CourseItemMeasure.FIND_BY_FLW_AND_COURSE_ITEM_MEASURE_AND_EVENT,
                 query = "select r from CourseItemMeasure r where r.frontLineWorkerDimension.id=:flw_id and r.courseItemDimension.id=:course_item_id and r.event=:event")
-
-
 }
 )
-
 public class CourseItemMeasure {
 
     public static final String FIND_BY_FLW_AND_EVENT = "find.by.flw.and.event";
@@ -54,11 +51,17 @@ public class CourseItemMeasure {
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
+    @Column(name = "duration")
+    private Integer duration;
+
     @Column(name = "percentage")
     private Integer percentage;
 
     @Column(name = "event")
     private String event;
+
+    @Column(name = "call_id")
+    private String callId;
 
     public TimeDimension getTimeDimension() {
         return timeDimension;
@@ -114,12 +117,14 @@ public class CourseItemMeasure {
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
                              DateTime timestamp,
+                             Integer duration,
                              Integer percentage) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.locationDimension = locationDimension;
         this.timestamp = new Timestamp(timestamp.getMillis());
+        this.duration = duration;
         this.percentage = percentage;
     }
 }
