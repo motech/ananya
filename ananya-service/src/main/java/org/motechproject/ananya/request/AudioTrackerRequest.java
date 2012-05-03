@@ -12,6 +12,9 @@ public class AudioTrackerRequest extends BaseRequest {
     private String timeStamp;
     private Integer duration;
 
+    public AudioTrackerRequest() {
+    }
+
     public static AudioTrackerRequest createFrom(String callId, String callerId, String json, String token) {
         Gson gson = new Gson();
         Type type = new TypeToken<AudioTrackerRequest>() {
