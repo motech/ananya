@@ -12,10 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.CallDuration;
-import org.motechproject.ananya.domain.CallDurationList;
-import org.motechproject.ananya.domain.CallEvent;
-import org.motechproject.ananya.domain.TransferData;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequest;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
@@ -111,7 +108,7 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("dataToPost")).thenReturn("[]");
 
         transferCallDataController.receiveIVRDataAtDisconnect(request);
-        verify(dataPublishService).publishCallDisconnectEvent(callId);
+        verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
 
     @Test
