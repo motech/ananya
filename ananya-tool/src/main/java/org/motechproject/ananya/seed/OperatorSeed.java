@@ -26,6 +26,7 @@ public class OperatorSeed {
         operator_usage.put("reliance", convertMinutesToMilliSeconds(34));
         operator_usage.put("bsnl", convertMinutesToMilliSeconds(28));
         operator_usage.put("undefined", convertMinutesToMilliSeconds(28));
+        operator_usage.put("longcode", convertMinutesToMilliSeconds(50));
     }
 
     public static Integer convertMinutesToMilliSeconds(int minutes) {

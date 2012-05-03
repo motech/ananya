@@ -35,6 +35,7 @@ public class RegistrationMeasure {
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)
     private LocationDimension locationDimension;
+
     @ManyToOne
     @JoinColumn(name = "flw_id", nullable = false)
     private FrontLineWorkerDimension frontLineWorkerDimension;
