@@ -128,6 +128,6 @@ public class CourseItemMeasureService {
     }
 
     private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
-        return (logItem.getDuration() * 100 )/totalDuration;
+        return (int) Math.round((double)logItem.getDuration() * 100 /totalDuration);
     }
 }

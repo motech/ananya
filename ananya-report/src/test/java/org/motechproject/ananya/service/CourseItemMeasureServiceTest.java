@@ -213,17 +213,19 @@ public class CourseItemMeasureServiceTest {
 
     @Test
     public void shouldSaveAudioTrackerToCourseItemMeasure() {
+        int duration = 38;
+        int totalCourseDuration = 1000;
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.CERTIFICATE_COURSE);
         String timeStamp = "2012-04-29T09:38:49Z";
         DateTime dateTime = DateTime.parse(timeStamp);
-        AudioTrackerLogItem audioTrackerLogItem = new AudioTrackerLogItem("contentid", dateTime, 10);
+        AudioTrackerLogItem audioTrackerLogItem = new AudioTrackerLogItem("contentid", dateTime, duration);
         audioTrackerLog.addItem(audioTrackerLogItem);
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(null);
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         TimeDimension timeDimension = new TimeDimension(dateTime);
         when(allTimeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
-        CourseItemDimension courseItemDimension = new CourseItemDimension("blah", "contentid", CourseItemType.AUDIO, null, "filename", 100);
+        CourseItemDimension courseItemDimension = new CourseItemDimension("blah", "contentid", CourseItemType.AUDIO, null, "filename", totalCourseDuration);
         when(allCourseItemDimensions.getFor(audioTrackerLogItem.getContentId())).thenReturn(courseItemDimension);
 
         when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
@@ -238,7 +240,7 @@ public class CourseItemMeasureServiceTest {
         assertEquals(locationDimension, courseItemMeasure.getLocationDimension());
         assertEquals(timeDimension, courseItemMeasure.getTimeDimension());
         assertEquals(new Timestamp(dateTime.getMillis()), courseItemMeasure.getTimestamp());
-        assertEquals(10, (int) courseItemMeasure.getPercentage());
+        assertEquals(4, (int) courseItemMeasure.getPercentage());
         verify(audioTrackerLogService).deleteLogsFor(callId);
     }
 
