@@ -74,7 +74,7 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("dataToPost")).thenReturn(postedData());
 
-        transferCallDataController.receiveCallData(request);
+        transferCallDataController.receiveIVRDataAtDisconnect(request);
 
         CertificationCourseStateRequest stateRequest = new CertificationCourseStateRequest();
         stateRequest.setCallId(callId);
@@ -138,7 +138,7 @@ public class CertificateCourseCallDataControllerTest {
 
         when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{\"time\":1330320462000,\"callEvent\":\"CALL_START\"}}]");
 
-        String s = transferCallDataController.receiveCallData(request);
+        String s = transferCallDataController.receiveIVRDataAtDisconnect(request);
 
         List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1330320462000L));
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
@@ -156,7 +156,7 @@ public class CertificateCourseCallDataControllerTest {
                 "\"data\":{\"time\":1330320462000,\"callEvent\":\"REGISTRATION_START\"}}," +
                 "{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{\"time\":1330320480000,\"callEvent\":\"REGISTRATION_END\"}}]");
 
-        transferCallDataController.receiveCallData(request);
+        transferCallDataController.receiveIVRDataAtDisconnect(request);
 
         List<CallDuration> expectedCallDurations = Arrays.asList(
                 new CallDuration(CallEvent.REGISTRATION_START, 1330320462000L),

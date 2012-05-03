@@ -79,7 +79,7 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         String jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}}]", token);
         transferDataRequest.setJsonPostData(jsonData);
 
-        CertificateCourseResponse response =  certificateCourseWebService.requestForTransferData(transferDataRequest);
+        CertificateCourseResponse response =  certificateCourseWebService.requestForDisconnect(transferDataRequest);
 
         ReportCard reportCard = new ReportCard();
         reportCard.addScore(new Score("8", "7", true, newCallId));

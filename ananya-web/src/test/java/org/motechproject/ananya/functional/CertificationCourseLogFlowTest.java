@@ -55,7 +55,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         MyWebClient.PostParam callIdParam = param("callId", callId);
         MyWebClient.PostParam dataToPost = param("dataToPost", "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata",callIdParam, callerId, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect",callIdParam, callerId, dataToPost);
 
         CertificationCourseLog byCallId = allCertificateCourseLogs.findByCallId(callId);
         assertEquals(byCallId.getCourseLogItems().size(), 1);
@@ -167,7 +167,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"13\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata",callId, callerId, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect",callId, callerId, dataToPost);
 
 //        CertificationCourseLog byCallId = allCertificationCourseLogs.findByCallId("99865740001234567890");
 //        assertEquals(byCallId.getCourseLogItems().size(), 1);

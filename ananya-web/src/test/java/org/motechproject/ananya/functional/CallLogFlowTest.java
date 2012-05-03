@@ -56,7 +56,7 @@ public class CallLogFlowTest extends SpringIntegrationTest {
                         "{\"token\":\"3\",\"type\":\"callDuration\",\"data\":{'time':1330320624871,'callEvent':'JOBAID_START'}}," +
                         "{\"token\":\"4\",\"type\":\"callDuration\",\"data\":{'time':1330320634871,'callEvent':'DISCONNECT'}}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata", callIdParam, callerIdParam, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callIdParam, callerIdParam, dataToPost);
 
         CallLog callLog = allCallLogs.findByCallId(callId);
         assertEquals(callId, callLog.getCallId());

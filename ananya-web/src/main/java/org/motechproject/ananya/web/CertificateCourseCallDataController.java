@@ -37,10 +37,9 @@ public class CertificateCourseCallDataController {
         this.dataPublishService = dataPublishService;
     }
 
-    //TODO Remove this request
-    @RequestMapping(method = RequestMethod.POST, value = "/transferdata")
+    @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
     @ResponseBody
-    public String receiveCallData(HttpServletRequest request) {
+    public String receiveIVRDataAtDisconnect(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
         final String callerId = request.getParameter("callerId");
         final String calledNumber = request.getParameter("calledNumber");
@@ -62,19 +61,9 @@ public class CertificateCourseCallDataController {
         certificateCourseService.saveState(stateRequestList);
         certificateCourseService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
-
-        log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
-        return getReturnVxml();
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
-    @ResponseBody
-    public String receiveIVRDataAtDisconnect(HttpServletRequest request) {
-        final String callId = request.getParameter("callId");
-        receiveCallData(request);
-
         dataPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
+        log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
         log.info("Call ended: " + callId);
         return getReturnVxml();
     }
