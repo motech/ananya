@@ -11,7 +11,11 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "job_aid_content_measure")
+@NamedQuery(name = JobAidContentMeasure.FIND_BY_CALL_ID, query = "select m from JobAidContentMeasure m where m.callId = :call_id")
 public class JobAidContentMeasure {
+
+    public static final String FIND_BY_CALL_ID = "find.by.job.aid.call.id";
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,5 +96,4 @@ public class JobAidContentMeasure {
     public Integer getDuration() {
         return duration;
     }
-
 }

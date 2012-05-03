@@ -8,18 +8,24 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
+import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
+import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,6 +48,10 @@ public class ReportDb {
     private AllSMSSentMeasures allSMSSentMeasures;
     @Autowired
     private TestDataAccessTemplate template;
+    @Autowired
+    private AllJobAidContentMeasures allJobAidContentMeasures;
+    @Autowired
+    private AllAudioTrackerLogs allAudioTrackerLogs;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
@@ -95,11 +105,30 @@ public class ReportDb {
         return this;
     }
 
+    public JobAidContentDimension getExistingAudioDimension() {
+        List<JobAidContentDimension> jobAidContentDimensionList = template.loadAll(JobAidContentDimension.class);
+        for(JobAidContentDimension jobAidContentDimension : jobAidContentDimensionList) {
+            if (jobAidContentDimension.getType().equalsIgnoreCase("audio")) return jobAidContentDimension;
+        }
+        return null;
+    }
+
     public ReportDb confirmSMSSent(String callerId, String smsReferenceNumber) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
         assertNotNull(smsSentMeasure);
-        assertEquals(smsReferenceNumber,smsSentMeasure.getSmsReferenceNumber());
+        assertEquals(smsReferenceNumber, smsSentMeasure.getSmsReferenceNumber());
         return this;
+    }
+
+    public void confirmJobAidContentMeasureForDisconnectEvent(String callId) {
+        JobAidContentMeasure jobAidContentMeasure = allJobAidContentMeasures.findByCallId(callId);
+        assertNotNull(jobAidContentMeasure);
+    }
+
+    public void clearJobAidMeasureAndAudioTrackerLogs(String callId) {
+        JobAidContentMeasure jobAidContentMeasure = allJobAidContentMeasures.findByCallId(callId);
+        template.delete(jobAidContentMeasure);
+        allAudioTrackerLogs.deleteFor(callId);
     }
 }

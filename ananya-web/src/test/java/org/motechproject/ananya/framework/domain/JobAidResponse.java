@@ -60,4 +60,10 @@ public class JobAidResponse {
         assertEquals(times, promptsHeard.get(maxUsagePrompt));
         return this;
     }
+
+    public static JobAidResponse makeForNonJson(String contentAsString) {
+        if(contentAsString == "<dummy/>")
+            return new JobAidResponse();
+        return null;
+    }
 }

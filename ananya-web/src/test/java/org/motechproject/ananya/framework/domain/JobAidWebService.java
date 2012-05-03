@@ -40,6 +40,22 @@ public class JobAidWebService {
         return makeRequest(webPage);
     }
 
+    public JobAidResponse requestForDisconnect(JobAidDisconnectRequest request) throws IOException {
+        String webPage ="/ananya/jobaid/transferdata/disconnect";
+        MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
+        MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
+        MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
+        MyWebClient.PostParam calledNumber = MyWebClient.PostParam.param("calledNumber", request.getCalledNumber());
+        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost, calledNumber);
+    }
+
+    private JobAidResponse makePostRequestForDisconnect(
+            String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId,
+            MyWebClient.PostParam dataToPost, MyWebClient.PostParam calledNumber) throws IOException {
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, calledNumber);
+        return JobAidResponse.makeForNonJson(page.getWebResponse().getContentAsString());
+    }
+
     protected String getAppServerUrl() {
         return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }

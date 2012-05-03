@@ -84,13 +84,13 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         String packet2 = "{" +
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"123456789\"                          " +
+                "    \"timeStamp\" : \"2012-12-31T18:30:00.000Z\"                          " +
                 "}";
 
         String packet3 = "{" +
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"123456789\"                          " +
+                "    \"timeStamp\" : \"2012-12-31T18:30:00.000Z\"                          " +
                 "}";
 
         String packet4 = "{" +
@@ -115,12 +115,12 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
                 "       \"token\" : 2," +
                 "       \"type\"  : \"audioTracker\", " +
                 "       \"data\"  : " + packet3 +
-                "   }" +
+                "   }," +
                 "   {" +
                 "       \"token\" : 3," +
                 "       \"type\"  : \"callDuration\", " +
                 "       \"data\"  : " + packet4 +
-                "   }," +
+                "   }" +
                 "]";
     }
 
@@ -135,7 +135,7 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         MyWebClient.PostParam calledNumberParam = param("calledNumber", calledNumber);
         MyWebClient.PostParam jsonParam = param("dataToPost", postedData());
 
-        new MyWebClient().post(getAppServerHostUrl()+"/jobaid/transferdata/disconnect",
+        new MyWebClient().post(getAppServerHostUrl()+"/ananya/jobaid/transferdata/disconnect",
                 callIdParam, callerIdParam, calledNumberParam, jsonParam);
 
         CallLog callLog =  allCallLogs.findByCallId(callId);
@@ -151,6 +151,6 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         assertEquals(2, audioTrackerLogItems.size());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerLogItems.get(0).getContentId());
         assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
-        assertEquals("123456789", audioTrackerLogItems.get(0).getTimeStamp());
+        assertEquals("2012-12-31T18:30:00.000Z", audioTrackerLogItems.get(0).getTimeStamp().toDateTimeISO().toString());
     }
 }

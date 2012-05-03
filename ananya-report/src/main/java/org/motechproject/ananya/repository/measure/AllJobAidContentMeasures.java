@@ -13,12 +13,14 @@ public class AllJobAidContentMeasures {
     @Autowired
     private DataAccessTemplate template;
 
-    public AllJobAidContentMeasures() {
-
-    }
+    public AllJobAidContentMeasures() { }
 
     public void add(JobAidContentMeasure jobAidContentMeasure){
         template.save(jobAidContentMeasure);
     }
 
+    public JobAidContentMeasure findByCallId(String callId) {
+        return (JobAidContentMeasure)template.getUniqueResult(JobAidContentMeasure.FIND_BY_CALL_ID,
+                new String[] {"call_id"}, new Object[] { callId });
+    }
 }

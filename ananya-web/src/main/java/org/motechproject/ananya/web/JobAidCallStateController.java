@@ -36,7 +36,7 @@ public class JobAidCallStateController {
         this.dataPublishService = dataPublishService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/jobaid/transferdata/disconnect")
+    @RequestMapping(method = RequestMethod.POST, value = "/jobaid/transferdata/disconnect")
     @ResponseBody
     public String updateJobAidCallData(HttpServletRequest request){
         final String callId = request.getParameter("callId");

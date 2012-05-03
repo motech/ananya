@@ -58,4 +58,12 @@ public class JobAidContentDimension {
     public Integer getId() {
         return id;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getContentId() {
+        return contentId;
+    }
 }
