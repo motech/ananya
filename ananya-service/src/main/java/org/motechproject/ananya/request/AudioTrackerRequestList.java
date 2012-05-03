@@ -1,5 +1,7 @@
 package org.motechproject.ananya.request;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,5 +35,10 @@ public class AudioTrackerRequestList {
 
     public boolean isEmpty() {
         return audioTrackerRequestList.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(audioTrackerRequestList);
     }
 }
