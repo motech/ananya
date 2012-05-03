@@ -1,8 +1,10 @@
 package org.motechproject.ananya.repository;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.AudioTrackerLog;
+import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.ServiceType;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +22,7 @@ public class AllAudioTrackerLogsTest extends SpringIntegrationTest {
         String callerId = "123";
         String callId = "123456";
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
+        audioTrackerLog.addItem(new AudioTrackerLogItem("contentId", DateTime.now(), 312));
         allAudioTrackerLogs.add(audioTrackerLog);
         markForDeletion(audioTrackerLog);
 

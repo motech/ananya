@@ -177,6 +177,87 @@ tokens[174] = [{"token":188,"type":"ccState","data":{"result":null,"questionResp
 tokens[175] = [{"token":189,"type":"callDuration","data":{"callEvent":"DISCONNECT","time":1331211652263}}];
 
 
+for(var i = 0; i < tokens.length; ++i) {
+    var token = tokens[i];
+    for(var j = 0; j < token.length; ++j) {
+        var dataToken = token[j];
+        if(dataToken.type == "ccState" && dataToken.data.contentId != null) {
+            var data = dataToken.data;
+            var contentName = data.contentName;
+            var contentType = data.contentType;
+
+            if(contentType == "quiz") {
+                contentType = "chapter";
+            }
+
+            if(contentType == "chapter") {
+                var chapterNode = courseData.children[data.chapterIndex];
+                data.contentId = chapterNode.id;
+            } else if (contentType == "lesson") {
+                var lessonNode = courseData.children[data.chapterIndex].children[data.lessonOrQuestionIndex];
+                data.contentId = lessonNode.id;
+            }
+        }
+    }
+}
+
+addAudioTokenWithId = function(contentId, token, data){
+    token.push({
+                "token": 0,
+                "type": "audioTracker",
+                "data": {
+                    "contentId": contentId,
+                    "timeStamp": data.time,
+                    "duration" : Math.floor((Math.random()*1000)+1)
+                }
+            });
+}
+
+for(var i = 0; i < tokens.length; ++i) {
+    var token = tokens[i];
+    for(var j = 0; j < token.length; ++j) {
+        var dataToken = token[j];
+        if(dataToken.type == "ccState") {
+            var data = dataToken.data;
+            if(data.courseItemState == "end") {
+                var contentType = data.contentType;
+                if(contentType == "chapter"){
+                    var chapterNode = courseData.children[data.chapterIndex];
+                    var chapterContents = chapterNode.contents;
+                    for(var content in chapterContents){
+                        addAudioTokenWithId(chapterContents[content].id, token, data)
+                    }
+                } else if(contentType == "quiz"){
+                    for(var questionIndex = 4; questionIndex < 8; ++questionIndex){
+                        var chapterNode = courseData.children[data.chapterIndex].children[questionIndex];
+                        var chapterContents = chapterNode.contents;
+                        for(var content in chapterContents){
+                            addAudioTokenWithId(chapterContents[content].id, token, data)
+                        }
+                    }
+
+                } else if(contentType == "lesson"){
+                    var lessonNode = courseData.children[data.chapterIndex].children[data.lessonOrQuestionIndex];
+                    var lessonContents = lessonNode.contents;
+                    for(var content in lessonContents){
+                        addAudioTokenWithId(lessonContents[content].id, token, data)
+                    }
+                }
+            }
+        }
+    }
+}
+
+//update tokens with token numbers
+var tokenNum = 0;
+for(var i = 0; i < tokens.length; ++i) {
+    var token = tokens[i];
+    for(var j = 0; j < token.length; ++j) {
+        var dataToken = token[j];
+        dataToken.token = tokenNum++;
+    }
+}
+
 var Utility = function() {
     this.stringify = function(value) {
         switch (typeof value) {
@@ -254,11 +335,6 @@ var Utility = function() {
 
 var utility = new Utility();
 
-var i = 1;
-for(i = 1; i <= tokens.length; i++) {
-    vars.put("token_" + i, utility.stringify(tokens[i-1]));
-}
-
 var flattened_tokens = []
 var j = 0;
 for (i = 0; i < tokens.length; i++) {
@@ -268,5 +344,3 @@ for (i = 0; i < tokens.length; i++) {
 }
 
 vars.put("tokens_block", utility.stringify(flattened_tokens));
-
-vars.put("tokens_length", tokens.length);
