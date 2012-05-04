@@ -7,16 +7,16 @@ public class AudioTrackerLogItem {
     @JsonProperty
     private String contentId;
     @JsonProperty
-    private DateTime timeStamp;
+    private DateTime time;
     @JsonProperty
     private Integer duration;
 
     public AudioTrackerLogItem() {
     }
 
-    public AudioTrackerLogItem(String contentId, DateTime timeStamp, Integer duration) {
+    public AudioTrackerLogItem(String contentId, DateTime time, Integer duration) {
         this.contentId = contentId;
-        this.timeStamp = timeStamp;
+        this.time = time;
         this.duration = duration;
     }
 
@@ -24,8 +24,8 @@ public class AudioTrackerLogItem {
         return contentId;
     }
 
-    public DateTime getTimeStamp() {
-        return timeStamp;
+    public DateTime getTime() {
+        return time;
     }
 
     public Integer getDuration() {

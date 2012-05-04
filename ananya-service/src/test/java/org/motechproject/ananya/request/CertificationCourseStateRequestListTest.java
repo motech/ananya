@@ -22,11 +22,11 @@ public class CertificationCourseStateRequestListTest {
 
         String token1 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"2012-03-08T12:54:57Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
+                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
 
         String token2 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a807e\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lesson\",\"courseItemState\":\"start\"," +
-                "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"2012-03-08T12:55:18Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
+                "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
 
         courseStateRequestList.add(token1, "1");
@@ -45,11 +45,11 @@ public class CertificationCourseStateRequestListTest {
 
         String token1 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"2012-03-08T12:54:57Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
+                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
 
         String token2 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a807e\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playCourseResult\",\"courseItemState\":\"start\"," +
-                "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"2012-03-08T12:55:18Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
+                "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
 
         courseStateRequestList.add(token1, "1");

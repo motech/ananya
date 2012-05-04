@@ -95,7 +95,7 @@ public class CertificateCourseCallDataControllerTest {
         assertEquals(callerId, audioTrackerRequestList.getCallerId());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
         assertEquals(123, (int)audioTrackerRequest.getDuration());
-        assertEquals(DateTime.parse("123456789"), audioTrackerRequest.getTimeAsDateTime());
+        assertEquals(new DateTime(123456789l), audioTrackerRequest.getTimeAsDateTime());
     }
 
     @Test
@@ -187,7 +187,7 @@ public class CertificateCourseCallDataControllerTest {
         String packet3 = "{" +
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"123456789\"                          " +
+                "    \"time\" : \"123456789\"                          " +
                 "}";
 
         return "[" +

@@ -92,14 +92,14 @@ public class CertificationCourseStateRequest extends BaseRequest {
 
     public DateTime getTimeAsDateTime() {
         if (StringUtils.isBlank(time)) return null;
-        return DateTime.parse(time);
+        return new DateTime(Long.valueOf(time));
     }
 
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    public boolean hasContentId(){
+    public boolean hasContentId() {
         return StringUtils.isNotBlank(getContentId());
     }
 

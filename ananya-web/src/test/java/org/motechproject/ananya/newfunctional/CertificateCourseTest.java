@@ -34,8 +34,8 @@ public class CertificateCourseTest extends SpringIntegrationTest {
     @Autowired
     private ReportDb reportDb;
 
-    String callerId = "987654";
-    String operator = "airtel";
+    private String callerId = "987654";
+    private String operator = "airtel";
     private String callId = "2345678";
 
 
@@ -101,7 +101,7 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         String jsonData = String.format("[{\"token\":%d,\"type\":\"ccState\"," +
                 "\"data\":{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6b9eb2\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\"," +
-                "\"courseItemState\":\"end\",\"contentName\":\"Chapter 2 Lesson 1\",\"time\":\"2012-03-08T12:56:25Z\"," +
+                "\"courseItemState\":\"end\",\"contentName\":\"Chapter 2 Lesson 1\",\"time\":\"1331211652245\"," +
                 "\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}}," +
                 "{\"token\":%d,\"type\":\"callDuration\"," +
                 "\"data\":{\"callEvent\":\"DISCONNECT\",\"time\":1331211652263}}]",token,token+1);

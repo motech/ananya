@@ -102,13 +102,13 @@ public class CourseItemMeasureService {
         for (AudioTrackerLogItem logItem : audioTrackerLog.getAudioTrackerLogItems()) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
             Integer totalDuration = courseItemDimension.getDuration();
-            TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTimeStamp());
+            TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
                     timeDimension,
                     courseItemDimension,
                     frontLineWorkerDimension,
                     locationDimension,
-                    logItem.getTimeStamp(),
+                    logItem.getTime(),
                     logItem.getDuration(),
                     getPercentage(logItem, totalDuration)
                     );

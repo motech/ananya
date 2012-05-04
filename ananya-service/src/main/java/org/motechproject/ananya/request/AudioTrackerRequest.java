@@ -10,7 +10,7 @@ import java.lang.reflect.Type;
 
 public class AudioTrackerRequest extends BaseRequest {
     private String contentId;
-    private String timeStamp;
+    private String time;
     private Integer duration;
 
     public AudioTrackerRequest() {
@@ -31,8 +31,8 @@ public class AudioTrackerRequest extends BaseRequest {
         return contentId;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public String getTime() {
+        return time;
     }
 
     public Integer getDuration() {
@@ -40,8 +40,8 @@ public class AudioTrackerRequest extends BaseRequest {
     }
 
     public DateTime getTimeAsDateTime() {
-        if (StringUtils.isBlank(timeStamp)) return null;
-        return DateTime.parse(timeStamp);
+        if (StringUtils.isBlank(time)) return null;
+        return new DateTime(Long.valueOf(time));
     }
 
     @Override

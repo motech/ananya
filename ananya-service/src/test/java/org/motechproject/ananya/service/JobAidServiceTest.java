@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -98,19 +97,20 @@ public class JobAidServiceTest {
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                         "    \"duration\" : \"123\",                             " +
-                        "    \"timeStamp\" : \"2012-04-29T09:38:49Z\"                          " +
+                        "    \"time\" : \"123456789\"                          " +
                         "}";
 
         String jsonString2 =
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926999\",     " +
                         "    \"duration\" : \"121\",                             " +
-                        "    \"timeStamp\" : \"2012-04-29T09:38:49Z\"                          " +
+                        "    \"time\" : \"123456789\"                          " +
                         "}";
 
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId, callerId);
         audioTrackerRequestList.add(jsonString1, "1");
         audioTrackerRequestList.add(jsonString2, "2");
+
         jobAidService.saveAudioTrackerState(audioTrackerRequestList);
 
         ArgumentCaptor<AudioTrackerLog> captor = ArgumentCaptor.forClass(AudioTrackerLog.class);
@@ -120,10 +120,11 @@ public class JobAidServiceTest {
         assertEquals(callerId,audioTrackerLog.getCallerId());
         assertEquals(callId,audioTrackerLog.getCallId());
         assertEquals(ServiceType.JOB_AID,audioTrackerLog.getServiceType());
+
         List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.getAudioTrackerLogItems();
         assertEquals(2, audioTrackerLogItems.size());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90",audioTrackerLogItems.get(0).getContentId());
-        assertEquals(DateTime.parse("2012-04-29T09:38:49Z"),audioTrackerLogItems.get(0).getTimeStamp());
+        assertEquals(123456789l,audioTrackerLogItems.get(0).getTime().getMillis());
         assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
     }
 }

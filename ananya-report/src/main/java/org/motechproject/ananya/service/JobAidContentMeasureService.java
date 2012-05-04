@@ -61,10 +61,10 @@ public class JobAidContentMeasureService {
         for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.getAudioTrackerLogItems()) {
 
             JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
-            TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLogItem.getTimeStamp());
+            TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLogItem.getTime());
 
             JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(frontLineWorkerDimension, callId,
-                    locationDimension, jobAidContentDimension, timeDimension, audioTrackerLogItem.getTimeStamp(),
+                    locationDimension, jobAidContentDimension, timeDimension, audioTrackerLogItem.getTime(),
                     audioTrackerLogItem.getDuration(), getPercentage(audioTrackerLogItem, jobAidContentDimension.getDuration()));
 
             allJobAidContentMeasures.add(jobAidContentMeasure);

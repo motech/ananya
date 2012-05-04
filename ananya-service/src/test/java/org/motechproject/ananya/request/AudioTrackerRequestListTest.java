@@ -16,7 +16,7 @@ public class AudioTrackerRequestListTest {
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                         "    \"duration\" : \"123\",                             " +
-                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "    \"time\" : \"123456789\"                          " +
                         "}";
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId,  callerId);
 
@@ -34,7 +34,7 @@ public class AudioTrackerRequestListTest {
                 "{" +
                         "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                         "    \"duration\" : \"123\",                             " +
-                        "    \"timeStamp\" : \"123456789\"                          " +
+                        "    \"time\" : \"123456789\"                          " +
                         "}";
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId,  callerId);
         audioTrackerRequestList.add(jsonString, dataToken);

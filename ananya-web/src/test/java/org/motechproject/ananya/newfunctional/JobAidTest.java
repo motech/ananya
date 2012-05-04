@@ -98,7 +98,7 @@ public class JobAidTest extends SpringIntegrationTest {
         String packet2 = "{" +
                 "    \"contentId\" : \"%s\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"%s\"                          " +
+                "    \"time\" : \"%s\"                          " +
                 "}";
 
         String packet3 = "{" +
@@ -134,7 +134,7 @@ public class JobAidTest extends SpringIntegrationTest {
 
         JobAidDisconnectRequest jobAidDisconnectRequest = new JobAidDisconnectRequest(callerId, operator, callId, "12345");
         String dataToPost = postedData();
-        dataToPost = String.format(dataToPost, reportDb.getExistingAudioDimension().getContentId(), DateTime.now().toDateTimeISO().toString());
+        dataToPost = String.format(dataToPost, reportDb.getExistingAudioDimension().getContentId(), new Long(DateTime.now().getMillis()).toString());
         jobAidDisconnectRequest.setJsonPostData(dataToPost);
         jobAidService.requestForDisconnect(jobAidDisconnectRequest);
 

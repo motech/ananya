@@ -19,10 +19,10 @@ public class TransferDataListTest {
     public void setUp() {
         String json = "[{\"token\":0,\"type\":\"callDuration\",\"data\":{\"callEvent\":\"CALL_START\",\"time\":1331211295810}},\n" +
                 "{\"token\":1,\"type\":\"callDuration\",\"data\":{\"callEvent\":\"CERTIFICATECOURSE_START\",\"time\":1331211297476}},\n" +
-                "{\"token\":2,\"type\":\"audioTracker\",\"data\":{\"contentId\":\"content_id\",\"timeStamp\":1331211297476,\"duration\":123}},\n" +
+                "{\"token\":2,\"type\":\"audioTracker\",\"data\":{\"contentId\":\"content_id\",\"time\":1331211297476,\"duration\":123}},\n" +
                 "{\"token\":3,\"type\":\"ccState\",\"data\":{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"2012-03-08T12:54:57Z\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}}]";
+                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}}]";
 
         transferDataList = new TransferDataList(json);
     }

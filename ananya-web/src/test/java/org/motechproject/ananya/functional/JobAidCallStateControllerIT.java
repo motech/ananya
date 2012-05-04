@@ -84,13 +84,13 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         String packet2 = "{" +
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"2012-12-31T18:30:00.000Z\"                          " +
+                "    \"time\" : \"123456789\"                          " +
                 "}";
 
         String packet3 = "{" +
                 "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
                 "    \"duration\" : \"123\",                             " +
-                "    \"timeStamp\" : \"2012-12-31T18:30:00.000Z\"                          " +
+                "    \"time\" : \"123456789\"                          " +
                 "}";
 
         String packet4 = "{" +
@@ -151,6 +151,6 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
         assertEquals(2, audioTrackerLogItems.size());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerLogItems.get(0).getContentId());
         assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
-        assertEquals("2012-12-31T18:30:00.000Z", audioTrackerLogItems.get(0).getTimeStamp().toDateTimeISO().toString());
+        assertEquals(123456789l, audioTrackerLogItems.get(0).getTime().getMillis());
     }
 }
