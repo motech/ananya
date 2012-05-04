@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.AudioTrackerLog;
-import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -13,8 +12,6 @@ import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
-
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -34,13 +31,12 @@ public class JobAidServiceTest {
     @Mock
     private AllFrontLineWorkers allFrontLineWorkers;
     @Mock
-    private AudioTrackerLogService audioTrackerLogService;
-
+    private AudioTrackerService audioTrackerService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService, audioTrackerLogService);
+        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService, audioTrackerService);
     }
 
     @Test
@@ -56,7 +52,7 @@ public class JobAidServiceTest {
     }
 
     @Test
-    public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule(){
+    public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule() {
         String operator = "airtel";
         String callerId = "callerId";
         String promptKey = "prompt";
@@ -72,14 +68,14 @@ public class JobAidServiceTest {
         verify(frontLineWorkerService).getFLWForJobAidCallerData(callerId, operator);
         verify(dataPublishService).publishNewRegistration(callerId);
 
-        assertEquals(callerData.getCurrentJobAidUsage(),new Integer(9));
-        assertEquals(callerData.getMaxAllowedUsageForOperator(),new Integer(10));
+        assertEquals(callerData.getCurrentJobAidUsage(), new Integer(9));
+        assertEquals(callerData.getMaxAllowedUsageForOperator(), new Integer(10));
         assertEquals(callerData.getPromptsHeard().get(promptKey), new Integer(1));
-        assertEquals(callerData.isCallerRegistered(),false);
+        assertEquals(callerData.isCallerRegistered(), false);
     }
 
     @Test
-    public void shouldUpdateTheFrontLineWorkerWithTheNewUsage(){
+    public void shouldUpdateTheFrontLineWorkerWithTheNewUsage() {
         int currentUsage = 10;
         String callerId = "callerId";
 
@@ -90,7 +86,7 @@ public class JobAidServiceTest {
     }
 
     @Test
-    public void shouldSaveAudioTrackerState(){
+    public void shouldSaveAudioTrackerState() {
         String callerId = "callerId";
         String callId = "callId";
         String jsonString1 =
@@ -113,18 +109,6 @@ public class JobAidServiceTest {
 
         jobAidService.saveAudioTrackerState(audioTrackerRequestList);
 
-        ArgumentCaptor<AudioTrackerLog> captor = ArgumentCaptor.forClass(AudioTrackerLog.class);
-        verify(audioTrackerLogService).createNew(captor.capture());
-
-        AudioTrackerLog audioTrackerLog = captor.getValue();
-        assertEquals(callerId,audioTrackerLog.getCallerId());
-        assertEquals(callId,audioTrackerLog.getCallId());
-        assertEquals(ServiceType.JOB_AID,audioTrackerLog.getServiceType());
-
-        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.getAudioTrackerLogItems();
-        assertEquals(2, audioTrackerLogItems.size());
-        assertEquals("e79139b5540bf3fc8d96635bc2926f90",audioTrackerLogItems.get(0).getContentId());
-        assertEquals(123456789l,audioTrackerLogItems.get(0).getTime().getMillis());
-        assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
+        verify(audioTrackerService).saveAudioTrackerState(audioTrackerRequestList, ServiceType.JOB_AID);
     }
 }

@@ -29,12 +29,12 @@ public class CertificateCourseServiceTest {
     @Mock
     private SendSMSService sendSMSService;
     @Mock
-    private AudioTrackerLogService audioTrackerLogService;
+    private AudioTrackerService audioTrackerService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerLogService, frontlineWorkerService, dataPublishService, sendSMSService);
+        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerService, frontlineWorkerService, dataPublishService, sendSMSService);
     }
 
     @Test
@@ -228,21 +228,6 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveAudioTrackerState(audioTrackerRequestList);
 
-        ArgumentCaptor<AudioTrackerLog> captor = ArgumentCaptor.forClass(AudioTrackerLog.class);
-        verify(audioTrackerLogService).createNew(captor.capture());
-        AudioTrackerLog audioTrackerLog = captor.getValue();
-        assertEquals(callid, audioTrackerLog.getCallId());
-        assertEquals(callerid, audioTrackerLog.getCallerId());
-    }
-
-    @Test
-    public void shouldNotProceedWithSaveAudioTrackerLogsIfTheRequestListIsEmpty() {
-        String callid = "callid";
-        String callerid = "callerid";
-        AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callid, callerid);
-
-        certificateCourseService.saveAudioTrackerState(audioTrackerRequestList);
-
-        verify(audioTrackerLogService,never()).createNew(null);
+        verify(audioTrackerService).saveAudioTrackerState(audioTrackerRequestList, ServiceType.CERTIFICATE_COURSE);
     }
 }

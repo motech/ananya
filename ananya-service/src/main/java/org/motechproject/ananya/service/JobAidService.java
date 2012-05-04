@@ -1,10 +1,7 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.mapper.AudioTrackerLogItemMapper;
-import org.motechproject.ananya.request.AudioTrackerRequest;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
@@ -22,17 +19,17 @@ public class JobAidService {
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
     private DataPublishService dataPublishService;
-    private AudioTrackerLogService audioTrackerLogService;
+    private AudioTrackerService audioTrackerService;
 
     @Autowired
     public JobAidService(FrontLineWorkerService frontLineWorkerService,
                          OperatorService operatorService,
                          DataPublishService dataPublishService,
-                         AudioTrackerLogService audioTrackerLogService) {
+                         AudioTrackerService audioTrackerService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.dataPublishService = dataPublishService;
-        this.audioTrackerLogService = audioTrackerLogService;
+        this.audioTrackerService = audioTrackerService;
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
@@ -64,23 +61,7 @@ public class JobAidService {
     }
 
     public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {
-        log.info("Audio Tracker Request List " + audioTrackerRequestList);
-        if (audioTrackerRequestList.isEmpty()) return;
-
-        AudioTrackerLog audioTrackerLog = createAudioTrackerLog(audioTrackerRequestList);
-        audioTrackerLogService.createNew(audioTrackerLog);
+        audioTrackerService.saveAudioTrackerState(audioTrackerRequestList, ServiceType.JOB_AID);
     }
-
-    private AudioTrackerLog createAudioTrackerLog(AudioTrackerRequestList audioTrackerRequestList) {
-        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(
-                audioTrackerRequestList.getCallId(),
-                audioTrackerRequestList.getCallerId(),
-                ServiceType.JOB_AID);
-
-        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll())
-            audioTrackerLog.addItem(AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest));
-
-        return audioTrackerLog;
-    }
-
 }
+
