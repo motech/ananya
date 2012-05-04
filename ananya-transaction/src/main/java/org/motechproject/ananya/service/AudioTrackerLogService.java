@@ -5,6 +5,8 @@ import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AudioTrackerLogService {
     private AllAudioTrackerLogs allAudioTrackerLogs;
@@ -20,6 +22,10 @@ public class AudioTrackerLogService {
 
     public AudioTrackerLog getLogFor(String callId) {
         return allAudioTrackerLogs.findByCallId(callId);
+    }
+
+    public List<AudioTrackerLog> getAll() {
+        return allAudioTrackerLogs.getAll();
     }
 
     public void deleteLogsFor(String callId) {

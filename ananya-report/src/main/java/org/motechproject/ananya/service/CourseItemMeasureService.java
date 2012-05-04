@@ -61,7 +61,7 @@ public class CourseItemMeasureService {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
         Long callerId = getCallerId(courseLog, audioTrackerLog);
 
-        if(callerId == null) return;
+        if (callerId == null) return;
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
@@ -72,7 +72,7 @@ public class CourseItemMeasureService {
     }
 
     private void addCertificateCourseItemMeasure(String callId, CertificationCourseLog courseLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
-        if(courseLog == null) return;
+        if (courseLog == null) return;
 
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
 
@@ -97,7 +97,7 @@ public class CourseItemMeasureService {
     }
 
     private void addAudioTrackerCourseItemMeasure(String callId, AudioTrackerLog audioTrackerLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
-        if(audioTrackerLog == null) return;
+        if (audioTrackerLog == null) return;
 
         for (AudioTrackerLogItem logItem : audioTrackerLog.getAudioTrackerLogItems()) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
@@ -111,7 +111,7 @@ public class CourseItemMeasureService {
                     logItem.getTime(),
                     logItem.getDuration(),
                     getPercentage(logItem, totalDuration)
-                    );
+            );
 
             reportDB.add(courseItemMeasure);
         }
@@ -122,12 +122,12 @@ public class CourseItemMeasureService {
     private Long getCallerId(CertificationCourseLog courseLog, AudioTrackerLog audioTrackerLog) {
         if (courseLog != null)
             return courseLog.callerIdAsLong();
-        else if(audioTrackerLog != null)
+        else if (audioTrackerLog != null)
             return audioTrackerLog.callerIdAsLong();
         return null;
     }
 
     private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
-        return (int) Math.round((double)logItem.getDuration() * 100 /totalDuration);
+        return (int) Math.round((double) logItem.getDuration() * 100 / totalDuration);
     }
 }

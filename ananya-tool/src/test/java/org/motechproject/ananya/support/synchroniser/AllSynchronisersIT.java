@@ -26,15 +26,18 @@ public class AllSynchronisersIT {
     private SMSSynchroniser smsSynchroniser;
     @Autowired
     private CertificateCourseItemSynchroniser certificateCourseItemSynchroniser;
+    @Autowired
+    private AudioTrackerSynchronizer audioTrackerSynchroniser;
 
     @Test
     public void shouldPickUpAllSynchronisersSortedInPriority() {
         List<Synchroniser> synchronisers = allSynchronisers.getAll();
-        assertThat(synchronisers.size(), is(4));
+        assertThat(synchronisers.size(), is(5));
         assertTrue(synchronisers.get(0).equals(frontLineWorkerSynchroniser));
         assertTrue(synchronisers.get(1).equals(smsSynchroniser));
         assertTrue(synchronisers.contains(callDurationSychroniser));
         assertTrue(synchronisers.contains(certificateCourseItemSynchroniser));
+        assertTrue(synchronisers.contains(audioTrackerSynchroniser));
     }
 
 }
