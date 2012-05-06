@@ -4,18 +4,15 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+
 public class TransferData implements JsonDeserializer<TransferData> {
     private String token;
     private String type;
     private String data;
 
-    public static final String TYPE_CC_STATE = "ccState";
-    public static final String TYPE_CALL_DURATION = "callDuration";
-    public static final String TYPE_AUDIO_TRACKER = "audioTracker";
+    public TransferData() {
+    }
 
-
-    public TransferData() {}
-    
     public TransferData(String token, String type) {
         this.token = token;
         this.type = type;
@@ -37,6 +34,14 @@ public class TransferData implements JsonDeserializer<TransferData> {
         return Integer.parseInt(token);
     }
 
+    public boolean isCCState() {
+        return type.equals(TransferDataStates.TYPE_CC_STATE);
+    }
+
+    public boolean isAudioTrackerState() {
+        return type.equals(TransferDataStates.TYPE_AUDIO_TRACKER);
+    }
+
     @Override
     public TransferData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
@@ -47,13 +52,5 @@ public class TransferData implements JsonDeserializer<TransferData> {
         transferData.data = jsonObject.get("data").toString();
 
         return transferData;
-    }
-
-    public boolean isCCState(){
-        return type.equals(TYPE_CC_STATE);
-    }
-
-    public boolean isAudioTrackerState() {
-        return type.equals(TYPE_AUDIO_TRACKER);
     }
 }

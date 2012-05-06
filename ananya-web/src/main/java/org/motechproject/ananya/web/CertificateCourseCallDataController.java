@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.motechproject.ananya.action.TransferDataStateAction;
 import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;
@@ -50,14 +51,12 @@ public class CertificateCourseCallDataController {
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
 
+        TransferDataStateAction.init(stateRequestList, audioTrackerList, callDurationList);
         for (TransferData transferData : transferDataList.all()) {
-            if (transferData.isCCState())
-                stateRequestList.add(transferData.getData(), transferData.getToken());
-            else if (transferData.isAudioTrackerState())
-                audioTrackerList.add(transferData.getData(),transferData.getToken());
-            else
-                callDurationList.add(transferData.getData());
+            TransferDataStateAction transferDataStateAction = TransferDataStateAction.getFor(transferData.getType());
+            transferDataStateAction.addToRequest(transferData);
         }
+
         certificateCourseService.saveState(stateRequestList);
         certificateCourseService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
