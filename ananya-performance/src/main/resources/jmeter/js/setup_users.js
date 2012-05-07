@@ -20,10 +20,10 @@ function fetch_from_vars_as_int(key) {
     return value;
 }
 
-var operator_counter = fetch_from_vars_as_int("operator_counter");
+var operator_counter = fetch_from_vars_as_int("operator_counter") + 1;
 var user_counter = fetch_from_vars_as_int("user_counter");
 
-if ((user_counter + thread) > 21500) {
+if ((user_counter + thread) > 2500) {
     user_counter = 0;
     operator_counter = operator_counter + 1;
     if (operator_counter > 6) {
@@ -35,7 +35,7 @@ var user = user_counter + thread;
 vars.put("user_counter", user_counter + thread_count);
 vars.put("operator_counter", operator_counter);
 
-var callerId = operator_counter + "" + user
+var callerId = "9999" + operator_counter + "" + user
 var callId = callerId + new Date().valueOf();
 var calledNumber = "550011"
 vars.put("callId", callId);
