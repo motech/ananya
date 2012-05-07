@@ -1,12 +1,19 @@
 package org.motechproject.ananya.performance.data;
 
+import org.apache.commons.lang.StringUtils;
+import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.performance.framework.PerformanceData;
+import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class JobAidDataSetup {
@@ -16,11 +23,14 @@ public class JobAidDataSetup {
     private OperatorService operatorService;
     private JobAidService jobAidService;
 
+    private AllNodes allNodes;
+
 
     @Autowired
-    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService) {
+    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService, AllNodes allNodes) {
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;
+        this.allNodes = allNodes;
     }
 
     @PerformanceData(testName = "jobaid", description = "create airtel subscribers")
@@ -58,6 +68,42 @@ public class JobAidDataSetup {
         loadUsers("undefined", 7);
     }
 
+    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
+    public void prepareDataForPosting() throws IOException {
+        Node jobAidCourse = allNodes.findByName("JobAidCourse");
+        String jobAidTokens = getClass().getResource("/jmeter/js/job_aid_tokens.js").getPath();
+        String templateFileName = getClass().getResource("/jmeter/js/job_aid_template.js").getPath();
+        BufferedReader templateReader = new BufferedReader(new FileReader(templateFileName));
+        BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter(jobAidTokens));
+        
+        ArrayList<String> contentIds = new ArrayList<String>();
+        recursivelyWriteAudioTrackerArrayForJobAid(jobAidCourse, contentIds);
+
+        jobAidTokensWriter.write(String.format("var contentIds = [%s];", StringUtils.join(contentIds, ',')));
+
+        String line = templateReader.readLine();
+        while (line != null) {
+            jobAidTokensWriter.newLine();
+            jobAidTokensWriter.write(line);
+            line = templateReader.readLine();
+        }
+        jobAidTokensWriter.close();
+        templateReader.close();
+    }
+
+    private void recursivelyWriteAudioTrackerArrayForJobAid(Node node, List<String> contentArray) {
+        for(String contenId : node.contentIds()){
+            contentArray.add("\"" + contenId + "\"");
+        }
+
+        if(node.children().size() == 0)
+            return;
+
+        for(Node nextNode : node.children()) {
+            recursivelyWriteAudioTrackerArrayForJobAid(nextNode, contentArray);
+        }
+    }
+
 
     private void loadUsers(String operatorName, int prefix) {
         for (int j = 0; j < usersPerOperator; j++) {
@@ -76,7 +122,7 @@ public class JobAidDataSetup {
         return null;
     }
 
-    public static void main(String... args){
+    public static void main(String... args) throws IOException {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
         JobAidDataSetup jobAidDataSetup = (JobAidDataSetup) context.getBean("jobAidDataSetup");
         jobAidDataSetup.loadAirtelSubscribers();
@@ -85,6 +131,7 @@ public class JobAidDataSetup {
         jobAidDataSetup.loadIdeaSubscribers();
         jobAidDataSetup.loadTataSubscribers();
         jobAidDataSetup.loadVodafoneSubscribers();
+        jobAidDataSetup.prepareDataForPosting();
 
         System.out.println("done");
     }
