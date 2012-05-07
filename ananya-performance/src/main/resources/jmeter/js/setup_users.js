@@ -37,8 +37,9 @@ vars.put("operator_counter", operator_counter);
 
 var callerId = operator_counter + "" + user
 var callId = callerId + new Date().valueOf();
-
+var calledNumber = "550011"
 vars.put("callId", callId);
 vars.put("callerId", callerId);
+vars.put("calledNumber", calledNumber);
 vars.put("operator", operators[operator_counter]);
 vars.put("thread", thread);

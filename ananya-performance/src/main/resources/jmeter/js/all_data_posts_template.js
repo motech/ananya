@@ -176,7 +176,27 @@ tokens[173] = [{"token":187,"type":"ccState","data":{"result":null,"questionResp
 tokens[174] = [{"token":188,"type":"ccState","data":{"result":null,"questionResponse":null,"contentId":null,"contentType":"course","certificateCourseId":"","contentData":null,"interactionKey":null,"courseItemState":"end","contentName":null,"time":"2012-03-08T13:00:52Z","chapterIndex":null,"lessonOrQuestionIndex":null}}];
 tokens[175] = [{"token":189,"type":"callDuration","data":{"callEvent":"DISCONNECT","time":1331211652263}}];
 
+var courseData = vars.getObject('course_data');
 
+// Remove null valued keys in ccState data
+for(var i = 0; i < tokens.length; ++i) {
+    var token = tokens[i];
+    for(var j = 0; j < token.length; ++j) {
+        var dataToken = token[j];
+        if(dataToken.type == "ccState") {
+            var data = dataToken.data;
+            for(var key in data) {
+                if(data.hasOwnProperty(key)) {
+                    if(data[key] == null){
+                        delete data[key];
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Update the contentIds from the new courseData
 for(var i = 0; i < tokens.length; ++i) {
     var token = tokens[i];
     for(var j = 0; j < token.length; ++j) {
@@ -201,18 +221,31 @@ for(var i = 0; i < tokens.length; ++i) {
     }
 }
 
+// Update time to be in milli seconds format
+for(var i = 0; i < tokens.length; ++i) {
+    var token = tokens[i];
+    for(var j = 0; j < token.length; ++j) {
+        var dataToken = token[j];
+        if(dataToken.type == "ccState" && dataToken.data.time != null) {
+            var data = dataToken.data;
+            data.time = new Date().getTime();
+        }
+    }
+}
+
 addAudioTokenWithId = function(contentId, token, data){
     token.push({
                 "token": 0,
                 "type": "audioTracker",
                 "data": {
                     "contentId": contentId,
-                    "timeStamp": data.time,
+                    "time": data.time,
                     "duration" : Math.floor((Math.random()*1000)+1)
                 }
             });
 }
 
+// Add audio tracker log
 for(var i = 0; i < tokens.length; ++i) {
     var token = tokens[i];
     for(var j = 0; j < token.length; ++j) {
@@ -248,7 +281,7 @@ for(var i = 0; i < tokens.length; ++i) {
     }
 }
 
-//update tokens with token numbers
+// Update tokens with correct token numbers
 var tokenNum = 0;
 for(var i = 0; i < tokens.length; ++i) {
     var token = tokens[i];
