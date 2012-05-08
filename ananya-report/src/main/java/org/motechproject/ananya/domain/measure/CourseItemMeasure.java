@@ -103,13 +103,15 @@ public class CourseItemMeasure {
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
                              Integer score,
-                             CourseItemState event) {
+                             CourseItemState event,
+                             String callId) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.locationDimension = locationDimension;
         this.score = score;
         this.event = String.valueOf(event);
+        this.callId = callId ;
     }
 
     public CourseItemMeasure(TimeDimension timeDimension,
@@ -118,7 +120,8 @@ public class CourseItemMeasure {
                              LocationDimension locationDimension,
                              DateTime timestamp,
                              Integer duration,
-                             Integer percentage) {
+                             Integer percentage,
+                             String callId) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
@@ -126,5 +129,6 @@ public class CourseItemMeasure {
         this.timestamp = new Timestamp(timestamp.getMillis());
         this.duration = duration;
         this.percentage = percentage;
+        this.callId = callId;
     }
 }

@@ -88,7 +88,8 @@ public class CourseItemMeasureService {
                     frontLineWorkerDimension,
                     locationDimension,
                     logItem.giveScore(),
-                    logItem.getCourseItemState());
+                    logItem.getCourseItemState(),
+                    callId);
 
             reportDB.add(courseItemMeasure);
         }
@@ -110,7 +111,8 @@ public class CourseItemMeasureService {
                     locationDimension,
                     logItem.getTime(),
                     logItem.getDuration(),
-                    getPercentage(logItem, totalDuration)
+                    getPercentage(logItem, totalDuration),
+                    callId
             );
 
             reportDB.add(courseItemMeasure);
