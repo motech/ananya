@@ -21,41 +21,27 @@ public class PostgresDiagnostic implements Diagnostic {
         diagnosticLog.add("Opening session with database");
         try {
             Session session = dataAccessTemplate.getSessionFactory().openSession();
+            DateTime today = DateTime.now();
 
-            int flwCount = ((Long) session.createQuery("select count(*) from FrontLineWorkerDimension").uniqueResult()).intValue();
-            diagnosticLog.add("Front Line Workers in database : " + flwCount);
+            int flwTotalCount = getCountFor(session, (DiagnosticQuery.FIND_TOTAL_FLWS).getQuery());
+            diagnosticLog.add("\nFront Line Workers in database : " + flwTotalCount);
+            
+            int flwRegisteredTodayCount = getCountFor(session, DiagnosticQuery.FIND_FLWS_REG_TODAY.getQuery(today));
+            diagnosticLog.add("\nFront Line Workers registered today are : " + flwRegisteredTodayCount);
 
+            
             Iterator totalCountByRegisteredStatus;
-            totalCountByRegisteredStatus = (session.createQuery(
-                    "select count(*),status from FrontLineWorkerDimension group by status").list().iterator());
+            totalCountByRegisteredStatus = (session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS.getQuery()).list().iterator());
             diagnosticLog.add("\nFront Line Workers in database registered by registration status are : \n");
             while (totalCountByRegisteredStatus.hasNext()) {
                 Object[] row = (Object[]) totalCountByRegisteredStatus.next();
                 Long count = (Long) row[0];
                 String status = (String) row[1];
                 diagnosticLog.add(status + ":" + count + "\n");
-
             }
 
-            DateTime today = DateTime.now();
-            int registeredTodayCount = ((Long) session.createQuery(
-                    "select count(*) from FrontLineWorkerDimension flwd, RegistrationMeasure rm, TimeDimension td" +
-                            " where flwd.id = rm.frontLineWorkerDimension.id" +
-                            " and td.id = rm.timeDimension.id" +
-                            " and td.day = " + today.getDayOfYear() +
-                            " and td.month = " + today.getMonthOfYear() +
-                            " and td.year = " + today.getYear()).uniqueResult()).intValue();
-            diagnosticLog.add("\nFront Line Workers registered today are : " + registeredTodayCount);
-
             Iterator totalCountByStatusAndDate;
-            totalCountByStatusAndDate = (session.createQuery(
-                    "select count(*),flwd.status from FrontLineWorkerDimension flwd, RegistrationMeasure rm, TimeDimension td" +
-                            " where flwd.id = rm.frontLineWorkerDimension.id" +
-                            " and td.id = rm.timeDimension.id" +
-                            " and td.day = " + today.getDayOfYear() +
-                            " and td.month = " + today.getMonthOfYear() +
-                            " and td.year = " + today.getYear() +
-                            " group by flwd.status")).list().iterator();
+            totalCountByStatusAndDate = (session.createQuery(DiagnosticQuery.FIND_FLWS_BY_STATUS_TODAY.getQuery(today))).list().iterator();
             diagnosticLog.add("\nFront Line Workers registered today by registration status are : \n");
             while (totalCountByStatusAndDate.hasNext()) {
                 Object[] row = (Object[]) totalCountByStatusAndDate.next();
@@ -64,37 +50,23 @@ public class PostgresDiagnostic implements Diagnostic {
                 diagnosticLog.add(status + ":" + count + "\n");
             }
 
-            int jobAidCallCount = ((Long) session.createQuery("select count(distinct callId) from JobAidContentMeasure").uniqueResult()).intValue();
+            int jobAidCallCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery());
             diagnosticLog.add("\nTotal calls made to JobAid : " + jobAidCallCount);
 
-            int jobAidCallCountForToday = ((Long) session.createQuery("select count(distinct jacm.callId) from JobAidContentMeasure jacm, TimeDimension td" +
-                    " where td.id = jacm.timeDimension.id" +
-                    " and td.day = " + today.getDayOfYear() +
-                    " and td.month = " + today.getMonthOfYear() +
-                    " and td.year = " + today.getYear()).uniqueResult()).intValue();
+            int jobAidCallCountForToday = getCountFor(session, DiagnosticQuery.FIND_JOB_AID_CALLS_TODAY.getQuery(today));
             diagnosticLog.add("\nTotal calls made today to JobAid : " + jobAidCallCountForToday);
 
-            int certificateCourseCallCount = ((Long) session.createQuery("select count(distinct callId) from CourseItemMeasure").uniqueResult()).intValue();
+            int certificateCourseCallCount = getCountFor(session,DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery());
             diagnosticLog.add("\nTotal calls made to Certificate Course : " + certificateCourseCallCount);
 
-            int certificateCourseCallCountForToday = ((Long) session.createQuery("select count(distinct cim.callId) from CourseItemMeasure cim, TimeDimension td" +
-                    " where td.id = cim.timeDimension.id" +
-                    " and td.day = " + today.getDayOfYear() +
-                    " and td.month = " + today.getMonthOfYear() +
-                    " and td.year = " + today.getYear()).uniqueResult()).intValue();
+            int certificateCourseCallCountForToday = getCountFor(session,DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today));
             diagnosticLog.add("\nTotal calls made today to Certificate Course : " + certificateCourseCallCountForToday);
 
-            int smsTotalCount =  ((Long) session.createQuery("select count(*) from SMSSentMeasure " +
-                    "where smsSent = true").uniqueResult()).intValue();
+            int smsTotalCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery());
             diagnosticLog.add("\nTotal SMS sent : " + smsTotalCount);
 
 
-            int smsTotalCountForToday =  ((Long) session.createQuery("select count(*) from SMSSentMeasure ssm, TimeDimension td" +
-                    " where ssm.smsSent = true" +
-                    " and td.id = ssm.timeDimension.id" +
-                    " and td.day = " + today.getDayOfYear() +
-                    " and td.month = " + today.getMonthOfYear() +
-                    " and td.year = " + today.getYear()).uniqueResult()).intValue();
+            int smsTotalCountForToday = getCountFor(session, DiagnosticQuery.FIND_SMS_SENT_TODAY.getQuery(today));
             diagnosticLog.add("\nTotal SMS sent today: " + smsTotalCountForToday);
 
 
@@ -103,5 +75,9 @@ public class PostgresDiagnostic implements Diagnostic {
             diagnosticLog.add(ExceptionUtils.getFullStackTrace(e));
         }
         return diagnosticLog;
+    }
+
+    private int getCountFor(Session session, String query) {
+        return ((Long) session.createQuery(query).uniqueResult()).intValue();
     }
 }
