@@ -40,8 +40,6 @@ public enum DiagnosticQuery {
                     " and td.id = ssm.timeDimension.id " +
                     " and td.day = %s and td.month = %s and td.year = %s"
     );
-
-
     private String query;
 
     private DiagnosticQuery(String query) {

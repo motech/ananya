@@ -11,11 +11,12 @@ public class DiagnosticLog {
     }
 
     public void add(String message) {
+        log.append("==========================================\n");
         log.append(message + "\n");
     }
 
     @Override
     public String toString() {
-        return "====== DiagnosticLog " + entity + " ===" + "\n" + log;
+        return "=== DiagnosticLog " + entity + " ===" + "\n" + log;
     }
 }
