@@ -51,10 +51,9 @@ public class CertificateCourseCallDataController {
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
 
-        TransferDataStateAction.init(stateRequestList, audioTrackerList, callDurationList);
         for (TransferData transferData : transferDataList.all()) {
             TransferDataStateAction transferDataStateAction = TransferDataStateAction.getFor(transferData.getType());
-            transferDataStateAction.addToRequest(transferData);
+            transferDataStateAction.addToRequest(transferData, stateRequestList, audioTrackerList, callDurationList);
         }
 
         certificateCourseService.saveState(stateRequestList);

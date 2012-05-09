@@ -39,7 +39,7 @@ public class JobAidCallStateController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/jobaid/transferdata/disconnect")
     @ResponseBody
-    public String updateJobAidCallData(HttpServletRequest request){
+    public String updateJobAidCallData(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
         final String callerId = request.getParameter("callerId");
         final String calledNumber = request.getParameter("calledNumber");
@@ -49,10 +49,9 @@ public class JobAidCallStateController {
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
 
-        TransferDataStateAction.init(audioTrackerList, callDurationList);
         for (TransferData transferData : transferDataList.all()) {
             TransferDataStateAction transferDataStateAction = TransferDataStateAction.getFor(transferData.getType());
-            transferDataStateAction.addToRequest(transferData);
+            transferDataStateAction.addToRequest(transferData, null, audioTrackerList, callDurationList);
         }
 
         jobAidService.saveAudioTrackerState(audioTrackerList);
