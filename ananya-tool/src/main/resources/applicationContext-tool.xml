@@ -7,6 +7,8 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <util:properties id="ananyaProperties" location="classpath:ananya.properties"/>
+    <util:properties id="activemqProperties" location="classpath:activemq.properties"/>
+    <util:properties id="couchdbProperties" location="classpath:couchdb.properties"/>
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:spring-configured/>

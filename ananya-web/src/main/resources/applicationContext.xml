@@ -11,6 +11,7 @@
 
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
+    <util:properties id="activemqProperties" location="classpath:/activemq.properties"/>
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:spring-configured/>
