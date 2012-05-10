@@ -27,7 +27,7 @@ public class ActiveMQDiagnostic implements Diagnostic {
 
     @Override
     public DiagnosticLog performDiagnosis() throws JMSException {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("activemq");
+        DiagnosticLog diagnosticLog = new DiagnosticLog("ACTIVEMQ");
         try {
             diagnosticLog.add("Checking for Active MQ connection");
             ActiveMQConnectionFactory activeMQConnectionFactory =

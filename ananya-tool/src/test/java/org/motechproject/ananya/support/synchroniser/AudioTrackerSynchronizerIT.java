@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.is;
 public class AudioTrackerSynchronizerIT {
 
     @Autowired
-    private AudioTrackerSynchronizer audioTrackerSynchronizer;
+    private AudioTrackerSynchroniser audioTrackerSynchronizer;
 
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;

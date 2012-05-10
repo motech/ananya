@@ -27,7 +27,7 @@ public class AllSynchronisersIT {
     @Autowired
     private CertificateCourseItemSynchroniser certificateCourseItemSynchroniser;
     @Autowired
-    private AudioTrackerSynchronizer audioTrackerSynchroniser;
+    private AudioTrackerSynchroniser audioTrackerSynchroniser;
 
     @Test
     public void shouldPickUpAllSynchronisersSortedInPriority() {

@@ -3,7 +3,6 @@ package org.motechproject.ananya.support.synchroniser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.AudioTrackerLog;
-import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
@@ -15,14 +14,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class AudioTrackerSynchronizer implements Synchroniser {
+public class AudioTrackerSynchroniser implements Synchroniser {
 
     private AudioTrackerLogService audioTrackerLogService;
     private CourseItemMeasureService courseItemMeasureService;
     private JobAidContentMeasureService jobAidContentMeasureService;
 
     @Autowired
-    public AudioTrackerSynchronizer(AudioTrackerLogService audioTrackerLogService, CourseItemMeasureService courseItemMeasureService, JobAidContentMeasureService jobAidContentMeasureService) {
+    public AudioTrackerSynchroniser(AudioTrackerLogService audioTrackerLogService, CourseItemMeasureService courseItemMeasureService, JobAidContentMeasureService jobAidContentMeasureService) {
         this.audioTrackerLogService = audioTrackerLogService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.jobAidContentMeasureService = jobAidContentMeasureService;
