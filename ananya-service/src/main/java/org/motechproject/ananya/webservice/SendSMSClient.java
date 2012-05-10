@@ -24,7 +24,7 @@ public class SendSMSClient {
     public SendSMSClient(OnMobileSendSMSService smsService,
                          FrontLineWorkerService frontLineWorkerService,
                          SMSPublisherService smsPublisherService,
-                         @Value("#{smsProperties['sms.sender.id']}") String senderId) {
+                         @Value("#{ananyaProperties['sms.sender.id']}") String senderId) {
         this.smsService = smsService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.smsPublisherService = smsPublisherService;

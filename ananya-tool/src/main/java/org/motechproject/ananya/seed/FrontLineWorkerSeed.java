@@ -21,13 +21,13 @@ public class FrontLineWorkerSeed {
     @Autowired
     private LocationService locationService;
 
-    @Value("#{toolProperties['seed.flw.file']}")
+    @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
 
-    @Value("#{toolProperties['seed.flw.file.out']}")
+    @Value("#{ananyaProperties['seed.flw.file.out']}")
     private String outputFileName;
 
-    @Value("#{toolProperties['environment']}")
+    @Value("#{ananyaProperties['environment']}")
     private String environment;
 
     private String inputCSVFile;

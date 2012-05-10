@@ -21,13 +21,13 @@ public class LocationSeed {
     @Autowired
     private LocationService locationService;
     
-    @Value("#{toolProperties['seed.location.file']}")
+    @Value("#{ananyaProperties['seed.location.file']}")
     private String inputFileName;
 
-    @Value("#{toolProperties['seed.location.file.out']}")
+    @Value("#{ananyaProperties['seed.location.file.out']}")
     private String outputFileName;
 
-    @Value("#{toolProperties['environment']}")
+    @Value("#{ananyaProperties['environment']}")
     private String environment;
 
     private BufferedWriter writer;

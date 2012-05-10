@@ -5,8 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-    <util:properties id="serviceProperties" location="classpath:/services.properties"/>
-    <util:properties id="smsProperties" location="classpath:/sms.properties"/>
+    <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
 

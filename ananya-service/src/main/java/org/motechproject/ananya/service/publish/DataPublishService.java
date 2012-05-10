@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service.publish;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.LogData;
@@ -22,7 +21,7 @@ public class DataPublishService implements PublishService {
     @Autowired
     public DataPublishService(DbPublishService dbPublishService,
                               QueuePublishService queuePublishService,
-                              @Value("#{serviceProperties['publisher.type']}") String publisherType) {
+                              @Value("#{ananyaProperties['publisher.type']}") String publisherType) {
 
         this.publishService = publisherType.equalsIgnoreCase(DB) ? dbPublishService : queuePublishService;
     }

@@ -30,8 +30,7 @@ public class ActiveMQDiagnostic implements Diagnostic {
         DiagnosticLog diagnosticLog = new DiagnosticLog("ACTIVEMQ");
         try {
             diagnosticLog.add("Checking for Active MQ connection");
-            ActiveMQConnectionFactory activeMQConnectionFactory =
-                    (ActiveMQConnectionFactory) connectionFactory.getTargetConnectionFactory();
+            ActiveMQConnectionFactory activeMQConnectionFactory = (ActiveMQConnectionFactory) connectionFactory.getTargetConnectionFactory();
             connection = activeMQConnectionFactory.createConnection();
             connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
