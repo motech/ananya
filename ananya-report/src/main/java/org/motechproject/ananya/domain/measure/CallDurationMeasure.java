@@ -4,6 +4,7 @@ package org.motechproject.ananya.domain.measure;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -28,6 +29,10 @@ public class CallDurationMeasure {
     @JoinColumn(name = "location_id", nullable = false)
     private LocationDimension locationDimension;
 
+    @ManyToOne
+    @JoinColumn(name = "time_id", nullable = false)
+    private TimeDimension timeDimension;
+
     @Column(name = "call_id")
     private String callId;
 
@@ -49,10 +54,12 @@ public class CallDurationMeasure {
     public CallDurationMeasure() {
     }
 
-    public CallDurationMeasure(FrontLineWorkerDimension flwDimension, LocationDimension locationDimension, String callId,
-                               Long calledNumber, Integer duration, DateTime startTime, DateTime endTime, String type) {
+    public CallDurationMeasure(FrontLineWorkerDimension flwDimension, LocationDimension locationDimension,
+                               TimeDimension timeDimension, String callId, Long calledNumber, Integer duration,
+                               DateTime startTime, DateTime endTime, String type) {
         this.frontLineWorkerDimension = flwDimension;
         this.locationDimension = locationDimension;
+        this.timeDimension = timeDimension;
         this.callId = callId;
         this.calledNumber = calledNumber;
         this.duration = duration;
@@ -91,5 +98,9 @@ public class CallDurationMeasure {
 
     public Long getCalledNumber() {
         return calledNumber;
+    }
+
+    public TimeDimension getTimeDimension() {
+        return timeDimension;
     }
 }

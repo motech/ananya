@@ -15,6 +15,7 @@ import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.sql.Timestamp;
@@ -32,6 +33,8 @@ public class CallDurationMeasureServiceTest {
     private CallLoggerService callLoggerService;
     @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Mock
+    private AllTimeDimensions allTimeDimensions;
 
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
@@ -47,7 +50,7 @@ public class CallDurationMeasureServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
         callId = "callId";
         callerId = 123456789L;
         flwId = 1;
@@ -67,6 +70,7 @@ public class CallDurationMeasureServiceTest {
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+        when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
 
         callDurationMeasureService.createCallDurationMeasure(callId);
 
@@ -75,6 +79,7 @@ public class CallDurationMeasureServiceTest {
 
         CallDurationMeasure callDurationMeasure = captor.getValue();
         assertEquals(frontLineWorkerDimension, callDurationMeasure.getFrontLineWorkerDimension());
+        assertEquals(timeDimension, callDurationMeasure.getTimeDimension());
         assertEquals(callId, callDurationMeasure.getCallId());
         assertEquals(10, callDurationMeasure.getDuration());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasure.getType());

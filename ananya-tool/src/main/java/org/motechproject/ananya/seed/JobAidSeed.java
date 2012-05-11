@@ -31,6 +31,10 @@ public class JobAidSeed {
 
     private void recursivelyAddNodesToReportDB(Node node, JobAidContentDimension parentDimension) {
 
+        String nodeType = node.data().get("type");
+        Long shortCode = -1L;
+        if (nodeType.equalsIgnoreCase("Lesson")) shortCode = Long.valueOf("57711" + node.data().get("shortcode"));
+
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension(
                 node.getId(),
                 parentDimension,
@@ -39,6 +43,7 @@ public class JobAidSeed {
                 getNodeType(node),
                 null
         );
+        if (nodeType.equalsIgnoreCase("Lesson")) jobAidContentDimension.setShortCode(shortCode);
         allJobAidContentDimensions.add(jobAidContentDimension);
 
         for(StringContent content : node.contents()) {
@@ -50,6 +55,7 @@ public class JobAidSeed {
                     "Audio",
                     Integer.valueOf(content.getMetadata().get("duration"))
             );
+            if (nodeType.equalsIgnoreCase("Lesson")) audioContentDimension.setShortCode(shortCode);
             allJobAidContentDimensions.add(audioContentDimension);
         }
 
@@ -171,6 +177,13 @@ public class JobAidSeed {
     private Map<String, String> getMetaData(String duration){
         HashMap<String, String> metadata = new HashMap<String, String>();
         metadata.put("duration", duration);
+        return metadata;
+    }
+
+    private Map<String, String> getMetadata(String duration, String shortCode) {
+        Map<String, String> metadata = new HashMap<String, String>();
+        metadata.put("duration", duration);
+        metadata.put("shortcode", shortCode);
         return metadata;
     }
 

@@ -143,6 +143,7 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         assertEquals(callerId, callDurationMeasureForCall.getFrontLineWorkerDimension().getMsisdn());
         assertEquals(new Timestamp(callStartTime.getMillis()), callDurationMeasureForCall.getStartTime());
         assertEquals(new Timestamp(callEndTime.getMillis()), callDurationMeasureForCall.getEndTime());
+        assertEquals(timeDimension.getId(), callDurationMeasureForCall.getTimeDimension().getId());
 
         assertEquals(10, callDurationMeasureForCourse.getDuration());
         assertEquals(callId, callDurationMeasureForCourse.getCallId());
@@ -150,5 +151,6 @@ public class CallDurationHandlerIT extends SpringIntegrationTest {
         assertEquals(callerId, callDurationMeasureForCall.getFrontLineWorkerDimension().getMsisdn());
         assertEquals(new Timestamp(certificateCourseStartTime.getMillis()), callDurationMeasureForCourse.getStartTime());
         assertEquals(new Timestamp(certificateCourseEndTime.getMillis()), callDurationMeasureForCourse.getEndTime());
+        assertEquals(timeDimension.getId(), callDurationMeasureForCourse.getTimeDimension().getId());
     }
 }

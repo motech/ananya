@@ -340,4 +340,19 @@
         </createIndex>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="21">
+        <addColumn tableName="job_aid_content_dimension">
+            <column name="short_code" type="bigint"/>
+        </addColumn>
+
+        <addColumn tableName="call_duration_measure">
+            <column name="time_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_time_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -34,6 +34,9 @@ public class JobAidContentDimension {
     @Column(name = "duration")
     private Integer duration;
 
+    @Column(name = "short_code")
+    private Long shortCode;
+
     public JobAidContentDimension() {
     }
 
@@ -65,5 +68,9 @@ public class JobAidContentDimension {
 
     public String getContentId() {
         return contentId;
+    }
+
+    public void setShortCode(Long shortCode) {
+        this.shortCode = shortCode;
     }
 }
