@@ -25,16 +25,16 @@
         <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="create_jobaid_callers" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="create_jobaid_callers" enabled="true">
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">500</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">7</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1332780540000</longProp>
         <longProp name="ThreadGroup.end_time">1332783120000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -46,9 +46,9 @@
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">var thread = ctx.getThreadNum();
-var callerId = &quot;9876&quot; + Math.round(Math.random()*10%7)+&quot;&quot;+thread;
+var callerId = &quot;9876&quot; + Math.floor(Math.random()*10000);
 var operators = [
-       &quot;airtel&quot;, &quot;reliance&quot;, &quot;tata&quot;, &quot;idea&quot;, &quot;bsnl&quot;, &quot;idea&quot;
+       &quot;airtel&quot;, &quot;reliance&quot;, &quot;tata&quot;, &quot;idea&quot;, &quot;bsnl&quot;, &quot;vodafone&quot;
     ];
 var operator = operators[thread % 6];
 
@@ -127,16 +127,16 @@ vars.put(&quot;operator&quot;, operator);</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="update_data_at_disconnect" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="update_data_at_disconnect" enabled="true">
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">500</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <stringProp name="ThreadGroup.num_threads">7</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1332780540000</longProp>
         <longProp name="ThreadGroup.end_time">1332783120000</longProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
@@ -148,19 +148,20 @@ vars.put(&quot;operator&quot;, operator);</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">var thread = ctx.getThreadNum();
-var callerId = &quot;9999&quot; + Math.round(Math.random()*10%7)+&quot;&quot;+thread;
+var num = (thread % 6) + 1;
+var random = Math.floor(Math.random() * 10000) % 25000;
+var callerId = &quot;9999&quot; + num + &quot;&quot; + random;
 var operators = [
-       &quot;airtel&quot;, &quot;reliance&quot;, &quot;tata&quot;, &quot;idea&quot;, &quot;bsnl&quot;, &quot;idea&quot;
+       &quot;airtel&quot;, &quot;reliance&quot;, &quot;tata&quot;, &quot;idea&quot;, &quot;bsnl&quot;, &quot;vodafone&quot;
     ];
 var operator = operators[thread % 6];
-var callId=callerId+new Date().valueOf();
+var callId=&quot;9&quot;+new Date().valueOf();
 var calledNumber = &quot;550011&quot;;
 
 vars.put(&quot;callerId&quot;, callerId);
 vars.put(&quot;operator&quot;, operator);
 vars.put(&quot;callId&quot;, callId);
-vars.put(&quot;calledNumber&quot;, calledNumber);
-</stringProp>
+vars.put(&quot;calledNumber&quot;, calledNumber);</stringProp>
             <stringProp name="scriptLanguage">javascript</stringProp>
           </BSFPreProcessor>
           <hashTree/>
@@ -276,8 +277,9 @@ vars.put(&quot;calledNumber&quot;, calledNumber);
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">var thread = ctx.getThreadNum();
-var callerId = &quot;9999&quot; + Math.round(Math.random()*10%7)+&quot;&quot;+thread;
-var callId=callerId+new Date().valueOf();
+var num = (thread % 2 == 0) ? 3 : 4;
+var callerId = &quot;9876&quot; + num + &quot;&quot; + Math.floor(Math.random() * 10);
+var callId=&quot;9&quot;+new Date().valueOf();
 var promptList=&quot;[&apos;samplePrompt1&apos;,&apos;samplePrompt2&apos;,&apos;samplePrompt3&apos;]&quot;;
 
 vars.put(&quot;callerId&quot;, callerId);
@@ -363,7 +365,7 @@ vars.put(&quot;promptList&quot;, promptList);</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="update_usage" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="update_usage" enabled="false">
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
@@ -384,14 +386,14 @@ vars.put(&quot;promptList&quot;, promptList);</stringProp>
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <stringProp name="script">var thread = ctx.getThreadNum();
-var callerId = &quot;9999&quot; + Math.round(Math.random()*10%7)+&quot;&quot;+thread;
-var callId=callerId+new Date().valueOf();
+var num = (thread % 2 == 0) ? 5 : 6;
+var callerId = &quot;9999&quot; + num + &quot;&quot; + Math.floor(Math.random() * 10);
+var callId=&quot;9&quot; + new Date().valueOf();
 var callDuration = Math.round(Math.random()*1000);
 
 vars.put(&quot;callerId&quot;, callerId);
 vars.put(&quot;callId&quot;, callId);
-vars.put(&quot;callDuration&quot;, callDuration);
-</stringProp>
+vars.put(&quot;callDuration&quot;, callDuration);</stringProp>
             <stringProp name="scriptLanguage">javascript</stringProp>
           </BSFPreProcessor>
           <hashTree/>

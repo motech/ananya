@@ -1,6 +1,6 @@
 
 var operators = [
-       "airtel", "reliance", "tata", "idea", "bsnl", "idea", "undefined"
+       "airtel", "reliance", "tata", "idea", "bsnl", "vodafone"
     ];
 
 var thread = ctx.getThreadNum();
@@ -20,10 +20,10 @@ function fetch_from_vars_as_int(key) {
     return value;
 }
 
-var operator_counter = fetch_from_vars_as_int("operator_counter") + 1;
+var operator_counter = fetch_from_vars_as_int("operator_counter");
 var user_counter = fetch_from_vars_as_int("user_counter");
 
-if ((user_counter + thread) > 2500) {
+if ((user_counter + thread) > 25000) {
     user_counter = 0;
     operator_counter = operator_counter + 1;
     if (operator_counter > 6) {
@@ -35,8 +35,10 @@ var user = user_counter + thread;
 vars.put("user_counter", user_counter + thread_count);
 vars.put("operator_counter", operator_counter);
 
-var callerId = "9999" + operator_counter + "" + user
-var callId = callerId + new Date().valueOf();
+var num = operator_counter + 1;
+
+var callerId = "9999" + num + "" + user
+var callId = "9" + new Date().valueOf();
 var calledNumber = "550011"
 vars.put("callId", callId);
 vars.put("callerId", callerId);

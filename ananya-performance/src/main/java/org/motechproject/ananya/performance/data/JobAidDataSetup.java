@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class JobAidDataSetup {
 
-    private final int usersPerOperator = 2500;
+    private final int usersPerOperator = 25000;
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
@@ -63,10 +63,10 @@ public class JobAidDataSetup {
         loadUsers("vodafone", 6);
     }
 
-    @PerformanceData(testName = "jobaid", description = "create undefined subscribers")
-    public void loadUndefinedSubscribers() {
-        loadUsers("undefined", 7);
-    }
+//    @PerformanceData(testName = "jobaid", description = "create undefined subscribers")
+//    public void loadUndefinedSubscribers() {
+//        loadUsers("undefined", 7);
+//    }
 
     @PerformanceData(testName = "jobaid", description = "prepare data for posting")
     public void prepareDataForPosting() throws IOException {
@@ -108,9 +108,9 @@ public class JobAidDataSetup {
     private void loadUsers(String operatorName, int prefix) {
         for (int j = 0; j < usersPerOperator; j++) {
             String callerId = "9999" + prefix + "" + j;
-            Operator airtel = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callerId, airtel.getName());
-            jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (airtel.getAllowedUsagePerMonth() + 1));
+            Operator operator = getOperatorFor(operatorName);
+            jobAidService.createCallerData(callerId, operator.getName());
+            jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
             System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId()+"|count="+j);
         }
     }
