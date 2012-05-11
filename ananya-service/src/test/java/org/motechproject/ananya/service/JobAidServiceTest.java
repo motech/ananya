@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
@@ -32,11 +32,14 @@ public class JobAidServiceTest {
     private AllFrontLineWorkers allFrontLineWorkers;
     @Mock
     private AudioTrackerService audioTrackerService;
+    @Mock
+    private RegistrationLogService registrationLogService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        jobAidService = new JobAidService(frontLineWorkerService, operatorService, dataPublishService, audioTrackerService);
+        jobAidService = new JobAidService(frontLineWorkerService, operatorService,
+                                        dataPublishService, audioTrackerService,registrationLogService);
     }
 
     @Test
@@ -66,7 +69,13 @@ public class JobAidServiceTest {
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
         verify(frontLineWorkerService).getFLWForJobAidCallerData(callerId, operator);
-        verify(dataPublishService).publishNewRegistration(callerId);
+        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
+                verify(registrationLogService).add(captor.capture());
+        
+                        RegistrationLog registrationLog = captor.getValue();
+                assertEquals(callerId, registrationLog.getCallerId());
+                assertEquals(operator, registrationLog.getOperator());
+
 
         assertEquals(callerData.getCurrentJobAidUsage(), new Integer(9));
         assertEquals(callerData.getMaxAllowedUsageForOperator(), new Integer(10));

@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
@@ -20,16 +21,19 @@ public class JobAidService {
     private OperatorService operatorService;
     private DataPublishService dataPublishService;
     private AudioTrackerService audioTrackerService;
+    private RegistrationLogService registrationLogService;
 
     @Autowired
     public JobAidService(FrontLineWorkerService frontLineWorkerService,
                          OperatorService operatorService,
                          DataPublishService dataPublishService,
-                         AudioTrackerService audioTrackerService) {
+                         AudioTrackerService audioTrackerService,
+                         RegistrationLogService registrationLogService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.dataPublishService = dataPublishService;
         this.audioTrackerService = audioTrackerService;
+        this.registrationLogService = registrationLogService;
     }
 
     public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
@@ -43,8 +47,10 @@ public class JobAidService {
 
         boolean isNewFLW = frontLineWorkerService.isNewFLW(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
-        if (isNewFLW)
-            dataPublishService.publishNewRegistration(callerId);
+        if (isNewFLW) {
+            RegistrationLog registrationLog = new RegistrationLog(callerId, operator);
+            registrationLogService.add(registrationLog);
+        }
 
         Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
 

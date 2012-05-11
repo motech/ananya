@@ -6,7 +6,7 @@ import org.motechproject.ananya.requests.LogData;
 public interface PublishService {
     void publishSMSSent(LogData logData);
 
-    void publishCallDisconnectEvent(String callId, ServiceType serviceType);
+    void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType);
 
     void publishNewRegistration(String callerId);
 }

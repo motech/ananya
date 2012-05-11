@@ -2,6 +2,7 @@ package org.motechproject.ananya.newfunctional;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.CouchDb;
@@ -13,7 +14,7 @@ import org.motechproject.ananya.framework.domain.JobAidWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-
+@Ignore
 public class JobAidTest extends SpringIntegrationTest {
 
     @Autowired

@@ -56,7 +56,7 @@ public class JobAidCallStateController {
 
         jobAidService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
-        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        dataPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
         log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
         log.info("Call ended: " + callId);

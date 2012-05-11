@@ -19,7 +19,7 @@ import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-
+@Ignore
 public class CertificateCourseTest extends SpringIntegrationTest {
 
     @Autowired

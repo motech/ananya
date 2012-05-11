@@ -1,10 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.action.ServiceAction;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.ServiceType;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
@@ -28,16 +25,21 @@ public class CertificateCourseService {
     private DataPublishService dataPublishService;
     private SendSMSService sendSMSService;
     private AudioTrackerService audioTrackerService;
+    private RegistrationLogService registrationLogService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
-                                    AudioTrackerService audioTrackerService, FrontLineWorkerService frontLineWorkerService,
-                                    DataPublishService dataPublishService, SendSMSService sendSMSService) {
+                                    AudioTrackerService audioTrackerService,
+                                    FrontLineWorkerService frontLineWorkerService,
+                                    DataPublishService dataPublishService,
+                                    SendSMSService sendSMSService,
+                                    RegistrationLogService registrationLogService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.dataPublishService = dataPublishService;
         this.sendSMSService = sendSMSService;
         this.audioTrackerService = audioTrackerService;
+        this.registrationLogService = registrationLogService;
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
@@ -45,9 +47,10 @@ public class CertificateCourseService {
 
         boolean isNewFLW = frontLineWorkerService.isNewFLW(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator);
-        if (isNewFLW)
-            dataPublishService.publishNewRegistration(msisdn);
-
+        if (isNewFLW) {
+            registrationLogService.add(new RegistrationLog(msisdn, operator));
+            //            dataPublishService.publishNewRegistration(msisdn);
+        }
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),
                 frontLineWorker.status().isRegistered(),

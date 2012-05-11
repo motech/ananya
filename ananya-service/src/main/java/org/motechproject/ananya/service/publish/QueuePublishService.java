@@ -30,7 +30,7 @@ public class QueuePublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
+    public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
         log.info("Call Id is: " + callId);
         if (serviceType.equals(ServiceType.JOB_AID))
             publishJobAidContentData(new LogData(LogType.JOBAID, callId));

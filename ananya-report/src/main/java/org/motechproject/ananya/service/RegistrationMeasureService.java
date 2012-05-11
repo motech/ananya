@@ -25,6 +25,7 @@ public class RegistrationMeasureService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
+    private RegistrationLogService registrationLogService;
 
     public RegistrationMeasureService() {
     }
@@ -46,7 +47,6 @@ public class RegistrationMeasureService {
     public void createRegistrationMeasure(LogData logData) {
         String callerId = logData.getDataId();
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
-
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(

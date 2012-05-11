@@ -4,6 +4,7 @@ import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.JobAidService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,17 @@ public class CallerDataController {
     private Properties properties;
     private JobAidService jobAidService;
     private CertificateCourseService certificateCourseService;
+    private RegistrationLogService registrationLogService;
 
     @Autowired
     public CallerDataController(JobAidService jobAidService,
                                 CertificateCourseService certificateCourseService,
+                                RegistrationLogService registrationLogService,
                                 @Qualifier("ananyaProperties") Properties properties) {
         this.certificateCourseService = certificateCourseService;
         this.properties = properties;
         this.jobAidService = jobAidService;
+        this.registrationLogService = registrationLogService;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/jobaid/caller_data.js")

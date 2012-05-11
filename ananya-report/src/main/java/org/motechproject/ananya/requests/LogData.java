@@ -1,14 +1,15 @@
 package org.motechproject.ananya.requests;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class LogData implements Serializable {
     private LogType type;
-    private String dataId;
+    private Map<String,String> dataMap;
 
     public LogData(LogType type, String dataId) {
         this.type = type;
-        this.dataId = dataId;
+        this.dataMap = dataId;
     }
 
     public LogType getType() {

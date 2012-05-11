@@ -30,11 +30,14 @@ public class CertificateCourseServiceTest {
     private SendSMSService sendSMSService;
     @Mock
     private AudioTrackerService audioTrackerService;
+    @Mock
+    private RegistrationLogService registrationLogService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerService, frontlineWorkerService, dataPublishService, sendSMSService);
+        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerService,
+                frontlineWorkerService, dataPublishService, sendSMSService, registrationLogService);
     }
 
     @Test

@@ -33,7 +33,7 @@ public class ReportPublishServiceTest {
     @Test
     public void shouldPublishCertificateCourseDisconnectEvent(){
         String callId = "callID";
-        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
@@ -49,7 +49,7 @@ public class ReportPublishServiceTest {
     @Test
     public void shouldPublishJobAidDisconnectEvent(){
         String callId = "callID";
-        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY), captor.capture());

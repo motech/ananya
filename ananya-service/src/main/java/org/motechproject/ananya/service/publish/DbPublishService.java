@@ -33,7 +33,7 @@ public class DbPublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
+    public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
         if (serviceType.equals(ServiceType.JOB_AID))
             this.jobAidContentMeasureService.createJobAidContentMeasure(callId);
         else

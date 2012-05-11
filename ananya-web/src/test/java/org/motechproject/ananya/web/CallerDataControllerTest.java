@@ -9,6 +9,7 @@ import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.JobAidService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,6 +36,9 @@ public class CallerDataControllerTest {
     private JobAidService jobAidService;
 
     @Mock
+    private RegistrationLogService registrationLogService;
+
+    @Mock
     Properties properties;
     private CallerDataController controller;
 
@@ -42,7 +46,7 @@ public class CallerDataControllerTest {
     public void setUp() {
         initMocks(this);
         when(properties.getProperty("url.version")).thenReturn("v1");
-        controller = new CallerDataController(jobAidService, certificateCourseService, properties);
+        controller = new CallerDataController(jobAidService, certificateCourseService, registrationLogService, properties);;
     }
 
     @Test

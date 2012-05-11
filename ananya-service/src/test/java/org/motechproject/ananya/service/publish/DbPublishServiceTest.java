@@ -48,7 +48,7 @@ public class DbPublishServiceTest {
     public void shouldPublishCallDisconnectEventForCertificateCourse() throws Exception {
         String callId = "141414";
 
-        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
         verify(courseItemMeasureService).createCourseItemMeasure(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
@@ -58,7 +58,7 @@ public class DbPublishServiceTest {
     public void shouldPublishCallDisconnectEventForJobAidCourse() throws Exception {
         String callId = "141414";
 
-        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
         verify(jobAidContentMeasureService).createJobAidContentMeasure(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);

@@ -26,8 +26,8 @@ public class DataPublishServiceTest {
 
     @Test
     public void shouldPickTheRightImplementationBasedOnConfiguration() {
-        dataPublishService.publishCallDisconnectEvent("123", ServiceType.JOB_AID);
-        verify(dbPublishService, never()).publishCallDisconnectEvent("123", ServiceType.JOB_AID);
-        verify(queuePublishService).publishCallDisconnectEvent("123", ServiceType.JOB_AID);
+        dataPublishService.publishCallDisconnectEvent("123", callerId, ServiceType.JOB_AID);
+        verify(dbPublishService, never()).publishCallDisconnectEvent("123", callerId, ServiceType.JOB_AID);
+        verify(queuePublishService).publishCallDisconnectEvent("123", callerId, ServiceType.JOB_AID);
     }
 }

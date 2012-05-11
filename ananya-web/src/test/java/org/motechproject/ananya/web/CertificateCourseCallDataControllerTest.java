@@ -108,7 +108,7 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("dataToPost")).thenReturn("[]");
 
         transferCallDataController.receiveIVRDataAtDisconnect(request);
-        verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        verify(dataPublishService).publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
     }
 
     @Test
