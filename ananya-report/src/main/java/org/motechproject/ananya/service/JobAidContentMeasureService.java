@@ -58,10 +58,11 @@ public class JobAidContentMeasureService {
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
 
+        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
+
         for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.getAudioTrackerLogItems()) {
 
             JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
-            TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLogItem.getTime());
 
             JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(frontLineWorkerDimension, callId,
                     locationDimension, jobAidContentDimension, timeDimension, audioTrackerLogItem.getTime(),
@@ -70,7 +71,7 @@ public class JobAidContentMeasureService {
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
 
-        audioTrackerLogService.deleteLogsFor(callId);
+        audioTrackerLogService.remove(audioTrackerLog);
     }
 
     private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {

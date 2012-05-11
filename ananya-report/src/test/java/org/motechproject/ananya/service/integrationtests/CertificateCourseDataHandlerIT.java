@@ -112,19 +112,17 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime now = DateTime.now();
         CertificationCourseLog courseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.START, now));
-        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.END, now.plusDays(26)));
+        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.END, now));
         allCertificateCourseLogs.add(courseLog);
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, CourseItemType.CHAPTER, null));
 
-        TimeDimension timeDimension1 = allTimeDimensions.addOrUpdate(now);
-        TimeDimension timeDimension2 = allTimeDimensions.addOrUpdate(now.plusDays(26));
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(now);
 
         allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "", "");
 
         FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "", "");
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         allLocationDimensions.add(locationDimension);
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
         allRegistrationMeasures.add(new RegistrationMeasure(flwDimension, locationDimension, timeDimension));
 
         LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
@@ -137,8 +135,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
 
         assertEquals(2, courseItemMeasures.size());
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, callerId, timeDimension1.getId(),contentName)));
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, callerId, timeDimension2.getId(),contentName)));
+        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, callerId, timeDimension.getId(), contentName)));
+        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, callerId, timeDimension.getId(),contentName)));
 
         List<CourseItemDimension> courseItemDimensions = template.loadAll(CourseItemDimension.class);
         assertEquals(1, courseItemDimensions.size());

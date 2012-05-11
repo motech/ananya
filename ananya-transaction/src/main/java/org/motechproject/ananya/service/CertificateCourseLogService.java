@@ -20,16 +20,16 @@ public class CertificateCourseLogService {
         return allCertificateCourseLogs.findByCallId(callId);
     }
 
-    public void deleteCertificateCourseLogsFor(String callId) {
-        allCertificateCourseLogs.deleteFor(callId);
-    }
-
     public void createNew(CertificationCourseLog courseLog) {
         allCertificateCourseLogs.add(courseLog);
     }
 
     public void update(CertificationCourseLog courseLog) {
         allCertificateCourseLogs.update(courseLog);
+    }
+
+    public void remove(CertificationCourseLog courseLog) {
+        allCertificateCourseLogs.remove(courseLog);
     }
 
     public List<CertificationCourseLog> getAll() {

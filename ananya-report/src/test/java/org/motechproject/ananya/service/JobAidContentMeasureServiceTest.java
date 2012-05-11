@@ -20,8 +20,6 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -89,6 +87,7 @@ public class JobAidContentMeasureServiceTest {
 
         ArgumentCaptor<JobAidContentMeasure> captor = ArgumentCaptor.forClass(JobAidContentMeasure.class);
         verify(allJobAidContentMeasures).add(captor.capture());
+        verify(audioTrackerLogService).remove(audioTrackerLog);
 
         JobAidContentMeasure jobAidContentMeasure = captor.getValue();
         assertEquals(timeDimension, jobAidContentMeasure.getTimeDimension());

@@ -76,12 +76,13 @@ public class CourseItemMeasureService {
 
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
 
+        TimeDimension timeDimension = allTimeDimensions.getFor(courseLogItems.get(0).getTime());
+
         for (CertificationCourseLogItem logItem : courseLogItems) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(
                     logItem.getContentName(),
                     logItem.getContentType());
 
-            TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
                     timeDimension,
                     courseItemDimension,
@@ -93,17 +94,18 @@ public class CourseItemMeasureService {
 
             reportDB.add(courseItemMeasure);
         }
-        certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
+        certificateCourseLogService.remove(courseLog);
         log.info("Added Certificate CourseItemMeasures for CallId=" + callId);
     }
 
     private void addAudioTrackerCourseItemMeasure(String callId, AudioTrackerLog audioTrackerLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
         if (audioTrackerLog == null) return;
 
+        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
+
         for (AudioTrackerLogItem logItem : audioTrackerLog.getAudioTrackerLogItems()) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
             Integer totalDuration = courseItemDimension.getDuration();
-            TimeDimension timeDimension = allTimeDimensions.getFor(logItem.getTime());
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(
                     timeDimension,
                     courseItemDimension,
@@ -117,7 +119,7 @@ public class CourseItemMeasureService {
 
             reportDB.add(courseItemMeasure);
         }
-        audioTrackerLogService.deleteLogsFor(callId);
+        audioTrackerLogService.remove(audioTrackerLog);
         log.info("Added AudioTrack CourseItemMeasures for CallId=" + callId);
     }
 

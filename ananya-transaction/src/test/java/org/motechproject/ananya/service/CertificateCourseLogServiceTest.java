@@ -35,13 +35,6 @@ public class CertificateCourseLogServiceTest {
     }
 
     @Test
-    public void shouldDeleteCertificateCourseLogsForACallId(){
-        String callId = "callId";
-        certificateCourseLogService.deleteCertificateCourseLogsFor(callId);
-        verify(allCertificateCourseLogs).deleteFor(callId);
-    }
-
-    @Test
     public void shouldCreateNewCertificateCourseLog(){
         CertificationCourseLog courseLogDocument = new CertificationCourseLog();
 

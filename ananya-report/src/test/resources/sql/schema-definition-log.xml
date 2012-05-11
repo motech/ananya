@@ -322,4 +322,22 @@
         </addColumn>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="20">
+        <createIndex tableName="front_line_worker_dimension" indexName="idx_front_line_worker_dimension_msisdn">
+            <column name="msisdn"/>
+        </createIndex>
+        <createIndex tableName="time_dimension" indexName="idx_time_dimension_year_month_day">
+            <column name="year, month, day"/>
+        </createIndex>
+        <createIndex tableName="job_aid_content_dimension" indexName="idx_job_aid_content_dimension_content_id">
+            <column name="content_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_dimension" indexName="idx_course_item_dimension_content_id">
+            <column name="content_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_dimension" indexName="idx_course_item_dimension_name_type">
+            <column name="name, type"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

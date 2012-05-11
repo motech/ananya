@@ -140,8 +140,7 @@ public class CourseItemMeasureServiceTest {
         CourseItemType contentType2 = CourseItemType.COURSE;
         CourseItemState event = CourseItemState.START;
 
-        TimeDimension timeDimension1 = new TimeDimension();
-        TimeDimension timeDimension2 = new TimeDimension();
+        TimeDimension timeDimension = new TimeDimension();
         CourseItemDimension courseItemDimension1 = new CourseItemDimension();
         CourseItemDimension courseItemDimension2 = new CourseItemDimension();
 
@@ -151,8 +150,8 @@ public class CourseItemMeasureServiceTest {
 
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
-        when(allTimeDimensions.getFor(now)).thenReturn(timeDimension1);
-        when(allTimeDimensions.getFor(now.plusDays(5))).thenReturn(timeDimension2);
+        when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
+        when(allTimeDimensions.getFor(now.plusDays(5))).thenReturn(timeDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allCourseItemDimensions.getFor(contentName1, contentType1)).thenReturn(courseItemDimension1);
         when(allCourseItemDimensions.getFor(contentName2, contentType2)).thenReturn(courseItemDimension2);
@@ -166,14 +165,14 @@ public class CourseItemMeasureServiceTest {
 
         List<CourseItemMeasure> allValues = captor.getAllValues();
         CourseItemMeasure courseItemMeasure1 = allValues.get(0);
-        assertEquals(timeDimension1, courseItemMeasure1.getTimeDimension());
+        assertEquals(timeDimension, courseItemMeasure1.getTimeDimension());
         assertEquals(frontLineWorkerDimension, courseItemMeasure1.getFrontLineWorkerDimension());
         assertEquals(courseItemDimension1, courseItemMeasure1.getCourseItemDimension());
         assertEquals(event, courseItemMeasure1.getEvent());
         assertEquals(Integer.valueOf(3), courseItemMeasure1.getScore());
 
         CourseItemMeasure courseItemMeasure2 = allValues.get(1);
-        assertEquals(timeDimension2, courseItemMeasure2.getTimeDimension());
+        assertEquals(timeDimension, courseItemMeasure2.getTimeDimension());
         assertEquals(frontLineWorkerDimension, courseItemMeasure2.getFrontLineWorkerDimension());
         assertEquals(courseItemDimension2, courseItemMeasure2.getCourseItemDimension());
         assertEquals(event, courseItemMeasure2.getEvent());
@@ -199,7 +198,7 @@ public class CourseItemMeasureServiceTest {
 
         courseItemMeasureService.createCourseItemMeasure(callId);
 
-        verify(certificateCourseLogService).deleteCertificateCourseLogsFor(callId);
+        verify(certificateCourseLogService).remove(certificationCourseLog);
     }
 
     @Test
@@ -241,7 +240,7 @@ public class CourseItemMeasureServiceTest {
         assertEquals(timeDimension, courseItemMeasure.getTimeDimension());
         assertEquals(new Timestamp(dateTime.getMillis()), courseItemMeasure.getTimestamp());
         assertEquals(4, (int) courseItemMeasure.getPercentage());
-        verify(audioTrackerLogService).deleteLogsFor(callId);
+        verify(audioTrackerLogService).remove(audioTrackerLog);
     }
 
     @Test

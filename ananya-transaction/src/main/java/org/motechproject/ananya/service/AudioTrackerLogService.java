@@ -20,6 +20,10 @@ public class AudioTrackerLogService {
         allAudioTrackerLogs.add(audioTrackerLog);
     }
 
+    public void remove(AudioTrackerLog audioTrackerLog) {
+        allAudioTrackerLogs.remove(audioTrackerLog);
+    }
+
     public AudioTrackerLog getLogFor(String callId) {
         return allAudioTrackerLogs.findByCallId(callId);
     }
