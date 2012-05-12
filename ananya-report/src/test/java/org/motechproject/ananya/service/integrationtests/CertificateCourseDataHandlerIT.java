@@ -5,20 +5,21 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.CertificationCourseLog;
-import org.motechproject.ananya.domain.CertificationCourseLogItem;
-import org.motechproject.ananya.domain.CourseItemState;
-import org.motechproject.ananya.domain.CourseItemType;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -39,6 +40,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +75,32 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     @Autowired
     AllRegistrationMeasures allRegistrationMeasures;
+    
+    @Autowired
+    AllCallLogs allCallLogs;
+
+    @Autowired
+    AllFrontLineWorkers allFrontLineWorkers;
 
     @After
+    @Before
     public void tearDown(){
         allCertificateCourseLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.flush();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.flush();
+        template.deleteAll(template.loadAll(TimeDimension.class));
         template.flush();
         template.deleteAll(template.loadAll(CourseItemMeasure.class));
         template.flush();
         template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.flush();
+        template.deleteAll(template.loadAll(CallDurationMeasure.class));
+        template.flush();
+        template.deleteAll(template.loadAll(RegistrationMeasure.class));
+        template.flush();
+        allFrontLineWorkers.removeAll();
     }
 
     @Test
@@ -102,41 +120,68 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
 
     @Test
-    public void shouldMapCallLogToCallDurationMeasure() {
+    public void shouldMapCertificateCourseLogsToCourseItemMeasure() {
         String callId = "callId";
         String calledNumber = "123";
         String callerId = "1923456";
         String contentName = "Chapter 1";
         String contentId = "contentId";
-
         DateTime now = DateTime.now();
+        DateTime callStartTime = now;
+        DateTime callEndTime = now.plusSeconds(20);
+        DateTime certificateCourseStartTime = now.plusSeconds(5);
+        DateTime certificateCourseEndTime = now.plusSeconds(15);
+
+        Location location = new Location("", "", "", 0, 0, 0);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "",Designation.ANGANWADI, location,RegistrationStatus.UNREGISTERED);
+        frontLineWorker.setRegisteredDate(now);
+        allFrontLineWorkers.add(frontLineWorker);
+
+        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
+        allLocationDimensions.add(locationDimension);
+        TimeDimension callStartTimeDimension = allTimeDimensions.addOrUpdate(callStartTime);
+
+        CallLog callLog = new CallLog(callId, callerId.toString(), "321");
+        callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
+        callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
+        allCallLogs.add(callLog);
+
         CertificationCourseLog courseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
-        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.START, now));
-        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId,CourseItemType.CHAPTER, contentName,"",CourseItemState.END, now));
+        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, CourseItemType.CHAPTER, contentName, "",
+                CourseItemState.START, certificateCourseStartTime));
+        courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, CourseItemType.CHAPTER, contentName, "",
+                CourseItemState.END, certificateCourseEndTime));
         allCertificateCourseLogs.add(courseLog);
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, CourseItemType.CHAPTER, null));
 
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(now);
+        TimeDimension certificateCourseStartTimeDimension = allTimeDimensions.addOrUpdate(certificateCourseStartTime);
+        TimeDimension certificateCourseEndTimeDimension = allTimeDimensions.addOrUpdate(certificateCourseEndTime);
 
-        allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "airtel", "", "", "");
 
-        FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), "", "", "", "");
-        LocationDimension locationDimension = new LocationDimension("", "", "", "");
-        allLocationDimensions.add(locationDimension);
-        allRegistrationMeasures.add(new RegistrationMeasure(flwDimension, locationDimension, timeDimension));
-
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId);
+        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId, callerId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
         handler.handleCertificateCourseData(event);
 
+        List<RegistrationMeasure> registrationMeasures = template.loadAll(RegistrationMeasure.class);
+        RegistrationMeasure registrationMeasure = registrationMeasures.get(0);
+        assertEquals(Long.valueOf(callerId), registrationMeasure.getFrontLineWorkerDimension().getMsisdn());
+
+        List<CallDurationMeasure> callDurationMeasures = template.loadAll(CallDurationMeasure.class);
+
+        assertEquals(2,callDurationMeasures.size());
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, callerId, locationDimension.getId(),callStartTimeDimension.getId(),20, "CALL",new Timestamp(callStartTime.getMillis()),new Timestamp(callEndTime.getMillis()))));
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId,callerId,locationDimension.getId(),callStartTimeDimension.getId(),10,"CERTIFICATECOURSE", new Timestamp(certificateCourseStartTime.getMillis()),new Timestamp(certificateCourseEndTime.getMillis()))));
+        
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
 
         assertEquals(2, courseItemMeasures.size());
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.START, callerId, timeDimension.getId(), contentName)));
-        assertThat(courseItemMeasures, hasItems(callDurationMeasureMatcher(CourseItemState.END, callerId, timeDimension.getId(),contentName)));
+        assertThat(courseItemMeasures, hasItems(courseItemMeasureMatcher(CourseItemState.START, callerId,
+                certificateCourseStartTimeDimension.getId(), contentName)));
+        assertThat(courseItemMeasures, hasItems(courseItemMeasureMatcher(CourseItemState.END, callerId,
+                certificateCourseEndTimeDimension.getId(), contentName)));
 
         List<CourseItemDimension> courseItemDimensions = template.loadAll(CourseItemDimension.class);
         assertEquals(1, courseItemDimensions.size());
@@ -150,8 +195,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         assertEquals(Long.valueOf(callerId),frontLineWorkerDimension.getMsisdn());
         assertNull(allCertificateCourseLogs.findByCallId(callId));
     }
-
-    private Matcher<CourseItemMeasure> callDurationMeasureMatcher(final CourseItemState event, final String msisdn, final Integer timeDimensionId, final String courseItemName) {
+    
+    private Matcher<CourseItemMeasure> courseItemMeasureMatcher(final CourseItemState event, final String msisdn, final Integer timeDimensionId, final String courseItemName) {
         return new BaseMatcher<CourseItemMeasure>() {
             @Override
             public boolean matches(Object o) {
@@ -160,6 +205,46 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
                         o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(msisdn)) &&
                         o1.getTimeDimension().getId().equals(timeDimensionId) &&
                         o1.getCourseItemDimension().getName().equals(courseItemName);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+    
+    private Matcher<RegistrationMeasure> registrationMeasureMatcher(final String msisdn, final Integer timeDimensionId, final String locationId) {
+        return new BaseMatcher<RegistrationMeasure>() {
+            @Override
+            public boolean matches(Object o) {
+                RegistrationMeasure o1 = (RegistrationMeasure) o;
+                return o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(msisdn)) &&
+                       o1.getTimeDimension().getId().equals(timeDimensionId) &&
+                       o1.getLocationDimension().getId().equals(locationId);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+    
+    private Matcher<CallDurationMeasure> callDurationMeasureMatcher(final String callId,
+            final String callerId, final Integer locationId, final Integer timeId,
+            final int duration, final String type, final Timestamp startTime, final Timestamp endTime) {
+
+            return new BaseMatcher<CallDurationMeasure>() {
+            @Override
+            public boolean matches(Object o) {
+                CallDurationMeasure o1 = (CallDurationMeasure) o;
+                return o1.getLocationDimension().getId().equals(locationId) &&
+                        o1.getTimeDimension().getId().equals(timeId)&&
+                        o1.getCallId().equals(callId) &&
+                        o1.getDuration() == duration &&
+                        o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(callerId)) &&
+                        o1.getType().equals(type)&&
+                        o1.getStartTime().equals(startTime)&&
+                        o1.getEndTime().equals(endTime);
             }
 
             @Override

@@ -8,5 +8,5 @@ public interface PublishService {
 
     void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType);
 
-    void publishNewRegistration(String callerId);
+//    void publishNewRegistration(String callerId);
 }

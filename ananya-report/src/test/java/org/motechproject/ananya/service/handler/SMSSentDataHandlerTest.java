@@ -35,7 +35,7 @@ public class SMSSentDataHandlerTest {
         Map<String, Object> handlerParams = new HashMap<String, Object>();
         LogData logData = new LogData(LogType.SMS_SENT, callerId);
         handlerParams.put("0", logData);
-        
+
         MotechEvent motechEvent = new MotechEvent(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY, handlerParams);
         smsSentDataHandler.handleSMSSent(motechEvent);
 

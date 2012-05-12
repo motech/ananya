@@ -43,7 +43,6 @@ public class CallDurationMeasureService {
     }
 
 
-
     @Transactional
     public void createCallDurationMeasure(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
@@ -62,8 +61,9 @@ public class CallDurationMeasureService {
         TimeDimension timeDimension = allTimeDimensions.getFor(callLog.getCallLogItems().get(0).getStartTime());
 
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
-            if (callLogItem.getStartTime() == null || callLogItem.getEndTime() == null)
+            if (callLogItem.getStartTime() == null || callLogItem.getEndTime() == null) {
                 continue;
+            }
 
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension,

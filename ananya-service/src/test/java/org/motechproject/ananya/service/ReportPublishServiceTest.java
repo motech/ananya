@@ -11,8 +11,6 @@ import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.context.EventContext;
 
-import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -33,38 +31,34 @@ public class ReportPublishServiceTest {
     @Test
     public void shouldPublishCertificateCourseDisconnectEvent(){
         String callId = "callID";
+        String callerId = "callerId";
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CALL_DURATION_DATA_KEY), captor.capture());
-        List<LogData> captured = captor.getAllValues();
+        LogData logData = captor.getValue();
         
-        assertEquals(2, captured.size());
-        for(LogData logData: captured){
-            assertEquals(callId, logData.getDataId());
-        }
+        assertEquals(callId, logData.getCallId());
+        assertEquals(callerId , logData.getCallerId());
     }
 
     @Test
     public void shouldPublishJobAidDisconnectEvent(){
         String callId = "callID";
+        String callerId = "callerId";
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY), captor.capture());
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CALL_DURATION_DATA_KEY), captor.capture());
-        List<LogData> captured = captor.getAllValues();
+        LogData logData = captor.getValue();
 
-        assertEquals(2, captured.size());
-        for(LogData logData: captured){
-            assertEquals(callId, logData.getDataId());
-        }
+        assertEquals(callId, logData.getCallId());
+        assertEquals(callerId , logData.getCallerId());
     }
 
     @Test
     public void shouldPublishSMSSent() {
-        LogData reportData = new LogData(LogType.SMS_SENT, "callerId");
+        LogData reportData = new LogData(LogType.SMS_SENT, "callId", "callerId");
 
         reportPublishService.publishSMSSent(reportData);
 
@@ -73,17 +67,4 @@ public class ReportPublishServiceTest {
         LogData captured = captor.getValue();
         assertEquals(captured, reportData);
     }
-
-    @Test
-    public void shouldPublishRegistration() {
-        String callerId = "123";
-
-        reportPublishService.publishNewRegistration(callerId);
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_REGISTRATION_DATA_KEY), captor.capture());
-        LogData captured = captor.getValue();
-        assertEquals(captured.getDataId(), callerId);
-    }
-
 }

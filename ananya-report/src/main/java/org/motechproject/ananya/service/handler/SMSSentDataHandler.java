@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SMSSentDataHandler {
 
-    private static final Logger log = Logger.getLogger(RegistrationDataHandler.class);
+    private static final Logger log = Logger.getLogger(SMSSentDataHandler.class);
     
     private SMSSentMeasureService smsSentMeasureService;
 
@@ -27,7 +27,7 @@ public class SMSSentDataHandler {
         log.info("inside handle SMS event");
         
         for (Object log : motechEvent.getParameters().values()) {
-            String callerId = ((LogData) log).getDataId();
+            String callerId = ((LogData) log).getCallerId();
             SMSSentDataHandler.log.info("Caller id is : " + callerId);
             this.smsSentMeasureService.createSMSSentMeasure(callerId);
         }

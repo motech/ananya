@@ -30,19 +30,23 @@ public class CertificateCourseDataHandlerTest {
     public void setUp() {
         initMocks(this);
         handler = new CertificateCourseDataHandler(courseItemMeasureService,
-                registrationMeasureService,
-                callDurationMeasureService);
+                callDurationMeasureService,
+                registrationMeasureService);
     }
 
     @Test
     public void shouldHandleCertificateCourseData() {
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, "callId");
+        String callId = "callId";
+        String callerId = "callerId";
+        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId, callerId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
         handler.handleCertificateCourseData(event);
 
-        verify(courseItemMeasureService).createCourseItemMeasure("callId");
+        verify(registrationMeasureService).createRegistrationMeasure(callerId);
+        verify(courseItemMeasureService).createCourseItemMeasure(callId);
+        verify(callDurationMeasureService).createCallDurationMeasure(callId);
     }
 }

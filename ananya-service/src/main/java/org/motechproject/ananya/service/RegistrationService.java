@@ -5,8 +5,6 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +39,7 @@ public class RegistrationService {
         Designation desgn = Designation.getFor(designation);
 
         frontLineWorkerService.createOrUpdate(callerId, name, desgn, location, registrationStatus);
-        registrationMeasureService.createRegistrationMeasure(new LogData(LogType.REGISTRATION, callerId));
+        registrationMeasureService.createRegistrationMeasure(callerId);
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();

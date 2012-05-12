@@ -5,6 +5,7 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
@@ -26,6 +27,7 @@ public class RegistrationMeasureService {
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
     private RegistrationLogService registrationLogService;
+    private AllRegistrationLogs allRegistrationLogs;
 
     public RegistrationMeasureService() {
     }
@@ -44,8 +46,7 @@ public class RegistrationMeasureService {
     }
 
     @Transactional
-    public void createRegistrationMeasure(LogData logData) {
-        String callerId = logData.getDataId();
+    public void createRegistrationMeasure(String callerId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
 
@@ -65,7 +66,7 @@ public class RegistrationMeasureService {
 
     @Transactional
     public void updateRegistrationStatusAndName(LogData logData) {
-        FrontLineWorker existingFlw = frontLineWorkerService.findByCallerId(logData.getDataId());
+        FrontLineWorker existingFlw = frontLineWorkerService.findByCallerId(logData.getCallerId());
         FrontLineWorkerDimension existingFlwDimension = allFrontLineWorkerDimensions.fetchFor(existingFlw.msisdn());
 
         existingFlwDimension.setName(existingFlw.name());

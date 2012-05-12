@@ -46,16 +46,6 @@ public class DataPublishService implements PublishService {
         }
     }
 
-    @Override
-    public void publishNewRegistration(String callerId) {
-        try{
-            publishService.publishNewRegistration(callerId);
-        }
-        catch (Exception e) {
-            handlePublishServiceException(e);
-        }
-    }
-
     private void handlePublishServiceException(Exception e) {
         StringBuilder sb = new StringBuilder();
         sb.append(ExceptionUtils.getMessage(e));

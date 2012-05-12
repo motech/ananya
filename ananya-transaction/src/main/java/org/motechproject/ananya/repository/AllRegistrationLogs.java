@@ -20,11 +20,14 @@ public class AllRegistrationLogs extends MotechBaseRepository<RegistrationLog> {
     }
 
     @GenerateView
-    public RegistrationLog findById(String logId) {
-        ViewQuery viewQuery = createQuery("by_id").key(logId).includeDocs(true);
+    public RegistrationLog findByCallerId(String callerId) {
+        ViewQuery viewQuery = createQuery("by_callerId").key(callerId).includeDocs(true);
         List<RegistrationLog> logs = db.queryView(viewQuery, RegistrationLog.class);
         if (logs == null || logs.isEmpty()) return null;
         return logs.get(0);
     }
 
+    public void deleteFor(String callerId) {
+
+    }
 }

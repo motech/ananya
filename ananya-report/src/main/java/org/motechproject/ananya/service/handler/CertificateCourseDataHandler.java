@@ -17,24 +17,24 @@ public class CertificateCourseDataHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
     private CourseItemMeasureService courseItemMeasureService;
-    private RegistrationMeasureService registrationMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
+    private RegistrationMeasureService registrationMeasureService;
 
     @Autowired
     public CertificateCourseDataHandler(CourseItemMeasureService courseItemMeasureService,
-                                        RegistrationMeasureService registrationMeasureService,
-                                        CallDurationMeasureService callDurationMeasureService) {
+                                        CallDurationMeasureService callDurationMeasureService, RegistrationMeasureService registrationMeasureService) {
         this.courseItemMeasureService = courseItemMeasureService;
-        this.registrationMeasureService = registrationMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
+        this.registrationMeasureService = registrationMeasureService;
     }
 
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
     public void handleCertificateCourseData(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
-            String callId = ((LogData) log).getDataId();
+            String callId = ((LogData) log).getCallId();
+            String callerId = ((LogData) log).getCallerId();
             LOG.info("CallId is: " + callId);
-            registrationMeasureService.createRegistrationMeasure((LogData)log);
+            registrationMeasureService.createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             this.courseItemMeasureService.createCourseItemMeasure(callId);
         }

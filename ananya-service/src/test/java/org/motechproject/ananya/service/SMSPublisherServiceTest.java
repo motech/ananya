@@ -10,7 +10,6 @@ import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.publish.DataPublishService;
 
 import static junit.framework.Assert.assertEquals;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -34,7 +33,7 @@ public class SMSPublisherServiceTest {
         ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
         verify(dataPublishService).publishSMSSent(captor.capture());
         LogData logData = captor.getValue();
-        assertEquals(msisdn,logData.getDataId());
+        assertEquals(msisdn,logData.getCallerId());
         assertEquals(LogType.SMS_SENT,logData.getType());
     }
 }

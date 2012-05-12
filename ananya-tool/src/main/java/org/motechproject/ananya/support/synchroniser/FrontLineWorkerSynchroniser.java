@@ -40,7 +40,7 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
             try {
                 if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
                     LogData logData = new LogData(LogType.REGISTRATION, msisdn.toString());
-                    registrationMeasureService.createRegistrationMeasure(logData);
+                    registrationMeasureService.createRegistrationMeasure(String.valueOf(msisdn));
                     synchroniserLog.add(msisdn.toString(), "Success");
                 }
             } catch (Exception e) {
