@@ -1,17 +1,17 @@
 package org.motechproject.ananya.support.diagnostics;
 
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.hibernate.exception.ExceptionUtils;
-import org.motechproject.ananya.repository.*;
-import org.motechproject.dao.MotechBaseRepository;
-import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticUrl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class CouchDBDiagnostic implements Diagnostic {
@@ -19,20 +19,12 @@ public class CouchDBDiagnostic implements Diagnostic {
     @Autowired
     @Qualifier("ananyaDbInstance")
     private StdCouchDbInstance ananyaDBInstance;
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
-    @Autowired
-    private AllLocations allLocations;
-    @Autowired
-    private AllCallLogs allCallLogs;
-    @Autowired
-    private AllCertificateCourseLogs allCertificateCourseLogs;
-    @Autowired
-    private AllOperators allOperators;
-    @Autowired
-    private AllSMSReferences allSMSReferences;
-    @Autowired
-    private AllAudioTrackerLogs allAudioTrackerLogs;
+
+    @Value("#{couchdbProperties['host']}")
+    private String server;
+
+    @Value("#{couchdbProperties['port']}")
+    private String port;
 
     @Override
     public DiagnosticLog performDiagnosis() {
@@ -42,14 +34,12 @@ public class CouchDBDiagnostic implements Diagnostic {
             ananyaDBInstance.getConnection().head("/");
             diagnosticLog.add("Databases present : " + ananyaDBInstance.getAllDatabases().toString());
 
-            List<MotechBaseRepository<? extends MotechBaseDataObject>> repositories =
-                    Arrays.asList(allFrontLineWorkers, allLocations, allOperators, allCallLogs,
-                            allCertificateCourseLogs, allAudioTrackerLogs, allSMSReferences);
-
-            for (MotechBaseRepository<? extends MotechBaseDataObject> repository : repositories) {
-                List<? extends MotechBaseDataObject> dataObjects = repository.getAll();
-                diagnosticLog.add("Size of " + repository.getClass().getSimpleName() + ": " + dataObjects.size());
-                dataObjects.clear();
+            HttpClient httpClient = new HttpClient();
+            for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
+                GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
+                httpClient.executeMethod(method);
+                String httpResponse = method.getResponseBodyAsString();
+                diagnosticLog.add(diagnosticUrl.description()+" : "+httpResponse);
             }
 
         } catch (Exception e) {

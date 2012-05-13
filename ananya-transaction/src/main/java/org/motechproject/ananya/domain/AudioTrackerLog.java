@@ -27,11 +27,11 @@ public class AudioTrackerLog extends BaseLog {
         audioTrackerLogItems.add(audioTrackerLogItem);
     }
 
-    public ServiceType getServiceType() {
-        return serviceType;
-    }
-
     public List<AudioTrackerLogItem> getAudioTrackerLogItems() {
         return audioTrackerLogItems;
+    }
+
+    public boolean typeIsCertificateCourse() {
+        return this.serviceType.equals(ServiceType.CERTIFICATE_COURSE);
     }
 }

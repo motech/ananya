@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics;
+package org.motechproject.ananya.support.diagnostics.base;
 
 public class DiagnosticLog {
 

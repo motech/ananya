@@ -3,11 +3,12 @@ package org.motechproject.ananya.support.synchroniser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.AudioTrackerLog;
-import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
-import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.Priority;
+import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ public class AudioTrackerSynchroniser implements Synchroniser {
         List<AudioTrackerLog> audioTrackerLogs = audioTrackerLogService.getAll();
         for (AudioTrackerLog audioTrackerLog : audioTrackerLogs) {
             try {
-                if(audioTrackerLog.getServiceType().equals(ServiceType.CERTIFICATE_COURSE))
+                if(audioTrackerLog.typeIsCertificateCourse())
                     courseItemMeasureService.createCourseItemMeasure(audioTrackerLog.getCallId());
                 else
                     jobAidContentMeasureService.createJobAidContentMeasure(audioTrackerLog.getCallId());

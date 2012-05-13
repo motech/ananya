@@ -3,6 +3,8 @@ package org.motechproject.ananya.support.diagnostics;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.hibernate.exception.ExceptionUtils;
+import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.stereotype.Component;

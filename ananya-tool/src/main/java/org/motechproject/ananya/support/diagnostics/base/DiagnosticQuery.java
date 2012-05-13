@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics;
+package org.motechproject.ananya.support.diagnostics.base;
 
 import org.joda.time.DateTime;
 

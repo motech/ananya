@@ -1,7 +1,6 @@
-package org.motechproject.ananya.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser.base;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
 
 public interface Synchroniser {
 

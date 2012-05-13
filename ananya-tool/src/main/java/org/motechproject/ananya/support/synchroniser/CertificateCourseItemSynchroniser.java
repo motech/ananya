@@ -5,7 +5,9 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.Priority;
+import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

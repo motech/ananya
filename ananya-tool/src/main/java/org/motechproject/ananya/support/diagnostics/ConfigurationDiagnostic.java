@@ -1,14 +1,16 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import java.util.Properties;
 import java.util.TreeSet;
 
-@Service
+@Component
 public class ConfigurationDiagnostic implements Diagnostic {
 
     @Autowired

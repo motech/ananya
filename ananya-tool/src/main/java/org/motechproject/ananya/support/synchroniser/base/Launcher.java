@@ -1,9 +1,8 @@
-package org.motechproject.ananya.support;
+package org.motechproject.ananya.support.synchroniser.base;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.motechproject.ananya.support.synchroniser.AllSynchronisers;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class Launcher {

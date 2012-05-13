@@ -1,7 +1,6 @@
-package org.motechproject.ananya.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser.base;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Repository;

@@ -9,7 +9,9 @@ import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.motechproject.ananya.service.SMSSentMeasureService;
-import org.motechproject.ananya.support.synchroniser.log.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.Priority;
+import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

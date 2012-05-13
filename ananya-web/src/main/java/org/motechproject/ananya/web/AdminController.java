@@ -5,7 +5,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.support.diagnostics.DiagnosticService;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.motechproject.ananya.views.FrontLineWorkerPresenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

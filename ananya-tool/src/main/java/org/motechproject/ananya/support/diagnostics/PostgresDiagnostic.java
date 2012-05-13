@@ -4,6 +4,9 @@ import org.hibernate.classic.Session;
 import org.hibernate.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
+import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

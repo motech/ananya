@@ -1,5 +1,6 @@
-package org.motechproject.ananya.support.diagnostics;
+package org.motechproject.ananya.support.diagnostics.base;
 
+import org.motechproject.ananya.support.diagnostics.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,12 @@ public class DiagnosticService {
     private PostgresDiagnostic postgresDiagnostic;
     @Autowired
     private ConfigurationDiagnostic configurationDiagnostic;
-
+    @Autowired
+    private SMSDiagnostic smsDiagnostic;
 
     public String getDiagnostics() throws Exception {
         StringBuilder sb = new StringBuilder();
-        for (Diagnostic diagnostic : Arrays.asList(activeMQDiagnostic, couchDBDiagnostic, postgresDiagnostic, configurationDiagnostic))
+        for (Diagnostic diagnostic : Arrays.asList(activeMQDiagnostic, couchDBDiagnostic, postgresDiagnostic, configurationDiagnostic, smsDiagnostic))
             sb.append(diagnostic.performDiagnosis().toString());
         return sb.toString();
     }
