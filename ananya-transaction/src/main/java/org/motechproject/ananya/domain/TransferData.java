@@ -35,11 +35,11 @@ public class TransferData implements JsonDeserializer<TransferData> {
     }
 
     public boolean isCCState() {
-        return type.equals(TransferDataStates.TYPE_CC_STATE);
+        return type.equals(TransferDataState.TYPE_CC_STATE);
     }
 
     public boolean isAudioTrackerState() {
-        return type.equals(TransferDataStates.TYPE_AUDIO_TRACKER);
+        return type.equals(TransferDataState.TYPE_AUDIO_TRACKER);
     }
 
     @Override

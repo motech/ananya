@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallLogCounter;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
-import org.motechproject.ananya.domain.TransferDataStates;
+import org.motechproject.ananya.domain.TransferDataState;
 import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -46,12 +46,12 @@ public class CallLogCounterServiceTest {
         String callId = "555:123";
 
         List<TransferData> list = new ArrayList<TransferData>();
-        list.add(new TransferData("0", TransferDataStates.TYPE_CC_STATE));
-        list.add(new TransferData("1", TransferDataStates.TYPE_CALL_DURATION));
-        list.add(new TransferData("2", TransferDataStates.TYPE_CC_STATE));
-        list.add(new TransferData("3", TransferDataStates.TYPE_CC_STATE));
-        list.add(new TransferData("4", TransferDataStates.TYPE_CC_STATE));
-        list.add(new TransferData("5", TransferDataStates.TYPE_CALL_DURATION));
+        list.add(new TransferData("0", TransferDataState.TYPE_CC_STATE));
+        list.add(new TransferData("1", TransferDataState.TYPE_CALL_DURATION));
+        list.add(new TransferData("2", TransferDataState.TYPE_CC_STATE));
+        list.add(new TransferData("3", TransferDataState.TYPE_CC_STATE));
+        list.add(new TransferData("4", TransferDataState.TYPE_CC_STATE));
+        list.add(new TransferData("5", TransferDataState.TYPE_CALL_DURATION));
 
         TransferDataList transferDataList = new TransferDataList("");
         ReflectionTestUtils.setField(transferDataList, "list", list);

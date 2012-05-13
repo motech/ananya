@@ -51,7 +51,7 @@ public class JobAidCallStateController {
 
         for (TransferData transferData : transferDataList.all()) {
             TransferDataStateAction transferDataStateAction = TransferDataStateAction.getFor(transferData.getType());
-            transferDataStateAction.addToRequest(transferData, null, audioTrackerList, callDurationList);
+            transferDataStateAction.addToRequest(transferData, audioTrackerList, callDurationList);
         }
 
         jobAidService.saveAudioTrackerState(audioTrackerList);
