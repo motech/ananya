@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.diagnostics;
 
 import org.hibernate.classic.Session;
-import org.hibernate.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
@@ -30,7 +29,7 @@ public class PostgresDiagnostic implements Diagnostic {
             SMSSentDiagnosis(diagnosticLog, session);
         } catch (Exception e) {
             diagnosticLog.add("Opening session failed");
-            diagnosticLog.add(ExceptionUtils.getFullStackTrace(e));
+            diagnosticLog.addError(e);
         }
         return diagnosticLog;
     }

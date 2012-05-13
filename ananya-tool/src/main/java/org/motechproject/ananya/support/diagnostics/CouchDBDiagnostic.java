@@ -4,7 +4,6 @@ package org.motechproject.ananya.support.diagnostics;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.ektorp.impl.StdCouchDbInstance;
-import org.hibernate.exception.ExceptionUtils;
 import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticUrl;
@@ -44,7 +43,7 @@ public class CouchDBDiagnostic implements Diagnostic {
 
         } catch (Exception e) {
             diagnosticLog.add("Couch DB connection failed");
-            diagnosticLog.add(ExceptionUtils.getFullStackTrace(e));
+            diagnosticLog.addError(e);
         }
         return diagnosticLog;
     }

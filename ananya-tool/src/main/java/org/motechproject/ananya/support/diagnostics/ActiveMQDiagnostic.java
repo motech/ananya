@@ -2,7 +2,6 @@ package org.motechproject.ananya.support.diagnostics;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
-import org.hibernate.exception.ExceptionUtils;
 import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class ActiveMQDiagnostic implements Diagnostic {
             diagnosticLog.add("Queue size is : " + queueSize);
         } catch (Exception e) {
             diagnosticLog.add("Error in creating ActiveMQ connection");
-            diagnosticLog.add(ExceptionUtils.getFullStackTrace(e));
+            diagnosticLog.addError(e);
         } finally {
             if (browser != null) browser.close();
             if (connection != null) connection.close();

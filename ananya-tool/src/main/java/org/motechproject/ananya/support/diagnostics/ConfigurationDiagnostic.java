@@ -13,17 +13,18 @@ import java.util.TreeSet;
 @Component
 public class ConfigurationDiagnostic implements Diagnostic {
 
-    @Autowired
-    @Qualifier("ananyaProperties")
     private Properties ananyaProperties;
-
-    @Autowired
-    @Qualifier("couchdbProperties")
     private Properties couchdbProperties;
+    private Properties activemqProperties;
 
     @Autowired
-    @Qualifier("activemqProperties")
-    private Properties activemqProperties;
+    public ConfigurationDiagnostic(@Qualifier("ananyaProperties") Properties ananyaProperties,
+                                   @Qualifier("couchdbProperties") Properties couchdbProperties,
+                                   @Qualifier("activemqProperties") Properties activemqProperties) {
+        this.ananyaProperties = ananyaProperties;
+        this.couchdbProperties = couchdbProperties;
+        this.activemqProperties = activemqProperties;
+    }
 
     @Override
     public DiagnosticLog performDiagnosis() throws JMSException {
