@@ -2,7 +2,6 @@ package org.motechproject.ananya.service.publish;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +23,6 @@ public class DataPublishService implements PublishService {
                               @Value("#{ananyaProperties['publisher.type']}") String publisherType) {
 
         this.publishService = publisherType.equalsIgnoreCase(DB) ? dbPublishService : queuePublishService;
-    }
-
-    @Override
-    public void publishSMSSent(LogData logData) {
-        try {
-            publishService.publishSMSSent(logData);
-        }
-        catch (Exception e) {
-            handlePublishServiceException(e);
-        }
     }
 
     @Override

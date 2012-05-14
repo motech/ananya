@@ -4,6 +4,7 @@ import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
@@ -19,12 +20,14 @@ public class JobAidDataHandler {
     private JobAidContentMeasureService jobAidContentMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
+    private RegistrationLogService registrationLogService;
 
     @Autowired
-    public JobAidDataHandler(JobAidContentMeasureService jobAidContentMeasureService, CallDurationMeasureService callDurationMeasureService, RegistrationMeasureService registrationMeasureService) {
+    public JobAidDataHandler(JobAidContentMeasureService jobAidContentMeasureService, CallDurationMeasureService callDurationMeasureService, RegistrationMeasureService registrationMeasureService, RegistrationLogService registrationLogService) {
         this.jobAidContentMeasureService = jobAidContentMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.registrationMeasureService = registrationMeasureService;
+        this.registrationLogService = registrationLogService;
     }
 
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY})
@@ -33,9 +36,16 @@ public class JobAidDataHandler {
             String callId = ((LogData) log).getCallId();
             String callerId =  ((LogData) log).getCallerId();
             LOG.info("CallId is: " + callId);
-            registrationMeasureService.createRegistrationMeasure(callerId);
+            createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
-            this.jobAidContentMeasureService.createJobAidContentMeasure(callId);
+            jobAidContentMeasureService.createJobAidContentMeasure(callId);
+        }
+    }
+
+    private void createRegistrationMeasure(String callerId) {
+        if(registrationLogService.registrationLogFor(callerId) != null){
+            registrationMeasureService.createRegistrationMeasure(callerId);
+            registrationLogService.deleteFor(callerId);
         }
     }
 }

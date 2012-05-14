@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.*;
 
 import static org.mockito.Mockito.verify;
@@ -30,16 +28,6 @@ public class DbPublishServiceTest {
         initMocks(this);
         dbPublishService = new DbPublishService(registrationMeasureService, courseItemMeasureService,
                 callDurationMeasureService, smsSentMeasureService, jobAidContentMeasureService);
-    }
-
-    @Test
-    public void shouldPublishSMSSent() throws Exception {
-        String callerId = "1234";
-        LogData logData = new LogData(LogType.SMS_SENT, callerId);
-
-        dbPublishService.publishSMSSent(logData);
-
-        verify(smsSentMeasureService).createSMSSentMeasure(callerId);
     }
 
     @Test

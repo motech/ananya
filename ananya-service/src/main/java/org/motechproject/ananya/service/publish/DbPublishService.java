@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,6 @@ public class DbPublishService implements PublishService {
         this.callDurationMeasureService = callDurationMeasureService;
         this.smsSentMeasureService = smsSentMeasureService;
         this.jobAidContentMeasureService = jobAidContentMeasureService;
-    }
-
-    @Override
-    public void publishSMSSent(LogData logData) {
-        String callerId = logData.getCallerId();
-        this.smsSentMeasureService.createSMSSentMeasure(callerId);
     }
 
     @Override

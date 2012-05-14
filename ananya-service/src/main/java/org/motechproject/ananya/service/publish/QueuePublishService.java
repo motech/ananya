@@ -24,12 +24,6 @@ public class QueuePublishService implements PublishService {
     }
 
     @Override
-    public void publishSMSSent(LogData logData) {
-        log.info("Log Data is: " + logData);
-        eventContext.send(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY, logData);
-    }
-
-    @Override
     public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
         log.info("Call Id is: " + callId);
 

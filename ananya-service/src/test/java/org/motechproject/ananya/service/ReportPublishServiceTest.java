@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.context.EventContext;
@@ -54,17 +53,5 @@ public class ReportPublishServiceTest {
 
         assertEquals(callId, logData.getCallId());
         assertEquals(callerId , logData.getCallerId());
-    }
-
-    @Test
-    public void shouldPublishSMSSent() {
-        LogData reportData = new LogData(LogType.SMS_SENT, "callId", "callerId");
-
-        reportPublishService.publishSMSSent(reportData);
-
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_SMS_SENT_DATA_KEY), captor.capture());
-        LogData captured = captor.getValue();
-        assertEquals(captured, reportData);
     }
 }
