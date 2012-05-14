@@ -45,6 +45,9 @@ public class FrontLineWorkerSeedTest {
     @Autowired
     private LocationSeed locationSeed;
 
+    @Autowired
+    private TimeSeed timeSeed;
+
     @Before
     public void setUp() throws IOException {
         allLocations.removeAll();
@@ -52,6 +55,7 @@ public class FrontLineWorkerSeedTest {
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();
         locationSeed.load();
+        timeSeed.load();
     }
 
     @Test

@@ -40,7 +40,7 @@ public class RegistrationMeasureServiceTest {
     public void setUp(){
         initMocks(this);
         registrationMeasureService = new RegistrationMeasureService(frontLineWorkerService,
-                allLocationDimensions, allFrontLineWorkerDimensions, allTimeDimensions,allRegistrationMeasures );
+                allLocationDimensions, allFrontLineWorkerDimensions, allTimeDimensions, allRegistrationMeasures);
     }
     
     @Test

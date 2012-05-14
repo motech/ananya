@@ -6,8 +6,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
+import org.motechproject.ananya.domain.SendSMSLog;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.SMSPublisherService;
+import org.motechproject.ananya.service.SendSMSLogService;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.Matchers.is;
@@ -25,14 +26,14 @@ public class SendSMSClientTest {
     @Mock
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
-    private SMSPublisherService smsPublisherService;
-    
+    private SendSMSLogService sendSMSLogService;
+
     private String senderId = "BI-577110";
 
     @Before
     public void setUp() {
         initMocks(this);
-        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, smsPublisherService, senderId);
+        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, sendSMSLogService, senderId);
     }
 
     @Test
@@ -52,7 +53,11 @@ public class SendSMSClientTest {
         verify(frontLineWorkerService).addSMSReferenceNumber(captor.capture());
         SMSReference value = captor.getValue();
         assertEquals(mobileNumber, value.getMsisdn());
-        verify(smsPublisherService).publishSMSSent(mobileNumber);
+
+        ArgumentCaptor<SendSMSLog> sendSMSLogArgumentCaptor = ArgumentCaptor.forClass(SendSMSLog.class);
+        verify(sendSMSLogService).add(sendSMSLogArgumentCaptor.capture());
+        SendSMSLog sendSMSLogValue = sendSMSLogArgumentCaptor.getValue();
+        assertEquals(mobileNumber, sendSMSLogValue.getCallerId());
     }
 
     @Test
@@ -73,7 +78,11 @@ public class SendSMSClientTest {
         SMSReference value = captor.getValue();
         assertEquals(mobileNumber, value.getMsisdn());
         assertEquals(smsReference, value);
-        verify(smsPublisherService).publishSMSSent(mobileNumber);
+
+        ArgumentCaptor<SendSMSLog> sendSMSLogArgumentCaptor = ArgumentCaptor.forClass(SendSMSLog.class);
+        verify(sendSMSLogService).add(sendSMSLogArgumentCaptor.capture());
+        SendSMSLog sendSMSLogValue = sendSMSLogArgumentCaptor.getValue();
+        assertEquals(mobileNumber, sendSMSLogValue.getCallerId());
     }
 
     @Test

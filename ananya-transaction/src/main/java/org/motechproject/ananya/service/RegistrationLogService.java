@@ -19,11 +19,11 @@ public class RegistrationLogService {
         allRegistrationLogs.add(registrationLog);
     }
 
-    public RegistrationLog getRegistrationLogFor(String callerId) {
+    public RegistrationLog registrationLogFor(String callerId) {
         return allRegistrationLogs.findByCallerId(callerId);
     }
 
     public void deleteFor(String callerId) {
-        allRegistrationLogs.remove(getRegistrationLogFor(callerId));
+        allRegistrationLogs.remove(registrationLogFor(callerId));
     }
 }

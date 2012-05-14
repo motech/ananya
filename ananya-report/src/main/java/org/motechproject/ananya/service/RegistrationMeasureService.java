@@ -5,12 +5,10 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.requests.LogData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +24,6 @@ public class RegistrationMeasureService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
-    private RegistrationLogService registrationLogService;
-    private AllRegistrationLogs allRegistrationLogs;
 
     public RegistrationMeasureService() {
     }
@@ -62,18 +58,5 @@ public class RegistrationMeasureService {
         log.info("Added registration measure for "
                 + callerId + "[Location=" + locationDimension.getId() +
                 "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
-    }
-
-    @Transactional
-    public void updateRegistrationStatusAndName(LogData logData) {
-        FrontLineWorker existingFlw = frontLineWorkerService.findByCallerId(logData.getCallerId());
-        FrontLineWorkerDimension existingFlwDimension = allFrontLineWorkerDimensions.fetchFor(existingFlw.msisdn());
-
-        existingFlwDimension.setName(existingFlw.name());
-        existingFlwDimension.setStatus(existingFlw.status().toString());
-        this.allFrontLineWorkerDimensions.update(existingFlwDimension);
-
-        log.info("Updated flw dimension for " + existingFlw.getMsisdn()
-                + "[name=" + existingFlw.getName() + "|status=" + existingFlw.status() + "]");
     }
 }
