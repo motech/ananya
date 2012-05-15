@@ -11,6 +11,7 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.util.DateUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -317,5 +318,15 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
+    }
+
+    @Test
+    public void shouldGetAllFrontLineWorkers() {
+        ArrayList<FrontLineWorker> expectedFrontLineWorkerList = new ArrayList<FrontLineWorker>();
+        when(allFrontLineWorkers.getAll()).thenReturn(expectedFrontLineWorkerList);
+
+        List<FrontLineWorker> actualFrontLineWorkerList = frontLineWorkerService.getAll();
+
+        assertEquals(expectedFrontLineWorkerList, actualFrontLineWorkerList);
     }
 }

@@ -89,6 +89,24 @@ public class FrontLineWorkerSeedTest {
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
     }
 
+    @Test
+    public void shouldUpdateOperatorInReportDbIfTheOperatorIsPresentInCouchDb() {
+        RegistrationStatus registrationStatus = RegistrationStatus.UNREGISTERED;
+        Designation designation = Designation.ASHA;
+        String name = "Name";
+        Long msisdn = 123L;
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), registrationStatus);
+        String operator = "Airtel";
+        frontLineWorker.setOperator(operator);
+        allFrontLineWorkers.add(frontLineWorker);
+        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name()));
+
+        frontLineWorkerSeed.updateOperatorOfReportDbFromCouchdb();
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
+        assertEquals(operator, frontLineWorkerDimension.getOperator());
+    }
+
     @After
     public void tearDown() {
         allLocations.removeAll();

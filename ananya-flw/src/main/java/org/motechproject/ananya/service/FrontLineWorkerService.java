@@ -140,6 +140,10 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.findByRegisteredDate(startDate, endDate);
     }
 
+    public List<FrontLineWorker> getAll() {
+        return allFrontLineWorkers.getAll();
+    }
+
     private boolean ifPreviousMonthOfYear(DateTime lastJobAidAccessTime) {
         DateTime now = DateTime.now();
         return lastJobAidAccessTime != null &&

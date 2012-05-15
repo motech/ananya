@@ -58,12 +58,19 @@ public class FrontLineWorkerSeed {
         loadFromCsv(inputCSVFile);
     }
 
-    @Seed(priority = 0, version = "1.1")
+    @Seed(priority = 1, version = "1.1")
     public void updateStatusOfNewlyRegistered() {
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
         for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions){
             frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
         }
+    }
+
+    @Seed(priority = 0, version = "1.1")
+    public void updateOperatorOfReportDbFromCouchdb() {
+        List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
+
+        frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
     }
 
     private void loadFromCsv(String path) throws IOException {
