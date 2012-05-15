@@ -6,7 +6,6 @@ import org.hamcrest.Matcher;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
@@ -125,7 +124,6 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
 
     @Test
-    @Ignore
     public void shouldMapCertificateCourseLogsToCourseItemMeasure() {
         String callId = "callId";
         String calledNumber = "123";
