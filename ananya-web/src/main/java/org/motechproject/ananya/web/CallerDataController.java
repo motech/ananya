@@ -47,7 +47,7 @@ public class CallerDataController {
         String circle = request.getParameter("circle");
         response.setContentType("application/javascript");
 
-        log.info("fetching caller data for: " + msisdn + " for operator: " + operator);
+        log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle: " + circle);
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator, circle);
 
@@ -62,11 +62,12 @@ public class CallerDataController {
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
         String operator = request.getParameter("operator");
+        String circle = request.getParameter("circle");
         response.setContentType("application/javascript");
 
-        log.info("fetching caller data for: " + msisdn + " for operator: " + operator);
+        log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle" + circle);
 
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator, circle);
 
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())

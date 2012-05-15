@@ -44,6 +44,7 @@ public class CertificateCourseServiceTest {
     public void shouldCreateCallerDataForGivenCallerId() {
         String callerId = "123";
         String operator = "airtel";
+        String circle = "circle";
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         BookMark bookMark = new BookMark("type", 1, 2);
@@ -51,7 +52,7 @@ public class CertificateCourseServiceTest {
 
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator, circle);
         assertEquals(bookMark.asJson(), callerData.getBookmark());
     }
 

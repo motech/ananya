@@ -54,9 +54,10 @@ public class CallerDataControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/joabaid/caller_data.js");
         request.addParameter("callerId", "12345");
         request.addParameter("operator", "airtel");
+        request.addParameter("circle", "circle");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
 
-        when(jobAidService.createCallerData("12345", "airtel")).thenReturn(
+        when(jobAidService.createCallerData("12345", "airtel", "circle")).thenReturn(
                 new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
@@ -74,11 +75,13 @@ public class CallerDataControllerTest {
         boolean isUserRegistered = true;
         String callerId = "12345";
         String operator = "airtel";
+        String circle = "circle";
         HashMap<String, Integer> scoresByChapter = new HashMap<String, Integer>();
         request.addParameter("callerId", callerId);
         request.addParameter("operator", operator);
+        request.addParameter("circle", circle);
         request.setServletPath("/dynamic/caller_data.js");
-        when(certificateCourseService.createCallerData(callerId, operator)).thenReturn(
+        when(certificateCourseService.createCallerData(callerId, operator, circle)).thenReturn(
                 new CertificateCourseCallerDataResponse(current_bookmark, isUserRegistered, scoresByChapter));
 
         ModelAndView callerDataForJobAid = controller.getCallerData(request, new MockHttpServletResponse());

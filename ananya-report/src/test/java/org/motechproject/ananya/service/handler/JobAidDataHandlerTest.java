@@ -49,7 +49,7 @@ public class JobAidDataHandlerTest {
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        when(registrationLogService.registrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, ""));
+        when(registrationLogService.registrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, "", ""));
 
         handler.handleJobAidData(event);
 

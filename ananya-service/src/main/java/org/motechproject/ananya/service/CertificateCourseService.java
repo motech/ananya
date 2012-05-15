@@ -48,7 +48,7 @@ public class CertificateCourseService {
         boolean isNewFlw = frontLineWorkerService.isNewFlw(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
         if (isNewFlw)
-            registrationLogService.add(new RegistrationLog(msisdn, operator));
+            registrationLogService.add(new RegistrationLog(msisdn, operator, circle));
 
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),

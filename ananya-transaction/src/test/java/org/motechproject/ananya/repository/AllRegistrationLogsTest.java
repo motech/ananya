@@ -19,7 +19,8 @@ public class AllRegistrationLogsTest extends SpringIntegrationTest {
     public void shouldFindByCallId() {
         String callerId = "123";
         String operator = "airtel";
-        RegistrationLog registrationLog = new RegistrationLog(callerId,operator);
+        String circle = "circle";
+        RegistrationLog registrationLog = new RegistrationLog(callerId,operator,circle);
         allRegistrationLogs.add(registrationLog);
         markForDeletion(registrationLog);
 

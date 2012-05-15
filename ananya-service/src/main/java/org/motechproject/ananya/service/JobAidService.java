@@ -49,7 +49,7 @@ public class JobAidService {
         boolean isNewFLW = frontLineWorkerService.isNewFlw(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
         if (isNewFLW) {
-            RegistrationLog registrationLog = new RegistrationLog(callerId, operator);
+            RegistrationLog registrationLog = new RegistrationLog(callerId, operator, circle);
             registrationLogService.add(registrationLog);
         }
 
