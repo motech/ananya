@@ -44,11 +44,12 @@ public class CallerDataController {
     public ModelAndView getCallerDataForJobAid(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String msisdn = request.getParameter("callerId");
         String operator = request.getParameter("operator");
+        String circle = request.getParameter("circle");
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator);
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator, circle);
 
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())

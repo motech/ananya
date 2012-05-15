@@ -42,12 +42,13 @@ public class JobAidService {
                 jobAidPromptRequest.getPromptList());
     }
 
-    public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
-        log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
+    public JobAidCallerDataResponse createCallerData(String callerId, String operator, String circle) {
+        log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " + circle);
 
-        boolean isNewFlw = frontLineWorkerService.isNewFlw(callerId);
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator);
-        if (isNewFlw) {
+
+        boolean isNewFLW = frontLineWorkerService.isNewFlw(callerId);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
+        if (isNewFLW) {
             RegistrationLog registrationLog = new RegistrationLog(callerId, operator);
             registrationLogService.add(registrationLog);
         }

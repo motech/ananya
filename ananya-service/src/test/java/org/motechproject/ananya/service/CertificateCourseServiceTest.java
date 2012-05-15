@@ -49,7 +49,7 @@ public class CertificateCourseServiceTest {
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
 
-        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator);
         assertEquals(bookMark.asJson(), callerData.getBookmark());

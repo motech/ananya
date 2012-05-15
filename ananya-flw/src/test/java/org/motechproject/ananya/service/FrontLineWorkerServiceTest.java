@@ -42,7 +42,7 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        frontLineWorkerService.createOrUpdateUnregistered(msisdn, frontLineWorker.getOperator());
+        frontLineWorkerService.createOrUpdateUnregistered(msisdn, frontLineWorker.getOperator(), "circle");
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
@@ -55,11 +55,15 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldNotCreateFLWIfExistsInDBAndNotUpdateFLWIfOperatorIsNotModified() {
         String msisdn = "123";
+        String circle = "circle";
+        String operator = "airtel";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
-        frontLineWorker.setOperator("airtel");
+        frontLineWorker.setOperator(operator);
+        frontLineWorker.setCircle(circle);
+
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers, never()).update(frontLineWorker);
@@ -69,12 +73,50 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenOperatorIsDifferent() {
         String msisdn = "123";
+        String circle = "circle";
+        String oldOperator = "vodafone";
+        String newOperator = "airtel";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
-        frontLineWorker.setOperator("vodafone");
+        frontLineWorker.setOperator(oldOperator);
+        frontLineWorker.setCircle(circle);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, "airtel");
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, newOperator, circle);
+
+        verify(allFrontLineWorkers, never()).add(frontLineWorker);
+        verify(allFrontLineWorkers).update(frontLineWorker);
+        assertEquals(frontLineWorker, frontLineWorkerFromDb);
+    }
+    
+    @Test
+    public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenCircleIsDifferent() {
+        String msisdn = "123";
+        String operator = "vodafone";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
+        frontLineWorker.setOperator(operator);
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, "circle");
+
+        verify(allFrontLineWorkers, never()).add(frontLineWorker);
+        verify(allFrontLineWorkers).update(frontLineWorker);
+        assertEquals(frontLineWorker, frontLineWorkerFromDb);
+    }
+
+    @Test
+    public void shouldNotCreateFLWIfAlreadyPresentInDBButShouldUpdateWhenCircleAndOperatorIsDifferent(){
+        String msisdn = "123";
+        String oldOperator = "vodafone";
+        String newOperator = "airtel";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
+        frontLineWorker.setOperator(oldOperator);
+        frontLineWorker.setCircle("oldCircle");
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+
+        FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, newOperator, "newCircle");
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).update(frontLineWorker);
@@ -201,6 +243,7 @@ public class FrontLineWorkerServiceTest {
         String randomPromptKey = "random";
         String operator = "airtel";
         String promptKey = "Max_Usage";
+        String circle = "circle";
         DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
@@ -209,7 +252,8 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.markPromptHeard(randomPromptKey);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator");
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator", circle);
+
 
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
@@ -219,13 +263,14 @@ public class FrontLineWorkerServiceTest {
     public void shouldResetCurrentUsageAtBeginningOfMonthEvenThoughMaxUsageIsNotReached() {
         String callerId = "callerId";
         String operator = "airtel";
+        String circle = "circle";
         DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis());
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now().minusMonths(2));
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator");
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator", circle);
 
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey("Max_Usage"));

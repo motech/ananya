@@ -109,7 +109,7 @@ public class JobAidDataSetup {
         for (int j = 0; j < usersPerOperator; j++) {
             String callerId = "9999" + prefix + "" + j;
             Operator operator = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callerId, operator.getName());
+            jobAidService.createCallerData(callerId, operator.getName(),"circle");
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
             System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId()+"|count="+j);
         }

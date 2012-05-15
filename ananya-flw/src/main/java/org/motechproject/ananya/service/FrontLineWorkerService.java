@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FrontLineWorkerService {
@@ -45,7 +46,7 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator) {
+    public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
         if (frontLineWorker == null) {
@@ -55,17 +56,18 @@ public class FrontLineWorkerService {
             log.info("Created:" + frontLineWorker);
             return frontLineWorker;
         }
-        if (frontLineWorker.operatorIs(operator))
+        if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle))
             return frontLineWorker;
 
         frontLineWorker.setOperator(operator);
+        frontLineWorker.setCircle(circle);
         allFrontLineWorkers.update(frontLineWorker);
         log.info("Updated:" + frontLineWorker);
         return frontLineWorker;
     }
 
-    public FrontLineWorker findForJobAidCallerData(String callerId, String operator) {
-        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator);
+    public FrontLineWorker findForJobAidCallerData(String callerId, String operator, String circle) {
+        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator, circle);
         DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
 
         if (ifPreviousMonthOfYear(lastJobAidAccessTime)) {

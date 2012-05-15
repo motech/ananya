@@ -24,6 +24,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private String operator;
+    
+    @JsonProperty
+    private String circle;
 
     @JsonProperty
     private BookMark bookmark;
@@ -226,5 +229,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void resetJobAidUsageAndPrompts() {
         this.currentJobAidUsage = 0;
         this.promptsHeard.remove("Max_Usage");
+    }
+    public boolean circleIs(String circle) {
+        return StringUtils.equalsIgnoreCase(this.circle, circle);
+    }
+
+    public void setCircle(String circle) {
+        this.circle = circle;
     }
 }

@@ -42,11 +42,11 @@ public class CertificateCourseService {
         this.registrationLogService = registrationLogService;
     }
 
-    public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
-        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
+    public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
+        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle);
 
         boolean isNewFlw = frontLineWorkerService.isNewFlw(msisdn);
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
         if (isNewFlw)
             registrationLogService.add(new RegistrationLog(msisdn, operator));
 

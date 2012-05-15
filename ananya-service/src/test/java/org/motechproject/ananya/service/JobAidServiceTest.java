@@ -59,16 +59,19 @@ public class JobAidServiceTest {
         String operator = "airtel";
         String callerId = "callerId";
         String promptKey = "prompt";
+        String circle = "circle";
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator)).thenReturn(frontLineWorker);
+
+        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
         when(frontLineWorkerService.isNewFlw(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator, circle);
 
-        verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator);
+        verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator, circle);
+
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
                 verify(registrationLogService).add(captor.capture());
         
