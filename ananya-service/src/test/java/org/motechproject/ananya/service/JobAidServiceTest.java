@@ -65,7 +65,7 @@ public class JobAidServiceTest {
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.isNewFlw(callerId)).thenReturn(true);
+        when(frontLineWorkerService.isNewFlwOrOperatorIsEmpty(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator, circle);

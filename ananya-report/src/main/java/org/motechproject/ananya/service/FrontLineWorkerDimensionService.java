@@ -27,6 +27,7 @@ public class FrontLineWorkerDimensionService {
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
     }
 
+    @Transactional
     public List<FrontLineWorkerDimension> getAllUnregistered() {
         return allFrontLineWorkerDimensions.getAllUnregistered();
     }
@@ -44,5 +45,10 @@ public class FrontLineWorkerDimensionService {
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
             log.info("Updated operator for frontlineworker : " + frontLineWorker.getMsisdn() + "with operator : " + frontLineWorker.getOperator());
         }
+    }
+
+    @Transactional
+    public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus) {
+        return allFrontLineWorkerDimensions.getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
     }
 }

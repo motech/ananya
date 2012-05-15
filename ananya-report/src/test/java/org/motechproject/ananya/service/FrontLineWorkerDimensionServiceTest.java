@@ -3,7 +3,9 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 
@@ -63,5 +65,19 @@ public class FrontLineWorkerDimensionServiceTest {
         frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
 
         verify(allFrontLineWorkerDimensions, never()).update(frontLineWorkerDimension);
+    }
+
+    @Test
+    public void shouldGetOrMakeGivenTheDetails() {
+        long msisdn = 123L;
+        String operator = "Airtel";
+        String circle = "circle";
+        String name = "name";
+        String designation = Designation.ANM.name();
+        String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
+
+        frontLineWorkerDimensionService.getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
+
+        verify(allFrontLineWorkerDimensions).getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
     }
 }

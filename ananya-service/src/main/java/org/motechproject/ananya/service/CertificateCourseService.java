@@ -45,9 +45,9 @@ public class CertificateCourseService {
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle);
 
-        boolean isNewFlw = frontLineWorkerService.isNewFlw(msisdn);
+        boolean isNewFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
-        if (isNewFlw)
+        if (isNewFlwOrOperatorIsEmpty)
             registrationLogService.add(new RegistrationLog(msisdn, operator, circle));
 
         return new CertificateCourseCallerDataResponse(

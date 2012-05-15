@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -131,9 +132,9 @@ public class FrontLineWorkerService {
         log.info("Updated certificate course state for " + frontLineWorker);
     }
 
-    public boolean isNewFlw(String callerId) {
+    public boolean isNewFlwOrOperatorIsEmpty(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        return frontLineWorker == null;
+        return frontLineWorker == null || StringUtils.isEmpty(frontLineWorker.getOperator());
     }
 
     public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {

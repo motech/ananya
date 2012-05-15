@@ -10,7 +10,6 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -32,7 +31,7 @@ public class RegistrationMeasureServiceTest {
     @Mock
     private AllLocationDimensions allLocationDimensions;
     @Mock
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     @Mock
     private AllTimeDimensions allTimeDimensions;
 
@@ -40,7 +39,7 @@ public class RegistrationMeasureServiceTest {
     public void setUp(){
         initMocks(this);
         registrationMeasureService = new RegistrationMeasureService(frontLineWorkerService,
-                allLocationDimensions, allFrontLineWorkerDimensions, allTimeDimensions, allRegistrationMeasures);
+                frontLineWorkerDimensionService, allLocationDimensions, allTimeDimensions, allRegistrationMeasures);
     }
     
     @Test
@@ -58,7 +57,7 @@ public class RegistrationMeasureServiceTest {
 
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
-        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.getOrMakeFor(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
         registrationMeasureService.createRegistrationMeasure(callerId);

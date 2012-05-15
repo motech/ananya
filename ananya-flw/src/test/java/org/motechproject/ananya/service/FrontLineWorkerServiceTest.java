@@ -17,6 +17,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -328,5 +329,35 @@ public class FrontLineWorkerServiceTest {
         List<FrontLineWorker> actualFrontLineWorkerList = frontLineWorkerService.getAll();
 
         assertEquals(expectedFrontLineWorkerList, actualFrontLineWorkerList);
+    }
+
+    @Test
+    public void shouldReturnTrueIfFrontLineWorkerIsNotPresent() {
+        String msisdn = "1234";
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
+
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+
+        assertTrue(newFlwOrOperatorIsEmpty);
+    }
+
+    @Test
+    public void shouldReturnTrueIfOperatorIsNorPresentOnFrontLineWorker() {
+        String msisdn = "1234";
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(new FrontLineWorker(msisdn,null));
+
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+
+        assertTrue(newFlwOrOperatorIsEmpty);
+    }
+
+    @Test
+    public void shouldReturnFalseIfOperatorIsPresentOnFrontLineWorker() {
+        String msisdn = "1234";
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(new FrontLineWorker(msisdn,"Airtel"));
+
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+
+        assertFalse(newFlwOrOperatorIsEmpty);
     }
 }

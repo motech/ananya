@@ -20,8 +20,8 @@ public class RegistrationMeasureService {
     private static final Logger log = LoggerFactory.getLogger(RegistrationMeasureService.class);
 
     private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     private AllLocationDimensions allLocationDimensions;
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
 
@@ -30,14 +30,13 @@ public class RegistrationMeasureService {
 
     @Autowired
     public RegistrationMeasureService(FrontLineWorkerService frontLineWorkerService,
-                                      AllLocationDimensions allLocationDimensions,
-                                      AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                      FrontLineWorkerDimensionService frontLineWorkerDimensionService, AllLocationDimensions allLocationDimensions,
                                       AllTimeDimensions allTimeDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
-        this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+        this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
@@ -46,7 +45,7 @@ public class RegistrationMeasureService {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(
+        FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.getOrMakeFor(
                 frontLineWorker.msisdn(), frontLineWorker.getOperator(), frontLineWorker.getCircle(),
                 frontLineWorker.name(), frontLineWorker.designationName(), frontLineWorker.status().toString());
 
