@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public class AllFrontLineWorkerDimensions {
@@ -24,7 +26,7 @@ public class AllFrontLineWorkerDimensions {
             template.save(dimension);
             return dimension;
         }
-        dimension.update(operator,name,status,designation);
+        dimension.update(operator, name, status, designation);
         template.saveOrUpdate(dimension);
         return dimension;
     }
@@ -37,7 +39,11 @@ public class AllFrontLineWorkerDimensions {
     public void update(FrontLineWorkerDimension frontLineWorkerDimension) {
         template.update(frontLineWorkerDimension);
     }
-    
+
+    public List<FrontLineWorkerDimension> getAllUnregistered() {
+        return template.findByNamedQueryAndNamedParam(FrontLineWorkerDimension.FIND_ALL_UNREGISTERED, new String[0], new Object[0]);
+    }
+
     public void removeAll() {
         template.bulkUpdate("delete from FrontLineWorkerDimension");
     }

@@ -4,10 +4,15 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "front_line_worker_dimension")
-@NamedQuery(name = FrontLineWorkerDimension.FIND_BY_MSISDN, query = "select f from FrontLineWorkerDimension f where f.msisdn=:msisdn")
+@NamedQueries({
+        @NamedQuery(name = FrontLineWorkerDimension.FIND_BY_MSISDN, query = "select f from FrontLineWorkerDimension f where f.msisdn=:msisdn"),
+        @NamedQuery(name = FrontLineWorkerDimension.FIND_ALL_UNREGISTERED, query = "select f from FrontLineWorkerDimension f where f.status='UNREGISTERED'"),
+})
 public class FrontLineWorkerDimension {
 
     public static final String FIND_BY_MSISDN = "find.by.msisdn";
+
+    public static final String FIND_ALL_UNREGISTERED = "find.all.unregistered";
 
     @Id
     @Column(name="id")
@@ -25,10 +30,9 @@ public class FrontLineWorkerDimension {
 
     @Column(name="name")
     private String name;
-    
+
     @Column (name="designation")
     private String designation;
-
     @Column(name="status")
     private String status;
 

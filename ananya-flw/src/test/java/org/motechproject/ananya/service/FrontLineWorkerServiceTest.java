@@ -305,6 +305,17 @@ public class FrontLineWorkerServiceTest {
 
         assertEquals(expectedFrontLineWorkers, frontLineWorkers);
         verify(allFrontLineWorkers).findByRegisteredDate(startDate, endDate);
+    }
 
+    @Test
+    public void shouldUpdateRegistrationStatusForFrontLineWorker() {
+        String msisdn = "123";
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+
+        frontLineWorkerService.updateRegistrationStatus(msisdn, RegistrationStatus.UNREGISTERED);
+
+        verify(allFrontLineWorkers).update(frontLineWorker);
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
     }
 }

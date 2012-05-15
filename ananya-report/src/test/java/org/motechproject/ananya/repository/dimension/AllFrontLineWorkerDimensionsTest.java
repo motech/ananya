@@ -4,8 +4,11 @@ import org.junit.After;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -76,5 +79,21 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
     public void shouldReturnNullWhenFrontLineWorkerDimensionDoesNotExists() {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(100L);
         assertNull(frontLineWorkerDimension);
+    }
+
+    @Test
+    public void shouldGetAllUnRegisteredFrontLineWorkerDimensions(){
+        long msisdn = 9880099L;
+        long msisdn1 = 98800999L;
+        String name = "name";
+        String operator = "operator";
+        String status = RegistrationStatus.UNREGISTERED.name();
+        String designation = "designation";
+        template.save(new FrontLineWorkerDimension(msisdn, operator, name, designation, status));
+        template.save(new FrontLineWorkerDimension(msisdn1, operator, name, designation, status));
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
+
+        assertEquals(2, frontLineWorkerDimensions.size());
     }
 }

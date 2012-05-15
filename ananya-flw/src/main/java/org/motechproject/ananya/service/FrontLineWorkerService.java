@@ -83,6 +83,12 @@ public class FrontLineWorkerService {
         return frontLineWorker.currentCourseAttempt();
     }
 
+    public void updateRegistrationStatus(String msisdn, RegistrationStatus registrationStatus) {
+        FrontLineWorker frontLineWorker = findByCallerId(msisdn);
+        frontLineWorker.setRegistrationStatus(registrationStatus);
+        allFrontLineWorkers.update(frontLineWorker);
+    }
+
     public SMSReference getSMSReferenceNumber(String callerId) {
         return allSMSReferences.findByMsisdn(callerId);
     }

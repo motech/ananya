@@ -6,7 +6,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -21,7 +24,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -70,6 +72,21 @@ public class FrontLineWorkerSeedTest {
         Assert.assertEquals(frontLineWorkerDimension.getName(), frontLineWorker.name());
         Assert.assertEquals(frontLineWorkerDimension.getMsisdn(), frontLineWorker.msisdn());
         Assert.assertEquals(frontLineWorkerDimension.getOperator(), frontLineWorker.getOperator());
+    }
+
+    @Test
+    public void shouldUpdateStatusOfNewlyRegisteredToUnregistered() {
+        RegistrationStatus registrationStatus = RegistrationStatus.UNREGISTERED;
+        Designation designation = Designation.ASHA;
+        String name = "Name";
+        Long msisdn = 123L;
+        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", name, designation.name(), registrationStatus.name()));
+        allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), name, designation, new Location(), RegistrationStatus.PARTIALLY_REGISTERED));
+
+        frontLineWorkerSeed.updateStatusOfNewlyRegistered();
+
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn.toString());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
     }
 
     @After
