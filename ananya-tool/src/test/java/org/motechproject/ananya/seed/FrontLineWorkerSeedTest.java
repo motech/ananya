@@ -80,7 +80,7 @@ public class FrontLineWorkerSeedTest {
         Designation designation = Designation.ASHA;
         String name = "Name";
         Long msisdn = 123L;
-        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", name, designation.name(), registrationStatus.name()));
+        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name()));
         allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), name, designation, new Location(), RegistrationStatus.PARTIALLY_REGISTERED));
 
         frontLineWorkerSeed.updateStatusOfNewlyRegistered();

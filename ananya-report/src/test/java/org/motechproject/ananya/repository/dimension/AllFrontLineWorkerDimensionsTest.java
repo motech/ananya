@@ -89,8 +89,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String operator = "operator";
         String status = RegistrationStatus.UNREGISTERED.name();
         String designation = "designation";
-        template.save(new FrontLineWorkerDimension(msisdn, operator, name, designation, status));
-        template.save(new FrontLineWorkerDimension(msisdn1, operator, name, designation, status));
+        String circle = "Bihar";
+        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
+        template.save(new FrontLineWorkerDimension(msisdn1, operator, circle, name, designation, status));
 
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
 
