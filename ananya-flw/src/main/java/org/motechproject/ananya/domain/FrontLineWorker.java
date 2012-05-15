@@ -222,4 +222,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public boolean hasPassedTheCourse() {
         return reportCard().totalScore() >= CERTIFICATE_COURSE_PASSING_SCORE;
     }
+
+    public void resetJobAidUsageAndPrompts() {
+        this.currentJobAidUsage = 0;
+        this.promptsHeard.remove("Max_Usage");
+    }
 }

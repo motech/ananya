@@ -45,19 +45,17 @@ public class JobAidService {
     public JobAidCallerDataResponse createCallerData(String callerId, String operator) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator);
 
-        boolean isNewFLW = frontLineWorkerService.isNewFLW(callerId);
-        FrontLineWorker frontLineWorker = frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator);
-        if (isNewFLW) {
+        boolean isNewFlw = frontLineWorkerService.isNewFlw(callerId);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator);
+        if (isNewFlw) {
             RegistrationLog registrationLog = new RegistrationLog(callerId, operator);
             registrationLogService.add(registrationLog);
         }
 
-        Integer allowedUsagePerMonthForOperator = operatorService.findMaximumUsageFor(operator);
-
         return new JobAidCallerDataResponse(
                 frontLineWorker.status().isRegistered(),
                 frontLineWorker.getCurrentJobAidUsage(),
-                allowedUsagePerMonthForOperator,
+                operatorService.findMaximumUsageFor(operator),
                 frontLineWorker.getPromptsHeard());
     }
 

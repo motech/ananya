@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FrontLineWorkerService {
@@ -65,6 +64,18 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
+    public FrontLineWorker findForJobAidCallerData(String callerId, String operator) {
+        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator);
+        DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
+
+        if (ifPreviousMonthOfYear(lastJobAidAccessTime)) {
+            frontLineWorker.resetJobAidUsageAndPrompts();
+            allFrontLineWorkers.update(frontLineWorker);
+            log.info("Reset last jobaid usage for " + frontLineWorker);
+        }
+        return frontLineWorker;
+    }
+
     public int getCurrentCourseAttempt(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         return frontLineWorker.currentCourseAttempt();
@@ -112,30 +123,19 @@ public class FrontLineWorkerService {
         log.info("Updated certificate course state for " + frontLineWorker);
     }
 
-    public FrontLineWorker getFLWForJobAidCallerData(String callerId, String operator) {
-        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator);
-        DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
-
-        if (lastJobAidAccessTime != null &&
-                (lastJobAidAccessTime.getMonthOfYear() != DateTime.now().getMonthOfYear() ||
-                        lastJobAidAccessTime.getYear() != DateTime.now().getYear())) {
-
-            frontLineWorker.setCurrentJobAidUsage(0);
-            Map<String, Integer> promptsHeard = frontLineWorker.getPromptsHeard();
-            promptsHeard.remove("Max_Usage");
-
-            allFrontLineWorkers.update(frontLineWorker);
-            log.info("Reset last jobaid usage for " + frontLineWorker);
-        }
-        return frontLineWorker;
-    }
-
-    public boolean isNewFLW(String callerId) {
+    public boolean isNewFlw(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         return frontLineWorker == null;
     }
 
     public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
         return allFrontLineWorkers.findByRegisteredDate(startDate, endDate);
+    }
+
+    private boolean ifPreviousMonthOfYear(DateTime lastJobAidAccessTime) {
+        DateTime now = DateTime.now();
+        return lastJobAidAccessTime != null &&
+                (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                        lastJobAidAccessTime.getYear() != now.getYear());
     }
 }

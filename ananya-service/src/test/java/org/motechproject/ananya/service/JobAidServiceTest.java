@@ -62,13 +62,13 @@ public class JobAidServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        when(frontLineWorkerService.getFLWForJobAidCallerData(callerId, operator)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.isNewFLW(callerId)).thenReturn(true);
+        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.isNewFlw(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator);
 
-        verify(frontLineWorkerService).getFLWForJobAidCallerData(callerId, operator);
+        verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator);
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
                 verify(registrationLogService).add(captor.capture());
         

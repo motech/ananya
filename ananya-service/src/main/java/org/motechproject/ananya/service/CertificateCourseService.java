@@ -45,7 +45,7 @@ public class CertificateCourseService {
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator);
 
-        boolean isNewFlw = frontLineWorkerService.isNewFLW(msisdn);
+        boolean isNewFlw = frontLineWorkerService.isNewFlw(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator);
         if (isNewFlw)
             registrationLogService.add(new RegistrationLog(msisdn, operator));
@@ -69,7 +69,6 @@ public class CertificateCourseService {
     }
 
     private void saveBookmarkAndScore(CertificationCourseStateRequestList stateRequestList) {
-
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
         addBookmark(frontLineWorker, stateRequestList);
 

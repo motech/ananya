@@ -209,7 +209,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.markPromptHeard(randomPromptKey);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.getFLWForJobAidCallerData("callerId", "operator");
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator");
 
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
@@ -225,7 +225,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setLastJobAidAccessTime(DateTime.now().minusMonths(2));
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.getFLWForJobAidCallerData("callerId", "operator");
+        FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator");
 
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey("Max_Usage"));
