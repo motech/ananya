@@ -1,38 +1,34 @@
 package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.service.*;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.ReportPublishEventKeys;
+import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
+import org.motechproject.ananya.service.handler.JobAidDataHandler;
+import org.motechproject.model.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DbPublishService implements PublishService {
-    private RegistrationMeasureService registrationMeasureService;
-    private CourseItemMeasureService courseItemMeasureService;
-    private CallDurationMeasureService callDurationMeasureService;
-    private SMSSentMeasureService smsSentMeasureService;
-    private JobAidContentMeasureService jobAidContentMeasureService;
+    private CertificateCourseDataHandler certificateCourseDataHandler;
+    private JobAidDataHandler jobAidDataHandler;
 
     @Autowired
-    public DbPublishService(RegistrationMeasureService registrationMeasureService, CourseItemMeasureService courseItemMeasureService,
-                            CallDurationMeasureService callDurationMeasureService, SMSSentMeasureService smsSentMeasureService,
-                            JobAidContentMeasureService jobAidContentMeasureService) {
-        this.registrationMeasureService = registrationMeasureService;
-        this.courseItemMeasureService = courseItemMeasureService;
-        this.callDurationMeasureService = callDurationMeasureService;
-        this.smsSentMeasureService = smsSentMeasureService;
-        this.jobAidContentMeasureService = jobAidContentMeasureService;
+    public DbPublishService(CertificateCourseDataHandler certificateCourseDataHandler, JobAidDataHandler jobAidDataHandler) {
+        this.certificateCourseDataHandler = certificateCourseDataHandler;
+        this.jobAidDataHandler = jobAidDataHandler;
     }
 
     @Override
     public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
-        registrationMeasureService.createRegistrationMeasure(callerId);
-        if (serviceType.equals(ServiceType.JOB_AID))
-            this.jobAidContentMeasureService.createJobAidContentMeasure(callId);
-        else
-            this.courseItemMeasureService.createCourseItemMeasure(callId);
+        MotechEvent motechEvent = new MotechEvent(ReportPublishEventKeys.DB_PUBLISH_KEY);
+        motechEvent.getParameters().put("logData", new LogData(null, callId, callerId));
 
-        this.callDurationMeasureService.createCallDurationMeasure(callId);
+        if (serviceType.equals(ServiceType.CERTIFICATE_COURSE))
+            certificateCourseDataHandler.handleCertificateCourseData(motechEvent);
+        else
+            jobAidDataHandler.handleJobAidData(motechEvent);
     }
 
 }

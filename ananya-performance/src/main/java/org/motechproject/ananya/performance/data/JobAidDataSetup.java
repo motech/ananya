@@ -7,6 +7,8 @@ import org.motechproject.ananya.performance.framework.PerformanceData;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
+import org.motechproject.ananya.service.RegistrationLogService;
+import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
@@ -22,15 +24,19 @@ public class JobAidDataSetup {
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
+    private RegistrationMeasureService registrationMeasureService;
+    private RegistrationLogService registrationLogService;
 
     private AllNodes allNodes;
 
 
     @Autowired
-    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService, AllNodes allNodes) {
+    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService, AllNodes allNodes, RegistrationMeasureService registrationMeasureService, RegistrationLogService registrationLogService) {
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;
         this.allNodes = allNodes;
+        this.registrationMeasureService = registrationMeasureService;
+        this.registrationLogService = registrationLogService;
     }
 
     @PerformanceData(testName = "jobaid", description = "create airtel subscribers")
@@ -109,7 +115,9 @@ public class JobAidDataSetup {
         for (int j = 0; j < usersPerOperator; j++) {
             String callerId = "9999" + prefix + "" + j;
             Operator operator = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callerId, operator.getName(),"circle");
+            jobAidService.createCallerData(callerId, operator.getName(), "circle");
+            registrationLogService.deleteFor(callerId);
+            registrationMeasureService.createRegistrationMeasure(callerId);
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
             System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId()+"|count="+j);
         }

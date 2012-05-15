@@ -23,7 +23,7 @@ function fetch_from_vars_as_int(key) {
 var operator_counter = fetch_from_vars_as_int("operator_counter");
 var user_counter = fetch_from_vars_as_int("user_counter");
 
-if ((user_counter + thread) > 25000) {
+if ((user_counter + thread) > 24999) {
     user_counter = 0;
     operator_counter = operator_counter + 1;
     if (operator_counter > 6) {

@@ -2,32 +2,30 @@ package org.motechproject.ananya.service.publish;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.service.*;
+import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
+import org.motechproject.ananya.service.handler.JobAidDataHandler;
+import org.motechproject.model.MotechEvent;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class DbPublishServiceTest {
     @Mock
-    private RegistrationMeasureService registrationMeasureService;
+    CertificateCourseDataHandler certificateCourseDataHandler;
     @Mock
-    private CourseItemMeasureService courseItemMeasureService;
-    @Mock
-    private CallDurationMeasureService callDurationMeasureService;
-    @Mock
-    private SMSSentMeasureService smsSentMeasureService;
-    @Mock
-    private JobAidContentMeasureService jobAidContentMeasureService;
+    JobAidDataHandler jobAidDataHandler;
 
     private DbPublishService dbPublishService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        dbPublishService = new DbPublishService(registrationMeasureService, courseItemMeasureService,
-                callDurationMeasureService, smsSentMeasureService, jobAidContentMeasureService);
+        dbPublishService = new DbPublishService(certificateCourseDataHandler, jobAidDataHandler);
     }
 
     @Test
@@ -37,9 +35,13 @@ public class DbPublishServiceTest {
 
         dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
-        verify(courseItemMeasureService).createCourseItemMeasure(callId);
-        verify(callDurationMeasureService).createCallDurationMeasure(callId);
+        ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(certificateCourseDataHandler).handleCertificateCourseData(captor.capture());
+        MotechEvent motechEvent = captor.getValue();
+        assertEquals(1, motechEvent.getParameters().values().size());
+        LogData logData = (LogData) motechEvent.getParameters().get("logData");
+        assertEquals(callerId, logData.getCallerId());
+        assertEquals(callId, logData.getCallId());
     }
 
     @Test
@@ -49,8 +51,12 @@ public class DbPublishServiceTest {
 
         dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
-        verify(jobAidContentMeasureService).createJobAidContentMeasure(callId);
-        verify(callDurationMeasureService).createCallDurationMeasure(callId);
+        ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
+        verify(jobAidDataHandler).handleJobAidData(captor.capture());
+        MotechEvent motechEvent = captor.getValue();
+        assertEquals(1, motechEvent.getParameters().values().size());
+        LogData logData = (LogData) motechEvent.getParameters().get("logData");
+        assertEquals(callerId, logData.getCallerId());
+        assertEquals(callId, logData.getCallId());
     }
 }

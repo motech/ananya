@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AllRegistrationLogsTest extends SpringIntegrationTest {
@@ -22,10 +23,12 @@ public class AllRegistrationLogsTest extends SpringIntegrationTest {
         String circle = "circle";
         RegistrationLog registrationLog = new RegistrationLog(callerId,operator,circle);
         allRegistrationLogs.add(registrationLog);
-        markForDeletion(registrationLog);
 
         RegistrationLog registrationLogFromDB = allRegistrationLogs.findByCallerId(callerId);
         assertEquals(callerId, registrationLogFromDB.getCallerId());
         assertEquals(operator,registrationLogFromDB.getOperator());
+
+        allRegistrationLogs.deleteFor(callerId);
+        assertNull(allRegistrationLogs.findByCallerId(callerId));
     }
 }
