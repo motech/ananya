@@ -1,4 +1,4 @@
-// dot 2.28.0 on Mac OS X 10.7.3
+// dot 2.26.3 on Linux 2.6.38-11-generic-pae
 // SchemaSpy rev 590
 digraph "oneDegreeRelationshipsDiagram" {
   graph [
@@ -27,12 +27,12 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">course_item_dimension</TD></TR>
       <TR><TD PORT="id" COLSPAN="2" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD><TD PORT="id.type" ALIGN="LEFT">serial[10]</TD></TR>
       <TR><TD PORT="name" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">name</TD><TD PORT="name.type" ALIGN="LEFT">varchar[255]</TD></TR>
-      <TR><TD PORT="content_id" COLSPAN="2" ALIGN="LEFT">content_id</TD><TD PORT="content_id.type" ALIGN="LEFT">varchar[255]</TD></TR>
+      <TR><TD PORT="content_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">content_id</TD><TD PORT="content_id.type" ALIGN="LEFT">varchar[255]</TD></TR>
       <TR><TD PORT="type" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">type</TD><TD PORT="type.type" ALIGN="LEFT">varchar[30]</TD></TR>
       <TR><TD PORT="parent_id" COLSPAN="2" ALIGN="LEFT">parent_id</TD><TD PORT="parent_id.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD PORT="file_name" COLSPAN="2" ALIGN="LEFT">file_name</TD><TD PORT="file_name.type" ALIGN="LEFT">varchar[255]</TD></TR>
       <TR><TD PORT="duration" COLSPAN="2" ALIGN="LEFT">duration</TD><TD PORT="duration.type" ALIGN="LEFT">int4[10]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">91 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">334 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="course_item_dimension.html"
     tooltip="course_item_dimension"
@@ -50,6 +50,8 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="location_id" COLSPAN="3" ALIGN="LEFT">location_id</TD></TR>
       <TR><TD PORT="timestamp" COLSPAN="3" ALIGN="LEFT">timestamp</TD></TR>
       <TR><TD PORT="percentage" COLSPAN="3" ALIGN="LEFT">percentage</TD></TR>
+      <TR><TD PORT="call_id" COLSPAN="3" ALIGN="LEFT">call_id</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="course_item_measure.html"

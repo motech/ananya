@@ -4,9 +4,9 @@ time_dimension
 course_item_dimension
 job_aid_content_dimension
 call_duration_measure
-job_aid_content_measure
 registration_measure
 sms_sent_measure
 course_item_measure
+job_aid_content_measure
 databasechangelog
 databasechangeloglock

@@ -111,9 +111,21 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
    <tr class='relative even' valign='top'>
+    <td class='relatedTable detail' title="call_duration_measure.time_id refs time_dimension.id via fk_call_duration_measure_time_dimension"><a href='call_duration_measure.html'>call_duration_measure</a><span class='relatedKey'>.time_id</span>
+    </td>
+    <td class='constraint detail'>fk_call_duration_measure_time_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+   <tr class='relative even' valign='top'>
     <td class='relatedTable detail' title="course_item_measure.time_id refs time_dimension.id via fk_course_item_measure_time_dimension"><a href='course_item_measure.html'>course_item_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_course_item_measure_time_dimension<span title='Cascade on delete:
+ Deletion of parent deletes child'>&nbsp;C</span></td>
+   </tr>
+   <tr class='relative even' valign='top'>
+    <td class='relatedTable detail' title="job_aid_content_measure.time_id refs time_dimension.id via fk_job_aid_content_measure_time_dimension"><a href='job_aid_content_measure.html'>job_aid_content_measure</a><span class='relatedKey'>.time_id</span>
+    </td>
+    <td class='constraint detail'>fk_job_aid_content_measure_time_dimension<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
    <tr class='relative even' valign='top'>
@@ -189,7 +201,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='6 columns'>Table contained 732 rows at Thu Apr 26 15:55 GMT+05:30 2012<p/>
+<p title='6 columns'>Table contained 732 rows at Mon May 14 17:32 IST 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -212,6 +224,13 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <td>&nbsp;</td>
  </tr>
  <tr>
+  <td class='indexedColumn'>year + month + day</td>
+  <td class='detail'>Performance</td>
+  <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
+  <td class='constraint' style='text-align:left;'>idx_time_dimension_year_month_day</td>
+  <td>&nbsp;</td>
+ </tr>
+ <tr>
   <td class='indexedColumn'>day + week + month + year</td>
   <td class='detail'>Must be unique</td>
   <td class='detail' style='text-align:left;'><span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span>/<span title='Ascending'>Asc</span></td>
@@ -224,20 +243,25 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from time_dimension'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="course_item_measure.html" title="course_item_measure" alt="" coords="255,5,430,267">
-<area shape="rect" id="node3" href="time_dimension.html" title="time_dimension" alt="" coords="6,329,205,527">
-<area shape="rect" id="node4" href="registration_measure.html" title="registration_measure" alt="" coords="257,285,429,433">
-<area shape="rect" id="node6" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="249,451,436,667">
+<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="260,5,439,289">
+<area shape="rect" id="node3" href="time_dimension.html" title="time_dimension" alt="" coords="5,786,205,985">
+<area shape="rect" id="node4" href="course_item_measure.html" title="course_item_measure" alt="" coords="261,305,437,612">
+<area shape="rect" id="node6" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="251,629,448,891">
+<area shape="rect" id="node8" href="registration_measure.html" title="registration_measure" alt="" coords="264,907,435,1055">
+<area shape="rect" id="node10" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="256,1072,443,1288">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/time_dimension.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="course_item_measure.html" title="course_item_measure" alt="" coords="274,5,449,267">
-<area shape="rect" id="node3" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="19,49,210,129">
-<area shape="rect" id="node5" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,225,224,305">
-<area shape="rect" id="node7" href="location_dimension.html" title="location_dimension" alt="" coords="29,540,201,620">
-<area shape="rect" id="node9" href="time_dimension.html" title="time_dimension" alt="" coords="15,323,214,522">
-<area shape="rect" id="node10" href="registration_measure.html" title="registration_measure" alt="" coords="275,518,447,666">
-<area shape="rect" id="node14" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="268,284,455,500">
+<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="279,726,457,1010">
+<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,515,224,595">
+<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,621,200,701">
+<area shape="rect" id="node7" href="time_dimension.html" title="time_dimension" alt="" coords="15,718,215,917">
+<area shape="rect" id="node8" href="course_item_measure.html" title="course_item_measure" alt="" coords="280,5,456,312">
+<area shape="rect" id="node10" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="16,49,213,129">
+<area shape="rect" id="node14" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="269,1027,467,1288">
+<area shape="rect" id="node17" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="8,1117,221,1197">
+<area shape="rect" id="node20" href="registration_measure.html" title="registration_measure" alt="" coords="283,329,453,477">
+<area shape="rect" id="node24" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="275,493,461,709">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/time_dimension.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

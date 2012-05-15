@@ -1,4 +1,4 @@
-// dot 2.28.0 on Mac OS X 10.7.3
+// dot 2.26.3 on Linux 2.6.38-11-generic-pae
 // SchemaSpy rev 590
 digraph "twoDegreesRelationshipsDiagram" {
   graph [
@@ -21,12 +21,14 @@ digraph "twoDegreesRelationshipsDiagram" {
   ];
   "call_duration_measure":"elipses":w -> "front_line_worker_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "call_duration_measure":"elipses":w -> "location_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "call_duration_measure":"elipses":w -> "time_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "course_item_measure":"course_item_id":w -> "course_item_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "course_item_measure":"flw_id":w -> "front_line_worker_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "course_item_measure":"location_id":w -> "location_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "course_item_measure":"time_id":w -> "time_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "job_aid_content_measure":"elipses":w -> "front_line_worker_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "job_aid_content_measure":"elipses":w -> "location_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
+  "job_aid_content_measure":"elipses":w -> "time_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "registration_measure":"elipses":w -> "front_line_worker_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "registration_measure":"elipses":w -> "location_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
   "registration_measure":"elipses":w -> "time_dimension":"id":e [arrowhead=none dir=back arrowtail=crowodot];
@@ -38,7 +40,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">call_duration_measure</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 2</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="call_duration_measure.html"
     tooltip="call_duration_measure"
@@ -49,12 +51,12 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">course_item_dimension</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
       <TR><TD PORT="name" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">name</TD></TR>
-      <TR><TD PORT="content_id" COLSPAN="3" ALIGN="LEFT">content_id</TD></TR>
+      <TR><TD PORT="content_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">content_id</TD></TR>
       <TR><TD PORT="type" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">type</TD></TR>
       <TR><TD PORT="parent_id" COLSPAN="3" ALIGN="LEFT">parent_id</TD></TR>
       <TR><TD PORT="file_name" COLSPAN="3" ALIGN="LEFT">file_name</TD></TR>
       <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">91 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 1</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">334 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2 &gt;</TD></TR>
     </TABLE>>
     URL="course_item_dimension.html"
     tooltip="course_item_dimension"
@@ -72,6 +74,8 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="location_id" COLSPAN="2" ALIGN="LEFT">location_id</TD><TD PORT="location_id.type" ALIGN="LEFT">int8[19]</TD></TR>
       <TR><TD PORT="timestamp" COLSPAN="2" ALIGN="LEFT">timestamp</TD><TD PORT="timestamp.type" ALIGN="LEFT">timestamptz[35,6]</TD></TR>
       <TR><TD PORT="percentage" COLSPAN="2" ALIGN="LEFT">percentage</TD><TD PORT="percentage.type" ALIGN="LEFT">int2[5]</TD></TR>
+      <TR><TD PORT="call_id" COLSPAN="2" ALIGN="LEFT">call_id</TD><TD PORT="call_id.type" ALIGN="LEFT">varchar[255]</TD></TR>
+      <TR><TD PORT="duration" COLSPAN="2" ALIGN="LEFT">duration</TD><TD PORT="duration.type" ALIGN="LEFT">int4[10]</TD></TR>
       <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 &gt;</TD></TR>
     </TABLE>>
     URL="course_item_measure.html"
@@ -82,11 +86,12 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">front_line_worker_dimension</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="msisdn" COLSPAN="3" ALIGN="LEFT">msisdn</TD></TR>
+      <TR><TD PORT="msisdn" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">msisdn</TD></TR>
       <TR><TD PORT="operator" COLSPAN="3" ALIGN="LEFT">operator</TD></TR>
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT">name</TD></TR>
       <TR><TD PORT="status" COLSPAN="3" ALIGN="LEFT">status</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
+      <TR><TD PORT="designation" COLSPAN="3" ALIGN="LEFT">designation</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">7 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="front_line_worker_dimension.html"
     tooltip="front_line_worker_dimension"
@@ -96,7 +101,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">job_aid_content_measure</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="job_aid_content_measure.html"
     tooltip="job_aid_content_measure"
@@ -120,7 +125,7 @@ digraph "twoDegreesRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">registration_measure</TD></TR>
       <TR><TD PORT="elipses" COLSPAN="3" ALIGN="LEFT">...</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">7 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="registration_measure.html"
     tooltip="registration_measure"
@@ -145,7 +150,7 @@ digraph "twoDegreesRelationshipsDiagram" {
       <TR><TD PORT="month" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">month</TD></TR>
       <TR><TD PORT="year" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">year</TD></TR>
       <TR><TD PORT="date" COLSPAN="3" ALIGN="LEFT">date</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">732 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">3 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">732 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="time_dimension.html"
     tooltip="time_dimension"

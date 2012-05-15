@@ -1,9 +1,9 @@
 databasechangeloglock
 databasechangelog
+job_aid_content_measure
 course_item_measure
 sms_sent_measure
 registration_measure
-job_aid_content_measure
 call_duration_measure
 job_aid_content_dimension
 course_item_dimension
