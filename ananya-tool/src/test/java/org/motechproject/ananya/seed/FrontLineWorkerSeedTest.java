@@ -101,7 +101,7 @@ public class FrontLineWorkerSeedTest {
         allFrontLineWorkers.add(frontLineWorker);
         template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name()));
 
-        frontLineWorkerSeed.updateOperatorOfReportDbFromCouchdb();
+        frontLineWorkerSeed.updateOperatorInReportDbFromCouchdb();
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
         assertEquals(operator, frontLineWorkerDimension.getOperator());
