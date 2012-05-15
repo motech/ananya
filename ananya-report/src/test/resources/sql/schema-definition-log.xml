@@ -354,5 +354,11 @@
                                  referencedTableName="time_dimension" referencedColumnNames="id"
                                  onDelete="CASCADE"/>
     </changeSet>
+    
+    <changeSet context="setup" author="ThoughtWorks" id="22">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="circle" type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

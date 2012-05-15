@@ -47,16 +47,18 @@ public class RegistrationMeasureServiceTest {
     public void shouldCreateRegistrationMeasure(){
         String callerId = "12345";
         String operator = "operator";
+        String circle = "circle";
         DateTime registeredDate = DateTime.now();
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, "", "", "");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
         TimeDimension timeDimension = new TimeDimension(registeredDate);
 
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
-        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, null,null,"UNREGISTERED")).thenReturn(frontLineWorkerDimension);
+        when(allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
         registrationMeasureService.createRegistrationMeasure(callerId);

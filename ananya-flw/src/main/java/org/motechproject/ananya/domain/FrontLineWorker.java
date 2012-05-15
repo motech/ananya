@@ -237,4 +237,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void setCircle(String circle) {
         this.circle = circle;
     }
+
+    public String getCircle() {
+        return circle;
+    }
 }

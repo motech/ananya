@@ -16,11 +16,11 @@ public class AllFrontLineWorkerDimensions {
     public AllFrontLineWorkerDimensions() {
     }
 
-    public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String name, String designation, String status) {
+    public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String circle, String name, String designation, String status) {
         FrontLineWorkerDimension dimension = (FrontLineWorkerDimension) template.getUniqueResult(
                 FrontLineWorkerDimension.FIND_BY_MSISDN, new String[]{"msisdn"}, new Object[]{msisdn});
         if (dimension == null) {
-            dimension = new FrontLineWorkerDimension(msisdn, operator, name, designation, status);
+            dimension = new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status);
             template.save(dimension);
             return dimension;
         }

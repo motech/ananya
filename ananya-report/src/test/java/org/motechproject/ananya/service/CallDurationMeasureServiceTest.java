@@ -56,7 +56,7 @@ public class CallDurationMeasureServiceTest {
         flwId = 1;
         timeDimension = new TimeDimension(DateTime.now());
         locationDimension = new LocationDimension("", "", "", "");
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "ANGANWADI", "Registered");
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
     }
@@ -110,7 +110,7 @@ public class CallDurationMeasureServiceTest {
         String calledNumber = "321";
         LocationDimension locationDimension = new LocationDimension("","","","");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "anganwadi-worker", "ANGANWADI", "Registered");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
 

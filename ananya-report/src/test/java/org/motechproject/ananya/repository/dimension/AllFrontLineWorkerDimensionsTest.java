@@ -27,7 +27,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String operator = "operator";
         String status = "status";
         String designation = Designation.ANGANWADI.name();
-        template.save(new FrontLineWorkerDimension(msisdn, operator, name, designation, status));
+        template.save(new FrontLineWorkerDimension(msisdn, operator, "circle", name, designation, status));
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
 
         assertEquals(name, frontLineWorkerDimension.getName());
@@ -42,8 +42,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String name = "name";
         String operator = "operator";
         String status = "status";
+        String circle = "circle";
         String designation = Designation.ANGANWADI.name();
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, operator, name, designation, status);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, operator, circle, name, designation, status);
 
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(operator, frontLineWorkerDimension.getOperator());
@@ -59,9 +60,10 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String operator = "operator";
         String status = "status";
         String designation = "designation";
-        template.save(new FrontLineWorkerDimension(msisdn, operator, name, designation, status));
+        String circle = "circle";
+        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, "operator1", "name1", "designation1", "status1");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, "operator1", circle, "name1", "designation1", "status1");
 
         assertEquals("name1", frontLineWorkerDimension.getName());
         assertEquals("operator1", frontLineWorkerDimension.getOperator());

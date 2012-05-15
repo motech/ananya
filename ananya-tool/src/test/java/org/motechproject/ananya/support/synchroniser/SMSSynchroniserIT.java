@@ -87,7 +87,7 @@ public class SMSSynchroniserIT {
         DateTime toDate = fromDate.plusHours(8);
         String operator = "airtel";
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString());
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf(callerId), operator, "circle", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString());
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("locationId","district","block","panchayat"));
 

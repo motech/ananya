@@ -71,7 +71,7 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
 
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         CourseItemDimension courseItemDimension = new CourseItemDimension(courseItemDimensionName, "contentId", chapter, null);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, "operator", "name", "ASHA", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, "operator", "circle", "name", "ASHA", "REGISTERED");
 
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         allCourseItemDimensions.add(courseItemDimension);

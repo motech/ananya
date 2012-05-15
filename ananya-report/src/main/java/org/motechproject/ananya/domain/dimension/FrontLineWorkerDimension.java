@@ -20,6 +20,9 @@ public class FrontLineWorkerDimension {
     @Column(name="operator")
     private String operator;
 
+    @Column(name="circle")
+    private String circle;
+
     @Column(name="name")
     private String name;
     
@@ -32,12 +35,13 @@ public class FrontLineWorkerDimension {
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String name, String designation, String status) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
         this.designation = designation;
         this.status = status;
+        this.circle = circle;
     }
 
     public Long getMsisdn() {
