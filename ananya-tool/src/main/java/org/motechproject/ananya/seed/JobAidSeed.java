@@ -22,7 +22,7 @@ public class JobAidSeed {
     @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;
 
-    @Seed(priority = 0)
+    @Seed(priority = 0, version="1.0")
     public void load() {
         Node courseNode = createJobAidTree();
         allNodes.addNodeWithDescendants(courseNode);

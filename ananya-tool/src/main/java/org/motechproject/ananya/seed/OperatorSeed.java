@@ -33,7 +33,7 @@ public class OperatorSeed {
         return minutes * 60 * 1000;
     }
 
-    @Seed(priority = 0)
+    @Seed(priority = 0, version = "1.1")
     public void load() throws IOException {
         Iterator<String> operatorNameIterator = operator_usage.keySet().iterator();
 

@@ -27,7 +27,7 @@ public class CertificationCourseSeed {
     @Autowired
     private AllCourseItemDimensions allCourseItemDimensions;
 
-    @Seed(priority = 0)
+    @Seed(priority = 0, version = "1.1")
     public void loadSeed() {
         Node certificateCourse = createNodeForCourse();
         allNodes.addNodeWithDescendants(certificateCourse);

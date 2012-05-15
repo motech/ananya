@@ -33,7 +33,7 @@ public class FrontLineWorkerSeed {
     private String inputCSVFile;
     private BufferedWriter writer;
 
-    @Seed(priority = 0)
+    @Seed(priority = 0, version = "1.1")
     public void load() throws IOException {
         inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();

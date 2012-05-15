@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -73,7 +74,7 @@ public class FrontLineWorkerSeedTest {
 
     @After
     public void tearDown() {
-//        allLocations.removeAll();
+        allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();
