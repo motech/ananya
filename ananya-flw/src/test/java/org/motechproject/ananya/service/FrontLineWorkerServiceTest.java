@@ -360,4 +360,21 @@ public class FrontLineWorkerServiceTest {
 
         assertFalse(newFlwOrOperatorIsEmpty);
     }
+
+    @Test
+    public void shouldUpdateFrontLineWorkersWithCircle(){
+
+        ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<FrontLineWorker>();
+        frontLineWorkers.add(new FrontLineWorker("123","airtel"));
+        frontLineWorkers.add(new FrontLineWorker("456","airtel"));
+        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, "Bihar");
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        
+        verify(allFrontLineWorkers, times(2)).update(captor.capture());
+
+        List<FrontLineWorker> frontLineWorkerList = captor.getAllValues();
+        for( FrontLineWorker frontLineWorker : frontLineWorkerList){
+           assertEquals("Bihar", frontLineWorker.getCircle());
+        }
+    }
 }

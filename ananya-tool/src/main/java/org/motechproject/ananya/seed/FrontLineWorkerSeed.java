@@ -46,7 +46,7 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
-    private static String DEFAULTCIRCLE = "bihar";
+    private static String DEFAULTCIRCLE = "BIHAR";
     private String inputCSVFile;
     private BufferedWriter writer;
 
@@ -74,18 +74,13 @@ public class FrontLineWorkerSeed {
     @Seed(priority = 0, version = "1.1")
     public void updateOperatorInReportDbFromCouchdb() {
         List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-
         frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
     }
 
     @Seed(priority = 0, version = "1.1")
     public void loadCircle(){
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        for(FrontLineWorker frontLineWorker : frontLineWorkers){
-
-            frontLineWorker.setCircle(DEFAULTCIRCLE);
-            allFrontLineWorkers.update(frontLineWorker);
-        }
+        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, DEFAULTCIRCLE);
     }
 
     private void loadFromCsv(String path) throws IOException {

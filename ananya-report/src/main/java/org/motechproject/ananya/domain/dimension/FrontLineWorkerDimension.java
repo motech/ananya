@@ -25,6 +25,7 @@ public class FrontLineWorkerDimension {
     @Column(name="operator")
     private String operator;
 
+
     @Column(name="circle")
     private String circle;
 
@@ -33,6 +34,7 @@ public class FrontLineWorkerDimension {
 
     @Column (name="designation")
     private String designation;
+
     @Column(name="status")
     private String status;
 
@@ -66,6 +68,14 @@ public class FrontLineWorkerDimension {
 
     public Integer getId() {
         return this.id;
+    }
+
+    public String getCircle() {
+        return circle;
+    }
+
+    public void setCircle(String circle) {
+        this.circle = circle;
     }
 
     public void setId(Integer id) {

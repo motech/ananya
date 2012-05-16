@@ -151,4 +151,12 @@ public class FrontLineWorkerService {
                 (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                         lastJobAidAccessTime.getYear() != now.getYear());
     }
+
+    public void updateFrontLineWorkerWithDefaultCircle(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
+        for(FrontLineWorker frontLineWorker : frontLineWorkers){
+            frontLineWorker.setCircle(defaultCircle);
+            allFrontLineWorkers.update(frontLineWorker);
+            log.info("Updated FrontLineWorker: " +frontLineWorker.getMsisdn() +"with circle: " + frontLineWorker.getCircle());
+        }
+    }
 }
