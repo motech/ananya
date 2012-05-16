@@ -24,7 +24,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private String operator;
-    
+
     @JsonProperty
     private String circle;
 
@@ -79,18 +79,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @Override
     public String toString() {
-        return "FrontLineWorker{" +
-                "name='" + name + '\'' +
-                ", msisdn='" + msisdn + '\'' +
-                ", operator='" + operator + '\'' +
-                ", bookmark=" + bookmark +
-                ", reportCard=" + reportCard +
-                ", status=" + status +
-                ", designation=" + designation +
-                ", locationId='" + locationId + '\'' +
-                ", registeredDate=" + registeredDate +
-                ", certificateCourseAttempts=" + certificateCourseAttempts +
-                '}';
+        return "FrontLineWorker{" + msisdn + "}";
     }
 
     public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
@@ -230,6 +219,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = 0;
         this.promptsHeard.remove("Max_Usage");
     }
+
     public boolean circleIs(String circle) {
         return StringUtils.equalsIgnoreCase(this.circle, circle);
     }
