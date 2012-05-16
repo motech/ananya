@@ -107,6 +107,15 @@ public class FrontLineWorkerSeedTest {
         assertEquals(operator, frontLineWorkerDimension.getOperator());
     }
 
+    public void shouldUpdateFrontLineWorkersWithCircleThroughSeed(){
+        frontLineWorkerSeed.loadCircle();
+
+        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
+        for(FrontLineWorker frontLineWorker : frontLineWorkers){
+            assertEquals("bihar", frontLineWorker.getCircle());
+        }
+    }
+
     @After
     public void tearDown() {
         allLocations.removeAll();

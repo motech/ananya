@@ -1,10 +1,11 @@
 package org.motechproject.ananya.seed;
 
-import liquibase.util.csv.CSVReader;
+ import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
@@ -26,6 +27,9 @@ public class FrontLineWorkerSeed {
 
     @Autowired
     private LocationService locationService;
+    
+    @Autowired
+    private AllFrontLineWorkers allFrontLineWorkers;
 
     @Autowired
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
@@ -42,6 +46,7 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
+    private static String DEFAULTCIRCLE = "bihar";
     private String inputCSVFile;
     private BufferedWriter writer;
 
@@ -71,6 +76,16 @@ public class FrontLineWorkerSeed {
         List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
 
         frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
+    }
+
+    @Seed(priority = 0, version = "1.1")
+    public void loadCircle(){
+        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
+        for(FrontLineWorker frontLineWorker : frontLineWorkers){
+
+            frontLineWorker.setCircle(DEFAULTCIRCLE);
+            allFrontLineWorkers.update(frontLineWorker);
+        }
     }
 
     private void loadFromCsv(String path) throws IOException {
