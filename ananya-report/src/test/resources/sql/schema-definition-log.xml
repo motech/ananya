@@ -361,4 +361,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks" id="23">
+        <createIndex tableName="location_dimension" indexName="idx_location_dimension_location_id">
+            <column name="location_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
