@@ -175,7 +175,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="9">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="9">
         <addColumn tableName="course_item_measure">
             <column name="location_id" type="bigint"/>
         </addColumn>
@@ -191,7 +191,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="10">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="10">
         <addColumn tableName="call_duration_measure">
             <column name="location_id" type="bigint"/>
         </addColumn>
@@ -210,7 +210,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="11">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="11">
         <addColumn tableName="sms_sent_measure">
             <column name="location_id" type="bigint"/>
         </addColumn>
@@ -220,13 +220,13 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="12">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="12">
         <addColumn tableName="time_dimension">
             <column name="date" type="date"/>
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="13">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="13">
         <addColumn tableName="course_item_dimension">
             <column name="parent_id" type="integer"/>
         </addColumn>
@@ -242,7 +242,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="14">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="14">
         <createTable tableName="job_aid_content_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -260,7 +260,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="15">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="15">
         <createTable tableName="job_aid_content_measure" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -289,13 +289,13 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="16">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="16">
         <addColumn tableName="front_line_worker_dimension">
             <column name="designation" type="varchar(30)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="17">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="17">
         <addColumn tableName="job_aid_content_measure">
             <column name="time_id" type="bigint"/>
         </addColumn>
@@ -306,13 +306,13 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="18">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="18">
         <addColumn tableName="course_item_measure">
             <column name="call_id" type="varchar(255)"/>
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="19">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="19">
         <addColumn tableName="course_item_measure">
             <column name="duration" type="int"/>
         </addColumn>
@@ -322,7 +322,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="20">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="20">
         <createIndex tableName="front_line_worker_dimension" indexName="idx_front_line_worker_dimension_msisdn">
             <column name="msisdn"/>
         </createIndex>
@@ -340,7 +340,7 @@
         </createIndex>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks" id="21">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="21">
         <addColumn tableName="job_aid_content_dimension">
             <column name="short_code" type="bigint"/>
         </addColumn>
@@ -355,7 +355,7 @@
                                  onDelete="CASCADE"/>
     </changeSet>
     
-    <changeSet context="setup" author="ThoughtWorks" id="22">
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="22">
         <addColumn tableName="front_line_worker_dimension">
             <column name="circle" type="varchar(30)"/>
         </addColumn>
