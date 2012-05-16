@@ -74,7 +74,7 @@ public class JobAidDataSetup {
 //        loadUsers("undefined", 7);
 //    }
 
-    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
+//    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
     public void prepareDataForPosting() throws IOException {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
         String jobAidTokens = getClass().getResource("/jmeter/js/job_aid_tokens.js").getPath();
