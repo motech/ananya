@@ -133,12 +133,12 @@ public class JobAidDataSetup {
     public static void main(String... args) throws IOException {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
         JobAidDataSetup jobAidDataSetup = (JobAidDataSetup) context.getBean("jobAidDataSetup");
-        jobAidDataSetup.loadAirtelSubscribers();
-        jobAidDataSetup.loadRelianceSubscribers();
-        jobAidDataSetup.loadBsnlSubscribers();
-        jobAidDataSetup.loadIdeaSubscribers();
-        jobAidDataSetup.loadTataSubscribers();
-        jobAidDataSetup.loadVodafoneSubscribers();
+//        jobAidDataSetup.loadAirtelSubscribers();
+//        jobAidDataSetup.loadRelianceSubscribers();
+//        jobAidDataSetup.loadBsnlSubscribers();
+//        jobAidDataSetup.loadIdeaSubscribers();
+//        jobAidDataSetup.loadTataSubscribers();
+//        jobAidDataSetup.loadVodafoneSubscribers();
         jobAidDataSetup.prepareDataForPosting();
 
         System.out.println("done");
