@@ -336,17 +336,19 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "1234";
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
 
         assertTrue(newFlwOrOperatorIsEmpty);
     }
 
     @Test
-    public void shouldReturnTrueIfOperatorIsNorPresentOnFrontLineWorker() {
+    public void shouldReturnTrueIfOperatorIsNotPresentOnFrontLineWorker() {
         String msisdn = "1234";
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(new FrontLineWorker(msisdn,null));
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null);
+        frontLineWorker.setCircle("bihar");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
 
         assertTrue(newFlwOrOperatorIsEmpty);
     }
@@ -354,11 +356,34 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldReturnFalseIfOperatorIsPresentOnFrontLineWorker() {
         String msisdn = "1234";
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(new FrontLineWorker(msisdn,"Airtel"));
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
+        frontLineWorker.setCircle("bihar");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(msisdn);
+        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
 
         assertFalse(newFlwOrOperatorIsEmpty);
+    }
+
+    @Test
+    public void shouldReturnTrueIfCircleIsNotPresentOnFrontLineWorker(){
+        String msisdn = "1234";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+        
+        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
+        assertTrue(newFlwOrOperatorOrCircleIsEmpty);
+    }
+    
+    @Test
+    public void shouldReturnFalseIfCircleIsPresentOnFrontLineWorker(){
+        String msisdn = "1234";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
+        frontLineWorker.setCircle("bihar");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+        
+        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
+        assertFalse(newFlwOrOperatorOrCircleIsEmpty);
     }
 
     @Test

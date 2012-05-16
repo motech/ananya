@@ -16,6 +16,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 public class CertificateCourseServiceTest {
 
@@ -54,6 +55,28 @@ public class CertificateCourseServiceTest {
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator, circle);
         assertEquals(bookMark.asJson(), callerData.getBookmark());
+    }
+
+    @Test
+    public void shouldCreateCallerDataAndRegistrationLogForGivenCallerIdIfFrontLineWorkerDoesNotExist() {
+        String callerId = "123";
+        String operator = "airtel";
+        String circle = "circle";
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        BookMark bookMark = new BookMark("type", 1, 2);
+        frontLineWorker.addBookMark(bookMark);
+        frontLineWorker.setCircle(circle);
+
+        when(frontlineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
+        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
+
+        certificateCourseService.createCallerData(callerId,operator, circle);
+
+        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
+        verify(registrationLogService).add(captor.capture());
+        RegistrationLog registrationLog = captor.getValue();
+        assertEquals(callerId, registrationLog.getCallerId());
     }
 
     @Test

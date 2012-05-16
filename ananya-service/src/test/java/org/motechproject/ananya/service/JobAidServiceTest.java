@@ -14,6 +14,8 @@ import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -65,7 +67,7 @@ public class JobAidServiceTest {
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.isNewFlwOrOperatorIsEmpty(callerId)).thenReturn(true);
+        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator, circle);
@@ -122,5 +124,40 @@ public class JobAidServiceTest {
         jobAidService.saveAudioTrackerState(audioTrackerRequestList);
 
         verify(audioTrackerService).saveAudioTrackerState(audioTrackerRequestList, ServiceType.JOB_AID);
+    }
+
+    @Test
+    public void shouldCreateFrontLineWorkerAndRegistrationLogWhileCreatingCallerDataIfNotInOnlineDB(){
+        String callerId = "1234";
+        String operator = "airtel";
+        String circle = "bihar";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setCircle(circle);
+
+        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
+        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
+
+        jobAidService.createCallerData(callerId, operator, circle);
+        
+        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
+        verify(registrationLogService).add(captor.capture());
+        RegistrationLog registrationLog = captor.getValue();
+        assertEquals(callerId,registrationLog.getCallerId());
+        assertEquals(operator,registrationLog.getOperator());
+    }
+
+    @Test
+    public void shouldReturnCallerDataWithoutCreatingRegistrationLogIfFrontLineWorkerExists(){
+        String callerId = "1234";
+        String operator = "airtel";
+        String circle = "bihar";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setCircle(circle);
+
+        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(false);
+        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
+
+        jobAidService.createCallerData(callerId, operator, circle);
+        verify(registrationLogService, never()).add(any(RegistrationLog.class));
     }
 }

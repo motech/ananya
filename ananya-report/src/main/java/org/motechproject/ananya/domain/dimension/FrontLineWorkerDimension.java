@@ -98,11 +98,12 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public void update(String operator, String name, String status, String designation) {
+    public void update(String circle, String operator, String name, String status, String designation) {
         this.operator = operator;
         this.name = name;
         this.status = status;
         this.designation = designation;
+        this.circle = circle;
     }
 
     public String getDesignation() {

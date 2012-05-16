@@ -26,7 +26,7 @@ public class AllFrontLineWorkerDimensions {
             template.save(dimension);
             return dimension;
         }
-        dimension.update(operator, name, status, designation);
+        dimension.update(circle, operator, name, status, designation);
         template.saveOrUpdate(dimension);
         return dimension;
     }

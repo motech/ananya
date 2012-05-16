@@ -46,9 +46,9 @@ public class JobAidService {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " + circle);
 
 
-        boolean isNewFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorIsEmpty(callerId);
+        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
-        if (isNewFlwOrOperatorIsEmpty) {
+        if (newFlwOrOperatorOrCircleIsEmpty) {
             RegistrationLog registrationLog = new RegistrationLog(callerId, operator, circle);
             registrationLogService.add(registrationLog);
         }

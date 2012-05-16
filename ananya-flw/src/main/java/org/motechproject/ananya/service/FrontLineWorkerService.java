@@ -132,9 +132,10 @@ public class FrontLineWorkerService {
         log.info("Updated certificate course state for " + frontLineWorker);
     }
 
-    public boolean isNewFlwOrOperatorIsEmpty(String callerId) {
+    public boolean isNewFlwOrOperatorOrCircleIsEmpty(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        return frontLineWorker == null || StringUtils.isEmpty(frontLineWorker.getOperator());
+        return frontLineWorker == null || StringUtils.isEmpty(frontLineWorker.getOperator()) ||
+                StringUtils.isEmpty(frontLineWorker.getCircle());
     }
 
     public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
