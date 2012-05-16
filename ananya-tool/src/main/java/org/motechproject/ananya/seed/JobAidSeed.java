@@ -183,12 +183,4 @@ public class JobAidSeed {
         metadata.put("duration", duration);
         return metadata;
     }
-
-    private Map<String, String> getMetadata(String duration, String shortCode) {
-        Map<String, String> metadata = new HashMap<String, String>();
-        metadata.put("duration", duration);
-        metadata.put("shortcode", shortCode);
-        return metadata;
-    }
-
 }
