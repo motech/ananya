@@ -1,4 +1,4 @@
-package org.motechproject.ananya.handler;
+package org.motechproject.ananya.service.handler;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;

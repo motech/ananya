@@ -4,7 +4,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.handler.SendSMSHandler;
+import org.motechproject.ananya.service.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
 
 import java.util.HashMap;

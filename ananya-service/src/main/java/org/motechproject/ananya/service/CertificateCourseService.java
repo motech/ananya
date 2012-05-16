@@ -8,7 +8,6 @@ import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequest;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
-import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +21,20 @@ public class CertificateCourseService {
 
     private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
-    private DataPublishService dataPublishService;
-    private SendSMSService sendSMSService;
     private AudioTrackerService audioTrackerService;
     private RegistrationLogService registrationLogService;
+    private SMSLogService sendSMSLogService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
                                     AudioTrackerService audioTrackerService,
                                     FrontLineWorkerService frontLineWorkerService,
-                                    DataPublishService dataPublishService,
-                                    SendSMSService sendSMSService,
-                                    RegistrationLogService registrationLogService) {
+                                    RegistrationLogService registrationLogService, SMSLogService sendSMSLogService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.dataPublishService = dataPublishService;
-        this.sendSMSService = sendSMSService;
         this.audioTrackerService = audioTrackerService;
         this.registrationLogService = registrationLogService;
+        this.sendSMSLogService = sendSMSLogService;
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
@@ -79,10 +74,14 @@ public class CertificateCourseService {
         frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
 
         if (frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
-            sendSMSService.buildAndSendSMS(
-                    frontLineWorker.getMsisdn(),
-                    frontLineWorker.getLocationId(),
-                    frontLineWorker.currentCourseAttempt());
+            sendSMSLogService.add(
+                    new SMSLog(
+                            stateRequestList.getCallId(),
+                            frontLineWorker.getMsisdn(),
+                            frontLineWorker.getLocationId(),
+                            frontLineWorker.currentCourseAttempt()
+                    )
+            );
             log.info("Course completion SMS sent for " + frontLineWorker);
         }
     }

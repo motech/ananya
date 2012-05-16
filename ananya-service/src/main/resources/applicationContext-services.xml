@@ -9,14 +9,4 @@
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
-    <bean id="smsService"
-          class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
-        <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
-        <property name="wsdlDocumentUrl"
-                  value="${sms.service.wsdl.url}"/>
-        <property name="namespaceUri" value="${sms.service.namespace.uri}"/>
-        <property name="serviceName" value="${sms.service.service.name}"/>
-        <property name="portName" value="${sms.service.port.name}"/>
-        <property name="lookupServiceOnStartup" value="false"/>
-    </bean>
 </beans>

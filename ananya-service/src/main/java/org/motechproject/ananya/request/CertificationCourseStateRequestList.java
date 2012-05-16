@@ -36,6 +36,10 @@ public class CertificationCourseStateRequestList {
         return callerId;
     }
 
+    public String getCallId() {
+        return callId;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(list);

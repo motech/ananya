@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.handler;
 
+import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.*;
@@ -17,19 +18,23 @@ public class CertificateCourseDataHandler {
     private CourseItemMeasureService courseItemMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
-    private SMSSentMeasureService smsSentMeasureService;
     private RegistrationLogService registrationLogService;
-    private SendSMSLogService sendSMSLogService;
+    private SMSLogService smsLogService;
+    private SendSMSService sendSMSService;
 
     @Autowired
     public CertificateCourseDataHandler(CourseItemMeasureService courseItemMeasureService,
-                                        CallDurationMeasureService callDurationMeasureService, RegistrationMeasureService registrationMeasureService, SMSSentMeasureService smsSentMeasureService, RegistrationLogService registrationLogService, SendSMSLogService sendSMSLogService) {
+                                        CallDurationMeasureService callDurationMeasureService,
+                                        RegistrationMeasureService registrationMeasureService,
+                                        RegistrationLogService registrationLogService,
+                                        SMSLogService smsLogService,
+                                        SendSMSService sendSMSService) {
         this.courseItemMeasureService = courseItemMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.registrationMeasureService = registrationMeasureService;
-        this.smsSentMeasureService = smsSentMeasureService;
         this.registrationLogService = registrationLogService;
-        this.sendSMSLogService = sendSMSLogService;
+        this.smsLogService = smsLogService;
+        this.sendSMSService = sendSMSService;
     }
 
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
@@ -41,14 +46,19 @@ public class CertificateCourseDataHandler {
             createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             courseItemMeasureService.createCourseItemMeasure(callId);
-            createSMSSentMeasure(callerId);
+            handleSMS(callId);
         }
     }
 
-    private void createSMSSentMeasure(String callerId) {
-        if(sendSMSLogService.sendSMSLogFor(callerId) != null){
-            smsSentMeasureService.createSMSSentMeasure(callerId);
-            sendSMSLogService.deleteFor(callerId);
+    private void handleSMS(String callId) {
+        SMSLog smslog = smsLogService.getSMSLogFor(callId);
+        if(smslog != null){
+            sendSMSService.buildAndSendSMS(
+                    smslog.getCallerId(),
+                    smslog.getLocationId(),
+                    smslog.getCourseAttempts()
+            );
+            smsLogService.deleteFor(smslog);
         }
     }
 

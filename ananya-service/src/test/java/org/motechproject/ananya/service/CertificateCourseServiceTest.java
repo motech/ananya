@@ -3,17 +3,18 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
-import org.motechproject.ananya.service.publish.DataPublishService;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -26,19 +27,17 @@ public class CertificateCourseServiceTest {
     @Mock
     private CertificateCourseLogService certificateCourseLogService;
     @Mock
-    private DataPublishService dataPublishService;
-    @Mock
-    private SendSMSService sendSMSService;
-    @Mock
     private AudioTrackerService audioTrackerService;
     @Mock
     private RegistrationLogService registrationLogService;
+    @Mock
+    private SMSLogService sendSMSLogService;
 
     @Before
     public void setUp() {
         initMocks(this);
         certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerService,
-                frontlineWorkerService, dataPublishService, sendSMSService, registrationLogService);
+                frontlineWorkerService, registrationLogService, sendSMSLogService);
     }
 
     @Test
@@ -153,8 +152,10 @@ public class CertificateCourseServiceTest {
     }
 
     @Test
-    public void shouldIncrementCourseAttemptsAndSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+    public void shouldIncrementCourseAttemptsAndLogSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
+        String callId = "123456";
+        String callerId = "123";
+        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
         ReportCard reportCard = mock(ReportCard.class);
@@ -176,11 +177,16 @@ public class CertificateCourseServiceTest {
 
         assertEquals(new Integer(1), captured.currentCourseAttempt());
 
-        verify(sendSMSService).buildAndSendSMS("123", "S01D000B000V000", 1);
+        ArgumentCaptor<SMSLog> captorLog = ArgumentCaptor.forClass(SMSLog.class);
+        verify(sendSMSLogService).add(captorLog.capture());
+        SMSLog SMSLog = captorLog.getValue();
+
+        assertEquals(callId, SMSLog.getCallId());
+        assertEquals(callerId, SMSLog.getCallerId());
     }
 
     @Test
-    public void shouldNotSendSMSForAGivenFLWWhenInteractionIsNotCourseCompletionAndScoreIsPassingScore() {
+    public void shouldNotLogSendSMSForAGivenFLWWhenInteractionIsNotCourseCompletionAndScoreIsPassingScore() {
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
@@ -197,7 +203,7 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.saveState(stateRequestList);
 
-        verify(sendSMSService, never()).buildAndSendSMS("123", "S01D000B000V000", 1);
+        verify(sendSMSLogService, never()).add(Matchers.<SMSLog>any());
     }
 
 

@@ -2,7 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
-import org.motechproject.ananya.handler.SendSMSHandler;
+import org.motechproject.ananya.service.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

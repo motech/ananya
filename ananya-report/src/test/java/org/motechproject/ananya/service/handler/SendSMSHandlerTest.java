@@ -1,4 +1,4 @@
-package org.motechproject.ananya.handler;
+package org.motechproject.ananya.service.handler;
 
 import org.junit.Before;
 import org.junit.Test;

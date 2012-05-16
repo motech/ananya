@@ -2,9 +2,8 @@ package org.motechproject.ananya.webservice;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
-import org.motechproject.ananya.domain.SendSMSLog;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.SendSMSLogService;
+import org.motechproject.ananya.service.SMSSentMeasureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +17,18 @@ public class SendSMSClient {
 
     private OnMobileSendSMSService smsService;
     private FrontLineWorkerService frontLineWorkerService;
-    private SendSMSLogService sendSMSLogService;
+    private SMSSentMeasureService smsSentMeasureService;
     private String senderId;
 
     @Autowired
     public SendSMSClient(OnMobileSendSMSService smsService,
                          FrontLineWorkerService frontLineWorkerService,
-                         SendSMSLogService sendSMSLogService,
+                         SMSSentMeasureService smsSentMeasureService,
                          @Value("#{ananyaProperties['sms.sender.id']}") String senderId) {
         this.smsService = smsService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.sendSMSLogService = sendSMSLogService;
         this.senderId = senderId;
+        this.smsSentMeasureService = smsSentMeasureService;
     }
 
     public void sendSingleSMS(String mobileNumber, String smsMessage, String smsReferenceNumber) {
@@ -52,6 +51,6 @@ public class SendSMSClient {
         }
         smsReference.add(smsReferenceNumber, frontLineWorker.currentCourseAttempt());
         frontLineWorkerService.updateSMSReferenceNumber(smsReference);
-        sendSMSLogService.add(new SendSMSLog(callerId));
+        smsSentMeasureService.createSMSSentMeasure(callerId);
     }
 }

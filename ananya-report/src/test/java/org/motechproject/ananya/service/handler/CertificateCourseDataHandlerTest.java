@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.RegistrationLog;
-import org.motechproject.ananya.domain.SendSMSLog;
+import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.*;
@@ -27,18 +27,18 @@ public class CertificateCourseDataHandlerTest {
     @Mock
     private CallDurationMeasureService callDurationMeasureService;
     @Mock
-    private SMSSentMeasureService smsSentMeasureService;
-    @Mock
     private RegistrationLogService registrationLogService;
     @Mock
-    private SendSMSLogService sendSMSLogService;
+    private SMSLogService smsLogService;
+    @Mock
+    private SendSMSService sendSMSService;
 
     @Before
     public void setUp() {
         initMocks(this);
         handler = new CertificateCourseDataHandler(courseItemMeasureService,
                 callDurationMeasureService,
-                registrationMeasureService, smsSentMeasureService, registrationLogService, sendSMSLogService);
+                registrationMeasureService, registrationLogService, smsLogService, sendSMSService);
     }
 
     @Test
@@ -51,13 +51,13 @@ public class CertificateCourseDataHandlerTest {
         MotechEvent event = new MotechEvent("", map);
 
         when(registrationLogService.registrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, "", ""));
-        when(sendSMSLogService.sendSMSLogFor(callerId)).thenReturn(new SendSMSLog(callerId));
+        when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
 
         handler.handleCertificateCourseData(event);
 
         verify(registrationMeasureService).createRegistrationMeasure(callerId);
         verify(courseItemMeasureService).createCourseItemMeasure(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
-        verify(smsSentMeasureService).createSMSSentMeasure(callerId);
+        verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
     }
 }
