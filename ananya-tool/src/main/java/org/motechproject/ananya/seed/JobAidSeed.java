@@ -26,11 +26,15 @@ public class JobAidSeed {
     public void load() {
         Node courseNode = createJobAidTree();
         allNodes.addNodeWithDescendants(courseNode);
-        recursivelyAddNodesToReportDB(courseNode, null);
+    }
+
+    @Seed(priority = 0, version = "1.1")
+    public void addJobAidContentDimensions() {
+        Node jobAidCourse = allNodes.findByName("JobAidCourse");
+        recursivelyAddNodesToReportDB(jobAidCourse, null);
     }
 
     private void recursivelyAddNodesToReportDB(Node node, JobAidContentDimension parentDimension) {
-
         String nodeType = node.data().get("type");
         Long shortCode = -1L;
         if (nodeType.equalsIgnoreCase("Lesson")) shortCode = Long.valueOf("57711" + node.data().get("shortcode"));
