@@ -23,18 +23,18 @@ public class CertificateCourseService {
     private FrontLineWorkerService frontLineWorkerService;
     private AudioTrackerService audioTrackerService;
     private RegistrationLogService registrationLogService;
-    private SMSLogService sendSMSLogService;
+    private SMSLogService smsLogService;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
                                     AudioTrackerService audioTrackerService,
                                     FrontLineWorkerService frontLineWorkerService,
-                                    RegistrationLogService registrationLogService, SMSLogService sendSMSLogService) {
+                                    RegistrationLogService registrationLogService, SMSLogService smsLogService) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.audioTrackerService = audioTrackerService;
         this.registrationLogService = registrationLogService;
-        this.sendSMSLogService = sendSMSLogService;
+        this.smsLogService = smsLogService;
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
@@ -74,7 +74,7 @@ public class CertificateCourseService {
         frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
 
         if (frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
-            sendSMSLogService.add(
+            smsLogService.add(
                     new SMSLog(
                             stateRequestList.getCallId(),
                             frontLineWorker.getMsisdn(),

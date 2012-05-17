@@ -1,11 +1,15 @@
 package org.motechproject.ananya.util;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PerformanceCounter {
+
+    private static Logger log = LoggerFactory.getLogger(PerformanceCounter.class);
 
     private int numberRuns;
     
@@ -73,5 +77,11 @@ public class PerformanceCounter {
                 ", lastRunTime=" + lastRunTime +
                 ", averageTime=" + averageTime +
                 '}';
+    }
+
+    public static void logAllCounters() {
+        for(String key : performanceCounterMap.keySet()) {
+            log.info(performanceCounterMap.get(key).toString());
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.handler;
 
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -63,9 +64,10 @@ public class CertificateCourseDataHandler {
     }
 
     private void createRegistrationMeasure(String callerId) {
-        if(registrationLogService.registrationLogFor(callerId) != null){
+        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
+        if(registrationLog != null){
             registrationMeasureService.createRegistrationMeasure(callerId);
-            registrationLogService.deleteFor(callerId);
+            registrationLogService.delete(registrationLog);
         }
     }
 }

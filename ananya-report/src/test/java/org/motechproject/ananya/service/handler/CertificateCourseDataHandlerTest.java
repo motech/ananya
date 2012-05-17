@@ -50,7 +50,7 @@ public class CertificateCourseDataHandlerTest {
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        when(registrationLogService.registrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, "", ""));
+        when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, "", ""));
         when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
 
         handler.handleCertificateCourseData(event);

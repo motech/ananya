@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.handler;
 
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.requests.LogData;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.CallDurationMeasureService;
@@ -43,9 +44,10 @@ public class JobAidDataHandler {
     }
 
     private void createRegistrationMeasure(String callerId) {
-        if(registrationLogService.registrationLogFor(callerId) != null){
+        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
+        if(registrationLog != null){
             registrationMeasureService.createRegistrationMeasure(callerId);
-            registrationLogService.deleteFor(callerId);
+            registrationLogService.delete(registrationLog);
         }
     }
 }
