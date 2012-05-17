@@ -402,4 +402,22 @@ public class FrontLineWorkerServiceTest {
            assertEquals("Bihar", frontLineWorker.getCircle());
         }
     }
+
+    @Test
+    public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist(){
+        String callerId = "1234";
+        String circle = "bihar";
+        String operator = "airtel";
+        
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
+        
+        frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
+        
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).add(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(circle,frontLineWorker.getCircle());
+        assertEquals(operator, frontLineWorker.getOperator());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
+    }
 }

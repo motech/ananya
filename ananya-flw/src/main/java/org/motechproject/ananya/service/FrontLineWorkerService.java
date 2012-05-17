@@ -52,6 +52,7 @@ public class FrontLineWorkerService {
 
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, operator);
+            frontLineWorker.setCircle(circle);
             frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
             allFrontLineWorkers.add(frontLineWorker);
             log.info("Created:" + frontLineWorker);
