@@ -53,6 +53,7 @@ public class JobAidContentMeasureService {
         log.info("Creating job aid content measure for call id " + callId);
 
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
+        if(audioTrackerLog == null) return;
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());

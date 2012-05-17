@@ -21,6 +21,8 @@ import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -97,5 +99,13 @@ public class JobAidContentMeasureServiceTest {
         assertEquals(callId, jobAidContentMeasure.getCallId());
         assertEquals(30, (int)jobAidContentMeasure.getPercentage());
         assertEquals(duration, jobAidContentMeasure.getDuration());
+    }
+
+    @Test
+    public void shouldNotCreateJobAidContentMeasureWhenAudioTrackerLogIsNotPresent(){
+        String callId = "12345";
+        when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);
+        jobAidContentMeasureService.createJobAidContentMeasure(callId);
+        verify(allJobAidContentMeasures,never()).add(any(JobAidContentMeasure.class));
     }
 }
