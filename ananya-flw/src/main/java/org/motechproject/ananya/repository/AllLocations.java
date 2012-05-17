@@ -21,8 +21,8 @@ public class AllLocations extends MotechBaseRepository<Location> {
     }
 
     @GenerateView
-    public Location findByExternalId(String panchayat) {
-        ViewQuery viewQuery = createQuery("by_externalId").key(panchayat).includeDocs(true);
+    public Location findByExternalId(String externalId) {
+        ViewQuery viewQuery = createQuery("by_externalId").key(externalId).includeDocs(true);
         List<Location> locations = db.queryView(viewQuery, Location.class);
         if (locations == null || locations.isEmpty()) return null;
         return locations.get(0);
