@@ -95,10 +95,10 @@ public class PostgresDiagnosticIT {
         String circle = "circle";
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(987L, "", circle, "", "", "REGISTERED");
-        allFrontLineWorkerDimensions.getOrMakeFor(654L, "", circle, "", "", "UNREGISTERED");
-        allFrontLineWorkerDimensions.getOrMakeFor(653L, "", circle, "", "", "UNREGISTERED");
-        allFrontLineWorkerDimensions.getOrMakeFor(321L, "", circle, "", "", "PARTIALLY_REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", circle, "", "", "REGISTERED");
+        allFrontLineWorkerDimensions.createOrUpdate(654L, "", circle, "", "", "UNREGISTERED");
+        allFrontLineWorkerDimensions.createOrUpdate(653L, "", circle, "", "", "UNREGISTERED");
+        allFrontLineWorkerDimensions.createOrUpdate(321L, "", circle, "", "", "PARTIALLY_REGISTERED");
         allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
 
         assertEquals(4, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS.getQuery()).uniqueResult()).intValue());
@@ -127,7 +127,7 @@ public class PostgresDiagnosticIT {
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(987L, "", "circle", "", "", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
         allJobAidContentDimensions.add(new JobAidContentDimension("contentId", null, "", "", "", 0));
         JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId("contentId");
         allJobAidContentMeasures.add(new JobAidContentMeasure(frontLineWorkerDimension, "123", locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
@@ -143,7 +143,7 @@ public class PostgresDiagnosticIT {
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(987L, "", "circle", "", "", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
         allCourseItemDimensions.add(new CourseItemDimension("", "contenId", CourseItemType.COURSE, null));
         CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor("contenId");
         allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, 0, CourseItemState.START, "123"));
@@ -159,7 +159,7 @@ public class PostgresDiagnosticIT {
         LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(987L, "", "circle", "", "", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
         allSMSSentMeasures.save(new SMSSentMeasure(1,"",true,frontLineWorkerDimension, timeDimension, locationDimension));
         allSMSSentMeasures.save(new SMSSentMeasure(1,"",true,frontLineWorkerDimension, anotherTimeDimension, locationDimension));
         allSMSSentMeasures.save(new SMSSentMeasure(1,"",false,frontLineWorkerDimension, timeDimension, locationDimension));

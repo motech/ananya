@@ -2,7 +2,6 @@ package org.motechproject.ananya.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
@@ -13,7 +12,7 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -77,8 +76,26 @@ public class FrontLineWorkerDimensionServiceTest {
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
 
-        frontLineWorkerDimensionService.getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
+        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus);
 
-        verify(allFrontLineWorkerDimensions).getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
+        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus);
+    }
+
+    @Test
+    public void shouldCheckIfFrontLineWorkerExists() {
+        when(allFrontLineWorkerDimensions.fetchFor(123L)).thenReturn(new FrontLineWorkerDimension());
+
+        boolean exists = frontLineWorkerDimensionService.exists(123L);
+
+        assertTrue(exists);
+    }
+
+    @Test
+    public void shouldReturnFalseIfFrontLineWorkerExists() {
+        when(allFrontLineWorkerDimensions.fetchFor(123L)).thenReturn(null);
+
+        boolean exists = frontLineWorkerDimensionService.exists(123L);
+
+        assertFalse(exists);
     }
 }

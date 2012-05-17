@@ -60,7 +60,7 @@ public class AllSMSSentMeasuresTest extends SpringIntegrationTest{
     @Test
     public void shouldFetchBasedOnFLW(){
         String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.getOrMakeFor(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);

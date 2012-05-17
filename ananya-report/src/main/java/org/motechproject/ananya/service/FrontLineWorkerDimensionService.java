@@ -47,8 +47,12 @@ public class FrontLineWorkerDimensionService {
         }
     }
 
+    public boolean exists(Long msisdn) {
+        return allFrontLineWorkerDimensions.fetchFor(msisdn) != null;
+    }
+
     @Transactional
-    public FrontLineWorkerDimension getOrMakeFor(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus) {
-        return allFrontLineWorkerDimensions.getOrMakeFor(msisdn, operator, circle, name, designation, registrationStatus);
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus) {
+        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus);
     }
 }

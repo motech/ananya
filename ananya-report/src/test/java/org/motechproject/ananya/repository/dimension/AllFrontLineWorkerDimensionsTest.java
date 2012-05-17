@@ -47,7 +47,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String status = "status";
         String circle = "circle";
         String designation = Designation.ANGANWADI.name();
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, operator, circle, name, designation, status);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, status);
 
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(operator, frontLineWorkerDimension.getOperator());
@@ -66,7 +66,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String circle = "circle";
         template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.getOrMakeFor(msisdn, "operator1", "newCircle", "name1", "designation1", "status1");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(msisdn, "operator1", "newCircle", "name1", "designation1", "status1");
 
         assertEquals("name1", frontLineWorkerDimension.getName());
         assertEquals("operator1", frontLineWorkerDimension.getOperator());

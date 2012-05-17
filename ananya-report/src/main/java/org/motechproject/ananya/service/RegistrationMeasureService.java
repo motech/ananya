@@ -5,7 +5,6 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -44,10 +43,14 @@ public class RegistrationMeasureService {
     public void createRegistrationMeasure(String callerId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
+        boolean frontLineWorkerAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
 
-        FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.getOrMakeFor(
+        FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
                 frontLineWorker.msisdn(), frontLineWorker.getOperator(), frontLineWorker.getCircle(),
                 frontLineWorker.name(), frontLineWorker.designationName(), frontLineWorker.status().toString());
+
+        log.info("CreateOrUpdate frontlineworker with msisdn : " + frontLineWorker.msisdn());
+        if (frontLineWorkerAlreadyExists) return;
 
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
 
