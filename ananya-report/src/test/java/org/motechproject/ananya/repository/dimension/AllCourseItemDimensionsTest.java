@@ -52,4 +52,18 @@ public class AllCourseItemDimensionsTest extends SpringIntegrationTest {
 
         assertNull(courseItemDimension);
     }
+
+    @Test
+    public void shouldUpdateCourseItemDimension() {
+        CourseItemDimension courseItemDimension = new CourseItemDimension("name","contentID",CourseItemType.CHAPTER, null);
+        allCourseItemDimensions.add(courseItemDimension);
+        CourseItemDimension parentDimension = new CourseItemDimension("parentName", "parentContentID", CourseItemType.COURSE, null);
+        allCourseItemDimensions.add(parentDimension);
+        courseItemDimension.setParentDimension(parentDimension);
+
+        allCourseItemDimensions.update(courseItemDimension);
+
+        CourseItemDimension actualCourseItemDimension = allCourseItemDimensions.getFor("contentID");
+        assertEquals("parentName",actualCourseItemDimension.getParent().getName());
+    }
 }

@@ -29,4 +29,8 @@ public class AllCourseItemDimensions {
         template.save(courseItemDimension);
         return courseItemDimension;
     }
+
+    public void update(CourseItemDimension courseItemDimension) {
+        template.update(courseItemDimension);
+    }
 }

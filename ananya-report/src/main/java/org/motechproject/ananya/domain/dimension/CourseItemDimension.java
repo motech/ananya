@@ -77,6 +77,13 @@ public class CourseItemDimension {
 
     public CourseItemType getType() {
         return CourseItemType.valueOf(type);
+    }
 
+    public CourseItemDimension getParent() {
+        return parent;
+    }
+
+    public void setParentDimension(CourseItemDimension parentDimension) {
+        parent = parentDimension;
     }
 }

@@ -99,4 +99,9 @@ public class Node extends MotechBaseDataObject {
         this.parentId = nodeId;
         return this;
     }
+
+    public void deleteAllContents() {
+        contents = new ArrayList<StringContent>();
+        contentIds = new ArrayList<String>();
+    }
 }
