@@ -97,15 +97,13 @@ public class CertificateCourseService {
         CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
 
-        CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(firstRequest.getCallId());
-        if (courseLog == null) {
-            courseLog = logMapper.mapFrom(firstRequest);
-            certificateCourseLogService.createNew(courseLog);
-        }
+        CertificationCourseLog courseLog = logMapper.mapFrom(firstRequest);
+
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
             if (stateRequest.hasContentId())
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
         }
-        certificateCourseLogService.update(courseLog);
+
+        certificateCourseLogService.createNew(courseLog);
     }
 }
