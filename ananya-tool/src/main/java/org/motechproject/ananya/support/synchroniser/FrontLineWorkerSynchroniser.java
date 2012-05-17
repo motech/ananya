@@ -1,12 +1,10 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
@@ -19,31 +17,31 @@ import java.util.List;
 @Component
 public class FrontLineWorkerSynchroniser implements Synchroniser {
 
-    private FrontLineWorkerService frontLineWorkerService;
     private RegistrationMeasureService registrationMeasureService;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    private RegistrationLogService registrationLogService;
 
     @Autowired
     public FrontLineWorkerSynchroniser(FrontLineWorkerService frontLineWorkerService,
                                        RegistrationMeasureService registrationMeasureService,
-                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
-        this.frontLineWorkerService = frontLineWorkerService;
+                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, RegistrationLogService registrationLogService) {
         this.registrationMeasureService = registrationMeasureService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+        this.registrationLogService = registrationLogService;
     }
 
     @Override
-    public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
+    public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("FrontLineWorker");
-        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(fromDate, toDate);
+        List<RegistrationLog> registrationLogs = registrationLogService.getAll();
 
-        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            Long msisdn = frontLineWorker.msisdn();
+        for (RegistrationLog registrationLog : registrationLogs) {
+            Long msisdn = registrationLog.callerIdAsLong();
             try {
                 if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
-                    LogData logData = new LogData(LogType.REGISTRATION, msisdn.toString());
-                    registrationMeasureService.createRegistrationMeasure(String.valueOf(msisdn));
+                    registrationMeasureService.createRegistrationMeasure(msisdn.toString());
                     synchroniserLog.add(msisdn.toString(), "Success");
+                    registrationLogService.delete(registrationLog);
                 }
             } catch (Exception e) {
                 synchroniserLog.add(msisdn.toString(), "Error: " + ExceptionUtils.getFullStackTrace(e));

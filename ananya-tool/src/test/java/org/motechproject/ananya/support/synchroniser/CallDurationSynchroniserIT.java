@@ -71,7 +71,7 @@ public class CallDurationSynchroniserIT {
         DateTime fromDate = DateUtil.now();
         DateTime toDate = fromDate.plusHours(8);
 
-        SynchroniserLog synchroniserLog = callDurationSychroniser.replicate(fromDate, toDate);
+        SynchroniserLog synchroniserLog = callDurationSychroniser.replicate();
 
         verifyCallDurationMeasureInReportDB(callId);
         verifySynchroniserLog(synchroniserLog);

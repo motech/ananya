@@ -5,6 +5,8 @@ import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RegistrationLogService {
 
@@ -29,5 +31,9 @@ public class RegistrationLogService {
 
     public void delete(RegistrationLog registrationLog) {
         allRegistrationLogs.remove(registrationLog);
+    }
+
+    public List<RegistrationLog> getAll() {
+        return allRegistrationLogs.getAll();
     }
 }

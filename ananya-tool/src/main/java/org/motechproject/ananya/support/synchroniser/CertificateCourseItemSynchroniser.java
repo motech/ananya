@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
@@ -27,7 +26,7 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
     }
 
     @Override
-    public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
+    public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("CertificateCourseItem");
         List<CertificationCourseLog> courseLogs = certificateCourseLogService.getAll();
         for (CertificationCourseLog courseLog : courseLogs) {

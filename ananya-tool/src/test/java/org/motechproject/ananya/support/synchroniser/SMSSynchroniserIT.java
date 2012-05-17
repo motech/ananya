@@ -101,7 +101,7 @@ public class SMSSynchroniserIT {
         smsReference.add("S00V00", 1);
         allSMSReferences.add(smsReference);
 
-        SynchroniserLog synchroniserLog = smsSynchroniser.replicate(fromDate, toDate);
+        SynchroniserLog synchroniserLog = smsSynchroniser.replicate();
 
         verifySMSSentMeasureInReportDb(callerId);
         verifySynchroniserLog(synchroniserLog);

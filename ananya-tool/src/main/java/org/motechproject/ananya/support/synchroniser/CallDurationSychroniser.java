@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -27,7 +26,7 @@ public class CallDurationSychroniser implements Synchroniser {
     }
 
     @Override
-    public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
+    public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("CallDuration");
         List<CallLog> callLogs = callLoggerService.getAll();
         for (CallLog callLog : callLogs) {

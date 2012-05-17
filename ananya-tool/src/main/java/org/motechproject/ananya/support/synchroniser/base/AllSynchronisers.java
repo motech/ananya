@@ -1,6 +1,5 @@
 package org.motechproject.ananya.support.synchroniser.base;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Repository;
@@ -25,9 +24,9 @@ public class AllSynchronisers implements BeanPostProcessor {
         return bean;
     }
 
-    public void run(DateTime fromDate, DateTime toDate) {
+    public void run() {
         for (Synchroniser synchroniser : getAll()) {
-            SynchroniserLog synchroniserLog = synchroniser.replicate(fromDate, toDate);
+            SynchroniserLog synchroniserLog = synchroniser.replicate();
             synchroniserLog.print();
         }
     }

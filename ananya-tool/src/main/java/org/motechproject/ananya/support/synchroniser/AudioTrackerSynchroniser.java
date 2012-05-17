@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
@@ -29,7 +28,7 @@ public class AudioTrackerSynchroniser implements Synchroniser {
     }
 
     @Override
-    public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
+    public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("AudioTracker");
         List<AudioTrackerLog> audioTrackerLogs = audioTrackerLogService.getAll();
         for (AudioTrackerLog audioTrackerLog : audioTrackerLogs) {

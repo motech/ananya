@@ -1,7 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
@@ -38,7 +37,7 @@ public class SMSSynchroniser implements Synchroniser {
     }
 
     @Override
-    public SynchroniserLog replicate(DateTime fromDate, DateTime toDate) {
+    public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("SMS");
         List<SMSReference> smsReferences = allSMSReferences.getAll();
         

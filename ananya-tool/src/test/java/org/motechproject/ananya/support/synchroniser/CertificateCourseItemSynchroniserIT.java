@@ -94,7 +94,7 @@ public class CertificateCourseItemSynchroniserIT {
         DateTime fromDate = DateUtil.now();
         DateTime toDate = fromDate.plusHours(8);
 
-        SynchroniserLog synchroniserLog = certificateCourseItemSychroniser.replicate(fromDate, toDate);
+        SynchroniserLog synchroniserLog = certificateCourseItemSychroniser.replicate();
 
         verifyCourseItemMeasureInReportDb(contentId, frontLineWorkerDimension);
         verifySynchroniserLog(synchroniserLog);

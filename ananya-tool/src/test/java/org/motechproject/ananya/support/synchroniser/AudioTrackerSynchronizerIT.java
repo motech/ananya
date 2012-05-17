@@ -66,7 +66,7 @@ public class AudioTrackerSynchronizerIT {
         setUpTransactionData(callerId, contentId, timeStamp);
         setUpReportDataForCertificateCourse(callId, callerId, contentId, timeStamp);
 
-        audioTrackerSynchronizer.replicate(DateTime.now(), DateTime.now().plusHours(8));
+        audioTrackerSynchronizer.replicate();
 
         verifyPostgresDataForCertificateCourse(callerId, contentId);
     }
@@ -80,7 +80,7 @@ public class AudioTrackerSynchronizerIT {
         setUpTransactionData(callerId, contentId, timeStamp);
         setUpReportDataForJobAid(callId, callerId, contentId, timeStamp);
 
-        audioTrackerSynchronizer.replicate(DateTime.now(), DateTime.now().plusHours(8));
+        audioTrackerSynchronizer.replicate();
 
         verifyPostgresDataForJobAid(callerId, contentId);
     }

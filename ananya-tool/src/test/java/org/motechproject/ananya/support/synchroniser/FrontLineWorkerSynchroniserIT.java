@@ -6,16 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -30,8 +28,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -56,6 +54,8 @@ public class FrontLineWorkerSynchroniserIT {
     private TestDataAccessTemplate template;
     @Autowired
     private AllLocations allLocations;
+    @Autowired
+    private AllRegistrationLogs allRegistrationLogs;
 
     @Before
     public void setUp() {
@@ -85,16 +85,19 @@ public class FrontLineWorkerSynchroniserIT {
         setUpTestFLW("111", fromDate);
         setUpTestFLW("222", fromDate.plusDays(1));
         setUpTestFLW("333", fromDate.plusDays(2));
-        setUpTestFLW("444", fromDate.plusDays(3));
 
-        SynchroniserLog synchroniserLog = frontLineWorkerSynchroniser.replicate(fromDate, toDate);
+        SynchroniserLog synchroniserLog = frontLineWorkerSynchroniser.replicate();
 
         verifyFLWExistsInReportDbFor("111");
         verifyFLWExistsInReportDbFor("222");
         verifyFLWExistsInReportDbFor("333");
-        verifyFLWNotExistsInReportDbFor("444");
+        verifyRegistrationLogIsExmpty();
         verifySynchroniserLog(synchroniserLog);
 
+    }
+
+    private void verifyRegistrationLogIsExmpty() {
+        assertEquals(0, allRegistrationLogs.getAll().size());
     }
 
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
@@ -102,7 +105,7 @@ public class FrontLineWorkerSynchroniserIT {
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
         allTimeDimensions.addOrUpdate(registeredDate);
-
+        allRegistrationLogs.add(new RegistrationLog(msisdn, "", ""));
     }
 
     private void verifyFLWExistsInReportDbFor(String msisdn) {
@@ -110,11 +113,6 @@ public class FrontLineWorkerSynchroniserIT {
         assertNotNull(frontLineWorkerDimension);
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         assertNotNull(registrationMeasure);
-    }
-
-    private void verifyFLWNotExistsInReportDbFor(String msisdn) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
-        assertNull(frontLineWorkerDimension);
     }
 
     private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
