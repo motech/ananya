@@ -1,12 +1,79 @@
 package org.motechproject.ananya.seed;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AudioContentList {
-    public static List<AudioContent> ALL_AUDIOS = new ArrayList<AudioContent>();
+public class CertificateCourseDetails {
+    public static final int NUMBER_OF_LESSONS_IN_A_CHAPTER = 4;
+    public static final int NUMBER_OF_QUESTIONS_IN_A_CHAPTER = 4;
+    public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
 
-    static  {
+    private static final Map<String, String> CORRECT_ANSWERS = new HashMap<String, String>();
+    private static List<AudioContent> ALL_AUDIOS = new ArrayList<AudioContent>();
+
+    public static AudioContent findAudioContentContainingFilename(String endOptionName) {
+        for (AudioContent audioContent : ALL_AUDIOS) {
+            if (audioContent.fileName.contains(endOptionName)) {
+                return audioContent;
+            }
+        }
+        throw new RuntimeException("Could not find any file with the name: " + endOptionName);
+    }
+
+    public static String getCorrectAnswerFor(String question) {
+        return CORRECT_ANSWERS.get(question);
+    }
+
+    static {
+        CORRECT_ANSWERS.put("Chapter 1, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 1, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 1, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 1, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 2, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 2, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 2, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 2, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 3, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 3, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 3, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 3, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 4, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 4, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 4, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 4, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 5, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 5, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 5, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 5, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 6, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 6, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 6, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 6, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 7, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 7, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 7, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 7, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 8, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 8, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 8, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 8, Question 4", "2");
+
+        CORRECT_ANSWERS.put("Chapter 9, Question 1", "1");
+        CORRECT_ANSWERS.put("Chapter 9, Question 2", "2");
+        CORRECT_ANSWERS.put("Chapter 9, Question 3", "1");
+        CORRECT_ANSWERS.put("Chapter 9, Question 4", "2");
+    }
+
+    static {
         ALL_AUDIOS.add(new AudioContent("0000_b_dead_space_1pt5_sec.wav", 1502));
         ALL_AUDIOS.add(new AudioContent("0001_wp_ma_mohnish.wav", 125521));
         ALL_AUDIOS.add(new AudioContent("0002_start_course_op.wav", 24464));

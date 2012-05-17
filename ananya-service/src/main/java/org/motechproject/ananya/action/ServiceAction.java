@@ -59,7 +59,6 @@ public enum ServiceAction {
     }
 
     public static ServiceAction findFor(String interactionKey) {
-        ServiceAction.values();
         for (ServiceAction serviceAction : ServiceAction.values()) {
             if (StringUtils.endsWithIgnoreCase(serviceAction.interactionKey, interactionKey))
                 return serviceAction;
