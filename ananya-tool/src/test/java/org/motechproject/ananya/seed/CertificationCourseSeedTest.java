@@ -9,11 +9,13 @@ import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.cmslite.api.model.StringContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -53,5 +55,18 @@ public class CertificationCourseSeedTest {
         Node lesson = chapter.children().get(0);
         assertEquals(0, lesson.children().size());
         assertEquals("lesson", lesson.data().get("type"));
+    }
+
+    @Test
+    public void shouldLoadAudioContentDetails() {
+        certificationCourseSeed.loadSeed();
+        certificationCourseSeed.loadAudioContentDetails();
+
+        Node chapterNode = allNodes.findByName("Chapter 1");
+
+        assertEquals(7, chapterNode.contents().size());
+        for(StringContent content : chapterNode.contents()) {
+            assertTrue(allCourseItemDimensions.getFor(content.getId()).getName().contains(content.getValue()));
+        }
     }
 }

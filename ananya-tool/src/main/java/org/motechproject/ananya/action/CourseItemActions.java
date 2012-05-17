@@ -115,7 +115,7 @@ public enum CourseItemActions {
     Default(null) {
         @Override
         public Node updateContents(Node node) {
-            return null;
+            return node;
         }
     };
 
