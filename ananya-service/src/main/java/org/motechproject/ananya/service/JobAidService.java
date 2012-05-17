@@ -61,8 +61,7 @@ public class JobAidService {
     }
 
     public void updateCurrentUsageAndSetLastAccessTimeForUser(String callerId, Integer callDuration) {
-        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, callDuration);
-        frontLineWorkerService.updateJobAidLastAccessTime(callerId);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
     }
 
     public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {

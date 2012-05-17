@@ -150,7 +150,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, currentUsage);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, currentUsage);
 
         assertEquals(currentUsage, frontLineWorker.getCurrentJobAidUsage());
         verify(allFrontLineWorkers).update(frontLineWorker);
@@ -212,7 +212,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setCurrentJobAidUsage(currentUsage);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, callDuration);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -225,11 +225,12 @@ public class FrontLineWorkerServiceTest {
     public void shouldUpdateTheLastAccessTimeForFlw() {
         String callerId = "callerId";
         String operator = "airtel";
+        int callDuration = 15;
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidLastAccessTime(callerId);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId,callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());

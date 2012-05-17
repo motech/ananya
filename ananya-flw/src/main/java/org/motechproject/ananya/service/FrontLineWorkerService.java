@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FrontLineWorkerService {
@@ -70,9 +69,7 @@ public class FrontLineWorkerService {
 
     public FrontLineWorker findForJobAidCallerData(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator, circle);
-        DateTime lastJobAidAccessTime = frontLineWorker.getLastJobAidAccessTime();
-
-        if (ifPreviousMonthOfYear(lastJobAidAccessTime)) {
+        if (frontLineWorker.jobAidLastAccessedPreviousMonth()) {
             frontLineWorker.resetJobAidUsageAndPrompts();
             allFrontLineWorkers.update(frontLineWorker);
             log.info("Reset last jobaid usage for " + frontLineWorker);
@@ -113,19 +110,13 @@ public class FrontLineWorkerService {
         log.info("Updated prompts heard for " + frontLineWorker);
     }
 
-    public void updateJobAidCurrentUsageFor(String callerId, Integer currentCallDuration) {
+    public void updateJobAidUsageAndAccessTime(String callerId, Integer currentCallDuration) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated jobaid usage for " + frontLineWorker);
-    }
-
-    public void updateJobAidLastAccessTime(String callerId) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated last jobaid access time " + frontLineWorker);
+        log.info("Updated jobaid usage and access time for " + frontLineWorker);
     }
 
     public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {
@@ -147,18 +138,11 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.getAll();
     }
 
-    private boolean ifPreviousMonthOfYear(DateTime lastJobAidAccessTime) {
-        DateTime now = DateTime.now();
-        return lastJobAidAccessTime != null &&
-                (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
-                        lastJobAidAccessTime.getYear() != now.getYear());
-    }
-
     public void updateFrontLineWorkerWithDefaultCircle(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
-        for(FrontLineWorker frontLineWorker : frontLineWorkers){
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
             frontLineWorker.setCircle(defaultCircle);
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("Updated FrontLineWorker: " +frontLineWorker.getMsisdn() +"with circle: " + frontLineWorker.getCircle());
+            log.info("Updated FrontLineWorker: " + frontLineWorker.getMsisdn() + "with circle: " + frontLineWorker.getCircle());
         }
     }
 }

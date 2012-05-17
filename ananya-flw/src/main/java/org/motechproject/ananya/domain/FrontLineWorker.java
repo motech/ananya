@@ -231,4 +231,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public String getCircle() {
         return circle;
     }
+
+    @JsonIgnore
+    public boolean jobAidLastAccessedPreviousMonth() {
+        DateTime now = DateTime.now();
+        return lastJobAidAccessTime != null &&
+                (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                        lastJobAidAccessTime.getYear() != now.getYear());
+    }
+
 }
