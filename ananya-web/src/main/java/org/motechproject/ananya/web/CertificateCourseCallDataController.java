@@ -71,7 +71,7 @@ public class CertificateCourseCallDataController {
         builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
         builder.append("<form id=\"endCall\">");
         builder.append("<block><disconnect/></block>");
-        builder.append("/form></vxml>");
+        builder.append("</form></vxml>");
         return builder.toString();
     }
 
