@@ -1,11 +1,10 @@
 package org.motechproject.ananya.seed;
 
- import liquibase.util.csv.CSVReader;
+import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
@@ -22,85 +21,43 @@ import java.util.List;
 
 @Component
 public class FrontLineWorkerSeed {
+
     @Autowired
     private RegistrationService registrationService;
-
     @Autowired
     private LocationService locationService;
-    
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
-
     @Autowired
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
-
     @Autowired
     private FrontLineWorkerService frontLineWorkerService;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
-
     @Value("#{ananyaProperties['seed.flw.file.out']}")
     private String outputFileName;
-
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
-    private static String DEFAULTCIRCLE = "BIHAR";
-    private String inputCSVFile;
-    private BufferedWriter writer;
 
-    @Seed(priority = 0, version = "1.0")
-    public void load() throws IOException {
-        inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+    @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
+    public void create_FrontlineWorkersFromCSVFile() throws IOException {
+
+        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();
         String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+
         File file = new File(outputCSVFile);
         file.createNewFile();
 
-        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputCSVFile));
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        LocationList locationList = new LocationList(locationService.getAll());
 
-        loadFromCsv(inputCSVFile);
-    }
-
-    /*
-    * Users registered with id < 20988 were imported via a CSV file and have proper registration status. Users
-    * after that were defaulted to PARTIALLY_REGISTERED, but need to be updated to UNREGISTERED. This needs to happen
-    * in both couch and postgres.
-    */
-    @Seed(priority = 1, version = "1.1")
-    public void updateStatusOfNewlyRegistered() {
-
-        frontLineWorkerDimensionService.updateStatus(RegistrationStatus.UNREGISTERED.toString(), 20988);
-
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
-        for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions){
-            frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
-        }
-    }
-
-    /*
-     * 1. Corrects MSISDN values : Converts 10 digit format to 12 digit format by appending 91 (couch and postgres)
-     * 2. Updates designation and operator values in Dimension, postgres
-     * 3. Updates circle value in couchdb
-     */
-    @Seed(priority = 0, version = "1.1")
-    public void updateFrontLineWorkerRecords() {
-        List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-
-        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
-
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(allFrontLineWorkers, DEFAULTCIRCLE);
-    }
-
-    private void loadFromCsv(String path) throws IOException {
-        CSVReader csvReader = new CSVReader(new FileReader(path));
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-        LocationList locationList = new LocationList(locationService.getAll());
-        //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
+
         while (currentRow != null) {
             msisdn = currentRow[0];
             name = currentRow[1];
@@ -109,14 +66,33 @@ public class FrontLineWorkerSeed {
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
 
-            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation,
-                    currentDistrict, currentBlock, currentPanchayat, locationList);
+            RegistrationResponse registrationResponse = registrationService.registerFlw(
+                    msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
 
             writer.write(msisdn + " : " + registrationResponse.getMessage());
             writer.newLine();
             currentRow = csvReader.readNext();
         }
         writer.close();
+    }
+
+    @Seed(priority = 1, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
+    public void updateStatusOfFrontLineWorkersRegisteredViaCalls() {
+        int lastSequenceOfPreImportedFLWs = 20988;
+        frontLineWorkerDimensionService.updateRegistrationStatus(RegistrationStatus.UNREGISTERED.toString(), lastSequenceOfPreImportedFLWs);
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
+        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
+            frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
+        }
+    }
+
+    @Seed(priority = 0, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    public void update_CallerIds_Circle_Operator_Designation() {
+        String defaultCircle = "BIHAR";
+        List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
+        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
+        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(allFrontLineWorkers, defaultCircle);
     }
 
 }

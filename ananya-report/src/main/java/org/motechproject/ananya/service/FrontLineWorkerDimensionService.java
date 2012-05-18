@@ -32,7 +32,7 @@ public class FrontLineWorkerDimensionService {
     }
 
     @Transactional
-    public void updateStatus(String status, int id) {
+    public void updateRegistrationStatus(String status, int id) {
         allFrontLineWorkerDimensions.updateStatus(status, id);
     }
 
