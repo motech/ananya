@@ -1,0 +1,59 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="1">
+        <sql>
+            update
+            report.course_item_measure
+            set
+            location_id = ( select
+            location_id
+            from
+            report.registration_measure
+            where
+            course_item_measure.flw_id = registration_measure.flw_id
+            )
+        </sql>
+
+        <sql>
+            update
+            report.call_duration_measure
+            set
+            location_id = ( select
+            location_id
+            from
+            report.registration_measure
+            where
+            call_duration_measure.flw_id = registration_measure.flw_id
+            )
+        </sql>
+
+        <sql>
+            update
+            report.sms_sent_measure
+            set
+            location_id = ( select
+            location_id
+            from
+            report.registration_measure
+            where
+            sms_sent_measure.flw_id = registration_measure.flw_id
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="2">
+        <sql>
+            update report.front_line_worker_dimension set status='UNREGISTERED' where id > 20988
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="3">
+        <sql>
+            update report.front_line_worker_dimension set circle='BIHAR'
+        </sql>
+    </changeSet>
+</databaseChangeLog>
