@@ -19,12 +19,12 @@ public class LocationDetailsController {
     @Autowired
     private LocationRegistrationService locationRegistrationService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/add")
+    @RequestMapping(method = RequestMethod.POST)
     public void create(@RequestParam String district, @RequestParam String block, @RequestParam String panchayat) {
         locationRegistrationService.addNewLocation(district, block, panchayat);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/get")
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getLocation(HttpServletRequest request) {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
@@ -32,6 +32,6 @@ public class LocationDetailsController {
 
         List<LocationResponse> filteredLocations = locationRegistrationService.getFilteredLocations(district, block, panchayat);
 
-        return new ModelAndView("locations").addObject("filtered_locations", filteredLocations);
+        return new ModelAndView("locations").addObject("filteredLocations", filteredLocations);
     }
 }
