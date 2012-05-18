@@ -37,7 +37,7 @@ public class LocationRegistrationServiceTest {
     public void shouldNotRegisterALocationIfItIsMissingDetails() {
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
 
-        LocationRegistrationResponse response = locationRegistrationService.addNewLocation("D1", "", "V1");
+        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest("D1", "", "V1"));
 
         assertEquals("One or more of District, Block details are missing", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -51,7 +51,7 @@ public class LocationRegistrationServiceTest {
         when(locationService.getAll()).thenReturn(locations);
         locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService);
 
-        LocationRegistrationResponse response = locationRegistrationService.addNewLocation("D1", "B1", "V1");
+        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest("D1", "B1", "V1"));
 
         assertEquals("The location is already present", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
@@ -67,7 +67,7 @@ public class LocationRegistrationServiceTest {
         ArrayList<Location> locations = new ArrayList<Location>();
         when(locationService.getAll()).thenReturn(locations);
 
-        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(district, block, panchayat);
+        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest(district, block, panchayat));
 
         assertEquals("Successfully registered location", response.getMessage());
 

@@ -5,6 +5,7 @@ import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,12 +21,8 @@ public class LocationDetailsController {
     private LocationRegistrationService locationRegistrationService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public void create(HttpServletRequest request) {
-        String district = request.getParameter("district");
-        String block = request.getParameter("block");
-        String panchayat = request.getParameter("panchayat");
-
-        locationRegistrationService.addNewLocation(district, block, panchayat);
+    public void create(@RequestBody LocationRequest request) {
+        locationRegistrationService.addNewLocation(request);
     }
 
     @RequestMapping(method = RequestMethod.GET)

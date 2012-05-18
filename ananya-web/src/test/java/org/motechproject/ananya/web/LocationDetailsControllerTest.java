@@ -10,6 +10,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,11 +49,8 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String panchayat = "Charkot";
         String block = "Amer";
         String district = "Patna";
-        when(request.getParameter("district")).thenReturn(district);
-        when(request.getParameter("block")).thenReturn(block);
-        when(request.getParameter("panchayat")).thenReturn(panchayat);
 
-        locationDetailsController.create(request);
+        locationDetailsController.create(new LocationRequest(district, block, panchayat));
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());
@@ -66,12 +64,9 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String panchayat = "Charkot";
         String block = "Amer";
         String district = "Patna";
-        locationDetailsController.create(request);
-        when(request.getParameter("district")).thenReturn(district);
-        when(request.getParameter("block")).thenReturn(block);
-        when(request.getParameter("panchayat")).thenReturn(panchayat);
 
-        locationDetailsController.create(request);
+        locationDetailsController.create(new LocationRequest(district, block, panchayat));
+        locationDetailsController.create(new LocationRequest(district, block, panchayat));
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());

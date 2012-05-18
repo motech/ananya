@@ -1,6 +1,8 @@
 package org.motechproject.ananya.request;
 
-public class LocationRequest {
+import java.io.Serializable;
+
+public class LocationRequest implements Serializable {
     private String district;
     private String block;
     private String panchayat;
@@ -9,6 +11,10 @@ public class LocationRequest {
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
+    }
+
+    public LocationRequest() {
+
     }
 
     public String getDistrict() {
@@ -21,5 +27,17 @@ public class LocationRequest {
 
     public String getPanchayat() {
         return panchayat;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
+
+    public void setPanchayat(String panchayat) {
+        this.panchayat = panchayat;
     }
 }

@@ -32,9 +32,9 @@ public class LocationRegistrationService {
         locationDimensionService.add(locationDimension);
     }
 
-    public LocationRegistrationResponse addNewLocation(String district, String block, String panchayat) {
+    public LocationRegistrationResponse addNewLocation(LocationRequest request) {
         LocationList locationList = new LocationList(locationService.getAll());
-        return registerLocation(district, block, panchayat, locationList);
+        return registerLocation(request.getDistrict(), request.getBlock(), request.getPanchayat(), locationList);
     }
 
     public List<LocationRegistrationResponse> registerAllLocations(List<Location> locationsToSave) {
