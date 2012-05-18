@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 
@@ -112,8 +113,9 @@ public class LocationRegistrationServiceTest {
         String panchayat = "P1";
         locationDimensions.add(new LocationDimension(externalId, district, block, panchayat));
         when(locationDimensionService.getFilteredLocations(district, null, null)).thenReturn(locationDimensions);
+        LocationRequest locationRequest = new LocationRequest(district, null, null);
 
-        List<LocationResponse> locationResponses = locationRegistrationService.getFilteredLocations(district, null, null);
+        List<LocationResponse> locationResponses = locationRegistrationService.getFilteredLocations(locationRequest);
 
         assertEquals(1, locationResponses.size());
         assertEquals(district, locationResponses.get(0).getDistrict());

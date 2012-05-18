@@ -4,6 +4,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.mapper.LocationMapper;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,8 @@ public class LocationRegistrationService {
         return responses;
     }
 
-    public List<LocationResponse> getFilteredLocations(String district, String block, String panchayat) {
-        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(district, block, panchayat);
+    public List<LocationResponse> getFilteredLocations(LocationRequest request) {
+        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(request.getDistrict(), request.getBlock(), request.getPanchayat());
         List<LocationResponse> locationResponses = new ArrayList<LocationResponse>();
         for (LocationDimension locationDimension : filteredLocations) {
             locationResponses.add(LocationMapper.mapFrom(locationDimension));

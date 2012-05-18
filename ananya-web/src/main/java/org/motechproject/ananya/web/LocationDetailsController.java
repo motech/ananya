@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,9 @@ public class LocationDetailsController {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
+        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
 
-        List<LocationResponse> filteredLocations = locationRegistrationService.getFilteredLocations(district, block, panchayat);
+        List<LocationResponse> filteredLocations = locationRegistrationService.getFilteredLocations(locationRequest);
 
         return new ModelAndView("locations").addObject("filteredLocations", filteredLocations);
     }
