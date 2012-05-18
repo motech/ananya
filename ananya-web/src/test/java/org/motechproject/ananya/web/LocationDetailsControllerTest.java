@@ -48,8 +48,11 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String panchayat = "Charkot";
         String block = "Amer";
         String district = "Patna";
+        when(request.getParameter("district")).thenReturn(district);
+        when(request.getParameter("block")).thenReturn(block);
+        when(request.getParameter("panchayat")).thenReturn(panchayat);
 
-        locationDetailsController.create(district, block, panchayat);
+        locationDetailsController.create(request);
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());
@@ -63,9 +66,12 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String panchayat = "Charkot";
         String block = "Amer";
         String district = "Patna";
-        locationDetailsController.create(district, block, panchayat);
+        locationDetailsController.create(request);
+        when(request.getParameter("district")).thenReturn(district);
+        when(request.getParameter("block")).thenReturn(block);
+        when(request.getParameter("panchayat")).thenReturn(panchayat);
 
-        locationDetailsController.create(district, block, panchayat);
+        locationDetailsController.create(request);
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());
