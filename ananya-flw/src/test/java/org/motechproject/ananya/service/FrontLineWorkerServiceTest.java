@@ -9,15 +9,12 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -295,19 +292,6 @@ public class FrontLineWorkerServiceTest {
         frontLineWorkerService.updateSMSReferenceNumber(smsReference);
 
         verify(allSMSReferences).update(smsReference);
-    }
-
-    @Test
-    public void shouldFetchByRegisteredDate() {
-        DateTime startDate = DateUtil.now();
-        DateTime endDate = startDate.plusDays(2);
-        List<FrontLineWorker> expectedFrontLineWorkers = Arrays.asList(new FrontLineWorker());
-        when(allFrontLineWorkers.findByRegisteredDate(startDate, endDate)).thenReturn(expectedFrontLineWorkers);
-
-        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(startDate, endDate);
-
-        assertEquals(expectedFrontLineWorkers, frontLineWorkers);
-        verify(allFrontLineWorkers).findByRegisteredDate(startDate, endDate);
     }
 
     @Test

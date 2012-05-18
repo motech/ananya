@@ -21,7 +21,6 @@ public class OperatorService {
         return allOperators.findByName(operator).getAllowedUsagePerMonth();
     }
 
-    //only used in perf test
     public List<Operator> getAllOperators() {
         return allOperators.getAll();
     }

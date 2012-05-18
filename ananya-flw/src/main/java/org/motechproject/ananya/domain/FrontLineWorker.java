@@ -58,6 +58,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
+    @JsonIgnore
+    private boolean modified;
+
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
         this.currentJobAidUsage = 0;
@@ -240,4 +243,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
                         lastJobAidAccessTime.getYear() != now.getYear());
     }
 
+    @JsonIgnore
+    public void setModified() {
+        this.modified = true;
+    }
+
+    @JsonIgnore
+    public boolean isModified() {
+        return modified;
+    }
 }

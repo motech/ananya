@@ -7,6 +7,7 @@ import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
+import org.motechproject.ananya.util.PerformanceCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +46,9 @@ public class JobAidService {
     public JobAidCallerDataResponse createCallerData(String callerId, String operator, String circle) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " + circle);
 
-
-        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId);
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
-        if (newFlwOrOperatorOrCircleIsEmpty) {
-            RegistrationLog registrationLog = new RegistrationLog(callerId, operator, circle);
-            registrationLogService.add(registrationLog);
-        }
+        if (frontLineWorker.isModified())
+            registrationLogService.add(new RegistrationLog(callerId, operator, circle));
 
         return new JobAidCallerDataResponse(
                 frontLineWorker.status().isRegistered(),

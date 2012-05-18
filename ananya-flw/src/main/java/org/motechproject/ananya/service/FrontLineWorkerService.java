@@ -53,16 +53,21 @@ public class FrontLineWorkerService {
             frontLineWorker = new FrontLineWorker(callerId, operator);
             frontLineWorker.setCircle(circle);
             frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
+            frontLineWorker.setModified();
+
             allFrontLineWorkers.add(frontLineWorker);
             log.info("Created:" + frontLineWorker);
             return frontLineWorker;
         }
+
         if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle))
             return frontLineWorker;
 
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setModified();
         allFrontLineWorkers.update(frontLineWorker);
+
         log.info("Updated:" + frontLineWorker);
         return frontLineWorker;
     }
@@ -128,10 +133,6 @@ public class FrontLineWorkerService {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         return frontLineWorker == null || StringUtils.isEmpty(frontLineWorker.getOperator()) ||
                 StringUtils.isEmpty(frontLineWorker.getCircle());
-    }
-
-    public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
-        return allFrontLineWorkers.findByRegisteredDate(startDate, endDate);
     }
 
     public List<FrontLineWorker> getAll() {

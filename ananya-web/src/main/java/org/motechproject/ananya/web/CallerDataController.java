@@ -48,7 +48,6 @@ public class CallerDataController {
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle: " + circle);
-
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator, circle);
 
         return new ModelAndView("job_aid_caller_data")

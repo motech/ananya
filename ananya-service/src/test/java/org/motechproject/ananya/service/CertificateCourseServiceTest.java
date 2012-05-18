@@ -66,8 +66,8 @@ public class CertificateCourseServiceTest {
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setModified();
 
-        when(frontlineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         certificateCourseService.createCallerData(callerId,operator, circle);
