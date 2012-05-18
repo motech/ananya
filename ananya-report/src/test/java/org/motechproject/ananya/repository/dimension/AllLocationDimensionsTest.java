@@ -44,7 +44,7 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
 
     @Test
     public void shouldFilterLocationBasedOnDistrictBlockAndPanchayat() {
-        LocationDimension initialLocationDimension = new LocationDimension("ZZZ100", "D1", "B1", "P1");
+        LocationDimension initialLocationDimension = new LocationDimension("ZZZ100", "d1", "B1", "P1");
         LocationDimension initialLocationDimension1 = new LocationDimension("ZZZ101", "D1", "B2", "P2");
         LocationDimension initialLocationDimension2 = new LocationDimension("ZZZ102", "D1", "B2", "P3");
         LocationDimension initialLocationDimension3 = new LocationDimension("ZZZ103", "D2", "B3", "P4");
@@ -61,7 +61,7 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
 
         locationDimensions = allLocationDimensions.getFilteredLocationFor(null, null, "P1");
         assertEquals(1, locationDimensions.size());
-        
+
         locationDimensions = allLocationDimensions.getFilteredLocationFor("D1", "B2", "P2");
         assertEquals(1, locationDimensions.size());
     }

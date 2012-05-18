@@ -32,11 +32,11 @@ public class AllLocationDimensions {
     public List<LocationDimension> getFilteredLocationFor(String district, String block, String panchayat) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(LocationDimension.class);
         if (district != null)
-            detachedCriteria.add(Restrictions.eq("district", district));
+            detachedCriteria.add(Restrictions.eq("district", district).ignoreCase());
         if (block != null)
-            detachedCriteria.add(Restrictions.eq("block", block));
+            detachedCriteria.add(Restrictions.eq("block", block).ignoreCase());
         if (panchayat != null)
-            detachedCriteria.add(Restrictions.eq("panchayat", panchayat));
+            detachedCriteria.add(Restrictions.eq("panchayat", panchayat).ignoreCase());
 
         return template.findByCriteria(detachedCriteria);
     }
