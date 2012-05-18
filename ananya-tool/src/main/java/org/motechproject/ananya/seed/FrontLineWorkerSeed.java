@@ -63,8 +63,16 @@ public class FrontLineWorkerSeed {
         loadFromCsv(inputCSVFile);
     }
 
+    /*
+    * Users registered with id < 20988 were imported via a CSV file and have proper registration status. Users
+    * after that were defaulted to PARTIALLY_REGISTERED, but need to be updated to UNREGISTERED. This needs to happen
+    * in both couch and postgres.
+    */
     @Seed(priority = 1, version = "1.1")
     public void updateStatusOfNewlyRegistered() {
+
+        frontLineWorkerDimensionService.updateStatus(RegistrationStatus.UNREGISTERED.toString(), 20988);
+
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
         for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions){
             frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);

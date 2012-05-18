@@ -146,9 +146,9 @@ public class PostgresDiagnosticIT {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
         allCourseItemDimensions.add(new CourseItemDimension("", "contenId", CourseItemType.COURSE, null));
         CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor("contenId");
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, 0, CourseItemState.START, "123"));
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, 0, CourseItemState.START, "123"));
-        allCourseItemMeasures.save(new CourseItemMeasure(anotherTimeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, 0, CourseItemState.START, "456"));
+        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "123"));
+        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "123"));
+        allCourseItemMeasures.save(new CourseItemMeasure(anotherTimeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "456"));
 
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery()).uniqueResult()).intValue());
         assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today)).uniqueResult()).intValue());

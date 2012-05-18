@@ -45,4 +45,8 @@ public class AllFrontLineWorkerDimensions {
     public void removeAll() {
         template.bulkUpdate("delete from FrontLineWorkerDimension");
     }
+
+    public void updateStatus(String status, int id) {
+        template.bulkUpdate("update FrontLineWorkerDimension set status = '" + status + "' where id >= " + id);
+    }
 }

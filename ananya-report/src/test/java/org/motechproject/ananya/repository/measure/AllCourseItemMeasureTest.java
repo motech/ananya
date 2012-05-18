@@ -48,17 +48,17 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertCourseItemMeasureWhenFLWDimensionIsNull() {
-        allCourseItemMeasures.save(new CourseItemMeasure(new TimeDimension(), new CourseItemDimension(), null, null, 2, CourseItemState.START, "callId"));
+        allCourseItemMeasures.save(new CourseItemMeasure(new TimeDimension(), new CourseItemDimension(), null, null, DateTime.now(), 2, CourseItemState.START, "callId"));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertCourseItemMeasureWhenCourseItemDimensionIsNull() {
-        allCourseItemMeasures.save(new CourseItemMeasure(null, new CourseItemDimension(), new FrontLineWorkerDimension(), null, 2, CourseItemState.START, "callId"));
+        allCourseItemMeasures.save(new CourseItemMeasure(null, new CourseItemDimension(), new FrontLineWorkerDimension(), null, DateTime.now(), 2, CourseItemState.START, "callId"));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertCourseItemMeasureWhenTimeDimensionIsNull() {
-        allCourseItemMeasures.save(new CourseItemMeasure(new TimeDimension(), null, new FrontLineWorkerDimension(), null, 2, CourseItemState.START, "callId"));
+        allCourseItemMeasures.save(new CourseItemMeasure(new TimeDimension(), null, new FrontLineWorkerDimension(), null, DateTime.now(), 2, CourseItemState.START, "callId"));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         allLocationDimensions.add(locationDimension);
 
 
-        CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, 0, event,callId);
+        CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, event,callId);
         allCourseItemMeasures.save(courseItemMeasure);
 
         CourseItemMeasure measure = allCourseItemMeasures.fetchFor(frontLineWorkerDimension.getId(), courseItemDimension, String.valueOf(event));
