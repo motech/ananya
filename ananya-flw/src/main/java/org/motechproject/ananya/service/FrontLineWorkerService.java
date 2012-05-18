@@ -139,9 +139,17 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.getAll();
     }
 
-    public void updateFrontLineWorkerWithDefaultCircle(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
+    /*
+     * Only used for seed. should be moved out later.
+     */
+    public void updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
         for (FrontLineWorker frontLineWorker : frontLineWorkers) {
+            String msisdn = frontLineWorker.getMsisdn();
+            if (msisdn.length() == 10) msisdn = "91" + msisdn;
+
+            frontLineWorker.setMsisdn(msisdn);
             frontLineWorker.setCircle(defaultCircle);
+
             allFrontLineWorkers.update(frontLineWorker);
             log.info("Updated FrontLineWorker: " + frontLineWorker.getMsisdn() + "with circle: " + frontLineWorker.getCircle());
         }

@@ -252,4 +252,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public boolean isModified() {
         return modified;
     }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
 }

@@ -79,16 +79,18 @@ public class FrontLineWorkerSeed {
         }
     }
 
+    /*
+     * 1. Corrects MSISDN values : Converts 10 digit format to 12 digit format by appending 91 (couch and postgres)
+     * 2. Updates designation and operator values in Dimension, postgres
+     * 3. Updates circle value in couchdb
+     */
     @Seed(priority = 0, version = "1.1")
-    public void updateOperatorInReportDbFromCouchdb() {
+    public void updateFrontLineWorkerRecords() {
         List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
-    }
 
-    @Seed(priority = 0, version = "1.1")
-    public void loadCircle(){
-        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, DEFAULTCIRCLE);
+        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
+
+        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(allFrontLineWorkers, DEFAULTCIRCLE);
     }
 
     private void loadFromCsv(String path) throws IOException {

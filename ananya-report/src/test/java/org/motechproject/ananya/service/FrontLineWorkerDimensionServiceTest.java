@@ -55,19 +55,6 @@ public class FrontLineWorkerDimensionServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateReportDbIfTheOperatorIsEmptyInCouch() {
-        Long msisdn = 1234L;
-        ArrayList<FrontLineWorker> allFrontLineWorkers = new ArrayList<FrontLineWorker>();
-        allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), null));
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
-        when(allFrontLineWorkerDimensions.fetchFor(msisdn)).thenReturn(frontLineWorkerDimension);
-
-        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
-
-        verify(allFrontLineWorkerDimensions, never()).update(frontLineWorkerDimension);
-    }
-
-    @Test
     public void shouldGetOrMakeGivenTheDetails() {
         long msisdn = 123L;
         String operator = "Airtel";

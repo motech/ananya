@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -94,27 +95,25 @@ public class FrontLineWorkerSeedTest {
         RegistrationStatus registrationStatus = RegistrationStatus.UNREGISTERED;
         Designation designation = Designation.ASHA;
         String name = "Name";
-        Long msisdn = 123L;
+        Long msisdn = 1234567890L;
+        Long correctMsisdn = 911234567890L;
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), registrationStatus);
         String operator = "Airtel";
         frontLineWorker.setOperator(operator);
         allFrontLineWorkers.add(frontLineWorker);
         template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name()));
 
-        frontLineWorkerSeed.updateOperatorInReportDbFromCouchdb();
+        frontLineWorkerSeed.updateFrontLineWorkerRecords();
 
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(correctMsisdn);
+        assertNotNull(frontLineWorkerDimension);
         assertEquals(operator, frontLineWorkerDimension.getOperator());
-    }
-
-    @Test
-    public void shouldUpdateFrontLineWorkersWithCircleThroughSeed(){
-        frontLineWorkerSeed.loadCircle();
-
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        for(FrontLineWorker frontLineWorker : frontLineWorkers){
-            String defaultCircle = "bihar";
-            assertEquals(defaultCircle, frontLineWorker.getCircle());
+
+        for(FrontLineWorker flw : frontLineWorkers){
+            String defaultCircle = "BIHAR";
+            assertEquals(defaultCircle, flw.getCircle());
+            assertEquals(12, flw.getMsisdn().length());
         }
     }
 

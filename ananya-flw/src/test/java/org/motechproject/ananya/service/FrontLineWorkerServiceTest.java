@@ -372,12 +372,12 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateFrontLineWorkersWithCircle(){
+    public void shouldUpdateFrontLineWorkersWithCircleAndCorrectMsisdn(){
 
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<FrontLineWorker>();
-        frontLineWorkers.add(new FrontLineWorker("123","airtel"));
-        frontLineWorkers.add(new FrontLineWorker("456","airtel"));
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, "Bihar");
+        frontLineWorkers.add(new FrontLineWorker("1234567890","airtel"));
+        frontLineWorkers.add(new FrontLineWorker("1234567891","airtel"));
+        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(frontLineWorkers, "Bihar");
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         
         verify(allFrontLineWorkers, times(2)).update(captor.capture());
@@ -385,6 +385,7 @@ public class FrontLineWorkerServiceTest {
         List<FrontLineWorker> frontLineWorkerList = captor.getAllValues();
         for( FrontLineWorker frontLineWorker : frontLineWorkerList){
            assertEquals("Bihar", frontLineWorker.getCircle());
+           assertEquals(12, frontLineWorker.getMsisdn().length());
         }
     }
 
