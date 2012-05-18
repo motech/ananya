@@ -33,6 +33,10 @@ public class AllTimeDimensions {
         return existingTimeDimension;
     }
 
+    public void update(TimeDimension timeDimension) {
+        template.update(timeDimension);
+    }
+
     public TimeDimension getFor(DateTime dateTime) {
         return (TimeDimension) template.getUniqueResult(
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR,

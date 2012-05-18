@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
@@ -33,15 +34,17 @@ public class FrontLineWorkerDimensionService {
     }
 
     @Transactional
-    public void updateFrontLineWorkerWithOperator(List<FrontLineWorker> allFrontLineWorkers) {
+    public void updateFrontLineWorkers(List<FrontLineWorker> allFrontLineWorkers) {
         log.info("Updating frontlineworkers in postgres with the right operators from couchdb.");
         for (FrontLineWorker frontLineWorker : allFrontLineWorkers) {
             String operator = frontLineWorker.getOperator();
+            Designation designation = frontLineWorker.getDesignation();
 
-            if (StringUtils.isEmpty(operator)) continue;
+            if (StringUtils.isEmpty(operator) && designation == null ) continue;
 
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
             frontLineWorkerDimension.setOperator(operator);
+            frontLineWorkerDimension.setDesignation(designation.toString());
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
             log.info("Updated operator for frontlineworker : " + frontLineWorker.getMsisdn() + "with operator : " + frontLineWorker.getOperator());
         }

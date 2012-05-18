@@ -88,6 +88,7 @@ public class CourseItemMeasureService {
                     courseItemDimension,
                     frontLineWorkerDimension,
                     locationDimension,
+                    logItem.getTime(),
                     logItem.giveScore(),
                     logItem.getCourseItemState(),
                     callId);

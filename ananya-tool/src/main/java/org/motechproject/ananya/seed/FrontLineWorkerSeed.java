@@ -74,7 +74,7 @@ public class FrontLineWorkerSeed {
     @Seed(priority = 0, version = "1.1")
     public void updateOperatorInReportDbFromCouchdb() {
         List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-        frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
+        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
     }
 
     @Seed(priority = 0, version = "1.1")
