@@ -40,9 +40,8 @@ public class CertificateCourseService {
     public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle);
 
-        boolean isNewFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
-        if (isNewFlwOrOperatorIsEmpty)
+        if (frontLineWorker.isModified())
             registrationLogService.add(new RegistrationLog(msisdn, operator, circle));
 
         return new CertificateCourseCallerDataResponse(
@@ -98,12 +97,10 @@ public class CertificateCourseService {
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
 
         CertificationCourseLog courseLog = logMapper.mapFrom(firstRequest);
-
         for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
             if (stateRequest.hasContentId())
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
         }
-
         certificateCourseLogService.createNew(courseLog);
     }
 }

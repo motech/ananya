@@ -74,7 +74,7 @@ public class JobAidDataSetup {
 //        loadUsers("undefined", 7);
 //    }
 
-    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
+//    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
     public void prepareDataForPosting() throws IOException {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
         String jobAidTokens = getClass().getResource("/jmeter/js/job_aid_tokens.js").getPath();
@@ -133,12 +133,12 @@ public class JobAidDataSetup {
     public static void main(String... args) throws IOException {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
         JobAidDataSetup jobAidDataSetup = (JobAidDataSetup) context.getBean("jobAidDataSetup");
-        jobAidDataSetup.loadAirtelSubscribers();
-        jobAidDataSetup.loadRelianceSubscribers();
-        jobAidDataSetup.loadBsnlSubscribers();
-        jobAidDataSetup.loadIdeaSubscribers();
-        jobAidDataSetup.loadTataSubscribers();
-        jobAidDataSetup.loadVodafoneSubscribers();
+//        jobAidDataSetup.loadAirtelSubscribers();
+//        jobAidDataSetup.loadRelianceSubscribers();
+//        jobAidDataSetup.loadBsnlSubscribers();
+//        jobAidDataSetup.loadIdeaSubscribers();
+//        jobAidDataSetup.loadTataSubscribers();
+//        jobAidDataSetup.loadVodafoneSubscribers();
         jobAidDataSetup.prepareDataForPosting();
 
         System.out.println("done");

@@ -65,9 +65,9 @@ public class JobAidServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
+        frontLineWorker.setModified();
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator, circle);
@@ -95,8 +95,7 @@ public class JobAidServiceTest {
 
         jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, currentUsage);
 
-        verify(frontLineWorkerService).updateJobAidCurrentUsageFor(callerId, currentUsage);
-        verify(frontLineWorkerService).updateJobAidLastAccessTime(callerId);
+        verify(frontLineWorkerService).updateJobAidUsageAndAccessTime(callerId, currentUsage);
     }
 
     @Test
@@ -133,14 +132,15 @@ public class JobAidServiceTest {
         String circle = "bihar";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setModified();
 
-        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(true);
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         jobAidService.createCallerData(callerId, operator, circle);
         
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
         verify(registrationLogService).add(captor.capture());
+
         RegistrationLog registrationLog = captor.getValue();
         assertEquals(callerId,registrationLog.getCallerId());
         assertEquals(operator,registrationLog.getOperator());

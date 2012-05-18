@@ -12,19 +12,19 @@ public class PerformanceCounter {
     private static Logger log = LoggerFactory.getLogger(PerformanceCounter.class);
 
     private int numberRuns;
-    
+
     private double totalTime;
-    
+
     private double averageTime;
-    
+
     private double lastRunTime;
-    
+
     private DateTime lastStartTime;
-    
+
     private boolean isRunning;
 
     private static Map<String, PerformanceCounter> performanceCounterMap =
-            new ConcurrentHashMap<String, PerformanceCounter> ();
+            new ConcurrentHashMap<String, PerformanceCounter>();
 
     private PerformanceCounter() {
         numberRuns = 0;
@@ -56,7 +56,7 @@ public class PerformanceCounter {
         isRunning = true;
         lastStartTime = DateTime.now();
     }
-    
+
     public void stop() {
         DateTime now = DateTime.now();
         if (!isRunning) return; // Silent return
@@ -64,10 +64,10 @@ public class PerformanceCounter {
         lastRunTime = now.getMillis() - lastStartTime.getMillis();
         isRunning = false;
         totalTime += lastRunTime;
-        numberRuns ++;
+        numberRuns++;
         averageTime = totalTime / numberRuns;
     }
-    
+
     @Override
     public String toString() {
         return "PerformanceCounter{" +
@@ -80,8 +80,8 @@ public class PerformanceCounter {
     }
 
     public static void logAllCounters() {
-        for(String key : performanceCounterMap.keySet()) {
-            log.info(performanceCounterMap.get(key).toString());
+        for (String key : performanceCounterMap.keySet()) {
+            log.info(key + "::" + performanceCounterMap.get(key).toString());
         }
     }
 }

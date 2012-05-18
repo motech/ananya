@@ -3,7 +3,6 @@ package org.motechproject.ananya.repository;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
-import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +27,4 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         if (workers == null || workers.isEmpty()) return null;
         return workers.get(0);
     }
-
-    @GenerateView
-    public List<FrontLineWorker> findByRegisteredDate(DateTime startDate, DateTime endDate) {
-         ViewQuery viewQuery = createQuery("by_registeredDate").startKey(startDate).endKey(endDate).includeDocs(true);
-        return db.queryView(viewQuery, FrontLineWorker.class);
-    }
-
 }

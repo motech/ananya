@@ -9,15 +9,12 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -150,7 +147,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, currentUsage);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, currentUsage);
 
         assertEquals(currentUsage, frontLineWorker.getCurrentJobAidUsage());
         verify(allFrontLineWorkers).update(frontLineWorker);
@@ -212,7 +209,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setCurrentJobAidUsage(currentUsage);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidCurrentUsageFor(callerId, callDuration);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -225,11 +222,12 @@ public class FrontLineWorkerServiceTest {
     public void shouldUpdateTheLastAccessTimeForFlw() {
         String callerId = "callerId";
         String operator = "airtel";
+        int callDuration = 15;
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidLastAccessTime(callerId);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId,callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -294,19 +292,6 @@ public class FrontLineWorkerServiceTest {
         frontLineWorkerService.updateSMSReferenceNumber(smsReference);
 
         verify(allSMSReferences).update(smsReference);
-    }
-
-    @Test
-    public void shouldFetchByRegisteredDate() {
-        DateTime startDate = DateUtil.now();
-        DateTime endDate = startDate.plusDays(2);
-        List<FrontLineWorker> expectedFrontLineWorkers = Arrays.asList(new FrontLineWorker());
-        when(allFrontLineWorkers.findByRegisteredDate(startDate, endDate)).thenReturn(expectedFrontLineWorkers);
-
-        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.findByRegisteredDate(startDate, endDate);
-
-        assertEquals(expectedFrontLineWorkers, frontLineWorkers);
-        verify(allFrontLineWorkers).findByRegisteredDate(startDate, endDate);
     }
 
     @Test
@@ -401,5 +386,23 @@ public class FrontLineWorkerServiceTest {
         for( FrontLineWorker frontLineWorker : frontLineWorkerList){
            assertEquals("Bihar", frontLineWorker.getCircle());
         }
+    }
+
+    @Test
+    public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist(){
+        String callerId = "1234";
+        String circle = "bihar";
+        String operator = "airtel";
+        
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
+        
+        frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
+        
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).add(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(circle,frontLineWorker.getCircle());
+        assertEquals(operator, frontLineWorker.getOperator());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
     }
 }

@@ -90,7 +90,7 @@ public class CertificateCourseDetails {
         ALL_AUDIOS.add(new AudioContent("0008_ch1_l3_op.wav", 19914));
         ALL_AUDIOS.add(new AudioContent("0009_ch1_l4.wav", 156892));
         ALL_AUDIOS.add(new AudioContent("0010_ch1_l4_op.wav", 58201));
-        ALL_AUDIOS.add(new AudioContent("0011_ch1_qp.wav", 72737));
+        ALL_AUDIOS.add(new AudioContent("0011_ch1_qp.wav", 96289));
         ALL_AUDIOS.add(new AudioContent("0012_ch1_q1.wav", 39079));
         ALL_AUDIOS.add(new AudioContent("0013_ch1_q1_ca.wav", 17906));
         ALL_AUDIOS.add(new AudioContent("0014_ch1_q1_wa.wav", 20596));
@@ -166,7 +166,7 @@ public class CertificateCourseDetails {
         ALL_AUDIOS.add(new AudioContent("0081_ch3_1_ca.wav", 23817));
         ALL_AUDIOS.add(new AudioContent("0082_ch3_0_ca.wav", 24785));
         ALL_AUDIOS.add(new AudioContent("0083_ch3_end_op.wav", 24853));
-        ALL_AUDIOS.add(new AudioContent("0084_ch4_l1.wav", 232537));
+        ALL_AUDIOS.add(new AudioContent("0084_ch4_l1.wav", 232450));
         ALL_AUDIOS.add(new AudioContent("0085_ch4_l1_op.wav", 20321));
         ALL_AUDIOS.add(new AudioContent("0086_ch4_l2.wav", 183627));
         ALL_AUDIOS.add(new AudioContent("0087_ch4_l2_op.wav", 19141));

@@ -48,7 +48,7 @@ public class FrontLineWorkerDimensionServiceTest {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         when(allFrontLineWorkerDimensions.fetchFor(msisdn)).thenReturn(frontLineWorkerDimension);
 
-        frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
+        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
 
         verify(allFrontLineWorkerDimensions).update(frontLineWorkerDimension);
         assertEquals(operator, frontLineWorkerDimension.getOperator());
@@ -62,7 +62,7 @@ public class FrontLineWorkerDimensionServiceTest {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         when(allFrontLineWorkerDimensions.fetchFor(msisdn)).thenReturn(frontLineWorkerDimension);
 
-        frontLineWorkerDimensionService.updateFrontLineWorkerWithOperator(allFrontLineWorkers);
+        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
 
         verify(allFrontLineWorkerDimensions, never()).update(frontLineWorkerDimension);
     }

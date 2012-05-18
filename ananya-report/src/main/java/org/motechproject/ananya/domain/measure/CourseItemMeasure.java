@@ -102,6 +102,7 @@ public class CourseItemMeasure {
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
+                             DateTime timestamp,
                              Integer score,
                              CourseItemState event,
                              String callId) {
@@ -109,6 +110,7 @@ public class CourseItemMeasure {
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.locationDimension = locationDimension;
+        this.timestamp = new Timestamp(timestamp.getMillis());
         this.score = score;
         this.event = String.valueOf(event);
         this.callId = callId ;

@@ -75,6 +75,7 @@ public class CourseItemMeasureService {
         if (courseLog == null) return;
 
         List<CertificationCourseLogItem> courseLogItems = courseLog.getCourseLogItems();
+        if (courseLogItems == null || courseLogItems.isEmpty()) return;
 
         TimeDimension timeDimension = allTimeDimensions.getFor(courseLogItems.get(0).getTime());
 
@@ -88,6 +89,7 @@ public class CourseItemMeasureService {
                     courseItemDimension,
                     frontLineWorkerDimension,
                     locationDimension,
+                    logItem.getTime(),
                     logItem.giveScore(),
                     logItem.getCourseItemState(),
                     callId);
