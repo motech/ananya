@@ -20,10 +20,10 @@ public class LocationRegistrationService {
     public LocationRegistrationService(LocationDimensionService locationDimensionService, LocationService locationService) {
         this.locationService = locationService;
         this.locationDimensionService = locationDimensionService;
-        locationList = new LocationList(locationService.getAll());
     }
 
     public LocationRegistrationResponse registerLocation(String district, String block, String panchayat) {
+        initLocationList();
         LocationRegistrationResponse response = new LocationRegistrationResponse();
         Location location = new Location(district, block, panchayat, 0, 0, 0);
 
@@ -45,7 +45,12 @@ public class LocationRegistrationService {
         locationDimensionService.add(locationDimension);
     }
 
+    public List<Location> getFilteredLocations(String district, String block, String panchayat) {
+        return locationDimensionService.getFilteredLocations(district, block, panchayat);
+    }
+
     public void registerDefaultLocationForDistrictBlock() {
+        initLocationList();
         List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
         for (Location location : uniqueDistrictBlockLocations) {
             LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
@@ -55,6 +60,7 @@ public class LocationRegistrationService {
     }
 
     private void saveNewLocation(Location currentLocation) {
+        initLocationList();
         Location location = createNewLocation(currentLocation);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
 
@@ -64,10 +70,16 @@ public class LocationRegistrationService {
     }
 
     private Location createNewLocation(Location currentLocation) {
+        initLocationList();
         Integer districtCodeFor = locationList.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locationList.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locationList.getPanchayatCodeFor(currentLocation);
         Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor);
         return locationToSave;
+    }
+
+    private void initLocationList() {
+        if(locationList == null)
+            locationList = new LocationList(locationService.getAll());
     }
 }
