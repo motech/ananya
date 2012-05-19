@@ -67,9 +67,8 @@ public class LocationRegistrationService {
     }
 
     private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
-        LocationRegistrationResponse response = new LocationRegistrationResponse();
+        LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
         Location location = new Location(district, block, panchayat, 0, 0, 0);
-        response.setLocationDetails(district, block, panchayat);
 
         if (location.isMissingDetails())
             return response.withIncompleteDetails();

@@ -1,15 +1,15 @@
 package org.motechproject.ananya.seed;
 
- import liquibase.util.csv.CSVReader;
+import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.request.FrontLineWorkerRequest;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.LocationService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,9 +26,6 @@ public class FrontLineWorkerSeed {
     @Autowired
     private RegistrationService registrationService;
 
-    @Autowired
-    private LocationService locationService;
-    
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 
@@ -74,7 +72,7 @@ public class FrontLineWorkerSeed {
         frontLineWorkerDimensionService.updateStatus(RegistrationStatus.UNREGISTERED.toString(), 20988);
 
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
-        for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions){
+        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
             frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
         }
     }
@@ -86,7 +84,7 @@ public class FrontLineWorkerSeed {
     }
 
     @Seed(priority = 0, version = "1.1")
-    public void loadCircle(){
+    public void loadCircle() {
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
         frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, DEFAULTCIRCLE);
     }
@@ -95,10 +93,11 @@ public class FrontLineWorkerSeed {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-        LocationList locationList = new LocationList(locationService.getAll());
         //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
+
+        List<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
         while (currentRow != null) {
             msisdn = currentRow[0];
             name = currentRow[1];
@@ -107,12 +106,22 @@ public class FrontLineWorkerSeed {
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
 
-            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation,
-                    currentDistrict, currentBlock, currentPanchayat, locationList);
+            frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
+                    name,
+                    designation,
+                    null,
+                    new LocationRequest(currentDistrict, currentBlock, currentPanchayat)));
 
-            writer.write(msisdn + " : " + registrationResponse.getMessage());
-            writer.newLine();
             currentRow = csvReader.readNext();
+        }
+        List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequests);
+        logResponses(registrationResponses);
+    }
+
+    private void logResponses(List<RegistrationResponse> responses) throws IOException {
+        for (RegistrationResponse response : responses) {
+            writer.write(response.getMessage() + response.getFrontLineWorkerDetails());
+            writer.newLine();
         }
         writer.close();
     }

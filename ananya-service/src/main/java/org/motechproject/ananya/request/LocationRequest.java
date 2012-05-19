@@ -1,5 +1,9 @@
 package org.motechproject.ananya.request;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.Designation;
+
 import java.io.Serializable;
 
 public class LocationRequest implements Serializable {
@@ -7,14 +11,12 @@ public class LocationRequest implements Serializable {
     private String block;
     private String panchayat;
 
+    public LocationRequest() {}
+
     public LocationRequest(String district, String block, String panchayat) {
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
-    }
-
-    public LocationRequest() {
-
     }
 
     public String getDistrict() {

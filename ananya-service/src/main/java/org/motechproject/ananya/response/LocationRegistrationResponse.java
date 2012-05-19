@@ -5,6 +5,10 @@ public class LocationRegistrationResponse {
     private String message;
     private String locationDetails;
 
+    public LocationRegistrationResponse(String district, String block, String panchayat) {
+        locationDetails = district+","+block+","+panchayat;
+    }
+
     public LocationRegistrationResponse withIncompleteDetails() {
         message = "One or more of District, Block details are missing";
         return this;
@@ -18,10 +22,6 @@ public class LocationRegistrationResponse {
     public LocationRegistrationResponse withSuccessfulRegistration() {
         message = "Successfully registered location";
         return this;
-    }
-
-    public void setLocationDetails(String district, String block, String panchayat) {
-        locationDetails = district+","+block+","+panchayat;
     }
 
     public String getLocationDetails() {
