@@ -34,4 +34,15 @@ public class FrontLineWorkerTest {
         flw.markPromptHeard(promptKey);
         assertEquals((int) promptsHeard.get(promptKey), 2);
     }
+
+    @Test
+    public void shouldAppend91ToCallerId() {
+        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
+        assertEquals("919986554790", flw.getMsisdn());
+        flw.setMsisdn("9988");
+        assertEquals("919988", flw.getMsisdn());
+
+        FrontLineWorker flw2 = new FrontLineWorker("9986554790","airtel");
+        assertEquals("919986554790", flw2.getMsisdn());
+    }
 }

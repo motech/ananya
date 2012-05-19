@@ -68,8 +68,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorker(String msisdn, String operator) {
         this();
-        this.msisdn = msisdn;
-        this.operator = (operator == null ? this.operator : operator);
+        this.msisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
+        this.operator = operator == null ? this.operator : operator;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
@@ -254,6 +254,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
+        this.msisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
     }
 }

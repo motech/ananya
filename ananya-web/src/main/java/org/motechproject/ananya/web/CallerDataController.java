@@ -65,7 +65,6 @@ public class CallerDataController {
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle" + circle);
-
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator, circle);
 
         return new ModelAndView("caller_data")
