@@ -46,7 +46,7 @@ public class RegistrationMeasureServiceTest {
 
     @Test
     public void shouldCreateRegistrationMeasure() {
-        String callerId = "12345";
+        String callerId = "919986574410";
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
@@ -77,7 +77,7 @@ public class RegistrationMeasureServiceTest {
 
     @Test
     public void shouldNotCreateANewRegistrationMeasureIfTheFrontLineWorkerAlreadyExists() {
-        String callerId = "12345";
+        String callerId = "919986574410";
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();

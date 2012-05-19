@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
 import org.motechproject.model.MotechEvent;
@@ -39,7 +39,7 @@ public class DbPublishServiceTest {
         verify(certificateCourseDataHandler).handleCertificateCourseData(captor.capture());
         MotechEvent motechEvent = captor.getValue();
         assertEquals(1, motechEvent.getParameters().values().size());
-        LogData logData = (LogData) motechEvent.getParameters().get("logData");
+        CallMessage logData = (CallMessage) motechEvent.getParameters().get("logData");
         assertEquals(callerId, logData.getCallerId());
         assertEquals(callId, logData.getCallId());
     }
@@ -55,7 +55,7 @@ public class DbPublishServiceTest {
         verify(jobAidDataHandler).handleJobAidData(captor.capture());
         MotechEvent motechEvent = captor.getValue();
         assertEquals(1, motechEvent.getParameters().values().size());
-        LogData logData = (LogData) motechEvent.getParameters().get("logData");
+        CallMessage logData = (CallMessage) motechEvent.getParameters().get("logData");
         assertEquals(callerId, logData.getCallerId());
         assertEquals(callId, logData.getCallId());
     }

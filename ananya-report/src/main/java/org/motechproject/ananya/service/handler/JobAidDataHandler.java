@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service.handler;
 
 import org.motechproject.ananya.domain.RegistrationLog;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
@@ -34,8 +34,8 @@ public class JobAidDataHandler {
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY})
     public void handleJobAidData(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
-            String callId = ((LogData) log).getCallId();
-            String callerId =  ((LogData) log).getCallerId();
+            String callId = ((CallMessage) log).getCallId();
+            String callerId =  ((CallMessage) log).getCallerId();
             LOG.info("CallId is: " + callId);
             createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);

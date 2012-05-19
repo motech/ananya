@@ -2,7 +2,7 @@ package org.motechproject.ananya.service.handler;
 
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.*;
 import org.motechproject.model.MotechEvent;
@@ -41,8 +41,8 @@ public class CertificateCourseDataHandler {
     @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
     public void handleCertificateCourseData(MotechEvent event) {
         for (Object log : event.getParameters().values()) {
-            String callId = ((LogData) log).getCallId();
-            String callerId = ((LogData) log).getCallerId();
+            String callId = ((CallMessage) log).getCallId();
+            String callerId = ((CallMessage) log).getCallerId();
             LOG.info("CallId is: " + callId);
             createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);

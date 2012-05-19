@@ -41,7 +41,7 @@ public class FrontLineWorkerDimensionServiceTest {
 
     @Test
     public void shouldUpdateAllTheFrontLineWorkersWithTheOperatorDetailsFromCouch() {
-        Long msisdn = 1234L;
+        Long msisdn = 919986574410l;
         String operator = "airtel";
         ArrayList<FrontLineWorker> allFrontLineWorkers = new ArrayList<FrontLineWorker>();
         allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), operator));

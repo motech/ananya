@@ -81,7 +81,7 @@ public class SMSSynchroniserIT {
 
     @Test
     public void shouldMoveSMSDataFromTransactionDbToReportDb() {
-        String callerId = "1234";
+        String callerId = "919986574410";
         DateTime callStartTime = DateUtil.now();
         DateTime fromDate = DateUtil.now();
         DateTime toDate = fromDate.plusHours(8);
@@ -110,7 +110,7 @@ public class SMSSynchroniserIT {
     private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
         List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
         assertThat(synchroniserLogItems.size(), is(1));
-        assertThat(synchroniserLogItems.get(0).print(), is("1234: Success"));
+        assertThat(synchroniserLogItems.get(0).print(), is("919986574410: Success"));
     }
 
     private void verifySMSSentMeasureInReportDb(String callerId) {

@@ -46,7 +46,7 @@ public class FrontLineWorkerServiceTest {
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker savedFrontLineWorker = captor.getValue();
-        assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
+        assertEquals("91" + frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
         assertEquals(RegistrationStatus.UNREGISTERED, savedFrontLineWorker.status());
     }
@@ -87,7 +87,7 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker, frontLineWorkerFromDb);
     }
-    
+
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenCircleIsDifferent() {
         String msisdn = "123";
@@ -105,7 +105,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldNotCreateFLWIfAlreadyPresentInDBButShouldUpdateWhenCircleAndOperatorIsDifferent(){
+    public void shouldNotCreateFLWIfAlreadyPresentInDBButShouldUpdateWhenCircleAndOperatorIsDifferent() {
         String msisdn = "123";
         String oldOperator = "vodafone";
         String newOperator = "airtel";
@@ -165,7 +165,7 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldCreateFLWIfNotExists() {
-        String msisdn = "123";
+        String msisdn = "919986574410";
         String name = "name";
         Designation designation = Designation.ANGANWADI;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
@@ -227,7 +227,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
 
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId,callDuration);
+        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -351,58 +351,58 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldReturnTrueIfCircleIsNotPresentOnFrontLineWorker(){
+    public void shouldReturnTrueIfCircleIsNotPresentOnFrontLineWorker() {
         String msisdn = "1234";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-        
+
         boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
         assertTrue(newFlwOrOperatorOrCircleIsEmpty);
     }
-    
+
     @Test
-    public void shouldReturnFalseIfCircleIsPresentOnFrontLineWorker(){
+    public void shouldReturnFalseIfCircleIsPresentOnFrontLineWorker() {
         String msisdn = "1234";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
         frontLineWorker.setCircle("bihar");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-        
+
         boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
         assertFalse(newFlwOrOperatorOrCircleIsEmpty);
     }
 
     @Test
-    public void shouldUpdateFrontLineWorkersWithCircleAndCorrectMsisdn(){
+    public void shouldUpdateFrontLineWorkersWithCircleAndCorrectMsisdn() {
 
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<FrontLineWorker>();
-        frontLineWorkers.add(new FrontLineWorker("1234567890","airtel"));
-        frontLineWorkers.add(new FrontLineWorker("1234567891","airtel"));
+        frontLineWorkers.add(new FrontLineWorker("1234567890", "airtel"));
+        frontLineWorkers.add(new FrontLineWorker("1234567891", "airtel"));
         frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(frontLineWorkers, "Bihar");
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        
+
         verify(allFrontLineWorkers, times(2)).update(captor.capture());
 
         List<FrontLineWorker> frontLineWorkerList = captor.getAllValues();
-        for( FrontLineWorker frontLineWorker : frontLineWorkerList){
-           assertEquals("Bihar", frontLineWorker.getCircle());
-           assertEquals(12, frontLineWorker.getMsisdn().length());
+        for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
+            assertEquals("Bihar", frontLineWorker.getCircle());
+            assertEquals(12, frontLineWorker.getMsisdn().length());
         }
     }
 
     @Test
-    public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist(){
+    public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist() {
         String callerId = "1234";
         String circle = "bihar";
         String operator = "airtel";
-        
+
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
-        
+
         frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
-        
+
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker frontLineWorker = captor.getValue();
-        assertEquals(circle,frontLineWorker.getCircle());
+        assertEquals(circle, frontLineWorker.getCircle());
         assertEquals(operator, frontLineWorker.getOperator());
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
     }

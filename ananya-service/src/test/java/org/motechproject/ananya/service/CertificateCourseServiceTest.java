@@ -154,15 +154,15 @@ public class CertificateCourseServiceTest {
     @Test
     public void shouldIncrementCourseAttemptsAndLogSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
         String callId = "123456";
-        String callerId = "123";
+        String callerId = "919986574410";
         CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "airtel");
         ReportCard reportCard = mock(ReportCard.class);
         when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
         ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
 
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
 
         String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playCourseResult\",\"courseItemState\":\"end\"," +

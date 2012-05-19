@@ -40,7 +40,7 @@ public class FrontLineWorkerSeed {
 
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
-    public void create_FrontlineWorkersFromCSVFile() throws IOException {
+    public void createFrontlineWorkersFromCSVFile() throws IOException {
 
         String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();

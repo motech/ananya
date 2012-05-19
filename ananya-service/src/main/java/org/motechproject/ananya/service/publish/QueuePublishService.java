@@ -1,8 +1,8 @@
 package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.context.EventContext;
 import org.slf4j.Logger;
@@ -28,19 +28,19 @@ public class QueuePublishService implements PublishService {
         log.info("Call Id is: " + callId);
 
         if (serviceType.equals(ServiceType.JOB_AID))
-            publishJobAidContentData(new LogData(LogType.JOBAID, callId , callerId));
+            publishJobAidContentData(new CallMessage(CallMessageType.JOBAID, callId , callerId));
         else
-            publishCertificateCourseData(new LogData(LogType.CERTIFICATE_COURSE_DATA, callId, callerId));
+            publishCertificateCourseData(new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId));
 
     }
 
 
 
-    private void publishCertificateCourseData(LogData logData) {
+    private void publishCertificateCourseData(CallMessage logData) {
         eventContext.send(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY, logData);
     }
 
-    private void publishJobAidContentData(LogData logData) {
+    private void publishJobAidContentData(CallMessage logData) {
         eventContext.send(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY, logData);
     }
 }

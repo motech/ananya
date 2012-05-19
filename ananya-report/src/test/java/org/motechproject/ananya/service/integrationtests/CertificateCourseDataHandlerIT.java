@@ -25,8 +25,8 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
@@ -90,21 +90,14 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     @Before
     public void tearDown(){
         allCertificateCourseLogs.removeAll();
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.flush();
-        template.deleteAll(template.loadAll(LocationDimension.class));
-        template.flush();
-        template.deleteAll(template.loadAll(TimeDimension.class));
-        template.flush();
-        template.deleteAll(template.loadAll(CourseItemMeasure.class));
-        template.flush();
-        template.deleteAll(template.loadAll(CourseItemDimension.class));
-        template.flush();
-        template.deleteAll(template.loadAll(CallDurationMeasure.class));
-        template.flush();
-        template.deleteAll(template.loadAll(RegistrationMeasure.class));
-        template.flush();
         allFrontLineWorkers.removeAll();
+        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        template.deleteAll(template.loadAll(TimeDimension.class));
+        template.deleteAll(template.loadAll(CourseItemMeasure.class));
+        template.deleteAll(template.loadAll(CourseItemDimension.class));
+        template.deleteAll(template.loadAll(CallDurationMeasure.class));
+        template.deleteAll(template.loadAll(RegistrationMeasure.class));
     }
 
     @Test
@@ -125,11 +118,12 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldMapCertificateCourseLogsToCourseItemMeasure() {
-        String callId = "callId";
-        String calledNumber = "123";
-        String callerId = "1923456";
+        String callId = "919986574410-12345678";
+        String calledNumber = "57889";
+        String callerId = "919986574410";
         String contentName = "Chapter 1";
         String contentId = "contentId";
+
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
         DateTime callEndTime = now.plusSeconds(20);
@@ -146,7 +140,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         allLocationDimensions.add(locationDimension);
         TimeDimension callStartTimeDimension = allTimeDimensions.addOrUpdate(callStartTime);
 
-        CallLog callLog = new CallLog(callId, callerId.toString(), "321");
+        CallLog callLog = new CallLog(callId, callerId, calledNumber);
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
         allCallLogs.add(callLog);
@@ -163,7 +157,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         TimeDimension certificateCourseEndTimeDimension = allTimeDimensions.addOrUpdate(certificateCourseEndTime);
 
 
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

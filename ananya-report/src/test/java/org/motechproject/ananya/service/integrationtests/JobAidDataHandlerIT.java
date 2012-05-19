@@ -21,8 +21,8 @@ import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
 import org.motechproject.context.Context;
@@ -107,8 +107,10 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
     @Test
     @Ignore
     public void shouldMapJobAidCallDataToReportDB() {
-        String callerId = "9876543210";
-        String callId = "callId";
+        String callerId = "919876543210";
+        String callId = "919876543210-12345678";
+        String calledNumber = "577965";
+
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
         DateTime callEndTime = now.plusSeconds(20);
@@ -123,7 +125,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);
 
-        CallLog callLog = new CallLog(callId, callerId.toString(), "321");
+        CallLog callLog = new CallLog(callId, callerId.toString(), calledNumber);
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));
         callLog.addItem(new CallLogItem(CallFlowType.JOBAID, jobAidStartTime, jobAidEndTime));
         allCallLogs.add(callLog);
@@ -137,11 +139,11 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         allJobAidContentDimensions.add(jobAidContentDimension);
         allJobAidContentDimensions.add(new JobAidContentDimension("content2", null, "LESSON", "filename", "AUDIO", 100));
 
-        TimeDimension jobAidStartTimeDimension = allTimeDimensions.addOrUpdate(jobAidStartTime);
-        TimeDimension jobAidEndTimeDimension = allTimeDimensions.addOrUpdate(jobAidEndTime);
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(now);
+        allTimeDimensions.addOrUpdate(jobAidStartTime);
+        allTimeDimensions.addOrUpdate(jobAidEndTime);
+        allTimeDimensions.addOrUpdate(now);
         
-        LogData logData = new LogData(LogType.JOBAID, callId);
+        CallMessage logData = new CallMessage(CallMessageType.JOBAID, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
@@ -160,9 +162,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         assertNotNull(jobAidContentMeasure.getLocationDimension());
         assertEquals(locationDimension.getId(), jobAidContentMeasure.getLocationDimension().getId());
 
-       
-
-        assertEquals("callId", jobAidContentMeasure.getCallId());
+        assertEquals(callId, jobAidContentMeasure.getCallId());
         assertEquals(10, (int)jobAidContentMeasure.getDuration());
         assertEquals(new Timestamp(now.getMillis()), jobAidContentMeasure.getTimestamp());
         assertEquals(10, (int)jobAidContentMeasure.getPercentage());

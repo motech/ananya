@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service.publish;
 
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
@@ -23,7 +23,7 @@ public class DbPublishService implements PublishService {
     @Override
     public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
         MotechEvent motechEvent = new MotechEvent(ReportPublishEventKeys.DB_PUBLISH_KEY);
-        motechEvent.getParameters().put("logData", new LogData(null, callId, callerId));
+        motechEvent.getParameters().put("logData", new CallMessage(null, callId, callerId));
 
         if (serviceType.equals(ServiceType.CERTIFICATE_COURSE))
             certificateCourseDataHandler.handleCertificateCourseData(motechEvent);

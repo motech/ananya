@@ -1,6 +1,7 @@
 package org.motechproject.ananya.functional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestUtils;
@@ -51,7 +52,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
                 "}";
 
         String callId = "99865740001234567890";
-        MyWebClient.PostParam callerId = param("callerId", "9986574000");
+        MyWebClient.PostParam callerId = param("callerId", "919986574000");
         MyWebClient.PostParam callIdParam = param("callId", callId);
         MyWebClient.PostParam dataToPost = param("dataToPost", "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
@@ -75,8 +76,9 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void shouldSendSMSWhenAtPlayCourseResult() throws IOException {
-        String msisdn = "9" + System.currentTimeMillis();
+        String msisdn = "919986574000";
         FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location(),RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("playFinalScore", 8, 8));
 

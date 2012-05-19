@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.*;
 import org.motechproject.model.MotechEvent;
 
@@ -45,7 +45,7 @@ public class CertificateCourseDataHandlerTest {
     public void shouldHandleCertificateCourseData() {
         String callId = "callId";
         String callerId = "callerId";
-        LogData logData = new LogData(LogType.CERTIFICATE_COURSE_DATA, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

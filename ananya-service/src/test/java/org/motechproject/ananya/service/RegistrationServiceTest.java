@@ -3,10 +3,7 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.LocationList;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.response.RegistrationResponse;
 
 import java.util.ArrayList;
@@ -36,12 +33,13 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldSaveNewFLWAndPublishForReport() {
-        String callerId = "123";
+        String callerId = "919986574410";
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.ANGANWADI;
         LocationList locationList = new LocationList(Arrays.asList(location));
-        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
+
+        when(frontLineWorkerService.createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED)).thenReturn(new FrontLineWorker(callerId, "operator"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
 
@@ -52,7 +50,7 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldNotSaveFLWForInvalidLocation() {
-        String callerId = "123";
+        String callerId = "919986574410";
         String name = "name";
         Designation designation = Designation.ANGANWADI;
         LocationList locationList = new LocationList(new ArrayList<Location>());
@@ -70,10 +68,13 @@ public class RegistrationServiceTest {
         String name = "name";
         Designation designation = Designation.ANGANWADI;
         LocationList locationList = new LocationList(new ArrayList<Location>());
+
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
+
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+
         callerId = "abcdef";
         registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
 
@@ -85,12 +86,14 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldSaveFLWWithInvalidNameAsPartiallyRegistered() {
-        String callerId = "123";
+        String callerId = "919986574410";
         String name = "";
         Designation designation = Designation.ANGANWADI;
         Location location = new Location("district", "block", "village", 1, 1, 1);
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
+
+        when(frontLineWorkerService.createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED))).thenReturn(new FrontLineWorker(callerId,"operator"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
 
@@ -100,12 +103,14 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldSaveFLWWithInvalidDesignationAsPartiallyRegistered() {
-        String callerId = "123";
+        String callerId = "919986574410";
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
+
+        when(frontLineWorkerService.createOrUpdate(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED))).thenReturn(new FrontLineWorker(callerId,"operator"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village", locationList);
 

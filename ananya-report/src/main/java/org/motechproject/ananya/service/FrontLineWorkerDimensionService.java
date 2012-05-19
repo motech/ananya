@@ -43,7 +43,7 @@ public class FrontLineWorkerDimensionService {
             String operator = frontLineWorker.getOperator();
             String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
             String msisdn = frontLineWorker.getMsisdn();
-            if (msisdn.length() == 10) msisdn = "91" + msisdn;
+            if (msisdn.length() <= 10) msisdn = "91" + msisdn;
 
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
             frontLineWorkerDimension.setOperator(operator);
