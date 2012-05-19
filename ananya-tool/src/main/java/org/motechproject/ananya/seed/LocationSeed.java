@@ -55,7 +55,7 @@ public class LocationSeed {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-        //skip header
+
         csvReader.readNext();
         currentRow = csvReader.readNext();
         while (currentRow != null) {

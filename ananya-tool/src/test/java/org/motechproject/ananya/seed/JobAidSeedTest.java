@@ -41,7 +41,7 @@ public class JobAidSeedTest {
 
     @Test
     public void shouldLoadJobAidSeedData() throws Exception {
-        jobAidSeed.load();
+        jobAidSeed.createJobAidCourseStructure();
 
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
         Node level1 = jobAidCourse.children().get(0);
@@ -63,7 +63,7 @@ public class JobAidSeedTest {
 
     @Test
     public void shouldPropogateAllChangesToPostgres() throws Exception {
-        jobAidSeed.load();
+        jobAidSeed.createJobAidCourseStructure();
 
         jobAidSeed.addJobAidContentDimensions();
 

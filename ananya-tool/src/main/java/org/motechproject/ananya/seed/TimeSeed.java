@@ -27,7 +27,7 @@ public class TimeSeed {
     }
 
     @Seed(priority = 2, version = "1.1")
-    public void updateDateField() {
+    public void updateNewlyAddedDateField() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
 
