@@ -86,7 +86,7 @@ public class FrontLineWorkerSeedTest {
         template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name()));
         allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), name, designation, new Location(), RegistrationStatus.PARTIALLY_REGISTERED));
 
-        frontLineWorkerSeed.updateStatusOfFrontLineWorkersRegisteredViaCalls();
+        frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
 
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn.toString());
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
@@ -108,7 +108,7 @@ public class FrontLineWorkerSeedTest {
 
         template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name()));
 
-        frontLineWorkerSeed.update_CallerIds_Circle_Operator_Designation();
+        frontLineWorkerSeed.updateCorrectCallerIdsCircleOperatorAndDesignation();
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(correctMsisdn);
         assertNotNull(frontLineWorkerDimension);

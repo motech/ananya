@@ -295,18 +295,6 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateRegistrationStatusForFrontLineWorker() {
-        String msisdn = "123";
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-
-        frontLineWorkerService.updateRegistrationStatus(msisdn, RegistrationStatus.UNREGISTERED);
-
-        verify(allFrontLineWorkers).update(frontLineWorker);
-        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
-    }
-
-    @Test
     public void shouldGetAllFrontLineWorkers() {
         ArrayList<FrontLineWorker> expectedFrontLineWorkerList = new ArrayList<FrontLineWorker>();
         when(allFrontLineWorkers.getAll()).thenReturn(expectedFrontLineWorkerList);
@@ -316,78 +304,6 @@ public class FrontLineWorkerServiceTest {
         assertEquals(expectedFrontLineWorkerList, actualFrontLineWorkerList);
     }
 
-    @Test
-    public void shouldReturnTrueIfFrontLineWorkerIsNotPresent() {
-        String msisdn = "1234";
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
-
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
-
-        assertTrue(newFlwOrOperatorIsEmpty);
-    }
-
-    @Test
-    public void shouldReturnTrueIfOperatorIsNotPresentOnFrontLineWorker() {
-        String msisdn = "1234";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null);
-        frontLineWorker.setCircle("bihar");
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
-
-        assertTrue(newFlwOrOperatorIsEmpty);
-    }
-
-    @Test
-    public void shouldReturnFalseIfOperatorIsPresentOnFrontLineWorker() {
-        String msisdn = "1234";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
-        frontLineWorker.setCircle("bihar");
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-
-        boolean newFlwOrOperatorIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
-
-        assertFalse(newFlwOrOperatorIsEmpty);
-    }
-
-    @Test
-    public void shouldReturnTrueIfCircleIsNotPresentOnFrontLineWorker() {
-        String msisdn = "1234";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-
-        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
-        assertTrue(newFlwOrOperatorOrCircleIsEmpty);
-    }
-
-    @Test
-    public void shouldReturnFalseIfCircleIsPresentOnFrontLineWorker() {
-        String msisdn = "1234";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Airtel");
-        frontLineWorker.setCircle("bihar");
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
-
-        boolean newFlwOrOperatorOrCircleIsEmpty = frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(msisdn);
-        assertFalse(newFlwOrOperatorOrCircleIsEmpty);
-    }
-
-    @Test
-    public void shouldUpdateFrontLineWorkersWithCircleAndCorrectMsisdn() {
-
-        ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<FrontLineWorker>();
-        frontLineWorkers.add(new FrontLineWorker("1234567890", "airtel"));
-        frontLineWorkers.add(new FrontLineWorker("1234567891", "airtel"));
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(frontLineWorkers, "Bihar");
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-
-        verify(allFrontLineWorkers, times(2)).update(captor.capture());
-
-        List<FrontLineWorker> frontLineWorkerList = captor.getAllValues();
-        for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
-            assertEquals("Bihar", frontLineWorker.getCircle());
-            assertEquals(12, frontLineWorker.getMsisdn().length());
-        }
-    }
 
     @Test
     public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist() {

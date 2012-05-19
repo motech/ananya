@@ -3,11 +3,8 @@ package org.motechproject.ananya.seed;
 import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
-import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.response.RegistrationResponse;
-import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
-import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.LocationService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
@@ -27,9 +24,7 @@ public class FrontLineWorkerSeed {
     @Autowired
     private LocationService locationService;
     @Autowired
-    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
-    @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerSeedService seedService;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
@@ -77,22 +72,18 @@ public class FrontLineWorkerSeed {
     }
 
     @Seed(priority = 5, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
-    public void updateStatusOfFrontLineWorkersRegisteredViaCalls() {
+    public void updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls() {
         int lastSequenceOfPreImportedFLWs = 20988;
-        frontLineWorkerDimensionService.updateRegistrationStatus(RegistrationStatus.UNREGISTERED.toString(), lastSequenceOfPreImportedFLWs);
-
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
-        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-            frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
-        }
+        seedService.updateUnRegisteredStatusGreaterTheGivenIDInPostgres(lastSequenceOfPreImportedFLWs);
+        seedService.updateUnRegisteredStatusInCouchDbBasedOnPostgres();
     }
 
     @Seed(priority = 4, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
-    public void update_CallerIds_Circle_Operator_Designation() {
+    public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
         String defaultCircle = "BIHAR";
-        List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircleAndCorrectMsisdn(allFrontLineWorkers, defaultCircle);
+        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        seedService.updateDefaultCircleAndCorrectMsisdnInCouchDb(allFrontLineWorkers, defaultCircle);
+        seedService.updateOperatorDesignationAndCorrectMsisdnInPostgresBasedOnCouchDb(allFrontLineWorkers);
     }
 
 }
