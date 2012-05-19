@@ -28,7 +28,7 @@ public class JobAidSeed {
         allNodes.addNodeWithDescendants(courseNode);
     }
 
-    @Seed(priority = 0, version = "1.1")
+    @Seed(priority = 2, version = "1.1")
     public void addJobAidContentDimensions() {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
         recursivelyAddNodesToReportDB(jobAidCourse, null);

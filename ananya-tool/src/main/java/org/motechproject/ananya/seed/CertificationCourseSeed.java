@@ -34,7 +34,7 @@ public class CertificationCourseSeed {
         recursivelySaveContentsInPostgres(certificateCourse);
     }
 
-    @Seed(priority = 0, version = "1.1")
+    @Seed(priority = 3, version = "1.1")
     public void loadAudioContentDetails() {
         Node certificateCourse = allNodes.findByName("CertificationCourse");
         recursivelySaveAudioContentAndParentDetails(certificateCourse, null);

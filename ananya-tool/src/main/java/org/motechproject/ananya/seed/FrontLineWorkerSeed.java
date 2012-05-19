@@ -76,7 +76,7 @@ public class FrontLineWorkerSeed {
         writer.close();
     }
 
-    @Seed(priority = 1, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
+    @Seed(priority = 5, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
     public void updateStatusOfFrontLineWorkersRegisteredViaCalls() {
         int lastSequenceOfPreImportedFLWs = 20988;
         frontLineWorkerDimensionService.updateRegistrationStatus(RegistrationStatus.UNREGISTERED.toString(), lastSequenceOfPreImportedFLWs);
@@ -87,7 +87,7 @@ public class FrontLineWorkerSeed {
         }
     }
 
-    @Seed(priority = 0, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    @Seed(priority = 4, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void update_CallerIds_Circle_Operator_Designation() {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
