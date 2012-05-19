@@ -1,4 +1,4 @@
-package org.motechproject.ananya.seed;
+package org.motechproject.ananya.seed.domain;
 
 public class AudioContent {
     public final String fileName;

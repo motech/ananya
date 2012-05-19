@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.seed.domain.CertificateCourseItemAction;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 
@@ -25,24 +26,24 @@ public class CourseItemActionsTest {
     @Before
     public void setUp() {
         initMocks(this);
-        CourseItemActions.init(allNodes, allStringContents);
+        CertificateCourseItemAction.init(allNodes, allStringContents);
     }
 
     @Test
     public void shouldInvokeCorrectActionForEachCourseItem() {
-        CourseItemActions chapterAction = CourseItemActions.findFor(CourseItemType.CHAPTER);
-        assertEquals(CourseItemActions.UpdateChapterAudioContent, chapterAction);
+        CertificateCourseItemAction chapterAction = CertificateCourseItemAction.findFor(CourseItemType.CHAPTER);
+        assertEquals(CertificateCourseItemAction.UpdateChapterAudioContent, chapterAction);
 
-        CourseItemActions lessonAction = CourseItemActions.findFor(CourseItemType.LESSON);
-        assertEquals(CourseItemActions.UpdateLessonAudioContent, lessonAction);
+        CertificateCourseItemAction lessonAction = CertificateCourseItemAction.findFor(CourseItemType.LESSON);
+        assertEquals(CertificateCourseItemAction.UpdateLessonAudioContent, lessonAction);
 
-        CourseItemActions questionAction = CourseItemActions.findFor(CourseItemType.QUIZ);
-        assertEquals(CourseItemActions.UpdateQuestionAudioContent, questionAction);
+        CertificateCourseItemAction questionAction = CertificateCourseItemAction.findFor(CourseItemType.QUIZ);
+        assertEquals(CertificateCourseItemAction.UpdateQuestionAudioContent, questionAction);
     }
 
     @Test
     public void shouldUpdateAudioContentForChapter() {
-        CourseItemActions action = CourseItemActions.findFor(CourseItemType.CHAPTER);
+        CertificateCourseItemAction action = CertificateCourseItemAction.findFor(CourseItemType.CHAPTER);
 
         Node node = action.updateContents(new Node("Chapter 1"));
 
@@ -54,7 +55,7 @@ public class CourseItemActionsTest {
 
     @Test
     public void shouldUpdateAudioContentForLesson() {
-        CourseItemActions action = CourseItemActions.findFor(CourseItemType.LESSON);
+        CertificateCourseItemAction action = CertificateCourseItemAction.findFor(CourseItemType.LESSON);
 
         Node node = action.updateContents(new Node("Chapter 1 Lesson 1"));
 
@@ -66,7 +67,7 @@ public class CourseItemActionsTest {
 
     @Test
     public void shouldUpdateAudioContentForQuestion() {
-        CourseItemActions action = CourseItemActions.findFor(CourseItemType.QUIZ);
+        CertificateCourseItemAction action = CertificateCourseItemAction.findFor(CourseItemType.QUIZ);
 
         Node node = action.updateContents(new Node("Chapter 1 Question 1"));
 
