@@ -31,11 +31,11 @@ public class LocationResponse {
 
     @Override
     public String toString() {
-        return "LocationResponse{" +
-                "district='" + district + '\'' +
-                ", block='" + block + '\'' +
-                ", panchayat='" + panchayat + '\'' +
-                ", externalId='" + externalId + '\'' +
+        return "{" +
+                "\"district\"=\"" + district + "\"" +
+                ", \"block\"=\"" + block + "\"" +
+                ", \"panchayat\"=\"" + panchayat + "\"" +
+                ", \"externalId\"=\"" + externalId + "\"" +
                 '}';
     }
 }
