@@ -7,7 +7,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CallLogCounter;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.framework.CouchDb;
@@ -15,18 +14,15 @@ import org.motechproject.ananya.framework.ReportDb;
 import org.motechproject.ananya.framework.domain.CertificateCourseRequest;
 import org.motechproject.ananya.framework.domain.CertificateCourseResponse;
 import org.motechproject.ananya.framework.domain.CertificateCourseWebservice;
-import org.motechproject.ananya.repository.AllCallLogCounters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+
 @Ignore
 public class CertificateCourseTest extends SpringIntegrationTest {
 
     @Autowired
     private CertificateCourseWebservice certificateCourseWebService;
-
-    @Autowired
-    private AllCallLogCounters allCallLogCounters;
 
     @Autowired
     private CouchDb couchDb;
@@ -74,18 +70,18 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         String newCallId = callId + "1";
         CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, newCallId);
 
-        int token = GenerateToken(newCallId);
+        int token = generateToken(newCallId);
 
         String jsonData = String.format("[{\"token\":%d ,\"type\":\"ccState\",\"data\":{\"chapterIndex\":8,\"lessonOrQuestionIndex\":7,\"questionResponse\":1,\"result\":true,\"interactionKey\":\"playAnswerExplanation\"}}]", token);
         transferDataRequest.setJsonPostData(jsonData);
 
-        CertificateCourseResponse response =  certificateCourseWebService.requestForDisconnect(transferDataRequest);
+        CertificateCourseResponse response = certificateCourseWebService.requestForDisconnect(transferDataRequest);
 
         ReportCard reportCard = new ReportCard();
         reportCard.addScore(new Score("8", "7", true, newCallId));
 
-        couchDb.confirmBookmarkUpdated(callerId,new BookMark("playAnswerExplanation",8,7))
-               .confirmScoresSaved(callerId, reportCard);
+        couchDb.confirmBookmarkUpdated(callerId, new BookMark("playAnswerExplanation", 8, 7))
+                .confirmScoresSaved(callerId, reportCard);
     }
 
 
@@ -95,7 +91,7 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         certificateCourseWebService.requestForCallerData(request);
 
         CertificateCourseRequest transferDataRequest = new CertificateCourseRequest(callerId, operator, callId);
-        int token = GenerateToken(callId);
+        int token = generateToken(callId);
 
 
         String jsonData = String.format("[{\"token\":%d,\"type\":\"ccState\"," +
@@ -104,13 +100,13 @@ public class CertificateCourseTest extends SpringIntegrationTest {
                 "\"courseItemState\":\"end\",\"contentName\":\"Chapter 2 Lesson 1\",\"time\":\"1331211652245\"," +
                 "\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}}," +
                 "{\"token\":%d,\"type\":\"callDuration\"," +
-                "\"data\":{\"callEvent\":\"DISCONNECT\",\"time\":1331211652263}}]",token,token+1);
+                "\"data\":{\"callEvent\":\"DISCONNECT\",\"time\":1331211652263}}]", token, token + 1);
 
         transferDataRequest.setJsonPostData(jsonData);
 
         certificateCourseWebService.requestForDisconnect(transferDataRequest);
 
-        BookMark bookMark = new BookMark("lessonEndMenu",1,0);
+        BookMark bookMark = new BookMark("lessonEndMenu", 1, 0);
         reportDb.confirmCourseItemMeasureForDisconnectEvent(callerId, bookMark, "END");
 
     }
@@ -127,7 +123,7 @@ public class CertificateCourseTest extends SpringIntegrationTest {
 
         transferDataRequest.setJsonPostData(jsonDataWithScoresForFullCCFlow);
         certificateCourseWebService.requestForDisconnect(transferDataRequest);
-        String smsReferenceNumber= "00000098765401";
+        String smsReferenceNumber = "00000098765401";
         reportDb.confirmSMSSent(callerId, smsReferenceNumber);
 
         clearSMSReferences();
@@ -138,13 +134,8 @@ public class CertificateCourseTest extends SpringIntegrationTest {
         couchDb.clearSMSReferences(callerId);
     }
 
-    private int GenerateToken(String callId) {
-        CallLogCounter callLogCounter = allCallLogCounters.findByCallId(callId);
-        int token;
-        if(callLogCounter!= null)
-            token = callLogCounter.getToken()+20;
-        else
-            token = (int)Math.ceil(Math.random()*7);
+    private int generateToken(String callId) {
+        int token = (int) Math.ceil(Math.random() * 7);
         return token;
     }
 }

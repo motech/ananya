@@ -55,19 +55,15 @@ public class CertificateCourseDataHandler {
 
     private void handleSMS(String callId) {
         SMSLog smslog = smsLogService.getSMSLogFor(callId);
-        if(smslog != null){
-            sendSMSService.buildAndSendSMS(
-                    smslog.getCallerId(),
-                    smslog.getLocationId(),
-                    smslog.getCourseAttempts()
-            );
+        if (smslog != null) {
+            sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
             smsLogService.deleteFor(smslog);
         }
     }
 
     private void createRegistrationMeasure(String callerId) {
         RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
-        if(registrationLog != null){
+        if (registrationLog != null) {
             registrationMeasureService.createRegistrationMeasure(callerId);
             registrationLogService.delete(registrationLog);
         }

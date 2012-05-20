@@ -10,7 +10,6 @@ import org.motechproject.ananya.service.OperatorService;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -69,19 +68,14 @@ public class JobAidDataSetup {
         loadUsers("vodafone", 6);
     }
 
-//    @PerformanceData(testName = "jobaid", description = "create undefined subscribers")
-//    public void loadUndefinedSubscribers() {
-//        loadUsers("undefined", 7);
-//    }
-
-//    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
+    @PerformanceData(testName = "jobaid", description = "prepare data for posting")
     public void prepareDataForPosting() throws IOException {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
         String jobAidTokens = getClass().getResource("/jmeter/js/job_aid_tokens.js").getPath();
         String templateFileName = getClass().getResource("/jmeter/js/job_aid_template.js").getPath();
         BufferedReader templateReader = new BufferedReader(new FileReader(templateFileName));
         BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter(jobAidTokens));
-        
+
         ArrayList<String> contentIds = new ArrayList<String>();
         recursivelyWriteAudioTrackerArrayForJobAid(jobAidCourse, contentIds);
 
@@ -98,16 +92,11 @@ public class JobAidDataSetup {
     }
 
     private void recursivelyWriteAudioTrackerArrayForJobAid(Node node, List<String> contentArray) {
-        for(String contenId : node.contentIds()){
-            contentArray.add("\"" + contenId + "\"");
-        }
-
-        if(node.children().size() == 0)
-            return;
-
-        for(Node nextNode : node.children()) {
+        for (String contentId : node.contentIds())
+            contentArray.add("\"" + contentId + "\"");
+        if (node.children().size() == 0) return;
+        for (Node nextNode : node.children())
             recursivelyWriteAudioTrackerArrayForJobAid(nextNode, contentArray);
-        }
     }
 
 
@@ -119,7 +108,7 @@ public class JobAidDataSetup {
             registrationLogService.deleteFor(callerId);
             registrationMeasureService.createRegistrationMeasure(callerId);
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
-            System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId()+"|count="+j);
+            System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j);
         }
     }
 
@@ -130,17 +119,4 @@ public class JobAidDataSetup {
         return null;
     }
 
-    public static void main(String... args) throws IOException {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
-        JobAidDataSetup jobAidDataSetup = (JobAidDataSetup) context.getBean("jobAidDataSetup");
-//        jobAidDataSetup.loadAirtelSubscribers();
-//        jobAidDataSetup.loadRelianceSubscribers();
-//        jobAidDataSetup.loadBsnlSubscribers();
-//        jobAidDataSetup.loadIdeaSubscribers();
-//        jobAidDataSetup.loadTataSubscribers();
-//        jobAidDataSetup.loadVodafoneSubscribers();
-        jobAidDataSetup.prepareDataForPosting();
-
-        System.out.println("done");
-    }
 }

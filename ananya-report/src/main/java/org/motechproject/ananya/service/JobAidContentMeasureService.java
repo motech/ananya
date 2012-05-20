@@ -1,4 +1,4 @@
-    package org.motechproject.ananya.service;
+package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
@@ -31,7 +31,8 @@ public class JobAidContentMeasureService {
     private AllTimeDimensions allTimeDimensions;
     private AllJobAidContentMeasures allJobAidContentMeasures;
 
-    public JobAidContentMeasureService() { }
+    public JobAidContentMeasureService() {
+    }
 
     @Autowired
     public JobAidContentMeasureService(AudioTrackerLogService audioTrackerLogService,
@@ -50,19 +51,15 @@ public class JobAidContentMeasureService {
 
     @Transactional
     public void createJobAidContentMeasure(String callId) {
-        log.info("Creating job aid content measure for call id " + callId);
-
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
-        if(audioTrackerLog == null) return;
+        if (audioTrackerLog == null) return;
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-
         TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
 
         for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.getAudioTrackerLogItems()) {
-
             JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
 
             JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(frontLineWorkerDimension, callId,
@@ -71,11 +68,11 @@ public class JobAidContentMeasureService {
 
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
-
+        log.info("Added JobAidContentMeasures for CallId " + callId);
         audioTrackerLogService.remove(audioTrackerLog);
     }
 
     private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
-        return (logItem.getDuration() * 100 )/totalDuration;
+        return (logItem.getDuration() * 100) / totalDuration;
     }
 }
