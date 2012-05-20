@@ -92,7 +92,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
     @Test
     public void shouldBindToTheCorrectHandlerForJobAidDataEvent() throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.JOBAID_CALL_MESSAGE);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CertificateCourseDataHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
     private CourseItemMeasureService courseItemMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
@@ -38,12 +38,14 @@ public class CertificateCourseDataHandler {
         this.sendSMSService = sendSMSService;
     }
 
-    @MotechListener(subjects = {ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY})
+    @MotechListener(subjects = {ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE})
     public void handleCertificateCourseData(MotechEvent event) {
-        for (Object log : event.getParameters().values()) {
-            String callId = ((CallMessage) log).getCallId();
-            String callerId = ((CallMessage) log).getCallerId();
-            LOG.info("CallId is: " + callId);
+        for (Object object : event.getParameters().values()) {
+            CallMessage callMessage = (CallMessage) object;
+            String callId = callMessage.getCallId();
+            String callerId = callMessage.getCallerId();
+            log.info("Received the certificate course call message for callId: " + callId);
+
             createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             courseItemMeasureService.createCourseItemMeasure(callId);

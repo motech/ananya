@@ -30,6 +30,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        LOG.info("Request END [uri=" + request.getRequestedSessionId());
+        LOG.info("Request END [uri=" + request.getRequestURI()+"]");
     }
 }

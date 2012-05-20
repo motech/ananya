@@ -34,7 +34,7 @@ public class ReportPublishServiceTest {
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE), captor.capture());
         CallMessage logData = captor.getValue();
         
         assertEquals(callId, logData.getCallId());
@@ -48,7 +48,7 @@ public class ReportPublishServiceTest {
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
         ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY), captor.capture());
+        verify(eventContext).send(eq(ReportPublishEventKeys.JOBAID_CALL_MESSAGE), captor.capture());
         CallMessage logData = captor.getValue();
 
         assertEquals(callId, logData.getCallId());

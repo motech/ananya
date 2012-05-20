@@ -103,7 +103,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     @Test
     public void shouldBindToTheCorrectHandlerForCertificateCourseDataEvent() throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
         EventListenerRegistry registry = Context.getInstance().getEventListenerRegistry();
-        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY);
+        Set<EventListener> listeners = registry.getListeners(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE);
 
         MotechListenerAbstractProxy motechListenerAbstractProxy = (MotechListenerAbstractProxy) listeners.toArray()[0];
         Field declaredField = MotechListenerAbstractProxy.class.getDeclaredField("method");

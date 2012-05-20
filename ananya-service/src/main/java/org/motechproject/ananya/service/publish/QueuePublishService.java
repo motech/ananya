@@ -37,10 +37,10 @@ public class QueuePublishService implements PublishService {
 
 
     private void publishCertificateCourseData(CallMessage logData) {
-        eventContext.send(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY, logData);
+        eventContext.send(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE, logData);
     }
 
     private void publishJobAidContentData(CallMessage logData) {
-        eventContext.send(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY, logData);
+        eventContext.send(ReportPublishEventKeys.JOBAID_CALL_MESSAGE, logData);
     }
 }
