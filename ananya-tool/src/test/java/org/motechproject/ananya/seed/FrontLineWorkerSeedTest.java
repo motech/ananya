@@ -60,8 +60,8 @@ public class FrontLineWorkerSeedTest {
         template.deleteAll(template.loadAll(LocationDimension.class));
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();
-        locationSeed.load();
-        timeSeed.load();
+        locationSeed.loadLocationsFromCSVFile();
+        timeSeed.createDimensionsInPostgres();
     }
 
     @Test
