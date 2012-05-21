@@ -83,7 +83,7 @@ public class FrontLineWorkerSeed {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.updateDefaultCircleAndCorrectMsisdnInCouchDb(allFrontLineWorkers, defaultCircle);
-        seedService.updateOperatorDesignationAndCorrectMsisdnInPostgresBasedOnCouchDb(allFrontLineWorkers);
+        seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresBasedOnCouchDb(allFrontLineWorkers);
     }
 
 }

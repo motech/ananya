@@ -52,26 +52,27 @@ public class FrontLineWorkerSeedService {
     }
 
     @Transactional
-    public void updateOperatorDesignationAndCorrectMsisdnInPostgresBasedOnCouchDb(List<FrontLineWorker> frontLineWorkers) {
+    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresBasedOnCouchDb(List<FrontLineWorker> frontLineWorkers) {
         log.info("Updating frontlineWorkers in postgres: START");
         for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-
-            String operator = frontLineWorker.getOperator();
             String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
             String msisdn = frontLineWorker.getMsisdn();
             if (msisdn.length() <= 10)
                 msisdn = "91" + msisdn;
 
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-            frontLineWorkerDimension.setOperator(operator);
+            frontLineWorkerDimension.setOperator(frontLineWorker.getOperator());
             frontLineWorkerDimension.setDesignation(designation);
             frontLineWorkerDimension.setMsisdn(Long.valueOf(msisdn));
+            frontLineWorkerDimension.setCircle(frontLineWorker.getCircle());
 
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-            log.info("Updated Postgres: " + frontLineWorker + "with operator : " + frontLineWorker.getOperator());
+            log.info("Updated Postgres: " + frontLineWorkerDimension.getMsisdn() + "with operator : " +
+                    frontLineWorker.getOperator() + " and circle : " + frontLineWorkerDimension.getCircle());
         }
         log.info("Updating frontlineWorkers in postgres: END");
     }
+
 
 
     @Transactional
