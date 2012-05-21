@@ -16,9 +16,11 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -42,6 +44,8 @@ public class CourseItemMeasureServiceTest {
     private AllRegistrationMeasures allRegistrationMeasures;
     @Mock
     private AudioTrackerLogService audioTrackerLogService;
+    @Mock
+    private AllCourseItemMeasures allCourseItemMeasures;
 
     CourseItemMeasureService courseItemMeasureService;
     String callId;
@@ -63,7 +67,7 @@ public class CourseItemMeasureServiceTest {
         now = DateTime.now();
         courseItemMeasureService = new CourseItemMeasureService(reportDB,
                 allFrontLineWorkerDimensions, allTimeDimensions, allCourseItemDimensions,
-                certificateCourseLogService, audioTrackerLogService, allRegistrationMeasures);
+                certificateCourseLogService, audioTrackerLogService, allRegistrationMeasures, allCourseItemMeasures);
 
         timeDimension = new TimeDimension();
         frontLineWorkerDimension = new FrontLineWorkerDimension();
@@ -251,5 +255,23 @@ public class CourseItemMeasureServiceTest {
         courseItemMeasureService.createCourseItemMeasure(callId);
 
         verify(reportDB, never()).add(any(CourseItemMeasure.class));
+    }
+
+    @Test
+    public void shouldGetAllMsisdnsBetweenStartDateAndEndDate() {
+        DateTime today = DateTime.now();
+        DateTime tomorrow = DateTime.now().plusDays(1);
+        ArrayList<Long> flwMsisdnIds = new ArrayList<Long>();
+        long msisdn1 = 1234L;
+        long msisdn2 = 4567L;
+        flwMsisdnIds.add(msisdn1);
+        flwMsisdnIds.add(msisdn2);
+        when(allCourseItemMeasures.getFilteredFrontLineWorkerMsisdns(today.toDate(), tomorrow.toDate())).thenReturn(flwMsisdnIds);
+
+        List<Long> frontLineWorkerMsisdnsBetween = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(today.toDate(), tomorrow.toDate());
+
+        assertEquals(2, frontLineWorkerMsisdnsBetween.size());
+        assertEquals((Long) msisdn1, frontLineWorkerMsisdnsBetween.get(0));
+        assertEquals((Long) msisdn2, frontLineWorkerMsisdnsBetween.get(1));
     }
 }

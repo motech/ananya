@@ -2,8 +2,6 @@ package org.motechproject.ananya.repository.dimension;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,20 +52,21 @@ public class AllFrontLineWorkerDimensions {
         template.bulkUpdate("update FrontLineWorkerDimension set status = '" + status + "' where id >= " + id);
     }
 
-    public List<FrontLineWorkerDimension> getFilteredFLWFor(Long msisdn, String name, String registrationStatus, String designation, String operator, String circle) {
+    public List<FrontLineWorkerDimension> getFilteredFLWFor(List<Long> allFilteredMsisdns, String name, String registrationStatus, String designation, String operator, String circle) {
         DetachedCriteria criteria = DetachedCriteria.forClass(FrontLineWorkerDimension.class);
-        if (msisdn != null)
-            criteria.add(Restrictions.eq("msisdn", msisdn));
+
+        if (!allFilteredMsisdns.isEmpty())
+            criteria.add(Restrictions.in("msisdn", allFilteredMsisdns));
         if (registrationStatus != null)
             criteria.add(Restrictions.eq("status", registrationStatus));
         if (name != null)
-            criteria.add(Restrictions.eq("name", name));
+            criteria.add(Restrictions.eq("name", name).ignoreCase());
         if (designation != null)
             criteria.add(Restrictions.eq("designation", designation));
         if (operator != null)
-            criteria.add(Restrictions.eq("operator", operator));
+            criteria.add(Restrictions.eq("operator", operator).ignoreCase());
         if (circle != null)
-            criteria.add(Restrictions.eq("circle", circle));
+            criteria.add(Restrictions.eq("circle", circle).ignoreCase());
 
         return template.findByCriteria(criteria);
     }

@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.joda.time.DateTime;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -35,8 +37,13 @@ public class FrontLineWorkerDetailsController {
         String designation = request.getParameter("designation");
         String operator = request.getParameter("operator");
         String circle = request.getParameter("circle");
+        String activityStartDate = request.getParameter("activityStartDate");
+        String activityEndDate = request.getParameter("activityEndDate");
+        Long msisdnAsLong = msisdn != null ? Long.parseLong(msisdn) : null;
+        Date startDate = activityStartDate !=null ? DateTime.parse(activityStartDate).toDate() : null;
+        Date endDate = activityEndDate !=null ? DateTime.parse(activityEndDate).toDate() : null;
 
-        List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
+        List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
 
         return new ModelAndView("get_filtered_results").addObject("filteredResponse", filteredFLW);
     }

@@ -63,8 +63,7 @@ public class FrontLineWorkerDimensionService {
         return allFrontLineWorkerDimensions.fetchFor(msisdn) != null;
     }
 
-    public List<FrontLineWorkerDimension> getFilteredFLW(String msisdn, String name, String status, String designation, String operator, String circle) {
-        Long msisdnInLong = msisdn != null ? Long.parseLong(msisdn) : null;
-        return allFrontLineWorkerDimensions.getFilteredFLWFor(msisdnInLong, name, status, designation, operator, circle);
+    public List<FrontLineWorkerDimension> getFilteredFLW(List<Long> allFilteredMsisdns, String name, String status, String designation, String operator, String circle) {
+        return allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, name, status, designation, operator, circle);
     }
 }

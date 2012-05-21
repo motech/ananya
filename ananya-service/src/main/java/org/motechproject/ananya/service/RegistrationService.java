@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,15 +25,18 @@ public class RegistrationService {
 
     private FrontLineWorkerService frontLineWorkerService;
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
+    private CourseItemMeasureService courseItemMeasureService;
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
 
     @Autowired
     public RegistrationService(FrontLineWorkerService frontLineWorkerService,
+                               CourseItemMeasureService courseItemMeasureService,
                                FrontLineWorkerDimensionService frontLineWorkerDimensionService,
                                RegistrationMeasureService registrationMeasureService,
                                LocationService locationService) {
         this.frontLineWorkerService = frontLineWorkerService;
+        this.courseItemMeasureService = courseItemMeasureService;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.registrationMeasureService = registrationMeasureService;
         this.locationService = locationService;
@@ -67,11 +71,20 @@ public class RegistrationService {
                 locationList);
     }
 
-    public List<FrontLineWorkerResponse> getFilteredFLW(String msisdn, String name, String status, String designation, String operator, String circle) {
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
+    public List<FrontLineWorkerResponse> getFilteredFLW(Long msisdn, String name, String status, String designation, String operator, String circle, Date activityStartDate, Date activityEndDate) {
         List<FrontLineWorkerResponse> filteredFlws = new ArrayList<FrontLineWorkerResponse>();
-        for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions)
+        List<Long> allFilteredMsisdns = new ArrayList<Long>();
+        if (activityStartDate != null && activityEndDate != null) {
+            allFilteredMsisdns = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate, activityEndDate);
+            if (allFilteredMsisdns.isEmpty())
+                return filteredFlws;
+        }
+        if (msisdn != null) allFilteredMsisdns.add(msisdn);
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, name, status, designation, operator, circle);
+
+        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions)
             filteredFlws.add(FrontLineWorkerMapper.mapFrom(frontLineWorkerDimension));
+
         return filteredFlws;
     }
 

@@ -14,6 +14,7 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,6 +36,7 @@ public class CourseItemMeasureService {
     private CertificateCourseLogService certificateCourseLogService;
     private AllRegistrationMeasures allRegistrationMeasures;
     private AudioTrackerLogService audioTrackerLogService;
+    private AllCourseItemMeasures allCourseItemMeasures;
 
     public CourseItemMeasureService() {
     }
@@ -45,7 +48,7 @@ public class CourseItemMeasureService {
                                     AllCourseItemDimensions allCourseItemDimensions,
                                     CertificateCourseLogService certificateCourseLogService,
                                     AudioTrackerLogService audioTrackerLogService,
-                                    AllRegistrationMeasures allRegistrationMeasures) {
+                                    AllRegistrationMeasures allRegistrationMeasures, AllCourseItemMeasures allCourseItemMeasures) {
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allTimeDimensions = allTimeDimensions;
@@ -53,6 +56,7 @@ public class CourseItemMeasureService {
         this.certificateCourseLogService = certificateCourseLogService;
         this.audioTrackerLogService = audioTrackerLogService;
         this.allRegistrationMeasures = allRegistrationMeasures;
+        this.allCourseItemMeasures = allCourseItemMeasures;
     }
 
     @Transactional
@@ -69,6 +73,10 @@ public class CourseItemMeasureService {
 
         addCertificateCourseItemMeasure(callId, courseLog, frontLineWorkerDimension, locationDimension);
         addAudioTrackerCourseItemMeasure(callId, audioTrackerLog, frontLineWorkerDimension, locationDimension);
+    }
+
+    public List<Long> getAllFrontLineWorkerMsisdnsBetween(Date startDate, Date endDate) {
+        return allCourseItemMeasures.getFilteredFrontLineWorkerMsisdns(startDate, endDate);
     }
 
     private void addCertificateCourseItemMeasure(String callId, CertificationCourseLog courseLog, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
