@@ -35,46 +35,38 @@ public class FrontLineWorkerSeedService {
         this.template = template;
     }
 
-    public void updateDefaultCircleAndCorrectMsisdnInCouchDb(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
-        log.info("Updating frontlineWorkers in couchdb: START");
-        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-
-            String msisdn = frontLineWorker.getMsisdn();
-            if (msisdn.length() == 10)
-                msisdn = "91" + msisdn;
-
-            frontLineWorker.setMsisdn(msisdn);
-            frontLineWorker.setCircle(defaultCircle);
-            allFrontLineWorkers.update(frontLineWorker);
-            log.info("Updated Couchdb: " + frontLineWorker + "with circle: " + frontLineWorker.getCircle());
-        }
-        log.info("Updating frontlineWorkers in couchdb: END");
-    }
 
     @Transactional
-    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresBasedOnCouchDb(List<FrontLineWorker> frontLineWorkers) {
-        log.info("Updating frontlineWorkers in postgres: START");
-        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
-            String msisdn = frontLineWorker.getMsisdn();
-            if (msisdn.length() <= 10)
-                msisdn = "91" + msisdn;
+    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
+        log.info("Updating frontlineWorkers in postgres/couchdb: START");
 
-            FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
+            //couchdb
+            String msisdn = frontLineWorker.getMsisdn();
+            String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
+            String correctedMsisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
+
+            frontLineWorker.setMsisdn(correctedMsisdn);
+            frontLineWorker.setCircle(defaultCircle);
+            allFrontLineWorkers.update(frontLineWorker);
+            log.info("Corrected msisdn in couchdb and circle for: " + frontLineWorker);
+
+            //postgres
+            FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
             if (frontLineWorkerDimension == null) {
                 log.error("Db mismatch, postgres missing : " + frontLineWorker.getMsisdn());
                 continue;
             }
             frontLineWorkerDimension.setOperator(frontLineWorker.getOperator());
             frontLineWorkerDimension.setDesignation(designation);
-            frontLineWorkerDimension.setMsisdn(Long.valueOf(msisdn));
+            frontLineWorkerDimension.setMsisdn(Long.valueOf(correctedMsisdn));
             frontLineWorkerDimension.setCircle(frontLineWorker.getCircle());
 
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
             log.info("Updated Postgres: " + frontLineWorkerDimension.getMsisdn() + "with operator : " +
                     frontLineWorker.getOperator() + " and circle : " + frontLineWorkerDimension.getCircle());
         }
-        log.info("Updating frontlineWorkers in postgres: END");
+        log.info("Updating frontlineWorkers in postgres/couchdb: END");
     }
 
 
