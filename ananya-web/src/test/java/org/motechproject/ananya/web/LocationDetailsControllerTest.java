@@ -91,10 +91,10 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         when(request.getParameter("block")).thenReturn("B2");
         when(request.getParameter("panchayat")).thenReturn(null);
 
-        ModelAndView location = locationDetailsController.get(request);
+        ModelAndView location = locationDetailsController.search(request);
 
         Map<String, Object> model = location.getModel();
-        List<LocationResponse> locations = (List<LocationResponse>) model.get("filteredLocations");
+        List<LocationResponse> locations = (List<LocationResponse>) model.get("filteredResponse");
         assertEquals(1, model.size());
         assertEquals(2, locations.size());
     }

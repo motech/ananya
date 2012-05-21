@@ -6,7 +6,7 @@ public class LocationRegistrationResponse {
     private String locationDetails;
 
     public LocationRegistrationResponse(String district, String block, String panchayat) {
-        locationDetails = district+","+block+","+panchayat;
+        locationDetails = district + "," + block + "," + panchayat;
     }
 
     public LocationRegistrationResponse withIncompleteDetails() {
@@ -30,5 +30,13 @@ public class LocationRegistrationResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "message='" + message + '\'' +
+                ", locationDetails='" + locationDetails + '\'' +
+                '}';
     }
 }

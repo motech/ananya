@@ -93,9 +93,9 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         when(request.getParameter("operator")).thenReturn(null);
         when(request.getParameter("circle")).thenReturn(null);
 
-        ModelAndView modelAndView = frontLineWorkerDetailsController.get(request);
+        ModelAndView modelAndView = frontLineWorkerDetailsController.search(request);
 
-        List<FrontLineWorkerResponse> filteredFLWs = (List<FrontLineWorkerResponse>) modelAndView.getModel().get("filteredFLWs");
+        List<FrontLineWorkerResponse> filteredFLWs = (List<FrontLineWorkerResponse>) modelAndView.getModel().get("filteredResponse");
         assertEquals(1, filteredFLWs.size());
         assertEquals(msisdn, filteredFLWs.get(0).getMsisdn());
     }

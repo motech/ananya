@@ -1,9 +1,0 @@
-var locations = {
-#set($locationsCount = $filteredLocations.size())
-#foreach($entry in $filteredLocations)
-    $entry
-    #if($foreach.count < $locationsCount)
-    ,
-    #end
-#end
-};

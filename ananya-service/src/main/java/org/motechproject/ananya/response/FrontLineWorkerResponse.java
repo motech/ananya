@@ -40,4 +40,16 @@ public class FrontLineWorkerResponse {
     public String getCircle() {
         return circle;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "msisdn='" + msisdn + '\'' +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", designation='" + designation + '\'' +
+                ", operator='" + operator + '\'' +
+                ", circle='" + circle + '\'' +
+                '}';
+    }
 }

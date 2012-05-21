@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/data/flw")
+@RequestMapping(value = "/flw")
 public class FrontLineWorkerDetailsController {
 
     @Autowired
@@ -24,11 +24,11 @@ public class FrontLineWorkerDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView create(@RequestBody FrontLineWorkerRequest request) {
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(request);
-        return new ModelAndView("frontLineWorkerCreation").addObject("response", registrationResponse);
+        return new ModelAndView("creation").addObject("response", registrationResponse);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView get(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    public ModelAndView search(HttpServletRequest request) {
         String msisdn = request.getParameter("msisdn");
         String name = request.getParameter("name");
         String status = request.getParameter("status");
@@ -38,6 +38,6 @@ public class FrontLineWorkerDetailsController {
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
 
-        return new ModelAndView("frontLineWorkers").addObject("filteredFLWs", filteredFLW);
+        return new ModelAndView("get_filtered_results").addObject("filteredResponse", filteredFLW);
     }
 }

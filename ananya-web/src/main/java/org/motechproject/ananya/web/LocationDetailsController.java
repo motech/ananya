@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/data/location")
+@RequestMapping(value = "/location")
 public class LocationDetailsController {
 
     @Autowired
@@ -24,11 +24,11 @@ public class LocationDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView create(@RequestBody LocationRequest request) {
         LocationRegistrationResponse response = locationRegistrationService.addNewLocation(request);
-        return new ModelAndView("locationCreation").addObject("response", response);
+        return new ModelAndView("creation").addObject("response", response);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView get(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    public ModelAndView search(HttpServletRequest request) {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
@@ -36,6 +36,6 @@ public class LocationDetailsController {
 
         List<LocationResponse> filteredLocations = locationRegistrationService.getFilteredLocations(locationRequest);
 
-        return new ModelAndView("locations").addObject("filteredLocations", filteredLocations);
+        return new ModelAndView("get_filtered_results").addObject("filteredResponse", filteredLocations);
     }
 }

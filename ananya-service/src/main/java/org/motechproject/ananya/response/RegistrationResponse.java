@@ -32,5 +32,13 @@ public class RegistrationResponse {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "message='" + message + '\'' +
+                ", frontLineWorkerDetails='" + frontLineWorkerDetails + '\'' +
+                '}';
+    }
 }
    
