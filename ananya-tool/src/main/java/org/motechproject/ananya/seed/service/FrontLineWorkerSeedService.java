@@ -1,5 +1,6 @@
 package org.motechproject.ananya.seed.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -53,6 +54,10 @@ public class FrontLineWorkerSeedService {
 
             //postgres
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
+            if (frontLineWorkerDimension == null && msisdn.length() > 10) {
+                msisdn = StringUtils.removeStart(msisdn, "91");
+                frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
+            }
             if (frontLineWorkerDimension == null) {
                 log.error("Db mismatch, postgres missing : " + frontLineWorker.getMsisdn());
                 continue;
