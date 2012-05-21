@@ -6,8 +6,10 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 
 import java.util.ArrayList;
@@ -29,11 +31,13 @@ public class RegistrationServiceTest {
     private RegistrationMeasureService registrationMeasureService;
     @Mock
     private LocationService locationService;
+    @Mock
+    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
     }
 
     @Test
@@ -96,7 +100,7 @@ public class RegistrationServiceTest {
         String name = "";
         Designation designation = Designation.ANGANWADI;
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
 
@@ -112,7 +116,7 @@ public class RegistrationServiceTest {
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, null, new LocationRequest("district", "block", "village"));
 
@@ -143,6 +147,23 @@ public class RegistrationServiceTest {
         assertEquals("New FrontlineWorker added", registrationResponses.get(1).getMessage());
         verify(frontLineWorkerService).createOrUpdate(callerId1, name1, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED);
         verify(registrationMeasureService).createRegistrationMeasure(callerId1);
+    }
 
+    @Test
+    public void shouldGetFilteredFLWs() {
+        String msisdn = "123456";
+        String name = "name";
+        String status = RegistrationStatus.REGISTERED.name();
+        String designation = Designation.ANGANWADI.name();
+        String operator = "airtel";
+        String circle = "bihar";
+        ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn),operator,circle,name,designation,status));
+        when(frontLineWorkerDimensionService.getFilteredFLW(msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+
+        List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
+
+        assertEquals(1,filteredFLW.size());
+        assertEquals(msisdn, filteredFLW.get(0).getMsisdn());
     }
 }

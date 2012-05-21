@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
 
 public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
@@ -84,7 +83,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldGetAllUnRegisteredFrontLineWorkerDimensions(){
+    public void shouldGetAllUnRegisteredFrontLineWorkerDimensions() {
         long msisdn = 9880099L;
         long msisdn1 = 98800999L;
         String name = "name";
@@ -98,5 +97,79 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
 
         assertEquals(2, frontLineWorkerDimensions.size());
+    }
+
+    @Test
+    public void shouldGetAllTheFrontLineWorkerBasedOnSingleCriteria() {
+        Long msisdn = 9880099L;
+        Long msisdn1 = 98800999L;
+        String airtel = "airtel";
+        String bsnl = "bsnl";
+        Designation anganwadi = Designation.ANGANWADI;
+        Designation anm = Designation.ANM;
+        String bihar = "Bihar";
+        String up = "UP";
+        String name2 = "name2";
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name()));
+        template.save(new FrontLineWorkerDimension(msisdn1, bsnl, up, name2, anm.name(), RegistrationStatus.REGISTERED.name()));
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(msisdn, null, null, null, null, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
+
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, null, RegistrationStatus.PARTIALLY_REGISTERED.name(), null, null, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED.name(), frontLineWorkerDimensions.get(0).getStatus());
+        assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
+
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, name2, null, null, null, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(name2, frontLineWorkerDimensions.get(0).getName());
+        assertEquals(msisdn1, frontLineWorkerDimensions.get(0).getMsisdn());
+
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, null, null, anganwadi.name(), null, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(anganwadi.name(), frontLineWorkerDimensions.get(0).getDesignation());
+        assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
+
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, null, null, null, bsnl, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(bsnl, frontLineWorkerDimensions.get(0).getOperator());
+        assertEquals(msisdn1, frontLineWorkerDimensions.get(0).getMsisdn());
+
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, null, null, null, null, up);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(up, frontLineWorkerDimensions.get(0).getCircle());
+        assertEquals(msisdn1, frontLineWorkerDimensions.get(0).getMsisdn());
+    }
+
+    @Test
+    public void shouldGetAllTheFrontLineWorkerBasedOnMultipleCriteria() {
+        long msisdn = 9880099L;
+        long msisdn1 = 98800999L;
+        long msisdn2 = 8800999L;
+        String airtel = "airtel";
+        String bsnl = "bsnl";
+        Designation anganwadi = Designation.ANGANWADI;
+        Designation anm = Designation.ANM;
+        String bihar = "Bihar";
+        String up = "UP";
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name());
+        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name());
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name()));
+        template.save(frontLineWorkerDimension1);
+        template.save(frontLineWorkerDimension2);
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(null, null, RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), null, up);
+
+        assertEquals(2, frontLineWorkerDimensions.size());
+        assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension1));
+        assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension2));
     }
 }

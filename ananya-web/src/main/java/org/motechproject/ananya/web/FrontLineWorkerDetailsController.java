@@ -1,12 +1,17 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
+import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/data/flw")
@@ -18,5 +23,19 @@ public class FrontLineWorkerDetailsController {
     @RequestMapping(method = RequestMethod.POST)
     public void create(@RequestBody FrontLineWorkerRequest request) {
         registrationService.createOrUpdateFLW(request);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView get(HttpServletRequest request) {
+        String msisdn = request.getParameter("msisdn");
+        String name = request.getParameter("name");
+        String status = request.getParameter("status");
+        String designation = request.getParameter("designation");
+        String operator = request.getParameter("operator");
+        String circle = request.getParameter("circle");
+
+        List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
+
+        return new ModelAndView("frontLineWorkers").addObject("filteredFLWs",filteredFLW);
     }
 }

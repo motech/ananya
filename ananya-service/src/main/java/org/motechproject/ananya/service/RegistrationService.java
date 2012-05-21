@@ -5,7 +5,10 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
+import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +23,17 @@ public class RegistrationService {
     private static Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
     private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
 
     @Autowired
     public RegistrationService(FrontLineWorkerService frontLineWorkerService,
+                               FrontLineWorkerDimensionService frontLineWorkerDimensionService,
                                RegistrationMeasureService registrationMeasureService,
                                LocationService locationService) {
         this.frontLineWorkerService = frontLineWorkerService;
+        this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.registrationMeasureService = registrationMeasureService;
         this.locationService = locationService;
     }
@@ -59,6 +65,14 @@ public class RegistrationService {
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
                 locationList);
+    }
+
+    public List<FrontLineWorkerResponse> getFilteredFLW(String msisdn, String name, String status, String designation, String operator, String circle) {
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
+        List<FrontLineWorkerResponse> filteredFlws = new ArrayList<FrontLineWorkerResponse>();
+        for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions)
+            filteredFlws.add(FrontLineWorkerMapper.mapFrom(frontLineWorkerDimension));
+        return filteredFlws;
     }
 
     private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, LocationList locationList) {

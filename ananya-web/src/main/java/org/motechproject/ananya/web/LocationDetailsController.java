@@ -26,7 +26,7 @@ public class LocationDetailsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getLocation(HttpServletRequest request) {
+    public ModelAndView get(HttpServletRequest request) {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
