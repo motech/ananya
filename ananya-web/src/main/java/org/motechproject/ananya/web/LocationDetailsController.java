@@ -1,6 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,9 @@ public class LocationDetailsController {
     private LocationRegistrationService locationRegistrationService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public void create(@RequestBody LocationRequest request) {
-        locationRegistrationService.addNewLocation(request);
+    public ModelAndView create(@RequestBody LocationRequest request) {
+        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(request);
+        return new ModelAndView("locationCreation").addObject("response", response);
     }
 
     @RequestMapping(method = RequestMethod.GET)

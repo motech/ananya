@@ -16,6 +16,7 @@ import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimension
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
+import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,12 +70,14 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String operator = "airtel";
         String name = "name";
 
-        frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, locationRequest));
+        ModelAndView modelAndView = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, locationRequest));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
+        RegistrationResponse response = (RegistrationResponse) modelAndView.getModel().get("response");
+        assertEquals("New FrontlineWorker added", response.getMessage());
     }
 
     @Test

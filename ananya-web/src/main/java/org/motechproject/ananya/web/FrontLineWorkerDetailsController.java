@@ -2,6 +2,7 @@ package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
+import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,9 @@ public class FrontLineWorkerDetailsController {
     private RegistrationService registrationService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public void create(@RequestBody FrontLineWorkerRequest request) {
-        registrationService.createOrUpdateFLW(request);
+    public ModelAndView create(@RequestBody FrontLineWorkerRequest request) {
+        RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(request);
+        return new ModelAndView("frontLineWorkerCreation").addObject("response", registrationResponse);
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -36,6 +38,6 @@ public class FrontLineWorkerDetailsController {
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle);
 
-        return new ModelAndView("frontLineWorkers").addObject("filteredFLWs",filteredFLW);
+        return new ModelAndView("frontLineWorkers").addObject("filteredFLWs", filteredFLW);
     }
 }

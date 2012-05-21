@@ -11,6 +11,7 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -65,14 +66,18 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String block = "Amer";
         String district = "Patna";
 
-        locationDetailsController.create(new LocationRequest(district, block, panchayat));
-        locationDetailsController.create(new LocationRequest(district, block, panchayat));
+        ModelAndView modelAndView = locationDetailsController.create(new LocationRequest(district, block, panchayat));
+        ModelAndView modelAndView1 = locationDetailsController.create(new LocationRequest(district, block, panchayat));
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());
         assertEquals(district, allLocations.get(0).getDistrict());
         assertEquals(block, allLocations.get(0).getBlock());
         assertEquals(panchayat, allLocations.get(0).getPanchayat());
+        LocationRegistrationResponse response = (LocationRegistrationResponse) modelAndView.getModel().get("response");
+        LocationRegistrationResponse response1 = (LocationRegistrationResponse) modelAndView1.getModel().get("response");
+        assertEquals("Successfully registered location", response.getMessage());
+        assertEquals("The location is already present", response1.getMessage());
     }
 
     @Test
