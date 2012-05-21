@@ -61,6 +61,10 @@ public class FrontLineWorkerSeedService {
                 msisdn = "91" + msisdn;
 
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+            if (frontLineWorkerDimension == null) {
+                log.error("Db mismatch, postgres missing : " + frontLineWorker.getMsisdn());
+                continue;
+            }
             frontLineWorkerDimension.setOperator(frontLineWorker.getOperator());
             frontLineWorkerDimension.setDesignation(designation);
             frontLineWorkerDimension.setMsisdn(Long.valueOf(msisdn));
@@ -74,7 +78,6 @@ public class FrontLineWorkerSeedService {
     }
 
 
-
     @Transactional
     public void updateUnRegisteredStatusGreaterTheGivenIDInPostgres(int id) {
         String status = RegistrationStatus.UNREGISTERED.toString();
@@ -86,6 +89,10 @@ public class FrontLineWorkerSeedService {
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
             FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorkerDimension.getMsisdn().toString());
+            if (frontLineWorker == null) {
+                log.error("Db mismatch, couchdb missing : " + frontLineWorkerDimension.getMsisdn());
+                continue;
+            }
             frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
             allFrontLineWorkers.update(frontLineWorker);
         }
