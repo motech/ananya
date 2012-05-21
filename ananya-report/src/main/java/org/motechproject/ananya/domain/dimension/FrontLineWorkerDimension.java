@@ -25,7 +25,6 @@ public class FrontLineWorkerDimension {
     @Column(name="operator")
     private String operator;
 
-
     @Column(name="circle")
     private String circle;
 
@@ -113,5 +112,11 @@ public class FrontLineWorkerDimension {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public void merge(FrontLineWorkerDimension frontLineWorkerDimension) {
+       this.name = frontLineWorkerDimension.name;
+       this.status = frontLineWorkerDimension.status;
+       this.designation = frontLineWorkerDimension.designation;
     }
 }

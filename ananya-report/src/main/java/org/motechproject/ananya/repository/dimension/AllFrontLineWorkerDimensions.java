@@ -46,4 +46,7 @@ public class AllFrontLineWorkerDimensions {
         template.bulkUpdate("delete from FrontLineWorkerDimension");
     }
 
+    public void remove(FrontLineWorkerDimension frontLineWorkerDimension) {
+        template.delete(frontLineWorkerDimension);
+    }
 }

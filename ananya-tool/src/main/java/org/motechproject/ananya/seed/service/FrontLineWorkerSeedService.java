@@ -1,12 +1,12 @@
 package org.motechproject.ananya.seed.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +38,53 @@ public class FrontLineWorkerSeedService {
 
 
     @Transactional
-    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
-        log.info("Updating frontlineWorkers in postgres/couchdb: START");
+    public void correctRegistrationStatusInCouchAndPostgres() {
+        int lastSequenceOfPreImportedFLWs = 20988;
+        template.bulkUpdate("update FrontLineWorkerDimension set status = '" + RegistrationStatus.UNREGISTERED + "' where id >= " + lastSequenceOfPreImportedFLWs);
+        log.info("RegistrationStatus:Postgres FrontLineWorkerDimensions >= 20988 to unregistered status");
 
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
+        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
+            FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorkerDimension.getMsisdn().toString());
+            if (frontLineWorker == null) {
+                log.error("RegistrationStatus: Db mismatch, Couchdb missing : " + frontLineWorkerDimension.getMsisdn());
+                continue;
+            }
+            frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
+            allFrontLineWorkers.update(frontLineWorker);
+            log.info("RegistrationStatus: Updated Couchdb doc to unregistered status for :" + frontLineWorker);
+        }
+    }
+
+    @Transactional
+    public void correctDuplicatesInCouchAndPostgres(List<FrontLineWorker> frontLineWorkers) {
+        FrontLineWorkerList frontLineWorkerList = new FrontLineWorkerList(frontLineWorkers);
         for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            //couchdb
+            String msisdn = frontLineWorker.getMsisdn();
+            if (msisdn.length() > 10) continue;
+            try {
+                FrontLineWorker finalFrontLineWorker = frontLineWorkerList.findLongCodeDuplicate(msisdn);
+                finalFrontLineWorker.merge(frontLineWorker);
+                allFrontLineWorkers.update(finalFrontLineWorker);
+                allFrontLineWorkers.remove(frontLineWorker);
+                log.info("Duplicates: Merged Couchdb docs for " + finalFrontLineWorker);
+
+                FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+                FrontLineWorkerDimension finalFrontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(finalFrontLineWorker.msisdn());
+                finalFrontLineWorkerDimension.merge(frontLineWorkerDimension);
+                allFrontLineWorkerDimensions.update(finalFrontLineWorkerDimension);
+                allFrontLineWorkerDimensions.remove(frontLineWorkerDimension);
+                log.info("Duplicates: Merged Postgres dimensions for " + finalFrontLineWorker);
+
+            } catch (Exception e) {
+                log.error("Exception while correcting duplicates for:" + msisdn);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
             String msisdn = frontLineWorker.getMsisdn();
             String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
             String correctedMsisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
@@ -50,48 +92,22 @@ public class FrontLineWorkerSeedService {
             frontLineWorker.setMsisdn(correctedMsisdn);
             frontLineWorker.setCircle(defaultCircle);
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("Corrected msisdn in couchdb and circle for: " + frontLineWorker);
+            log.info("Updated: Correct msisdn, circle in Couchdb for: " + frontLineWorker);
 
-            //postgres
+
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
-            if (frontLineWorkerDimension == null && msisdn.length() > 10) {
-                msisdn = StringUtils.removeStart(msisdn, "91");
-                frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
-            }
+            if (frontLineWorkerDimension == null)
+                frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(correctedMsisdn));
             if (frontLineWorkerDimension == null) {
-                log.error("Db mismatch, postgres missing : " + frontLineWorker.getMsisdn());
+                log.error("Updated: Db mismatch, Postgres missing : " + frontLineWorker.getMsisdn());
                 continue;
             }
             frontLineWorkerDimension.setOperator(frontLineWorker.getOperator());
             frontLineWorkerDimension.setDesignation(designation);
             frontLineWorkerDimension.setMsisdn(Long.valueOf(correctedMsisdn));
             frontLineWorkerDimension.setCircle(frontLineWorker.getCircle());
-
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-            log.info("Updated Postgres: " + frontLineWorkerDimension.getMsisdn() + "with operator : " +
-                    frontLineWorker.getOperator() + " and circle : " + frontLineWorkerDimension.getCircle());
-        }
-        log.info("Updating frontlineWorkers in postgres/couchdb: END");
-    }
-
-
-    @Transactional
-    public void updateUnRegisteredStatusGreaterTheGivenIDInPostgres(int id) {
-        String status = RegistrationStatus.UNREGISTERED.toString();
-        template.bulkUpdate("update FrontLineWorkerDimension set status = '" + status + "' where id >= " + id);
-    }
-
-    @Transactional
-    public void updateUnRegisteredStatusInCouchDbBasedOnPostgres() {
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
-        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-            FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorkerDimension.getMsisdn().toString());
-            if (frontLineWorker == null) {
-                log.error("Db mismatch, couchdb missing : " + frontLineWorkerDimension.getMsisdn());
-                continue;
-            }
-            frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
-            allFrontLineWorkers.update(frontLineWorker);
+            log.info("Updated: Correct msisdn, circle in Postgres dimension for: ");
         }
     }
 

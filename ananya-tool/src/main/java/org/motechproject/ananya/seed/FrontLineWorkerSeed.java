@@ -73,15 +73,14 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 5, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
     public void updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls() {
-        int lastSequenceOfPreImportedFLWs = 20988;
-        seedService.updateUnRegisteredStatusGreaterTheGivenIDInPostgres(lastSequenceOfPreImportedFLWs);
-        seedService.updateUnRegisteredStatusInCouchDbBasedOnPostgres();
+        seedService.correctRegistrationStatusInCouchAndPostgres();
     }
 
-    @Seed(priority = 4, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    @Seed(priority = 4, version = "1.1", comment = "0) merging duplicates, 1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }
 
