@@ -78,14 +78,13 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 6, version = "1.1", comment = "1) merging duplicates")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
-        String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
     }
 
     @Seed(priority = 5, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
-        String defaultCircle = "BIHAR";
+        String defaultCircle = "bihar";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }

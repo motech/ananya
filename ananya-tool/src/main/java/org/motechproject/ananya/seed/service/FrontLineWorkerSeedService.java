@@ -107,7 +107,7 @@ public class FrontLineWorkerSeedService {
             String msisdn = frontLineWorker.getMsisdn();
             try {
                 String designation = frontLineWorker.getDesignation() == null ? "" : frontLineWorker.getDesignation().toString();
-                String correctedMsisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
+                String correctedMsisdn = msisdn.length() == 10 ? "91" + msisdn : msisdn;
 
                 frontLineWorker.setMsisdn(correctedMsisdn);
                 frontLineWorker.setCircle(defaultCircle);

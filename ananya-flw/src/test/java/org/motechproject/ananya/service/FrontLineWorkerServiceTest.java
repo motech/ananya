@@ -46,7 +46,7 @@ public class FrontLineWorkerServiceTest {
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).add(captor.capture());
         FrontLineWorker savedFrontLineWorker = captor.getValue();
-        assertEquals("91" + frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
+        assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
         assertEquals(RegistrationStatus.UNREGISTERED, savedFrontLineWorker.status());
     }

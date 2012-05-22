@@ -68,7 +68,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorker(String msisdn, String operator) {
         this();
-        this.msisdn = msisdn.length() <= 10 ? "91" + msisdn : msisdn;
+        this.msisdn = msisdn.length() == 10 ? "91" + msisdn : msisdn;
         this.operator = operator == null ? this.operator : operator;
     }
 
