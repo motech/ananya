@@ -17,7 +17,7 @@ public class JobAidSeed {
         seedService.saveTreeInCouchDB(new JobAidTree().build());
     }
 
-    @Seed(priority = 2, version = "1.1", comment = "Create jobaid content dimension in postgres in synch with course structure in couchdb")
+    @Seed(priority = 2, version = "1.2", comment = "Create jobaid content dimension in postgres in synch with course structure in couchdb")
     public void addJobAidContentDimensions() {
         seedService.saveJobAidTreeToReportDb();
     }
