@@ -29,7 +29,7 @@ public class CertificationCourseSeed {
         seedService.saveCourseTreeInPostgres(courseTree);
     }
 
-    @Seed(priority = 3, version = "1.1", comment = "Update the audio duration and parent node details in couchdb and postgres")
+    @Seed(priority = 3, version = "1.2", comment = "Update the audio duration and parent node details in couchdb and postgres")
     public void loadAudioContentDetails() {
         seedService.updateAudioContentAndParentDetailsInCouchDbAndPostgres();
     }

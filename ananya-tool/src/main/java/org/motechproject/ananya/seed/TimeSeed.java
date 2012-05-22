@@ -26,7 +26,7 @@ public class TimeSeed {
         }
     }
 
-    @Seed(priority = 2, version = "1.1", comment = "update the newly added column date for all dimensions")
+    @Seed(priority = 2, version = "1.2", comment = "update the newly added column date for all dimensions")
     public void updateNewlyAddedDateFieldForAllDimensions() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
