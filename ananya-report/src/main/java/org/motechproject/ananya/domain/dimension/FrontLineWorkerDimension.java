@@ -119,4 +119,17 @@ public class FrontLineWorkerDimension {
        this.status = frontLineWorkerDimension.status;
        this.designation = frontLineWorkerDimension.designation;
     }
+
+    @Override
+    public String toString() {
+        return "FrontLineWorkerDimension{" +
+                "id=" + id +
+                ", msisdn=" + msisdn +
+                ", operator='" + operator + '\'' +
+                ", circle='" + circle + '\'' +
+                ", name='" + name + '\'' +
+                ", designation='" + designation + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

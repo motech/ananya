@@ -13,16 +13,16 @@ public class FrontLineWorkerList {
 
     public FrontLineWorkerList(List<FrontLineWorker> frontLineWorkers) {
         this.frontLineWorkers = frontLineWorkers;
-        this.comparator = getFrontlineWorkerComparator();
+        this.comparator = getComparator();
         Collections.sort(frontLineWorkers, comparator);
     }
 
     public FrontLineWorker findLongCodeDuplicate(String msisdn) {
         int i = Collections.binarySearch(frontLineWorkers, new FrontLineWorker("91" + msisdn, ""), comparator);
-        return i > 0 ? frontLineWorkers.get(0) : null;
+        return i > 0 ? frontLineWorkers.get(i) : null;
     }
 
-    private Comparator<FrontLineWorker> getFrontlineWorkerComparator() {
+    private Comparator<FrontLineWorker> getComparator() {
         return new Comparator<FrontLineWorker>() {
             @Override
             public int compare(FrontLineWorker frontLineWorker, FrontLineWorker frontLineWorker1) {

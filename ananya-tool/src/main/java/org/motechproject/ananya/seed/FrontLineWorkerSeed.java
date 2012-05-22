@@ -71,17 +71,24 @@ public class FrontLineWorkerSeed {
         writer.close();
     }
 
-    @Seed(priority = 5, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
+    @Seed(priority = 6, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
     public void updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls() {
         seedService.correctRegistrationStatusInCouchAndPostgres();
     }
 
-    @Seed(priority = 4, version = "1.1", comment = "0) merging duplicates, 1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    @Seed(priority = 5, version = "1.1", comment = "1) merging duplicates")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
+    }
+
+    @Seed(priority =4, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
+        String defaultCircle = "BIHAR";
+        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }
+
 
 }
