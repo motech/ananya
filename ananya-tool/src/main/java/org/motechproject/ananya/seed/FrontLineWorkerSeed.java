@@ -89,7 +89,7 @@ public class FrontLineWorkerSeed {
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }
 
-    @Seed(priority = 4, version = "1.1", comment = "Correction of invalid status for AWW [P+C]")
+    @Seed(priority = 4, version = "1.2", comment = "Correction of invalid status for AWW [P+C]")
     public void correctInvalidDesignationsForAnganwadi() throws IOException {
 
         String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
