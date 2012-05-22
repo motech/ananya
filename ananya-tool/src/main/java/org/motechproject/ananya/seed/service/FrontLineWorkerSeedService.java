@@ -4,9 +4,11 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +26,20 @@ public class FrontLineWorkerSeedService {
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllFrontLineWorkers allFrontLineWorkers;
     private DataAccessTemplate template;
+    private AllRegistrationMeasures allRegistrationMeasures;
 
     public FrontLineWorkerSeedService() {
+
     }
 
     @Autowired
     public FrontLineWorkerSeedService(AllFrontLineWorkers allFrontLineWorkers,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      DataAccessTemplate template) {
+                                      DataAccessTemplate template, AllRegistrationMeasures allRegistrationMeasures) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.template = template;
+        this.allRegistrationMeasures = allRegistrationMeasures;
     }
 
 
@@ -76,6 +81,14 @@ public class FrontLineWorkerSeedService {
                 FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
                 FrontLineWorkerDimension finalFrontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(finalFrontLineWorker.msisdn());
                 finalFrontLineWorkerDimension.merge(frontLineWorkerDimension);
+
+                RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+                RegistrationMeasure finalRegistrationMeasure = allRegistrationMeasures.fetchFor(finalFrontLineWorkerDimension.getId());
+                finalRegistrationMeasure.merge(registrationMeasure);
+                allRegistrationMeasures.update(finalRegistrationMeasure);
+                allRegistrationMeasures.remove(registrationMeasure);
+                log.info("Duplicates: Merged Postgres measure from : " + registrationMeasure + " to final version : " + finalRegistrationMeasure);
+
                 allFrontLineWorkerDimensions.update(finalFrontLineWorkerDimension);
                 allFrontLineWorkerDimensions.remove(frontLineWorkerDimension);
                 log.info("Duplicates: Merged Postgres dimensions from : " + frontLineWorkerDimension + " to final version : " + finalFrontLineWorkerDimension);

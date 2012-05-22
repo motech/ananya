@@ -1,10 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.action.TransferDataStateAction;
-import org.motechproject.ananya.domain.CallDurationList;
-import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.domain.TransferData;
-import org.motechproject.ananya.domain.TransferDataList;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -41,7 +38,7 @@ public class JobAidCallStateController {
     @ResponseBody
     public String updateJobAidCallData(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
-        final String callerId = request.getParameter("callerId");
+        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
 
@@ -68,7 +65,7 @@ public class JobAidCallStateController {
     @ResponseBody
     public String updateJobAidPrompts(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
-        final String callerId = request.getParameter("callerId");
+        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final String promptIds = request.getParameter("promptList");
 
         log.info("Jobaid prompt update - callId = " + callId +
@@ -83,7 +80,7 @@ public class JobAidCallStateController {
     @ResponseBody
     public String updateJobAidUsage(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
-        final String callerId = request.getParameter("callerId");
+        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final Integer callDuration = Integer.valueOf(request.getParameter("callDuration"));
 
         log.info("Jobaid usage update - callId = " + callId +
@@ -105,4 +102,5 @@ public class JobAidCallStateController {
         builder.append("</form></vxml>");
         return builder.toString();
     }
+
 }

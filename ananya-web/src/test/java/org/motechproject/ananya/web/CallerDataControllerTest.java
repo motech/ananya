@@ -52,12 +52,13 @@ public class CallerDataControllerTest {
     @Test
     public void shouldReturnCallerDataForJobAidWithUsageValues() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/joabaid/caller_data.js");
-        request.addParameter("callerId", "12345");
+        String callerId = "919986574410";
+        request.addParameter("callerId", callerId);
         request.addParameter("operator", "airtel");
         request.addParameter("circle", "circle");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
 
-        when(jobAidService.createCallerData("12345", "airtel", "circle")).thenReturn(
+        when(jobAidService.createCallerData(callerId, "airtel", "circle")).thenReturn(
                 new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
@@ -73,7 +74,7 @@ public class CallerDataControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
         String current_bookmark = "current_bookmark";
         boolean isUserRegistered = true;
-        String callerId = "12345";
+        String callerId = "919986574410";
         String operator = "airtel";
         String circle = "circle";
         HashMap<String, Integer> scoresByChapter = new HashMap<String, Integer>();

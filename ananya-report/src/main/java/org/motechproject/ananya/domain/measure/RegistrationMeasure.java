@@ -66,4 +66,19 @@ public class RegistrationMeasure {
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
         return frontLineWorkerDimension;
     }
+
+    public void merge(RegistrationMeasure registrationMeasure) {
+        this.timeDimension = registrationMeasure.timeDimension;
+        this.locationDimension = registrationMeasure.locationDimension;
+    }
+
+    @Override
+    public String toString() {
+        return "RegistrationMeasure{" +
+                "id=" + id +
+                ", timeDimension=" + timeDimension +
+                ", locationDimension=" + locationDimension +
+                ", frontLineWorkerDimension=" + frontLineWorkerDimension +
+                '}';
+    }
 }

@@ -1,10 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.action.TransferDataStateAction;
-import org.motechproject.ananya.domain.CallDurationList;
-import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.domain.TransferData;
-import org.motechproject.ananya.domain.TransferDataList;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.CertificationCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
@@ -42,7 +39,7 @@ public class CertificateCourseCallDataController {
     @ResponseBody
     public String receiveIVRDataAtDisconnect(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
-        final String callerId = request.getParameter("callerId");
+        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
 

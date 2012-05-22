@@ -46,7 +46,7 @@ public class CallLogFlowTest extends SpringIntegrationTest {
         DateTime disconnectTime = new DateTime(1330320634871L).toDateTime(ist);
 
         String callId = "99865744201234567890";
-        String callerId = "9986574420";
+        String callerId = "919986574420";
         MyWebClient.PostParam callerIdParam = param("callerId", callerId);
         MyWebClient.PostParam callIdParam = param("callId", callId);
         MyWebClient.PostParam dataToPost = param("dataToPost",
