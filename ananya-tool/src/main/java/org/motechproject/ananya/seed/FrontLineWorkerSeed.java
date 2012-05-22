@@ -71,23 +71,48 @@ public class FrontLineWorkerSeed {
         writer.close();
     }
 
-    @Seed(priority = 6, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
+    @Seed(priority = 7, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
     public void updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls() {
         seedService.correctRegistrationStatusInCouchAndPostgres();
     }
 
-    @Seed(priority = 5, version = "1.1", comment = "1) merging duplicates")
+    @Seed(priority = 6, version = "1.1", comment = "1) merging duplicates")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
     }
 
-    @Seed(priority =4, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    @Seed(priority = 5, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
         String defaultCircle = "BIHAR";
         List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
+    }
+
+    @Seed(priority = 4, version = "1.2", comment = "Correction of invalid status for AWW [P+C]")
+    public void correctInvalidDesignationsForAnganwadi() throws IOException {
+
+        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+        String outputFilePath = new File(inputCSVFile).getParent();
+        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+
+        File file = new File(outputCSVFile);
+        file.createNewFile();
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+
+        String msisdn, designation;
+        String[] currentRow;
+        csvReader.readNext();
+        currentRow = csvReader.readNext();
+
+        while (currentRow != null) {
+            msisdn = currentRow[0];
+            designation = currentRow[2];
+            if ("AWW".equalsIgnoreCase(designation))
+                seedService.correctInvalidDesignationsForAnganwadi(msisdn);
+            currentRow = csvReader.readNext();
+        }
     }
 
 

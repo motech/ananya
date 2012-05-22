@@ -1,6 +1,8 @@
 package org.motechproject.ananya.seed.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -133,5 +135,30 @@ public class FrontLineWorkerSeedService {
 
     public List<FrontLineWorker> getAllFromCouchDb() {
         return allFrontLineWorkers.getAll();
+    }
+
+    @Transactional
+    public void correctInvalidDesignationsForAnganwadi(String msisdn) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("91" + msisdn);
+        if (frontLineWorker == null) {
+            log.error("Designation: Missing FrontlineWorker in couchdb: " + msisdn);
+            return;
+        }
+        frontLineWorker.setDesignation(Designation.ANGANWADI);
+        if (StringUtils.isNotBlank(frontLineWorker.getName()))
+            frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
+
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("Designation: Corrected invalid designation in couchdb: " + frontLineWorker);
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        if (frontLineWorkerDimension == null) {
+            log.error("Designation: Missing FrontlineWorker in postgres: " + msisdn);
+            return;
+        }
+        frontLineWorkerDimension.setDesignation(frontLineWorker.designationName());
+        frontLineWorkerDimension.setStatus(frontLineWorker.status().toString());
+        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+        log.info("Designation: Corrected invalid designation in postgres: " + frontLineWorkerDimension);
     }
 }
