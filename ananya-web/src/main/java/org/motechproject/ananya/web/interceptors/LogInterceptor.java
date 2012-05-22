@@ -1,4 +1,4 @@
-package org.motechproject.ananya.web;
+package org.motechproject.ananya.web.interceptors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

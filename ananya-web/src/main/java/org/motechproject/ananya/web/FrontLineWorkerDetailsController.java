@@ -5,6 +5,7 @@ import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.web.annotations.Authenticated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
+@Authenticated
 @Controller
 @RequestMapping(value = "/flw")
 public class FrontLineWorkerDetailsController {

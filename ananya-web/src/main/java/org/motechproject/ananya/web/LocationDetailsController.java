@@ -4,6 +4,7 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
+import org.motechproject.ananya.web.annotations.Authenticated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Authenticated
 @Controller
 @RequestMapping(value = "/location")
 public class LocationDetailsController {
