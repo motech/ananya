@@ -19,7 +19,7 @@ import java.util.List;
 
 @Authenticated
 @Controller
-@RequestMapping(value = "/flw")
+@RequestMapping(value = "/data/flw")
 public class FrontLineWorkerDetailsController {
 
     @Autowired

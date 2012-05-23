@@ -17,7 +17,7 @@ import java.util.List;
 
 @Authenticated
 @Controller
-@RequestMapping(value = "/location")
+@RequestMapping(value = "/data/location")
 public class LocationDetailsController {
 
     @Autowired
