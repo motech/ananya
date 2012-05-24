@@ -38,7 +38,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="end_time" COLSPAN="3" ALIGN="LEFT">end_time</TD></TR>
       <TR><TD PORT="called_number" COLSPAN="3" ALIGN="LEFT">called_number</TD></TR>
       <TR><TD PORT="time_id" COLSPAN="3" ALIGN="LEFT">time_id</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">310 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="call_duration_measure.html"
     tooltip="call_duration_measure"
@@ -58,7 +58,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="percentage" COLSPAN="3" ALIGN="LEFT">percentage</TD></TR>
       <TR><TD PORT="call_id" COLSPAN="3" ALIGN="LEFT">call_id</TD></TR>
       <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">444 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="course_item_measure.html"
     tooltip="course_item_measure"
@@ -86,11 +86,11 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="2" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">location_dimension</TD></TR>
       <TR><TD PORT="id" COLSPAN="2" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD><TD PORT="id.type" ALIGN="LEFT">serial[10]</TD></TR>
-      <TR><TD PORT="location_id" COLSPAN="2" ALIGN="LEFT">location_id</TD><TD PORT="location_id.type" ALIGN="LEFT">varchar[30]</TD></TR>
+      <TR><TD PORT="location_id" COLSPAN="2" BGCOLOR="#f4f7da" ALIGN="LEFT">location_id</TD><TD PORT="location_id.type" ALIGN="LEFT">varchar[30]</TD></TR>
       <TR><TD PORT="district" COLSPAN="2" ALIGN="LEFT">district</TD><TD PORT="district.type" ALIGN="LEFT">varchar[255]</TD></TR>
       <TR><TD PORT="block" COLSPAN="2" ALIGN="LEFT">block</TD><TD PORT="block.type" ALIGN="LEFT">varchar[255]</TD></TR>
       <TR><TD PORT="panchayat" COLSPAN="2" ALIGN="LEFT">panchayat</TD><TD PORT="panchayat.type" ALIGN="LEFT">varchar[255]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">19 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2,442 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="location_dimension.html"
     tooltip="location_dimension"
@@ -103,7 +103,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="location_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">location_id</TD></TR>
       <TR><TD PORT="time_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">time_id</TD></TR>
       <TR><TD PORT="flw_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">flw_id</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">7 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">22,278 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="registration_measure.html"
     tooltip="registration_measure"

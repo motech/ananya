@@ -30,8 +30,8 @@ public class LocationSeed {
 
     private BufferedWriter writer;
 
-    @Seed(priority = 1, version = "1.0")
-    public void load() throws IOException {
+    @Seed(priority = 1, version = "1.0",comment = "load all locations from csv file")
+    public void loadLocationsFromCSVFile() throws IOException {
         String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();
         String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();

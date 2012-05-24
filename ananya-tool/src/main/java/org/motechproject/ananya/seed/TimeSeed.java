@@ -14,8 +14,8 @@ public class TimeSeed {
     @Autowired
     private AllTimeDimensions allTimeDimensions;
 
-    @Seed(priority = 2, version = "1.0")
-    public void load() {
+    @Seed(priority = 2, version = "1.0", comment = "load dimensions for 2 years from 1-1-2012 to 1-1-2014")
+    public void createDimensionsInPostgres() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
 
@@ -26,8 +26,8 @@ public class TimeSeed {
         }
     }
 
-    @Seed(priority = 2, version = "1.1")
-    public void updateDateField() {
+    @Seed(priority = 2, version = "1.2", comment = "update the newly added column date for all dimensions")
+    public void updateNewlyAddedDateFieldForAllDimensions() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
         LocalDate endDate = DateUtil.newDate(2014, 1, 1);
 

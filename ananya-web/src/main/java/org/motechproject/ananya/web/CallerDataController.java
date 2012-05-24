@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.motechproject.ananya.domain.CallerIdParam;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -42,7 +43,7 @@ public class CallerDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/jobaid/caller_data.js")
     public ModelAndView getCallerDataForJobAid(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String msisdn = request.getParameter("callerId");
+        String msisdn = new CallerIdParam(request.getParameter("callerId")).getValue();
         String operator = request.getParameter("operator");
         String circle = request.getParameter("circle");
         response.setContentType("application/javascript");
@@ -59,13 +60,12 @@ public class CallerDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/dynamic/caller_data.js")
     public ModelAndView getCallerData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String msisdn = request.getParameter("callerId");
+        String msisdn = new CallerIdParam(request.getParameter("callerId")).getValue();
         String operator = request.getParameter("operator");
         String circle = request.getParameter("circle");
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle" + circle);
-
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator, circle);
 
         return new ModelAndView("caller_data")

@@ -26,14 +26,13 @@ public class OperatorSeed {
         operator_usage.put("reliance", convertMinutesToMilliSeconds(34));
         operator_usage.put("bsnl", convertMinutesToMilliSeconds(28));
         operator_usage.put("undefined", convertMinutesToMilliSeconds(28));
-        operator_usage.put("longcode", convertMinutesToMilliSeconds(50));
     }
 
     public static Integer convertMinutesToMilliSeconds(int minutes) {
         return minutes * 60 * 1000;
     }
 
-    @Seed(priority = 0, version = "1.0")
+    @Seed(priority = 0, version = "1.0", comment = "load the usage limit for the operators")
     public void load() throws IOException {
         Iterator<String> operatorNameIterator = operator_usage.keySet().iterator();
 
@@ -43,4 +42,13 @@ public class OperatorSeed {
             allOperators.add(operator);
         }
     }
+
+
+    @Seed(priority = 0, version = "1.2", comment = "load long code")
+    public void loadLongCode() throws IOException {
+        Operator operator = new Operator("longcode", convertMinutesToMilliSeconds(50));
+        allOperators.add(operator);
+
+    }
+
 }

@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -40,6 +39,7 @@ public class FrontLineWorkerService {
             log.info("Created:" + frontLineWorker);
             return frontLineWorker;
         }
+
         frontLineWorker.update(name, designation, location);
         allFrontLineWorkers.update(frontLineWorker);
         log.info("Updated:" + frontLineWorker);
@@ -87,12 +87,6 @@ public class FrontLineWorkerService {
         return frontLineWorker.currentCourseAttempt();
     }
 
-    public void updateRegistrationStatus(String msisdn, RegistrationStatus registrationStatus) {
-        FrontLineWorker frontLineWorker = findByCallerId(msisdn);
-        frontLineWorker.setRegistrationStatus(registrationStatus);
-        allFrontLineWorkers.update(frontLineWorker);
-    }
-
     public SMSReference getSMSReferenceNumber(String callerId) {
         return allSMSReferences.findByMsisdn(callerId);
     }
@@ -129,21 +123,7 @@ public class FrontLineWorkerService {
         log.info("Updated certificate course state for " + frontLineWorker);
     }
 
-    public boolean isNewFlwOrOperatorOrCircleIsEmpty(String callerId) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        return frontLineWorker == null || StringUtils.isEmpty(frontLineWorker.getOperator()) ||
-                StringUtils.isEmpty(frontLineWorker.getCircle());
-    }
-
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
-    }
-
-    public void updateFrontLineWorkerWithDefaultCircle(List<FrontLineWorker> frontLineWorkers, String defaultCircle) {
-        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            frontLineWorker.setCircle(defaultCircle);
-            allFrontLineWorkers.update(frontLineWorker);
-            log.info("Updated FrontLineWorker: " + frontLineWorker.getMsisdn() + "with circle: " + frontLineWorker.getCircle());
-        }
     }
 }

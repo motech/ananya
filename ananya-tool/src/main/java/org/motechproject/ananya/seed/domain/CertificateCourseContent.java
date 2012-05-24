@@ -1,30 +1,27 @@
-package org.motechproject.ananya.seed;
+package org.motechproject.ananya.seed.domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CertificateCourseDetails {
-    public static final int NUMBER_OF_LESSONS_IN_A_CHAPTER = 4;
-    public static final int NUMBER_OF_QUESTIONS_IN_A_CHAPTER = 4;
-    public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
+public class CertificateCourseContent {
 
     private static final Map<String, String> CORRECT_ANSWERS = new HashMap<String, String>();
     private static List<AudioContent> ALL_AUDIOS = new ArrayList<AudioContent>();
 
-    public static AudioContent findAudioContentContainingFilename(String endOptionName) {
-        for (AudioContent audioContent : ALL_AUDIOS) {
-            if (audioContent.fileName.contains(endOptionName)) {
+
+    public AudioContent getFor(String endOptionName) {
+        for (AudioContent audioContent : ALL_AUDIOS)
+            if (audioContent.fileName.contains(endOptionName))
                 return audioContent;
-            }
-        }
         throw new RuntimeException("Could not find any file with the name: " + endOptionName);
     }
 
-    public static String getCorrectAnswerFor(String question) {
+    public String getCorrectAnswerFor(String question) {
         return CORRECT_ANSWERS.get(question);
     }
+
 
     static {
         CORRECT_ANSWERS.put("Chapter 1, Question 1", "1");

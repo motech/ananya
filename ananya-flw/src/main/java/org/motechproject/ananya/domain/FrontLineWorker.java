@@ -68,8 +68,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorker(String msisdn, String operator) {
         this();
-        this.msisdn = msisdn;
-        this.operator = (operator == null ? this.operator : operator);
+        this.msisdn = msisdn.length() == 10 ? "91" + msisdn : msisdn;
+        this.operator = operator == null ? this.operator : operator;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
@@ -251,5 +251,43 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonIgnore
     public boolean isModified() {
         return modified;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public void merge(FrontLineWorker frontLineWorker) {
+        if (this.status.equals(RegistrationStatus.UNREGISTERED)) {
+            this.status = frontLineWorker.status();
+            this.locationId = frontLineWorker.getLocationId();
+            this.designation = frontLineWorker.getDesignation();
+            this.name = frontLineWorker.name();
+            this.registeredDate = frontLineWorker.getRegisteredDate();
+        }
+        if (this.bookmark == null) {
+            this.bookmark = frontLineWorker.bookMark();
+            this.reportCard = frontLineWorker.reportCard();
+            this.certificateCourseAttempts = frontLineWorker.certificateCourseAttempts;
+        }
+        if (this.currentJobAidUsage == 0) {
+            this.currentJobAidUsage = frontLineWorker.currentJobAidUsage;
+            this.lastJobAidAccessTime = frontLineWorker.lastJobAidAccessTime;
+            this.promptsHeard = frontLineWorker.promptsHeard;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FrontLineWorker that = (FrontLineWorker) o;
+        if (msisdn != null ? !msisdn.equals(that.msisdn) : that.msisdn != null) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return msisdn != null ? msisdn.hashCode() : 0;
     }
 }

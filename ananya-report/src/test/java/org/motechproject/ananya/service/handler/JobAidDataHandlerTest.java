@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.RegistrationLog;
-import org.motechproject.ananya.requests.LogData;
-import org.motechproject.ananya.requests.LogType;
+import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
 import org.motechproject.ananya.service.RegistrationLogService;
@@ -44,7 +44,7 @@ public class JobAidDataHandlerTest {
     public void shouldHandleJobAidData() {
         String callId = "callId";
         String callerId = "callerId";
-        LogData logData = new LogData(LogType.JOBAID, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.JOBAID, callId, callerId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

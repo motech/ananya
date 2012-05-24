@@ -101,7 +101,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </tr>
 </thead>
 <tbody valign='top'>
-<tr class='even'>
+<tr class='odd'>
  <td class='primaryKey' title='Primary Key'>id</td>
  <td class='detail'>serial</td>
  <td class='detail' align='right'>10</td>
@@ -110,31 +110,31 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail' align='right'>nextval('report.time_dimension_id_seq'::regclass)</td>
  <td class='detail'>
   <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="call_duration_measure.time_id refs time_dimension.id via fk_call_duration_measure_time_dimension"><a href='call_duration_measure.html'>call_duration_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_call_duration_measure_time_dimension<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="course_item_measure.time_id refs time_dimension.id via fk_course_item_measure_time_dimension"><a href='course_item_measure.html'>course_item_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_course_item_measure_time_dimension<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="job_aid_content_measure.time_id refs time_dimension.id via fk_job_aid_content_measure_time_dimension"><a href='job_aid_content_measure.html'>job_aid_content_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_job_aid_content_measure_time_dimension<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="registration_measure.time_id refs time_dimension.id via fk_registration_measure_time_dimension"><a href='registration_measure.html'>registration_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_registration_measure_time_dimension<span title='Cascade on delete:
  Deletion of parent deletes child'>&nbsp;C</span></td>
    </tr>
-   <tr class='relative even' valign='top'>
+   <tr class='relative odd' valign='top'>
     <td class='relatedTable detail' title="sms_sent_measure.time_id refs time_dimension.id via fk_sms_sent_measure_time_dimension"><a href='sms_sent_measure.html'>sms_sent_measure</a><span class='relatedKey'>.time_id</span>
     </td>
     <td class='constraint detail'>fk_sms_sent_measure_time_dimension<span title='Cascade on delete:
@@ -145,7 +145,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='indexedColumn' title='Indexed'>day</td>
  <td class='detail'>int2</td>
  <td class='detail' align='right'>5</td>
@@ -156,7 +156,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='indexedColumn' title='Indexed'>week</td>
  <td class='detail'>int2</td>
  <td class='detail' align='right'>5</td>
@@ -167,7 +167,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='indexedColumn' title='Indexed'>month</td>
  <td class='detail'>int2</td>
  <td class='detail' align='right'>5</td>
@@ -178,7 +178,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='even'>
+<tr class='odd'>
  <td class='indexedColumn' title='Indexed'>year</td>
  <td class='detail'>int2</td>
  <td class='detail' align='right'>5</td>
@@ -189,7 +189,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='detail'> </td>
  <td class='comment detail'></td>
 </tr>
-<tr class='odd'>
+<tr class='even'>
  <td class='detail'>date</td>
  <td class='detail'>date</td>
  <td class='detail' align='right'>13</td>
@@ -201,7 +201,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
  <td class='comment detail'></td>
 </tr>
 </table>
-<p title='6 columns'>Table contained 732 rows at Mon May 14 17:32 IST 2012<p/>
+<p title='6 columns'>Table contained 732 rows at Tue May 22 22:30 IST 2012<p/>
 </td></tr></table>
 <div class='indent'>
 <b>Indexes:</b>
@@ -243,25 +243,25 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <br><form action='get'><b>Close relationships</b><span class='degrees' id='degrees' title='Detail diminishes with increased separation from time_dimension'>
 &nbsp;within <label for='oneDegree'><input type='radio' name='degrees' id='oneDegree' checked>one</label>  <label for='twoDegrees'><input type='radio' name='degrees' id='twoDegrees'>two degrees</label> of separation</span><b>:</b></form>
 <map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="260,5,439,289">
+<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="256,5,451,289">
 <area shape="rect" id="node3" href="time_dimension.html" title="time_dimension" alt="" coords="5,786,205,985">
-<area shape="rect" id="node4" href="course_item_measure.html" title="course_item_measure" alt="" coords="261,305,437,612">
-<area shape="rect" id="node6" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="251,629,448,891">
-<area shape="rect" id="node8" href="registration_measure.html" title="registration_measure" alt="" coords="264,907,435,1055">
-<area shape="rect" id="node10" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="256,1072,443,1288">
+<area shape="rect" id="node4" href="course_item_measure.html" title="course_item_measure" alt="" coords="257,305,449,612">
+<area shape="rect" id="node6" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="255,629,452,891">
+<area shape="rect" id="node8" href="registration_measure.html" title="registration_measure" alt="" coords="251,907,456,1055">
+<area shape="rect" id="node10" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="260,1072,447,1288">
 </map>
   <a name='diagram'><img id='oneDegreeImg' src='../diagrams/time_dimension.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>
 <map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="279,726,457,1010">
-<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="5,515,224,595">
-<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="29,621,200,701">
-<area shape="rect" id="node7" href="time_dimension.html" title="time_dimension" alt="" coords="15,718,215,917">
-<area shape="rect" id="node8" href="course_item_measure.html" title="course_item_measure" alt="" coords="280,5,456,312">
-<area shape="rect" id="node10" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="16,49,213,129">
-<area shape="rect" id="node14" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="269,1027,467,1288">
-<area shape="rect" id="node17" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="8,1117,221,1197">
-<area shape="rect" id="node20" href="registration_measure.html" title="registration_measure" alt="" coords="283,329,453,477">
-<area shape="rect" id="node24" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="275,493,461,709">
+<area shape="rect" id="node1" href="call_duration_measure.html" title="call_duration_measure" alt="" coords="299,726,493,1010">
+<area shape="rect" id="node3" href="front_line_worker_dimension.html" title="front_line_worker_dimension" alt="" coords="7,515,247,595">
+<area shape="rect" id="node5" href="location_dimension.html" title="location_dimension" alt="" coords="32,621,221,701">
+<area shape="rect" id="node7" href="time_dimension.html" title="time_dimension" alt="" coords="27,718,227,917">
+<area shape="rect" id="node8" href="course_item_measure.html" title="course_item_measure" alt="" coords="300,5,492,312">
+<area shape="rect" id="node10" href="course_item_dimension.html" title="course_item_dimension" alt="" coords="32,49,221,129">
+<area shape="rect" id="node14" href="job_aid_content_measure.html" title="job_aid_content_measure" alt="" coords="297,1027,495,1288">
+<area shape="rect" id="node17" href="job_aid_content_dimension.html" title="job_aid_content_dimension" alt="" coords="24,1117,229,1197">
+<area shape="rect" id="node20" href="registration_measure.html" title="registration_measure" alt="" coords="293,329,499,477">
+<area shape="rect" id="node24" href="sms_sent_measure.html" title="sms_sent_measure" alt="" coords="303,493,489,709">
 </map>
 
   <a name='diagram'><img id='twoDegreesImg' src='../diagrams/time_dimension.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>

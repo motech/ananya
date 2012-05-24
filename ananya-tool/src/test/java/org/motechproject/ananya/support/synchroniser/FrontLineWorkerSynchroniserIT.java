@@ -79,24 +79,23 @@ public class FrontLineWorkerSynchroniserIT {
     @Test
     public void shouldMigrateFLWDataFromTransactionDbToReportDb() {
         DateTime fromDate = DateUtil.now();
-        DateTime toDate = DateUtil.now().plusDays(2);
 
         locationRegistrationService.loadDefaultLocation();
-        setUpTestFLW("111", fromDate);
-        setUpTestFLW("222", fromDate.plusDays(1));
-        setUpTestFLW("333", fromDate.plusDays(2));
+        setUpTestFLW("919986574410", fromDate);
+        setUpTestFLW("919986574411", fromDate.plusDays(1));
+        setUpTestFLW("919986574412", fromDate.plusDays(2));
 
         SynchroniserLog synchroniserLog = frontLineWorkerSynchroniser.replicate();
 
-        verifyFLWExistsInReportDbFor("111");
-        verifyFLWExistsInReportDbFor("222");
-        verifyFLWExistsInReportDbFor("333");
-        verifyRegistrationLogIsExmpty();
+        verifyFLWExistsInReportDbFor("919986574410");
+        verifyFLWExistsInReportDbFor("919986574411");
+        verifyFLWExistsInReportDbFor("919986574412");
+        verifyRegistrationLogIsEmpty();
         verifySynchroniserLog(synchroniserLog);
 
     }
 
-    private void verifyRegistrationLogIsExmpty() {
+    private void verifyRegistrationLogIsEmpty() {
         assertEquals(0, allRegistrationLogs.getAll().size());
     }
 
@@ -118,9 +117,9 @@ public class FrontLineWorkerSynchroniserIT {
     private void verifySynchroniserLog(SynchroniserLog synchroniserLog) {
         List<SynchroniserLogItem> synchroniserLogItems = synchroniserLog.getItems();
         assertThat(synchroniserLogItems.size(), is(3));
-        assertThat(synchroniserLogItems.get(0).print(), is("111: Success"));
-        assertThat(synchroniserLogItems.get(1).print(), is("222: Success"));
-        assertThat(synchroniserLogItems.get(2).print(), is("333: Success"));
+        assertThat(synchroniserLogItems.get(0).print(), is("919986574410: Success"));
+        assertThat(synchroniserLogItems.get(1).print(), is("919986574411: Success"));
+        assertThat(synchroniserLogItems.get(2).print(), is("919986574412: Success"));
     }
 
 }

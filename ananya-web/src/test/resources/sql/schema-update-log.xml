@@ -44,16 +44,4 @@
             )
         </sql>
     </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="2">
-        <sql>
-            update report.front_line_worker_dimension set status='UNREGISTERED' where id > 20988
-        </sql>
-    </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks-jobAidCapture" id="3">
-        <sql>
-            update report.front_line_worker_dimension set circle='BIHAR'
-        </sql>
-    </changeSet>
 </databaseChangeLog>

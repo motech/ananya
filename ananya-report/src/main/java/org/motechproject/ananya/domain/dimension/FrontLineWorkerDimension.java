@@ -25,7 +25,6 @@ public class FrontLineWorkerDimension {
     @Column(name="operator")
     private String operator;
 
-
     @Column(name="circle")
     private String circle;
 
@@ -141,5 +140,24 @@ public class FrontLineWorkerDimension {
         result = 31 * result + (designation != null ? designation.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
+    }
+
+    public void merge(FrontLineWorkerDimension frontLineWorkerDimension) {
+       this.name = frontLineWorkerDimension.name;
+       this.status = frontLineWorkerDimension.status;
+       this.designation = frontLineWorkerDimension.designation;
+    }
+
+    @Override
+    public String toString() {
+        return "FrontLineWorkerDimension{" +
+                "id=" + id +
+                ", msisdn=" + msisdn +
+                ", operator='" + operator + '\'' +
+                ", circle='" + circle + '\'' +
+                ", name='" + name + '\'' +
+                ", designation='" + designation + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

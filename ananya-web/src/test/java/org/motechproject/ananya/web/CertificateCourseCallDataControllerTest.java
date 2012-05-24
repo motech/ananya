@@ -67,8 +67,8 @@ public class CertificateCourseCallDataControllerTest {
 
     @Test
     public void shouldRetrieveIVRData() {
-        final String callerId = "123";
         final String callId = "456";
+        final String callerId = "9986574410";
 
         when(request.getParameter("callerId")).thenReturn(callerId);
         when(request.getParameter("callId")).thenReturn(callId);
@@ -92,16 +92,16 @@ public class CertificateCourseCallDataControllerTest {
         AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.getAll().get(0);
         assertEquals(1, audioTrackerRequestList.getAll().size());
         assertEquals(callId, audioTrackerRequestList.getCallId());
-        assertEquals(callerId, audioTrackerRequestList.getCallerId());
+        assertEquals("91" + callerId, audioTrackerRequestList.getCallerId());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
-        assertEquals(123, (int)audioTrackerRequest.getDuration());
+        assertEquals(123, (int) audioTrackerRequest.getDuration());
         assertEquals(new DateTime(123456789l), audioTrackerRequest.getTimeAsDateTime());
     }
 
     @Test
     public void shouldCallAppropriateServicesToHandleDisconnectEvent() {
-        final String callerId = "123";
         final String callId = "456";
+        final String callerId = "919986574410";
 
         when(request.getParameter("callerId")).thenReturn(callerId);
         when(request.getParameter("callId")).thenReturn(callId);
@@ -131,7 +131,7 @@ public class CertificateCourseCallDataControllerTest {
     @Test
     public void shouldSaveACallLogForCallStartEvent() throws Exception {
         String callId = "123";
-        String callerId = "456";
+        String callerId = "919986574410";
 
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("callerId")).thenReturn(callerId);
@@ -148,7 +148,7 @@ public class CertificateCourseCallDataControllerTest {
     @Test
     public void shouldSaveACallLogForRegistrationStartAndEndEvent() throws Exception {
         String callId = "123";
-        String callerId = "456";
+        String callerId = "919986574410";
 
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("callerId")).thenReturn(callerId);

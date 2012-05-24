@@ -43,7 +43,7 @@ public class LocationSeedTest {
 
     @Test
     public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
-        locationSeed.load();
+        locationSeed.loadLocationsFromCSVFile();
 
         List<Location> locations = allLocations.getAll();
         Location location = locations.get(1);

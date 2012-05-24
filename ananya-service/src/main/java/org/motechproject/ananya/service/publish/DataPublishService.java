@@ -41,7 +41,6 @@ public class DataPublishService implements PublishService {
         sb.append(ExceptionUtils.getStackTrace(e));
         sb.append(ExceptionUtils.getRootCauseMessage(e));
         sb.append(ExceptionUtils.getRootCauseStackTrace(e));
-        String exceptionString = sb.toString();
-        log.error(exceptionString);
+        log.error(sb.toString());
     }
 }

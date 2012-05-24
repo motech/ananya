@@ -154,7 +154,6 @@ public class JobAidServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
 
-        when(frontLineWorkerService.isNewFlwOrOperatorOrCircleIsEmpty(callerId)).thenReturn(false);
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         jobAidService.createCallerData(callerId, operator, circle);

@@ -46,7 +46,6 @@ public class SMSSentMeasureService {
         int courseAttempt = frontLineWorkerService.getCurrentCourseAttempt(callerId);
         SMSReference smsReference = frontLineWorkerService.getSMSReferenceNumber(callerId);
 
-
         String referenceNumber = null;
         if (smsReference != null) {
             referenceNumber = smsReference.referenceNumbers(courseAttempt);
@@ -57,11 +56,10 @@ public class SMSSentMeasureService {
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent,
-                frontLineWorkerDimension, timeDimension,
-                locationDimension);
-        reportDB.add(smsSentMeasure);
 
+        SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent,
+                frontLineWorkerDimension, timeDimension, locationDimension);
+        reportDB.add(smsSentMeasure);
         log.info("Added SMS measure for " + callerId + "[smsRefNumber" + referenceNumber + "|attempt=" + courseAttempt + "]");
     }
 }

@@ -48,8 +48,8 @@ public class AllFrontLineWorkerDimensions {
         template.bulkUpdate("delete from FrontLineWorkerDimension");
     }
 
-    public void updateStatus(String status, int id) {
-        template.bulkUpdate("update FrontLineWorkerDimension set status = '" + status + "' where id >= " + id);
+    public void remove(FrontLineWorkerDimension frontLineWorkerDimension) {
+        template.delete(frontLineWorkerDimension);
     }
 
     public List<FrontLineWorkerDimension> getFilteredFLWFor(List<Long> allFilteredMsisdns, String name, String registrationStatus, String designation, String operator, String circle) {

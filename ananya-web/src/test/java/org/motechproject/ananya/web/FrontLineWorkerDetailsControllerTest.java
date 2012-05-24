@@ -53,7 +53,8 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
     public void setUp() throws IOException {
         initMocks(this);
         clearAllData();
-        timeSeed.load();
+        timeSeed.createDimensionsInPostgres();
+        timeSeed.updateNewlyAddedDateFieldForAllDimensions();
     }
 
     @After

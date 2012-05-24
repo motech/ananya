@@ -147,10 +147,22 @@ vars.put(&quot;operator&quot;, operator);</stringProp>
           <BSFPreProcessor guiclass="TestBeanGUI" testclass="BSFPreProcessor" testname="js_preprocessor" enabled="true">
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
-            <stringProp name="script">var thread = ctx.getThreadNum();
+            <stringProp name="script">function leftFill( number, filler, width )
+{
+  width -= number.toString().length;
+  if ( width &amp;gt; 0 )
+  {
+    return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( filler ) + number;
+  }
+  return number + &quot;&quot;; // always return a string
+}
+
+var thread = ctx.getThreadNum();
 var num = (thread % 6) + 1;
-var random = Math.floor(Math.random() * 10000) % 25000;
-var callerId = &quot;9999&quot; + num + &quot;&quot; + random;
+var random = Math.floor(Math.random() * 100) % 24999;
+var callerId = num + &quot;&quot; + random;
+callerId = &quot;91&quot; + leftFill(callerId, &apos;9&apos;, 10);
+
 var operators = [
        &quot;airtel&quot;, &quot;reliance&quot;, &quot;tata&quot;, &quot;idea&quot;, &quot;bsnl&quot;, &quot;vodafone&quot;
     ];

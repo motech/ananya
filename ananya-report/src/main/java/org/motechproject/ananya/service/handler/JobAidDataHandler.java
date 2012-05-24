@@ -1,7 +1,7 @@
 package org.motechproject.ananya.service.handler;
 
 import org.motechproject.ananya.domain.RegistrationLog;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.CallDurationMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobAidDataHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JobAidDataHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(JobAidDataHandler.class);
     private JobAidContentMeasureService jobAidContentMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
@@ -31,12 +31,14 @@ public class JobAidDataHandler {
         this.registrationLogService = registrationLogService;
     }
 
-    @MotechListener(subjects = {ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY})
+    @MotechListener(subjects = {ReportPublishEventKeys.JOBAID_CALL_MESSAGE})
     public void handleJobAidData(MotechEvent event) {
-        for (Object log : event.getParameters().values()) {
-            String callId = ((LogData) log).getCallId();
-            String callerId =  ((LogData) log).getCallerId();
-            LOG.info("CallId is: " + callId);
+        for (Object object : event.getParameters().values()) {
+            CallMessage callMessage = (CallMessage) object;
+            String callId = callMessage.getCallId();
+            String callerId =  callMessage.getCallerId();
+            log.info("Received jobaid call message for callId: " + callId);
+
             createRegistrationMeasure(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             jobAidContentMeasureService.createJobAidContentMeasure(callId);

@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.requests.LogData;
+import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.context.EventContext;
@@ -33,9 +33,9 @@ public class ReportPublishServiceTest {
         String callerId = "callerId";
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
 
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_CERTIFICATE_COURSE_DATA_KEY), captor.capture());
-        LogData logData = captor.getValue();
+        ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
+        verify(eventContext).send(eq(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE), captor.capture());
+        CallMessage logData = captor.getValue();
         
         assertEquals(callId, logData.getCallId());
         assertEquals(callerId , logData.getCallerId());
@@ -47,9 +47,9 @@ public class ReportPublishServiceTest {
         String callerId = "callerId";
         reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
 
-        ArgumentCaptor<LogData> captor = ArgumentCaptor.forClass(LogData.class);
-        verify(eventContext).send(eq(ReportPublishEventKeys.SEND_JOB_AID_CONTENT_DATA_KEY), captor.capture());
-        LogData logData = captor.getValue();
+        ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
+        verify(eventContext).send(eq(ReportPublishEventKeys.JOBAID_CALL_MESSAGE), captor.capture());
+        CallMessage logData = captor.getValue();
 
         assertEquals(callId, logData.getCallId());
         assertEquals(callerId , logData.getCallerId());

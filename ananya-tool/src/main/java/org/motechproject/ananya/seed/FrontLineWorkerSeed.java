@@ -2,12 +2,11 @@ package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationService;
@@ -23,36 +22,33 @@ import java.util.List;
 
 @Component
 public class FrontLineWorkerSeed {
+
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
-
-    @Autowired
-    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
-
     @Autowired
     private FrontLineWorkerService frontLineWorkerService;
+    @Autowired
+    private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
+    @Autowired
+    private AllFrontLineWorkers allFrontLineWorkers;
+    @Autowired
+    private FrontLineWorkerSeedService seedService;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
-
     @Value("#{ananyaProperties['seed.flw.file.out']}")
     private String outputFileName;
-
     @Value("#{ananyaProperties['environment']}")
     private String environment;
-
-    private static String DEFAULTCIRCLE = "BIHAR";
-    private String inputCSVFile;
     private BufferedWriter writer;
 
-    @Seed(priority = 0, version = "1.0")
-    public void load() throws IOException {
-        inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+    @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
+    public void createFrontlineWorkersFromCSVFile() throws IOException {
+
+        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();
         String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+
         File file = new File(outputCSVFile);
         file.createNewFile();
 
@@ -66,31 +62,8 @@ public class FrontLineWorkerSeed {
     * after that were defaulted to PARTIALLY_REGISTERED, but need to be updated to UNREGISTERED. This needs to happen
     * in both couch and postgres.
     */
-    @Seed(priority = 1, version = "1.1")
-    public void updateStatusOfNewlyRegistered() {
-
-        frontLineWorkerDimensionService.updateStatus(RegistrationStatus.UNREGISTERED.toString(), 20988);
-
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getAllUnregistered();
-        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-            frontLineWorkerService.updateRegistrationStatus(frontLineWorkerDimension.getMsisdn().toString(), RegistrationStatus.UNREGISTERED);
-        }
-    }
-
-    @Seed(priority = 0, version = "1.1")
-    public void updateOperatorInReportDbFromCouchdb() {
-        List<FrontLineWorker> allFrontLineWorkers = frontLineWorkerService.getAll();
-        frontLineWorkerDimensionService.updateFrontLineWorkers(allFrontLineWorkers);
-    }
-
-    @Seed(priority = 0, version = "1.1")
-    public void loadCircle() {
-        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        frontLineWorkerService.updateFrontLineWorkerWithDefaultCircle(frontLineWorkers, DEFAULTCIRCLE);
-    }
-
-    private void loadFromCsv(String path) throws IOException {
-        CSVReader csvReader = new CSVReader(new FileReader(path));
+    public void loadFromCsv(String inputCSVFile) throws IOException {
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
         //skip header
@@ -125,5 +98,49 @@ public class FrontLineWorkerSeed {
         }
         writer.close();
     }
+
+    @Seed(priority = 7, version = "1.1", comment = "FLWs registered via calls should be now 'unregistered' status. [P+C]")
+    public void updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls() {
+        seedService.correctRegistrationStatusInCouchAndPostgres();
+    }
+
+    @Seed(priority = 6, version = "1.1", comment = "1) merging duplicates")
+    public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
+        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
+    }
+
+    @Seed(priority = 5, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
+    public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
+        String defaultCircle = "bihar";
+        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
+    }
+
+    @Seed(priority = 4, version = "1.1", comment = "Correction of invalid status for AWW [P+C]")
+    public void correctInvalidDesignationsForAnganwadi() throws IOException {
+
+        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+        String outputFilePath = new File(inputCSVFile).getParent();
+        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+
+        File file = new File(outputCSVFile);
+        file.createNewFile();
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+
+        String msisdn, designation;
+        String[] currentRow;
+        csvReader.readNext();
+        currentRow = csvReader.readNext();
+
+        while (currentRow != null) {
+            msisdn = currentRow[0];
+            designation = currentRow[2];
+            if ("AWW".equalsIgnoreCase(designation))
+                seedService.correctInvalidDesignationsForAnganwadi(msisdn);
+            currentRow = csvReader.readNext();
+        }
+    }
+
 
 }

@@ -32,7 +32,8 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="name" COLSPAN="3" ALIGN="LEFT">name</TD></TR>
       <TR><TD PORT="status" COLSPAN="3" ALIGN="LEFT">status</TD></TR>
       <TR><TD PORT="designation" COLSPAN="3" ALIGN="LEFT">designation</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">7 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
+      <TR><TD PORT="circle" COLSPAN="3" ALIGN="LEFT">circle</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">22,278 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="front_line_worker_dimension.html"
     tooltip="front_line_worker_dimension"
@@ -42,11 +43,11 @@ digraph "oneDegreeRelationshipsDiagram" {
     <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
       <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">location_dimension</TD></TR>
       <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
-      <TR><TD PORT="location_id" COLSPAN="3" ALIGN="LEFT">location_id</TD></TR>
+      <TR><TD PORT="location_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">location_id</TD></TR>
       <TR><TD PORT="district" COLSPAN="3" ALIGN="LEFT">district</TD></TR>
       <TR><TD PORT="block" COLSPAN="3" ALIGN="LEFT">block</TD></TR>
       <TR><TD PORT="panchayat" COLSPAN="3" ALIGN="LEFT">panchayat</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">19 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">2,442 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="location_dimension.html"
     tooltip="location_dimension"
