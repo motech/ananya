@@ -44,6 +44,11 @@
             <artifactId>motech-platform-server-api</artifactId>
             <version>0.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-bulk-export-import</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
          <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>

@@ -23,5 +23,6 @@
     <import resource="classpath:applicationCmsLiteApi.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-services.xml"/>
+    <import resource="classpath:applicationBulkExportContext.xml"/>
 
 </beans>    
