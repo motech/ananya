@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class AllCallLogs extends MotechBaseRepository<CallLog> {
 
@@ -20,6 +22,9 @@ public class AllCallLogs extends MotechBaseRepository<CallLog> {
     @GenerateView
     public CallLog findByCallId(String callId) {
         ViewQuery viewQuery = createQuery("by_callId").key(callId).includeDocs(true);
-        return db.queryView(viewQuery, CallLog.class).get(0);
+        List<CallLog> callLogs = db.queryView(viewQuery, CallLog.class);
+        if(callLogs.size() > 0)
+            return callLogs.get(0);
+        return null;
     }
 }

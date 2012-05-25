@@ -35,4 +35,8 @@ public class AudioTrackerLogService {
     public void deleteLogsFor(String callId) {
         allAudioTrackerLogs.deleteFor(callId);
     }
+
+    public void update(AudioTrackerLog log) {
+        allAudioTrackerLogs.update(log);
+    }
 }

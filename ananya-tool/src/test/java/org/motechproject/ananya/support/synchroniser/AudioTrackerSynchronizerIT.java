@@ -72,6 +72,21 @@ public class AudioTrackerSynchronizerIT {
     }
 
     @Test
+    public void shouldMigrateAudioTrackerLogsFromCouchDbToPostgresAndReplaceOldContentIds() {
+        String callerId = "1234";
+        String callId = "12345678";
+        String newContentId = "7a823ae22badc42018c6542c597c9520";
+        String oldContentId = "5fc654d8ec2bac6c906be72af6704a63";
+        String timeStamp = "1336045431373";
+        setUpTransactionData(callerId, newContentId, timeStamp);
+        setUpReportDataForCertificateCourse(callId, callerId, oldContentId, timeStamp);
+
+        audioTrackerSynchronizer.replicate();
+
+        verifyPostgresDataForCertificateCourse(callerId, newContentId);
+    }
+
+    @Test
     public void shouldMigrateAudioTrackerLogsFromCouchDbToPostgresForJobAid() {
         String callerId = "1234";
         String callId = "12345678";
@@ -107,7 +122,7 @@ public class AudioTrackerSynchronizerIT {
         template.save(timeDimension);
         template.save(new CourseItemDimension("name", contentId, CourseItemType.AUDIO, null, "filename", 123));
         template.save(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
-        template.save(new JobAidContentDimension("contentId", null, "name", "filename", "type", 123));
+        template.save(new JobAidContentDimension(contentId, null, "name", "filename", "type", 123));
     }
 
     private void setUpReportDataForCertificateCourse(String callId, String callerId, String contentId, String timeStamp) {

@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallFlowType;
-import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallLog;
+import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -163,5 +163,17 @@ public class CallDurationMeasureServiceTest {
 
         assertEquals(new Timestamp(startTime.getMillis()), callDurationMeasure.getStartTime());
         assertEquals(new Timestamp(endTime.getMillis()), callDurationMeasure.getEndTime());
+    }
+
+    @Test
+    public void shouldNotCreateCallDurationMeasureIfCallLogIsNull() {
+        String callId = "callId";
+        when(callLoggerService.getCallLogFor(callId)).thenReturn(null);
+
+        callDurationMeasureService.createCallDurationMeasure(callId);
+
+        verify(reportDB, never()).add(any());
+        verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
+        verify(callLoggerService, never()).delete(any(CallLog.class));
     }
 }

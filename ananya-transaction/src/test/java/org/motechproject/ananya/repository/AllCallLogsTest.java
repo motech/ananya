@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AllCallLogsTest extends SpringIntegrationTest{
@@ -25,5 +26,14 @@ public class AllCallLogsTest extends SpringIntegrationTest{
 
         CallLog callLogFromDB = allCallLogs.findByCallId(callId);
         assertEquals(callerId, callLogFromDB.getCallerId());
+    }
+
+    @Test
+    public void shouldReturnNullIfTheCallLogIsNotPresent() {
+        String callId = "123456";
+
+        CallLog callLogFromDB = allCallLogs.findByCallId(callId);
+
+        assertNull(callLogFromDB);
     }
 }

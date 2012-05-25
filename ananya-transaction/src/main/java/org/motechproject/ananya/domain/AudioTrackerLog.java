@@ -31,6 +31,10 @@ public class AudioTrackerLog extends BaseLog {
         return audioTrackerLogItems;
     }
 
+    public void setAudioTrackerLogItems(List<AudioTrackerLogItem> audioTrackerLogItems) {
+        this.audioTrackerLogItems = audioTrackerLogItems;
+    }
+
     public boolean typeIsCertificateCourse() {
         return this.serviceType.equals(ServiceType.CERTIFICATE_COURSE);
     }

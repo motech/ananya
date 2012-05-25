@@ -48,4 +48,13 @@ public class AudioTrackerLogServiceTest {
 
         verify(allAudioTrackerLogs).deleteFor(callId);
     }
+
+    @Test
+    public void shouldUpdateAudioTrackerLogs() {
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog();
+
+        audioTrackerLogService.update(audioTrackerLog);
+
+        verify(allAudioTrackerLogs).update(audioTrackerLog);
+    }
 }
