@@ -1,6 +1,7 @@
 package org.motechproject.ananya.repository.dimension;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -60,7 +61,7 @@ public class AllFrontLineWorkerDimensions {
         if (registrationStatus != null)
             criteria.add(Restrictions.eq("status", registrationStatus));
         if (name != null)
-            criteria.add(Restrictions.eq("name", name).ignoreCase());
+            criteria.add(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
         if (designation != null)
             criteria.add(Restrictions.eq("designation", designation));
         if (operator != null)

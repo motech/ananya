@@ -9,9 +9,14 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
@@ -200,5 +205,31 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension2));
+    }
+
+    @Test
+    public void shouldGetAllFrontLineWorkers_WhichMatchesPartialName() {
+
+        long msisdn1 = 90909009L;
+        FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
+                "Ramakrishna", Designation.ANM.name(), RegistrationStatus.REGISTERED.name());
+        long msisdn2 = 90909002L;
+        FrontLineWorkerDimension flw2 = new FrontLineWorkerDimension(msisdn2, "Airtel", "UO",
+                "Krishnan", Designation.ANM.name(), RegistrationStatus.REGISTERED.name());
+        long msisdn3 = 90909003L;
+        FrontLineWorkerDimension flw3 = new FrontLineWorkerDimension(msisdn3, "Airtel", "UO",
+                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name());
+
+        template.save(flw1);
+        template.save(flw2);
+        template.save(flw3);
+
+        List<FrontLineWorkerDimension> filteredFlws = allFrontLineWorkerDimensions.getFilteredFLWFor(
+                Arrays.asList(msisdn1, msisdn2, msisdn3), "krish", RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), "Airtel", "UO");
+
+        assertThat(filteredFlws.size(), is(2));
+        assertThat(filteredFlws, hasItem(flw1));
+        assertThat(filteredFlws, hasItem(flw2));
+        assertThat(filteredFlws, not(hasItem(flw3)));
     }
 }
