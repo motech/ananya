@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
@@ -13,15 +14,20 @@ import static java.util.Arrays.asList;
 @ReportGroup(name="SampleFLW")
 public class SampleReportDataSource {
 
-    private List<SampleData> sampleData1 = new ArrayList<SampleData>();
+    private List<SampleData> sampleDataList = new ArrayList<SampleData>();
 
     public SampleReportDataSource() {
-        this.sampleData1 = asList(new SampleData("id1"), new SampleData("id2"));
+        this.sampleDataList = asList(new SampleData("1234"), new SampleData("id2"));
     }
 
     @Report
-    public List<SampleData> queryReport() {
-        return sampleData1;
-
+    public List<SampleData> queryReport(Map<String, String> criteria) {
+        String msisdn = criteria.get("msisdn");
+        ArrayList<SampleData> filteredSampleData = new ArrayList<SampleData>();
+        for(SampleData sampleData : sampleDataList) {
+            if(sampleData.getmsisdn().equals(msisdn))
+                filteredSampleData.add(sampleData);
+        }
+        return filteredSampleData;
     }
 }

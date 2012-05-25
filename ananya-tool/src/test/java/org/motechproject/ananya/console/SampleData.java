@@ -4,15 +4,15 @@ import org.motechproject.export.annotation.ReportValue;
 
 public class SampleData {
 
-    private String id;
+    private String msisdn;
 
-    public SampleData(String id) {
-        this.id = id;
+    public SampleData(String msisdn) {
+        this.msisdn = msisdn;
     }
 
     @ReportValue(index = 0)
-    public String getId() {
-        return id;
+    public String getmsisdn() {
+        return msisdn;
     }
 
     @ReportValue(column = "Custom column name", index = 1)
@@ -27,13 +27,13 @@ public class SampleData {
 
         SampleData that = (SampleData) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (msisdn != null ? !msisdn.equals(that.msisdn) : that.msisdn != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return msisdn != null ? msisdn.hashCode() : 0;
     }
 }

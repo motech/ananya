@@ -7,21 +7,26 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class CsvExporterTest {
     @Test
     public void shouldBuildCsvReportWithTheGivenArguments() throws IOException {
-        String fileName = "fileName.csv";
-        String[] arguments = {"SampleFLW", fileName};
+        String outputFileName = "outputFileName.csv";
+        String filtersFile = "/filters.txt";
+        String[] arguments = {"SampleFLW", filtersFile, outputFileName};
+
         CsvExporter.main(arguments);
-        FileInputStream fileInputStream = new FileInputStream(fileName);
+
+        FileInputStream fileInputStream = new FileInputStream(outputFileName);
         String fileContent = IOUtils.toString(fileInputStream);
-        assertEquals("Id,Custom column name\n" +
-                "id1,title\n" +
-                "id2,title\n", fileContent);
-        FileUtils.deleteQuietly(new File(fileName));
+
+        assertEquals("Msisdn,Custom column name\n" +
+                "1234,title\n", fileContent);
+        FileUtils.deleteQuietly(new File(outputFileName));
     }
 }
 
