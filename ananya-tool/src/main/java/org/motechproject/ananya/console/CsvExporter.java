@@ -6,8 +6,10 @@ import org.motechproject.export.model.AllReportDataSources;
 import org.motechproject.export.model.ReportDataSource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,8 @@ public class CsvExporter {
             System.out.println("Report Data Source not found: enter a valid value for the first argument..eg: FLW, LOCATION");
         Map<String, String> criteria = new HashMap<String, String>();
 
-        InputStream inputStream = CsvExporter.class.getResourceAsStream(args[1]);
-        List<String> strings = IOUtils.readLines(inputStream);
+        FileInputStream fileInputStream = new FileInputStream(args[1]);
+        List<String> strings = IOUtils.readLines(fileInputStream);
         for (String line : strings) {
             String[] keyValue = line.split("=");
             criteria.put(keyValue[0].toLowerCase(), keyValue[1]);
