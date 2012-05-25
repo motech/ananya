@@ -47,6 +47,9 @@ public class CallDurationMeasureService {
     public void createCallDurationMeasure(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 
+        if(callLog == null)
+            return;
+
         if (callLog.getCallLogItems().size() == 0) {
             callLoggerService.delete(callLog);
             return;

@@ -31,4 +31,8 @@ public class AudioTrackerLogItem {
     public Integer getDuration() {
         return duration;
     }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
 }
