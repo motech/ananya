@@ -11,7 +11,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 
 @Component
-@ReportGroup(name="SampleFLW")
+@ReportGroup(name="SAMPLE-FLW")
 public class SampleReportDataSource {
 
     private List<SampleData> sampleDataList = new ArrayList<SampleData>();

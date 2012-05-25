@@ -17,7 +17,7 @@ public class CsvExporterTest {
     public void shouldBuildCsvReportWithTheGivenArguments() throws IOException {
         String outputFileName = "outputFileName.csv";
         URL filtersFile = this.getClass().getResource("/filters.txt");
-        String[] arguments = {"SampleFLW", filtersFile.getPath(), outputFileName};
+        String[] arguments = {"Sample-FLW", filtersFile.getPath(), outputFileName};
 
         CsvExporter.main(arguments);
 
