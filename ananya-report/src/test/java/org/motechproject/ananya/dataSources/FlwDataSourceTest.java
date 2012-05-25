@@ -10,6 +10,7 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
+import org.motechproject.export.annotation.ReportGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,11 @@ public class FlwDataSourceTest {
     public void setUp() {
         initMocks(this);
         flwDataSource = new FlwDataSource(frontLineWorkerDimensionService, courseItemMeasureService);
+    }
+
+    @Test
+    public void shouldVerifyThatItBelongsToLocationReportGroup() {
+        assertEquals("FLW", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
     }
 
     @Test
