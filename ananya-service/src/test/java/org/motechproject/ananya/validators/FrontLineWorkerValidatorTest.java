@@ -17,7 +17,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldInvalidateFrontLineWorkerWithInvalidMsisdn() {
         String invalidMSISDN = "9876";
 
-        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker(invalidMSISDN, "name", Designation.ANGANWADI, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker(invalidMSISDN, "name", Designation.ANM, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
 
         assertFalse(validationResponse.isValid());
         assertEquals("Invalid msisdn", validationResponse.getMessage());
@@ -27,7 +27,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldInvalidateFrontLineWorkerWithMsisdnThatIsNotNumeric() {
         String invalidMSISDN = "9876O11223";
 
-        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker(invalidMSISDN, "name", Designation.ANGANWADI, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker(invalidMSISDN, "name", Designation.ANM, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
 
         assertFalse(validationResponse.isValid());
         assertEquals("Invalid msisdn", validationResponse.getMessage());
@@ -37,7 +37,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldInvalidateFrontLineWorkerWithInvalidName() {
         String invalidName = "@ron";
 
-        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", invalidName, Designation.ANGANWADI, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", invalidName, Designation.ANM, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), null);
 
         assertFalse(validationResponse.isValid());
         assertEquals("Invalid name", validationResponse.getMessage());
@@ -45,7 +45,7 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldInValidateIfLocationIsInvalid() {
-        ValidationResponse response = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", "name", Designation.ANGANWADI, new Location("district", "block", "panchayat", 1, 1, 1), RegistrationStatus.REGISTERED), null);
+        ValidationResponse response = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", "name", Designation.ANM, new Location("district", "block", "panchayat", 1, 1, 1), RegistrationStatus.REGISTERED), null);
 
         assertFalse(response.isValid());
         assertEquals("Invalid location", response.getMessage());
@@ -53,7 +53,7 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldValidateFrontLineWorkerWithAllValidAttributes() {
-        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", "name", Designation.ANGANWADI, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), new Location());
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", "name", Designation.ANM, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), new Location());
 
         assertTrue(validationResponse.isValid());
         assertNull(validationResponse.getMessage());

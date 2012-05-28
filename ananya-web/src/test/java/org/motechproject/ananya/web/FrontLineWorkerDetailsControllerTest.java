@@ -68,7 +68,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
         locationRegistrationService.addNewLocation(locationRequest);
         String msisdn = "91234545354";
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.ANM.name();
         String operator = "airtel";
         String name = "name";
 
@@ -87,7 +87,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String msisdn = "1234";
         String status = "REGISTERED";
         String name = "name";
-        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANGANWADI.name(), status));
+        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status));
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
         when(request.getParameter("status")).thenReturn(status);

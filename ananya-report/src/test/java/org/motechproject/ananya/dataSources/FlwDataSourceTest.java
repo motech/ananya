@@ -83,7 +83,7 @@ public class FlwDataSourceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.ANM.name();
         String operator = "airtel";
         String circle = "bihar";
 
@@ -110,7 +110,7 @@ public class FlwDataSourceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.ANM.name();
         String operator = "airtel";
         String circle = "bihar";
         DateTime activityStartDate = DateTime.now();
@@ -145,7 +145,7 @@ public class FlwDataSourceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.ANM.name();
         String operator = "airtel";
         String circle = "bihar";
         DateTime activityStartDate = DateTime.now();
@@ -177,7 +177,7 @@ public class FlwDataSourceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.ANM.name();
         String operator = "airtel";
         String circle = "bihar";
         DateTime activityEndDate = DateTime.now().plusDays(1);

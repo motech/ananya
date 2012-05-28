@@ -111,7 +111,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         Long msisdn1 = 98800999L;
         String airtel = "airtel";
         String bsnl = "bsnl";
-        Designation anganwadi = Designation.ANGANWADI;
+        Designation anganwadi = Designation.ANM;
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
@@ -164,7 +164,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         long msisdn2 = 8800999L;
         String airtel = "airtel";
         String bsnl = "bsnl";
-        Designation anganwadi = Designation.ANGANWADI;
+        Designation anganwadi = Designation.ANM;
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
@@ -188,7 +188,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         long msisdn2 = 8800999L;
         String airtel = "airtel";
         String bsnl = "bsnl";
-        Designation anganwadi = Designation.ANGANWADI;
+        Designation anganwadi = Designation.ANM;
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
