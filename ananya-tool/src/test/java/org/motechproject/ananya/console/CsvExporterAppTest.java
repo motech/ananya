@@ -12,14 +12,14 @@ import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-public class CsvExporterTest {
+public class CsvExporterAppTest {
     @Test
     public void shouldBuildCsvReportWithTheGivenArguments() throws IOException {
         String outputFileName = "outputFileName.csv";
         URL filtersFile = this.getClass().getResource("/filters.txt");
-        String[] arguments = {"Sample-FLW", filtersFile.getPath(), outputFileName};
+        String[] arguments = {"Sample-FLW", "-f " + filtersFile.getPath() , "-o " + outputFileName};
 
-        CsvExporter.main(arguments);
+        CsvExporterApp.main(arguments);
 
         FileInputStream fileInputStream = new FileInputStream(outputFileName);
         String fileContent = IOUtils.toString(fileInputStream);
