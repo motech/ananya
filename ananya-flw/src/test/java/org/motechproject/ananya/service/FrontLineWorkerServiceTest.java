@@ -167,7 +167,7 @@ public class FrontLineWorkerServiceTest {
     public void shouldCreateFLWIfNotExists() {
         String msisdn = "919986574410";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
@@ -184,7 +184,7 @@ public class FrontLineWorkerServiceTest {
     public void shouldUpdateFLWIfExists() {
         String msisdn = "123";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED);
 

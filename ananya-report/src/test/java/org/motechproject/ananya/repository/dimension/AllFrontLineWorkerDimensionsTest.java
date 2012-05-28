@@ -29,7 +29,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String name = "name";
         String operator = "operator";
         String status = "status";
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         template.save(new FrontLineWorkerDimension(msisdn, operator, "circle", name, designation, status));
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
 
@@ -46,7 +46,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String operator = "operator";
         String status = "status";
         String circle = "circle";
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, status);
 
         assertEquals(name, frontLineWorkerDimension.getName());

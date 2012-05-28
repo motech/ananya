@@ -100,7 +100,7 @@ public class FrontLineWorkerSynchroniserIT {
     }
 
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
         allTimeDimensions.addOrUpdate(registeredDate);

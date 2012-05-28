@@ -36,7 +36,7 @@ public class RegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         LocationList locationList = new LocationList(Arrays.asList(location));
 
         when(frontLineWorkerService.createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED)).thenReturn(new FrontLineWorker(callerId, "operator"));
@@ -52,7 +52,7 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidLocation() {
         String callerId = "919986574410";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         LocationList locationList = new LocationList(new ArrayList<Location>());
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
@@ -66,7 +66,7 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidCallerId() {
         String callerId = "";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         LocationList locationList = new LocationList(new ArrayList<Location>());
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
@@ -88,7 +88,7 @@ public class RegistrationServiceTest {
     public void shouldSaveFLWWithInvalidNameAsPartiallyRegistered() {
         String callerId = "919986574410";
         String name = "";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 1, 1, 1);
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);

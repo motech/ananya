@@ -13,14 +13,14 @@ import static org.junit.Assert.assertThat;
 public class FrontLineWorkerTest {
     @Test
     public void shouldReturnEmptyBookmarkIfThereIsNoBookmark() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         assertNotNull(flw.bookMark());
         assertThat(flw.bookMark(), is(EmptyBookmark.class));
     }
 
     @Test
     public void shouldIncrementPromptHeard() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         String promptKey = "prompt1";
 
         Map<String, Integer> promptsHeard = flw.getPromptsHeard();
@@ -37,7 +37,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldAppend91ToCallerId() {
-        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.ANGANWADI, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         assertEquals("919986554790", flw.getMsisdn());
 
         FrontLineWorker flw2 = new FrontLineWorker("9986554790","airtel");
