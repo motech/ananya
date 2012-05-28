@@ -1,11 +1,7 @@
 package org.motechproject.ananya.util;
 
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
-import org.junit.Assert;
 import org.junit.Test;
-import sun.tools.jstat.ParserException;
-
-import java.net.URL;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
