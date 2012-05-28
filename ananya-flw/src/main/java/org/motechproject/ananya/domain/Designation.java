@@ -3,7 +3,7 @@ package org.motechproject.ananya.domain;
 public enum Designation {
     ANM,
     ASHA,
-    ANGANWADI,
+    AWW,
     INVALID;
 
     private static boolean contains(String value) {

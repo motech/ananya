@@ -51,7 +51,7 @@ public class RegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "operator"));
@@ -67,7 +67,7 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidLocation() {
         String callerId = "919986574410";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
 
@@ -82,10 +82,10 @@ public class RegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidCallerId() {
         String callerId = "";
         String name = "name";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
-
+        
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
         assertTrue(StringUtils.contains(registrationResponse.toString(), "Invalid msisdn"));
@@ -105,7 +105,7 @@ public class RegistrationServiceTest {
     public void shouldSaveFLWWithInvalidNameAsPartiallyRegistered() {
         String callerId = "919986574410";
         String name = "";
-        Designation designation = Designation.ANGANWADI;
+        Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
@@ -144,7 +144,7 @@ public class RegistrationServiceTest {
         String callerId1 = "1234";
         String name = "name";
         String name1 = "name1";
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         Location location = new Location("district", "block", "village", 1, 1, 1);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<FrontLineWorkerRequest>();
@@ -166,7 +166,7 @@ public class RegistrationServiceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         String operator = "airtel";
         String circle = "bihar";
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
@@ -184,7 +184,7 @@ public class RegistrationServiceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         String operator = "airtel";
         String circle = "bihar";
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
@@ -207,7 +207,7 @@ public class RegistrationServiceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         String operator = "airtel";
         String circle = "bihar";
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
@@ -228,7 +228,7 @@ public class RegistrationServiceTest {
         Long msisdn = 123456L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
-        String designation = Designation.ANGANWADI.name();
+        String designation = Designation.AWW.name();
         String operator = "airtel";
         String circle = "bihar";
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();

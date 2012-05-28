@@ -160,7 +160,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonIgnore
     public boolean isAnganwadi() {
-        return this.designation.equals(Designation.ANGANWADI);
+        return this.designation.equals(Designation.AWW);
     }
 
     public DateTime getRegisteredDate() {

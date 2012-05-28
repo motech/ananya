@@ -144,7 +144,7 @@ public class    FrontLineWorkerSeedService {
             log.error("Designation: Missing FrontlineWorker in couchdb: " + msisdn);
             return;
         }
-        frontLineWorker.setDesignation(Designation.ANGANWADI);
+        frontLineWorker.setDesignation(Designation.AWW);
         if (StringUtils.isNotBlank(frontLineWorker.getName()))
             frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
 

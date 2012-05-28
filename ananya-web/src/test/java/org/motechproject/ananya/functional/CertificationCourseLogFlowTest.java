@@ -79,7 +79,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     @Ignore
     public void shouldSendSMSWhenAtPlayCourseResult() throws IOException {
         String msisdn = "919986574000";
-        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.ANGANWADI, new Location(),RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.AWW, new Location(),RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("playFinalScore", 8, 8));
 
         ReportCard reportCard = flw.reportCard();
