@@ -14,7 +14,7 @@
     	<param value="ananya-synchroniser.log" name="File"/>
         <param name="Append" value="true"/>
         <param name="MaxFileSize" value="4096KB"/>
-        <param name="maxBackupIndex" value="5"/>
+        <param name="maxBackupIndex" value="10"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param value="[%t] - %d %p [%c] - %m%n" name="ConversionPattern"/>
         </layout>
