@@ -367,4 +367,7 @@
         </createIndex>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.2" id="24">
+        <addUniqueConstraint columnNames="msisdn" tableName="front_line_worker_dimension" constraintName="unq_front_line_worker_dimension_msisdn"/>
+    </changeSet>
 </databaseChangeLog>
