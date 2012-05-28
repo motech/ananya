@@ -1,8 +1,10 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
@@ -19,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -50,14 +52,14 @@ public class RegistrationServiceTest {
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.ANGANWADI;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
-        when(frontLineWorkerService.createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED)).thenReturn(new FrontLineWorker(callerId, "operator"));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "operator"));
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
-        verify(frontLineWorkerService).createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED);
+        assertTrue(StringUtils.contains(registrationResponse.toString(), "Created/Updated FLW record"));
+        verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location);
         verify(registrationMeasureService).createRegistrationMeasure(callerId);
     }
 
@@ -67,12 +69,12 @@ public class RegistrationServiceTest {
         String name = "name";
         Designation designation = Designation.ANGANWADI;
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("Invalid Location", registrationResponse.getMessage());
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.REGISTERED));
+        assertTrue(StringUtils.contains(registrationResponse.toString(), "Invalid location"));
+        verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
     }
 
@@ -82,20 +84,20 @@ public class RegistrationServiceTest {
         String name = "name";
         Designation designation = Designation.ANGANWADI;
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("Invalid CallerId", registrationResponse.getMessage());
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
+        assertTrue(StringUtils.contains(registrationResponse.toString(), "Invalid msisdn"));
+        verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
 
         callerId = "abcdef";
-        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
+        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
         registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("Invalid CallerId", registrationResponse.getMessage());
-        verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
+        assertTrue(StringUtils.contains(registrationResponse.toString(), "Invalid msisdn"));
+        verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
         verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
     }
 
@@ -107,13 +109,13 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, new LocationRequest("district", "block", "village"));
-        when(frontLineWorkerService.createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED))).thenReturn(new FrontLineWorker(callerId, "operator"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
+        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
-        verify(frontLineWorkerService).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED));
+        assertTrue(StringUtils.contains(registrationResponse.toString(), "Invalid name"));
+        verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
     }
 
     @Test
@@ -124,13 +126,16 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, null, new LocationRequest("district", "block", "village"));
-        when(frontLineWorkerService.createOrUpdate(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED))).thenReturn(new FrontLineWorker(callerId, "operator"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, null, "bihar", new LocationRequest("district", "block", "village"));
+        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
 
-        RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
+        registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
-        verify(frontLineWorkerService).createOrUpdate(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class), eq(RegistrationStatus.PARTIALLY_REGISTERED));
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontLineWorkerService).createOrUpdate(captor.capture(), any(Location.class));
+        FrontLineWorker value = captor.getValue();
+        assertEquals(callerId, value.getMsisdn());
+        assertEquals(Designation.INVALID, value.getDesignation());
     }
 
     @Test
@@ -143,17 +148,17 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<FrontLineWorkerRequest>();
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, null, new LocationRequest("district", "block", "village")));
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, null, new LocationRequest("district", "block", "village")));
-        when(frontLineWorkerService.createOrUpdate(callerId, name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED)).thenReturn(new FrontLineWorker(callerId, "airtel"));
-        when(frontLineWorkerService.createOrUpdate(callerId1, name1, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED)).thenReturn(new FrontLineWorker(callerId1, "airtel"));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, null, "bihar", new LocationRequest("district", "block", "village")));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, null, "bihar", new LocationRequest("district", "block", "village")));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "airtel"));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId1, "airtel"));
 
         List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequestList);
 
-        assertEquals("New FrontlineWorker added", registrationResponses.get(0).getMessage());
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
-        assertEquals("New FrontlineWorker added", registrationResponses.get(1).getMessage());
-        verify(registrationMeasureService).createRegistrationMeasure(callerId1);
+        assertTrue(StringUtils.contains(registrationResponses.get(0).toString(), "Invalid msisdn"));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        assertTrue(StringUtils.contains(registrationResponses.get(1).toString(), "Invalid msisdn"));
+        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId1);
     }
 
     @Test

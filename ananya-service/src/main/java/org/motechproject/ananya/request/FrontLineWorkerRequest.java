@@ -7,15 +7,17 @@ public class FrontLineWorkerRequest implements Serializable {
     private String msisdn;
     private String operator;
     private String designation;
+    private String circle;
     private LocationRequest location;
 
     public FrontLineWorkerRequest() {}
 
-    public FrontLineWorkerRequest(String msisdn, String name,  String designation, String operator, LocationRequest location) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location) {
         this.name = name;
         this.msisdn = msisdn;
         this.operator = operator;
         this.designation = designation;
+        this.circle = circle;
         this.location = location;
     }
 
@@ -41,6 +43,14 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getCircle() {
+        return circle;
+    }
+
+    public void setCircle(String circle) {
+        this.circle = circle;
     }
 
     public String getDesignation() {

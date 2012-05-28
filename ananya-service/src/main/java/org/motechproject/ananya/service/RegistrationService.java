@@ -7,6 +7,8 @@ import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.response.ValidationResponse;
+import org.motechproject.ananya.validators.FrontLineWorkerValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,17 +88,17 @@ public class RegistrationService {
     }
 
     private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, LocationList locationList) {
-        RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, district, block, panchayat);
-
-        if (isInvalidCallerId(callerId))
-            return registrationResponse.withInvalidCallerId();
-
         Location location = locationList.findFor(district, block, panchayat);
-        if (location == null)
-            return registrationResponse.withInvalidLocationStatus();
-
+        RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, district, block, panchayat);
+        FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         RegistrationStatus registrationStatus = isInvalidNameOrDesignation(name, designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(callerId, name, Designation.getFor(designation), location, registrationStatus);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, registrationStatus);
+
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
+        if(validationResponse.isInValid())
+            return registrationResponse.withValidationResponse(validationResponse);
+
+        frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn());
 
         log.info("Registered new FLW:" + callerId);
@@ -105,9 +107,5 @@ public class RegistrationService {
 
     private boolean isInvalidNameOrDesignation(String name, String designation) {
         return StringUtils.isBlank(name) || Designation.isInValid(designation);
-    }
-
-    private boolean isInvalidCallerId(String callerId) {
-        return StringUtils.isBlank(callerId) || !StringUtils.isNumeric(callerId);
     }
 }

@@ -161,5 +161,4 @@ public class AudioTrackerSynchronizerIT {
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
         assertEquals(0, courseItemMeasures.size());
     }
-
 }

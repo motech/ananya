@@ -28,6 +28,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -66,19 +67,19 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
     public void shouldCreateFrontLineWorker() {
         LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
         locationRegistrationService.addNewLocation(locationRequest);
-        String msisdn = "12345";
+        String msisdn = "91234545354";
         String designation = Designation.ANGANWADI.name();
         String operator = "airtel";
         String name = "name";
 
-        ModelAndView modelAndView = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, locationRequest));
+        ModelAndView modelAndView = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, "bihar", locationRequest));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
         RegistrationResponse response = (RegistrationResponse) modelAndView.getModel().get("response");
-        assertEquals("New FrontlineWorker added", response.getMessage());
+        assertTrue(response.toString().contains("Created/Updated FLW record"));
     }
 
     @Test

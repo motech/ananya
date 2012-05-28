@@ -171,7 +171,7 @@ public class FrontLineWorkerServiceTest {
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location, RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED), location);
 
         verify(allFrontLineWorkers).add(frontLineWorker);
         assertEquals(frontLineWorker.getMsisdn(), msisdn);
@@ -190,7 +190,7 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        frontLineWorker = frontLineWorkerService.createOrUpdate(msisdn, name, designation, location, RegistrationStatus.REGISTERED);
+        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED), location);
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker.getName(), name);

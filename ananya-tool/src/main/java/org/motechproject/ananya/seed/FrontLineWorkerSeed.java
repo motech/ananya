@@ -65,6 +65,7 @@ public class FrontLineWorkerSeed {
     public void loadFromCsv(String inputCSVFile) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
+        String circle = null;
         String[] currentRow;
         //skip header
         csvReader.readNext();
@@ -83,7 +84,7 @@ public class FrontLineWorkerSeed {
                     name,
                     designation,
                     null,
-                    new LocationRequest(currentDistrict, currentBlock, currentPanchayat)));
+                    circle, new LocationRequest(currentDistrict, currentBlock, currentPanchayat)));
 
             currentRow = csvReader.readNext();
         }
@@ -93,7 +94,7 @@ public class FrontLineWorkerSeed {
 
     private void logResponses(List<RegistrationResponse> responses) throws IOException {
         for (RegistrationResponse response : responses) {
-            writer.write(response.getMessage() + response.getFrontLineWorkerDetails());
+            writer.write(response.toString());
             writer.newLine();
         }
         writer.close();

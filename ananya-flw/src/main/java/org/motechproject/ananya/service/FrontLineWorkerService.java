@@ -30,20 +30,25 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.findByMsisdn(callerId);
     }
 
-    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+    public FrontLineWorker createOrUpdate(FrontLineWorker frontLineWorker, Location location) {
+        String callerId = frontLineWorker.getMsisdn();
+        String name = frontLineWorker.getName();
+        Designation designation = Designation.getFor(frontLineWorker.designationName());
+        RegistrationStatus registrationStatus = frontLineWorker.status();
 
-        if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
-            allFrontLineWorkers.add(frontLineWorker);
-            log.info("Created:" + frontLineWorker);
-            return frontLineWorker;
+        FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
+
+        if (exisitingFrontLineWorker == null) {
+            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
+            allFrontLineWorkers.add(exisitingFrontLineWorker);
+            log.info("Created:" + exisitingFrontLineWorker);
+            return exisitingFrontLineWorker;
         }
 
-        frontLineWorker.update(name, designation, location);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated:" + frontLineWorker);
-        return frontLineWorker;
+        exisitingFrontLineWorker.update(name, designation, location);
+        allFrontLineWorkers.update(exisitingFrontLineWorker);
+        log.info("Updated:" + exisitingFrontLineWorker);
+        return exisitingFrontLineWorker;
     }
 
     public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator, String circle) {

@@ -76,7 +76,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this(msisdn, null);
         this.name = name;
         this.designation = designation;
-        this.locationId = location.getExternalId();
+        this.locationId = location == null ? null : location.getExternalId();
         this.status = registrationStatus;
     }
 
