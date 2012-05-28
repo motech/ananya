@@ -112,12 +112,12 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String airtel = "airtel";
         String bsnl = "bsnl";
         Designation anganwadi = Designation.ANM;
-        Designation anm = Designation.ANM;
+        Designation aww = Designation.AWW;
         String bihar = "Bihar";
         String up = "UP";
         String name2 = "Name2";
         template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name()));
-        template.save(new FrontLineWorkerDimension(msisdn1, bsnl, up, name2, anm.name(), RegistrationStatus.REGISTERED.name()));
+        template.save(new FrontLineWorkerDimension(msisdn1, bsnl, up, name2, aww.name(), RegistrationStatus.REGISTERED.name()));
 
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
         allFilteredMsisdns.add(msisdn);
