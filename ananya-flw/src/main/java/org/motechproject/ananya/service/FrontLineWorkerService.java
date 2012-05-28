@@ -30,22 +30,6 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.findByMsisdn(callerId);
     }
 
-    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
-        if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
-            allFrontLineWorkers.add(frontLineWorker);
-            log.info("Created:" + frontLineWorker);
-            return frontLineWorker;
-        }
-
-        frontLineWorker.update(name, designation, location);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated:" + frontLineWorker);
-        return frontLineWorker;
-    }
-
     public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
@@ -125,5 +109,31 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
+    }
+
+    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+
+        if (frontLineWorker == null) {
+            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
+            allFrontLineWorkers.add(frontLineWorker);
+            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(callerId);
+            if (existingFrontLineWorkers.size() > 1) {
+                removeDuplicateFLWs(existingFrontLineWorkers);
+            }
+            log.info("Created:" + frontLineWorker);
+            return frontLineWorker;
+        }
+
+        frontLineWorker.update(name, designation, location);
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated:" + frontLineWorker);
+        return frontLineWorker;
+    }
+
+    private void removeDuplicateFLWs(List<FrontLineWorker> existingFrontLineWorkers) {
+        for (int i = 0; i < existingFrontLineWorkers.size() - 1; i++) {
+            allFrontLineWorkers.remove(existingFrontLineWorkers.get(i));
+        }
     }
 }

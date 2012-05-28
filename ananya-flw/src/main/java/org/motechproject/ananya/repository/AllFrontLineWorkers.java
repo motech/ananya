@@ -27,4 +27,11 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         if (workers == null || workers.isEmpty()) return null;
         return workers.get(0);
     }
+
+    public List<FrontLineWorker> getAllForMsisdn(String msisdn) {
+        ViewQuery viewQuery = createQuery("by_msisdn").key(msisdn).includeDocs(true);
+        List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
+        if (workers == null || workers.isEmpty()) return null;
+        return workers;
+    }
 }

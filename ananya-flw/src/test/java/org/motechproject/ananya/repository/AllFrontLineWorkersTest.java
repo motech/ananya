@@ -45,4 +45,23 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
         FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         assertEquals(msisdn, dbFrontLineWorker.getMsisdn());
     }
+
+    @Test
+    public void shouldRetrieveAllFrontLineWorkersForMsisdn() {
+        String msisdn = "654321";
+        String anotherMsisdn = "4321";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "airtel");
+        FrontLineWorker duplicateFrontLineWorker = new FrontLineWorker(msisdn, "airtel");
+        FrontLineWorker notTheSameFLW = new FrontLineWorker(anotherMsisdn, "airtel");
+        allFrontLineWorkers.add(frontLineWorker);
+        allFrontLineWorkers.add(duplicateFrontLineWorker);
+        allFrontLineWorkers.add(notTheSameFLW);
+        markForDeletion(frontLineWorker);
+        markForDeletion(duplicateFrontLineWorker);
+        markForDeletion(notTheSameFLW);
+
+        List<FrontLineWorker> allForMsisdn = allFrontLineWorkers.getAllForMsisdn(msisdn);
+
+        assertEquals(2, allForMsisdn.size());
+    }
 }
