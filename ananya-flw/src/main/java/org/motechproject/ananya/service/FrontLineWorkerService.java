@@ -117,7 +117,7 @@ public class FrontLineWorkerService {
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
             allFrontLineWorkers.add(frontLineWorker);
-            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(callerId);
+            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(frontLineWorker.getMsisdn());
             if (existingFrontLineWorkers.size() > 1) {
                 removeDuplicateFLWs(existingFrontLineWorkers);
             }
