@@ -8,6 +8,7 @@ import org.motechproject.ananya.web.interceptors.AuthenticationInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertFalse;
@@ -24,6 +25,8 @@ public class AuthenticationInterceptorTest {
     private Object handler;
     @Mock
     private HttpServletResponse response;
+    @Mock
+    private PrintWriter printWriter;
 
     private AuthenticationInterceptor authenticationInterceptor;
 
@@ -38,10 +41,13 @@ public class AuthenticationInterceptorTest {
         String apiKey = "1234";
         when(apiKeys.containsValue(apiKey)).thenReturn(false);
         when(request.getHeader("APIKey")).thenReturn(apiKey);
+        when(response.getWriter()).thenReturn(printWriter);
 
         boolean shouldContinue = authenticationInterceptor.preHandle(request, response, new AuthenticatedClass());
 
-            verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "API key does not match.");
+        verify(response).setContentType("application/json");
+        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        verify(printWriter).write("{\"Error\" : \"API key does not match.\"}");
         assertFalse(shouldContinue);
     }
 
