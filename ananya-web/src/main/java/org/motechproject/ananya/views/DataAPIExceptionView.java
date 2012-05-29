@@ -6,14 +6,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-public class ExceptionView extends AbstractView {
+public class DataAPIExceptionView extends AbstractView {
 
     @Override
     protected void renderMergedOutputModel(
             Map<String, Object> stringObjectMap,
             HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception {
-
-        httpServletResponse.getOutputStream().print("var ananyaResponse = \"ANANYA_ERROR\";");
+        httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        httpServletResponse.getOutputStream().print(stringObjectMap.get("exception").toString());
     }
 }
-

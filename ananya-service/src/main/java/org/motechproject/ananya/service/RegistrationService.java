@@ -79,8 +79,8 @@ public class RegistrationService {
             if (allFilteredMsisdns.isEmpty())
                 return filteredFlws;
         }
-        if (msisdn != null) allFilteredMsisdns.add(msisdn);
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, name, status, designation, operator, circle);
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, msisdn, name, status, designation, operator, circle);
 
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions)
             filteredFlws.add(FrontLineWorkerMapper.mapFrom(frontLineWorkerDimension));

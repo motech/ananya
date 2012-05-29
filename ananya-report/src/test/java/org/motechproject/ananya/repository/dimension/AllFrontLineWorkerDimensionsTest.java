@@ -121,36 +121,36 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
         allFilteredMsisdns.add(msisdn);
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, null, null, null, null, null);
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, msisdn, null, null, null, null, null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
 
-        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, RegistrationStatus.PARTIALLY_REGISTERED.name(), null, null, null);
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, RegistrationStatus.PARTIALLY_REGISTERED.name(), null, null, null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED.name(), frontLineWorkerDimensions.get(0).getStatus());
         assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
 
-        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), "name2", null, null, null, null);
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, "name2", null, null, null, null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(name2, frontLineWorkerDimensions.get(0).getName());
         assertEquals(msisdn1, frontLineWorkerDimensions.get(0).getMsisdn());
 
-        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, anganwadi.name(), null, null);
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), msisdn, null, null, anganwadi.name(), null, null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(anganwadi.name(), frontLineWorkerDimensions.get(0).getDesignation());
         assertEquals(msisdn, frontLineWorkerDimensions.get(0).getMsisdn());
 
-        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, null, "Bsnl", null);
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, null, null, "Bsnl", null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(bsnl, frontLineWorkerDimensions.get(0).getOperator());
         assertEquals(msisdn1, frontLineWorkerDimensions.get(0).getMsisdn());
 
-        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, null, null, "up");
+        frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, null, null, null, "up");
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertEquals(up, frontLineWorkerDimensions.get(0).getCircle());
@@ -174,7 +174,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         template.save(frontLineWorkerDimension1);
         template.save(frontLineWorkerDimension2);
 
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), null, up);
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(new ArrayList<Long>(), null, null, RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), null, up);
 
         assertEquals(2, frontLineWorkerDimensions.size());
         assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension1));
@@ -201,10 +201,36 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         allFilteredMsisdns.add(msisdn);
         allFilteredMsisdns.add(msisdn2);
 
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, null, RegistrationStatus.REGISTERED.name(), null, null, null);
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, null, null, RegistrationStatus.REGISTERED.name(), null, null, null);
 
         assertEquals(1, frontLineWorkerDimensions.size());
         assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension2));
+    }
+
+    @Test
+    public void shouldGetAllTheFrontLineWorkerBasedOnMultipleCriteriaAndBasedOnMsisdnListAndBasedOnMsisdn() {
+        long msisdn = 9880099L;
+        long msisdn1 = 98800999L;
+        long msisdn2 = 8800999L;
+        String airtel = "airtel";
+        String bsnl = "bsnl";
+        Designation anganwadi = Designation.ANM;
+        Designation anm = Designation.ANM;
+        String bihar = "Bihar";
+        String up = "UP";
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name());
+        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name());
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name()));
+        template.save(frontLineWorkerDimension1);
+        template.save(frontLineWorkerDimension2);
+        ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
+        allFilteredMsisdns.add(msisdn1);
+        allFilteredMsisdns.add(msisdn2);
+
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getFilteredFLWFor(allFilteredMsisdns, msisdn1, null, null, null, null, null);
+
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertTrue(frontLineWorkerDimensions.contains(frontLineWorkerDimension1));
     }
 
     @Test
@@ -225,7 +251,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         template.save(flw3);
 
         List<FrontLineWorkerDimension> filteredFlws = allFrontLineWorkerDimensions.getFilteredFLWFor(
-                Arrays.asList(msisdn1, msisdn2, msisdn3), "krish", RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), "Airtel", "UO");
+                Arrays.asList(msisdn1, msisdn2, msisdn3), null, "krish", RegistrationStatus.REGISTERED.name(), Designation.ANM.name(), "Airtel", "UO");
 
         assertThat(filteredFlws.size(), is(2));
         assertThat(filteredFlws, hasItem(flw1));

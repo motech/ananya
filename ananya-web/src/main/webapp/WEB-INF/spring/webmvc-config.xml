@@ -46,6 +46,7 @@
             <props>
                 <prop key=".Exception">exceptionView</prop>
                 <prop key=".AnanyaException">exceptionView</prop>
+                <prop key=".DataAPIException">dataAPIExceptionView</prop>
             </props>
         </property>
     </bean>

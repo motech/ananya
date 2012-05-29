@@ -10,6 +10,7 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.exceptions.DataAPIException;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
@@ -19,14 +20,17 @@ import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.LocationRegistrationService;
+import org.motechproject.ananya.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -47,6 +51,8 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
     private TimeSeed timeSeed;
     @Mock
     private HttpServletRequest request;
+    @Mock
+    private RegistrationService registrationService;
 
     @Before
     public void setUp() throws IOException {
@@ -62,7 +68,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
     }
 
     @Test
-    public void shouldCreateFrontLineWorker() {
+    public void shouldCreateFrontLineWorker() throws DataAPIException {
         LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
         locationRegistrationService.addNewLocation(locationRequest);
         String msisdn = "91234545354";
@@ -80,7 +86,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
     }
 
     @Test
-    public void shouldFilterFrontLineWorkersBasedOnTheGivenCriteria() {
+    public void shouldFilterFrontLineWorkersBasedOnTheGivenCriteria() throws DataAPIException {
         String msisdn = "1234";
         String status = "REGISTERED";
         String name = "name";
@@ -96,6 +102,22 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
 
         assertEquals(1, filteredFLWs.size());
         assertEquals(msisdn, filteredFLWs.get(0).getMsisdn());
+    }
+
+    @Test(expected = DataAPIException.class)
+    public void shouldWrapAllExceptionsDuringCreateInDataAPIException() throws DataAPIException {
+        FrontLineWorkerDetailsController flwController = new FrontLineWorkerDetailsController(registrationService);
+        when(registrationService.createOrUpdateFLW(any(FrontLineWorkerRequest.class))).thenThrow(new RuntimeException());
+
+        flwController.create(new FrontLineWorkerRequest());
+    }
+
+    @Test(expected = DataAPIException.class)
+    public void shouldWrapAllExceptionsDuringGetInDataAPIException() throws DataAPIException {
+        FrontLineWorkerDetailsController flwController = new FrontLineWorkerDetailsController(registrationService);
+        when(registrationService.getFilteredFLW(any(Long.class), any(String.class), any(String.class), any(String.class), any(String.class), any(String.class), any(Date.class), any(Date.class))).thenThrow(new RuntimeException());
+
+        flwController.search(request);
     }
 
     private void clearAllData() {

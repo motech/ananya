@@ -75,9 +75,9 @@ public class FrontLineWorkerDimensionServiceTest {
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle));
-        when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
-        List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, name, registrationStatus, designation, operator, circle);
+        List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle);
 
         assertEquals(filteredFLWs.size(), 1);
         assertTrue(filteredFLWs.contains(frontLineWorkerDimensions.get(0)));

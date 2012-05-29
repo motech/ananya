@@ -53,11 +53,13 @@ public class AllFrontLineWorkerDimensions {
         template.delete(frontLineWorkerDimension);
     }
 
-    public List<FrontLineWorkerDimension> getFilteredFLWFor(List<Long> allFilteredMsisdns, String name, String registrationStatus, String designation, String operator, String circle) {
+    public List<FrontLineWorkerDimension> getFilteredFLWFor(List<Long> allFilteredMsisdns, Long msisdn, String name, String registrationStatus, String designation, String operator, String circle) {
         DetachedCriteria criteria = DetachedCriteria.forClass(FrontLineWorkerDimension.class);
 
         if (!allFilteredMsisdns.isEmpty())
             criteria.add(Restrictions.in("msisdn", allFilteredMsisdns));
+        if (msisdn != null)
+            criteria.add(Restrictions.eq("msisdn", msisdn));
         if (registrationStatus != null)
             criteria.add(Restrictions.eq("status", registrationStatus));
         if (name != null)

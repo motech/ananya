@@ -18,6 +18,7 @@ import org.motechproject.ananya.response.RegistrationResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -171,7 +172,7 @@ public class RegistrationServiceTest {
         String circle = "bihar";
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
-        when(frontLineWorkerDimensionService.getFilteredFLW(Arrays.asList(msisdn), name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        when(frontLineWorkerDimensionService.getFilteredFLW(new ArrayList<Long>(), msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle, null, null);
 
@@ -194,7 +195,30 @@ public class RegistrationServiceTest {
         ArrayList<Long> msisdnList = new ArrayList<Long>();
         msisdnList.add(msisdn);
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(msisdnList);
-        when(frontLineWorkerDimensionService.getFilteredFLW(msisdnList, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        when(frontLineWorkerDimensionService.getFilteredFLW(msisdnList, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+
+        List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle, activityStartDate.toDate(), activityEndDate.toDate());
+
+        assertEquals(1, filteredFLW.size());
+        assertEquals(msisdn.toString(), filteredFLW.get(0).getMsisdn());
+    }
+
+    @Test
+    public void shouldNotAddMsisdnFilterGetFilteredFLWsBetweenStartDateAndEndDate() {
+        Long msisdn = 123456L;
+        String name = "name";
+        String status = RegistrationStatus.REGISTERED.name();
+        String designation = Designation.AWW.name();
+        String operator = "airtel";
+        String circle = "bihar";
+        ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
+        DateTime activityStartDate = DateTime.now();
+        DateTime activityEndDate = DateTime.now().plusDays(1);
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
+        ArrayList<Long> msisdnList = new ArrayList<Long>();
+        msisdnList.add(msisdn);
+        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(msisdnList);
+        when(frontLineWorkerDimensionService.getFilteredFLW(msisdnList, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle, activityStartDate.toDate(), activityEndDate.toDate());
 
@@ -234,7 +258,7 @@ public class RegistrationServiceTest {
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         DateTime activityEndDate = DateTime.now().plusDays(1);
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
-        when(frontLineWorkerDimensionService.getFilteredFLW(Arrays.asList(msisdn), name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        when(frontLineWorkerDimensionService.getFilteredFLW(Collections.EMPTY_LIST, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle, null, activityEndDate.toDate());
 

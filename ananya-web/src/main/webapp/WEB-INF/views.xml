@@ -5,4 +5,5 @@
            
     <bean id="jsonView" class="org.motechproject.ananya.views.JsonView" />
     <bean id="exceptionView" class="org.motechproject.ananya.views.ExceptionView" />
+    <bean id="dataAPIExceptionView" class="org.motechproject.ananya.views.DataAPIExceptionView" />
 </beans>

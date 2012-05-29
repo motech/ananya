@@ -47,9 +47,10 @@ public class FlwDataSource {
             }
         }
 
-        if (msisdn != null) allFilteredMsisdns.add(Long.parseLong(msisdn));
+        Long msisdnInLong = null;
+        if (msisdn != null) msisdnInLong = Long.parseLong(msisdn);
 
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, criteria.get("name"), criteria.get("status"), criteria.get("designation"), criteria.get("operator"), criteria.get("circle"));
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, msisdnInLong, criteria.get("name"), criteria.get("status"), criteria.get("designation"), criteria.get("operator"), criteria.get("circle"));
 
         ArrayList<FlwReportData> flwReportDatas = new ArrayList<FlwReportData>();
         FrontLineReportDataMapper frontLineReportDataMapper = new FrontLineReportDataMapper();
