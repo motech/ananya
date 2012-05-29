@@ -10,34 +10,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Authenticated
 @Controller
-@RequestMapping(value = "/data/location")
+@RequestMapping(value = "/location")
 public class LocationDetailsController {
 
     @Autowired
     private LocationRegistrationService locationRegistrationService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView create(@RequestBody LocationRequest request) {
-        LocationRegistrationResponse response = locationRegistrationService.addNewLocation(request);
-        return new ModelAndView("creation").addObject("response", response);
+    public @ResponseBody LocationRegistrationResponse create(@RequestBody LocationRequest request) {
+        return locationRegistrationService.addNewLocation(request);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
-    public ModelAndView search(HttpServletRequest request) {
+    public @ResponseBody List<LocationResponse> search(HttpServletRequest request) {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
         LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
 
-        List<LocationResponse> filteredLocations = locationRegistrationService.getFilteredLocations(locationRequest);
-
-        return new ModelAndView("get_filtered_results").addObject("filteredResponse", filteredLocations);
+        return locationRegistrationService.getFilteredLocations(locationRequest);
     }
 }

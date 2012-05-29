@@ -33,11 +33,4 @@ public class ValidationResponse {
         isValid = false;
         return this;
     }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "message=\"" + message + '"' +
-                '}';
-    }
 }

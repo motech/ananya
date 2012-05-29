@@ -14,11 +14,9 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -66,16 +64,14 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         String block = "Amer";
         String district = "Patna";
 
-        ModelAndView modelAndView = locationDetailsController.create(new LocationRequest(district, block, panchayat));
-        ModelAndView modelAndView1 = locationDetailsController.create(new LocationRequest(district, block, panchayat));
+        LocationRegistrationResponse response = locationDetailsController.create(new LocationRequest(district, block, panchayat));
+        LocationRegistrationResponse response1 = locationDetailsController.create(new LocationRequest(district, block, panchayat));
 
         List<Location> allLocations = this.allLocations.getAll();
         assertEquals(1, allLocations.size());
         assertEquals(district, allLocations.get(0).getDistrict());
         assertEquals(block, allLocations.get(0).getBlock());
         assertEquals(panchayat, allLocations.get(0).getPanchayat());
-        LocationRegistrationResponse response = (LocationRegistrationResponse) modelAndView.getModel().get("response");
-        LocationRegistrationResponse response1 = (LocationRegistrationResponse) modelAndView1.getModel().get("response");
         assertEquals("Successfully registered location", response.getMessage());
         assertEquals("The location is already present", response1.getMessage());
     }
@@ -91,11 +87,8 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         when(request.getParameter("block")).thenReturn("B2");
         when(request.getParameter("panchayat")).thenReturn(null);
 
-        ModelAndView location = locationDetailsController.search(request);
+        List<LocationResponse> locations = locationDetailsController.search(request);
 
-        Map<String, Object> model = location.getModel();
-        List<LocationResponse> locations = (List<LocationResponse>) model.get("filteredResponse");
-        assertEquals(1, model.size());
         assertEquals(2, locations.size());
     }
 }

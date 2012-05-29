@@ -20,7 +20,6 @@ import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -28,7 +27,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -72,14 +70,13 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String operator = "airtel";
         String name = "name";
 
-        ModelAndView modelAndView = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, "bihar", locationRequest));
+        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, "bihar", locationRequest));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
-        RegistrationResponse response = (RegistrationResponse) modelAndView.getModel().get("response");
-        assertTrue(response.toString().contains("Created/Updated FLW record"));
+        assertEquals(registrationResponse.getMessage(), "Created/Updated FLW record");
     }
 
     @Test
@@ -95,9 +92,8 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         when(request.getParameter("operator")).thenReturn(null);
         when(request.getParameter("circle")).thenReturn(null);
 
-        ModelAndView modelAndView = frontLineWorkerDetailsController.search(request);
+        List<FrontLineWorkerResponse> filteredFLWs = frontLineWorkerDetailsController.search(request);
 
-        List<FrontLineWorkerResponse> filteredFLWs = (List<FrontLineWorkerResponse>) modelAndView.getModel().get("filteredResponse");
         assertEquals(1, filteredFLWs.size());
         assertEquals(msisdn, filteredFLWs.get(0).getMsisdn());
     }
