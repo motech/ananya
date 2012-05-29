@@ -37,7 +37,7 @@ public class AuthenticationInterceptorTest {
     public void shouldFailAuthenticationIfAPIKeyIsNotPresent() throws Exception {
         String apiKey = "1234";
         when(apiKeys.containsValue(apiKey)).thenReturn(false);
-        when(request.getParameter("APIKey")).thenReturn(apiKey);
+        when(request.getHeader("APIKey")).thenReturn(apiKey);
 
         boolean shouldContinue = authenticationInterceptor.preHandle(request, response, new AuthenticatedClass());
 
@@ -57,9 +57,9 @@ public class AuthenticationInterceptorTest {
     public void shouldAuthenticateBasedOnAPIKey() throws Exception {
         String apiKey = "1234";
         when(apiKeys.containsValue(apiKey)).thenReturn(true);
-        when(request.getParameter("APIKey")).thenReturn(apiKey);
+        when(request.getHeader("APIKey")).thenReturn(apiKey);
 
-        boolean shouldContinue = authenticationInterceptor.preHandle(request, null, new AuthenticatedClass());
+        boolean shouldContinue = authenticationInterceptor.preHandle(request, response, new AuthenticatedClass());
 
         assertTrue(shouldContinue);
     }

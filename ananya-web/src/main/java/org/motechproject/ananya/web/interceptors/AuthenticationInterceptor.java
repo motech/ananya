@@ -27,7 +27,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         if (handler.getClass().getAnnotation(Authenticated.class) == null)
             return true;
 
-        String apiKey = request.getParameter("APIKey");
+        String apiKey = request.getHeader("APIKey");
 
         if (apiKey == null || !apiKeys.containsValue(apiKey)) {
             log.error("Authentication failed with API key : " + apiKey);
