@@ -47,14 +47,14 @@
     <changeSet context="setup" author="ThoughtWorks-version1.2" id="2">
         <sql>
             update
-            report.front_line_worker_dimension
+            report.front_line_worker_dimension flwd
             set status = 'PARTIALLY_REGISTERED'
             where id in ( select
             flw_id from report.registration_measure rm
             join report.location_dimension ld
             on rm.location_id = ld.id
-            where ld.panchayat = ''
-            )
+            where ld.panchayat = '') and flwd.status= 'REGISTERED'
+            
         </sql>
     </changeSet>
 </databaseChangeLog>
