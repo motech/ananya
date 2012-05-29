@@ -17,14 +17,13 @@ public class CsvExporterApp {
             String filterFilePath = csvExporterArgumentsParser.getFilterFilePath();
             String outputFilePath = csvExporterArgumentsParser.getOutputFilePath();
             String entityName = csvExporterArgumentsParser.getEntityName();
-
             AllReportDataSources allReportDataSources = (AllReportDataSources) applicationContext.getBean("allReportDataSources");
             ReportDataSource reportDataSource = allReportDataSources.get(entityName);
-
             new CsvExporter(reportDataSource, filterFilePath, outputFilePath).buildReport();
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
             csvExporterArgumentsParser.printUsage();
+
         } finally {
             applicationContext.close();
         }

@@ -23,19 +23,19 @@ public class CsvExporter {
 
     public void buildReport() throws Exception {
         if (reportDataSource != null) {
-            if (filterFilePath != null) {
-                new CsvReportBuilder(outputFilePath, "queryReport", reportDataSource, getCriteria()).build();
-                System.out.println("Report file generated successfully.");
-            }
+            new CsvReportBuilder(outputFilePath, "queryReport", reportDataSource, getCriteria()).build();
+            System.out.println("Report file generated successfully.");
         }
     }
 
     private Map<String, String> getCriteria() throws IOException {
         Map<String, String> criteria = new HashMap<String, String>();
-        List<String> strings = IOUtils.readLines(new FileInputStream(filterFilePath));
-        for (String line : strings) {
-            String[] keyValue = line.split("=");
-            criteria.put(keyValue[0].toLowerCase(), keyValue[1]);
+        if (filterFilePath != null) {
+            List<String> strings = IOUtils.readLines(new FileInputStream(filterFilePath));
+            for (String line : strings) {
+                String[] keyValue = line.split("=");
+                criteria.put(keyValue[0].toLowerCase(), keyValue[1]);
+            }
         }
         return criteria;
     }
