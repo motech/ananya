@@ -22,10 +22,10 @@ public class CsvExporter {
     }
 
     public void buildReport() throws Exception {
-        if (reportDataSource != null) {
-            new CsvReportBuilder(outputFilePath, "queryReport", reportDataSource, getCriteria()).build();
-            System.out.println("Report file generated successfully.");
-        }
+        if (reportDataSource == null)
+            throw new RuntimeException("Entity to be reported not found");
+        new CsvReportBuilder(outputFilePath, "queryReport", reportDataSource, getCriteria()).build();
+        System.out.println("Report file generated successfully.");
     }
 
     private Map<String, String> getCriteria() throws IOException {
