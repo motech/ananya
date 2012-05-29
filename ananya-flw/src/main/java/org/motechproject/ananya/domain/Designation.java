@@ -16,7 +16,7 @@ public enum Designation {
     }
 
     public static boolean isInValid(String designation) {
-        return designation == null || !Designation.contains(designation) ? true : false;
+        return designation == null || !Designation.contains(designation);
     }
     
     public static Designation getFor(String designation) {
