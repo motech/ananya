@@ -40,7 +40,21 @@ public class FrontLineWorkerTest {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         assertEquals("919986554790", flw.getMsisdn());
 
-        FrontLineWorker flw2 = new FrontLineWorker("9986554790","airtel");
+        FrontLineWorker flw2 = new FrontLineWorker("9986554790", "airtel");
         assertEquals("919986554790", flw2.getMsisdn());
+    }
+
+    @Test
+    public void shouldUpdateRegistrationStatusOnlyIfTheCurrentStatusIsLessThanTheNewStatus() {
+        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
+
+        assertEquals(RegistrationStatus.REGISTERED, flw.status());
+        assertEquals("newName", flw.getName());
+
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+
+        assertEquals(RegistrationStatus.REGISTERED, flw.status());
+        assertEquals("newName", flw.getName());
     }
 }

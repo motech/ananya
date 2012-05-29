@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
@@ -91,7 +90,7 @@ public class RegistrationService {
         Location location = locationList.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, district, block, panchayat);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
-        RegistrationStatus registrationStatus = isInvalidNameOrDesignation(name, designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
+        RegistrationStatus registrationStatus = isInvalidDesignation(designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, registrationStatus);
 
         ValidationResponse validationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
@@ -105,7 +104,7 @@ public class RegistrationService {
         return registrationResponse.withNewRegistrationDone();
     }
 
-    private boolean isInvalidNameOrDesignation(String name, String designation) {
-        return StringUtils.isBlank(name) || Designation.isInValid(designation);
+    private boolean isInvalidDesignation(String designation) {
+        return Designation.isInValid(designation);
     }
 }

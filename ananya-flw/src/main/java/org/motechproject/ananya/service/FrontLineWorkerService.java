@@ -45,7 +45,7 @@ public class FrontLineWorkerService {
             return exisitingFrontLineWorker;
         }
 
-        exisitingFrontLineWorker.update(name, designation, location);
+        exisitingFrontLineWorker.update(name, designation, location, registrationStatus);
         allFrontLineWorkers.update(exisitingFrontLineWorker);
         log.info("Updated:" + exisitingFrontLineWorker);
         return exisitingFrontLineWorker;
@@ -147,7 +147,7 @@ public class FrontLineWorkerService {
             return frontLineWorker;
         }
 
-        frontLineWorker.update(name, designation, location);
+        frontLineWorker.update(name, designation, location, registrationStatus);
         allFrontLineWorkers.update(frontLineWorker);
         log.info("Updated:" + frontLineWorker);
         return frontLineWorker;
