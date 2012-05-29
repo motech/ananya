@@ -51,6 +51,7 @@ public class RegistrationService {
                     frontLineWorkerRequest.getLocation().getDistrict(),
                     frontLineWorkerRequest.getLocation().getBlock(),
                     frontLineWorkerRequest.getLocation().getPanchayat(),
+                    frontLineWorkerRequest.getCircle(),
                     locationList);
             registrationResponses.add(registrationResponse);
         }
@@ -66,6 +67,7 @@ public class RegistrationService {
                 frontLineWorkerRequest.getLocation().getDistrict(),
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
+                frontLineWorkerRequest.getCircle(),
                 locationList);
     }
 
@@ -86,12 +88,12 @@ public class RegistrationService {
         return filteredFlws;
     }
 
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, LocationList locationList) {
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, String circle, LocationList locationList) {
         Location location = locationList.findFor(district, block, panchayat);
-        RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, district, block, panchayat);
+        RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, circle, district, block, panchayat);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         RegistrationStatus registrationStatus = isInvalidDesignation(designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, registrationStatus);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus);
 
         ValidationResponse validationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
         if(validationResponse.isInValid())

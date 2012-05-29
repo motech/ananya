@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -196,6 +197,30 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker.getName(), name);
         assertEquals(frontLineWorker.getDesignation(), designation);
         assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
+    }
+
+    @Test
+    public void shouldUpdateFLWIfExistsWithOperatorAndCircle() {
+        String msisdn = "123";
+        String name = "name";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        String circle = "bihar";
+        String operator = "airtel";
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
+
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED), location);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(name, frontLineWorker.getName());
+        assertEquals(designation, frontLineWorker.getDesignation());
+        assertEquals(circle, frontLineWorker.getCircle());
+        assertEquals(operator, frontLineWorker.getOperator());
+        assertEquals(designation, frontLineWorker.getDesignation());
+        assertEquals(location.getExternalId(), frontLineWorker.getLocationId());
     }
 
     @Test

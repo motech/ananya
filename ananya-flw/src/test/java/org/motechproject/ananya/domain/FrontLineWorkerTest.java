@@ -47,12 +47,12 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldUpdateRegistrationStatusOnlyIfTheCurrentStatusIsLessThanTheNewStatus() {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, "bihar", "airtel");
 
         assertEquals(RegistrationStatus.REGISTERED, flw.status());
         assertEquals("newName", flw.getName());
 
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED, null, null);
 
         assertEquals(RegistrationStatus.REGISTERED, flw.status());
         assertEquals("newName", flw.getName());

@@ -41,7 +41,7 @@ public class AuthenticationInterceptorTest {
 
         boolean shouldContinue = authenticationInterceptor.preHandle(request, response, new AuthenticatedClass());
 
-        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "API key does not match.");
+            verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "API key does not match.");
         assertFalse(shouldContinue);
     }
 

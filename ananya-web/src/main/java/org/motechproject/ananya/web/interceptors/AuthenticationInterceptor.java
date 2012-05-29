@@ -31,7 +31,8 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
         if (apiKey == null || !apiKeys.containsValue(apiKey)) {
             log.error("Authentication failed with API key : " + apiKey);
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, unauthorizedErrorMessage);
+            response.sendError(401, "API key does not match.");
+            response.setContentType("application/json");
             return false;
         }
 

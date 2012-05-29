@@ -4,8 +4,8 @@ public class RegistrationResponse {
     private String frontLineWorkerDetails;
     private String message;
 
-    public RegistrationResponse(String name, String msisdn, String designation, String operator, String district, String block, String panchayat) {
-        frontLineWorkerDetails = name + "," + msisdn + "," + designation + "," + operator + "," + district + "," + block + "," + panchayat;
+    public RegistrationResponse(String name, String msisdn, String designation, String operator, String circle, String district, String block, String panchayat) {
+        frontLineWorkerDetails = name + "," + msisdn + "," + designation + "," + operator + "," + circle + "," + district + "," + block + "," + panchayat;
     }
 
     public RegistrationResponse withValidationResponse(ValidationResponse validationResponse) {
