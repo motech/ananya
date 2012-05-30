@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.motechproject.export.builder.csv.CsvReportBuilder;
 import org.motechproject.export.model.ReportDataSource;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,9 +24,10 @@ public class CsvExporter {
 
     public void buildReport() throws Exception {
         if (reportDataSource == null)
-            throw new RuntimeException("Entity to be reported not found");
+            throw new RuntimeException("Entity to be exported not found");
         new CsvReportBuilder(outputFilePath, "queryReport", reportDataSource, getCriteria()).build();
-        System.out.println("Report file generated successfully.");
+
+        System.out.println(String.format("Report file generated successfully"));
     }
 
     private Map<String, String> getCriteria() throws IOException {

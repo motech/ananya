@@ -30,7 +30,7 @@ public class CsvExporterArgumentsParser {
         CommandLine line = parser.parse(options, arguments);
 
         if (line.getArgs().length != 1)
-            throw new WrongNumberArgsException("Expected 1 Argument, Got Nothing");
+            throw new WrongNumberArgsException("Expected 'entity-name' argument, got nothing");
         else
             entityName = line.getArgs()[0].toUpperCase();
 
@@ -43,6 +43,6 @@ public class CsvExporterArgumentsParser {
 
     public void printUsage() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(" <Entity to be reported>", options);
+        formatter.printHelp(" <Entity to be exported>", options);
     }
 }

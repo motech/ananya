@@ -73,13 +73,13 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <ant antfile="${basedir}/packager.xml" target="package">
                                     <property name="project.version" value="${project.version}" />
                                     <property name="base.directory" value="${basedir}" />
                                     <property name="project.build.directory" value="${project.build.directory}" />
                                 </ant>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
