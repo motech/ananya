@@ -39,7 +39,7 @@ public class LocationRegistrationServiceTest {
 
         LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest("D1", "", "V1"));
 
-        assertEquals("One or more of District, Block details are missing", response.getMessage());
+        assertEquals("One or more of District, Block, Panchayat details are missing", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
         verify(locationService, never()).add(captor.capture());
     }
