@@ -143,7 +143,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return bookmark != null ? bookmark : new EmptyBookmark();
     }
 
-    public RegistrationStatus status() {
+    public RegistrationStatus getStatus() {
         return status;
     }
 
@@ -269,7 +269,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void merge(FrontLineWorker frontLineWorker) {
         if (this.status.equals(RegistrationStatus.UNREGISTERED)) {
-            this.status = frontLineWorker.status();
+            this.status = frontLineWorker.getStatus();
             this.locationId = frontLineWorker.getLocationId();
             this.designation = frontLineWorker.getDesignation();
             this.name = frontLineWorker.name();

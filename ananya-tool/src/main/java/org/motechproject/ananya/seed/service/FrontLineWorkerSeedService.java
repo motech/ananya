@@ -157,7 +157,7 @@ public class    FrontLineWorkerSeedService {
             return;
         }
         frontLineWorkerDimension.setDesignation(frontLineWorker.designationName());
-        frontLineWorkerDimension.setStatus(frontLineWorker.status().toString());
+        frontLineWorkerDimension.setStatus(frontLineWorker.getStatus().toString());
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
         log.info("Designation: Corrected invalid designation in postgres: " + frontLineWorkerDimension);
     }

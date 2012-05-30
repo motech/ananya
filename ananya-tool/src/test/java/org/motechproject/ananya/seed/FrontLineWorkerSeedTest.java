@@ -89,7 +89,7 @@ public class FrontLineWorkerSeedTest {
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
 
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn.toString());
-        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }
 
     @Test

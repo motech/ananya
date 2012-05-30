@@ -34,14 +34,14 @@ public class FrontLineWorkerService {
         String callerId = frontLineWorker.getMsisdn();
         String name = frontLineWorker.getName();
         Designation designation = Designation.getFor(frontLineWorker.designationName());
-        RegistrationStatus registrationStatus = frontLineWorker.status();
+        RegistrationStatus registrationStatus = frontLineWorker.getStatus();
         String circle = frontLineWorker.getCircle();
         String operator = frontLineWorker.getOperator();
 
         FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
 
         if (exisitingFrontLineWorker == null) {
-            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
+            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus);
             allFrontLineWorkers.add(exisitingFrontLineWorker);
             log.info("Created:" + exisitingFrontLineWorker);
             return exisitingFrontLineWorker;

@@ -46,7 +46,7 @@ public class CertificateCourseService {
 
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),
-                frontLineWorker.status().isRegistered(),
+                frontLineWorker.getStatus().isRegistered(),
                 frontLineWorker.reportCard().scoresByChapterIndex());
     }
 

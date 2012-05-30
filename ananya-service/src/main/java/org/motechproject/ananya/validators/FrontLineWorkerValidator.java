@@ -11,7 +11,7 @@ public class FrontLineWorkerValidator {
         ValidationResponse validationResponse = new ValidationResponse();
         if (StringUtils.length(frontLineWorker.getMsisdn()) < 10 || !StringUtils.isNumeric(frontLineWorker.getMsisdn()))
             return validationResponse.forInvalidMsisdn();
-        if (StringUtils.isBlank(frontLineWorker.getName()) || !StringUtils.isAlphanumericSpace(frontLineWorker.getName()))
+        if (!StringUtils.isAlphanumericSpace(frontLineWorker.getName()))
             return validationResponse.forInvalidName();
         if (locationOfFrontLineWorker == null)
             return validationResponse.forInvalidLocation();

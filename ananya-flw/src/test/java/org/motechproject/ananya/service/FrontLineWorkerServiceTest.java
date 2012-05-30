@@ -49,7 +49,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker savedFrontLineWorker = captor.getValue();
         assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
-        assertEquals(RegistrationStatus.UNREGISTERED, savedFrontLineWorker.status());
+        assertEquals(RegistrationStatus.UNREGISTERED, savedFrontLineWorker.getStatus());
     }
 
     @Test
@@ -60,7 +60,6 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
-
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
@@ -169,16 +168,20 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "919986574410";
         String name = "name";
         Designation designation = Designation.AWW;
+        String operator = "airtel";
+        String circle = "bihar";
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED), location);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED), location);
 
         verify(allFrontLineWorkers).add(frontLineWorker);
-        assertEquals(frontLineWorker.getMsisdn(), msisdn);
-        assertEquals(frontLineWorker.getName(), name);
-        assertEquals(frontLineWorker.getDesignation(), designation);
-        assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
+        assertEquals(msisdn, frontLineWorker.getMsisdn());
+        assertEquals(name, frontLineWorker.getName());
+        assertEquals(designation, frontLineWorker.getDesignation());
+        assertEquals(location.getExternalId(), frontLineWorker.getLocationId());
+        assertEquals(circle, frontLineWorker.getCircle());
+        assertEquals(operator, frontLineWorker.getOperator());
     }
 
     @Test
@@ -345,6 +348,6 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = captor.getValue();
         assertEquals(circle, frontLineWorker.getCircle());
         assertEquals(operator, frontLineWorker.getOperator());
-        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }
 }

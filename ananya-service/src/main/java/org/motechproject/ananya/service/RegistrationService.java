@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
@@ -92,11 +93,11 @@ public class RegistrationService {
         Location location = locationList.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, circle, district, block, panchayat);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
-        RegistrationStatus registrationStatus = isInvalidDesignation(designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
+        RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus);
 
         ValidationResponse validationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
-        if(validationResponse.isInValid())
+        if (validationResponse.isInValid())
             return registrationResponse.withValidationResponse(validationResponse);
 
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
@@ -104,6 +105,10 @@ public class RegistrationService {
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
+    }
+
+    private RegistrationStatus getRegistrationStatus(String designation, String name) {
+        return isInvalidDesignation(designation) || StringUtils.isBlank(name) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
     }
 
     private boolean isInvalidDesignation(String designation) {

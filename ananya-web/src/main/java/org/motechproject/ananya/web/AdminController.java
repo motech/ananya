@@ -48,7 +48,7 @@ public class AdminController{
         try {
             for (FrontLineWorker worker : workers) {
                 Location location = allLocations.findByExternalId(worker.getLocationId());
-                workerPresenters.add(new FrontLineWorkerPresenter(worker.getId(), worker.getMsisdn(), worker.status().toString(),
+                workerPresenters.add(new FrontLineWorkerPresenter(worker.getId(), worker.getMsisdn(), worker.getStatus().toString(),
                         location.getBlock(), location.getDistrict(), location.getPanchayat(), worker.getRegisteredDate()));
             }
         } catch (Exception e) {

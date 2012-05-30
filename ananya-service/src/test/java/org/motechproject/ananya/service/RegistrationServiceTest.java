@@ -113,10 +113,12 @@ public class RegistrationServiceTest {
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
 
-        RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
+        registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid name"));
-        verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontLineWorkerService).createOrUpdate(captor.capture(), any(Location.class));
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, frontLineWorker.getStatus());
     }
 
     @Test

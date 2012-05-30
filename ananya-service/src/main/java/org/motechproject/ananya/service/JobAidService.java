@@ -7,7 +7,6 @@ import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
-import org.motechproject.ananya.util.PerformanceCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,7 @@ public class JobAidService {
             registrationLogService.add(new RegistrationLog(callerId, operator, circle));
 
         return new JobAidCallerDataResponse(
-                frontLineWorker.status().isRegistered(),
+                frontLineWorker.getStatus().isRegistered(),
                 frontLineWorker.getCurrentJobAidUsage(),
                 operatorService.findMaximumUsageFor(operator),
                 frontLineWorker.getPromptsHeard());
