@@ -8,6 +8,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class FrontLineWorkerTest {
@@ -56,5 +57,11 @@ public class FrontLineWorkerTest {
 
         assertEquals(RegistrationStatus.REGISTERED, flw.getStatus());
         assertEquals("newName", flw.getName());
+    }
+
+    @Test
+    public void shouldCreateAnFlwWhenMsisdnIsNotGiven() {
+        FrontLineWorker flw = new FrontLineWorker(null, "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        assertNull(flw.getMsisdn());
     }
 }
