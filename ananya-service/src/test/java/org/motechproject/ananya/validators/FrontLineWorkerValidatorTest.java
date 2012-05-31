@@ -58,4 +58,12 @@ public class FrontLineWorkerValidatorTest {
         assertTrue(validationResponse.isValid());
         assertNull(validationResponse.getMessage());
     }
+
+    @Test
+    public void shouldValidateFrontLineWorkerBasedOnNameOnlyIfNameIsNotNull() {
+        ValidationResponse validationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", null, Designation.ANM, new Location("district", "block", "panchayat", 1, 1 ,1), RegistrationStatus.REGISTERED), new Location());
+
+        assertTrue(validationResponse.isValid());
+        assertNull(validationResponse.getMessage());
+    }
 }

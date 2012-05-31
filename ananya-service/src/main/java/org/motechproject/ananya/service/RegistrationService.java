@@ -108,10 +108,7 @@ public class RegistrationService {
     }
 
     private RegistrationStatus getRegistrationStatus(String designation, String name) {
-        return isInvalidDesignation(designation) || StringUtils.isBlank(name) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
+        return Designation.isInValid(designation) || StringUtils.isBlank(name) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
     }
 
-    private boolean isInvalidDesignation(String designation) {
-        return Designation.isInValid(designation);
-    }
 }
