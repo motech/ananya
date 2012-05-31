@@ -64,7 +64,7 @@ public class CertificateCourseDataHandler {
     private void createRegistrationMeasure(String callerId) {
         RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
         if (registrationLog != null) {
-            registrationMeasureService.createRegistrationMeasure(callerId);
+            registrationMeasureService.createOrUpdateFor(callerId);
             registrationLogService.delete(registrationLog);
         }
     }

@@ -61,7 +61,7 @@ public class RegistrationServiceTest {
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));
         verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location);
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService).createOrUpdateFor(callerId);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class RegistrationServiceTest {
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid location"));
         verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class RegistrationServiceTest {
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid msisdn"));
         verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
 
         callerId = "abcdef";
         frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
@@ -99,7 +99,7 @@ public class RegistrationServiceTest {
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid msisdn"));
         verify(frontLineWorkerService, never()).createOrUpdate(any(FrontLineWorker.class), any(Location.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
     }
 
     @Test
@@ -159,9 +159,9 @@ public class RegistrationServiceTest {
         List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequestList);
 
         assertTrue(StringUtils.contains(registrationResponses.get(0).getMessage(), "Invalid msisdn"));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
         assertTrue(StringUtils.contains(registrationResponses.get(1).getMessage(), "Invalid msisdn"));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId1);
+        verify(registrationMeasureService, never()).createOrUpdateFor(callerId1);
     }
 
     @Test

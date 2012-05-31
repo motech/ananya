@@ -40,23 +40,30 @@ public class RegistrationMeasureService {
     }
 
     @Transactional
-    public void createRegistrationMeasure(String callerId) {
+    public void createOrUpdateFor(String callerId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
-        boolean dimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
+        boolean flwDimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
+        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
 
         FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
-                frontLineWorker.msisdn(), frontLineWorker.getOperator(), frontLineWorker.getCircle(),
-                frontLineWorker.name(), frontLineWorker.designationName(), frontLineWorker.getStatus().toString());
+                frontLineWorker.msisdn(),
+                frontLineWorker.getOperator(),
+                frontLineWorker.getCircle(),
+                frontLineWorker.name(),
+                frontLineWorker.designationName(),
+                frontLineWorker.getStatus().toString());
 
-        log.info("FlwDimension created or updated for " + frontLineWorker);
-        if (dimensionAlreadyExists) return;
+        RegistrationMeasure registrationMeasure = getRegistrationMeasureFor(flwDimensionAlreadyExists, frontLineWorkerDimension, locationDimension, timeDimension);
+        allRegistrationMeasures.createOrUpdate(registrationMeasure);
 
-        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
-        allRegistrationMeasures.add(registrationMeasure);
-
-        log.info("RegistrationMeasure created for " + callerId + "[Location=" + locationDimension.getId() +
-                "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
+        log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
+                "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");
     }
+
+    private RegistrationMeasure getRegistrationMeasureFor(boolean flwDimensionAlreadyExists, FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension, TimeDimension timeDimension) {
+        return flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
+                : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+    }
+
 }

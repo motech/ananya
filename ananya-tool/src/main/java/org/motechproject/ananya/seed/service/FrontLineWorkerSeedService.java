@@ -87,7 +87,7 @@ public class    FrontLineWorkerSeedService {
                 RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
                 RegistrationMeasure finalRegistrationMeasure = allRegistrationMeasures.fetchFor(finalFrontLineWorkerDimension.getId());
                 finalRegistrationMeasure.merge(registrationMeasure);
-                allRegistrationMeasures.update(finalRegistrationMeasure);
+                allRegistrationMeasures.createOrUpdate(finalRegistrationMeasure);
                 allRegistrationMeasures.remove(registrationMeasure);
                 log.info("Duplicates: Merged Postgres measure from : " + registrationMeasure + " to final version : " + finalRegistrationMeasure);
 

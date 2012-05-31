@@ -101,7 +101,7 @@ public class RegistrationService {
             return registrationResponse.withValidationResponse(validationResponse);
 
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
-        registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn());
+        registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();

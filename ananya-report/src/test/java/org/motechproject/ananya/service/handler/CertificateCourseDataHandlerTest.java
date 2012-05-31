@@ -55,7 +55,7 @@ public class CertificateCourseDataHandlerTest {
 
         handler.handleCertificateCourseData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService).createOrUpdateFor(callerId);
         verify(courseItemMeasureService).createCourseItemMeasure(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);

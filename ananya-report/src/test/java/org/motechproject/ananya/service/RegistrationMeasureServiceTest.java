@@ -18,7 +18,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -63,10 +62,10 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
-        registrationMeasureService.createRegistrationMeasure(callerId);
+        registrationMeasureService.createOrUpdateFor(callerId);
 
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
-        verify(allRegistrationMeasures).add(captor.capture());
+        verify(allRegistrationMeasures).createOrUpdate(captor.capture());
 
         RegistrationMeasure registrationMeasure = captor.getValue();
         assertNotNull(registrationMeasure);
@@ -76,7 +75,8 @@ public class RegistrationMeasureServiceTest {
     }
 
     @Test
-    public void shouldNotCreateANewRegistrationMeasureIfTheFrontLineWorkerAlreadyExists() {
+    public void shouldUpdateExistingRegistrationMeasureIfTheFrontLineWorkerAlreadyExists() {
+        int flwId = 123;
         String callerId = "919986574410";
         String operator = "operator";
         String circle = "circle";
@@ -84,16 +84,22 @@ public class RegistrationMeasureServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
-        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
+        LocationDimension oldLocationDimension = new LocationDimension("oldid", "olddistrict", "oldblock", "oldpanchayat");
+        LocationDimension newLocationDimension = new LocationDimension("id", "district", "block", "panchayat");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
+        frontLineWorkerDimension.setId(flwId);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, oldLocationDimension, timeDimension);
 
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(true);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+        when(allLocationDimensions.getFor(any(String.class))).thenReturn(newLocationDimension);
 
-        registrationMeasureService.createRegistrationMeasure(callerId);
+        registrationMeasureService.createOrUpdateFor(callerId);
 
-        verify(allRegistrationMeasures, never()).add(any(RegistrationMeasure.class));
+        verify(allRegistrationMeasures).createOrUpdate(registrationMeasure);
+        assertEquals(newLocationDimension, registrationMeasure.getLocationDimension());
     }
 }

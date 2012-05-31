@@ -99,7 +99,7 @@ public class PostgresDiagnosticIT {
         allFrontLineWorkerDimensions.createOrUpdate(654L, "", circle, "", "", "UNREGISTERED");
         allFrontLineWorkerDimensions.createOrUpdate(653L, "", circle, "", "", "UNREGISTERED");
         allFrontLineWorkerDimensions.createOrUpdate(321L, "", circle, "", "", "PARTIALLY_REGISTERED");
-        allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
+        allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
 
         assertEquals(4, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS.getQuery()).uniqueResult()).intValue());
         assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_FLWS_REG_TODAY.getQuery(today)).uniqueResult()).intValue());
