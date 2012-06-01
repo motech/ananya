@@ -39,7 +39,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>resources</goal>
+                            <goal>testResources</goal>
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/lib</outputDirectory>
