@@ -33,8 +33,8 @@ public class FlwDataSource {
         if(criteria == null)
             criteria = new HashMap<String, String>();
 
-        String activityStartDate = criteria.get("activity-start-date");
-        String activityEndDate = criteria.get("activity-end-date");
+        String activityStartDate = criteria.get("activityStartDate");
+        String activityEndDate = criteria.get("activityEndDate");
         String msisdn = criteria.get("msisdn");
 
         List<FlwReportData> filteredFlws = new ArrayList<FlwReportData>();

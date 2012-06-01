@@ -129,13 +129,12 @@ public class FlwDataSourceTest {
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
-        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(Arrays.asList(msisdn));
+        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(Collections.EMPTY_LIST);
         when(frontLineWorkerDimensionService.getFilteredFLW(Collections.EMPTY_LIST, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FlwReportData> filteredFLW = flwDataSource.queryReport(criteria);
 
-        assertEquals(1, filteredFLW.size());
-        assertEquals(msisdn.toString(), filteredFLW.get(0).getMsisdn());
+        assertEquals(0, filteredFLW.size());
     }
 
     @Test
@@ -156,8 +155,8 @@ public class FlwDataSourceTest {
         criteria.put("designation", designation);
         criteria.put("operator", operator);
         criteria.put("circle", circle);
-        criteria.put("activity-start-date", activityStartDate.toString());
-        criteria.put("activity-end-date", activityEndDate.toString());
+        criteria.put("activityStartDate", activityStartDate.toString());
+        criteria.put("activityEndDate", activityEndDate.toString());
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
