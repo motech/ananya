@@ -7,6 +7,8 @@ import org.motechproject.ananya.mapper.LocationMapper;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
+import org.motechproject.ananya.response.LocationValidationResponse;
+import org.motechproject.ananya.validators.LocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,13 +71,10 @@ public class LocationRegistrationService {
     private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
         LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
         Location location = new Location(district, block, panchayat, 0, 0, 0);
-
-        if (location.isMissingDetails())
-            return response.withIncompleteDetails();
-
-        if (locationList.isAlreadyPresent(location)) {
-            return response.withAlreadyPresent();
-        }
+        LocationValidator locationValidator = new LocationValidator(locationList);
+        LocationValidationResponse validationResponse = locationValidator.validate(location);
+        if(validationResponse.isInValid())
+            return response.withValidationResponse(validationResponse);
 
         saveNewLocation(location, locationList);
 

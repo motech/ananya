@@ -1,6 +1,6 @@
 package org.motechproject.ananya.response;
 
-public class ValidationResponse {
+public class LocationValidationResponse {
     private String message;
     private boolean isValid = true;
 
@@ -16,21 +16,15 @@ public class ValidationResponse {
         return message;
     }
 
-    public ValidationResponse forInvalidMsisdn() {
-        message = "Invalid msisdn";
+    public LocationValidationResponse withIncompleteDetails() {
         isValid = false;
+        message = "One or more of District, Block, Panchayat details are missing";
         return this;
     }
 
-    public ValidationResponse forInvalidName() {
-        message = "Invalid name";
+    public LocationValidationResponse withAlreadyPresent() {
         isValid = false;
-        return this;
-    }
-
-    public ValidationResponse forInvalidLocation() {
-        message = "Invalid location";
-        isValid = false;
+        message = "The location is already present";
         return this;
     }
 }

@@ -71,8 +71,7 @@ public class Location extends MotechBaseDataObject {
 
     @JsonIgnore
     public boolean isMissingDetails() {
-        String emptyString = "";
-        return district.trim().equals(emptyString) || block.trim().equals(emptyString) || panchayat.trim().equals(emptyString);
+        return StringUtils.isBlank(district) || StringUtils.isBlank(block) || StringUtils.isBlank(panchayat);
     }
 
     private String prependZeros(int code) {

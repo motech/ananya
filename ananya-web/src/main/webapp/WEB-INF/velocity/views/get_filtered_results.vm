@@ -1,9 +1,0 @@
-var response = {
-#set($responseCount = $filteredResponse.size())
-#foreach($entry in $filteredResponse)
-    $entry
-    #if($foreach.count < $responseCount)
-    ,
-    #end
-#end
-};

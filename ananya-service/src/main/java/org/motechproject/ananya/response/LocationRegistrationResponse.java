@@ -9,18 +9,13 @@ public class LocationRegistrationResponse {
         locationDetails = district + "," + block + "," + panchayat;
     }
 
-    public LocationRegistrationResponse withIncompleteDetails() {
-        message = "One or more of District, Block, Panchayat details are missing";
-        return this;
-    }
-
-    public LocationRegistrationResponse withAlreadyPresent() {
-        message = "The location is already present";
-        return this;
-    }
-
     public LocationRegistrationResponse withSuccessfulRegistration() {
         message = "Successfully registered location";
+        return this;
+    }
+
+    public LocationRegistrationResponse withValidationResponse(LocationValidationResponse validationResponse) {
+        message = validationResponse.getMessage();
         return this;
     }
 

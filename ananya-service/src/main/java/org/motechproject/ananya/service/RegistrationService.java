@@ -5,9 +5,9 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
+import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
-import org.motechproject.ananya.response.ValidationResponse;
 import org.motechproject.ananya.validators.FrontLineWorkerValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +96,9 @@ public class RegistrationService {
         RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus);
 
-        ValidationResponse validationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
-        if (validationResponse.isInValid())
-            return registrationResponse.withValidationResponse(validationResponse);
+        FLWValidationResponse FLWValidationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
+        if (FLWValidationResponse.isInValid())
+            return registrationResponse.withValidationResponse(FLWValidationResponse);
 
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>motech-whp</artifactId>
+        <groupId>org.motechproject.whp</groupId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <name>whp-data-importer</name>
+    <artifactId>whp-data-importer</artifactId>
+    <properties>
+        <spring.version>3.0.5.RELEASE</spring.version>
+        <build.dir>../build</build.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-bulk-export-import</artifactId>
+            <version>${motech.contrib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp</groupId>
+            <artifactId>whp-adherence</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp</groupId>
+            <artifactId>whp-patient</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp</groupId>
+            <artifactId>whp-application</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp</groupId>
+            <artifactId>whp-mapping</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.whp</groupId>
+            <artifactId>whp-validation</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

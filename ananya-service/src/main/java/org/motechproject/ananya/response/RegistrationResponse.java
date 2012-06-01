@@ -8,8 +8,8 @@ public class RegistrationResponse {
         frontLineWorkerDetails = name + "," + msisdn + "," + designation + "," + operator + "," + circle + "," + district + "," + block + "," + panchayat;
     }
 
-    public RegistrationResponse withValidationResponse(ValidationResponse validationResponse) {
-        this.message = validationResponse.getMessage();
+    public RegistrationResponse withValidationResponse(FLWValidationResponse FLWValidationResponse) {
+        this.message = FLWValidationResponse.getMessage();
         return this;
     }
 
