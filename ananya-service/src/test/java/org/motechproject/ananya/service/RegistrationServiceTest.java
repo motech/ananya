@@ -53,7 +53,7 @@ public class RegistrationServiceTest {
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district ", " block", "village"));
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "operator"));
 
@@ -143,25 +143,25 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldRegisterMultipleFLWs() {
-        String callerId = "123";
-        String callerId1 = "1234";
+        String callerId = "1234532532523 ";
+        String callerId1 = "123434255434";
         String name = "name";
-        String name1 = "name1";
+        String name1 = " name1";
         String designation = Designation.AWW.name();
-        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Location location = new Location("district ", " block", "village", 1, 1, 1);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<FrontLineWorkerRequest>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, null, "bihar", new LocationRequest("district", "block", "village")));
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, null, "bihar", new LocationRequest("district", "block", "village")));
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "airtel"));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "airtel"));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId1, "airtel"));
 
         List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequestList);
 
-        assertTrue(StringUtils.contains(registrationResponses.get(0).getMessage(), "Invalid msisdn"));
-        verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
-        assertTrue(StringUtils.contains(registrationResponses.get(1).getMessage(), "Invalid msisdn"));
-        verify(registrationMeasureService, never()).createOrUpdateFor(callerId1);
+        assertTrue(StringUtils.contains(registrationResponses.get(0).getMessage(), "Created/Updated FLW record"));
+        verify(registrationMeasureService).createOrUpdateFor(callerId);
+        assertTrue(StringUtils.contains(registrationResponses.get(1).getMessage(), "Created/Updated FLW record"));
+        verify(registrationMeasureService).createOrUpdateFor(callerId1);
     }
 
     @Test

@@ -45,14 +45,14 @@ public class RegistrationService {
         LocationList locationList = new LocationList(locationService.getAll());
         List<RegistrationResponse> registrationResponses = new ArrayList<RegistrationResponse>();
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
-            RegistrationResponse registrationResponse = registerFlw(frontLineWorkerRequest.getMsisdn(),
-                    frontLineWorkerRequest.getName(),
-                    frontLineWorkerRequest.getDesignation(),
-                    frontLineWorkerRequest.getOperator(),
+            RegistrationResponse registrationResponse = registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getOperator()),
                     frontLineWorkerRequest.getLocation().getDistrict(),
                     frontLineWorkerRequest.getLocation().getBlock(),
                     frontLineWorkerRequest.getLocation().getPanchayat(),
-                    frontLineWorkerRequest.getCircle(),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
                     locationList);
             registrationResponses.add(registrationResponse);
         }
@@ -61,14 +61,14 @@ public class RegistrationService {
 
     public RegistrationResponse createOrUpdateFLW(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationList locationList = new LocationList(locationService.getAll());
-        return registerFlw(frontLineWorkerRequest.getMsisdn(),
-                frontLineWorkerRequest.getName(),
-                frontLineWorkerRequest.getDesignation(),
-                frontLineWorkerRequest.getOperator(),
+        return registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getOperator()),
                 frontLineWorkerRequest.getLocation().getDistrict(),
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
-                frontLineWorkerRequest.getCircle(),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
                 locationList);
     }
 
