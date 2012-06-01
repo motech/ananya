@@ -103,7 +103,7 @@
         <sql>
             update
             report.front_line_worker_dimension
-            set designation = ''
+            set designation = null
             where designation = 'INVALID'
 
         </sql>
