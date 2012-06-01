@@ -1,6 +1,7 @@
 package org.motechproject.ananya.console;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.export.builder.csv.CsvReportBuilder;
 import org.motechproject.export.model.ReportDataSource;
 
@@ -35,8 +36,18 @@ public class CsvExporter {
         if (filterFilePath != null) {
             List<String> strings = IOUtils.readLines(new FileInputStream(filterFilePath));
             for (String line : strings) {
+                if(StringUtils.isBlank(line))
+                    continue;
+
                 String[] keyValue = line.split("=");
-                criteria.put(keyValue[0].toLowerCase(), keyValue[1]);
+                int criteriaArrayLength = keyValue.length;
+                if(criteriaArrayLength < 1 || criteriaArrayLength > 2)
+                    continue;
+
+                String criteriaKey = keyValue[0].trim().toLowerCase();
+                String criteriaValue = (criteriaArrayLength > 1) ? keyValue[1].trim() : StringUtils.EMPTY;
+
+                criteria.put(criteriaKey, criteriaValue);
             }
         }
         return criteria;
