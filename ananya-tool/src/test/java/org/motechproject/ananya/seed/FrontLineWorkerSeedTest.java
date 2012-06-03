@@ -64,6 +64,14 @@ public class FrontLineWorkerSeedTest {
         timeSeed.createDimensionsInPostgres();
     }
 
+    @After
+    public void tearDown() {
+        allLocations.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        allFrontLineWorkers.removeAll();
+        allFrontLineWorkerDimensions.removeAll();
+    }
+
     @Test
     public void shouldRegisterFrontLineWorkersThroughTheFrontLineWorkerSeed() throws IOException {
         frontLineWorkerSeed.createFrontlineWorkersFromCSVFile();
@@ -120,13 +128,5 @@ public class FrontLineWorkerSeedTest {
             assertEquals(defaultCircle, flw.getCircle());
             assertEquals(12, flw.getMsisdn().length());
         }
-    }
-
-    @After
-    public void tearDown() {
-        allLocations.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
-        allFrontLineWorkers.removeAll();
-        allFrontLineWorkerDimensions.removeAll();
     }
 }

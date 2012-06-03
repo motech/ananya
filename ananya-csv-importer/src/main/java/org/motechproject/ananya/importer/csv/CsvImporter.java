@@ -1,97 +1,78 @@
-package org.motechproject.whp.importer.csv;
+package org.motechproject.ananya.importer.csv;
 
+
+import org.apache.commons.lang.StringUtils;
+import org.motechproject.ananya.importer.csv.exception.FileReadException;
+import org.motechproject.ananya.importer.csv.exception.InvalidArgumentException;
+import org.motechproject.ananya.importer.csv.exception.WrongNumberArgsException;
 import org.motechproject.importer.CSVDataImporter;
-import org.motechproject.whp.importer.csv.exceptions.ExceptionMessages;
-import org.motechproject.whp.importer.csv.exceptions.WHPImportException;
-import org.motechproject.whp.importer.csv.logger.ImporterLogger;
-import org.motechproject.whp.mapping.StringToEnumeration;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
 
 public class CsvImporter {
 
-    private static final String APPLICATION_CONTEXT_XML = "applicationDataImporterContext.xml";
+    private static final String APPLICATION_CONTEXT_XML = "applicationContext-DataImporter.xml";
 
-    public static void main(String argvs[]) throws Exception {
+    public static void main(String args[]) throws Exception {
         try {
-            validateAndSetUpLogger(argvs);
-            ImportType importType = validateAndSetImportType(argvs[0]);
+            validateArguments(args);
+
+            String entityType = args[0];
+            String filePath = args[1];
+            ImportType importType = validateAndSetImportType(entityType);
+            validateImportFile(filePath);
+
             ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(APPLICATION_CONTEXT_XML);
             CSVDataImporter csvDataImporter = (CSVDataImporter) context.getBean("csvDataImporter");
-            importType.performAction(argvs[1], csvDataImporter);
+            importType.performAction(filePath, csvDataImporter);
         } catch (Exception exception) {
-            ImporterLogger.error(exception);
             throw exception;
         }
     }
 
-    private static void validateAndSetUpLogger(String[] argvs) throws Exception {
-        validateArgCount(argvs);
-        setLogger(argvs[2]);
-        validateImportFile(argvs[1]);
+    private static void validateArguments(String[] args) throws WrongNumberArgsException {
+        if (args.length != 2)
+            throw new WrongNumberArgsException("Wrong number of arguments. Arguments expected in order : <entity_type> <file_name>");
     }
 
-    private static ImportType validateAndSetImportType(String mode) throws WHPImportException {
-        ImportType importType = (ImportType) new StringToEnumeration().convert(mode, ImportType.class);
-        if (importType == null) {
-            throw new WHPImportException(ExceptionMessages.ILLEGAL_ARGUMENTS);
-        }
-        return importType;
+    private static ImportType validateAndSetImportType(String entity) throws Exception {
+        if (ImportType.isInValid(entity))
+            throw new InvalidArgumentException("Invalid entity. Valid entities are : FrontLineWorker, Location");
+        return ImportType.findFor(entity);
     }
 
-    private static void validateImportFile(String importFile) throws WHPImportException {
-        try {
-            if (!new File(importFile).canRead()) {
-                throw new WHPImportException("invalid file");
-            }
-        } catch (Exception exception) {
-            throw new WHPImportException("Unable to read file - " + importFile + " Either file does not exist or the file does not have read permission");
-        }
-    }
-
-    private static void setLogger(String logFile) throws WHPImportException {
-        try {
-            new File(logFile).createNewFile();
-            ImporterLogger.loadAppender(logFile);
-        } catch (Exception exception) {
-            throw new WHPImportException("Unable to create/access the log file -" + logFile);
-        }
-    }
-
-    public static void validateArgCount(String args[]) throws Exception {
-        if (args.length < 3) {
-            throw new WHPImportException(ExceptionMessages.ILLEGAL_ARGUMENTS);
+    private static void validateImportFile(String importFile) {
+        if (!new File(importFile).canRead()) {
+            new FileReadException("Cannot read import file " + importFile);
         }
     }
 }
 
 enum ImportType {
-    Provider() {
+    FrontLineWorker() {
         @Override
         void performAction(String importFile, CSVDataImporter csvDataImporter) {
-            ImporterLogger.info("Importing provider records from file : " + importFile);
-            csvDataImporter.importData("providerRecordImporter", importFile);
+            csvDataImporter.importData("frontLineWorkerImporter", importFile);
         }
-    }, Patient {
+    }, Location {
         @Override
         void performAction(String importFile, CSVDataImporter csvDataImporter) {
-            ImporterLogger.info("Importing patient records from file : " + importFile);
-            csvDataImporter.importData("patientRecordImporter", importFile);
-        }
-    }, ProviderTest {
-        @Override
-        void performAction(String importFile, CSVDataImporter csvDataImporter) {
-            ImporterLogger.info("Testing import of provider records from file : " + importFile);
-            csvDataImporter.importData("providerRecordValidator", importFile);
-        }
-    }, PatientTest {
-        @Override
-        void performAction(String importFile, CSVDataImporter csvDataImporter) {
-            ImporterLogger.info("Testing import of patient records from file : " + importFile);
-            csvDataImporter.importData("patientRecordValidator", importFile);
         }
     };
+
+    public static boolean isInValid(String entity) {
+        return findFor(entity) == null;
+    }
+
+    public static ImportType findFor(String entity) {
+        for (ImportType designation : ImportType.values()) {
+            if (designation.name().equals(StringUtils.trimToEmpty(entity).toUpperCase())) {
+                return designation;
+            }
+        }
+        return null;
+    }
 
     abstract void performAction(String importFile, CSVDataImporter csvDataImporter);
 };

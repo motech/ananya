@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +29,9 @@ public class RegistrationService {
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
 
+    public RegistrationService() {
+    }
+
     @Autowired
     public RegistrationService(FrontLineWorkerService frontLineWorkerService,
                                CourseItemMeasureService courseItemMeasureService,
@@ -41,6 +45,7 @@ public class RegistrationService {
         this.locationService = locationService;
     }
 
+    @Transactional
     public List<RegistrationResponse> registerAllFLWs(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
         LocationList locationList = new LocationList(locationService.getAll());
         List<RegistrationResponse> registrationResponses = new ArrayList<RegistrationResponse>();

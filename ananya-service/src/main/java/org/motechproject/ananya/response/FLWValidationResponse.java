@@ -1,7 +1,7 @@
 package org.motechproject.ananya.response;
 
 public class FLWValidationResponse {
-    private String message;
+    private String message = "";
     private boolean isValid = true;
 
     public boolean isValid() {
@@ -17,19 +17,25 @@ public class FLWValidationResponse {
     }
 
     public FLWValidationResponse forInvalidMsisdn() {
-        message = "Invalid msisdn";
+        message += "[Invalid msisdn]";
         isValid = false;
         return this;
     }
 
     public FLWValidationResponse forInvalidName() {
-        message = "Invalid name";
+        message += "[Invalid name]";
         isValid = false;
         return this;
     }
 
     public FLWValidationResponse forInvalidLocation() {
-        message = "Invalid location";
+        message += "[Invalid location]";
+        isValid = false;
+        return this;
+    }
+
+    public FLWValidationResponse forDuplicates() {
+        message += "[Found duplicate FLW with the same MSISDN]";
         isValid = false;
         return this;
     }

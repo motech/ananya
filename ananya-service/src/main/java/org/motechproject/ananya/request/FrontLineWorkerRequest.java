@@ -10,7 +10,8 @@ public class FrontLineWorkerRequest implements Serializable {
     private String circle;
     private LocationRequest location;
 
-    public FrontLineWorkerRequest() {}
+    public FrontLineWorkerRequest() {
+    }
 
     public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location) {
         this.name = name;
@@ -67,5 +68,9 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setLocation(LocationRequest location) {
         this.location = location;
+    }
+
+    public String toCSV() {
+        return msisdn + "," + name + "," + designation + "," + location.getDistrict() + "," + location.getBlock() + "," + location.getPanchayat();
     }
 }
