@@ -1,7 +1,6 @@
 package org.motechproject.ananya.importer.csv;
 
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.importer.csv.exception.FileReadException;
 import org.motechproject.ananya.importer.csv.exception.InvalidArgumentException;
 import org.motechproject.ananya.importer.csv.exception.WrongNumberArgsException;
@@ -17,7 +16,6 @@ public class CsvImporter {
     public static void main(String args[]) throws Exception {
         try {
             validateArguments(args);
-
             String entityType = args[0];
             String filePath = args[1];
             ImportType importType = validateAndSetImportType(entityType);
@@ -42,38 +40,12 @@ public class CsvImporter {
         return ImportType.findFor(entity);
     }
 
-    private static void validateImportFile(String importFile) {
+    private static void validateImportFile(String importFile) throws FileReadException {
         if (!new File(importFile).canRead()) {
-            new FileReadException("Cannot read import file " + importFile);
+            throw new FileReadException("Cannot read import file " + importFile);
         }
     }
 }
 
-enum ImportType {
-    FrontLineWorker() {
-        @Override
-        void performAction(String importFile, CSVDataImporter csvDataImporter) {
-            csvDataImporter.importData("frontLineWorkerImporter", importFile);
-        }
-    }, Location {
-        @Override
-        void performAction(String importFile, CSVDataImporter csvDataImporter) {
-        }
-    };
-
-    public static boolean isInValid(String entity) {
-        return findFor(entity) == null;
-    }
-
-    public static ImportType findFor(String entity) {
-        for (ImportType designation : ImportType.values()) {
-            if (designation.name().equals(StringUtils.trimToEmpty(entity).toUpperCase())) {
-                return designation;
-            }
-        }
-        return null;
-    }
-
-    abstract void performAction(String importFile, CSVDataImporter csvDataImporter);
-};
+;
 

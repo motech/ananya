@@ -9,9 +9,8 @@
     <context:property-placeholder location="classpath*:*.properties"/>
     <import resource="classpath*:applicationContext-services.xml"/>
     <import resource="classpath*:applicationBulkImportContext.xml"/>
+    <import resource="classpath:applicationContext-report.xml"/>
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.motechproject.ananya.importer"/>
-
-
+    <context:component-scan base-package="org.motechproject.ananya"/>
 </beans>

@@ -14,11 +14,11 @@ import static junit.framework.Assert.assertEquals;
 public class FrontLineWorkerMapperTest {
     @Test
     public void shouldMapFromRequestToFLW() {
-        String msisdn = "123457890";
-        String name = "name";
+        String msisdn = "1234567678890 ";
+        String name = " name";
         String designation = Designation.ANM.name();
-        String operator = "airtel";
-        String circle = "bihar";
+        String operator = " airtel";
+        String circle = "bihar  ";
         String district = "D1";
         String block = "B1";
         String panchayat = "P1";
@@ -26,11 +26,11 @@ public class FrontLineWorkerMapperTest {
 
         FrontLineWorker frontLineWorker = FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest);
 
-        assertEquals(msisdn, frontLineWorker.getMsisdn());
-        assertEquals(name, frontLineWorker.getName());
+        assertEquals("1234567678890", frontLineWorker.getMsisdn());
+        assertEquals("name", frontLineWorker.getName());
         assertEquals(designation, frontLineWorker.getDesignation().name());
-        assertEquals(circle, frontLineWorker.getCircle());
-        assertEquals(operator, frontLineWorker.getOperator());
+        assertEquals("bihar", frontLineWorker.getCircle());
+        assertEquals("airtel", frontLineWorker.getOperator());
     }
 
     @Test

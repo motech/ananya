@@ -1,5 +1,7 @@
 package org.motechproject.ananya.request;
 
+import org.motechproject.importer.annotation.ColumnName;
+
 import java.io.Serializable;
 
 public class FrontLineWorkerRequest implements Serializable {
@@ -8,7 +10,7 @@ public class FrontLineWorkerRequest implements Serializable {
     private String operator;
     private String designation;
     private String circle;
-    private LocationRequest location;
+    private LocationRequest location = new LocationRequest();
 
     public FrontLineWorkerRequest() {
     }
@@ -68,6 +70,21 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setLocation(LocationRequest location) {
         this.location = location;
+    }
+
+    @ColumnName(name = "district")
+    public void setDistrict(String district) {
+        location.setDistrict(district);
+    }
+
+    @ColumnName(name = "block")
+    public void setBlock(String block) {
+        location.setBlock(block);
+    }
+
+    @ColumnName(name = "panchayat")
+    public void setPanchayat(String panchayat) {
+        location.setPanchayat(panchayat);
     }
 
     public String toCSV() {

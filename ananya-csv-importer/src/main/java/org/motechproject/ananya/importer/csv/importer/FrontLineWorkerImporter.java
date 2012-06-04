@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@CSVImporter(entity = "frontLineWorkerImporter", bean = FrontLineWorkerRequest.class)
+@CSVImporter(entity = "FrontLineWorker", bean = FrontLineWorkerRequest.class)
 @Component
 public class FrontLineWorkerImporter {
 
