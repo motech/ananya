@@ -197,6 +197,16 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-exporter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-importer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-report</artifactId>
             <version>${project.version}</version>
         </dependency>
