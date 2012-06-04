@@ -34,8 +34,8 @@ public class FlwDataSourceTest {
     }
 
     @Test
-    public void shouldVerifyThatItBelongsToLocationReportGroup() {
-        assertEquals("FLW", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
+    public void shouldVerifyThatItBelongsToFrontLineWorkerReportGroup() {
+        assertEquals("FrontLineWorker", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
     }
 
     @Test
