@@ -12,6 +12,7 @@ public enum ImportType {
     }, Location {
         @Override
         void performAction(String importFile, CSVDataImporter csvDataImporter) {
+            csvDataImporter.importData(ImportType.Location.name(), importFile);
         }
     };
 

@@ -39,14 +39,16 @@ public class LocationRegistrationService {
         return registerLocation(request.getDistrict(), request.getBlock(), request.getPanchayat(), locationList);
     }
 
-    public List<LocationRegistrationResponse> registerAllLocations(List<Location> locationsToSave) {
+    public List<LocationRegistrationResponse> registerAllLocationsWithDefaultLocations(List<LocationRequest> locationsToSave) {
         LocationList locationList = new LocationList(locationService.getAll());
-        List<LocationRegistrationResponse> responses = new ArrayList<LocationRegistrationResponse>();
-        for (Location location : locationsToSave) {
-            LocationRegistrationResponse locationRegistrationResponse = registerLocation(location.getDistrict(), location.getBlock(), location.getPanchayat(), locationList);
-            responses.add(locationRegistrationResponse);
-        }
+        List<LocationRegistrationResponse> responses = saveLocations(locationsToSave, locationList);
         registerDefaultLocationForDistrictBlock(locationList);
+        return responses;
+    }
+
+    public List<LocationRegistrationResponse> registerAllLocations(List<LocationRequest> locationsToSave) {
+        LocationList locationList = new LocationList(locationService.getAll());
+        List<LocationRegistrationResponse> responses = saveLocations(locationsToSave, locationList);
         return responses;
     }
 
@@ -57,6 +59,15 @@ public class LocationRegistrationService {
             locationResponses.add(LocationMapper.mapFrom(locationDimension));
         }
         return locationResponses;
+    }
+
+    private List<LocationRegistrationResponse> saveLocations(List<LocationRequest> locationsToSave, LocationList locationList) {
+        List<LocationRegistrationResponse> responses = new ArrayList<LocationRegistrationResponse>();
+        for (LocationRequest location : locationsToSave) {
+            LocationRegistrationResponse locationRegistrationResponse = registerLocation(location.getDistrict(), location.getBlock(), location.getPanchayat(), locationList);
+            responses.add(locationRegistrationResponse);
+        }
+        return responses;
     }
 
     private void registerDefaultLocationForDistrictBlock(LocationList locationList) {

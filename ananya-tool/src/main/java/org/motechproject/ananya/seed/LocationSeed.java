@@ -1,7 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
-import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
@@ -52,7 +52,7 @@ public class LocationSeed {
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-        List<Location> locationList = new ArrayList<Location>();
+        List<LocationRequest> locationList = new ArrayList<LocationRequest>();
         //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
@@ -61,11 +61,11 @@ public class LocationSeed {
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            locationList.add(new Location(currentDistrict, currentBlock, currentPanchayat, 0, 0, 0));
+            locationList.add(new LocationRequest(currentDistrict, currentBlock, currentPanchayat));
 
             currentRow = csvReader.readNext();
         }
-        List<LocationRegistrationResponse> responses = locationRegistrationService.registerAllLocations(locationList);
+        List<LocationRegistrationResponse> responses = locationRegistrationService.registerAllLocationsWithDefaultLocations(locationList);
         logResponses(responses);
     }
 

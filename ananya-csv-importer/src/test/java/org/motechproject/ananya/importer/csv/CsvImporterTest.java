@@ -54,6 +54,20 @@ public class CsvImporterTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void shouldImportLocationData() throws Exception {
+        URL locationData = this.getClass().getResource("/locationData.csv");
+        String[] arguments = {"Location", locationData.getPath()};
+
+        CsvImporter.main(arguments);
+
+        List<LocationDimension> locationDimensions = template.loadAll(LocationDimension.class);
+        assertEquals(1, locationDimensions.size());
+        assertEquals("D2", locationDimensions.get(0).getDistrict());
+        assertEquals("B2", locationDimensions.get(0).getBlock());
+        assertEquals("P2", locationDimensions.get(0).getPanchayat());
+    }
+
+    @Test
     @ExpectedException(InvalidArgumentException.class)
     public void shouldFailForRandomEntityNames() throws Exception {
         Location location = new Location("D1", "B1", "P1", 9, 9, 9);
