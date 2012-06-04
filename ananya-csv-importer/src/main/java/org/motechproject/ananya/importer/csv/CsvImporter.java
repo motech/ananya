@@ -11,7 +11,7 @@ import java.io.File;
 
 public class CsvImporter {
 
-    private static final String APPLICATION_CONTEXT_XML = "applicationContext-DataImporter.xml";
+    private static final String APPLICATION_CONTEXT_XML = "applicationContext-csv-importer.xml";
 
     public static void main(String args[]) throws Exception {
         try {

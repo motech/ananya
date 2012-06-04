@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-DataImporter.xml")
+@ContextConfiguration("classpath:applicationContext-csv-importer.xml")
 public abstract class SpringIntegrationTest {
 
     @Autowired
