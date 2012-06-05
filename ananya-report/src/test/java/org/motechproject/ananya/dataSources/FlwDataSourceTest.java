@@ -126,8 +126,8 @@ public class FlwDataSourceTest {
         criteria.put("designation", designation);
         criteria.put("operator", operator);
         criteria.put("circle", circle);
-        criteria.put("activityStartDate", activityStartDate.toString());
-        criteria.put("activityEndDate", activityEndDate.toString());
+        criteria.put("activitystartdate", activityStartDate.toString());
+        criteria.put("activityenddate", activityEndDate.toString());
 
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
@@ -158,8 +158,8 @@ public class FlwDataSourceTest {
         criteria.put("designation", designation);
         criteria.put("operator", operator);
         criteria.put("circle", circle);
-        criteria.put("activityStartDate", activityStartDate.toString());
-        criteria.put("activityEndDate", activityEndDate.toString());
+        criteria.put("activitystartdate", activityStartDate.toString());
+        criteria.put("activityenddate", activityEndDate.toString());
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
