@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-@ReportGroup(name = "FrontLineWorker")
+@ReportGroup(name = "FRONTLINEWORKER")
 public class FlwDataSource {
 
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;

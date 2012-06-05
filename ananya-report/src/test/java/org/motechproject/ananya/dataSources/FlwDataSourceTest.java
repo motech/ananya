@@ -1,5 +1,6 @@
 package org.motechproject.ananya.dataSources;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.motechproject.export.annotation.ReportGroup;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -35,7 +37,8 @@ public class FlwDataSourceTest {
 
     @Test
     public void shouldVerifyThatItBelongsToFrontLineWorkerReportGroup() {
-        assertEquals("FrontLineWorker", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
+        assertEquals("FRONTLINEWORKER", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
+        assertTrue(StringUtils.isAllUpperCase(flwDataSource.getClass().getAnnotation(ReportGroup.class).name()));
     }
 
     @Test

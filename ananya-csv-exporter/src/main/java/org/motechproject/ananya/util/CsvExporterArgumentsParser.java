@@ -31,8 +31,7 @@ public class CsvExporterArgumentsParser {
 
         if (line.getArgs().length != 1)
             throw new WrongNumberArgsException("Expected 'entity-name' argument, got nothing");
-        else
-            entityName = line.getArgs()[0].toUpperCase();
+        entityName = line.getArgs()[0].toUpperCase();
 
         if (line.hasOption("f"))
             filterFilePath = line.getOptionValue("f").trim();
@@ -43,6 +42,6 @@ public class CsvExporterArgumentsParser {
 
     public void printUsage() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(" <Entity to be exported>", options);
+        formatter.printHelp(" <Entity to be exported should be FrontLineWorker/Location>", options);
     }
 }
