@@ -13,13 +13,58 @@ import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+@Service
 public class CertificateCourseDataCorrectionSeed {
+
+    class ChapterScore {
+
+        private String chapterIndex;
+        private int score;
+
+        ChapterScore(String chapterIndex, int score) {
+            this.chapterIndex = chapterIndex;
+            this.score = score;
+        }
+
+        public String getChapterIndex() {
+            return chapterIndex;
+        }
+
+        public void setChapterIndex(String chapterIndex) {
+            this.chapterIndex = chapterIndex;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ChapterScore that = (ChapterScore) o;
+
+            if (chapterIndex != null ? !chapterIndex.equals(that.chapterIndex) : that.chapterIndex != null)
+                return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return chapterIndex != null ? chapterIndex.hashCode() : 0;
+        }
+    }
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseDataCorrectionSeed.class);
 
@@ -36,15 +81,69 @@ public class CertificateCourseDataCorrectionSeed {
 
     private DateTime endDate;
 
-    private HashMap<String, List<Integer>> flwScoresHashMap;
+    private Map<String, List<Integer>> flwChaptersMap = new HashMap<String, List<Integer>>();
+
+    private Map<String, List<ChapterScore>> flwScoresMap = new HashMap<String, List<ChapterScore>>();
 
     public static void main(String[] args) {
-        CertificateCourseDataCorrectionSeed certificateCourseDataCorrectionSeed = new CertificateCourseDataCorrectionSeed();
-        certificateCourseDataCorrectionSeed.correctData();
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
+        CertificateCourseDataCorrectionSeed certificateCourseDataCorrectionSeed =
+                (CertificateCourseDataCorrectionSeed) context.getBean("certificateCourseDataCorrectionSeed");
+        certificateCourseDataCorrectionSeed.correctScoresData();
+    }
+
+    @Seed(priority = 0, version = "1.3", comment = "Correct scores")
+    public void correctScoresData() {
+
+        startDate = DateUtil.newDate(2012, 5, 23).toDateTimeAtStartOfDay();
+
+        List<CourseItemMeasure> courseItemMeasureList =
+                courseItemMeasureSeedService.fetchQuizEndMeasuresBetweenDates(startDate, DateTime.now());
+
+        List<ChapterScore> flwScores;
+        String msisdn;
+        String currentChapter;
+        for(CourseItemMeasure courseItemMeasure : courseItemMeasureList) {
+            msisdn = courseItemMeasure.getFrontLineWorkerDimension().getMsisdn().toString();
+            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension()).toString();
+
+            if (flwScoresMap.containsKey(msisdn))
+                flwScores = flwScoresMap.get(msisdn);
+            else
+                flwScores = new ArrayList<ChapterScore>();
+
+            int index;
+            ChapterScore chapterScore = new ChapterScore(currentChapter, courseItemMeasure.getScore());
+            if ((index = flwScores.indexOf(currentChapter)) != -1)
+                flwScores.set(index, chapterScore);
+            else
+                flwScores.add(chapterScore);
+        }
+
+        FrontLineWorker frontLineWorker;
+        List<ChapterScore> chapterScoresMap;
+        Map<String, Integer> currentScoresInCouch;
+        int incorrectNumbersCount = 0;
+        for (String checkMsisdn : flwScoresMap.keySet()) {
+            frontLineWorker = allFrontLineWorkers.findByMsisdn(checkMsisdn);
+            currentScoresInCouch = frontLineWorker.reportCard().scoresByChapterIndex();
+
+            chapterScoresMap = flwScoresMap.get(checkMsisdn);
+            for (ChapterScore chapterScore : chapterScoresMap) {
+                if (chapterScore.getScore() != currentScoresInCouch.get(chapterScore.getChapterIndex())) {
+                    System.out.println("Score in postgres : " + chapterScore.getScore() +
+                            " Score in couch : " + currentScoresInCouch.get(chapterScore.getChapterIndex()) +
+                            " FLW with msisdn " + checkMsisdn);
+                    incorrectNumbersCount++;
+                }
+            }
+        }
+
+        System.out.println("Incorrect FLWs in the database are : " + incorrectNumbersCount);
     }
 
     @Seed(priority = 0, version = "1.3", comment = "Correct certificate course scores for FLWs")
-    private void correctData() {
+    public void correctData() {
         log.info("Correcting error FLW data : ");
 
         startDate = DateUtil.newDate(2012, 5, 23).toDateTimeAtStartOfDay();
@@ -54,9 +153,9 @@ public class CertificateCourseDataCorrectionSeed {
         log.info("Correction end date (inclusive) is : " + endDate);
 
         List<CourseItemMeasure> incorrectCalls =
-                courseItemMeasureSeedService.fetchQuizEndMeasuresBetweenDates(startDate, endDate);
+                courseItemMeasureSeedService.fetchQuizStartMeasuresBetweenDates(startDate, endDate);
         List<CourseItemMeasure> correctCallsAfterBug =
-                courseItemMeasureSeedService.fetchQuizEndMeasuresBetweenDates(endDate.plusDays(1), DateTime.now());
+                courseItemMeasureSeedService.fetchQuizStartMeasuresBetweenDates(endDate.plusDays(1), DateTime.now());
 
         log.info("Fetched incorrect Measures (count) : " + incorrectCalls.size());
         log.info("Fetched correct calls after bug (count) : " + correctCallsAfterBug.size());
@@ -65,14 +164,14 @@ public class CertificateCourseDataCorrectionSeed {
         List<Integer> chaptersForFLW;
         String msisdn;
         Integer currentChapter;
-        for(CourseItemMeasure courseItemMeasure : incorrectCalls) {
+        for (CourseItemMeasure courseItemMeasure : incorrectCalls) {
             msisdn = courseItemMeasure.getFrontLineWorkerDimension().getMsisdn().toString();
 
-            if (!flwScoresHashMap.containsKey(msisdn)) {
+            if (!flwChaptersMap.containsKey(msisdn)) {
                 chaptersForFLW = new ArrayList<Integer>();
-                flwScoresHashMap.put(msisdn, chaptersForFLW);
+                flwChaptersMap.put(msisdn, chaptersForFLW);
             } else {
-                chaptersForFLW = flwScoresHashMap.get(msisdn);
+                chaptersForFLW = flwChaptersMap.get(msisdn);
             }
 
             currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension());
@@ -82,12 +181,12 @@ public class CertificateCourseDataCorrectionSeed {
         }
 
         // remove freshly called chaptersForFLW from the hash
-        for(CourseItemMeasure courseItemMeasure : correctCallsAfterBug) {
+        for (CourseItemMeasure courseItemMeasure : correctCallsAfterBug) {
             msisdn = courseItemMeasure.getFrontLineWorkerDimension().getMsisdn().toString();
             currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension());
 
-            if (flwScoresHashMap.containsKey(msisdn)) {
-                chaptersForFLW = flwScoresHashMap.get(msisdn);
+            if (flwChaptersMap.containsKey(msisdn)) {
+                chaptersForFLW = flwChaptersMap.get(msisdn);
                 if (chaptersForFLW.contains(currentChapter)) {
                     chaptersForFLW.remove(currentChapter);
                     log.info("Removing chapter " + currentChapter + " from msisdn " + msisdn + " 's incorrect chapter list");
@@ -97,9 +196,9 @@ public class CertificateCourseDataCorrectionSeed {
 
         FrontLineWorker dirtyFrontLineWorker;
         Collection<Score> dirtyScoreCollection;
-        for (String dirtyMsisdn : flwScoresHashMap.keySet()) {
+        for (String dirtyMsisdn : flwChaptersMap.keySet()) {
             dirtyFrontLineWorker = allFrontLineWorkers.findByMsisdn(dirtyMsisdn);
-            chaptersForFLW = flwScoresHashMap.get(dirtyMsisdn);
+            chaptersForFLW = flwChaptersMap.get(dirtyMsisdn);
 
             Integer oldScore = dirtyFrontLineWorker.reportCard().totalScore();
             log.info("msisdn " + dirtyMsisdn + " : incorrect score is - " + oldScore);
@@ -115,7 +214,7 @@ public class CertificateCourseDataCorrectionSeed {
             log.info("msisdn " + dirtyMsisdn + " : corrected score is - " + newScore);
 
             if (oldScore < FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE &&
-                    newScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
+                newScore >= FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
                 log.info("Sending SMS to msisdn : " + dirtyMsisdn);
                 sendSMSService.buildAndSendSMS(
                         dirtyFrontLineWorker.getMsisdn(),
@@ -130,6 +229,7 @@ public class CertificateCourseDataCorrectionSeed {
     }
 
     private Integer getChapterIndexFromCourseItemDimension(CourseItemDimension courseItemDimension) {
+        System.out.println("Getting chapter index for course dimension : " + courseItemDimension.getName());
         return Integer.parseInt(courseItemDimension.getName().substring(8, 1));
     }
 
