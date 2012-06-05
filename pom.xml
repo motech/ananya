@@ -27,6 +27,7 @@
         <db.server>localhost</db.server>
         <db.name>ananya</db.name>
         <db.port>5984</db.port>
+        <motech.platform.version>0.10.1</motech.platform.version>
     </properties>
 
     <distributionManagement>
@@ -181,12 +182,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-common</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
