@@ -13,7 +13,7 @@ public class Launcher {
 
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-performance.xml");
         AllDataSetups allDataSetups = (AllDataSetups) context.getBean("allDataSetups");
-        allDataSetups.run();
+        allDataSetups.run(args);
 
         DateTime end = DateTime.now();
         System.out.println("Performance data setup: END: "+end);
