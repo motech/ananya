@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.exceptions.DataAPIException;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
@@ -19,7 +18,7 @@ import java.util.List;
 @Authenticated
 @Controller
 @RequestMapping(value = "/location")
-public class LocationDetailsController {
+public class LocationDetailsController extends BaseDataAPIController{
     private LocationRegistrationService locationRegistrationService;
 
     @Autowired
@@ -31,26 +30,18 @@ public class LocationDetailsController {
     public
     @ResponseBody
     LocationRegistrationResponse create(@RequestBody LocationRequest request) {
-        try {
-            return locationRegistrationService.addNewLocation(request);
-        } catch (Exception e) {
-            throw new DataAPIException(e);
-        }
+        return locationRegistrationService.addNewLocation(request);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     public
     @ResponseBody
     List<LocationResponse> search(HttpServletRequest request) {
-        try {
-            String district = request.getParameter("district");
-            String block = request.getParameter("block");
-            String panchayat = request.getParameter("panchayat");
-            LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
+        String district = request.getParameter("district");
+        String block = request.getParameter("block");
+        String panchayat = request.getParameter("panchayat");
+        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
 
-            return locationRegistrationService.getFilteredLocations(locationRequest);
-        } catch (Exception e) {
-            throw new DataAPIException(e);
-        }
+        return locationRegistrationService.getFilteredLocations(locationRequest);
     }
 }

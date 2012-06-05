@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class CertificateCourseCallDataController {
+public class CertificateCourseCallDataController extends BaseAnanyaController {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
 

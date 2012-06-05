@@ -40,17 +40,6 @@
         </bean>
     </mvc:interceptors>
 
-    <bean class="org.motechproject.ananya.web.AnanyaExceptionResolver"
-          p:defaultErrorView="exceptionView">
-        <property name="exceptionMappings">
-            <props>
-                <prop key=".Exception">exceptionView</prop>
-                <prop key=".AnanyaException">exceptionView</prop>
-                <prop key=".DataAPIException">dataAPIExceptionView</prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="messageAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">
             <util:list>
@@ -75,9 +64,4 @@
     <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath" value="/WEB-INF/velocity/views"/>
     </bean>
-
-    <bean id="xmlViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
-        <property name="location" value="/WEB-INF/views.xml"/>
-    </bean>
-
 </beans>

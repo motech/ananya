@@ -8,7 +8,6 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.exceptions.DataAPIException;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.request.LocationRequest;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -95,21 +93,5 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         List<LocationResponse> locations = locationDetailsController.search(request);
 
         assertEquals(2, locations.size());
-    }
-
-    @Test(expected = DataAPIException.class)
-    public void shouldHandleExceptionOnLocationCreation() {
-        LocationDetailsController locationController = new LocationDetailsController(locationRegistrationService);
-        when(locationRegistrationService.addNewLocation(any(LocationRequest.class))).thenThrow(new RuntimeException());
-
-        locationController.create(new LocationRequest());
-    }
-
-    @Test(expected = DataAPIException.class)
-    public void shouldHandleExceptionOnGettingFilteredLocations() {
-        LocationDetailsController locationController = new LocationDetailsController(locationRegistrationService);
-        when(locationRegistrationService.getFilteredLocations(any(LocationRequest.class))).thenThrow(new RuntimeException());
-
-        locationController.search(request);
     }
 }

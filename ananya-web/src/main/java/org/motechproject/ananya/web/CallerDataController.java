@@ -21,7 +21,7 @@ import java.util.Properties;
 
 @Controller
 @RequestMapping(value = "/generated/js")
-public class CallerDataController {
+public class CallerDataController extends BaseAnanyaController {
 
     private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
 
@@ -73,4 +73,5 @@ public class CallerDataController {
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("scoresByChapter", callerData.getScoresByChapter());
     }
+
 }
