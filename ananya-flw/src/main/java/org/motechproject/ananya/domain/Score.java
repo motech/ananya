@@ -83,4 +83,8 @@ public class Score {
         result1 = 31 * result1 + (result ? 1 : 0);
         return result1;
     }
+
+    public void setResult(boolean result) {
+        this.result = result;
+    }
 }

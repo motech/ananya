@@ -1,11 +1,14 @@
 package org.motechproject.ananya.repository.measure;
 
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Repository
 @Transactional
@@ -31,7 +34,6 @@ public class AllCourseItemMeasures {
                 new String[]{"flw_id","course_item_id","event"},
                 new Object[]{flwId,courseItemDimension.getId(),event});
     }
-    
 
     public void save(CourseItemMeasure courseItemMeasure) {
         template.save(courseItemMeasure);
