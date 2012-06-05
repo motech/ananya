@@ -35,4 +35,8 @@ public class JsonHttpClient {
     public void addHeader(String name, String value) {
         postMethod.addRequestHeader(name, value);
     }
+
+    public int getStatus() {
+        return postMethod.getStatusCode();
+    }
 }
