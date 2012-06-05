@@ -258,4 +258,30 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         assertThat(filteredFlws, hasItem(flw2));
         assertThat(filteredFlws, not(hasItem(flw3)));
     }
+
+    @Test
+    public void shouldGetAllFrontLineWorkers_WhereThereAreNoDesignation() {
+
+        long msisdn1 = 90909009L;
+        FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
+                "Ramakrishna", null, RegistrationStatus.REGISTERED.name());
+        long msisdn2 = 90909002L;
+        FrontLineWorkerDimension flw2 = new FrontLineWorkerDimension(msisdn2, "Airtel", "UO",
+                "Krishnan", null, RegistrationStatus.REGISTERED.name());
+        long msisdn3 = 90909003L;
+        FrontLineWorkerDimension flw3 = new FrontLineWorkerDimension(msisdn3, "Airtel", "UO",
+                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name());
+
+        template.save(flw1);
+        template.save(flw2);
+        template.save(flw3);
+
+        List<FrontLineWorkerDimension> filteredFlws = allFrontLineWorkerDimensions.getFilteredFLWFor(
+                new ArrayList<Long>(), null, null, null, "null", null, null);
+
+        assertThat(filteredFlws.size(), is(2));
+        assertThat(filteredFlws, hasItem(flw1));
+        assertThat(filteredFlws, hasItem(flw2));
+        assertThat(filteredFlws, not(hasItem(flw3)));
+    }
 }
