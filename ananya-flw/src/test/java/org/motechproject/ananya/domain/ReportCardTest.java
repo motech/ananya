@@ -2,6 +2,7 @@ package org.motechproject.ananya.domain;
 
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +84,15 @@ public class ReportCardTest {
         Integer totalScore = reportCard.totalScore();
 
         assertEquals(new Integer(3), totalScore);
+    }
+
+    @Test
+    public void shouldReturnScoresForAChapter() {
+        ReportCard reportCard = makeTestReportCard();
+
+        Collection<Score> scoreList = reportCard.getScoresForChapter("1");
+
+        assertEquals(3, scoreList.size());
     }
 
     private ReportCard makeTestReportCard() {

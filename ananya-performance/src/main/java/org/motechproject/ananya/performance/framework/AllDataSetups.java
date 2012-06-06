@@ -5,10 +5,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
@@ -36,8 +33,11 @@ public class AllDataSetups implements BeanPostProcessor {
         return bean;
     }
 
-    public void run() throws Exception {
+    public void run(String[] args) throws Exception {
+        List<String> testKeys = Arrays.asList(args);
         for (String test : methodMap.keySet()) {
+            if (testKeys.size() != 0 && !testKeys.contains(test)) continue;
+
             List<DataSetupMethod> dataSetupMethods = methodMap.get(test);
 
             CompletionService completionService = new ExecutorCompletionService(

@@ -105,7 +105,15 @@
             report.front_line_worker_dimension
             set designation = null
             where designation = 'INVALID'
+        </sql>
+    </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = null
+            where designation = ''
         </sql>
     </changeSet>
 

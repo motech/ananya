@@ -16,7 +16,7 @@ public class CertificateCoursePostDataSetup {
     @Autowired
     private AllNodes allNodes;
 
-    @PerformanceData(testName = "certificate course", description = "Setup all data posts with current doc ids")
+    @PerformanceData(testName = "certificate_course-content", description = "Setup all data posts with current doc ids")
     public void setupAllDataPostsWithContentIds() throws IOException {
         createAllDataPostsFile();
         createCourseRootFile();
@@ -51,6 +51,7 @@ public class CertificateCoursePostDataSetup {
     }
 
     private void createCourseChapterFile(String chapterJsFile, int chapterNumber) throws IOException {
+
         String json = allNodes.nodeAsJson("Chapter " + chapterNumber);
         String filePath = getClass().getResource("/jmeter/js/" + chapterJsFile).getPath();
         BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));

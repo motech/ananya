@@ -52,6 +52,10 @@ public class ReportCard {
         return scoresByChapterIndex;
     }
 
+    public Collection<Score> getScoresForChapter(String chapterIndex) {
+        return CollectionUtils.select(scores, Score.findByChapterId(chapterIndex));
+    }
+
     public Integer totalScore() {
         Collection<Integer> scores = scoresByChapterIndex().values();
         int totalScore = 0;

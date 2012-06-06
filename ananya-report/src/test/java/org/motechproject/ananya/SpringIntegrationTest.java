@@ -14,4 +14,8 @@ public abstract class SpringIntegrationTest {
     @Qualifier("testDataAccessTemplate")
     protected TestDataAccessTemplate template;
 
+//    protected FrontLineWorkerDimension getTestFrontLineWorkerDimension() {
+//        return new FrontLineWorkerDimension(1234567890, "airtel", "bihar", "abcd", "ANM", "PARTIALLY_REGISTERED");
+//    }
+
 }
