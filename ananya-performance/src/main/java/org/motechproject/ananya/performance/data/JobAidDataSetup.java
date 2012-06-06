@@ -19,7 +19,7 @@ import java.util.List;
 @Component
 public class JobAidDataSetup {
 
-    private final int usersPerOperator = 25000;
+    private final int usersPerOperator = 25;
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
@@ -76,7 +76,7 @@ public class JobAidDataSetup {
         BufferedReader templateReader = new BufferedReader(new FileReader(templateFileName));
         BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter(jobAidTokens));
 
-        ArrayList<String> contentIds = new ArrayList<String>();
+        List<String> contentIds = new ArrayList<String>();
         recursivelyWriteAudioTrackerArrayForJobAid(jobAidCourse, contentIds);
 
         jobAidTokensWriter.write(String.format("var contentIds = [%s];", StringUtils.join(contentIds, ',')));
