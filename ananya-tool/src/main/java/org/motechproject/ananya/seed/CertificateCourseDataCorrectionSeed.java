@@ -92,7 +92,7 @@ public class CertificateCourseDataCorrectionSeed {
         certificateCourseDataCorrectionSeed.correctScoresData();
     }
 
-    @Seed(priority = 0, version = "1.3", comment = "Correct scores")
+    @Seed(priority = 0, version = "1.0", comment = "Correct scores")
     public void correctScoresData() {
 
         startDate = DateUtil.newDate(2012, 5, 23).toDateTimeAtStartOfDay();
