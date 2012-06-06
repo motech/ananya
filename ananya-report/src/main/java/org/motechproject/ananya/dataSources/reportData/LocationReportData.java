@@ -16,7 +16,7 @@ public class LocationReportData {
         this.panchayat = panchayat;
     }
 
-    @ReportValue(column = "Location", index = 0)
+    @ReportValue(column = "LocationId", index = 0)
     public String getLocationId() {
         return locationId;
     }
