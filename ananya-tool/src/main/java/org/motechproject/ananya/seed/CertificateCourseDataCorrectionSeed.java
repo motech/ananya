@@ -142,7 +142,7 @@ public class CertificateCourseDataCorrectionSeed {
         System.out.println("Incorrect FLWs in the database are : " + incorrectNumbersCount);
     }
 
-    @Seed(priority = 0, version = "1.3", comment = "Correct certificate course scores for FLWs")
+    @Seed(priority = 0, version = "1.0", comment = "Correct certificate course scores for FLWs")
     public void correctData() {
         log.info("Correcting error FLW data : ");
 
