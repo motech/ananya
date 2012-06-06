@@ -102,6 +102,18 @@ public class JobAidContentMeasureServiceTest {
     }
 
     @Test
+    public void shouldRemoveAudioTrackerLogWhenNoItemsArePresentAndReturn() {
+        AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
+
+        when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
+
+        jobAidContentMeasureService.createJobAidContentMeasure(callId);
+
+        verify(allFrontLineWorkerDimensions, never()).fetchFor(Long.parseLong(callerId));
+        verify(audioTrackerLogService).remove(audioTrackerLog);
+    }
+
+    @Test
     public void shouldNotCreateJobAidContentMeasureWhenAudioTrackerLogIsNotPresent(){
         String callId = "12345";
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);

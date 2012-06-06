@@ -109,12 +109,14 @@ public class CertificateCourseDataCorrectionSeed {
 
             if (flwScoresMap.containsKey(msisdn))
                 flwScores = flwScoresMap.get(msisdn);
-            else
+            else {
                 flwScores = new ArrayList<ChapterScore>();
+                flwScoresMap.put(msisdn, flwScores);
+            }
 
             int index;
             ChapterScore chapterScore = new ChapterScore(currentChapter, courseItemMeasure.getScore());
-            if ((index = flwScores.indexOf(currentChapter)) != -1)
+            if ((index = flwScores.indexOf(new ChapterScore(currentChapter, -1))) != -1)
                 flwScores.set(index, chapterScore);
             else
                 flwScores.add(chapterScore);
@@ -123,6 +125,7 @@ public class CertificateCourseDataCorrectionSeed {
         FrontLineWorker frontLineWorker;
         List<ChapterScore> chapterScoresMap;
         Map<String, Integer> currentScoresInCouch;
+        Integer scoreInCouch;
         int incorrectNumbersCount = 0;
         for (String checkMsisdn : flwScoresMap.keySet()) {
             frontLineWorker = allFrontLineWorkers.findByMsisdn(checkMsisdn);
@@ -130,10 +133,13 @@ public class CertificateCourseDataCorrectionSeed {
 
             chapterScoresMap = flwScoresMap.get(checkMsisdn);
             for (ChapterScore chapterScore : chapterScoresMap) {
-                if (chapterScore.getScore() != currentScoresInCouch.get(chapterScore.getChapterIndex())) {
+                scoreInCouch = currentScoresInCouch.get(chapterScore.getChapterIndex());
+                if (scoreInCouch == null || chapterScore.getScore() != scoreInCouch) {
                     System.out.println("Score in postgres : " + chapterScore.getScore() +
-                            " Score in couch : " + currentScoresInCouch.get(chapterScore.getChapterIndex()) +
-                            " FLW with msisdn " + checkMsisdn);
+                            " Score in couch : " + scoreInCouch +
+                            " FLW with msisdn " + checkMsisdn +
+                            " Chapter is : " + chapterScore.getChapterIndex() +
+                            " couch id : " + frontLineWorker.getId());
                     incorrectNumbersCount++;
                 }
             }
@@ -229,8 +235,7 @@ public class CertificateCourseDataCorrectionSeed {
     }
 
     private Integer getChapterIndexFromCourseItemDimension(CourseItemDimension courseItemDimension) {
-        System.out.println("Getting chapter index for course dimension : " + courseItemDimension.getName());
-        return Integer.parseInt(courseItemDimension.getName().substring(8, 1));
+        return Integer.parseInt(courseItemDimension.getName().substring(8, 9)) - 1;
     }
 
 

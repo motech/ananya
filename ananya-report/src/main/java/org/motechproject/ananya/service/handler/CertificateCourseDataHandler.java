@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service.handler;
 
-import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
@@ -19,7 +18,6 @@ public class CertificateCourseDataHandler {
     private CourseItemMeasureService courseItemMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
-    private RegistrationLogService registrationLogService;
     private SMSLogService smsLogService;
     private SendSMSService sendSMSService;
 
@@ -27,13 +25,11 @@ public class CertificateCourseDataHandler {
     public CertificateCourseDataHandler(CourseItemMeasureService courseItemMeasureService,
                                         CallDurationMeasureService callDurationMeasureService,
                                         RegistrationMeasureService registrationMeasureService,
-                                        RegistrationLogService registrationLogService,
                                         SMSLogService smsLogService,
                                         SendSMSService sendSMSService) {
         this.courseItemMeasureService = courseItemMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.registrationMeasureService = registrationMeasureService;
-        this.registrationLogService = registrationLogService;
         this.smsLogService = smsLogService;
         this.sendSMSService = sendSMSService;
     }
@@ -46,7 +42,7 @@ public class CertificateCourseDataHandler {
             String callerId = callMessage.getCallerId();
             log.info("Received the certificate course call message for callId: " + callId);
 
-            createRegistrationMeasure(callerId);
+            registrationMeasureService.createRegistrationMeasureForCall(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             courseItemMeasureService.createCourseItemMeasure(callId);
             handleSMS(callId);
@@ -58,14 +54,6 @@ public class CertificateCourseDataHandler {
         if (smslog != null) {
             sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
             smsLogService.deleteFor(smslog);
-        }
-    }
-
-    private void createRegistrationMeasure(String callerId) {
-        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
-        if (registrationLog != null) {
-            registrationMeasureService.createRegistrationMeasure(callerId);
-            registrationLogService.delete(registrationLog);
         }
     }
 }

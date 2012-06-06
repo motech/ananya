@@ -39,9 +39,8 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
             Long msisdn = registrationLog.callerIdAsLong();
             try {
                 if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
-                    registrationMeasureService.createRegistrationMeasure(msisdn.toString());
+                    registrationMeasureService.createRegistrationMeasureForCall(msisdn.toString());
                     synchroniserLog.add(msisdn.toString(), "Success");
-                    registrationLogService.delete(registrationLog);
                 }
             } catch (Exception e) {
                 synchroniserLog.add(msisdn.toString(), "Error: " + ExceptionUtils.getFullStackTrace(e));

@@ -3,7 +3,6 @@ package org.motechproject.ananya.service.handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
@@ -27,8 +26,6 @@ public class CertificateCourseDataHandlerTest {
     @Mock
     private CallDurationMeasureService callDurationMeasureService;
     @Mock
-    private RegistrationLogService registrationLogService;
-    @Mock
     private SMSLogService smsLogService;
     @Mock
     private SendSMSService sendSMSService;
@@ -38,7 +35,7 @@ public class CertificateCourseDataHandlerTest {
         initMocks(this);
         handler = new CertificateCourseDataHandler(courseItemMeasureService,
                 callDurationMeasureService,
-                registrationMeasureService, registrationLogService, smsLogService, sendSMSService);
+                registrationMeasureService, smsLogService, sendSMSService);
     }
 
     @Test
@@ -50,14 +47,13 @@ public class CertificateCourseDataHandlerTest {
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(new RegistrationLog(callerId, "", ""));
         when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
 
         handler.handleCertificateCourseData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
-        verify(courseItemMeasureService).createCourseItemMeasure(callId);
+        verify(registrationMeasureService).createRegistrationMeasureForCall(callerId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
+        verify(courseItemMeasureService).createCourseItemMeasure(callId);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
     }
 }

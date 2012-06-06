@@ -32,8 +32,11 @@ public class RegistrationService {
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 
-        RegistrationStatus registrationStatus = isInvalidNameOrDesignation(name, designation) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(callerId, name, Designation.getFor(designation), location, registrationStatus);
+        RegistrationStatus registrationStatus = isInvalidNameOrDesignation(name, designation)
+                ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(
+                callerId, name, Designation.getFor(designation), location, registrationStatus);
+
         registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn());
 
         log.info("Registered new FLW:" + callerId);

@@ -105,8 +105,7 @@ public class JobAidDataSetup {
             String callerId = "9999" + prefix + "" + j;
             Operator operator = getOperatorFor(operatorName);
             jobAidService.createCallerData(callerId, operator.getName(), "circle");
-            registrationLogService.deleteFor(callerId);
-            registrationMeasureService.createRegistrationMeasure(callerId);
+            registrationMeasureService.createRegistrationMeasureForCall(callerId);
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
             System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j);
         }

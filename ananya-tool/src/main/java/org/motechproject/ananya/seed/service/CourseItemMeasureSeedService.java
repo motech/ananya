@@ -57,7 +57,7 @@ public class CourseItemMeasureSeedService {
                     "CourseItemMeasure c " +
                 "where " +
                     "c.courseItemDimension.type = 'QUIZ' and " +
-                    "c.event = 'START' and " +
+                    "c.event = 'END' and " +
                     "c.timestamp >= ? and " +
                     "c.timestamp <= ?",
                 startDate.toDate(), endDate.toDate()

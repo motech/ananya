@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -23,6 +24,7 @@ public class RegistrationMeasureService {
     private AllLocationDimensions allLocationDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
+    private RegistrationLogService registrationLogService;
 
     public RegistrationMeasureService() {
     }
@@ -31,16 +33,30 @@ public class RegistrationMeasureService {
     public RegistrationMeasureService(FrontLineWorkerService frontLineWorkerService,
                                       FrontLineWorkerDimensionService frontLineWorkerDimensionService, AllLocationDimensions allLocationDimensions,
                                       AllTimeDimensions allTimeDimensions,
-                                      AllRegistrationMeasures allRegistrationMeasures) {
+                                      AllRegistrationMeasures allRegistrationMeasures, RegistrationLogService registrationLogService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.allRegistrationMeasures = allRegistrationMeasures;
+        this.registrationLogService = registrationLogService;
+    }
+
+    @Transactional
+    public void createRegistrationMeasureForCall(String callerId) {
+        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
+        if (registrationLog == null) return;
+
+        createMeasure(callerId);
+        registrationLogService.delete(registrationLog);
     }
 
     @Transactional
     public void createRegistrationMeasure(String callerId) {
+        createMeasure(callerId);
+    }
+
+    private void createMeasure(String callerId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
         boolean dimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
@@ -59,4 +75,5 @@ public class RegistrationMeasureService {
         log.info("RegistrationMeasure created for " + callerId + "[Location=" + locationDimension.getId() +
                 "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
     }
+
 }

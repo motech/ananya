@@ -54,6 +54,11 @@ public class JobAidContentMeasureService {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
         if (audioTrackerLog == null) return;
 
+        if (audioTrackerLog.getAudioTrackerLogItems() == null || audioTrackerLog.getAudioTrackerLogItems().isEmpty()) {
+            audioTrackerLogService.remove(audioTrackerLog);
+            return;
+        }
+
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
