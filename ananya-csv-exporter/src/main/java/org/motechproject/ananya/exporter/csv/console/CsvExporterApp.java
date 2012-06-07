@@ -1,6 +1,6 @@
-package org.motechproject.ananya.console;
+package org.motechproject.ananya.exporter.csv.console;
 
-import org.motechproject.ananya.util.CsvExporterArgumentsParser;
+import org.motechproject.ananya.exporter.csv.util.CsvExporterArgumentsParser;
 import org.motechproject.export.model.AllReportDataSources;
 import org.motechproject.export.model.ReportDataSource;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

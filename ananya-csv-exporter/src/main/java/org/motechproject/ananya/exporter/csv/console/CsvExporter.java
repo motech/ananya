@@ -1,11 +1,10 @@
-package org.motechproject.ananya.console;
+package org.motechproject.ananya.exporter.csv.console;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.export.builder.csv.CsvReportBuilder;
 import org.motechproject.export.model.ReportDataSource;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;

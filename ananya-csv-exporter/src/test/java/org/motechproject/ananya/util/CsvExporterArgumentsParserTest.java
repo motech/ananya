@@ -2,6 +2,7 @@ package org.motechproject.ananya.util;
 
 import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException;
 import org.junit.Test;
+import org.motechproject.ananya.exporter.csv.util.CsvExporterArgumentsParser;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;

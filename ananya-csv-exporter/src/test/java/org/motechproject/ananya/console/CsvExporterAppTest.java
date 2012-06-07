@@ -3,6 +3,7 @@ package org.motechproject.ananya.console;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.motechproject.ananya.exporter.csv.console.CsvExporterApp;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 public class CsvExporterAppTest {
     @Test
