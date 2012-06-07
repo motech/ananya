@@ -1,7 +1,7 @@
 package org.motechproject.ananya.response;
 
 public class LocationValidationResponse {
-    private String message;
+    private String message = "";
     private boolean isValid = true;
 
     public boolean isValid() {

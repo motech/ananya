@@ -39,13 +39,13 @@ public class LocationImporter {
         List<LocationRequest> locationRequests = convertToLocationRequest(objects);
         LocationValidator locationValidator = new LocationValidator(new LocationList(locationService.getAll()));
 
+        addHeader(errors);
         for (LocationRequest locationRequest : locationRequests) {
             LocationValidationResponse locationValidationResponse = locationValidator.validate(LocationMapper.mapFrom(locationRequest));
             if (locationValidationResponse.isInValid()) {
                 isValid = false;
-                errors.add(new Error(locationRequest.toCSV() + "," + locationValidationResponse.getMessage()));
-                continue;
             }
+            errors.add(new Error(locationRequest.toCSV() + "," + locationValidationResponse.getMessage()));
         }
         return constructValidationResponse(isValid, errors);
     }
@@ -69,5 +69,9 @@ public class LocationImporter {
             locationRequests.add((LocationRequest) object);
         }
         return locationRequests;
+    }
+
+    private boolean addHeader(List<Error> errors) {
+        return errors.add(new Error("district,block,panchayat,error"));
     }
 }
