@@ -47,9 +47,8 @@ public class FrontLineWorkerImporter {
             FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, frontLineWorkerRequests);
             if (flwValidationResponse.isInValid()) {
                 isValid = false;
-                errors.add(new Error(frontLineWorkerRequest.toCSV() + "," + flwValidationResponse.getMessage()));
-                continue;
             }
+            errors.add(new Error(frontLineWorkerRequest.toCSV() + "," + flwValidationResponse.getMessage()));
         }
         return constructValidationResponse(isValid, errors);
     }

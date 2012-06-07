@@ -100,4 +100,19 @@ public class FrontLineWorkerImporterTest {
         assertEquals(1, flwRequests.size());
         assertEquals(msisdn, flwRequests.get(0).getMsisdn());
     }
+
+    @Test
+    public void shouldAddNoValidationErrorsIfFLWHasAllTheDetails() {
+        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
+        ArrayList<Location> locations = new ArrayList<Location>();
+        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
+        when(locationService.getAll()).thenReturn(locations);
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), "airtel", "bihar", new LocationRequest("D1", "B1", "P1")));
+
+        ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
+
+        assertTrue(validationResponse.isValid());
+        assertEquals("1234567890,name,ANM,D1,B1,P1,", validationResponse.getErrors().get(0).getMessage());
+    }
+
 }
