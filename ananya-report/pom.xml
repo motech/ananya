@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-bulk-export-import</artifactId>
-            <version>0.10.3</version>
+            <version>0.10.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

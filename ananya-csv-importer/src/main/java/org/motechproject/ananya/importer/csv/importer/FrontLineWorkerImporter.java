@@ -41,7 +41,7 @@ public class FrontLineWorkerImporter {
 
         List<FrontLineWorkerRequest> frontLineWorkerRequests = convertToFLWRequest(objects);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
-
+        addHeader(errors);
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
             Location location = getLocationFor(frontLineWorkerRequest.getLocation(), locationList);
             FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, frontLineWorkerRequests);
@@ -50,6 +50,7 @@ public class FrontLineWorkerImporter {
             }
             errors.add(new Error(frontLineWorkerRequest.toCSV() + "," + flwValidationResponse.getMessage()));
         }
+
         return constructValidationResponse(isValid, errors);
     }
 
@@ -76,5 +77,9 @@ public class FrontLineWorkerImporter {
             frontLineWorkerRequests.add((FrontLineWorkerRequest) object);
         }
         return frontLineWorkerRequests;
+    }
+
+    private boolean addHeader(List<Error> errors) {
+        return errors.add(new Error("msisdn,name,designation,district,block,panchayat,error"));
     }
 }
