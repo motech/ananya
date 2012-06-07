@@ -2,8 +2,8 @@ package org.motechproject.ananya.seed;
 
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
-import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.seed.service.CourseItemMeasureSeedService;
@@ -66,6 +66,24 @@ public class CertificateCourseDataCorrectionSeed {
         }
     }
 
+    class QuizInformation
+    {
+        private String chapterIndex;
+
+        private String type;
+
+        private int score;
+
+        private DateTime timestamp;
+
+        public QuizInformation(Object[] row) {
+            chapterIndex = getChapterIndexFromCourseItemDimension((String)row[1]).toString();
+            type = (String)row[3];
+            if (row[4] == null) score = -1; else score = (Integer)row[4];
+//            if (row[5] != null) timestamp = DateTime.parse(row[5].toString());
+        }
+    }
+
     private static Logger log = LoggerFactory.getLogger(CertificateCourseDataCorrectionSeed.class);
 
     @Autowired
@@ -77,22 +95,179 @@ public class CertificateCourseDataCorrectionSeed {
     @Autowired
     private SendSMSService sendSMSService;
 
-    private DateTime startDate;
-
-    private DateTime endDate;
+    private DateTime startDate = new DateTime(2012, 05, 23, 0, 0);
+    private DateTime endDate = new DateTime(2012, 06, 1, 0, 0);
+    private int startTimeId = 144;
+    private int endTimeId = 153;
 
     private Map<String, List<Integer>> flwChaptersMap = new HashMap<String, List<Integer>>();
 
     private Map<String, List<ChapterScore>> flwScoresMap = new HashMap<String, List<ChapterScore>>();
 
+    private Map<String, List<QuizInformation>> flwQuizHistoryMap = new HashMap<String, List<QuizInformation>>();
+
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
         CertificateCourseDataCorrectionSeed certificateCourseDataCorrectionSeed =
                 (CertificateCourseDataCorrectionSeed) context.getBean("certificateCourseDataCorrectionSeed");
-        certificateCourseDataCorrectionSeed.correctScoresData();
+        certificateCourseDataCorrectionSeed.correctFlwScoresData();
     }
 
-    @Seed(priority = 0, version = "1.0", comment = "Correct scores")
+    private Integer getChapterIndexFromCourseItemDimension(String str) {
+        return Integer.parseInt(str.substring(8, 9)) - 1;
+    }
+
+    @Seed(priority = 0, version = "1.4", comment = "Correct incorrect scores data for certificate course.")
+    public void correctFlwScoresData() {
+        System.out.println("Correction FLW Scores data.");
+
+        System.out.println("Fetching course ite measure history.");
+        List flwCourseHistory = courseItemMeasureSeedService.fetchFlwCourseHistory();
+
+        System.out.println("Creating FLW QUIZ history map");
+        Iterator iterator = flwCourseHistory.iterator();
+        while(iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            String msisdn = row[0].toString();
+            QuizInformation quizInformation = new QuizInformation(row);
+
+            if (flwQuizHistoryMap.containsKey(msisdn)) {
+                flwQuizHistoryMap.get(msisdn).add(quizInformation);
+            } else {
+                List<QuizInformation> quizInformationList = new ArrayList<QuizInformation>();
+                quizInformationList.add(quizInformation);
+                flwQuizHistoryMap.put(msisdn, quizInformationList);
+            }
+        }
+
+        for (String msisdn : flwQuizHistoryMap.keySet()) {
+            System.out.println("Correcting the score for FLW with msisdn : " + msisdn);
+
+            FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+            List<QuizInformation> quizInformationList = flwQuizHistoryMap.get(msisdn);
+
+            ReportCard reportCard = new ReportCard();
+            ReportCard oldReportCard = null;
+
+            boolean modified = false;
+            int oldScore = frontLineWorker.reportCard().totalScore();
+            List<Score> scores = frontLineWorker.reportCard().scores();
+            for (Score score : scores) {
+                String callId = score.getCallId();
+                String[] parts = callId.split("-");
+                String callIdTime = parts[1];
+
+                DateTime timeOfCall = new DateTime(Long.parseLong(callIdTime));
+                if (timeOfCall.getMillis() >= startDate.getMillis() &&
+                    timeOfCall.getMillis() <= endDate.getMillis()) {
+                    score.setResult(!score.result());
+                    modified = true;
+                }
+            }
+            int newScore = frontLineWorker.reportCard().totalScore();
+
+            if (modified) {
+                System.out.println("Updating FLW : " + msisdn + " oldScore - " + oldScore + " newScore - " + newScore);
+                allFrontLineWorkers.update(frontLineWorker);
+            }
+
+            if (frontLineWorker.currentCourseAttempt() > 0) {
+                System.out.println("Checking FLW " + msisdn + " who has completed the course.");
+                int previousChapterIndex = -1;
+                int counter = 0;
+                for (QuizInformation quizInformation : quizInformationList) {
+                    counter++;
+                    if (quizInformation.type.equalsIgnoreCase("END")) {
+                        reportCard.clearScoresForChapterIndex(quizInformation.chapterIndex);
+                        for (int i = 0; i < quizInformation.score; i++) {
+                            reportCard.addScore(new Score(quizInformation.chapterIndex, "" + i, true, ""));
+                        }
+                        for (int i = quizInformation.score; i < 4; i++) {
+                            reportCard.addScore(new Score(quizInformation.chapterIndex, "" + i, false, ""));
+                        }
+                    }
+                    if (Integer.parseInt(quizInformation.chapterIndex) < previousChapterIndex ||
+                            (quizInformation.chapterIndex.equalsIgnoreCase("8") &&
+                             quizInformation.type.equalsIgnoreCase("END") &&
+                             counter == quizInformationList.size())) {
+                        System.out.println("Switching attempts at " + quizInformation.chapterIndex + " " +
+                                quizInformation.type + " previousChapterIndex is " + previousChapterIndex +
+                                " FLW msisdn is : " + msisdn);
+                        if (reportCard.totalScore() > FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
+                            System.out.println("FLW " + msisdn + "had passed course. Sending FLW an SMS");
+                            sendSMSService.buildAndSendSMS(
+                                    frontLineWorker.getMsisdn(),
+                                    frontLineWorker.getLocationId(),
+                                    frontLineWorker.currentCourseAttempt());
+                        }
+
+                        oldReportCard = reportCard;
+                        reportCard = new ReportCard();
+                    }
+                    previousChapterIndex = Integer.parseInt(quizInformation.chapterIndex);
+                }
+            }
+        }
+
+//            int previousChapterIndex = -1;
+//            for (QuizInformation quizInformation : quizInformationList) {
+//                if (quizInformation.type.equalsIgnoreCase("END")) {
+//                    reportCard.clearScoresForChapterIndex(quizInformation.chapterIndex);
+//                    for (int i = 0; i < quizInformation.score; i++) {
+//                        reportCard.addScore(new Score(quizInformation.chapterIndex, "" + i, true, ""));
+//                    }
+//                    for (int i = quizInformation.score; i < 4; i++) {
+//                        reportCard.addScore(new Score(quizInformation.chapterIndex, "" + i, false, ""));
+//                    }
+//                }
+//                if (Integer.parseInt(quizInformation.chapterIndex) < previousChapterIndex) {
+//                    System.out.println("Switching attempts at " + quizInformation.chapterIndex + " " +
+//                            quizInformation.type + " previousChapterIndex is " + previousChapterIndex +
+//                            " FLW msisdn is : " + msisdn);
+//                    oldReportCard = reportCard;
+//                    reportCard = new ReportCard();
+//                }
+//                previousChapterIndex = Integer.parseInt(quizInformation.chapterIndex);
+//            }
+//
+//            if (oldReportCard != null) {
+//                if (frontLineWorker.currentCourseAttempt() <= 0) {
+//                    System.out.println("oldReportCard is not null but attempts shown as 0. BAD! FLW msisdn is : " + msisdn);
+//                } else {
+//                    System.out.println("FLW " + msisdn + " has a full certificate course attempt.");
+//                }
+//
+//                if (oldReportCard.totalScore() > FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
+//                    System.out.println("Front Line Worker with msisdn " + msisdn + " has passed the course. Send SMS!");
+//                }
+//            }
+//
+//            Map<String, Integer> currentScoresInCouch = frontLineWorker.reportCard().scoresByChapterIndex();
+//            Map<String, Integer> scoresInPostgres = reportCard.scoresByChapterIndex();
+//
+//            for(int currentChapterIndex = 0; currentChapterIndex < 9; currentChapterIndex++) {
+//                Integer couchScore = currentScoresInCouch.get("" + currentChapterIndex);
+//                Integer postgresScore = scoresInPostgres.get("" + currentChapterIndex);
+//
+//                if (couchScore != null && postgresScore == null) {
+//                    Collection<Score> scores = frontLineWorker.reportCard().getScoresForChapter("" + currentChapterIndex);
+//                    for (Score score : scores) {
+//                        CallDurationMeasure callDurationMeasure =
+//                                courseItemMeasureSeedService.fetchCallDurationMeasureForCallId(score.getCallId());
+//                        if (callDurationMeasure.getTimeDimension().getId() >= startTimeId &&
+//                            callDurationMeasure.getTimeDimension().getId() <= endTimeId) {
+//                            System.out.println("Call not recorded in postgres Cours");
+//                        }
+//                    }
+//                }
+//
+//                if (couchScore != postgresScore) {
+//                    System.out.println("Score for FLW with msisdn " + msisdn + " for chapter " + currentChapterIndex +
+//                            " in couch is " + couchScore + " in postgres is " + postgresScore);
+//                }
+//            }
+    }
+
     public void correctScoresData() {
 
         startDate = DateUtil.newDate(2012, 5, 23).toDateTimeAtStartOfDay();
@@ -105,7 +280,7 @@ public class CertificateCourseDataCorrectionSeed {
         String currentChapter;
         for(CourseItemMeasure courseItemMeasure : courseItemMeasureList) {
             msisdn = courseItemMeasure.getFrontLineWorkerDimension().getMsisdn().toString();
-            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension()).toString();
+            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension().getName()).toString();
 
             if (flwScoresMap.containsKey(msisdn))
                 flwScores = flwScoresMap.get(msisdn);
@@ -148,7 +323,6 @@ public class CertificateCourseDataCorrectionSeed {
         System.out.println("Incorrect FLWs in the database are : " + incorrectNumbersCount);
     }
 
-    @Seed(priority = 0, version = "1.0", comment = "Correct certificate course scores for FLWs")
     public void correctData() {
         log.info("Correcting error FLW data : ");
 
@@ -180,7 +354,7 @@ public class CertificateCourseDataCorrectionSeed {
                 chaptersForFLW = flwChaptersMap.get(msisdn);
             }
 
-            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension());
+            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension().getName());
             if (!chaptersForFLW.contains(currentChapter)) chaptersForFLW.add(currentChapter);
 
             log.info("Generated incorrect chapters for msisdn : " + msisdn + " chapters - " + chaptersForFLW);
@@ -189,7 +363,7 @@ public class CertificateCourseDataCorrectionSeed {
         // remove freshly called chaptersForFLW from the hash
         for (CourseItemMeasure courseItemMeasure : correctCallsAfterBug) {
             msisdn = courseItemMeasure.getFrontLineWorkerDimension().getMsisdn().toString();
-            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension());
+            currentChapter = getChapterIndexFromCourseItemDimension(courseItemMeasure.getCourseItemDimension().getName());
 
             if (flwChaptersMap.containsKey(msisdn)) {
                 chaptersForFLW = flwChaptersMap.get(msisdn);
@@ -233,10 +407,5 @@ public class CertificateCourseDataCorrectionSeed {
         }
 
     }
-
-    private Integer getChapterIndexFromCourseItemDimension(CourseItemDimension courseItemDimension) {
-        return Integer.parseInt(courseItemDimension.getName().substring(8, 9)) - 1;
-    }
-
 
 }
