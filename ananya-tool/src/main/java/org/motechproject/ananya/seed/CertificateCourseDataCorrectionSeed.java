@@ -96,7 +96,7 @@ public class CertificateCourseDataCorrectionSeed {
     private SendSMSService sendSMSService;
 
     private DateTime startDate = new DateTime(2012, 05, 23, 0, 0);
-    private DateTime endDate = new DateTime(2012, 06, 1, 0, 0);
+    private DateTime endDate = new DateTime(2012, 06, 2, 0, 0);
     private int startTimeId = 144;
     private int endTimeId = 153;
 
@@ -159,7 +159,7 @@ public class CertificateCourseDataCorrectionSeed {
 
                 DateTime timeOfCall = new DateTime(Long.parseLong(callIdTime));
                 if (timeOfCall.getMillis() >= startDate.getMillis() &&
-                    timeOfCall.getMillis() <= endDate.getMillis()) {
+                    timeOfCall.getMillis() < endDate.getMillis()) {
                     score.setResult(!score.result());
                     modified = true;
                 }
