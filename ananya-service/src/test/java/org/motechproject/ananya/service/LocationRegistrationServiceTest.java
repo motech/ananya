@@ -39,7 +39,7 @@ public class LocationRegistrationServiceTest {
 
         LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest("D1", "", "V1"));
 
-        assertEquals("One or more of District, Block, Panchayat details are missing", response.getMessage());
+        assertEquals("[One or more of District, Block, Panchayat details are missing]", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
         verify(locationService, never()).add(captor.capture());
     }
@@ -53,7 +53,7 @@ public class LocationRegistrationServiceTest {
 
         LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest("D1", "B1", "V1"));
 
-        assertEquals("The location is already present", response.getMessage());
+        assertEquals("[The location is already present]", response.getMessage());
         ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
         verify(locationService, never()).add(captor.capture());
     }

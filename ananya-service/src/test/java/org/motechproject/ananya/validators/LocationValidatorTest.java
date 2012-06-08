@@ -17,17 +17,17 @@ public class LocationValidatorTest {
         LocationValidationResponse validationResponse = locationValidator.validate(new Location("", "B1", "P1", 0, 0, 0));
 
         assertFalse(validationResponse.isValid());
-        assertEquals("One or more of District, Block, Panchayat details are missing", validationResponse.getMessage());
+        assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
         validationResponse = locationValidator.validate(new Location("D1", null, "P1", 0, 0, 0));
 
         assertFalse(validationResponse.isValid());
-        assertEquals("One or more of District, Block, Panchayat details are missing", validationResponse.getMessage());
+        assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
         validationResponse = locationValidator.validate(new Location("D1", "B1", "", 0, 0, 0));
 
         assertFalse(validationResponse.isValid());
-        assertEquals("One or more of District, Block, Panchayat details are missing", validationResponse.getMessage());
+        assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
         validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0));
 
@@ -43,6 +43,6 @@ public class LocationValidatorTest {
         LocationValidationResponse validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0));
 
         assertFalse(validationResponse.isValid());
-        assertEquals("The location is already present", validationResponse.getMessage());
+        assertEquals("[The location is already present]", validationResponse.getMessage());
     }
 }

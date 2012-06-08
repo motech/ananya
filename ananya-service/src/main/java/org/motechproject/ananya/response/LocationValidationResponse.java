@@ -18,13 +18,13 @@ public class LocationValidationResponse {
 
     public LocationValidationResponse withIncompleteDetails() {
         isValid = false;
-        message = "One or more of District, Block, Panchayat details are missing";
+        message = "[One or more of District, Block, Panchayat details are missing]";
         return this;
     }
 
     public LocationValidationResponse withAlreadyPresent() {
         isValid = false;
-        message = "The location is already present";
+        message = "[The location is already present]";
         return this;
     }
 }
