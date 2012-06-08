@@ -32,7 +32,6 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
         assertEquals(msisdn, frontLineWorkerFromDb.getMsisdn());
         assertEquals("S01D002B003V004", frontLineWorkerFromDb.getLocationId());
         assertTrue(frontLineWorkerFromDb.isAnganwadi());
-        assertNotNull(frontLineWorkerFromDb.getLastModified());
     }
 
     @Test

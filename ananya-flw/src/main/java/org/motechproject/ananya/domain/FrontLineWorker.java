@@ -92,7 +92,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this(msisdn, name, designation, location, registrationStatus);
         this.operator = operator;
         this.circle = circle;
-        this.lastModified = getLastModifiedDateTime(lastModified);
+        this.lastModified = lastModified;
     }
 
     @Override
@@ -229,7 +229,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, String circle, String operator, DateTime lastModified) {
         this.name = name;
-        this.lastModified = getLastModifiedDateTime(lastModified);
+        this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
         this.circle = circle;
@@ -313,9 +313,5 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @Override
     public int hashCode() {
         return msisdn != null ? msisdn.hashCode() : 0;
-    }
-
-    private DateTime getLastModifiedDateTime(DateTime lastModified) {
-        return lastModified != null ? lastModified : DateUtil.now();
     }
 }

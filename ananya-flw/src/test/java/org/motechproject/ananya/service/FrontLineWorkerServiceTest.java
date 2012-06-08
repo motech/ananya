@@ -378,7 +378,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateExistingFLWWhenGivenModificationIsNull() {
+    public void shouldUpdateExistingFLWWhenLastModifiedTimeIsGiven() {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
@@ -386,17 +386,20 @@ public class FrontLineWorkerServiceTest {
         String circle = "bihar";
         String operator = "airtel";
 
-        given(DateUtil.now()).willReturn(null);
         FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, null);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, null), location);
+        DateTime lastModified = DateTime.now();
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, lastModified), location);
 
-        verify(allFrontLineWorkers).update(any(FrontLineWorker.class));
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 
     @Test
-    public void shouldUpdateExistingFLWWithLastModificationDateWhenGivenModificationIsNull() {
+    public void shouldUpdateExistingFLWWithExistingLastModificationDateIfNewLastModifiedTimeIsNull() {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
@@ -406,10 +409,10 @@ public class FrontLineWorkerServiceTest {
         DateTime now = DateUtil.now();
 
         given(DateUtil.now()).willReturn(null);
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, now);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, now), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, null), location);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());

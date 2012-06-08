@@ -77,18 +77,6 @@ public class FrontLineWorkerTest {
     }
 
     @Test
-    public void shouldUpdateLastModifiedTimeToCurrentTimeIfLastModifiedTimeIsNotGiven() {
-        DateTime now = DateTime.now();
-        spy(DateUtil.class);
-        given(DateUtil.now()).willReturn(now);
-
-        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, "bihar", "airtel", null);
-
-        assertEquals(now, flw.getLastModified());
-    }
-
-    @Test
     public void shouldCreateAnFlwWhenMsisdnIsNotGiven() {
         FrontLineWorker flw = new FrontLineWorker(null, "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
         assertNull(flw.getMsisdn());
@@ -99,15 +87,5 @@ public class FrontLineWorkerTest {
         DateTime lastModified = DateTime.now();
         FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, "operator1", "circle1", new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), RegistrationStatus.PARTIALLY_REGISTERED, lastModified);
         assertEquals(lastModified, frontLineWorker.getLastModified());
-    }
-
-    @Test
-    public void shouldSetLastModifiedTimeAsNowIfItIsNotGiven() {
-        DateTime now = DateTime.now();
-        spy(DateUtil.class);
-        given(DateUtil.now()).willReturn(now);
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, "perator1", "circle1", new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), RegistrationStatus.PARTIALLY_REGISTERED, null);
-        assertEquals(now, frontLineWorker.getLastModified());
     }
 }

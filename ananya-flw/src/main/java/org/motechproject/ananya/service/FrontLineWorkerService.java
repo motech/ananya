@@ -38,18 +38,20 @@ public class FrontLineWorkerService {
         RegistrationStatus registrationStatus = frontLineWorker.getStatus();
         String circle = frontLineWorker.getCircle();
         String operator = frontLineWorker.getOperator();
+        DateTime lastModified = frontLineWorker.getLastModified();
 
         FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
 
         if (exisitingFrontLineWorker == null) {
-            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus, null);
+            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus, lastModified);
             allFrontLineWorkers.add(exisitingFrontLineWorker);
             log.info("Created:" + exisitingFrontLineWorker);
             return exisitingFrontLineWorker;
         }
 
         if (isFLWFromDbOlder(frontLineWorker, exisitingFrontLineWorker)) {
-            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, circle, operator, frontLineWorker.getLastModified());
+            lastModified = lastModified != null ? lastModified : exisitingFrontLineWorker.getLastModified();
+            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, circle, operator, lastModified);
             allFrontLineWorkers.update(exisitingFrontLineWorker);
             log.info("Updated:" + exisitingFrontLineWorker);
         }
