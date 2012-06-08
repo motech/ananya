@@ -59,7 +59,7 @@ public class LocationImporterTest {
         assertFalse(validationResponse.isValid());
         assertEquals(2, validationResponse.getErrors().size());
         assertEquals("district,block,panchayat,error", validationResponse.getErrors().get(0).getMessage());
-        assertEquals("D1,B1,null,One or more of District, Block, Panchayat details are missing", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("D1,B1,null,[One or more of District, Block, Panchayat details are missing]", validationResponse.getErrors().get(1).getMessage());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class LocationImporterTest {
 
         assertFalse(validationResponse.isValid());
         assertEquals(2, validationResponse.getErrors().size());
-        assertEquals("D1,B1,P1,The location is already present", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("D1,B1,P1,[The location is already present]", validationResponse.getErrors().get(1).getMessage());
     }
 
     @Test
