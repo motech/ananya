@@ -12,8 +12,9 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 
-import static org.mockito.Mockito.verify;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -59,9 +60,12 @@ public class CourseItemMeasureServiceTest {
         when(allFrontLineWorkerDimensions.fetchFor(123123L)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(1)).thenReturn(registrationMeasure);
 
-        courseItemMeasureService.createCourseItemMeasure(callId);
+        CourseItemMeasureServiceHelper courseItemMeasureServiceHelper =
+                courseItemMeasureService.getCourseItemMeasureServiceHelper(callId);
 
-        verify(courseItemMeasureAddAction).process(callId, courseLog, frontLineWorkerDimension, locationDimension);
-        verify(courseItemMeasureAudioTrackerAddAction).process(callId, audioTrackerLog, frontLineWorkerDimension, locationDimension);
+        assertEquals(courseLog, courseItemMeasureServiceHelper.getCourseLog());
+        assertEquals(audioTrackerLog, courseItemMeasureServiceHelper.getAudioTrackerLog());
+        assertEquals(frontLineWorkerDimension, courseItemMeasureServiceHelper.getFrontLineWorkerDimension());
+        assertEquals(locationDimension, courseItemMeasureServiceHelper.getLocationDimension());
     }
 }

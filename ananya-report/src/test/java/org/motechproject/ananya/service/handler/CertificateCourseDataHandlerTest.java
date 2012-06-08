@@ -7,6 +7,7 @@ import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.*;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;
@@ -46,14 +47,17 @@ public class CertificateCourseDataHandlerTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
+        CourseItemMeasureServiceHelper courseItemMeasureServiceHelper = new CourseItemMeasureServiceHelper();
 
         when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
+        when(courseItemMeasureService.getCourseItemMeasureServiceHelper(callId)).thenReturn(courseItemMeasureServiceHelper);
 
         handler.handleCertificateCourseData(event);
 
         verify(registrationMeasureService).createRegistrationMeasureForCall(callerId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
-        verify(courseItemMeasureService).createCourseItemMeasure(callId);
+        verify(courseItemMeasureService).createCourseItemMeasure(callId, courseItemMeasureServiceHelper);
+        verify(courseItemMeasureService).createCourseItemMeasureAudioTracker(callId, courseItemMeasureServiceHelper);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
     }
 }

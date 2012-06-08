@@ -7,10 +7,12 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CourseItemMeasureService {
@@ -41,19 +43,33 @@ public class CourseItemMeasureService {
         this.courseItemMeasureAudioTrackerAddAction = courseItemMeasureAudioTrackerAddAction;
     }
 
-    public void createCourseItemMeasure(String callId) {
+
+    @Transactional
+    public void createCourseItemMeasure(
+            String callId, CourseItemMeasureServiceHelper courseItemMeasureServiceHelper) {
+        courseItemMeasureAddAction.process(callId, courseItemMeasureServiceHelper.getCourseLog(),
+                courseItemMeasureServiceHelper.getFrontLineWorkerDimension(),
+                courseItemMeasureServiceHelper.getLocationDimension());
+    }
+
+    @Transactional
+    public void createCourseItemMeasureAudioTracker(
+            String callId, CourseItemMeasureServiceHelper courseItemMeasureServiceHelper) {
+        courseItemMeasureAudioTrackerAddAction.process(callId, courseItemMeasureServiceHelper.getAudioTrackerLog(),
+                courseItemMeasureServiceHelper.getFrontLineWorkerDimension(),
+                courseItemMeasureServiceHelper.getLocationDimension());
+    }
+
+    public CourseItemMeasureServiceHelper getCourseItemMeasureServiceHelper(String callId) {
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
         Long callerId = getCallerId(courseLog, audioTrackerLog);
-
-        if (callerId == null) return;
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
 
-        courseItemMeasureAddAction.process(callId, courseLog, frontLineWorkerDimension, locationDimension);
-        courseItemMeasureAudioTrackerAddAction.process(callId, audioTrackerLog, frontLineWorkerDimension, locationDimension);
+        return new CourseItemMeasureServiceHelper(courseLog, frontLineWorkerDimension, locationDimension, audioTrackerLog);
     }
 
     private Long getCallerId(CertificationCourseLog courseLog, AudioTrackerLog audioTrackerLog) {

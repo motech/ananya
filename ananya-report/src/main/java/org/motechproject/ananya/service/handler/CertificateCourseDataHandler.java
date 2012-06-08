@@ -2,6 +2,7 @@ package org.motechproject.ananya.service.handler;
 
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.*;
 import org.motechproject.model.MotechEvent;
@@ -44,7 +45,10 @@ public class CertificateCourseDataHandler {
 
             registrationMeasureService.createRegistrationMeasureForCall(callerId);
             callDurationMeasureService.createCallDurationMeasure(callId);
-            courseItemMeasureService.createCourseItemMeasure(callId);
+            CourseItemMeasureServiceHelper courseItemMeasureServiceHelper =
+                    courseItemMeasureService.getCourseItemMeasureServiceHelper(callId);
+            courseItemMeasureService.createCourseItemMeasure(callId, courseItemMeasureServiceHelper);
+            courseItemMeasureService.createCourseItemMeasureAudioTracker(callId, courseItemMeasureServiceHelper);
             handleSMS(callId);
         }
     }

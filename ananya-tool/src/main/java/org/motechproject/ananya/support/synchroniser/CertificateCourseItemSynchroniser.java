@@ -4,6 +4,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -31,7 +32,9 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
         List<CertificationCourseLog> courseLogs = certificateCourseLogService.getAll();
         for (CertificationCourseLog courseLog : courseLogs) {
             try {
-                courseItemMeasureService.createCourseItemMeasure(courseLog.getCallId());
+                CourseItemMeasureServiceHelper courseItemMeasureServiceHelper =
+                        courseItemMeasureService.getCourseItemMeasureServiceHelper(courseLog.getCallId());
+                courseItemMeasureService.createCourseItemMeasure(courseLog.getCallId(), courseItemMeasureServiceHelper);
                 synchroniserLog.add(courseLog.getCallId(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(courseLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));

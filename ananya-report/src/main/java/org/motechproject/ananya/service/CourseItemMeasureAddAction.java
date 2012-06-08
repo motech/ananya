@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class CourseItemMeasureAddAction {
         this.certificateCourseLogService = certificateCourseLogService;
     }
 
-    @Transactional
     public void process(String callId, CertificationCourseLog courseLog,
                         FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
         if (courseLog == null) return;

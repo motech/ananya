@@ -6,6 +6,7 @@ import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.JobAidContentMeasureService;
+import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -37,8 +38,12 @@ public class AudioTrackerSynchroniser implements Synchroniser {
         correctContentIds(audioTrackerLogs);
         for (AudioTrackerLog audioTrackerLog : audioTrackerLogs) {
             try {
-                if (audioTrackerLog.typeIsCertificateCourse())
-                    courseItemMeasureService.createCourseItemMeasure(audioTrackerLog.getCallId());
+                if (audioTrackerLog.typeIsCertificateCourse()) {
+                    CourseItemMeasureServiceHelper courseItemMeasureServiceHelper =
+                            courseItemMeasureService.getCourseItemMeasureServiceHelper(audioTrackerLog.getCallId());
+                    courseItemMeasureService.createCourseItemMeasureAudioTracker(
+                            audioTrackerLog.getCallId(), courseItemMeasureServiceHelper);
+                }
                 else
                     jobAidContentMeasureService.createJobAidContentMeasure(audioTrackerLog.getCallId());
                 synchroniserLog.add(audioTrackerLog.getCallId(), "Success");
