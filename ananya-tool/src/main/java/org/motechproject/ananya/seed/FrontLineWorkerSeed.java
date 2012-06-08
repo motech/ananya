@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
@@ -11,6 +12,7 @@ import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.deliverytools.seed.Seed;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -67,6 +69,8 @@ public class FrontLineWorkerSeed {
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
         String circle = null;
         String[] currentRow;
+        DateTime lastModified = DateUtil.now();
+
         //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
@@ -84,7 +88,7 @@ public class FrontLineWorkerSeed {
                     name,
                     designation,
                     null,
-                    circle, new LocationRequest(currentDistrict, currentBlock, currentPanchayat)));
+                    circle, new LocationRequest(currentDistrict, currentBlock, currentPanchayat), lastModified));
 
             currentRow = csvReader.readNext();
         }

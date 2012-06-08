@@ -66,7 +66,7 @@ public class FrontLineWorkerValidatorTest {
     @Test
     public void shouldBulkValidateFLWsAndThrowExceptionsIfThereAreDuplicates() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), "airtel", "bihar", new LocationRequest());
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), "airtel", "bihar", new LocationRequest(), null);
         frontLineWorkerRequests.add(frontLineWorkerRequest);
         frontLineWorkerRequests.add(frontLineWorkerRequest);
         FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), frontLineWorkerRequests);
@@ -78,7 +78,7 @@ public class FrontLineWorkerValidatorTest {
     @Test
     public void shouldBulkValidateFLWsAndPassValidationIfThereAreNoErrors() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), "airtel", "bihar", new LocationRequest());
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), "airtel", "bihar", new LocationRequest(), null);
         frontLineWorkerRequests.add(frontLineWorkerRequest);
         FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), frontLineWorkerRequests);
 

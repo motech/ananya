@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
+import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +42,25 @@ public class FrontLineWorkerService {
         FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
 
         if (exisitingFrontLineWorker == null) {
-            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus);
+            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus, null);
             allFrontLineWorkers.add(exisitingFrontLineWorker);
             log.info("Created:" + exisitingFrontLineWorker);
             return exisitingFrontLineWorker;
         }
 
-        exisitingFrontLineWorker.update(name, designation, location, registrationStatus, circle, operator);
-        allFrontLineWorkers.update(exisitingFrontLineWorker);
-        log.info("Updated:" + exisitingFrontLineWorker);
+        if (isFLWFromDbOlder(frontLineWorker, exisitingFrontLineWorker)) {
+            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, circle, operator, frontLineWorker.getLastModified());
+            allFrontLineWorkers.update(exisitingFrontLineWorker);
+            log.info("Updated:" + exisitingFrontLineWorker);
+        }
+        
         return exisitingFrontLineWorker;
+    }
+
+    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker exisitingFrontLineWorker) {
+        if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
+            return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
+        return true;
     }
 
 

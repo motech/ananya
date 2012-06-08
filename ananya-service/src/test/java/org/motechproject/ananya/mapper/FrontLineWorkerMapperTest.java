@@ -1,5 +1,6 @@
 package org.motechproject.ananya.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
@@ -22,7 +23,8 @@ public class FrontLineWorkerMapperTest {
         String district = "D1";
         String block = "B1";
         String panchayat = "P1";
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, operator, circle, new LocationRequest(district, block, panchayat));
+        DateTime lastModified = new DateTime(2000,11,23,20,25);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, operator, circle, new LocationRequest(district, block, panchayat), lastModified);
 
         FrontLineWorker frontLineWorker = FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest);
 
@@ -31,6 +33,7 @@ public class FrontLineWorkerMapperTest {
         assertEquals(designation, frontLineWorker.getDesignation().name());
         assertEquals("bihar", frontLineWorker.getCircle());
         assertEquals("airtel", frontLineWorker.getOperator());
+        assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 
     @Test

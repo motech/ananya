@@ -1,5 +1,6 @@
 package org.motechproject.ananya.request;
 
+import org.joda.time.DateTime;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
@@ -11,17 +12,19 @@ public class FrontLineWorkerRequest implements Serializable {
     private String designation;
     private String circle;
     private LocationRequest location = new LocationRequest();
+    private DateTime lastModified;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location, DateTime lastModified) {
         this.name = name;
         this.msisdn = msisdn;
         this.operator = operator;
         this.designation = designation;
         this.circle = circle;
         this.location = location;
+        this.lastModified = lastModified;
     }
 
     public String getName() {
@@ -89,5 +92,9 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public String toCSV() {
         return msisdn + "," + name + "," + designation + "," + location.getDistrict() + "," + location.getBlock() + "," + location.getPanchayat();
+    }
+
+    public DateTime getLastModified() {
+        return lastModified;
     }
 }

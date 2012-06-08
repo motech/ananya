@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
@@ -58,7 +59,7 @@ public class RegistrationService {
                     frontLineWorkerRequest.getLocation().getBlock(),
                     frontLineWorkerRequest.getLocation().getPanchayat(),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
-                    locationList);
+                    locationList, frontLineWorkerRequest.getLastModified());
             registrationResponses.add(registrationResponse);
         }
         return registrationResponses;
@@ -74,7 +75,7 @@ public class RegistrationService {
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
-                locationList);
+                locationList, frontLineWorkerRequest.getLastModified());
     }
 
     public List<FrontLineWorkerResponse> getFilteredFLW(Long msisdn, String name, String status, String designation, String operator, String circle, Date activityStartDate, Date activityEndDate) {
@@ -94,12 +95,12 @@ public class RegistrationService {
         return filteredFlws;
     }
 
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, String circle, LocationList locationList) {
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, String circle, LocationList locationList, DateTime lastModified) {
         Location location = locationList.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, circle, district, block, panchayat);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus, lastModified);
 
         FLWValidationResponse FLWValidationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
         if (FLWValidationResponse.isInValid())

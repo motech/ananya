@@ -56,6 +56,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private DateTime lastJobAidAccessTime;
 
     @JsonProperty
+    private DateTime lastModified;
+
+    @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
     @JsonIgnore
@@ -82,12 +85,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
         this.locationId = location == null ? null : location.getExternalId();
         this.status = registrationStatus;
+        this.lastModified = DateUtil.now();
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, String operator, String circle, Location location, RegistrationStatus registrationStatus) {
+    public FrontLineWorker(String msisdn, String name, Designation designation, String operator, String circle, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
         this(msisdn, name, designation, location, registrationStatus);
         this.operator = operator;
         this.circle = circle;
+        this.lastModified = getLastModifiedDateTime(lastModified);
     }
 
     @Override
@@ -210,6 +215,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return lastJobAidAccessTime;
     }
 
+    public DateTime getLastModified() {
+        return lastModified;
+    }
+
     public boolean operatorIs(String operator) {
         return StringUtils.equalsIgnoreCase(this.operator, operator);
     }
@@ -218,8 +227,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, String circle, String operator) {
+    public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, String circle, String operator, DateTime lastModified) {
         this.name = name;
+        this.lastModified = getLastModifiedDateTime(lastModified);
         this.locationId = location.getExternalId();
         this.designation = designation;
         this.circle = circle;
@@ -303,5 +313,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @Override
     public int hashCode() {
         return msisdn != null ? msisdn.hashCode() : 0;
+    }
+
+    private DateTime getLastModifiedDateTime(DateTime lastModified) {
+        return lastModified != null ? lastModified : DateUtil.now();
     }
 }
