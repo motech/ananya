@@ -76,7 +76,7 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
         assertEquals(block, allLocations.get(0).getBlock());
         assertEquals(panchayat, allLocations.get(0).getPanchayat());
         assertEquals("Successfully registered location", response.getMessage());
-        assertEquals("The location is already present", response1.getMessage());
+        assertEquals("[The location is already present]", response1.getMessage());
     }
 
     @Test
