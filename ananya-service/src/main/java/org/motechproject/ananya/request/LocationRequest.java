@@ -40,6 +40,6 @@ public class LocationRequest implements Serializable {
     }
 
     public String toCSV() {
-        return district + "," + block + "," + panchayat;
+        return "\"" + district + "\"" + "," + "\"" + block + "\"" + "," + "\"" + panchayat + "\"";
     }
 }

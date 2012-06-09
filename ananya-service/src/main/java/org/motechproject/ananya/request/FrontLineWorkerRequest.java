@@ -91,7 +91,7 @@ public class FrontLineWorkerRequest implements Serializable {
     }
 
     public String toCSV() {
-        return msisdn + "," + name + "," + designation + "," + location.getDistrict() + "," + location.getBlock() + "," + location.getPanchayat();
+        return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
     }
 
     public DateTime getLastModified() {
