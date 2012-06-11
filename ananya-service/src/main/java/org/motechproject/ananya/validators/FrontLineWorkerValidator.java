@@ -8,6 +8,7 @@ import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FrontLineWorkerValidator {
 
@@ -15,7 +16,7 @@ public class FrontLineWorkerValidator {
         FLWValidationResponse flwValidationResponse = new FLWValidationResponse();
         if (StringUtils.length(frontLineWorker.getMsisdn()) < 10 || !StringUtils.isNumeric(frontLineWorker.getMsisdn()))
             flwValidationResponse.forInvalidMsisdn();
-        if (frontLineWorker.name() != null && !StringUtils.isAlphanumericSpace(frontLineWorker.getName()))
+        if (StringUtils.isNotBlank(frontLineWorker.name()) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", frontLineWorker.name()))
             flwValidationResponse.forInvalidName();
         if (locationOfFrontLineWorker == null)
             flwValidationResponse.forInvalidLocation();

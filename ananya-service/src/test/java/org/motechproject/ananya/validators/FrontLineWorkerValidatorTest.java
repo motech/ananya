@@ -45,6 +45,10 @@ public class FrontLineWorkerValidatorTest {
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid name]", flwValidationResponse.getMessage());
+
+        flwValidationResponse = frontLineWorkerValidator.validate(new FrontLineWorker("9996664422", "Mr. Valid", Designation.ANM, new Location("district", "block", "panchayat", 1, 1, 1), RegistrationStatus.REGISTERED), new Location());
+
+        assertTrue(flwValidationResponse.isValid());
     }
 
     @Test
