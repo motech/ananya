@@ -117,4 +117,100 @@
         </sql>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.4" id="6">
+        <createTable tableName="temp_content_correction" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="content_name" type="varchar(255)"/>
+            <column name="incorrect_duration" type="int"/>
+            <column name="correct_duration" type="int"/>
+        </createTable>
+
+        <sql>
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0011_ch1_qp.wav', 96289, 24819 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0011_ch1_qp.wav', 96289, 23869 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0011_ch1_qp.wav', 96289, 21375 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0011_ch1_qp.wav', 96289, 28974 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0011_ch1_qp.wav', 96289, 29437 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0038_ch2_qp.wav', 16660, 25247 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0038_ch2_qp.wav', 16660, 25072 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0038_ch2_qp.wav', 16660, 21255 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0038_ch2_qp.wav', 16660, 28813 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0038_ch2_qp.wav', 16660, 29741 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0065_ch3_qp.wav', 16448, 24785 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0065_ch3_qp.wav', 16448, 23817 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0065_ch3_qp.wav', 16448, 21260 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0065_ch3_qp.wav', 16448, 28571 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0065_ch3_qp.wav', 16448, 28535 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0092_ch4_qp.wav', 16800, 24957 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0092_ch4_qp.wav', 16800, 24772 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0092_ch4_qp.wav', 16800, 23234 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0092_ch4_qp.wav', 16800, 30338 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0092_ch4_qp.wav', 16800, 30513 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0119_ch5_qp.wav', 16471, 25007 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0119_ch5_qp.wav', 16471, 24604 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0119_ch5_qp.wav', 16471, 21673 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0119_ch5_qp.wav', 16471, 28846 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0119_ch5_qp.wav', 16471, 29509 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0146_ch6_qp.wav', 16969, 24081 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0146_ch6_qp.wav', 16969, 23740 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0146_ch6_qp.wav', 16969, 20782 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0146_ch6_qp.wav', 16969, 27046 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0146_ch6_qp.wav', 16969, 28666 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0173_ch7_qp.wav', 16769, 24969 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0173_ch7_qp.wav', 16769, 24029 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0173_ch7_qp.wav', 16769, 21427 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0173_ch7_qp.wav', 16769, 27792 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0173_ch7_qp.wav', 16769, 28658 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0200_ch8_qp.wav', 16493, 23677 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0200_ch8_qp.wav', 16493, 23434 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0200_ch8_qp.wav', 16493, 20069 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0200_ch8_qp.wav', 16493, 27984 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0200_ch8_qp.wav', 16493, 28709 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0227_ch9_qp.wav', 16668, 24847 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0227_ch9_qp.wav', 16668, 24509 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0227_ch9_qp.wav', 16668, 21575 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0227_ch9_qp.wav', 16668, 28718 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0227_ch9_qp.wav', 16668, 28422 );
+        </sql>
+        <sql>
+            update
+                report.course_item_dimension
+            set
+                duration = (
+                    select
+                        tcc.correct_duration
+                    from
+                        report.temp_content_correction tcc
+                    where
+                        tcc.content_name = name
+                )
+                where
+                    name in (
+                        select
+                            tcc.content_name
+                        from
+                            report.temp_content_correction tcc
+                    )
+        </sql>
+        <sql>
+            update
+                report.course_item_measure
+            set
+                percentage = round(duration * 100.0 / (select duration from report.course_item_dimension cid where cid.id = course_item_id))
+            where
+                course_item_id in (
+                    select
+                        cid.id
+                    from
+                        report.course_item_dimension cid join
+                        report.temp_content_correction tcc on tcc.content_name = cid.name
+                )
+        </sql>
+        <sql>
+            drop table report.temp_content_correction;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
