@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -136,4 +137,24 @@ public class FrontLineWorkerService {
             allFrontLineWorkers.remove(existingFrontLineWorkers.get(i));
         }
     }
+
+    /*
+    * Returns a registration status of the FrontLineWorker based on the current information of the
+    * in the database, like location and designation etc. This is a non-transient field and is not
+    * picked up from the db field registrationStatus.
+    */
+    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
+        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
+
+        if (!(locationAbsent || locationIncomplete || designationInvalid || nameInvalid))
+            return RegistrationStatus.REGISTERED;
+
+        if (locationAbsent && designationInvalid && nameInvalid) return RegistrationStatus.UNREGISTERED;
+
+        return RegistrationStatus.PARTIALLY_REGISTERED;
+    }
+
 }

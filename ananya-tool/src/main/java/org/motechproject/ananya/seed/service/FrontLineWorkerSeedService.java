@@ -4,14 +4,17 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
+import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ public class FrontLineWorkerSeedService {
     private AllFrontLineWorkers allFrontLineWorkers;
     private DataAccessTemplate template;
     private AllRegistrationMeasures allRegistrationMeasures;
+    private AllLocations allLocations;
+    private FrontLineWorkerService frontLineWorkerService;
 
     public FrontLineWorkerSeedService() {
 
@@ -37,11 +42,13 @@ public class FrontLineWorkerSeedService {
     @Autowired
     public FrontLineWorkerSeedService(AllFrontLineWorkers allFrontLineWorkers,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      DataAccessTemplate template, AllRegistrationMeasures allRegistrationMeasures) {
+                                      DataAccessTemplate template, AllRegistrationMeasures allRegistrationMeasures, AllLocations allLocations, FrontLineWorkerService frontLineWorkerService) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.template = template;
         this.allRegistrationMeasures = allRegistrationMeasures;
+        this.allLocations = allLocations;
+        this.frontLineWorkerService = frontLineWorkerService;
     }
 
 
@@ -161,4 +168,45 @@ public class FrontLineWorkerSeedService {
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
         log.info("Designation: Corrected invalid designation in postgres: " + frontLineWorkerDimension);
     }
+
+    @Transactional
+    public List<FrontLineWorkerDimension> getFrontLineWorkers() {
+        return (List<FrontLineWorkerDimension>)template.find("select f from FrontLineWorkerDimension f");
+    }
+
+    @Transactional
+    public void correctFrontLineWorker(FrontLineWorkerDimension frontLineWorkerDimension) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("" + frontLineWorkerDimension.getMsisdn());
+        if (null == frontLineWorker) {
+            System.out.println("FATAL: user present in postgres but not in couch. msisdn - " +
+                    frontLineWorkerDimension.getMsisdn());
+            return;
+        }
+
+        Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
+
+        RegistrationStatus expectedRegistrationStatus =
+                frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+        RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
+        if (!actualRegistrationStatus.toString().equalsIgnoreCase(frontLineWorkerDimension.getStatus())) {
+            System.out.println("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
+                    " status in postgres : " + frontLineWorkerDimension.getStatus() +
+                    " status in couch : " + frontLineWorker.getStatus() +
+                    " expected status : " + expectedRegistrationStatus);
+            // to ensure both couch and postgres get updated.
+            actualRegistrationStatus = null;
+        }
+
+        if (expectedRegistrationStatus != actualRegistrationStatus) {
+            System.out.println("Changing registration status of msisdn : " + frontLineWorkerDimension.getMsisdn() +
+                    " status in postgres : " + frontLineWorkerDimension.getStatus() +
+                    " status in couch : " + frontLineWorker.getStatus() +
+                    " expected status : " + expectedRegistrationStatus);
+            frontLineWorkerDimension.setStatus(expectedRegistrationStatus.toString());
+            allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+            frontLineWorker.setRegistrationStatus(expectedRegistrationStatus);
+            allFrontLineWorkers.update(frontLineWorker);
+        }
+    }
+
 }

@@ -183,6 +183,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.currentJobAidUsage != null ? this.currentJobAidUsage : 0;
     }
 
+    public RegistrationStatus getStatus() {
+        return status;
+    }
+
     public void markPromptHeard(String promptKey) {
         this.promptsHeard.put(promptKey,
                 this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
