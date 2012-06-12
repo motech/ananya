@@ -1,6 +1,7 @@
 package org.motechproject.ananya.mapper;
 
 import liquibase.util.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
@@ -26,6 +27,7 @@ public class FrontLineWorkerMapper {
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getOperator()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
                 new Location(frontLineWorkerRequest.getLocation().getDistrict(), frontLineWorkerRequest.getLocation().getBlock(), frontLineWorkerRequest.getLocation().getPanchayat(), 0, 0, 0),
-                RegistrationStatus.PARTIALLY_REGISTERED, frontLineWorkerRequest.getLastModified());
+                RegistrationStatus.PARTIALLY_REGISTERED,
+                new DateTime(frontLineWorkerRequest.getLastModified()));
     }
 }

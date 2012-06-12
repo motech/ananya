@@ -1,9 +1,9 @@
 package org.motechproject.ananya.request;
 
-import org.joda.time.DateTime;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
@@ -12,12 +12,12 @@ public class FrontLineWorkerRequest implements Serializable {
     private String designation;
     private String circle;
     private LocationRequest location = new LocationRequest();
-    private DateTime lastModified;
+    private Date lastModified;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location, DateTime lastModified) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location, Date lastModified) {
         this.name = name;
         this.msisdn = msisdn;
         this.operator = operator;
@@ -75,6 +75,14 @@ public class FrontLineWorkerRequest implements Serializable {
         this.location = location;
     }
 
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
     @ColumnName(name = "district")
     public void setDistrict(String district) {
         location.setDistrict(district);
@@ -92,9 +100,5 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public String toCSV() {
         return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
-    }
-
-    public DateTime getLastModified() {
-        return lastModified;
     }
 }

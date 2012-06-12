@@ -24,7 +24,7 @@ public class FrontLineWorkerMapperTest {
         String block = "B1";
         String panchayat = "P1";
         DateTime lastModified = new DateTime(2000,11,23,20,25);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, operator, circle, new LocationRequest(district, block, panchayat), lastModified);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, operator, circle, new LocationRequest(district, block, panchayat), lastModified.toDate());
 
         FrontLineWorker frontLineWorker = FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest);
 

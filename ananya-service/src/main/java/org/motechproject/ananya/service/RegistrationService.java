@@ -59,7 +59,8 @@ public class RegistrationService {
                     frontLineWorkerRequest.getLocation().getBlock(),
                     frontLineWorkerRequest.getLocation().getPanchayat(),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
-                    locationList, frontLineWorkerRequest.getLastModified());
+                    locationList,
+                    new DateTime(frontLineWorkerRequest.getLastModified()));
             registrationResponses.add(registrationResponse);
         }
         return registrationResponses;
@@ -75,7 +76,8 @@ public class RegistrationService {
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
-                locationList, frontLineWorkerRequest.getLastModified());
+                locationList,
+                new DateTime(frontLineWorkerRequest.getLastModified()));
     }
 
     public List<FrontLineWorkerResponse> getFilteredFLW(Long msisdn, String name, String status, String designation, String operator, String circle, Date activityStartDate, Date activityEndDate) {

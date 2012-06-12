@@ -85,7 +85,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
         this.locationId = location == null ? null : location.getExternalId();
         this.status = registrationStatus;
-        this.lastModified = DateUtil.now();
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, String operator, String circle, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
