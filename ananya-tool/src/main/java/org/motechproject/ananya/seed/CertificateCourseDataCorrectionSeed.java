@@ -27,7 +27,7 @@ public class CertificateCourseDataCorrectionSeed {
     @Autowired
     private SendSMSService sendSMSService;
 
-    @Seed(priority = 0, version = "1.4", comment = "Correct incorrect scores data for certificate course.")
+    @Seed(priority = 0, version = "1.3", comment = "Correct incorrect scores data for certificate course.")
     public void correctFlwScoresData() {
         print("Correction FLW Scores data:START");
 

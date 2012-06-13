@@ -122,7 +122,7 @@ public class FrontLineWorkerSeed {
         }
     }
 
-    @Seed(priority = 0, version = "1.4", comment = "Sanitization of registration status of FLWs")
+    @Seed(priority = 0, version = "1.3", comment = "Sanitization of registration status of FLWs")
     public void correctInvalidRegistrationStatusForAllFLWs() {
         System.out.println("Correcting Registration status of FLWs");
         int startId = 1; int counter = 0;
