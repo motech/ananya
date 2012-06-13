@@ -117,7 +117,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.4" id="6">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="6">
         <createTable tableName="temp_content_correction" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -210,6 +210,12 @@
         </sql>
         <sql>
             drop table report.temp_content_correction;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="7">
+        <sql>
+           update report.location_dimension set panchayat = null where panchayat =''
         </sql>
     </changeSet>
 
