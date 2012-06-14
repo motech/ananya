@@ -43,11 +43,11 @@ public class RegistrationMeasureService {
     }
 
     @Transactional
-    public void createRegistrationMeasureForCall(String callerId) {
-        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
+    public void createRegistrationMeasureForCall(String callId) {
+        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callId);
         if (registrationLog == null) return;
 
-        createMeasure(callerId);
+        createMeasure(registrationLog.getCallerId());
         registrationLogService.delete(registrationLog);
     }
 

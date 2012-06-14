@@ -62,14 +62,14 @@ public class RegistrationMeasureServiceTest {
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationLog registrationLog = new RegistrationLog(callId,callerId, operator, circle);
 
-        when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(registrationLog);
+        when(registrationLogService.getRegistrationLogFor(callId)).thenReturn(registrationLog);
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
-        registrationMeasureService.createRegistrationMeasureForCall(callerId);
+        registrationMeasureService.createRegistrationMeasureForCall(callId);
 
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
         verify(allRegistrationMeasures).add(captor.capture());

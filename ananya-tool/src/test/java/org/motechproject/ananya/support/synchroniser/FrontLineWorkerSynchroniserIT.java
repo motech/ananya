@@ -70,6 +70,7 @@ public class FrontLineWorkerSynchroniserIT {
     private void resetDB() {
         allFrontLineWorkers.removeAll();
         allLocations.removeAll();
+        allRegistrationLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
         template.deleteAll(template.loadAll(TimeDimension.class));
@@ -99,13 +100,13 @@ public class FrontLineWorkerSynchroniserIT {
         assertEquals(0, allRegistrationLogs.getAll().size());
     }
 
-    //check
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
+        String callId = msisdn + "-" + DateTime.now().getMillisOfDay();
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
         allTimeDimensions.addOrUpdate(registeredDate);
-        allRegistrationLogs.add(new RegistrationLog("callId", msisdn, "", ""));
+        allRegistrationLogs.add(new RegistrationLog(callId, msisdn, "", ""));
     }
 
     private void verifyFLWExistsInReportDbFor(String msisdn) {

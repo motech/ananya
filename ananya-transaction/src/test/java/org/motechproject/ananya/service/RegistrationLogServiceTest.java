@@ -25,9 +25,16 @@ public class RegistrationLogServiceTest {
     }
 
     @Test
-    public void shouldDeleteRegistrationLogsForCallerId() {
-        String callerId = "callerId";
-        registrationLogService.deleteFor(callerId);
+    public void shouldDeleteRegistrationLogsForCallId() {
+        String callId = "callId";
+        registrationLogService.deleteFor(callId);
         verify(allRegistrationLogs).remove(any(RegistrationLog.class));
+    }
+    
+    @Test
+    public void shouldAddRegistrationLog(){
+        RegistrationLog registrationLog = new RegistrationLog("callId", "callerId", "", "");
+        registrationLogService.add(registrationLog);
+        verify(allRegistrationLogs).add(registrationLog);
     }
 }

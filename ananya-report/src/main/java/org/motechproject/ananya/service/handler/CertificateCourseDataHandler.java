@@ -40,10 +40,9 @@ public class CertificateCourseDataHandler {
         for (Object object : event.getParameters().values()) {
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
-            String callerId = callMessage.getCallerId();
             log.info("Received the certificate course call message for callId: " + callId);
 
-            registrationMeasureService.createRegistrationMeasureForCall(callerId);
+            registrationMeasureService.createRegistrationMeasureForCall(callId);
             callDurationMeasureService.createCallDurationMeasure(callId);
             CourseItemMeasureServiceHelper courseItemMeasureServiceHelper =
                     courseItemMeasureService.getCourseItemMeasureServiceHelper(callId);

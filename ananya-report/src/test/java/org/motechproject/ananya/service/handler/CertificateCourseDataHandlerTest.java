@@ -54,7 +54,7 @@ public class CertificateCourseDataHandlerTest {
 
         handler.handleCertificateCourseData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasureForCall(callerId);
+        verify(registrationMeasureService).createRegistrationMeasureForCall(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
         verify(courseItemMeasureService).createCourseItemMeasure(callId, courseItemMeasureServiceHelper);
         verify(courseItemMeasureService).createCourseItemMeasureAudioTracker(callId, courseItemMeasureServiceHelper);
