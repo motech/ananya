@@ -43,12 +43,12 @@ public class JobAidService {
                 jobAidPromptRequest.getPromptList());
     }
 
-    public JobAidCallerDataResponse createCallerData(String callerId, String operator, String circle) {
+    public JobAidCallerDataResponse createCallerData(String callId, String callerId, String operator, String circle) {
         log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " + circle);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
         if (frontLineWorker.isModified())
-            registrationLogService.add(new RegistrationLog(callerId, operator, circle));
+            registrationLogService.add(new RegistrationLog(callId, callerId, operator, circle));
 
         return new JobAidCallerDataResponse(
                 frontLineWorker.status().isRegistered(),

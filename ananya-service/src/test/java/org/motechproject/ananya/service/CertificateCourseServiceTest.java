@@ -43,6 +43,7 @@ public class CertificateCourseServiceTest {
     @Test
     public void shouldCreateCallerDataForGivenCallerId() {
         String callerId = "123";
+        String callId = "123432";
         String operator = "airtel";
         String circle = "circle";
 
@@ -52,7 +53,7 @@ public class CertificateCourseServiceTest {
 
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callerId, operator, circle);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callId, callerId, operator, circle);
         assertEquals(bookMark.asJson(), callerData.getBookmark());
     }
 
@@ -70,7 +71,7 @@ public class CertificateCourseServiceTest {
 
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        certificateCourseService.createCallerData(callerId,operator, circle);
+        certificateCourseService.createCallerData(callerId, callerId,operator, circle);
 
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
         verify(registrationLogService).add(captor.capture());

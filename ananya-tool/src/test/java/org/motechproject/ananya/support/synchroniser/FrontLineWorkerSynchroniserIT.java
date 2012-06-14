@@ -99,12 +99,13 @@ public class FrontLineWorkerSynchroniserIT {
         assertEquals(0, allRegistrationLogs.getAll().size());
     }
 
+    //check
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);
         allTimeDimensions.addOrUpdate(registeredDate);
-        allRegistrationLogs.add(new RegistrationLog(msisdn, "", ""));
+        allRegistrationLogs.add(new RegistrationLog("callId", msisdn, "", ""));
     }
 
     private void verifyFLWExistsInReportDbFor(String msisdn) {

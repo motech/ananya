@@ -1,6 +1,7 @@
 package org.motechproject.ananya.performance.data;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.performance.framework.PerformanceData;
@@ -103,8 +104,9 @@ public class JobAidDataSetup {
     private void loadUsers(String operatorName, int prefix) {
         for (int j = 0; j < usersPerOperator; j++) {
             String callerId = "9999" + prefix + "" + j;
+            String callId = callerId + "-" + DateTime.now().getMillisOfDay();
             Operator operator = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callerId, operator.getName(), "circle");
+            jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
             registrationMeasureService.createRegistrationMeasureForCall(callerId);
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
             System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j);

@@ -134,7 +134,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "",Designation.AWW, location,RegistrationStatus.UNREGISTERED);
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
-        registrationLogService.add(new RegistrationLog(callerId, "", ""));
+        registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
 
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);

@@ -37,12 +37,12 @@ public class CertificateCourseService {
         this.smsLogService = smsLogService;
     }
 
-    public CertificateCourseCallerDataResponse createCallerData(String msisdn, String operator, String circle) {
+    public CertificateCourseCallerDataResponse createCallerData(String callId, String msisdn, String operator, String circle) {
         log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
         if (frontLineWorker.isModified())
-            registrationLogService.add(new RegistrationLog(msisdn, operator, circle));
+            registrationLogService.add(new RegistrationLog(callId, msisdn, operator, circle));
 
         return new CertificateCourseCallerDataResponse(
                 frontLineWorker.bookMark().asJson(),

@@ -50,6 +50,7 @@ public class RegistrationMeasureServiceTest {
     @Test
     public void shouldCreateRegistrationMeasure() {
         String callerId = "919986574410";
+        String callId = "919986574410-12345";
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
@@ -59,7 +60,7 @@ public class RegistrationMeasureServiceTest {
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
         TimeDimension timeDimension = new TimeDimension(registeredDate);
-        RegistrationLog registrationLog = new RegistrationLog(callerId, operator, circle);
+        RegistrationLog registrationLog = new RegistrationLog(callId,callerId, operator, circle);
 
         when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(registrationLog);
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
@@ -83,6 +84,7 @@ public class RegistrationMeasureServiceTest {
 
     @Test
     public void shouldNotCreateANewRegistrationMeasureIfTheFrontLineWorkerAlreadyExists() {
+        String callId = "919986574410-123456";
         String callerId = "919986574410";
         String operator = "operator";
         String circle = "circle";
@@ -93,7 +95,7 @@ public class RegistrationMeasureServiceTest {
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
         TimeDimension timeDimension = new TimeDimension(registeredDate);
-        RegistrationLog registrationLog = new RegistrationLog(callerId, operator, circle);
+        RegistrationLog registrationLog = new RegistrationLog(callId, callerId, operator, circle);
 
         when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(registrationLog);
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(true);
