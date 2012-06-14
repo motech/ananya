@@ -53,7 +53,7 @@ public class CourseItemMeasureServiceTest {
         frontLineWorkerDimension.setId(1);
         LocationDimension locationDimension = new LocationDimension();
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(
-                frontLineWorkerDimension, locationDimension, new TimeDimension());
+                frontLineWorkerDimension, locationDimension, new TimeDimension(), callId);
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(courseLog);
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);

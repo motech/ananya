@@ -66,7 +66,7 @@ public class SMSSentMeasureServiceTest {
         when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(1)).thenReturn(registrationMeasure);
 
         service.createSMSSentMeasure(callerId);
@@ -100,7 +100,7 @@ public class SMSSentMeasureServiceTest {
         when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
 
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(flwd_id)).thenReturn(registrationMeasure);
 
         service.createSMSSentMeasure(callerId);

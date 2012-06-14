@@ -370,4 +370,10 @@
     <changeSet context="setup" author="ThoughtWorks-version1.2" id="24">
         <addUniqueConstraint columnNames="msisdn" tableName="front_line_worker_dimension" constraintName="unq_front_line_worker_dimension_msisdn"/>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="25">
+        <addColumn tableName="registration_measure">
+            <column name="call_id" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

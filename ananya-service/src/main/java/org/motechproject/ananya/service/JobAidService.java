@@ -44,7 +44,8 @@ public class JobAidService {
     }
 
     public JobAidCallerDataResponse createCallerData(String callId, String callerId, String operator, String circle) {
-        log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " + circle);
+        log.info("Creating caller data for msisdn: " + callerId + " for operator " + operator + " for circle " +
+                circle + " for callId " + callId);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
         if (frontLineWorker.isModified())

@@ -67,7 +67,7 @@ public class JobAidContentMeasureServiceTest {
         timeDimension = new TimeDimension();
         jobAidContentDimension = new JobAidContentDimension();
         jobAidContentDimension.setDuration(100);
-        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
     }
 
     @Test

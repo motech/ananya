@@ -13,16 +13,16 @@ public class AllRegistrationMeasureTest extends SpringIntegrationTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertRegistrationMeasureWhenFLWDimensionIsNull() {
-        template.save(new RegistrationMeasure(null, new LocationDimension(), new TimeDimension()));
+        template.save(new RegistrationMeasure(null, new LocationDimension(), new TimeDimension(),""));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertRegistrationMeasureWhenLocationDimensionIsNull() {
-        template.save(new RegistrationMeasure(new FrontLineWorkerDimension(), null , new TimeDimension()));
+        template.save(new RegistrationMeasure(new FrontLineWorkerDimension(), null , new TimeDimension(),""));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertRegistrationMeasureWhenTimeDimensionIsNull() {
-        template.save(new RegistrationMeasure(new FrontLineWorkerDimension(), new LocationDimension(), null));
+        template.save(new RegistrationMeasure(new FrontLineWorkerDimension(), new LocationDimension(), null,""));
     }
 }

@@ -38,7 +38,8 @@ public class CertificateCourseService {
     }
 
     public CertificateCourseCallerDataResponse createCallerData(String callId, String msisdn, String operator, String circle) {
-        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle);
+        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle
+                + " for callId " + callId);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
         if (frontLineWorker.isModified())

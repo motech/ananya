@@ -45,7 +45,7 @@ public class RegistrationServiceTest {
 
         assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
         verify(frontLineWorkerService).createOrUpdate(callerId, name, designation, location, RegistrationStatus.REGISTERED);
-        verify(registrationMeasureService).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService).createRegistrationMeasure(callerId, "");
     }
 
     @Test
@@ -59,7 +59,7 @@ public class RegistrationServiceTest {
 
         assertEquals("Invalid Location", registrationResponse.getMessage());
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), eq(RegistrationStatus.REGISTERED));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId, "");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class RegistrationServiceTest {
 
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId,"");
 
         callerId = "abcdef";
         registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
@@ -81,7 +81,7 @@ public class RegistrationServiceTest {
         assertEquals("Invalid CallerId", registrationResponse.getMessage());
 
         verify(frontLineWorkerService, never()).createOrUpdate(eq(callerId), eq(name), eq(designation), any(Location.class), any(RegistrationStatus.class));
-        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId);
+        verify(registrationMeasureService, never()).createRegistrationMeasure(callerId, "");
     }
 
     @Test

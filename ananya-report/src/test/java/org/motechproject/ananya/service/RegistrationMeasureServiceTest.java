@@ -122,6 +122,7 @@ public class RegistrationMeasureServiceTest {
     @Test
     public void shouldCreateRegistrationMeasureWithoutLog() {
         String callerId = "919986574410";
+        String callId = "919986574410-12312312";
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
@@ -138,7 +139,7 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
-        registrationMeasureService.createRegistrationMeasure(callerId);
+        registrationMeasureService.createRegistrationMeasure(callerId, callId);
 
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
         verify(allRegistrationMeasures).add(captor.capture());

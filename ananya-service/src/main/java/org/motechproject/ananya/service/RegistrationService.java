@@ -37,7 +37,7 @@ public class RegistrationService {
         FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(
                 callerId, name, Designation.getFor(designation), location, registrationStatus);
 
-        registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn());
+        registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn(), "");
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
