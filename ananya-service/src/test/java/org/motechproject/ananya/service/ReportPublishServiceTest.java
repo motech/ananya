@@ -11,6 +11,8 @@ import org.motechproject.ananya.service.publish.QueuePublishService;
 import org.motechproject.context.EventContext;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -30,28 +32,24 @@ public class ReportPublishServiceTest {
     @Test
     public void shouldPublishCertificateCourseDisconnectEvent(){
         String callId = "callID";
-        String callerId = "callerId";
-        reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
+        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE), captor.capture());
         CallMessage logData = captor.getValue();
         
         assertEquals(callId, logData.getCallId());
-        assertEquals(callerId , logData.getCallerId());
     }
 
     @Test
     public void shouldPublishJobAidDisconnectEvent(){
         String callId = "callID";
-        String callerId = "callerId";
-        reportPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
+        reportPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
 
         ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.JOBAID_CALL_MESSAGE), captor.capture());
         CallMessage logData = captor.getValue();
 
         assertEquals(callId, logData.getCallId());
-        assertEquals(callerId , logData.getCallerId());
     }
 }

@@ -28,8 +28,8 @@ public class DataPublishServiceTest {
     public void shouldPickTheRightImplementationBasedOnConfiguration() {
         String callerId = "321";
         String callId = "123";
-        dataPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
-        verify(dbPublishService, never()).publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
-        verify(queuePublishService).publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
+        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        verify(dbPublishService, never()).publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        verify(queuePublishService).publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
     }
 }

@@ -157,7 +157,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         TimeDimension certificateCourseEndTimeDimension = allTimeDimensions.addOrUpdate(certificateCourseEndTime);
 
 
-        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

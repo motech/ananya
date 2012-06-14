@@ -24,12 +24,12 @@ public class QueuePublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
+    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
         log.info("Call Id is: " + callId);
         if (serviceType.equals(ServiceType.JOB_AID))
-            publishJobAidContentData(new CallMessage(CallMessageType.JOBAID, callId , callerId));
+            publishJobAidContentData(new CallMessage(CallMessageType.JOBAID, callId));
         else
-            publishCertificateCourseData(new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId));
+            publishCertificateCourseData(new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId));
     }
 
     private void publishCertificateCourseData(CallMessage logData) {

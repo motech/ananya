@@ -38,15 +38,14 @@ public class JobAidDataHandlerTest {
     @Test
     public void shouldHandleJobAidData() {
         String callId = "callId";
-        String callerId = "callerId";
-        CallMessage logData = new CallMessage(CallMessageType.JOBAID, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.JOBAID, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
         handler.handleJobAidData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasureForCall(callerId);
+        verify(registrationMeasureService).createRegistrationMeasureForCall(callId);
         verify(callDurationMeasureService).createCallDurationMeasure(callId);
         verify(jobAidContentMeasureService).createJobAidContentMeasure(callId);
     }

@@ -26,9 +26,9 @@ public class DataPublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId, String callerId, ServiceType serviceType) {
+    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
         try {
-            publishService.publishCallDisconnectEvent(callId, callerId, serviceType);
+            publishService.publishCallDisconnectEvent(callId, serviceType);
         }
         catch (Exception e) {
             handlePublishServiceException(e);

@@ -43,7 +43,7 @@ public class CertificateCourseDataHandlerTest {
     public void shouldHandleCertificateCourseData() {
         String callId = "callId";
         String callerId = "callerId";
-        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

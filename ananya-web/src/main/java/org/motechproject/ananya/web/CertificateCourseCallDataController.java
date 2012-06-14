@@ -56,7 +56,7 @@ public class CertificateCourseCallDataController {
         certificateCourseService.saveState(stateRequestList);
         certificateCourseService.saveAudioTrackerState(audioTrackerList);
         callLoggerService.saveAll(callDurationList);
-        dataPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
+        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
         log.info("Call ended: " + callId);
