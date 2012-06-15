@@ -81,6 +81,11 @@ public class AdminController{
         return diagnosisResult;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/httpConnection")
+    public String getHttpConnectionStatus() throws Exception {
+        return "Http connection with BBC is successful.";
+    }
+
 
     private String contextWithVersion(HttpServletRequest request) {
         return request.getContextPath() + "/" + properties.getProperty("url.version");
