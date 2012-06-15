@@ -16,8 +16,8 @@ public class Launcher {
         allDataSetups.run(args);
 
         DateTime end = DateTime.now();
-        System.out.println("Performance data setup: END: "+end);
         Period period = new Period(start, end);
-        System.out.println("Time taken: "+ period.getHours()+":"+period.getMinutes()+":"+period.getSeconds());
+        System.out.println("Performance data setup: Time taken: "+ period.getHours()+":"+period.getMinutes()+":"+period.getSeconds());
+        System.out.println("Performance data setup: END: "+end);
     }
 }

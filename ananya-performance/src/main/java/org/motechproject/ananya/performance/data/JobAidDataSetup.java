@@ -8,7 +8,6 @@ import org.motechproject.ananya.performance.framework.PerformanceData;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
-import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.RegistrationMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,18 +24,15 @@ public class JobAidDataSetup {
     private OperatorService operatorService;
     private JobAidService jobAidService;
     private RegistrationMeasureService registrationMeasureService;
-    private RegistrationLogService registrationLogService;
-
     private AllNodes allNodes;
 
-
     @Autowired
-    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService, AllNodes allNodes, RegistrationMeasureService registrationMeasureService, RegistrationLogService registrationLogService) {
+    public JobAidDataSetup(OperatorService operatorService, JobAidService jobAidService, AllNodes allNodes,
+                           RegistrationMeasureService registrationMeasureService) {
         this.operatorService = operatorService;
         this.jobAidService = jobAidService;
         this.allNodes = allNodes;
         this.registrationMeasureService = registrationMeasureService;
-        this.registrationLogService = registrationLogService;
     }
 
     @PerformanceData(testName = "jobaid", description = "create airtel subscribers")
@@ -69,11 +65,11 @@ public class JobAidDataSetup {
         loadUsers("vodafone", 6);
     }
 
-    @PerformanceData(testName = "jobaid-content", description = "prepare data for posting")
+    @PerformanceData(testName = "jobaid-content", description = "Jobaid call-flow javascript generation")
     public void prepareDataForPosting() throws IOException {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
-        String jobAidTokens = getClass().getResource("/jmeter/js/job_aid_tokens.js").getPath();
-        String templateFileName = getClass().getResource("/jmeter/js/job_aid_template.js").getPath();
+        String jobAidTokens ="jmeter/js/job_aid_tokens.js";
+        String templateFileName = "jmeter/js/job_aid_template.js";
         BufferedReader templateReader = new BufferedReader(new FileReader(templateFileName));
         BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter(jobAidTokens));
 
@@ -109,7 +105,7 @@ public class JobAidDataSetup {
             jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
             registrationMeasureService.createRegistrationMeasureForCall(callerId);
             jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
-            System.out.println("loaded callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j);
+            System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j+"|operator="+operatorName+"]");
         }
     }
 
