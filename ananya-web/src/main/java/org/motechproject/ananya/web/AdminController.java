@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -81,12 +80,6 @@ public class AdminController{
         String diagnosisResult = diagnosticService.getDiagnostics();
         return diagnosisResult;
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/httpConnection")
-    public void getHttpConnectionStatus(HttpServletResponse response) throws Exception {
-        response.getOutputStream().print("Http connection with BBC is successful.");
-    }
-
 
     private String contextWithVersion(HttpServletRequest request) {
         return request.getContextPath() + "/" + properties.getProperty("url.version");
