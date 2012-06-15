@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -82,8 +83,8 @@ public class AdminController{
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/httpConnection")
-    public String getHttpConnectionStatus() throws Exception {
-        return "Http connection with BBC is successful.";
+    public void getHttpConnectionStatus(HttpServletResponse response) throws Exception {
+        response.getOutputStream().print("Http connection with BBC is successful.");
     }
 
 
