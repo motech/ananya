@@ -44,21 +44,8 @@
             )
         </sql>
     </changeSet>
-    <changeSet context="setup" author="ThoughtWorks-version1.2" id="2">
-        <sql>
-            update
-            report.front_line_worker_dimension flwd
-            set status = 'PARTIALLY_REGISTERED'
-            where id in ( select
-            flw_id from report.registration_measure rm
-            join report.location_dimension ld
-            on rm.location_id = ld.id
-            where ld.panchayat = '') and flwd.status= 'REGISTERED'
-            
-        </sql>
-    </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="3">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="2">
         <sql>
             update
             report.front_line_worker_dimension
@@ -99,7 +86,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="4">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="3">
         <sql>
             update
             report.front_line_worker_dimension
@@ -108,7 +95,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="4">
         <sql>
             update
             report.front_line_worker_dimension
@@ -117,7 +104,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="6">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
         <createTable tableName="temp_content_correction" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -213,7 +200,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="7">
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="6">
         <sql>
            update report.location_dimension set panchayat = null where panchayat =''
         </sql>
