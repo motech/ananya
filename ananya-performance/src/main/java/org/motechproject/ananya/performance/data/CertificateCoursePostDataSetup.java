@@ -52,7 +52,7 @@ public class CertificateCoursePostDataSetup {
 
     private String setupUsers(String jmx) throws IOException {
         String setupUsers = FileUtils.readFileToString(new File("jmeter/js/setup_users.js"));
-        setupUsers = setupUsers.replace("${no_of_subscribers_per_operator}", usersPerOperator).replace("${msisdn_prefix}", msisdnPrefix);
+        setupUsers = setupUsers.replace("${no_of_subscribers_per_operator}", usersPerOperator).replace("${msisdn_prefix}", "\"msisdnPrefix\"");
         return jmx.replace("${setup_users}", StringEscapeUtils.escapeXml(setupUsers));
     }
 
