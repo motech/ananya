@@ -107,8 +107,8 @@ public class JobAidDataSetup {
     }
 
     private void updateJMeterFile() throws Exception {
-        String tokens = FileUtils.readFileToString(new File("jmeter/js/job_aid_tokens.js"));
         String jmx = FileUtils.readFileToString(new File("jmeter/jobaid_course_flows.jmx"));
+        String tokens = FileUtils.readFileToString(new File("jmeter/js/job_aid_tokens.js"));
 
         String finalJmx = jmx.replace("${no_of_operators}", noOfOperators)
                 .replace("${no_of_subscribers_per_operator}", String.valueOf(usersPerOperator))
