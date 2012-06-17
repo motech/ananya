@@ -1,5 +1,7 @@
 package org.motechproject.ananya.performance.data;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Node;
@@ -20,6 +22,8 @@ import java.util.List;
 public class JobAidDataSetup {
 
     private final int usersPerOperator = 25;
+    private final String msisdnPrefix = "9999";
+    private final String noOfOperators = "6";
 
     private OperatorService operatorService;
     private JobAidService jobAidService;
@@ -66,18 +70,32 @@ public class JobAidDataSetup {
     }
 
     @PerformanceData(testName = "jobaid-content", description = "Jobaid call-flow javascript generation")
-    public void prepareDataForPosting() throws IOException {
+    public void prepareDataForPosting() throws Exception {
+        createJobAidTokensFile();
+        updateJMeterFile();
+    }
+
+    private void loadUsers(String operatorName, int prefix) {
+        for (int j = 0; j < usersPerOperator; j++) {
+            String callerId = msisdnPrefix + prefix + "" + j;
+            String callId = callerId + "-" + DateTime.now().getMillisOfDay();
+            Operator operator = getOperatorFor(operatorName);
+            jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
+            registrationMeasureService.createRegistrationMeasureForCall(callerId);
+            jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
+            System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j + "|operator=" + operatorName + "]");
+        }
+    }
+
+    private void createJobAidTokensFile() throws IOException {
         Node jobAidCourse = allNodes.findByName("JobAidCourse");
-        String jobAidTokens ="jmeter/js/job_aid_tokens.js";
-        String templateFileName = "jmeter/js/job_aid_template.js";
-        BufferedReader templateReader = new BufferedReader(new FileReader(templateFileName));
-        BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter(jobAidTokens));
+        BufferedReader templateReader = new BufferedReader(new FileReader("jmeter/js/job_aid_template.js"));
+        BufferedWriter jobAidTokensWriter = new BufferedWriter(new FileWriter("jmeter/js/job_aid_tokens.js"));
 
         List<String> contentIds = new ArrayList<String>();
         recursivelyWriteAudioTrackerArrayForJobAid(jobAidCourse, contentIds);
 
         jobAidTokensWriter.write(String.format("var contentIds = [%s];", StringUtils.join(contentIds, ',')));
-
         String line = templateReader.readLine();
         while (line != null) {
             jobAidTokensWriter.newLine();
@@ -88,25 +106,24 @@ public class JobAidDataSetup {
         templateReader.close();
     }
 
+    private void updateJMeterFile() throws Exception {
+        String tokens = FileUtils.readFileToString(new File("jmeter/js/job_aid_tokens.js"));
+        String jmx = FileUtils.readFileToString(new File("jmeter/jobaid_course_flows.jmx"));
+
+        String finalJmx = jmx.replace("${no_of_operators}", noOfOperators)
+                .replace("${no_of_subscribers_per_operator}", String.valueOf(usersPerOperator))
+                .replace("${msisdn_prefix}", msisdnPrefix)
+                .replace("${job_aid_tokens}", StringEscapeUtils.escapeXml(tokens));
+
+        FileUtils.writeStringToFile(new File("jmeter/jobaid_course_flows.jmx"), finalJmx);
+    }
+
     private void recursivelyWriteAudioTrackerArrayForJobAid(Node node, List<String> contentArray) {
         for (String contentId : node.contentIds())
             contentArray.add("\"" + contentId + "\"");
         if (node.children().size() == 0) return;
         for (Node nextNode : node.children())
             recursivelyWriteAudioTrackerArrayForJobAid(nextNode, contentArray);
-    }
-
-
-    private void loadUsers(String operatorName, int prefix) {
-        for (int j = 0; j < usersPerOperator; j++) {
-            String callerId = "9999" + prefix + "" + j;
-            String callId = callerId + "-" + DateTime.now().getMillisOfDay();
-            Operator operator = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
-            registrationMeasureService.createRegistrationMeasureForCall(callerId);
-            jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
-            System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j+"|operator="+operatorName+"]");
-        }
     }
 
     private Operator getOperatorFor(String operatorName) {
