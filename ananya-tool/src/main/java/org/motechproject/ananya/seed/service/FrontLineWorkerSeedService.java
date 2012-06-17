@@ -175,20 +175,17 @@ public class FrontLineWorkerSeedService {
     }
 
     @Transactional
-    public void correctFrontLineWorker(FrontLineWorkerDimension frontLineWorkerDimension) {
+    public void correctRegistrationStatus(FrontLineWorkerDimension frontLineWorkerDimension) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("" + frontLineWorkerDimension.getMsisdn());
-        if (null == frontLineWorker) {
-            System.out.println("FATAL: user present in postgres but not in couch. msisdn - " +
-                    frontLineWorkerDimension.getMsisdn());
+        if (frontLineWorker == null) {
+            System.out.println("FATAL: user present in postgres but not in couch. msisdn - " + frontLineWorkerDimension.getMsisdn());
             return;
         }
-
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
 
-        RegistrationStatus expectedRegistrationStatus =
-                frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
         RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
-        if (!actualRegistrationStatus.toString().equalsIgnoreCase(frontLineWorkerDimension.getStatus())) {
+        RegistrationStatus expectedRegistrationStatus = frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+        if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
             System.out.println("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
                     " status in couch : " + frontLineWorker.getStatus() +

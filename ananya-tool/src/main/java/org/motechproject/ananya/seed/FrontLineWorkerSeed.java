@@ -132,7 +132,7 @@ public class FrontLineWorkerSeed {
 
             for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
                 counter++;
-                seedService.correctFrontLineWorker(frontLineWorkerDimension);
+                seedService.correctRegistrationStatus(frontLineWorkerDimension);
                 if (counter % 100 == 0)
                     System.out.println("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
             }
