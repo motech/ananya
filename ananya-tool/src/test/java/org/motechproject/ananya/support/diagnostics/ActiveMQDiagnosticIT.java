@@ -20,7 +20,6 @@ public class ActiveMQDiagnosticIT {
     ActiveMQDiagnostic activeMQDiagnostic;
 
     @Test
-    @Ignore("Enable once activemqdiagnostic works with pre-fetch policy")
     public void shouldCheckActiveMQConnection() throws JMSException {
         DiagnosticLog diagnosticLog = activeMQDiagnostic.performDiagnosis();
         System.out.println(diagnosticLog.toString());
