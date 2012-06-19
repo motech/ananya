@@ -71,7 +71,7 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
-        registrationMeasureService.createRegistrationMeasureForCall(callId);
+        registrationMeasureService.createFor(callId);
 
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
         verify(allRegistrationMeasures).add(captor.capture());
@@ -104,7 +104,7 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
 
-        registrationMeasureService.createRegistrationMeasureForCall(callerId);
+        registrationMeasureService.createFor(callerId);
 
         verify(allRegistrationMeasures, never()).add(any(RegistrationMeasure.class));
         verify(registrationLogService).delete(registrationLog);
@@ -116,7 +116,7 @@ public class RegistrationMeasureServiceTest {
 
         when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(null);
 
-        registrationMeasureService.createRegistrationMeasureForCall(callerId);
+        registrationMeasureService.createFor(callerId);
 
         verify(frontLineWorkerService, never()).findByCallerId(callerId);
     }

@@ -6,10 +6,11 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
-import org.motechproject.ananya.service.*;
-import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
+import org.motechproject.ananya.service.SMSLogService;
+import org.motechproject.ananya.service.SendSMSService;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
-import org.motechproject.ananya.service.measure.CourseItemMeasureService;
+import org.motechproject.ananya.service.measure.CourseAudioTrackerMeasureService;
+import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 
@@ -24,8 +25,6 @@ public class CertificateCourseDataHandlerTest {
 
     private CertificateCourseDataHandler handler;
     @Mock
-    private CourseItemMeasureService courseItemMeasureService;
-    @Mock
     private RegistrationMeasureService registrationMeasureService;
     @Mock
     private CallDurationMeasureService callDurationMeasureService;
@@ -33,13 +32,18 @@ public class CertificateCourseDataHandlerTest {
     private SMSLogService smsLogService;
     @Mock
     private SendSMSService sendSMSService;
+    @Mock
+    private CourseContentMeasureService courseContentMeasureService;
+    @Mock
+    private CourseAudioTrackerMeasureService courseAudioTrackerMeasureService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        handler = new CertificateCourseDataHandler(courseItemMeasureService,
-                callDurationMeasureService,
-                registrationMeasureService, smsLogService, sendSMSService);
+        handler = new CertificateCourseDataHandler(
+                callDurationMeasureService, registrationMeasureService,
+                courseContentMeasureService, courseAudioTrackerMeasureService,
+                smsLogService, sendSMSService);
     }
 
     @Test
@@ -50,17 +54,14 @@ public class CertificateCourseDataHandlerTest {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
-        CourseItemMeasureServiceHelper courseItemMeasureServiceHelper = new CourseItemMeasureServiceHelper();
 
         when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
-        when(courseItemMeasureService.getCourseItemMeasureServiceHelper(callId)).thenReturn(courseItemMeasureServiceHelper);
 
         handler.handleCertificateCourseData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasureForCall(callId);
-        verify(callDurationMeasureService).createCallDurationMeasure(callId);
-        verify(courseItemMeasureService).createCourseItemMeasure(callId, courseItemMeasureServiceHelper);
-        verify(courseItemMeasureService).createCourseItemMeasureAudioTracker(callId, courseItemMeasureServiceHelper);
+        verify(registrationMeasureService).createFor(callId);
+        verify(callDurationMeasureService).createFor(callId);
+        verify(courseAudioTrackerMeasureService).createFor(callId);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
     }
 }

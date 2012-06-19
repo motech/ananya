@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class JobAidContentMeasureService {
 
-    private static final Logger log = LoggerFactory.getLogger(CourseItemMeasureService.class);
+    private static final Logger log = LoggerFactory.getLogger(JobAidContentMeasureService.class);
 
     private AudioTrackerLogService audioTrackerLogService;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -51,7 +51,7 @@ public class JobAidContentMeasureService {
     }
 
     @Transactional
-    public void createJobAidContentMeasure(String callId) {
+    public void createFor(String callId) {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
 
         if (audioTrackerLog == null) {

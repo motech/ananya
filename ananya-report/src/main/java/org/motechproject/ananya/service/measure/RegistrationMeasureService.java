@@ -46,7 +46,7 @@ public class RegistrationMeasureService {
     }
 
     @Transactional
-    public void createRegistrationMeasureForCall(String callId) {
+    public void createFor(String callId) {
         RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callId);
         if (registrationLog == null) {
             log.info("[" + callId + "] registrationLog not present");

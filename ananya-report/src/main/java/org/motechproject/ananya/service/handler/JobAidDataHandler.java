@@ -34,9 +34,9 @@ public class JobAidDataHandler {
             String callId = callMessage.getCallId();
             log.info("Received jobaid call message for callId: " + callId);
 
-            registrationMeasureService.createRegistrationMeasureForCall(callId);
-            callDurationMeasureService.createCallDurationMeasure(callId);
-            jobAidContentMeasureService.createJobAidContentMeasure(callId);
+            registrationMeasureService.createFor(callId);
+            callDurationMeasureService.createFor(callId);
+            jobAidContentMeasureService.createFor(callId);
         }
     }
 }

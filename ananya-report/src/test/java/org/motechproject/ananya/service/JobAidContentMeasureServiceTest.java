@@ -45,9 +45,10 @@ public class JobAidContentMeasureServiceTest {
 
     private JobAidContentMeasureService jobAidContentMeasureService;
 
-    private int flw_id;
-    private String callerId;
-    private String callId;
+    private int flw_id = 1;
+    private String callerId = "9876543210";
+    private String callId = "callId";
+
     private RegistrationMeasure registrationMeasure;
     private FrontLineWorkerDimension frontLineWorkerDimension;
     private LocationDimension locationDimension;
@@ -57,18 +58,17 @@ public class JobAidContentMeasureServiceTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        callerId = "9876543210";
-        callId = "callId";
         frontLineWorkerDimension = new FrontLineWorkerDimension();
-        flw_id = 1;
         frontLineWorkerDimension.setId(flw_id);
-        jobAidContentMeasureService = new JobAidContentMeasureService(audioTrackerLogService, allFrontLineWorkerDimensions,
-                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures);
+
         locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         timeDimension = new TimeDimension();
         jobAidContentDimension = new JobAidContentDimension();
         jobAidContentDimension.setDuration(100);
+
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
+        jobAidContentMeasureService = new JobAidContentMeasureService(audioTrackerLogService, allFrontLineWorkerDimensions,
+                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class JobAidContentMeasureServiceTest {
         when(allJobAidContentDimensions.findByContentId(contentId)).thenReturn(jobAidContentDimension);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
 
-        jobAidContentMeasureService.createJobAidContentMeasure(callId);
+        jobAidContentMeasureService.createFor(callId);
 
         ArgumentCaptor<JobAidContentMeasure> captor = ArgumentCaptor.forClass(JobAidContentMeasure.class);
         verify(allJobAidContentMeasures).add(captor.capture());
@@ -108,7 +108,7 @@ public class JobAidContentMeasureServiceTest {
 
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
 
-        jobAidContentMeasureService.createJobAidContentMeasure(callId);
+        jobAidContentMeasureService.createFor(callId);
 
         verify(allFrontLineWorkerDimensions, never()).fetchFor(Long.parseLong(callerId));
         verify(audioTrackerLogService).remove(audioTrackerLog);
@@ -118,7 +118,7 @@ public class JobAidContentMeasureServiceTest {
     public void shouldNotCreateJobAidContentMeasureWhenAudioTrackerLogIsNotPresent(){
         String callId = "12345";
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);
-        jobAidContentMeasureService.createJobAidContentMeasure(callId);
+        jobAidContentMeasureService.createFor(callId);
         verify(allJobAidContentMeasures,never()).add(any(JobAidContentMeasure.class));
     }
 }

@@ -46,7 +46,7 @@ public class CallDurationMeasureService {
 
 
     @Transactional
-    public void createCallDurationMeasure(String callId) {
+    public void createFor(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 
         if (callLog == null) {

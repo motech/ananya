@@ -31,7 +31,7 @@ public class CallDurationSychroniser implements Synchroniser {
         List<CallLog> callLogs = callLoggerService.getAll();
         for (CallLog callLog : callLogs) {
             try {
-                callDurationMeasureService.createCallDurationMeasure(callLog.getCallId());
+                callDurationMeasureService.createFor(callLog.getCallId());
                 synchroniserLog.add(callLog.getCallId(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(callLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));

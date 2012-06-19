@@ -14,10 +14,13 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.service.measure.CourseItemMeasureAddAction;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class CourseItemMeasureAddActionTest {
+public class CourseContentMeasureServiceTest {
 
     @Mock
     private ReportDB reportDB;
@@ -38,16 +41,23 @@ public class CourseItemMeasureAddActionTest {
     private CertificateCourseLogService certificateCourseLogService;
     @Mock
     private AudioTrackerLogService audioTrackerLogService;
+    @Mock
+    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Mock
+    private AllRegistrationMeasures allRegistrationMeasures;
 
-    String callId;
-    String callerId;
-    String calledNumber;
-    DateTime now;
+    private CourseContentMeasureService courseContentMeasureService;
+
+    private String callId;
+    private String callerId;
+    private String calledNumber;
+    private DateTime now;
+    private int flw_id;
     private TimeDimension timeDimension;
     private FrontLineWorkerDimension frontLineWorkerDimension;
     private LocationDimension locationDimension;
-    private int flw_id;
-    private CourseItemMeasureAddAction courseItemMeasureAddAction;
+    private RegistrationMeasure registrationMeasure;
+
 
     @Before
     public void setUp() throws Exception {
@@ -56,14 +66,16 @@ public class CourseItemMeasureAddActionTest {
         callerId = "123456789";
         calledNumber = "1234";
         now = DateTime.now();
-        courseItemMeasureAddAction = new CourseItemMeasureAddAction(
-                reportDB, allTimeDimensions, allCourseItemDimensions, certificateCourseLogService);
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
         timeDimension = new TimeDimension();
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         flw_id = 1;
         frontLineWorkerDimension.setId(flw_id);
         locationDimension = new LocationDimension();
+        courseContentMeasureService = new CourseContentMeasureService(
+                certificateCourseLogService, allTimeDimensions, allCourseItemDimensions, allFrontLineWorkerDimensions,
+                allRegistrationMeasures, reportDB);
     }
 
     @Test
@@ -78,10 +90,13 @@ public class CourseItemMeasureAddActionTest {
 
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
-        courseItemMeasureAddAction.process(callId, certificationCourseLog, frontLineWorkerDimension, locationDimension);
+        courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -101,15 +116,18 @@ public class CourseItemMeasureAddActionTest {
         String contentId = "contentId";
         CourseItemType contentType = CourseItemType.QUIZ;
         CourseItemState event = CourseItemState.START;
+
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, "3", event, now));
-
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
-        courseItemMeasureAddAction.process(callId, certificationCourseLog, frontLineWorkerDimension, locationDimension);
+        courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -135,12 +153,15 @@ public class CourseItemMeasureAddActionTest {
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId1, contentType1, contentName1, "3", event, now));
         certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId2, contentType2, contentName2, "", event, now.plusDays(5)));
 
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allTimeDimensions.getFor(now.plusDays(5))).thenReturn(timeDimension);
         when(allCourseItemDimensions.getFor(contentName1, contentType1)).thenReturn(courseItemDimension1);
         when(allCourseItemDimensions.getFor(contentName2, contentType2)).thenReturn(courseItemDimension2);
+        when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
+        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
 
-        courseItemMeasureAddAction.process(callId, certificationCourseLog, frontLineWorkerDimension, locationDimension);
+        courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
         verify(reportDB, times(2)).add(captor.capture());
@@ -164,9 +185,7 @@ public class CourseItemMeasureAddActionTest {
 
     @Test
     public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId() {
-        courseItemMeasureAddAction.process("callId", null,
-                frontLineWorkerDimension, locationDimension);
-
+        courseContentMeasureService.createFor("callId");
         verify(reportDB, never()).add(any(CourseItemMeasure.class));
     }
 
@@ -175,12 +194,13 @@ public class CourseItemMeasureAddActionTest {
         String contentName = "Chapter 1";
         CourseItemType contentType = CourseItemType.CHAPTER;
         CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
+        
+        when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
+
+        courseContentMeasureService.createFor(callId);
 
         verify(allTimeDimensions, never()).getFor(now);
         verify(allCourseItemDimensions, never()).getFor(contentName, contentType);
-
-        courseItemMeasureAddAction.process(callId, certificationCourseLog, frontLineWorkerDimension, locationDimension);
-
         verify(certificateCourseLogService).remove(certificationCourseLog);
     }
 

@@ -37,6 +37,6 @@ public class AudioTrackerLogItem {
     }
 
     public int getPercentage(Integer totalDuration) {
-        return (duration * 100) / totalDuration;
+        return (int) Math.round((double) duration * 100 / totalDuration);
     }
 }

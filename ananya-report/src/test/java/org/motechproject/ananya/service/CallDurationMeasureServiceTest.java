@@ -73,7 +73,7 @@ public class CallDurationMeasureServiceTest {
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -94,7 +94,7 @@ public class CallDurationMeasureServiceTest {
         CallLog callLog = new CallLog(callId, callerId.toString(), "321");
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         verify(reportDB, never()).add(any());
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
@@ -124,7 +124,7 @@ public class CallDurationMeasureServiceTest {
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
 
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB, times(2)).add(captor.capture());
@@ -156,7 +156,7 @@ public class CallDurationMeasureServiceTest {
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -171,7 +171,7 @@ public class CallDurationMeasureServiceTest {
         String callId = "callId";
         when(callLoggerService.getCallLogFor(callId)).thenReturn(null);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         verify(reportDB, never()).add(any());
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());

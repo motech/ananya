@@ -45,8 +45,8 @@ public class JobAidDataHandlerTest {
 
         handler.handleJobAidData(event);
 
-        verify(registrationMeasureService).createRegistrationMeasureForCall(callId);
-        verify(callDurationMeasureService).createCallDurationMeasure(callId);
-        verify(jobAidContentMeasureService).createJobAidContentMeasure(callId);
+        verify(registrationMeasureService).createFor(callId);
+        verify(callDurationMeasureService).createFor(callId);
+        verify(jobAidContentMeasureService).createFor(callId);
     }
 }
