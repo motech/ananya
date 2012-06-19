@@ -53,10 +53,14 @@ public class CourseAudioTrackerMeasureService {
     @Transactional
     public void createFor(String callId) {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
-        if (audioTrackerLog == null) return;
+        if (audioTrackerLog == null) {
+            log.info(callId + "- audioTrackerLog not present");
+            return;
+        }
 
         if (audioTrackerLog.hasNoItems()) {
-            audioTrackerLogService.remove(audioTrackerLog);
+            log.info(callId + "- audioTrackerLog has no items");
+            removeLog(callId, audioTrackerLog);
             return;
         }
 
@@ -70,13 +74,18 @@ public class CourseAudioTrackerMeasureService {
 
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(callId,
                     timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension,
-                    logItem.getTime(),logItem.getDuration(),
+                    logItem.getTime(), logItem.getDuration(),
                     logItem.getPercentage(courseItemDimension.getDuration())
             );
             reportDB.add(courseItemMeasure);
         }
+        log.info(callId + "- audioTrackerLog courseItemMeasures added");
+        removeLog(callId, audioTrackerLog);
+    }
+
+    private void removeLog(String callId, AudioTrackerLog audioTrackerLog) {
         audioTrackerLogService.remove(audioTrackerLog);
-        log.info("Added AudioTrack CourseItemMeasures for CallId=" + callId);
+        log.info(callId + "- audioTrackerLog removed");
     }
 
 }

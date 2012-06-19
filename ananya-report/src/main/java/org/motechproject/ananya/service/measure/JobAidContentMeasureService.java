@@ -55,14 +55,13 @@ public class JobAidContentMeasureService {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
 
         if (audioTrackerLog == null) {
-            log.info("["+callId+"] audioTrackerLog not present");
+            log.info(callId + "- audioTrackerLog not present");
             return;
         }
 
         if (audioTrackerLog.hasNoItems()) {
-            log.info("["+callId+"] audioTrackerLog has no items");
-            audioTrackerLogService.remove(audioTrackerLog);
-            log.info("["+callId+"] audioTrackerLog removed");
+            log.info(callId + "- audioTrackerLog has no items");
+            removeLog(callId, audioTrackerLog);
             return;
         }
 
@@ -82,10 +81,13 @@ public class JobAidContentMeasureService {
 
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
-        log.info("["+callId+"] audioTrackerLog jobAidContentMeasures added");
-        
+        log.info(callId + "- audioTrackerLog jobAidContentMeasures added");
+        removeLog(callId, audioTrackerLog);
+    }
+
+    private void removeLog(String callId, AudioTrackerLog audioTrackerLog) {
         audioTrackerLogService.remove(audioTrackerLog);
-        log.info("["+callId+"] audioTrackerLog removed");
+        log.info(callId + "- audioTrackerLog removed");
     }
 
 

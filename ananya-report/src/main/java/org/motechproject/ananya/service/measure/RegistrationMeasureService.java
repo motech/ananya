@@ -49,13 +49,13 @@ public class RegistrationMeasureService {
     public void createFor(String callId) {
         RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callId);
         if (registrationLog == null) {
-            log.info("[" + callId + "] registrationLog not present");
+            log.info(callId + "- registrationLog not present");
             return;
         }
         createMeasure(registrationLog.getCallerId(), callId);
 
         registrationLogService.delete(registrationLog);
-        log.info("[" + callId + "] registrationLog removed");
+        log.info(callId + "- registrationLog removed");
     }
 
     @Transactional
@@ -75,10 +75,10 @@ public class RegistrationMeasureService {
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
                 frontLineWorker.status().toString());
-        log.info("[" + callId + "] flwDimension created or updated for " + frontLineWorker);
+        log.info(callId + "- flwDimension created or updated for " + frontLineWorker);
 
         if (dimensionAlreadyExists) {
-            log.info("[" + callId + "] registrationMeasure already exists for " + frontLineWorker);
+            log.info(callId + "- registrationMeasure already exists for " + frontLineWorker);
             return;
         }
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
@@ -88,7 +88,7 @@ public class RegistrationMeasureService {
                 timeDimension,
                 callId);
         allRegistrationMeasures.add(registrationMeasure);
-        log.info("[" + callId + "] registrationMeasure created for " + frontLineWorker);
+        log.info(callId + "- registrationMeasure created for " + frontLineWorker);
     }
 
 }

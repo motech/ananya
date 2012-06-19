@@ -48,10 +48,14 @@ public class CourseContentMeasureService {
     @Transactional
     public void createFor(String callId) {
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
-        if (courseLog == null) return;
+        if (courseLog == null) {
+            log.info(callId + "- courseLog not present");
+            return;
+        }
 
         if (courseLog.hasNoItems()) {
-            certificateCourseLogService.remove(courseLog);
+            log.info(callId + "- courseLog has no items");
+            removeLog(callId, courseLog);
             return;
         }
 
@@ -71,9 +75,13 @@ public class CourseContentMeasureService {
 
             reportDB.add(courseItemMeasure);
         }
+        log.info(callId + "- courseLog courseItemMeasures added");
+        removeLog(callId, courseLog);
+    }
 
+    private void removeLog(String callId, CertificationCourseLog courseLog) {
         certificateCourseLogService.remove(courseLog);
-        log.info("Added Certificate CourseItemMeasures for CallId=" + callId);
+        log.info(callId + "- courseLog removed");
     }
 
 }

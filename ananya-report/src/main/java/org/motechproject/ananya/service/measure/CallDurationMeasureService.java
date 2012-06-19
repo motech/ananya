@@ -50,13 +50,12 @@ public class CallDurationMeasureService {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 
         if (callLog == null) {
-            log.info("[" + callId + "] callLog not present");
+            log.info(callId + "- callLog not present");
             return;
         }
         if (callLog.hasNoItems()) {
-            log.info("[" + callId + "] callLog has no items");
-            callLoggerService.delete(callLog);
-            log.info("[" + callId + "] callLog removed");
+            log.info(callId + "- callLog has no items");
+            removeLog(callId, callLog);
             return;
         }
 
@@ -69,6 +68,7 @@ public class CallDurationMeasureService {
 
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
             if (callLogItem.hasNoTimeLimits()) continue;
+
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension, locationDimension, timeDimension,
                     callId, calledNumber,
@@ -76,9 +76,12 @@ public class CallDurationMeasureService {
                     callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
             reportDB.add(callDurationMeasure);
         }
-        log.info("[" + callId + "] callLog callDurationMeasures added");
+        log.info(callId + "- callLog callDurationMeasures added");
+        removeLog(callId, callLog);
+    }
 
+    private void removeLog(String callId, CallLog callLog) {
         callLoggerService.delete(callLog);
-        log.info("[" + callId + "] callLog removed");
+        log.info(callId + "- callLog removed");
     }
 }
