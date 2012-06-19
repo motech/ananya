@@ -77,7 +77,7 @@ public class JobAidContentMeasureServiceTest {
         Integer duration = 30;
         String contentId = "contentId";
         DateTime now = DateTime.now();
-        audioTrackerLog.getAudioTrackerLogItems().add(new AudioTrackerLogItem(contentId, now, duration));
+        audioTrackerLog.items().add(new AudioTrackerLogItem(contentId, now, duration));
 
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);

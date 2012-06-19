@@ -42,14 +42,14 @@ public class CourseItemMeasureAudioTrackerAddAction {
                         FrontLineWorkerDimension frontLineWorkerDimension, LocationDimension locationDimension) {
         if (audioTrackerLog == null) return;
 
-        if (audioTrackerLog.getAudioTrackerLogItems() == null || audioTrackerLog.getAudioTrackerLogItems().isEmpty()) {
+        if (audioTrackerLog.items() == null || audioTrackerLog.items().isEmpty()) {
             audioTrackerLogService.remove(audioTrackerLog);
             return;
         }
 
-        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
+        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.items().get(0).getTime());
 
-        for (AudioTrackerLogItem logItem : audioTrackerLog.getAudioTrackerLogItems()) {
+        for (AudioTrackerLogItem logItem : audioTrackerLog.items()) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(logItem.getContentId());
             Integer totalDuration = courseItemDimension.getDuration();
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(

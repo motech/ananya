@@ -57,7 +57,7 @@ public class AudioTrackerSynchroniser implements Synchroniser {
     private void correctContentIds(List<AudioTrackerLog> audioTrackerLogs) {
         HashMap<String, String> oldContentIdToNewContentId = initContentIdMap();
         for (AudioTrackerLog log : audioTrackerLogs) {
-            List<AudioTrackerLogItem> audioTrackerLogItems = log.getAudioTrackerLogItems();
+            List<AudioTrackerLogItem> audioTrackerLogItems = log.items();
             List<AudioTrackerLogItem> newAudioTrackerLogItems = new ArrayList<AudioTrackerLogItem>();
             for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLogItems) {
                 String newContentId = oldContentIdToNewContentId.get(audioTrackerLogItem.getContentId());

@@ -130,9 +130,9 @@ public class PostgresDiagnosticIT {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
         allJobAidContentDimensions.add(new JobAidContentDimension("contentId", null, "", "", "", 0));
         JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId("contentId");
-        allJobAidContentMeasures.add(new JobAidContentMeasure(frontLineWorkerDimension, "123", locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
-        allJobAidContentMeasures.add(new JobAidContentMeasure(frontLineWorkerDimension, "456", locationDimension, jobAidContentDimension, anotherTimeDimension, today, 0, 0));
-        allJobAidContentMeasures.add(new JobAidContentMeasure(frontLineWorkerDimension, "123", locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
+        allJobAidContentMeasures.add(new JobAidContentMeasure("123", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
+        allJobAidContentMeasures.add(new JobAidContentMeasure("456", frontLineWorkerDimension, locationDimension, jobAidContentDimension, anotherTimeDimension, today, 0, 0));
+        allJobAidContentMeasures.add(new JobAidContentMeasure("123", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
 
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery()).uniqueResult()).intValue());
         assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_JOB_AID_CALLS_TODAY.getQuery(today)).uniqueResult()).intValue());

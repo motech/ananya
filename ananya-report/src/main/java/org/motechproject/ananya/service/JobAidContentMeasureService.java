@@ -52,32 +52,39 @@ public class JobAidContentMeasureService {
     @Transactional
     public void createJobAidContentMeasure(String callId) {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
-        if (audioTrackerLog == null) return;
 
-        if (audioTrackerLog.getAudioTrackerLogItems() == null || audioTrackerLog.getAudioTrackerLogItems().isEmpty()) {
+        if (audioTrackerLog == null) {
+            log.info("["+callId+"] audioTrackerLog not present");
+            return;
+        }
+
+        if (audioTrackerLog.hasNoItems()) {
+            log.info("["+callId+"] audioTrackerLog has no items");
             audioTrackerLogService.remove(audioTrackerLog);
             return;
         }
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.time());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
 
-        for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.getAudioTrackerLogItems()) {
+        for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.items()) {
             JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
 
-            JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(frontLineWorkerDimension, callId,
-                    locationDimension, jobAidContentDimension, timeDimension, audioTrackerLogItem.getTime(),
-                    audioTrackerLogItem.getDuration(), getPercentage(audioTrackerLogItem, jobAidContentDimension.getDuration()));
+            JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(callId,
+                    frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension,
+                    audioTrackerLogItem.getTime(),
+                    audioTrackerLogItem.getDuration(),
+                    audioTrackerLogItem.getPercentage(jobAidContentDimension.getDuration()));
 
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
-        log.info("Added JobAidContentMeasures for CallId " + callId);
+        log.info("["+callId+"] added jobAidContentMeasures for audioTrackerLog");
+        
         audioTrackerLogService.remove(audioTrackerLog);
+        log.info("["+callId+"] removed audioTrackerLog");
     }
 
-    private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
-        return (logItem.getDuration() * 100) / totalDuration;
-    }
+
 }

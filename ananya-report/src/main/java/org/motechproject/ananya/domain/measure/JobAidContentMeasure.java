@@ -52,7 +52,7 @@ public class JobAidContentMeasure {
     public JobAidContentMeasure() {
     }
 
-    public JobAidContentMeasure(FrontLineWorkerDimension frontLineWorkerDimension, String callId,
+    public JobAidContentMeasure(String callId, FrontLineWorkerDimension frontLineWorkerDimension,
                                 LocationDimension locationDimension, JobAidContentDimension jobAidContentDimension,
                                 TimeDimension timeDimension, DateTime timestamp, Integer duration, Integer percentage) {
         this.frontLineWorkerDimension = frontLineWorkerDimension;

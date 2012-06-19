@@ -2,6 +2,7 @@ package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class AudioTrackerLog extends BaseLog {
         audioTrackerLogItems.add(audioTrackerLogItem);
     }
 
-    public List<AudioTrackerLogItem> getAudioTrackerLogItems() {
+    public List<AudioTrackerLogItem> items() {
         return audioTrackerLogItems;
     }
 
@@ -38,4 +39,13 @@ public class AudioTrackerLog extends BaseLog {
     public boolean typeIsCertificateCourse() {
         return this.serviceType.equals(ServiceType.CERTIFICATE_COURSE);
     }
+
+    public boolean hasNoItems() {
+        return audioTrackerLogItems == null || audioTrackerLogItems.isEmpty();
+    }
+
+    public DateTime time() {
+        return hasNoItems() ? null : audioTrackerLogItems.get(0).getTime();
+    }
+
 }
