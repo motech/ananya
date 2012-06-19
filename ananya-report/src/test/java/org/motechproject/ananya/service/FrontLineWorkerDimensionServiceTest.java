@@ -7,6 +7,7 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 
 import java.util.ArrayList;
 import java.util.List;

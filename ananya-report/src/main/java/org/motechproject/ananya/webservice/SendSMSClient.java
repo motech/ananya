@@ -3,7 +3,7 @@ package org.motechproject.ananya.webservice;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.SMSSentMeasureService;
+import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

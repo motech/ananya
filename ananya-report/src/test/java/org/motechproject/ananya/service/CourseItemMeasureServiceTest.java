@@ -13,6 +13,9 @@ import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
+import org.motechproject.ananya.service.measure.CourseItemMeasureAddAction;
+import org.motechproject.ananya.service.measure.CourseItemMeasureAudioTrackerAddAction;
+import org.motechproject.ananya.service.measure.CourseItemMeasureService;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;

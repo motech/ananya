@@ -3,7 +3,7 @@ package org.motechproject.ananya.support.synchroniser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
-import org.motechproject.ananya.service.CourseItemMeasureService;
+import org.motechproject.ananya.service.measure.CourseItemMeasureService;
 import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;

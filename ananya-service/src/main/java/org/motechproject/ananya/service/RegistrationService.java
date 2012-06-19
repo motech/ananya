@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,6 +4,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -10,7 +10,7 @@ import org.motechproject.ananya.performance.framework.PerformanceData;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
-import org.motechproject.ananya.service.RegistrationMeasureService;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

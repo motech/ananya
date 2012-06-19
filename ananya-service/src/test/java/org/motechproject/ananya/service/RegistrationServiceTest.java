@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

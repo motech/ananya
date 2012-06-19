@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.SMSSentMeasureService;
+import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.Matchers.is;

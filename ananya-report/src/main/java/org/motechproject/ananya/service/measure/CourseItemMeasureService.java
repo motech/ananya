@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.measure;
 
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.CertificationCourseLog;
@@ -7,6 +7,8 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.AudioTrackerLogService;
+import org.motechproject.ananya.service.CertificateCourseLogService;
 import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,6 +8,9 @@ import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.*;
 import org.motechproject.ananya.service.helpers.CourseItemMeasureServiceHelper;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
+import org.motechproject.ananya.service.measure.CourseItemMeasureService;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;

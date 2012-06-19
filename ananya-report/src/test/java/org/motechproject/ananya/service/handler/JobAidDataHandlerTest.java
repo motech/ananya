@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
-import org.motechproject.ananya.service.CallDurationMeasureService;
-import org.motechproject.ananya.service.JobAidContentMeasureService;
-import org.motechproject.ananya.service.RegistrationMeasureService;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.model.MotechEvent;
 
 import java.util.HashMap;

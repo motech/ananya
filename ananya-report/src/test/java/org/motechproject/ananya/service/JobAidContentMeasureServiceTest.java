@@ -19,6 +19,7 @@ import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;

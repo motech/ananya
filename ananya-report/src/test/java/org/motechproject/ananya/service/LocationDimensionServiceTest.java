@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
