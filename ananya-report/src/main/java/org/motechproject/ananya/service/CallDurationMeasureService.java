@@ -34,7 +34,8 @@ public class CallDurationMeasureService {
     public CallDurationMeasureService(CallLoggerService callLoggerService,
                                       ReportDB reportDB,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      AllRegistrationMeasures allRegistrationMeasures, AllTimeDimensions allTimeDimensions) {
+                                      AllRegistrationMeasures allRegistrationMeasures,
+                                      AllTimeDimensions allTimeDimensions) {
         this.callLoggerService = callLoggerService;
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
@@ -47,11 +48,15 @@ public class CallDurationMeasureService {
     public void createCallDurationMeasure(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 
-        if(callLog == null)
+        if (callLog == null) {
+            log.info("[" + callId + "] callLog not present");
             return;
+        }
 
-        if (callLog.getCallLogItems().size() == 0) {
+        if (callLog.hasNoItems()) {
+            log.info("[" + callId + "] callLog has no items");
             callLoggerService.delete(callLog);
+            log.info("[" + callId + "] callLog removed");
             return;
         }
 
@@ -60,27 +65,24 @@ public class CallDurationMeasureService {
 
         FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwDimension.getId());
+        TimeDimension timeDimension = allTimeDimensions.getFor(callLog.startTime());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        TimeDimension timeDimension = allTimeDimensions.getFor(callLog.getCallLogItems().get(0).getStartTime());
 
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
-            if (callLogItem.getStartTime() == null || callLogItem.getEndTime() == null) {
+            if (callLogItem.hasNoTimeLimits())
                 continue;
-            }
 
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
-                    flwDimension,
-                    locationDimension,
-                    timeDimension,
-                    callId,
-                    calledNumber,
-                    callLogItem.duration(),
-                    callLogItem.getStartTime(),
-                    callLogItem.getEndTime(),
-                    callLogItem.getCallFlowType().name());
+                    flwDimension, locationDimension, timeDimension,
+                    callId, calledNumber,
+                    callLogItem.duration(), callLogItem.getStartTime(),
+                    callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
+
             reportDB.add(callDurationMeasure);
         }
+        log.info("[" + callId + "] callLog callDurationMeasures added");
+
         callLoggerService.delete(callLog);
-        log.info("Added CallDurationMeasures for callId=" + callId);
+        log.info("[" + callId + "] callLog removed");
     }
 }

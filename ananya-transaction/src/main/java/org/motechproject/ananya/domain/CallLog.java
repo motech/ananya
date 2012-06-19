@@ -2,6 +2,7 @@ package org.motechproject.ananya.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,14 @@ public class CallLog extends BaseLog {
 
     public Long calledNumberAsLong() {
         return Long.parseLong(calledNumber);
+    }
+
+
+    public boolean hasNoItems() {
+        return callLogItems == null || callLogItems.isEmpty();
+    }
+
+    public DateTime startTime() {
+        return hasNoItems() ? null : callLogItems.get(0).getStartTime();
     }
 }

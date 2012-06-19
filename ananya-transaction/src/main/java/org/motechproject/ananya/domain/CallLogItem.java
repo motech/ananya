@@ -47,4 +47,8 @@ public class CallLogItem {
     public void setStartTime(DateTime startTime) {
         this.startTime = startTime;
     }
+
+    public boolean hasNoTimeLimits() {
+        return startTime == null || endTime == null;
+    }
 }
