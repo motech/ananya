@@ -48,10 +48,14 @@ public class RegistrationMeasureService {
     @Transactional
     public void createRegistrationMeasureForCall(String callId) {
         RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callId);
-        if (registrationLog == null) return;
-
+        if (registrationLog == null) {
+            log.info("[" + callId + "] registrationLog not present");
+            return;
+        }
         createMeasure(registrationLog.getCallerId(), callId);
+
         registrationLogService.delete(registrationLog);
+        log.info("[" + callId + "] registrationLog removed");
     }
 
     @Transactional
@@ -65,21 +69,26 @@ public class RegistrationMeasureService {
         boolean dimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
 
         FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
-                frontLineWorker.msisdn(), frontLineWorker.getOperator(), frontLineWorker.getCircle(),
-                frontLineWorker.name(), frontLineWorker.designationName(), frontLineWorker.status().toString());
+                frontLineWorker.msisdn(),
+                frontLineWorker.getOperator(),
+                frontLineWorker.getCircle(),
+                frontLineWorker.name(),
+                frontLineWorker.designationName(),
+                frontLineWorker.status().toString());
+        log.info("[" + callId + "] flwDimension created or updated for " + frontLineWorker);
 
-        log.info("FlwDimension created or updated for " + frontLineWorker);
-        if (dimensionAlreadyExists) return;
-
+        if (dimensionAlreadyExists) {
+            log.info("[" + callId + "] registrationMeasure already exists for " + frontLineWorker);
+            return;
+        }
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension,
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(
+                frontLineWorkerDimension,
                 locationDimension,
                 timeDimension,
                 callId);
         allRegistrationMeasures.add(registrationMeasure);
-
-        log.info("RegistrationMeasure created for " + callerId + "[Location=" + locationDimension.getId() +
-                "|Time=" + timeDimension.getId() + "|flw=" + frontLineWorkerDimension.getId() + "]");
+        log.info("[" + callId + "] registrationMeasure created for " + frontLineWorker);
     }
 
 }
