@@ -40,26 +40,21 @@ public class CallDurationMeasureServiceTest {
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
 
-    private String callId;
-    private long callerId;
-    private int flwId;
-    private TimeDimension timeDimension;
-    private LocationDimension locationDimension;
+    private String callId = "callId";
+    private long callerId = 123456789L;
+    private int flwId = 1;
+    private TimeDimension timeDimension = new TimeDimension(DateTime.now());
+    private LocationDimension locationDimension = new LocationDimension();
     private FrontLineWorkerDimension frontLineWorkerDimension;
     private RegistrationMeasure registrationMeasure;
 
     @Before
     public void setup() {
         initMocks(this);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
-        callId = "callId";
-        callerId = 123456789L;
-        flwId = 1;
-        timeDimension = new TimeDimension(DateTime.now());
-        locationDimension = new LocationDimension("", "", "", "");
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
     }
 
     @Test
@@ -109,9 +104,9 @@ public class CallDurationMeasureServiceTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         String calledNumber = "321";
-        LocationDimension locationDimension = new LocationDimension("","","","");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
@@ -129,7 +124,7 @@ public class CallDurationMeasureServiceTest {
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB, times(2)).add(captor.capture());
         List<CallDurationMeasure> callDurationMeasures = captor.getAllValues();
-        assertEquals(2,callDurationMeasures.size());
+        assertEquals(2, callDurationMeasures.size());
 
         CallDurationMeasure callDurationMeasureForCall = callDurationMeasures.get(0);
         assertEquals(20, callDurationMeasureForCall.getDuration());

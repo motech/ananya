@@ -43,7 +43,7 @@ public class CourseAudioTrackerMeasureServiceTest {
 
     private String callId = "callId";
     private String callerId = "123456789";
-    private Integer flw_id = 1;
+    private Integer flwId = 1;
     private DateTime now = DateTime.now();
 
     private FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
@@ -57,7 +57,7 @@ public class CourseAudioTrackerMeasureServiceTest {
         initMocks(this);
 
         frontLineWorkerDimension = new FrontLineWorkerDimension();
-        frontLineWorkerDimension.setId(flw_id);
+        frontLineWorkerDimension.setId(flwId);
 
         locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         timeDimension = new TimeDimension();
@@ -102,7 +102,7 @@ public class CourseAudioTrackerMeasureServiceTest {
         when(allTimeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
         when(allCourseItemDimensions.getFor(audioTrackerLogItem.getContentId())).thenReturn(courseItemDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
-        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         courseAudioTrackerMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);

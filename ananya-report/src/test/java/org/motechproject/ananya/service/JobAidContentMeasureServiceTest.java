@@ -45,7 +45,7 @@ public class JobAidContentMeasureServiceTest {
 
     private JobAidContentMeasureService jobAidContentMeasureService;
 
-    private int flw_id = 1;
+    private int flwId = 1;
     private String callerId = "9876543210";
     private String callId = "callId";
 
@@ -59,7 +59,7 @@ public class JobAidContentMeasureServiceTest {
     public void setUp() throws Exception {
         initMocks(this);
         frontLineWorkerDimension = new FrontLineWorkerDimension();
-        frontLineWorkerDimension.setId(flw_id);
+        frontLineWorkerDimension.setId(flwId);
 
         locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         timeDimension = new TimeDimension();
@@ -82,7 +82,7 @@ public class JobAidContentMeasureServiceTest {
 
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
-        when(allRegistrationMeasures.fetchFor(flw_id)).thenReturn(registrationMeasure);
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allJobAidContentDimensions.findByContentId(contentId)).thenReturn(jobAidContentDimension);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
 
