@@ -38,6 +38,11 @@
             <artifactId>motech-platform-server-api</artifactId>
             <version>${motech.platform.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-diagnostics</artifactId>
+            <version>0.10.5-SNAPSHOT</version>
+        </dependency>
          <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>

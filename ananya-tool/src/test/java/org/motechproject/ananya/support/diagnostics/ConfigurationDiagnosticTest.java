@@ -2,7 +2,6 @@ package org.motechproject.ananya.support.diagnostics;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 
 import javax.jms.JMSException;
 import java.util.Properties;
@@ -15,11 +14,11 @@ public class ConfigurationDiagnosticTest {
     private Properties couchdbProperties = new Properties();
     private Properties ananyaProperties = new Properties();
 
-    private ConfigurationDiagnostic diagnostic;
+    private AnanyaConfigurationDiagnostic diagnostic;
 
     @Before
     public void setUp() {
-        diagnostic = new ConfigurationDiagnostic(ananyaProperties, couchdbProperties, activemqProperties);
+        diagnostic = new AnanyaConfigurationDiagnostic(ananyaProperties, couchdbProperties, activemqProperties);
     }
 
     @Test
@@ -30,12 +29,12 @@ public class ConfigurationDiagnosticTest {
         ananyaProperties.put("AN1", "AN1Value");
         ananyaProperties.put("AN2", "AN2Value");
 
-        DiagnosticLog diagnosticLog = diagnostic.performDiagnosis();
+        String diagnosticLog = diagnostic.performDiagnosis().getMessage();
 
-        assertTrue(diagnosticLog.toString().contains("AN1=AN1Value"));
-        assertTrue(diagnosticLog.toString().contains("AN2=AN2Value"));
-        assertTrue(diagnosticLog.toString().contains("A1=A1Value"));
-        assertTrue(diagnosticLog.toString().contains("A2=A2Value"));
-        assertTrue(diagnosticLog.toString().contains("C1=C1Value"));
+        assertTrue(diagnosticLog.contains("AN1=AN1Value"));
+        assertTrue(diagnosticLog.contains("AN2=AN2Value"));
+        assertTrue(diagnosticLog.contains("A1=A1Value"));
+        assertTrue(diagnosticLog.contains("A2=A2Value"));
+        assertTrue(diagnosticLog.contains("C1=C1Value"));
     }
 }

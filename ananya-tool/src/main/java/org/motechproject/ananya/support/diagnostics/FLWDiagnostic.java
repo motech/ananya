@@ -3,23 +3,25 @@ package org.motechproject.ananya.support.diagnostics;
 import org.hibernate.classic.Session;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
-import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
+import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.diagnostics.DiagnosticLog;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 
 @Component
-public class PostgresDiagnostic implements Diagnostic {
+public class FLWDiagnostic {
 
     @Autowired
     private DataAccessTemplate dataAccessTemplate;
 
-    @Override
-    public DiagnosticLog performDiagnosis() {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
+    @Diagnostic(name = "flwDiagnostics")
+    public DiagnosticsResult performDiagnosis() {
+        boolean isSuccess = true;
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
         try {
             Session session = dataAccessTemplate.getSessionFactory().openSession();
@@ -30,8 +32,9 @@ public class PostgresDiagnostic implements Diagnostic {
         } catch (Exception e) {
             diagnosticLog.add("Opening session failed");
             diagnosticLog.addError(e);
+            isSuccess = false;
         }
-        return diagnosticLog;
+        return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
     }
 
     private void flwDiagnosis(DiagnosticLog diagnosticLog, Session session) {

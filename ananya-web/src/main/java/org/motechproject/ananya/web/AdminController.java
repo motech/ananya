@@ -5,8 +5,9 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.motechproject.ananya.views.FrontLineWorkerPresenter;
+import org.motechproject.diagnostics.repository.AllDiagnosticMethods;
+import org.motechproject.diagnostics.response.DiagnosticsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +19,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 @Controller
-public class AdminController{
+public class AdminController {
     private static Logger log = LoggerFactory.getLogger(AdminController.class);
 
-    @Autowired
+    private AllDiagnosticMethods allDiagnosticMethods;
     private AllFrontLineWorkers allFrontLineWorkers;
 
-    @Autowired
     private AllLocations allLocations;
 
-    @Autowired
-    private DiagnosticService diagnosticService;
+    private Properties properties;
 
     @Autowired
-    @Qualifier("ananyaProperties")
-    private Properties properties;
+    public AdminController(AllDiagnosticMethods allDiagnosticMethods, AllFrontLineWorkers allFrontLineWorkers, AllLocations allLocations, @Qualifier("ananyaProperties") Properties properties) {
+        this.allDiagnosticMethods = allDiagnosticMethods;
+        this.allFrontLineWorkers = allFrontLineWorkers;
+        this.allLocations = allLocations;
+        this.properties = properties;
+    }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, value = "/admin/")
     public ModelAndView showTestPage(HttpServletRequest request) {
@@ -77,8 +81,13 @@ public class AdminController{
     @RequestMapping(method = RequestMethod.GET, value = "/admin/diagnostics")
     @ResponseBody
     public String getDiagnostics() throws Exception {
-        String diagnosisResult = diagnosticService.getDiagnostics();
-        return diagnosisResult;
+        StringWriter stringWriter = new StringWriter();
+        List<DiagnosticsResponse> diagnosticsResponses = allDiagnosticMethods.runAllDiagnosticMethods();
+        for(DiagnosticsResponse diagnosticsResponse : diagnosticsResponses) {
+            stringWriter.write(diagnosticsResponse.getResult().getMessage());
+        }
+
+        return stringWriter.toString();
     }
 
     private String contextWithVersion(HttpServletRequest request) {

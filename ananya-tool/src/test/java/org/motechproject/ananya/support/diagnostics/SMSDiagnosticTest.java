@@ -3,7 +3,6 @@ package org.motechproject.ananya.support.diagnostics;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.webservice.OnMobileSendSMSService;
 
 import javax.jms.JMSException;
@@ -34,9 +33,9 @@ public class SMSDiagnosticTest {
         String message = "Ananya Test SMS from Production";
         when(smsService.singlePush(mobileNumber, senderId, message)).thenReturn("failure");
 
-        DiagnosticLog diagnosticLog = smsDiagnostic.performDiagnosis();
+        String diagnosticLog = smsDiagnostic.performDiagnosis().getMessage();
 
-        assertTrue(diagnosticLog.toString().contains("Error in sending SMS"));
-        assertTrue(diagnosticLog.toString().contains("SMS failed to deliver"));
+        assertTrue(diagnosticLog.contains("Error in sending SMS"));
+        assertTrue(diagnosticLog.contains("SMS failed to deliver"));
     }
 }

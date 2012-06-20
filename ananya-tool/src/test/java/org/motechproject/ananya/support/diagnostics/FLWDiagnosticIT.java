@@ -19,7 +19,6 @@ import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,10 +32,10 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class PostgresDiagnosticIT {
+public class FLWDiagnosticIT {
 
     @Autowired
-    private PostgresDiagnostic postgresDiagnostic;
+    private FLWDiagnostic postgresDiagnostic;
     @Qualifier("testDataAccessTemplate")
     @Autowired
     private TestDataAccessTemplate template;
@@ -170,8 +169,8 @@ public class PostgresDiagnosticIT {
 
     @Test
     public void shouldDiagnosePostgres() {
-        DiagnosticLog diagnosticLog = postgresDiagnostic.performDiagnosis();
-        System.out.println(diagnosticLog.toString());
+        String diagnosticLog = postgresDiagnostic.performDiagnosis().getMessage();
+        System.out.println(diagnosticLog);
         assertNotNull(diagnosticLog);
     }
 
