@@ -9,6 +9,7 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 
 import java.util.ArrayList;
 import java.util.List;

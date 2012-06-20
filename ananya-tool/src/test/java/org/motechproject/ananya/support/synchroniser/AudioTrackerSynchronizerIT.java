@@ -121,7 +121,7 @@ public class AudioTrackerSynchronizerIT {
         TimeDimension timeDimension = new TimeDimension(new DateTime(new Long(timeStamp)));
         template.save(timeDimension);
         template.save(new CourseItemDimension("name", contentId, CourseItemType.AUDIO, null, "filename", 123));
-        template.save(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension));
+        template.save(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, ""));
         template.save(new JobAidContentDimension(contentId, null, "name", "filename", "type", 123));
     }
 

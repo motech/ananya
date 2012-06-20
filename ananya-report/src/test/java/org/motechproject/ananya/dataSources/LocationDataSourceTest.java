@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.dataSources.reportData.LocationReportData;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.service.LocationDimensionService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.export.annotation.ReportGroup;
 
 import java.util.ArrayList;

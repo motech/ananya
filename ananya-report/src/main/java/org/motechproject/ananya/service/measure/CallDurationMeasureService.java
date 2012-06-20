@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.measure;
 
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
@@ -11,6 +11,7 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.CallLoggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,8 @@ public class CallDurationMeasureService {
     public CallDurationMeasureService(CallLoggerService callLoggerService,
                                       ReportDB reportDB,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      AllRegistrationMeasures allRegistrationMeasures, AllTimeDimensions allTimeDimensions) {
+                                      AllRegistrationMeasures allRegistrationMeasures,
+                                      AllTimeDimensions allTimeDimensions) {
         this.callLoggerService = callLoggerService;
         this.reportDB = reportDB;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
@@ -44,43 +46,42 @@ public class CallDurationMeasureService {
 
 
     @Transactional
-    public void createCallDurationMeasure(String callId) {
+    public void createFor(String callId) {
         CallLog callLog = callLoggerService.getCallLogFor(callId);
 
-        if(callLog == null)
+        if (callLog == null) {
+            log.info(callId + "- callLog not present");
             return;
-
-        if (callLog.getCallLogItems().size() == 0) {
-            callLoggerService.delete(callLog);
+        }
+        if (callLog.hasNoItems()) {
+            log.info(callId + "- callLog has no items");
+            removeLog(callId, callLog);
             return;
         }
 
         Long callerId = callLog.callerIdAsLong();
         Long calledNumber = callLog.calledNumberAsLong();
-
         FrontLineWorkerDimension flwDimension = allFrontLineWorkerDimensions.fetchFor(callerId);
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwDimension.getId());
+        TimeDimension timeDimension = allTimeDimensions.getFor(callLog.startTime());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        TimeDimension timeDimension = allTimeDimensions.getFor(callLog.getCallLogItems().get(0).getStartTime());
 
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
-            if (callLogItem.getStartTime() == null || callLogItem.getEndTime() == null) {
-                continue;
-            }
+            if (callLogItem.hasNoTimeLimits()) continue;
 
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
-                    flwDimension,
-                    locationDimension,
-                    timeDimension,
-                    callId,
-                    calledNumber,
-                    callLogItem.duration(),
-                    callLogItem.getStartTime(),
-                    callLogItem.getEndTime(),
-                    callLogItem.getCallFlowType().name());
+                    flwDimension, locationDimension, timeDimension,
+                    callId, calledNumber,
+                    callLogItem.duration(), callLogItem.getStartTime(),
+                    callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
             reportDB.add(callDurationMeasure);
         }
+        log.info(callId + "- callLog callDurationMeasures added");
+        removeLog(callId, callLog);
+    }
+
+    private void removeLog(String callId, CallLog callLog) {
         callLoggerService.delete(callLog);
-        log.info("Added CallDurationMeasures for callId=" + callId);
+        log.info(callId + "- callLog removed");
     }
 }

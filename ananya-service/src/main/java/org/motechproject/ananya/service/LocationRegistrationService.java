@@ -8,6 +8,7 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.response.LocationValidationResponse;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.validators.LocationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

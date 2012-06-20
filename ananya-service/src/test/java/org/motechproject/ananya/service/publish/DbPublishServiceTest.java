@@ -31,32 +31,28 @@ public class DbPublishServiceTest {
     @Test
     public void shouldPublishCallDisconnectEventForCertificateCourse() throws Exception {
         String callId = "141414";
-        String callerId = "9876543210";
 
-        dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.CERTIFICATE_COURSE);
+        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(certificateCourseDataHandler).handleCertificateCourseData(captor.capture());
         MotechEvent motechEvent = captor.getValue();
         assertEquals(1, motechEvent.getParameters().values().size());
         CallMessage logData = (CallMessage) motechEvent.getParameters().get("logData");
-        assertEquals(callerId, logData.getCallerId());
         assertEquals(callId, logData.getCallId());
     }
 
     @Test
     public void shouldPublishCallDisconnectEventForJobAidCourse() throws Exception {
         String callId = "141414";
-        String callerId = "9876543210";
 
-        dbPublishService.publishCallDisconnectEvent(callId, callerId, ServiceType.JOB_AID);
+        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(jobAidDataHandler).handleJobAidData(captor.capture());
         MotechEvent motechEvent = captor.getValue();
         assertEquals(1, motechEvent.getParameters().values().size());
         CallMessage logData = (CallMessage) motechEvent.getParameters().get("logData");
-        assertEquals(callerId, logData.getCallerId());
         assertEquals(callId, logData.getCallId());
     }
 }

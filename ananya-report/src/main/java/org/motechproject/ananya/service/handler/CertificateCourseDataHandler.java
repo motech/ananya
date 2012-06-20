@@ -1,10 +1,10 @@
 package org.motechproject.ananya.service.handler;
 
-import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.*;
+import org.motechproject.ananya.service.measure.*;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.slf4j.Logger;
@@ -16,39 +16,41 @@ import org.springframework.stereotype.Component;
 public class CertificateCourseDataHandler {
 
     private static final Logger log = LoggerFactory.getLogger(CertificateCourseDataHandler.class);
-    private CourseItemMeasureService courseItemMeasureService;
+
     private CallDurationMeasureService callDurationMeasureService;
     private RegistrationMeasureService registrationMeasureService;
-    private RegistrationLogService registrationLogService;
+    private CourseContentMeasureService courseContentMeasureService;
+    private CourseAudioTrackerMeasureService courseAudioTrackerMeasureService;
     private SMSLogService smsLogService;
     private SendSMSService sendSMSService;
 
     @Autowired
-    public CertificateCourseDataHandler(CourseItemMeasureService courseItemMeasureService,
-                                        CallDurationMeasureService callDurationMeasureService,
+    public CertificateCourseDataHandler(CallDurationMeasureService callDurationMeasureService,
                                         RegistrationMeasureService registrationMeasureService,
-                                        RegistrationLogService registrationLogService,
+                                        CourseContentMeasureService courseContentMeasureService,
+                                        CourseAudioTrackerMeasureService courseAudioTrackerMeasureService,
                                         SMSLogService smsLogService,
                                         SendSMSService sendSMSService) {
-        this.courseItemMeasureService = courseItemMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.registrationMeasureService = registrationMeasureService;
-        this.registrationLogService = registrationLogService;
         this.smsLogService = smsLogService;
         this.sendSMSService = sendSMSService;
+        this.courseContentMeasureService = courseContentMeasureService;
+        this.courseAudioTrackerMeasureService = courseAudioTrackerMeasureService;
     }
 
     @MotechListener(subjects = {ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE})
     public void handleCertificateCourseData(MotechEvent event) {
+
         for (Object object : event.getParameters().values()) {
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
-            String callerId = callMessage.getCallerId();
             log.info("Received the certificate course call message for callId: " + callId);
 
-            createRegistrationMeasure(callerId);
-            callDurationMeasureService.createCallDurationMeasure(callId);
-            courseItemMeasureService.createCourseItemMeasure(callId);
+            registrationMeasureService.createFor(callId);
+            callDurationMeasureService.createFor(callId);
+            courseContentMeasureService.createFor(callId);
+            courseAudioTrackerMeasureService.createFor(callId);
             handleSMS(callId);
         }
     }
@@ -58,14 +60,6 @@ public class CertificateCourseDataHandler {
         if (smslog != null) {
             sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
             smsLogService.deleteFor(smslog);
-        }
-    }
-
-    private void createRegistrationMeasure(String callerId) {
-        RegistrationLog registrationLog = registrationLogService.getRegistrationLogFor(callerId);
-        if (registrationLog != null) {
-            registrationMeasureService.createOrUpdateFor(callerId);
-            registrationLogService.delete(registrationLog);
         }
     }
 }

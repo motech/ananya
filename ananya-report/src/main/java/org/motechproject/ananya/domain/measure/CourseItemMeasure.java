@@ -116,14 +116,13 @@ public class CourseItemMeasure {
         this.callId = callId ;
     }
 
-    public CourseItemMeasure(TimeDimension timeDimension,
+    public CourseItemMeasure(String callId, TimeDimension timeDimension,
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
                              DateTime timestamp,
                              Integer duration,
-                             Integer percentage,
-                             String callId) {
+                             Integer percentage) {
         this.timeDimension = timeDimension;
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;

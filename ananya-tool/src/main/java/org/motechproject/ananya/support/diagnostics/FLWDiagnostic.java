@@ -23,8 +23,8 @@ public class FLWDiagnostic {
         boolean isSuccess = true;
         DiagnosticLog diagnosticLog = new DiagnosticLog();
         diagnosticLog.add("Opening session with database");
+        Session session = dataAccessTemplate.getSessionFactory().openSession();
         try {
-            Session session = dataAccessTemplate.getSessionFactory().openSession();
             flwDiagnosis(diagnosticLog, session);
             jobAidDiagnosis(diagnosticLog, session);
             certificateCourseDiagnosis(diagnosticLog, session);
@@ -33,12 +33,14 @@ public class FLWDiagnostic {
             diagnosticLog.add("Opening session failed");
             diagnosticLog.addError(e);
             isSuccess = false;
+        } finally {
+            session.close();
         }
         return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
     }
 
     private void flwDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now() ;
+        DateTime today = DateTime.now();
         int flwTotalCount = getCountFor(session, (DiagnosticQuery.FIND_TOTAL_FLWS).getQuery());
         diagnosticLog.add("FrontlineWorkers in database : " + flwTotalCount);
 
@@ -65,7 +67,7 @@ public class FLWDiagnostic {
     }
 
     private void jobAidDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now() ;
+        DateTime today = DateTime.now();
         int jobAidCallCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery());
         diagnosticLog.add("Total calls made to JobAid : " + jobAidCallCount);
 
@@ -74,16 +76,16 @@ public class FLWDiagnostic {
     }
 
     private void certificateCourseDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now() ;
+        DateTime today = DateTime.now();
         int certificateCourseCallCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery());
         diagnosticLog.add("Total calls made to Certificate Course : " + certificateCourseCallCount);
 
-        int certificateCourseCallCountForToday = getCountFor(session,DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today));
+        int certificateCourseCallCountForToday = getCountFor(session, DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today));
         diagnosticLog.add("Total calls made today to Certificate Course : " + certificateCourseCallCountForToday);
     }
 
     private void SMSSentDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now() ;
+        DateTime today = DateTime.now();
         int smsTotalCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery());
         diagnosticLog.add("Total SMS sent : " + smsTotalCount);
 

@@ -3,7 +3,7 @@ package org.motechproject.ananya.support.synchroniser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.service.CertificateCourseLogService;
-import org.motechproject.ananya.service.CourseItemMeasureService;
+import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -16,13 +16,13 @@ import java.util.List;
 public class CertificateCourseItemSynchroniser implements Synchroniser {
 
     private CertificateCourseLogService certificateCourseLogService;
-    private CourseItemMeasureService courseItemMeasureService;
+    private CourseContentMeasureService courseContentMeasureService;
 
     @Autowired
     public CertificateCourseItemSynchroniser(CertificateCourseLogService certificateCourseLogService,
-                                             CourseItemMeasureService courseItemMeasureService) {
+                                             CourseContentMeasureService courseContentMeasureService) {
         this.certificateCourseLogService = certificateCourseLogService;
-        this.courseItemMeasureService = courseItemMeasureService;
+        this.courseContentMeasureService = courseContentMeasureService;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
         List<CertificationCourseLog> courseLogs = certificateCourseLogService.getAll();
         for (CertificationCourseLog courseLog : courseLogs) {
             try {
-                courseItemMeasureService.createCourseItemMeasure(courseLog.getCallId());
+                courseContentMeasureService.createFor(courseLog.getCallId());
                 synchroniserLog.add(courseLog.getCallId(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(courseLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));

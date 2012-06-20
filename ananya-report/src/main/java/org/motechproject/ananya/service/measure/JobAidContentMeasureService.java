@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.measure;
 
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
@@ -13,6 +13,7 @@ import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class JobAidContentMeasureService {
 
-    private static final Logger log = LoggerFactory.getLogger(CourseItemMeasureService.class);
+    private static final Logger log = LoggerFactory.getLogger(JobAidContentMeasureService.class);
 
     private AudioTrackerLogService audioTrackerLogService;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -50,29 +51,44 @@ public class JobAidContentMeasureService {
     }
 
     @Transactional
-    public void createJobAidContentMeasure(String callId) {
+    public void createFor(String callId) {
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
-        if (audioTrackerLog == null) return;
+
+        if (audioTrackerLog == null) {
+            log.info(callId + "- audioTrackerLog not present");
+            return;
+        }
+
+        if (audioTrackerLog.hasNoItems()) {
+            log.info(callId + "- audioTrackerLog has no items");
+            removeLog(callId, audioTrackerLog);
+            return;
+        }
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
+        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.time());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
-        TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.getAudioTrackerLogItems().get(0).getTime());
 
-        for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.getAudioTrackerLogItems()) {
+        for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.items()) {
             JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
 
-            JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(frontLineWorkerDimension, callId,
-                    locationDimension, jobAidContentDimension, timeDimension, audioTrackerLogItem.getTime(),
-                    audioTrackerLogItem.getDuration(), getPercentage(audioTrackerLogItem, jobAidContentDimension.getDuration()));
+            JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(callId,
+                    frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension,
+                    audioTrackerLogItem.getTime(),
+                    audioTrackerLogItem.getDuration(),
+                    audioTrackerLogItem.getPercentage(jobAidContentDimension.getDuration()));
 
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
-        log.info("Added JobAidContentMeasures for CallId " + callId);
-        audioTrackerLogService.remove(audioTrackerLog);
+        log.info(callId + "- audioTrackerLog jobAidContentMeasures added");
+        removeLog(callId, audioTrackerLog);
     }
 
-    private int getPercentage(AudioTrackerLogItem logItem, Integer totalDuration) {
-        return (logItem.getDuration() * 100) / totalDuration;
+    private void removeLog(String callId, AudioTrackerLog audioTrackerLog) {
+        audioTrackerLogService.remove(audioTrackerLog);
+        log.info(callId + "- audioTrackerLog removed");
     }
+
+
 }

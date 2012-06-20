@@ -62,6 +62,7 @@ public class JobAidServiceTest {
         String callerId = "callerId";
         String promptKey = "prompt";
         String circle = "circle";
+        String callId = "callId";
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
@@ -70,7 +71,7 @@ public class JobAidServiceTest {
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callerId, operator, circle);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callId, callerId, operator, circle);
 
         verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator, circle);
 
@@ -130,13 +131,14 @@ public class JobAidServiceTest {
         String callerId = "1234";
         String operator = "airtel";
         String circle = "bihar";
+        String callId = "callid";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setModified();
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        jobAidService.createCallerData(callerId, operator, circle);
+        jobAidService.createCallerData(callId, callerId, operator, circle);
         
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
         verify(registrationLogService).add(captor.capture());
@@ -151,12 +153,13 @@ public class JobAidServiceTest {
         String callerId = "1234";
         String operator = "airtel";
         String circle = "bihar";
+        String callId = "callid";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        jobAidService.createCallerData(callerId, operator, circle);
+        jobAidService.createCallerData(callId, callerId, operator, circle);
         verify(registrationLogService, never()).add(any(RegistrationLog.class));
     }
 }

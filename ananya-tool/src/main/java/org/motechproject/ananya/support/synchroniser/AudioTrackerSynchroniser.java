@@ -4,8 +4,8 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.service.AudioTrackerLogService;
-import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.service.JobAidContentMeasureService;
+import org.motechproject.ananya.service.measure.CourseAudioTrackerMeasureService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -20,11 +20,13 @@ import java.util.List;
 public class AudioTrackerSynchroniser implements Synchroniser {
 
     private AudioTrackerLogService audioTrackerLogService;
-    private CourseItemMeasureService courseItemMeasureService;
+    private CourseAudioTrackerMeasureService courseItemMeasureService;
     private JobAidContentMeasureService jobAidContentMeasureService;
 
     @Autowired
-    public AudioTrackerSynchroniser(AudioTrackerLogService audioTrackerLogService, CourseItemMeasureService courseItemMeasureService, JobAidContentMeasureService jobAidContentMeasureService) {
+    public AudioTrackerSynchroniser(AudioTrackerLogService audioTrackerLogService,
+                                    CourseAudioTrackerMeasureService courseItemMeasureService,
+                                    JobAidContentMeasureService jobAidContentMeasureService) {
         this.audioTrackerLogService = audioTrackerLogService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.jobAidContentMeasureService = jobAidContentMeasureService;
@@ -37,10 +39,10 @@ public class AudioTrackerSynchroniser implements Synchroniser {
         correctContentIds(audioTrackerLogs);
         for (AudioTrackerLog audioTrackerLog : audioTrackerLogs) {
             try {
-                if (audioTrackerLog.typeIsCertificateCourse())
-                    courseItemMeasureService.createCourseItemMeasure(audioTrackerLog.getCallId());
-                else
-                    jobAidContentMeasureService.createJobAidContentMeasure(audioTrackerLog.getCallId());
+                if (audioTrackerLog.typeIsCertificateCourse()) {
+                    courseItemMeasureService.createFor(audioTrackerLog.getCallId());
+                } else
+                    jobAidContentMeasureService.createFor(audioTrackerLog.getCallId());
                 synchroniserLog.add(audioTrackerLog.getCallId(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(audioTrackerLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));
@@ -52,7 +54,7 @@ public class AudioTrackerSynchroniser implements Synchroniser {
     private void correctContentIds(List<AudioTrackerLog> audioTrackerLogs) {
         HashMap<String, String> oldContentIdToNewContentId = initContentIdMap();
         for (AudioTrackerLog log : audioTrackerLogs) {
-            List<AudioTrackerLogItem> audioTrackerLogItems = log.getAudioTrackerLogItems();
+            List<AudioTrackerLogItem> audioTrackerLogItems = log.items();
             List<AudioTrackerLogItem> newAudioTrackerLogItems = new ArrayList<AudioTrackerLogItem>();
             for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLogItems) {
                 String newContentId = oldContentIdToNewContentId.get(audioTrackerLogItem.getContentId());

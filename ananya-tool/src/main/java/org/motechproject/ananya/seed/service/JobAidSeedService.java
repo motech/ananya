@@ -5,6 +5,7 @@ import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.cmslite.api.model.StringContent;
+import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class JobAidSeedService {
     private AllJobAidContentDimensions allJobAidContentDimensions;
     @Autowired
     private AllNodes allNodes;
+    @Autowired
+    private AllStringContents allStringContents;
 
     public void saveTreeInCouchDB(Node courseNode) {
         allNodes.addNodeWithDescendants(courseNode);
@@ -53,6 +56,21 @@ public class JobAidSeedService {
         for (Node child : children)
             recursivelyAddNodesToReportDB(child, jobAidContentDimension);
 
+    }
+
+    public void updateNonChapterNodeDuration(String nodeName, String duration) {
+        Node node = allNodes.findByName(nodeName);
+        List<StringContent> contents = node.contents();
+        if (contents == null || contents.isEmpty())
+            return;
+        StringContent stringContent = contents.get(0);
+        stringContent.getMetadata().put("duration", duration);
+        allStringContents.update(stringContent);
+        allNodes.update(node);
+
+        JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(stringContent.getId());
+        jobAidContentDimension.setDuration(Integer.parseInt(duration));
+        allJobAidContentDimensions.update(jobAidContentDimension);
     }
 
 

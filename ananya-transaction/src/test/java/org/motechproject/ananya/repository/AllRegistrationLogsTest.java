@@ -19,16 +19,17 @@ public class AllRegistrationLogsTest extends SpringIntegrationTest {
     @Test
     public void shouldFindByCallId() {
         String callerId = "123";
+        String callId = "123456";
         String operator = "airtel";
         String circle = "circle";
-        RegistrationLog registrationLog = new RegistrationLog(callerId,operator,circle);
+        RegistrationLog registrationLog = new RegistrationLog(callId,callerId,operator,circle);
         allRegistrationLogs.add(registrationLog);
 
-        RegistrationLog registrationLogFromDB = allRegistrationLogs.findByCallerId(callerId);
+        RegistrationLog registrationLogFromDB = allRegistrationLogs.findByCallId(callId);
         assertEquals(callerId, registrationLogFromDB.getCallerId());
         assertEquals(operator,registrationLogFromDB.getOperator());
 
-        allRegistrationLogs.deleteFor(callerId);
-        assertNull(allRegistrationLogs.findByCallerId(callerId));
+        allRegistrationLogs.deleteFor(callId);
+        assertNull(allRegistrationLogs.findByCallId(callId));
     }
 }

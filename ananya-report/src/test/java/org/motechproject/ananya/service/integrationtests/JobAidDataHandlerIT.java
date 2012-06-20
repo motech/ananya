@@ -16,6 +16,7 @@ import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -24,6 +25,7 @@ import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
+import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
 import org.motechproject.context.Context;
 import org.motechproject.model.MotechEvent;
@@ -47,32 +49,31 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
 
     @Autowired
     private JobAidDataHandler handler;
-
     @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;
-
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;
-
     @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-
     @Autowired
     private AllTimeDimensions allTimeDimensions;
-
     @Autowired
     private AllLocationDimensions allLocationDimensions;
-
     @Autowired
     private AllRegistrationMeasures allRegistrationMeasures;
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers ;
     @Autowired
     private AllCallLogs allCallLogs;
+    @Autowired
+    private RegistrationLogService registrationLogService;
+    @Autowired
+    private AllRegistrationLogs allRegistrationLogs;
 
     @Before
     @After
     public void tearDown() {
+        allRegistrationLogs.removeAll();
         allAudioTrackerLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
         template.flush();
@@ -105,7 +106,6 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void shouldMapJobAidCallDataToReportDB() {
         String callerId = "919876543210";
         String callId = "919876543210-12345678";
@@ -121,7 +121,8 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "",Designation.AWW, location,RegistrationStatus.UNREGISTERED);
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
-
+        registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
+        
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);
 
@@ -135,9 +136,10 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         audioTrackerLog.addItem(new AudioTrackerLogItem("content2", now, 20));
         allAudioTrackerLogs.add(audioTrackerLog);
 
-        JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("content1", null, "CHAPTER", "filename", "AUDIO", 100);
-        allJobAidContentDimensions.add(jobAidContentDimension);
-        allJobAidContentDimensions.add(new JobAidContentDimension("content2", null, "LESSON", "filename", "AUDIO", 100));
+        JobAidContentDimension content1Dimension = new JobAidContentDimension("content1", null, "CHAPTER", "filename", "AUDIO", 100);
+        JobAidContentDimension content2Dimension = new JobAidContentDimension("content2", null, "LESSON", "filename", "AUDIO", 100);
+        allJobAidContentDimensions.add(content1Dimension);
+        allJobAidContentDimensions.add(content2Dimension);
 
         allTimeDimensions.addOrUpdate(jobAidStartTime);
         allTimeDimensions.addOrUpdate(jobAidEndTime);
@@ -150,22 +152,28 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
 
         handler.handleJobAidData(event);
 
+        List<RegistrationMeasure> registrationMeasures = template.loadAll(RegistrationMeasure.class);
+        RegistrationMeasure registrationMeasure = registrationMeasures.get(0);
+        assertNotNull(registrationMeasure);
+
         List<JobAidContentMeasure> jobAidContentMeasureList = template.loadAll(JobAidContentMeasure.class);
         assertEquals(2,  jobAidContentMeasureList.size());
 
         JobAidContentMeasure jobAidContentMeasure = jobAidContentMeasureList.get(0);
         assertNotNull(jobAidContentMeasure);
 
-        assertNotNull(jobAidContentMeasure.getJobAidContentDimension());
-        assertEquals(jobAidContentDimension.getId(), jobAidContentMeasure.getJobAidContentDimension().getId());
+        JobAidContentDimension jobAidDimension1 = jobAidContentMeasure.getJobAidContentDimension();
+        assertNotNull(jobAidDimension1);
+        JobAidContentDimension byContentId = allJobAidContentDimensions.findByContentId(jobAidDimension1.getContentId());
+        assertEquals(byContentId.getId(), jobAidContentMeasure.getJobAidContentDimension().getId());
 
         assertNotNull(jobAidContentMeasure.getLocationDimension());
         assertEquals(locationDimension.getId(), jobAidContentMeasure.getLocationDimension().getId());
 
         assertEquals(callId, jobAidContentMeasure.getCallId());
-        assertEquals(10, (int)jobAidContentMeasure.getDuration());
+        assertEquals(20, (int)jobAidContentMeasure.getDuration());
         assertEquals(new Timestamp(now.getMillis()), jobAidContentMeasure.getTimestamp());
-        assertEquals(10, (int)jobAidContentMeasure.getPercentage());
+        assertEquals(20, (int)jobAidContentMeasure.getPercentage());
     }
 
 }

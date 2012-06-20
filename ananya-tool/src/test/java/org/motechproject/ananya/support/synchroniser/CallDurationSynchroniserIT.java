@@ -92,7 +92,7 @@ public class CallDurationSynchroniserIT {
         template.save(locationDimension);
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         template.save(timeDimension);
-        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
+        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension, ""));
 
     }
 

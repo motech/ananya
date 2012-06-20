@@ -11,65 +11,6 @@
     <artifactId>ananya-performance</artifactId>
     <name>Ananya Performance</name>
 
-    <profiles>
-        <profile>
-            <id>nightly</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>generate-performance-test-data</id>
-                                <phase>pre-integration-test</phase>
-                                <configuration>
-                                    <target name="generate.performance.test.data">
-                                        <echo message="Perf data loading : START"/>
-                                        <property name="compile_classpath" refid="maven.compile.classpath"/>
-                                        <java classname="org.motechproject.ananya.performance.framework.Launcher" failonerror="true">
-                                            <arg value="jobaid-content" />
-                                            <arg value="certificate_course-content" />
-                                            <arg value="${project.basedir}/src/main/resources/jmeter" />
-                                            <classpath>
-                                                <pathelement path="${compile_classpath}"/>
-                                            </classpath>
-                                        </java>
-                                        <echo message="Perf data loading: END"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>chronos-jmeter-maven-plugin</artifactId>
-                        <version>1.0</version>
-                        <configuration>
-                            <jMeterRemoteLocation>
-                                http://www.apache.org/dist/jmeter/binaries/apache-jmeter-2.7.zip
-                            </jMeterRemoteLocation>
-                            <jmeterhome>${project.basedir}/../jmeter</jmeterhome>
-                            <input>${project.basedir}/../ananya-performance/src/main/resources/jmeter</input>
-                            <jmeterOutput>${project.basedir}</jmeterOutput>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>jmeter</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>

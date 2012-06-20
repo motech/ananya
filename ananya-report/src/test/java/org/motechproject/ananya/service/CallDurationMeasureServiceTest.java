@@ -17,6 +17,7 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -39,26 +40,21 @@ public class CallDurationMeasureServiceTest {
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
 
-    private String callId;
-    private long callerId;
-    private int flwId;
-    private TimeDimension timeDimension;
-    private LocationDimension locationDimension;
+    private String callId = "callId";
+    private long callerId = 123456789L;
+    private int flwId = 1;
+    private TimeDimension timeDimension = new TimeDimension(DateTime.now());
+    private LocationDimension locationDimension = new LocationDimension();
     private FrontLineWorkerDimension frontLineWorkerDimension;
     private RegistrationMeasure registrationMeasure;
 
     @Before
     public void setup() {
         initMocks(this);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
-        callId = "callId";
-        callerId = 123456789L;
-        flwId = 1;
-        timeDimension = new TimeDimension(DateTime.now());
-        locationDimension = new LocationDimension("", "", "", "");
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
-        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
     }
 
     @Test
@@ -72,7 +68,7 @@ public class CallDurationMeasureServiceTest {
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -93,7 +89,7 @@ public class CallDurationMeasureServiceTest {
         CallLog callLog = new CallLog(callId, callerId.toString(), "321");
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         verify(reportDB, never()).add(any());
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
@@ -108,11 +104,11 @@ public class CallDurationMeasureServiceTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         String calledNumber = "321";
-        LocationDimension locationDimension = new LocationDimension("","","","");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "","", "anganwadi-worker", "ANGANWADI", "Registered");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
         CallLog callLog = new CallLog(callId, String.valueOf(callerId), calledNumber);
 
@@ -123,12 +119,12 @@ public class CallDurationMeasureServiceTest {
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
 
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB, times(2)).add(captor.capture());
         List<CallDurationMeasure> callDurationMeasures = captor.getAllValues();
-        assertEquals(2,callDurationMeasures.size());
+        assertEquals(2, callDurationMeasures.size());
 
         CallDurationMeasure callDurationMeasureForCall = callDurationMeasures.get(0);
         assertEquals(20, callDurationMeasureForCall.getDuration());
@@ -155,7 +151,7 @@ public class CallDurationMeasureServiceTest {
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
         verify(reportDB).add(captor.capture());
@@ -170,7 +166,7 @@ public class CallDurationMeasureServiceTest {
         String callId = "callId";
         when(callLoggerService.getCallLogFor(callId)).thenReturn(null);
 
-        callDurationMeasureService.createCallDurationMeasure(callId);
+        callDurationMeasureService.createFor(callId);
 
         verify(reportDB, never()).add(any());
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());

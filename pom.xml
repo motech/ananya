@@ -69,7 +69,7 @@
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
         </repository>
-         <repository>
+        <repository>
             <id>motech.nexus.release</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/releases</url>

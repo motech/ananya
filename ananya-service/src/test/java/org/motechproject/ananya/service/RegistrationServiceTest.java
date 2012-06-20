@@ -15,6 +15,8 @@ import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 
 import java.util.ArrayList;
 import java.util.Arrays;

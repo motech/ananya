@@ -46,10 +46,11 @@ public class CallerDataController extends BaseAnanyaController {
         String msisdn = new CallerIdParam(request.getParameter("callerId")).getValue();
         String operator = request.getParameter("operator");
         String circle = request.getParameter("circle");
+        String callId = request.getParameter("callId");
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle: " + circle);
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(msisdn, operator, circle);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callId, msisdn, operator, circle);
 
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
@@ -63,10 +64,11 @@ public class CallerDataController extends BaseAnanyaController {
         String msisdn = new CallerIdParam(request.getParameter("callerId")).getValue();
         String operator = request.getParameter("operator");
         String circle = request.getParameter("circle");
+        String callId = request.getParameter("callId");
         response.setContentType("application/javascript");
 
         log.info("fetching caller data for: " + msisdn + " for operator: " + operator + " for circle" + circle);
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(msisdn, operator, circle);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callId, msisdn, operator, circle);
 
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())

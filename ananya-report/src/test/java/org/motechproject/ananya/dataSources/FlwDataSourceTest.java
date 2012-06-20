@@ -10,10 +10,13 @@ import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.export.annotation.ReportGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

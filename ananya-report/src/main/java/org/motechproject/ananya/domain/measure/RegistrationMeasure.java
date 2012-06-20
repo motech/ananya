@@ -40,19 +40,28 @@ public class RegistrationMeasure {
     @JoinColumn(name = "flw_id", nullable = false)
     private FrontLineWorkerDimension frontLineWorkerDimension;
 
+    @Column(name="call_id")
+    private String callId;
+    
     public RegistrationMeasure() {
     }
 
     public RegistrationMeasure(FrontLineWorkerDimension frontLineWorkerDimension,
                                LocationDimension locationDimension,
-                               TimeDimension timeDimension) {
+                               TimeDimension timeDimension,
+                               String callId) {
         this.timeDimension = timeDimension;
         this.locationDimension = locationDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
+        this.callId = callId;
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public String getCallId() {
+        return callId;
     }
 
     public TimeDimension getTimeDimension() {

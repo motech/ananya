@@ -8,10 +8,6 @@ public enum Designation {
     AWW,
     INVALID;
 
-    public static boolean isInValid(String designation) {
-        return designation == null || !Designation.contains(designation);
-    }
-
     public static Designation getFor(String designation) {
         return Designation.isInValid(designation) ? Designation.INVALID : Designation.valueOf(StringUtils.trimToEmpty(designation).toUpperCase());
     }
@@ -23,5 +19,12 @@ public enum Designation {
             }
         }
         return false;
+    }
+
+    public static boolean isInValid(String designation) {
+        return
+                designation == null ||
+                designation.equalsIgnoreCase(Designation.INVALID.toString()) ||
+                !Designation.contains(designation);
     }
 }

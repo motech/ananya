@@ -22,4 +22,11 @@ public class JobAidSeed {
         seedService.saveJobAidTreeToReportDb();
     }
 
+    @Seed(priority = 0, version = "1.3", comment = "Corrections for BBC updating 0022_iud.wav")
+    public void accommodateForUpdatedAudioFile0022_iud() {
+        seedService.updateNonChapterNodeDuration("Level 3 Chapter 2 Lesson2","138742");
+        seedService.updateNonChapterNodeDuration("Level 4 Chapter 2 Lesson2","138742");
+    }
+
+
 }

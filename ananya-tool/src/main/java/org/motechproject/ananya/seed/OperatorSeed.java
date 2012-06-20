@@ -43,7 +43,6 @@ public class OperatorSeed {
         }
     }
 
-
     @Seed(priority = 0, version = "1.2", comment = "load long code")
     public void loadLongCode() throws IOException {
         Operator operator = new Operator("longcode", convertMinutesToMilliSeconds(50));

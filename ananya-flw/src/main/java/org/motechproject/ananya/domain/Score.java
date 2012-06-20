@@ -87,4 +87,8 @@ public class Score {
     public void setResult(boolean result) {
         this.result = result;
     }
+
+    public String getCallId() {
+        return callId;
+    }
 }

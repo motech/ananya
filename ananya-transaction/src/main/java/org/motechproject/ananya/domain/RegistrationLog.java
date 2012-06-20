@@ -12,8 +12,8 @@ public class RegistrationLog extends BaseLog {
     public RegistrationLog() {
     }
 
-    public RegistrationLog(String callerId, String operator, String circle) {
-        super(callerId, "", operator, "");
+    public RegistrationLog(String callId, String callerId, String operator, String circle) {
+        super(callerId, "", operator, callId);
         this.circle = circle;
     }
 }

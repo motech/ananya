@@ -2,7 +2,7 @@ package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.service.CallDurationMeasureService;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
@@ -31,7 +31,7 @@ public class CallDurationSychroniser implements Synchroniser {
         List<CallLog> callLogs = callLoggerService.getAll();
         for (CallLog callLog : callLogs) {
             try {
-                callDurationMeasureService.createCallDurationMeasure(callLog.getCallId());
+                callDurationMeasureService.createFor(callLog.getCallId());
                 synchroniserLog.add(callLog.getCallId(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(callLog.getCallId(), "Error:" + ExceptionUtils.getFullStackTrace(e));

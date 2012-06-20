@@ -1,5 +1,7 @@
 package org.motechproject.ananya.domain.dimension;
 
+import org.motechproject.ananya.domain.RegistrationStatus;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,26 +17,26 @@ public class FrontLineWorkerDimension {
     public static final String FIND_ALL_UNREGISTERED = "find.all.unregistered";
 
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="msisdn")
+    @Column(name = "msisdn")
     private Long msisdn;
 
-    @Column(name="operator")
+    @Column(name = "operator")
     private String operator;
 
-    @Column(name="circle")
+    @Column(name = "circle")
     private String circle;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column (name="designation")
+    @Column(name = "designation")
     private String designation;
 
-    @Column(name="status")
+    @Column(name = "status")
     private String status;
 
     public FrontLineWorkerDimension() {
@@ -143,9 +145,13 @@ public class FrontLineWorkerDimension {
     }
 
     public void merge(FrontLineWorkerDimension frontLineWorkerDimension) {
-       this.name = frontLineWorkerDimension.name;
-       this.status = frontLineWorkerDimension.status;
-       this.designation = frontLineWorkerDimension.designation;
+        this.name = frontLineWorkerDimension.name;
+        this.status = frontLineWorkerDimension.status;
+        this.designation = frontLineWorkerDimension.designation;
+    }
+
+    public boolean statusIs(RegistrationStatus status) {
+        return this.status.equalsIgnoreCase(status.toString());
     }
 
     @Override

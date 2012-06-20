@@ -1,4 +1,4 @@
-package org.motechproject.ananya.service;
+package org.motechproject.ananya.service.dimension;
 
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;

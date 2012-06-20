@@ -35,4 +35,8 @@ public class AudioTrackerLogItem {
     public void setContentId(String contentId) {
         this.contentId = contentId;
     }
+
+    public int getPercentage(Integer totalDuration) {
+        return (int) Math.round((double) duration * 100 / totalDuration);
+    }
 }

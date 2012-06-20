@@ -28,11 +28,19 @@ public class CertificationCourseLog extends BaseLog {
         this.courseLogItems.add(courseLogItem);
     }
 
-    public List<CertificationCourseLogItem> getCourseLogItems() {
+    public List<CertificationCourseLogItem> items() {
         return courseLogItems;
     }
 
     public String getCertificateCourseId() {
         return certificateCourseId;
+    }
+
+    public boolean hasNoItems() {
+        return courseLogItems == null || courseLogItems.isEmpty();
+    }
+
+    public DateTime time() {
+        return hasNoItems() ? null : courseLogItems.get(0).getTime();
     }
 }

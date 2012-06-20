@@ -59,7 +59,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect",callIdParam, callerId, dataToPost);
 
         CertificationCourseLog byCallId = allCertificateCourseLogs.findByCallId(callId);
-        assertEquals(byCallId.getCourseLogItems().size(), 1);
+        assertEquals(byCallId.items().size(), 1);
 
         frontLineWorker = allFrontLineWorkers.get(frontLineWorker.getId());
 

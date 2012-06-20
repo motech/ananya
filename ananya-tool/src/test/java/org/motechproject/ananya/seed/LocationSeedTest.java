@@ -9,7 +9,7 @@ import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.service.LocationDimensionService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

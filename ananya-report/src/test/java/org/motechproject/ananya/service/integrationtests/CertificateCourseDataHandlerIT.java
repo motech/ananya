@@ -134,7 +134,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "",Designation.AWW, location,RegistrationStatus.UNREGISTERED);
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
-        registrationLogService.add(new RegistrationLog(callerId, "", ""));
+        registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
 
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);
@@ -157,7 +157,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         TimeDimension certificateCourseEndTimeDimension = allTimeDimensions.addOrUpdate(certificateCourseEndTime);
 
 
-        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId, callerId);
+        CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);

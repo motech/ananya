@@ -147,7 +147,7 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
 
         AudioTrackerLog audioTrackerLog = allAudioTrackerLogs.findByCallId(callId);
         assertNotNull(audioTrackerLog);
-        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.getAudioTrackerLogItems();
+        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.items();
         assertEquals(2, audioTrackerLogItems.size());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerLogItems.get(0).getContentId());
         assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());

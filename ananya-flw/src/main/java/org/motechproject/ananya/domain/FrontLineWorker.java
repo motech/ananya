@@ -151,10 +151,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return bookmark != null ? bookmark : new EmptyBookmark();
     }
 
-    public RegistrationStatus getStatus() {
-        return status;
-    }
-
     public ReportCard reportCard() {
         return reportCard;
     }
@@ -197,6 +193,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.currentJobAidUsage != null ? this.currentJobAidUsage : 0;
     }
 
+    public RegistrationStatus getStatus() {
+        return status;
+    }
+
     public void markPromptHeard(String promptKey) {
         this.promptsHeard.put(promptKey,
                 this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
@@ -224,6 +224,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setRegistrationStatus(RegistrationStatus status) {
         this.status = status;
+    }
+
+    public void update(String name, Designation designation, Location location) {
+        this.name = name;
+        this.locationId = location.getExternalId();
+        this.designation = designation;
     }
 
     public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, String circle, String operator, DateTime lastModified) {

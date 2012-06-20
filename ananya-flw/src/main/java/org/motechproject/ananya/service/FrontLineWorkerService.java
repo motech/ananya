@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -145,5 +146,50 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
+    }
+
+    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+
+        if (frontLineWorker == null) {
+            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
+            allFrontLineWorkers.add(frontLineWorker);
+            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(frontLineWorker.getMsisdn());
+            if (existingFrontLineWorkers.size() > 1) {
+                removeDuplicateFLWs(existingFrontLineWorkers);
+            }
+            log.info("Created:" + frontLineWorker);
+            return frontLineWorker;
+        }
+
+        frontLineWorker.update(name, designation, location);
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("Updated:" + frontLineWorker);
+        return frontLineWorker;
+    }
+
+    private void removeDuplicateFLWs(List<FrontLineWorker> existingFrontLineWorkers) {
+        for (int i = 0; i < existingFrontLineWorkers.size() - 1; i++) {
+            allFrontLineWorkers.remove(existingFrontLineWorkers.get(i));
+        }
+    }
+
+    /*
+    * Returns a registration status of the FrontLineWorker based on the current information of the
+    * in the database, like location and designation etc. This is a non-transient field and is not
+    * picked up from the db field registrationStatus.
+    */
+    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
+        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
+
+        if (!(locationAbsent || locationIncomplete || designationInvalid || nameInvalid))
+            return RegistrationStatus.REGISTERED;
+
+        if (locationAbsent && designationInvalid && nameInvalid) return RegistrationStatus.UNREGISTERED;
+
+        return RegistrationStatus.PARTIALLY_REGISTERED;
     }
 }

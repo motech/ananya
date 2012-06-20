@@ -5,7 +5,7 @@ import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
-import org.motechproject.ananya.service.RegistrationMeasureService;
+import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -37,11 +37,11 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
 
         for (RegistrationLog registrationLog : registrationLogs) {
             Long msisdn = registrationLog.callerIdAsLong();
+            String callId = registrationLog.getCallId();
             try {
                 if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
-                    registrationMeasureService.createOrUpdateFor(msisdn.toString());
+                    registrationMeasureService.createFor(callId);
                     synchroniserLog.add(msisdn.toString(), "Success");
-                    registrationLogService.delete(registrationLog);
                 }
             } catch (Exception e) {
                 synchroniserLog.add(msisdn.toString(), "Error: " + ExceptionUtils.getFullStackTrace(e));

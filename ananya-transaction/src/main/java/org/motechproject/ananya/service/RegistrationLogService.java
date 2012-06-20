@@ -21,12 +21,12 @@ public class RegistrationLogService {
         allRegistrationLogs.add(registrationLog);
     }
 
-    public RegistrationLog getRegistrationLogFor(String callerId) {
-        return allRegistrationLogs.findByCallerId(callerId);
+    public RegistrationLog getRegistrationLogFor(String callId) {
+        return allRegistrationLogs.findByCallId(callId);
     }
 
-    public void deleteFor(String callerId) {
-        allRegistrationLogs.remove(getRegistrationLogFor(callerId));
+    public void deleteFor(String callId) {
+        allRegistrationLogs.remove(getRegistrationLogFor(callId));
     }
 
     public void delete(RegistrationLog registrationLog) {

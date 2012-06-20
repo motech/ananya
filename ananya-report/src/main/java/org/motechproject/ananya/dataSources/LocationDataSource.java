@@ -1,10 +1,9 @@
 package org.motechproject.ananya.dataSources;
 
 import org.motechproject.ananya.dataSources.mappers.LocationDataMapper;
-import org.motechproject.ananya.dataSources.reportData.FlwReportData;
 import org.motechproject.ananya.dataSources.reportData.LocationReportData;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.service.LocationDimensionService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.export.annotation.Report;
 import org.motechproject.export.annotation.ReportGroup;
 import org.springframework.beans.factory.annotation.Autowired;

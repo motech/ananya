@@ -5,7 +5,7 @@ import org.motechproject.ananya.dataSources.mappers.FrontLineReportDataMapper;
 import org.motechproject.ananya.dataSources.reportData.FlwReportData;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
-import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.export.annotation.Report;
 import org.motechproject.export.annotation.ReportGroup;
 import org.springframework.beans.factory.annotation.Autowired;

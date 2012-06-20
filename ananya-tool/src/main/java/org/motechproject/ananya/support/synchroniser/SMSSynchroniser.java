@@ -7,7 +7,7 @@ import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
-import org.motechproject.ananya.service.SMSSentMeasureService;
+import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;

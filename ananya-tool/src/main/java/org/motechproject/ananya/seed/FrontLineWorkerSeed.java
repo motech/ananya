@@ -3,18 +3,20 @@ package org.motechproject.ananya.seed;
 import liquibase.util.csv.CSVReader;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
-import org.motechproject.ananya.service.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -43,6 +45,13 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
     private BufferedWriter writer;
+
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
+        FrontLineWorkerSeed frontLineWorkerSeed =
+                (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
+        frontLineWorkerSeed.correctInvalidRegistrationStatusForAllFLWs();
+    }
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
@@ -149,5 +158,22 @@ public class FrontLineWorkerSeed {
         }
     }
 
+    @Seed(priority = 0, version = "1.3", comment = "Sanitization of registration status of FLWs")
+    public void correctInvalidRegistrationStatusForAllFLWs() {
+        System.out.println("Correcting Registration status of FLWs");
+        int startId = 1; int counter = 0;
+
+            System.out.println("Fetching FLWs from start id : " + startId);
+            List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
+
+            for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
+                counter++;
+                seedService.correctRegistrationStatus(frontLineWorkerDimension);
+                if (counter % 100 == 0)
+                    System.out.println("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
+            }
+
+        System.out.println("Correction of registration statuses done.");
+    }
 
 }

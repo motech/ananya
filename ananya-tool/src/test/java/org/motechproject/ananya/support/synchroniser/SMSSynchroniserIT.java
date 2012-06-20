@@ -95,7 +95,7 @@ public class SMSSynchroniserIT {
         frontLineWorker.incrementCertificateCourseAttempts();
         allFrontLineWorkers.add(frontLineWorker);
 
-        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension));
+        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension, ""));
 
         SMSReference smsReference = new SMSReference(callerId, frontLineWorker.getId());
         smsReference.add("S00V00", 1);
