@@ -21,7 +21,7 @@ public class AudioTrackerRequestList {
         audioTrackerRequestList.add(AudioTrackerRequest.createFrom(callId, callerId, json, token));
     }
 
-    public List<AudioTrackerRequest> getAll() {
+    public List<AudioTrackerRequest> all() {
         return audioTrackerRequestList;
     }
 

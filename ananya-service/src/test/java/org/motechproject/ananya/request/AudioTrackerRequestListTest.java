@@ -22,7 +22,7 @@ public class AudioTrackerRequestListTest {
 
         audioTrackerRequestList.add(jsonString, dataToken);
 
-        assertEquals(1, audioTrackerRequestList.getAll().size());
+        assertEquals(1, audioTrackerRequestList.all().size());
     }
 
     @Test

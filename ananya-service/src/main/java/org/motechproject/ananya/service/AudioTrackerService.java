@@ -35,7 +35,7 @@ public class AudioTrackerService {
                 audioTrackerRequestList.getCallerId(),
                 serviceType);
 
-        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.getAll())
+        for (AudioTrackerRequest audioTrackerRequest : audioTrackerRequestList.all())
             audioTrackerLog.addItem(AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest));
 
         return audioTrackerLog;

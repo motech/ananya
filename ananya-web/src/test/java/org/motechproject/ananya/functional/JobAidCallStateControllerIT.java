@@ -1,6 +1,5 @@
 package org.motechproject.ananya.functional;
 
-import com.gargoylesoftware.htmlunit.WebClient;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
@@ -32,47 +31,69 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
     private AllAudioTrackerLogs allAudioTrackerLogs;
 
     @Test
-    public void shouldUpdatePromptCountersForFLWs() throws IOException {
-        final String prompt1 = "prompt1";
-        final String prompt2 = "prompt2";
-        FrontLineWorker frontLineWorker = TestUtils.getSampleFLW();
-        frontLineWorker.markPromptHeard("prompt1");
-
-        allFrontLineWorkers.add(frontLineWorker);
-        markForDeletion(frontLineWorker);
-
-        new WebClient().getPage(getAppServerHostUrl() + String.format(
-            "/ananya/jobaid/updateprompt?callId=1234&callerId=#{0}&['prompt1', 'prompt2']", frontLineWorker.getMsisdn()));
-
-        FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorker.getMsisdn());
-        Map<String, Integer> prompts = updatedFrontLineWorker.getPromptsHeard();
-        
-        assertEquals((int)prompts.get(prompt1), 2);
-        assertEquals((int)prompts.get(prompt2), 1);
-    }
-    
-    @Test
-    public void shouldUpdateCurrentUsageAndLastJobAidAccessTimeForFLWs() throws IOException {
+    public void shouldHandleDisconnect() throws IOException {
+        String callId = "1234";
+        String calledNumber = "12345";
         Integer currentJobAidUsage = 12;
         Integer currentCallDuration = 23;
+
         FrontLineWorker frontLineWorker = TestUtils.getSampleFLW();
         frontLineWorker.setCurrentJobAidUsage(currentJobAidUsage);
-
         allFrontLineWorkers.add(frontLineWorker);
         markForDeletion(frontLineWorker);
 
-        new WebClient().getPage(getAppServerHostUrl() + String.format(
-            "/ananya/jobaid/updateusage?callId=1234&callerId=#{0}&currentUsage={1}", frontLineWorker.getMsisdn(), currentCallDuration));
+        MyWebClient.PostParam callIdParam = param("callId", callId);
+        MyWebClient.PostParam callerIdParam = param("callerId", frontLineWorker.getMsisdn());
+        MyWebClient.PostParam calledNumberParam = param("calledNumber", calledNumber);
+        MyWebClient.PostParam jsonParam = param("dataToPost", postedData());
+        MyWebClient.PostParam callDurationParam = param("CallDuration", currentCallDuration.toString());
+        MyWebClient.PostParam promptListParam = param("promptList", "['prompt1', 'prompt2']");
+
+        new MyWebClient().post(getAppServerHostUrl() + "/ananya/jobaid/transferdata/disconnect",
+                callIdParam, callerIdParam, calledNumberParam, jsonParam, callDurationParam, promptListParam);
 
         FrontLineWorker updatedFrontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorker.getMsisdn());
+        assertOnPromptUpdate(updatedFrontLineWorker);
+        assertOnUsageUpdate(currentJobAidUsage, currentCallDuration, updatedFrontLineWorker);
+        assertOnCallLogsInDB(callId, calledNumber, frontLineWorker);
+        assertOnAudioTrackersInDB(callId);
+    }
+
+    private void assertOnAudioTrackersInDB(String callId) {
+        AudioTrackerLog audioTrackerLog = allAudioTrackerLogs.findByCallId(callId);
+        assertNotNull(audioTrackerLog);
+        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.items();
+        assertEquals(2, audioTrackerLogItems.size());
+        assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerLogItems.get(0).getContentId());
+        assertEquals(123, (int) audioTrackerLogItems.get(0).getDuration());
+        assertEquals(123456789l, audioTrackerLogItems.get(0).getTime().getMillis());
+    }
+
+    private void assertOnCallLogsInDB(String callId, String calledNumber, FrontLineWorker frontLineWorker) {
+        CallLog callLog = allCallLogs.findByCallId(callId);
+        assertNotNull(callLog);
+        assertEquals(frontLineWorker.getMsisdn(), callLog.getCallerId());
+        assertEquals(calledNumber, callLog.getCalledNumber());
+        assertEquals(1, callLog.getCallLogItems().size());
+        assertEquals(CallFlowType.CALL, callLog.getCallLogItems().get(0).getCallFlowType());
+    }
+
+    private void assertOnUsageUpdate(Integer currentJobAidUsage, Integer currentCallDuration, FrontLineWorker updatedFrontLineWorker) {
         Integer updatedJobAidUsage = updatedFrontLineWorker.getCurrentJobAidUsage();
         DateTime lastJobAidAccessTime = updatedFrontLineWorker.getLastJobAidAccessTime();
 
         Integer newCallDuration = currentJobAidUsage + currentCallDuration;
-        assertEquals(newCallDuration,updatedJobAidUsage);
-        
-        assertEquals(DateTime.now().getMonthOfYear(),lastJobAidAccessTime.getMonthOfYear());
-        assertEquals(DateTime.now().getYear(),lastJobAidAccessTime.getYear());
+        assertEquals(newCallDuration, updatedJobAidUsage);
+
+        assertEquals(DateTime.now().getMonthOfYear(), lastJobAidAccessTime.getMonthOfYear());
+        assertEquals(DateTime.now().getYear(), lastJobAidAccessTime.getYear());
+    }
+
+    private void assertOnPromptUpdate(FrontLineWorker updatedFrontLineWorker) {
+        Map<String, Integer> prompts = updatedFrontLineWorker.getPromptsHeard();
+
+        assertEquals((int) prompts.get("prompt1"), 2);
+        assertEquals((int) prompts.get("prompt2"), 1);
     }
 
     private String postedData() {
@@ -122,35 +143,5 @@ public class JobAidCallStateControllerIT extends SpringIntegrationTest {
                 "       \"data\"  : " + packet4 +
                 "   }" +
                 "]";
-    }
-
-    @Test
-    public void shouldSaveJobAidState() throws IOException {
-        String callId = "1234";
-        String callerId = "123";
-        String calledNumber = "12345";
-
-        MyWebClient.PostParam callIdParam = param("callId", callId);
-        MyWebClient.PostParam callerIdParam = param("callerId", callerId);
-        MyWebClient.PostParam calledNumberParam = param("calledNumber", calledNumber);
-        MyWebClient.PostParam jsonParam = param("dataToPost", postedData());
-
-        new MyWebClient().post(getAppServerHostUrl()+"/ananya/jobaid/transferdata/disconnect",
-                callIdParam, callerIdParam, calledNumberParam, jsonParam);
-
-        CallLog callLog =  allCallLogs.findByCallId(callId);
-        assertNotNull(callLog);
-        assertEquals(callerId, callLog.getCallerId());
-        assertEquals(calledNumber, callLog.getCalledNumber());
-        assertEquals(1, callLog.getCallLogItems().size());
-        assertEquals(CallFlowType.CALL, callLog.getCallLogItems().get(0).getCallFlowType());
-
-        AudioTrackerLog audioTrackerLog = allAudioTrackerLogs.findByCallId(callId);
-        assertNotNull(audioTrackerLog);
-        List<AudioTrackerLogItem> audioTrackerLogItems = audioTrackerLog.items();
-        assertEquals(2, audioTrackerLogItems.size());
-        assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerLogItems.get(0).getContentId());
-        assertEquals(123, (int)audioTrackerLogItems.get(0).getDuration());
-        assertEquals(123456789l, audioTrackerLogItems.get(0).getTime().getMillis());
     }
 }

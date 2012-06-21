@@ -89,8 +89,8 @@ public class CertificateCourseCallDataControllerTest {
         ArgumentCaptor<AudioTrackerRequestList> captor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
         verify(certificateCourseService).saveAudioTrackerState(captor.capture());
         AudioTrackerRequestList audioTrackerRequestList = captor.getValue();
-        AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.getAll().get(0);
-        assertEquals(1, audioTrackerRequestList.getAll().size());
+        AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.all().get(0);
+        assertEquals(1, audioTrackerRequestList.all().size());
         assertEquals(callId, audioTrackerRequestList.getCallId());
         assertEquals("91" + callerId, audioTrackerRequestList.getCallerId());
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());

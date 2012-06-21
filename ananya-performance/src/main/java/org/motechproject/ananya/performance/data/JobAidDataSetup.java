@@ -81,8 +81,7 @@ public class JobAidDataSetup {
             String callId = callerId + "-" + DateTime.now().getMillisOfDay();
             Operator operator = getOperatorFor(operatorName);
             jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
-            registrationMeasureService.createFor(callerId);
-            jobAidService.updateCurrentUsageAndSetLastAccessTimeForUser(callerId, j % (operator.getAllowedUsagePerMonth() + 1));
+            registrationMeasureService.createRegistrationMeasure(callerId, callId);
             System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j + "|operator=" + operatorName + "]");
         }
     }
