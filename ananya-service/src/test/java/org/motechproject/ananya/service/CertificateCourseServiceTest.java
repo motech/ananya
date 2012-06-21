@@ -7,7 +7,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -81,7 +81,7 @@ public class CertificateCourseServiceTest {
 
     @Test
     public void shouldClearAllScoresForAGivenFLWWhenInteractionIsStartCertificationCourse() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.reportCard().addScore(new Score());
@@ -102,7 +102,7 @@ public class CertificateCourseServiceTest {
 
     @Test
     public void shouldClearAllScoresForAGivenFLWWhenInteractionIsStartQuiz() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         String chapterIndexWhoseScoresShouldNotBeCleared = "2";
@@ -126,7 +126,7 @@ public class CertificateCourseServiceTest {
 
     @Test
     public void shouldAddScoresToAChapterForAGivenFLWWhenInteractionIsisPlayAnswerExplanation() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
 
@@ -156,7 +156,7 @@ public class CertificateCourseServiceTest {
     public void shouldIncrementCourseAttemptsAndLogSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
         String callId = "123456";
         String callerId = "919986574410";
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList(callId, callerId);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "airtel");
         ReportCard reportCard = mock(ReportCard.class);
@@ -188,7 +188,7 @@ public class CertificateCourseServiceTest {
 
     @Test
     public void shouldNotLogSendSMSForAGivenFLWWhenInteractionIsNotCourseCompletionAndScoreIsPassingScore() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
         ReportCard reportCard = mock(ReportCard.class);
@@ -210,7 +210,7 @@ public class CertificateCourseServiceTest {
 
     @Test
     public void shouldModifyFLWAggregateFromTheCertificateCourseStateRequestList() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
         FrontLineWorker frontLineWorker = new FrontLineWorker();
 
         when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);

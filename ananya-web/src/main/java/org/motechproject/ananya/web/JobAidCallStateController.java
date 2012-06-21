@@ -32,14 +32,14 @@ public class JobAidCallStateController {
         final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
-        final String promptIds = request.getParameter("promptList");
-        final Integer callDuration =Integer.valueOf(request.getParameter("callDuration"));
+        final String promptList = request.getParameter("promptList");
+        final Integer callDuration = Integer.valueOf(request.getParameter("callDuration"));
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber, jsonData, promptIds, callDuration);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber, jsonData, promptList, callDuration);
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
-        log.info(callId+"- JobAid Disconnect completed");
-        log.info(callId+"- JobAid Call ended");
+        log.info(callId + "- JobAid Disconnect completed");
+        log.info(callId + "- JobAid Call ended");
         return getReturnVxml();
     }
 

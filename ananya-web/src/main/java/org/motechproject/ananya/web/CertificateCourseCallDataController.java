@@ -3,7 +3,7 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.action.TransferDataStateAction;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.publish.DataPublishService;
@@ -37,14 +37,14 @@ public class CertificateCourseCallDataController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
     @ResponseBody
-    public String receiveIVRDataAtDisconnect(HttpServletRequest request) {
+    public String handleDisconnect(HttpServletRequest request) {
         final String callId = request.getParameter("callId");
         final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
         final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
 
         TransferDataList transferDataList = new TransferDataList(jsonData);
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
+        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList(callId, callerId);
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
 

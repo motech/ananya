@@ -28,8 +28,8 @@ public class CertificationCourseStateRequestTest {
         String callId = "555:123";
         String dataToken = "1";
 
-        CertificationCourseStateRequest certificationCourseStateRequest =
-                CertificationCourseStateRequest.createFrom(callerId, callId, dataToken, jsonString);
+        CertificateCourseStateRequest certificationCourseStateRequest =
+                CertificateCourseStateRequest.createFrom(callerId, callId, dataToken, jsonString);
 
         assertEquals(certificationCourseStateRequest.callerId, callerId);
         assertEquals(certificationCourseStateRequest.callId, callId);

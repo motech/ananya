@@ -2,6 +2,7 @@ package org.motechproject.ananya.newfunctional;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
@@ -14,6 +15,7 @@ import org.motechproject.ananya.framework.domain.JobAidWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+
 @Ignore
 public class JobAidTest extends SpringIntegrationTest {
 
@@ -26,12 +28,18 @@ public class JobAidTest extends SpringIntegrationTest {
     @Autowired
     private ReportDb reportDb;
 
-    String callerId = "123456";
+    String callerId = "919686577090";
     String callId = "1234";
     String operator = "airtel";
+    String circle = "bihar";
 
     @After
     public void after() {
+        clearFLWData();
+    }
+
+    @Before
+    public void before() {
         clearFLWData();
     }
 
@@ -45,7 +53,7 @@ public class JobAidTest extends SpringIntegrationTest {
         int expectedMaxUsage = 39;
         int expectedCurrentUsage = 0;
 
-        JobAidRequest request = new JobAidRequest(callerId, operator);
+        JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
         JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
 
         response.confirmPartiallyRegistered()
@@ -60,40 +68,34 @@ public class JobAidTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldUpdatePromptCountersForFLW() throws IOException {
-        JobAidRequest request = new JobAidRequest(callerId, operator);
-        JobAidResponse response = jobAidService.createFLW(request);
-        String maxUsagePrompt = "MaxUsage";
+    public void shouldUpdateJobAidDataAndPostDisconnectEvent() throws IOException {
+        JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
+        JobAidResponse registrationResponse = jobAidService.whenRequestedForCallerData(request);
 
-        response.confirmNoPromptsHeard();
-        request.addPromptHeard(maxUsagePrompt);
-        jobAidService.updatePromptsHeard(request);
+        registrationResponse.confirmNoPromptsHeard();
+        String currentUsage = "21";
+        String maxUsagePrompt = "[MaxUsage]";
+        String dataToPost = postedData();
 
-        response = jobAidService.whenRequestedForCallerData(request);
-        response.verifyPromptHeard(maxUsagePrompt, 1);
+        JobAidDisconnectRequest jobAidDisconnectRequest = new JobAidDisconnectRequest(callerId, operator, callId, "12345", "1260000", maxUsagePrompt);
+        String dateTimeString = new Long(DateTime.now().getMillis()).toString();
+        dataToPost = String.format(dataToPost, dateTimeString, reportDb.getExistingAudioDimension().getContentId(),
+                dateTimeString, dateTimeString);
+        jobAidDisconnectRequest.setJsonPostData(dataToPost);
+        jobAidService.requestForDisconnect(jobAidDisconnectRequest);
 
-        jobAidService.updatePromptsHeard(request);
-        response = jobAidService.whenRequestedForCallerData(request);
-        response.verifyPromptHeard(maxUsagePrompt, 2);
-    }
-
-    @Test
-    public void shouldUpdateCurrentUsageForFLW() throws IOException {
-        int currentUsage = 5;
-        JobAidRequest request = new JobAidRequest(callerId, operator);
-        jobAidService.createFLW(request);
-
-        request.setCallDuration(currentUsage * 60 * 1000);
-        jobAidService.updateCurrentUsage(request);
+        reportDb.confirmJobAidContentMeasureForDisconnectEvent(callId);
+        reportDb.clearJobAidMeasureAndAudioTrackerLogs(callId);
 
         JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
-        response.confirmCurrentUsage(currentUsage);
+        response.confirmCurrentUsage(Integer.valueOf(currentUsage));
+        response.verifyPromptHeard(maxUsagePrompt, 1);
     }
 
     private String postedData() {
         String packet1 = "{" +
                 "   \"callEvent\" : \"CALL_START\"," +
-                "   \"time\"  : 1231413" +
+                "   \"time\"  : %s" +
                 "}";
 
         String packet2 = "{" +
@@ -104,7 +106,7 @@ public class JobAidTest extends SpringIntegrationTest {
 
         String packet3 = "{" +
                 "   \"callEvent\" : \"DISCONNECT\"," +
-                "   \"time\"  : 1231413" +
+                "   \"time\"  : %s" +
                 "}";
 
         return "[" +
@@ -126,20 +128,5 @@ public class JobAidTest extends SpringIntegrationTest {
                 "       \"data\"  : " + packet3 +
                 "   }" +
                 "]";
-    }
-
-    @Test
-    public void shouldUpdateJobAidDataAndPostDisconnectEvent() throws IOException {
-        JobAidRequest request = new JobAidRequest(callerId, operator);
-        JobAidResponse registrationResponse = jobAidService.whenRequestedForCallerData(request);
-
-        JobAidDisconnectRequest jobAidDisconnectRequest = new JobAidDisconnectRequest(callerId, operator, callId, "12345");
-        String dataToPost = postedData();
-        dataToPost = String.format(dataToPost, reportDb.getExistingAudioDimension().getContentId(), new Long(DateTime.now().getMillis()).toString());
-        jobAidDisconnectRequest.setJsonPostData(dataToPost);
-        jobAidService.requestForDisconnect(jobAidDisconnectRequest);
-
-        reportDb.confirmJobAidContentMeasureForDisconnectEvent(callId);
-        reportDb.clearJobAidMeasureAndAudioTrackerLogs(callId);
     }
 }

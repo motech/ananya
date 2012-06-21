@@ -9,21 +9,18 @@ import org.hamcrest.Description;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequest;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseStateRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.CallLoggerService;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,13 +36,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration("classpath:applicationContext.xml")
 public class CertificateCourseCallDataControllerTest {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataControllerTest.class);
 
-    private CertificateCourseCallDataController transferCallDataController;
+    private CertificateCourseCallDataController certificateCourseCallDataController;
 
     @Mock
     private HttpServletRequest request;
@@ -61,7 +58,7 @@ public class CertificateCourseCallDataControllerTest {
     @Before
     public void Setup() {
         initMocks(this);
-        transferCallDataController = new CertificateCourseCallDataController(callLoggerService,
+        certificateCourseCallDataController = new CertificateCourseCallDataController(callLoggerService,
                 certificateCourseService, dataPublishService);
     }
 
@@ -74,12 +71,13 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("dataToPost")).thenReturn(postedData());
 
-        transferCallDataController.receiveIVRDataAtDisconnect(request);
+        certificateCourseCallDataController.handleDisconnect(request);
 
-        CertificationCourseStateRequest stateRequest = new CertificationCourseStateRequest();
+        CertificateCourseStateRequest stateRequest = new CertificateCourseStateRequest();
         stateRequest.setCallId(callId);
         stateRequest.setToken("0");
-        List<CertificationCourseStateRequest> expectedStateRequestList = Arrays.asList(stateRequest);
+
+        List<CertificateCourseStateRequest> expectedStateRequestList = Arrays.asList(stateRequest);
 
         verify(certificateCourseService).saveState(argThat(new CertificationCourseStateRequestListMatcher(expectedStateRequestList)));
 
@@ -88,8 +86,10 @@ public class CertificateCourseCallDataControllerTest {
 
         ArgumentCaptor<AudioTrackerRequestList> captor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
         verify(certificateCourseService).saveAudioTrackerState(captor.capture());
+
         AudioTrackerRequestList audioTrackerRequestList = captor.getValue();
         AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.all().get(0);
+
         assertEquals(1, audioTrackerRequestList.all().size());
         assertEquals(callId, audioTrackerRequestList.getCallId());
         assertEquals("91" + callerId, audioTrackerRequestList.getCallerId());
@@ -107,7 +107,7 @@ public class CertificateCourseCallDataControllerTest {
         when(request.getParameter("callId")).thenReturn(callId);
         when(request.getParameter("dataToPost")).thenReturn("[]");
 
-        transferCallDataController.receiveIVRDataAtDisconnect(request);
+        certificateCourseCallDataController.handleDisconnect(request);
         verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
 
@@ -138,7 +138,7 @@ public class CertificateCourseCallDataControllerTest {
 
         when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{\"time\":1330320462000,\"callEvent\":\"CALL_START\"}}]");
 
-        String s = transferCallDataController.receiveIVRDataAtDisconnect(request);
+        String s = certificateCourseCallDataController.handleDisconnect(request);
 
         List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1330320462000L));
         verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
@@ -156,7 +156,7 @@ public class CertificateCourseCallDataControllerTest {
                 "\"data\":{\"time\":1330320462000,\"callEvent\":\"REGISTRATION_START\"}}," +
                 "{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{\"time\":1330320480000,\"callEvent\":\"REGISTRATION_END\"}}]");
 
-        transferCallDataController.receiveIVRDataAtDisconnect(request);
+        certificateCourseCallDataController.handleDisconnect(request);
 
         List<CallDuration> expectedCallDurations = Arrays.asList(
                 new CallDuration(CallEvent.REGISTRATION_START, 1330320462000L),
@@ -211,23 +211,23 @@ public class CertificateCourseCallDataControllerTest {
                 "]";
     }
 
-    private static class CertificationCourseStateRequestListMatcher extends BaseMatcher<CertificationCourseStateRequestList> {
-        private List<CertificationCourseStateRequest> certificationCourseStateRequests;
+    private static class CertificationCourseStateRequestListMatcher extends BaseMatcher<CertificateCourseStateRequestList> {
+        private List<CertificateCourseStateRequest> certificationCourseStateRequests;
 
-        public CertificationCourseStateRequestListMatcher(List<CertificationCourseStateRequest> certificationCourseStateRequests) {
+        public CertificationCourseStateRequestListMatcher(List<CertificateCourseStateRequest> certificationCourseStateRequests) {
             this.certificationCourseStateRequests = certificationCourseStateRequests;
         }
 
         @Override
         public boolean matches(Object o) {
-            List<CertificationCourseStateRequest> matchRequests = ((CertificationCourseStateRequestList) o).all();
+            List<CertificateCourseStateRequest> matchRequests = ((CertificateCourseStateRequestList) o).all();
 
             if (this.certificationCourseStateRequests.size() != matchRequests.size())
                 return false;
 
             for (int i = 0; i < matchRequests.size(); ++i) {
-                CertificationCourseStateRequest thisRequest = this.certificationCourseStateRequests.get(i);
-                CertificationCourseStateRequest request = matchRequests.get(i);
+                CertificateCourseStateRequest thisRequest = this.certificationCourseStateRequests.get(i);
+                CertificateCourseStateRequest request = matchRequests.get(i);
 
                 if (!(thisRequest.getCallId().equals(request.getCallId())
                         || thisRequest.getToken().equals(request.getToken())))

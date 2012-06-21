@@ -10,7 +10,6 @@ import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;

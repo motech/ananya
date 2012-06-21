@@ -6,12 +6,16 @@ public class JobAidDisconnectRequest {
     private String jsonData;
     private String callId;
     private String calledNumber;
+    private String callDuration;
+    private String promptList;
 
-    public JobAidDisconnectRequest(String callerId, String operator, String callId, String calledNumber) {
+    public JobAidDisconnectRequest(String callerId, String operator, String callId, String calledNumber, String callDuration, String promptList) {
         this.callerId = callerId;
         this.operator = operator;
         this.callId = callId;
         this.calledNumber = calledNumber;
+        this.callDuration = callDuration;
+        this.promptList = promptList;
     }
 
     public String getCallerId() {
@@ -40,5 +44,13 @@ public class JobAidDisconnectRequest {
 
     public void setCalledNumber(String calledNumber) {
         this.calledNumber = calledNumber;
+    }
+
+    public String getPromptList() {
+        return promptList;
+    }
+
+    public String getCallDuration() {
+        return callDuration;
     }
 }

@@ -81,6 +81,7 @@ public class ReportDb {
 
     public void clearDimensionAndMeasures(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
+        if(frontLineWorkerDimension == null) return;
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         template.delete(registrationMeasure);
         template.delete(frontLineWorkerDimension);
@@ -131,4 +132,5 @@ public class ReportDb {
         template.delete(jobAidContentMeasure);
         allAudioTrackerLogs.deleteFor(callId);
     }
+
 }

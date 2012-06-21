@@ -6,21 +6,21 @@ import org.motechproject.ananya.domain.InteractionKeys;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CertificationCourseStateRequestList {
-    private List<CertificationCourseStateRequest> list = new ArrayList<CertificationCourseStateRequest>();
+public class CertificateCourseStateRequestList {
+    private List<CertificateCourseStateRequest> list = new ArrayList<CertificateCourseStateRequest>();
     private String callId;
     private String callerId;
 
-    public CertificationCourseStateRequestList(String callId, String callerId) {
+    public CertificateCourseStateRequestList(String callId, String callerId) {
         this.callId = callId;
         this.callerId = callerId;
     }
 
     public void add(String json, String token) {
-        list.add(CertificationCourseStateRequest.createFrom(callerId, callId, token, json));
+        list.add(CertificateCourseStateRequest.createFrom(callerId, callId, token, json));
     }
 
-    public List<CertificationCourseStateRequest> all() {
+    public List<CertificateCourseStateRequest> all() {
         return list;
     }
 
@@ -28,7 +28,7 @@ public class CertificationCourseStateRequestList {
         return list.isEmpty();
     }
 
-    public CertificationCourseStateRequest lastRequest() {
+    public CertificateCourseStateRequest lastRequest() {
         return list.get(list.size() - 1);
     }
 
@@ -45,12 +45,12 @@ public class CertificationCourseStateRequestList {
         return ToStringBuilder.reflectionToString(list);
     }
 
-    public CertificationCourseStateRequest firstRequest() {
+    public CertificateCourseStateRequest firstRequest() {
         return list.isEmpty() ? null : list.get(0);
     }
 
     public boolean hasCourseCompletionInteraction() {
-        for (CertificationCourseStateRequest stateRequest : list)
+        for (CertificateCourseStateRequest stateRequest : list)
             if (stateRequest.getInteractionKey().equalsIgnoreCase(InteractionKeys.PlayCourseResultInteraction))
                 return true;
         return false;

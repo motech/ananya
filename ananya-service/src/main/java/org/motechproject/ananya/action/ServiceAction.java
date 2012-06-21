@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.InteractionKeys;
 import org.motechproject.ananya.domain.Score;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,21 +12,21 @@ public enum ServiceAction {
 
     CourseCompletion(InteractionKeys.PlayCourseResultInteraction) {
         @Override
-        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+        public void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
             frontLineWorker.incrementCertificateCourseAttempts();
             log.info("Incremented course attempts for " + frontLineWorker);
         }
     },
     StartCourse(InteractionKeys.StartCertificationCourseInteraction) {
         @Override
-        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+        public void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
             frontLineWorker.reportCard().clearAllScores();
             log.info("Cleared all scores for " + frontLineWorker);
         }
     },
     StartQuiz(InteractionKeys.StartQuizInteraction) {
         @Override
-        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+        public void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
             String chapterIndex = stateRequest.getChapterIndex().toString();
             frontLineWorker.reportCard().clearScoresForChapterIndex(chapterIndex);
             log.info("Cleared scores for chapter " + chapterIndex + " for " + frontLineWorker);
@@ -34,7 +34,7 @@ public enum ServiceAction {
     },
     PlayAnswerExplanation(InteractionKeys.PlayAnswerExplanationInteraction) {
         @Override
-        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+        public void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
             Score score = new Score(
                     stateRequest.getChapterIndex().toString(),
                     stateRequest.getLessonOrQuestionIndex().toString(),
@@ -46,7 +46,7 @@ public enum ServiceAction {
     },
     Default("") {
         @Override
-        public void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest) {
+        public void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
             //do nothing for other interactions
         }
     };
@@ -66,6 +66,6 @@ public enum ServiceAction {
         return ServiceAction.Default;
     }
 
-    public abstract void update(FrontLineWorker frontLineWorker, CertificationCourseStateRequest stateRequest);
+    public abstract void update(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest);
 
 }

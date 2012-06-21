@@ -17,9 +17,9 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class JobAidCallStateControllerTest {
-
     @Mock
     private JobAidService jobAidService;
+
     private JobAidCallStateController controller;
 
     @Before

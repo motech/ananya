@@ -5,7 +5,7 @@ import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataState;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 
 
 public enum TransferDataStateAction {
@@ -13,7 +13,7 @@ public enum TransferDataStateAction {
     CertificateCourseState(TransferDataState.TYPE_CC_STATE) {
         @Override
         public void addToRequest(TransferData transferData,
-                                 CertificationCourseStateRequestList certificationCourseStateRequestList,
+                                 CertificateCourseStateRequestList certificationCourseStateRequestList,
                                  AudioTrackerRequestList audioTrackerRequestList,
                                  CallDurationList callDurationList) {
             certificationCourseStateRequestList.add(transferData.getData(), transferData.getToken());
@@ -22,7 +22,7 @@ public enum TransferDataStateAction {
     AudioTrackerState(TransferDataState.TYPE_AUDIO_TRACKER) {
         @Override
         public void addToRequest(TransferData transferData,
-                                 CertificationCourseStateRequestList certificationCourseStateRequestList,
+                                 CertificateCourseStateRequestList certificationCourseStateRequestList,
                                  AudioTrackerRequestList audioTrackerRequestList,
                                  CallDurationList callDurationList) {
             audioTrackerRequestList.add(transferData.getData(), transferData.getToken());
@@ -31,7 +31,7 @@ public enum TransferDataStateAction {
     CallDurationState(TransferDataState.TYPE_CALL_DURATION) {
         @Override
         public void addToRequest(TransferData transferData,
-                                 CertificationCourseStateRequestList certificationCourseStateRequestList,
+                                 CertificateCourseStateRequestList certificationCourseStateRequestList,
                                  AudioTrackerRequestList audioTrackerRequestList,
                                  CallDurationList callDurationList) {
             callDurationList.add(transferData.getData());
@@ -40,7 +40,7 @@ public enum TransferDataStateAction {
     Default("") {
         @Override
         public void addToRequest(TransferData transferData,
-                                 CertificationCourseStateRequestList certificationCourseStateRequestList,
+                                 CertificateCourseStateRequestList certificationCourseStateRequestList,
                                  AudioTrackerRequestList audioTrackerRequestList,
                                  CallDurationList callDurationList) {
             //Do Nothing
@@ -50,7 +50,7 @@ public enum TransferDataStateAction {
     private final String transferDataState;
 
     public abstract void addToRequest(TransferData transferData,
-                                      CertificationCourseStateRequestList certificationCourseStateRequestList,
+                                      CertificateCourseStateRequestList certificationCourseStateRequestList,
                                       AudioTrackerRequestList audioTrackerRequestList,
                                       CallDurationList callDurationList);
 

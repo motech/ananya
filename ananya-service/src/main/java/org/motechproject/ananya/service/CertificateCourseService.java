@@ -5,8 +5,8 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseStateRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class CertificateCourseService {
                 frontLineWorker.reportCard().scoresByChapterIndex());
     }
 
-    public void saveState(CertificationCourseStateRequestList stateRequestList) {
+    public void saveState(CertificateCourseStateRequestList stateRequestList) {
         log.info("State Request List " + stateRequestList);
         if (stateRequestList.isEmpty())
             return;
@@ -63,11 +63,11 @@ public class CertificateCourseService {
         audioTrackerService.saveAudioTrackerState(audioTrackerRequestList, ServiceType.CERTIFICATE_COURSE);
     }
 
-    private void saveBookmarkAndScore(CertificationCourseStateRequestList stateRequestList) {
+    private void saveBookmarkAndScore(CertificateCourseStateRequestList stateRequestList) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
         addBookmark(frontLineWorker, stateRequestList);
 
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
+        for (CertificateCourseStateRequest stateRequest : stateRequestList.all()) {
             ServiceAction serviceAction = ServiceAction.findFor(stateRequest.getInteractionKey());
             serviceAction.update(frontLineWorker, stateRequest);
         }
@@ -86,19 +86,19 @@ public class CertificateCourseService {
         }
     }
 
-    private void addBookmark(FrontLineWorker frontLineWorker, CertificationCourseStateRequestList stateRequestList) {
-        CertificationCourseStateRequest lastRequest = stateRequestList.lastRequest();
+    private void addBookmark(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
+        CertificateCourseStateRequest lastRequest = stateRequestList.lastRequest();
         final BookMark bookMark = new BookMark(lastRequest.getInteractionKey(), lastRequest.getChapterIndex(), lastRequest.getLessonOrQuestionIndex());
         frontLineWorker.addBookMark(bookMark);
     }
 
-    private void saveCourseLog(CertificationCourseStateRequestList stateRequestList) {
-        CertificationCourseStateRequest firstRequest = stateRequestList.firstRequest();
+    private void saveCourseLog(CertificateCourseStateRequestList stateRequestList) {
+        CertificateCourseStateRequest firstRequest = stateRequestList.firstRequest();
         CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
 
         CertificationCourseLog courseLog = logMapper.mapFrom(firstRequest);
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
+        for (CertificateCourseStateRequest stateRequest : stateRequestList.all()) {
             if (stateRequest.hasContentId())
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
         }

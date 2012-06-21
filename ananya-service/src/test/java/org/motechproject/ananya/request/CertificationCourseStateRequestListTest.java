@@ -10,11 +10,11 @@ import static org.hamcrest.Matchers.is;
 
 public class CertificationCourseStateRequestListTest {
 
-    private CertificationCourseStateRequestList courseStateRequestList;
+    private CertificateCourseStateRequestList courseStateRequestList;
 
     @Before
     public void setUp() {
-        courseStateRequestList = new CertificationCourseStateRequestList("123", "12345");
+        courseStateRequestList = new CertificateCourseStateRequestList("123", "12345");
     }
 
     @Test
@@ -35,7 +35,7 @@ public class CertificationCourseStateRequestListTest {
         assertThat(courseStateRequestList.all().size(), is(2));
         assertFalse(courseStateRequestList.isEmpty());
 
-        CertificationCourseStateRequest recentRequest = courseStateRequestList.lastRequest();
+        CertificateCourseStateRequest recentRequest = courseStateRequestList.lastRequest();
         assertThat(recentRequest.getContentName(), is("Chapter 1 Lesson 2"));
     }
 

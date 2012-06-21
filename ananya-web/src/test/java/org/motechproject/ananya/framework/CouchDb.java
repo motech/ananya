@@ -44,7 +44,9 @@ public class CouchDb {
     
 
     public void clearFLWData(String callerId) {
-        allFrontLineWorkers.remove(allFrontLineWorkers.findByMsisdn(callerId));
+        FrontLineWorker byMsisdn = allFrontLineWorkers.findByMsisdn(callerId);
+        if(byMsisdn == null) return;
+        allFrontLineWorkers.remove(byMsisdn);
     }
 
     public void clearSMSReferences(String callerId) {

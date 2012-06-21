@@ -5,33 +5,28 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.InteractionKeys;
 
-import java.lang.reflect.Type;
+public class CertificateCourseStateRequest extends BaseRequest {
 
-public class CertificationCourseStateRequest extends BaseRequest {
-
+    private Boolean result;
     private Integer chapterIndex;
     private Integer lessonOrQuestionIndex;
-    private Boolean result;
+    private String time;
     private String interactionKey;
-
     private String contentId;
     private String contentType;
     private String contentName;
-    private String courseItemState;
     private String contentData;
+    private String courseItemState;
     private String certificateCourseId;
-    private String time;
 
-    public CertificationCourseStateRequest() {
+    public CertificateCourseStateRequest() {
     }
 
-    public static CertificationCourseStateRequest createFrom(String callerId, String callId, String token, String json) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<CertificationCourseStateRequest>() {
-        }.getType();
-        CertificationCourseStateRequest certificationCourseStateRequest = gson.fromJson(json, type);
+    public static CertificateCourseStateRequest createFrom(String callerId, String callId, String token, String json) {
+        CertificateCourseStateRequest certificationCourseStateRequest = new Gson().fromJson(json,
+                new TypeToken<CertificateCourseStateRequest>() {
+        }.getType());
         certificationCourseStateRequest.callerId = callerId;
         certificationCourseStateRequest.callId = callId;
         certificationCourseStateRequest.token = token;
@@ -70,10 +65,6 @@ public class CertificationCourseStateRequest extends BaseRequest {
         return lessonOrQuestionIndex;
     }
 
-    public Boolean isResult() {
-        return result;
-    }
-
     public String getInteractionKey() {
         return interactionKey;
     }
@@ -86,13 +77,8 @@ public class CertificationCourseStateRequest extends BaseRequest {
         return contentName;
     }
 
-    public String getTime() {
-        return time;
-    }
-
     public DateTime getTimeAsDateTime() {
-        if (StringUtils.isBlank(time)) return null;
-        return new DateTime(Long.valueOf(time));
+        return StringUtils.isBlank(time) ? null : new DateTime(Long.valueOf(time));
     }
 
     public String toString() {
@@ -103,19 +89,4 @@ public class CertificationCourseStateRequest extends BaseRequest {
         return StringUtils.isNotBlank(getContentId());
     }
 
-    public boolean isStartCertificationCourseInteraction() {
-        return InteractionKeys.StartCertificationCourseInteraction.equals(interactionKey);
-    }
-
-    public boolean isStartQuizInteraction() {
-        return InteractionKeys.StartQuizInteraction.equals(interactionKey);
-    }
-
-    public boolean isPlayAnswerExplanationInteraction() {
-        return InteractionKeys.PlayAnswerExplanationInteraction.equals(interactionKey);
-    }
-
-    public boolean isPlayCourseResultInteraction() {
-        return InteractionKeys.PlayCourseResultInteraction.equals(interactionKey);
-    }
 }
