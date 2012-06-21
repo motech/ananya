@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.*;
@@ -10,6 +11,7 @@ import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.ananya.validators.FrontLineWorkerValidator;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ public class RegistrationService {
     private CourseItemMeasureService courseItemMeasureService;
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
+    private JobAidContentMeasureService jobAidContentMeasureService;
 
     public RegistrationService() {
     }
@@ -40,12 +43,14 @@ public class RegistrationService {
                                CourseItemMeasureService courseItemMeasureService,
                                FrontLineWorkerDimensionService frontLineWorkerDimensionService,
                                RegistrationMeasureService registrationMeasureService,
-                               LocationService locationService) {
+                               LocationService locationService,
+                               JobAidContentMeasureService jobAidContentMeasureService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.registrationMeasureService = registrationMeasureService;
         this.locationService = locationService;
+        this.jobAidContentMeasureService = jobAidContentMeasureService;
     }
 
     @Transactional
@@ -86,7 +91,9 @@ public class RegistrationService {
         List<FrontLineWorkerResponse> filteredFlws = new ArrayList<FrontLineWorkerResponse>();
         List<Long> allFilteredMsisdns = new ArrayList<Long>();
         if (activityStartDate != null && activityEndDate != null) {
-            allFilteredMsisdns = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate, activityEndDate);
+            List<Long> filteredMsisdnsFromJobAid = jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate, activityEndDate);
+            List<Long> filteredMsisdnsFromCertificateCourse = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate, activityEndDate);
+            allFilteredMsisdns = ListUtils.union(filteredMsisdnsFromJobAid, filteredMsisdnsFromCertificateCourse);
             if (allFilteredMsisdns.isEmpty())
                 return filteredFlws;
         }

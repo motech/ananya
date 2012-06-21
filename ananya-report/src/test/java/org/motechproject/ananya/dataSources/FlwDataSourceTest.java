@@ -11,6 +11,7 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.export.annotation.ReportGroup;
 
 import java.util.ArrayList;
@@ -27,15 +28,17 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class FlwDataSourceTest {
     @Mock
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
-
     @Mock
     private CourseItemMeasureService courseItemMeasureService;
+    @Mock
+    private JobAidContentMeasureService jobAidContentMeasureService;
+
     private FlwDataSource flwDataSource;
 
     @Before
     public void setUp() {
         initMocks(this);
-        flwDataSource = new FlwDataSource(frontLineWorkerDimensionService, courseItemMeasureService);
+        flwDataSource = new FlwDataSource(frontLineWorkerDimensionService, courseItemMeasureService, jobAidContentMeasureService);
     }
 
     @Test
@@ -45,7 +48,7 @@ public class FlwDataSourceTest {
     }
 
     @Test
-    public void ShouldGetReportData() {
+    public void shouldGetReportData() {
         long msisdn = 1234L;
         ArrayList<Long> emptyMsisdnList = new ArrayList<Long>();
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(null, null)).thenReturn(emptyMsisdnList);
@@ -65,7 +68,7 @@ public class FlwDataSourceTest {
     }
 
     @Test
-    public void ShouldGetReportDataIfThereIsNoCriteria() {
+    public void shouldGetReportDataIfThereIsNoCriteria() {
         long msisdn = 1234L;
         ArrayList<Long> emptyMsisdnList = new ArrayList<Long>();
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(null, null)).thenReturn(emptyMsisdnList);
@@ -114,6 +117,7 @@ public class FlwDataSourceTest {
     @Test
     public void shouldGetFilteredFLWsBetweenStartDateAndEndDate() {
         Long msisdn = 123456L;
+        Long msisdn1 = 12345L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
         String designation = Designation.ANM.name();
@@ -135,12 +139,23 @@ public class FlwDataSourceTest {
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
-        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(Collections.EMPTY_LIST);
-        when(frontLineWorkerDimensionService.getFilteredFLW(Collections.EMPTY_LIST, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        ArrayList<Long> certificateCourseMsisdn = new ArrayList<Long>();
+        certificateCourseMsisdn.add(msisdn);
+        ArrayList<Long> jobAidMsisdns = new ArrayList<Long>();
+        jobAidMsisdns.add(msisdn1);
+        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(jobAidMsisdns);
+        when(jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(certificateCourseMsisdn);
+        ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
+        allFilteredMsisdns.add(msisdn);
+        allFilteredMsisdns.add(msisdn1);
+        when(frontLineWorkerDimensionService.getFilteredFLW(allFilteredMsisdns, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+
+        flwDataSource = new FlwDataSource(frontLineWorkerDimensionService, courseItemMeasureService, jobAidContentMeasureService);
 
         List<FlwReportData> filteredFLW = flwDataSource.queryReport(criteria);
 
-        assertEquals(0, filteredFLW.size());
+        assertEquals(1, filteredFLW.size());
+        assertEquals(msisdn.toString(), filteredFLW.get(0).getMsisdn());
     }
 
     @Test

@@ -16,6 +16,7 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class RegistrationServiceTest {
     @Mock
     private RegistrationMeasureService registrationMeasureService;
     @Mock
+    private JobAidContentMeasureService jobAidContentMeasureService;
+    @Mock
     private LocationService locationService;
     @Mock
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
@@ -46,7 +49,7 @@ public class RegistrationServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
     }
 
     @Test
@@ -110,7 +113,7 @@ public class RegistrationServiceTest {
         String name = "";
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, "bihar", new LocationRequest("district", "block", "village"), null);
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
@@ -129,7 +132,7 @@ public class RegistrationServiceTest {
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService);
+        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
         when(locationService.getAll()).thenReturn(Arrays.asList(location));
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, null, "bihar", new LocationRequest("district", "block", "village"), null);
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
@@ -210,6 +213,7 @@ public class RegistrationServiceTest {
     @Test
     public void shouldNotAddMsisdnFilterGetFilteredFLWsBetweenStartDateAndEndDate() {
         Long msisdn = 123456L;
+        Long msisdn1 = 123457L;
         String name = "name";
         String status = RegistrationStatus.REGISTERED.name();
         String designation = Designation.AWW.name();
@@ -219,10 +223,13 @@ public class RegistrationServiceTest {
         DateTime activityStartDate = DateTime.now();
         DateTime activityEndDate = DateTime.now().plusDays(1);
         frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
-        ArrayList<Long> msisdnList = new ArrayList<Long>();
-        msisdnList.add(msisdn);
-        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(msisdnList);
-        when(frontLineWorkerDimensionService.getFilteredFLW(msisdnList, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+        ArrayList<Long> msisdnListForCC = new ArrayList<Long>();
+        msisdnListForCC.add(msisdn);
+        ArrayList<Long> msisdnListForJobAid = new ArrayList<Long>();
+        msisdnListForCC.add(msisdn1);
+        when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(msisdnListForCC);
+        when(jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(msisdnListForJobAid);
+        when(frontLineWorkerDimensionService.getFilteredFLW(msisdnListForCC, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerResponse> filteredFLW = registrationService.getFilteredFLW(msisdn, name, status, designation, operator, circle, activityStartDate.toDate(), activityEndDate.toDate());
 

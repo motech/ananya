@@ -1,11 +1,13 @@
 package org.motechproject.ananya.dataSources;
 
+import org.apache.commons.collections.ListUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.dataSources.mappers.FrontLineReportDataMapper;
 import org.motechproject.ananya.dataSources.reportData.FlwReportData;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.export.annotation.Report;
 import org.motechproject.export.annotation.ReportGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,13 @@ public class FlwDataSource {
 
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     private CourseItemMeasureService courseItemMeasureService;
+    private JobAidContentMeasureService jobAidContentMeasureService;
 
     @Autowired
-    public FlwDataSource(FrontLineWorkerDimensionService frontLineWorkerDimensionService, CourseItemMeasureService courseItemMeasureService) {
+    public FlwDataSource(FrontLineWorkerDimensionService frontLineWorkerDimensionService, CourseItemMeasureService courseItemMeasureService, JobAidContentMeasureService jobAidContentMeasureService) {
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.courseItemMeasureService = courseItemMeasureService;
+        this.jobAidContentMeasureService = jobAidContentMeasureService;
     }
 
     @Report
@@ -36,13 +40,15 @@ public class FlwDataSource {
         String activityStartDate = criteria.get("activitystartdate");
         String activityEndDate = criteria.get("activityenddate");
         String msisdn = criteria.get("msisdn");
-        List<FlwReportData> filteredFlws = new ArrayList<FlwReportData>();
         List<Long> allFilteredMsisdns = new ArrayList<Long>();
 
         if (activityStartDate != null && activityEndDate != null) {
-            allFilteredMsisdns = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(DateTime.parse(activityStartDate).toDate(), DateTime.parse(activityEndDate).toDate());
+            List<Long> filteredMsisdnsFromJobAid = jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(DateTime.parse(activityStartDate).toDate(), DateTime.parse(activityEndDate).toDate());
+            List<Long> filteredMsisdnsFromCertificateCourse = courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(DateTime.parse(activityStartDate).toDate(), DateTime.parse(activityEndDate).toDate());
+            allFilteredMsisdns = ListUtils.union(filteredMsisdnsFromJobAid, filteredMsisdnsFromCertificateCourse);
+
             if (allFilteredMsisdns.isEmpty()) {
-                return filteredFlws;
+                return new ArrayList<FlwReportData>();
             }
         }
 
