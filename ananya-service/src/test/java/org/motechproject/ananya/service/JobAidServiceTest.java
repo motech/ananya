@@ -49,18 +49,6 @@ public class JobAidServiceTest {
     }
 
     @Test
-    public void shouldUpdateFrontLineWorkersWithPrompts() {
-        String callId = "callId";
-        String callerId = "callerId";
-        String promptIds = "[promptIds]";
-        JobAidPromptRequest jobAidPromptRequest = new JobAidPromptRequest(callId, callerId, promptIds);
-
-        jobAidService.updateJobAidPrompts(jobAidPromptRequest);
-
-        verify(frontLineWorkerService).updatePromptsFor(jobAidPromptRequest.getCallerId(), jobAidPromptRequest.getPromptList());
-    }
-
-    @Test
     public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule() {
         String operator = "airtel";
         String callerId = "callerId";

@@ -3,7 +3,6 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.request.JobAidPromptRequest;
 import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
@@ -36,12 +35,6 @@ public class JobAidService {
         this.audioTrackerService = audioTrackerService;
         this.registrationLogService = registrationLogService;
         this.callLoggerService = callLoggerService;
-    }
-
-    public void updateJobAidPrompts(JobAidPromptRequest jobAidPromptRequest) {
-        frontLineWorkerService.updatePromptsFor(
-                jobAidPromptRequest.getCallerId(),
-                jobAidPromptRequest.getPromptList());
     }
 
     public JobAidCallerDataResponse createCallerData(String callId, String callerId, String operator, String circle) {
