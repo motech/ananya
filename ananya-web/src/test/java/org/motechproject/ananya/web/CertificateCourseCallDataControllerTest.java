@@ -1,265 +1,64 @@
 package org.motechproject.ananya.web;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.collections.CollectionUtils;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.request.AudioTrackerRequest;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificateCourseStateRequest;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
-import org.motechproject.ananya.service.CallLoggerService;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.publish.DataPublishService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.argThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration("classpath:applicationContext.xml")
 public class CertificateCourseCallDataControllerTest {
-
-    private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataControllerTest.class);
 
     private CertificateCourseCallDataController certificateCourseCallDataController;
 
     @Mock
-    private HttpServletRequest request;
-    @Mock
-    private HttpServletResponse response;
-    @Mock
     private CertificateCourseService certificateCourseService;
-    @Mock
-    private CallLoggerService callLoggerService;
-    @Mock
-    private DataPublishService dataPublishService;
 
     @Before
-    public void Setup() {
+    public void setup() {
         initMocks(this);
-        certificateCourseCallDataController = new CertificateCourseCallDataController(callLoggerService,
-                certificateCourseService, dataPublishService);
+        certificateCourseCallDataController = new CertificateCourseCallDataController(certificateCourseService);
     }
 
     @Test
-    public void shouldRetrieveIVRData() {
-        final String callId = "456";
-        final String callerId = "9986574410";
-
-        when(request.getParameter("callerId")).thenReturn(callerId);
-        when(request.getParameter("callId")).thenReturn(callId);
-        when(request.getParameter("dataToPost")).thenReturn(postedData());
-
-        certificateCourseCallDataController.handleDisconnect(request);
-
-        CertificateCourseStateRequest stateRequest = new CertificateCourseStateRequest();
-        stateRequest.setCallId(callId);
-        stateRequest.setToken("0");
-
-        List<CertificateCourseStateRequest> expectedStateRequestList = Arrays.asList(stateRequest);
-
-        verify(certificateCourseService).saveState(argThat(new CertificationCourseStateRequestListMatcher(expectedStateRequestList)));
-
-        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1231413));
-        verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
-
-        ArgumentCaptor<AudioTrackerRequestList> captor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
-        verify(certificateCourseService).saveAudioTrackerState(captor.capture());
-
-        AudioTrackerRequestList audioTrackerRequestList = captor.getValue();
-        AudioTrackerRequest audioTrackerRequest = audioTrackerRequestList.all().get(0);
-
-        assertEquals(1, audioTrackerRequestList.all().size());
-        assertEquals(callId, audioTrackerRequestList.getCallId());
-        assertEquals("91" + callerId, audioTrackerRequestList.getCallerId());
-        assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
-        assertEquals(123, (int) audioTrackerRequest.getDuration());
-        assertEquals(new DateTime(123456789l), audioTrackerRequest.getTimeAsDateTime());
-    }
-
-    @Test
-    public void shouldCallAppropriateServicesToHandleDisconnectEvent() {
-        final String callId = "456";
-        final String callerId = "919986574410";
-
-        when(request.getParameter("callerId")).thenReturn(callerId);
-        when(request.getParameter("callId")).thenReturn(callId);
+    public void shouldCallCourseServiceWithServiceRequestFromHttpPayLoad() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter("callId")).thenReturn("123-456");
+        when(request.getParameter("callerId")).thenReturn("123");
+        when(request.getParameter("calledNumber")).thenReturn("57711");
         when(request.getParameter("dataToPost")).thenReturn("[]");
 
-        certificateCourseCallDataController.handleDisconnect(request);
-        verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+
+        ArgumentCaptor<CertificateCourseServiceRequest> captor = ArgumentCaptor.forClass(CertificateCourseServiceRequest.class);
+        String response = certificateCourseCallDataController.handleDisconnect(request);
+
+        verify(certificateCourseService).handleDisconnect(captor.capture());
+        CertificateCourseServiceRequest certificateCourseServiceRequest = captor.getValue();
+
+        assertThat(certificateCourseServiceRequest.getCallId(), is("123-456"));
+        assertThat(certificateCourseServiceRequest.getCallerId(), is("123"));
+        assertThat(certificateCourseServiceRequest.getCalledNumber(), is("57711"));
+        Assert.assertThat(response, is(getReturnVxml()));
     }
 
-    @Test
-    public void tryJsonParse() {
-        String jsonString = postedData();
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(TransferData.class, new TransferData());
-        Gson gson = gsonBuilder.create();
-
-        Type collectionType = new TypeToken<Collection<TransferData>>() {
-        }.getType();
-        Collection<TransferData> dataCollection = gson.fromJson(jsonString, collectionType);
-
-        for (TransferData item : dataCollection) {
-            log.info(item.getData());
-        }
-    }
-
-    @Test
-    public void shouldSaveACallLogForCallStartEvent() throws Exception {
-        String callId = "123";
-        String callerId = "919986574410";
-
-        when(request.getParameter("callId")).thenReturn(callId);
-        when(request.getParameter("callerId")).thenReturn(callerId);
-
-        when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{\"time\":1330320462000,\"callEvent\":\"CALL_START\"}}]");
-
-        String s = certificateCourseCallDataController.handleDisconnect(request);
-
-        List<CallDuration> expectedCallDurations = Arrays.asList(new CallDuration(CallEvent.CALL_START, 1330320462000L));
-        verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
-    }
-
-
-    @Test
-    public void shouldSaveACallLogForRegistrationStartAndEndEvent() throws Exception {
-        String callId = "123";
-        String callerId = "919986574410";
-
-        when(request.getParameter("callId")).thenReturn(callId);
-        when(request.getParameter("callerId")).thenReturn(callerId);
-        when(request.getParameter("dataToPost")).thenReturn("[{\"token\":\"0\",\"type\":\"callDuration\"," +
-                "\"data\":{\"time\":1330320462000,\"callEvent\":\"REGISTRATION_START\"}}," +
-                "{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{\"time\":1330320480000,\"callEvent\":\"REGISTRATION_END\"}}]");
-
-        certificateCourseCallDataController.handleDisconnect(request);
-
-        List<CallDuration> expectedCallDurations = Arrays.asList(
-                new CallDuration(CallEvent.REGISTRATION_START, 1330320462000L),
-                new CallDuration(CallEvent.REGISTRATION_END, 1330320480000L)
-        );
-        verify(callLoggerService).saveAll(argThat(new CallDurationListMatcher(expectedCallDurations)));
-    }
-
-    private String postedData() {
-        String packet1 = "{" +
-                "    \"chapterIndex\" : 1,                                     " +
-                "    \"lessonOrQuestionIndex\" : 2,                            " +
-                "    \"questionResponse\" : 1,                                 " +
-                "    \"result\" : true,                                        " +
-                "    \"interactionKey\" : \"startNextChapter\",                " +
-
-                "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
-                "    \"contentType\" : \"lesson\",                             " +
-                "    \"courseItemState\" : \"start\",                          " +
-                "    \"contentData\" : 6,                                      " +
-                "    \"certificateCourseId\" : \"e79139b5540bf3fc8d96635bc2926f90\"  " +
-                "}";
-        String packet2 = "{" +
-                "   \"callEvent\" : \"CALL_START\"," +
-                "   \"time\"  : 1231413" +
-                "}";
-
-        String packet3 = "{" +
-                "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
-                "    \"duration\" : \"123\",                             " +
-                "    \"time\" : \"123456789\"                          " +
-                "}";
-
-        return "[" +
-                "   {" +
-                "       \"token\" : 0," +
-                "       \"type\"  : \"ccState\", " +
-                "       \"data\"  : " + packet1 +
-                "   }," +
-                "" +
-                "   {" +
-                "       \"token\" : 1," +
-                "       \"type\"  : \"callDuration\", " +
-                "       \"data\"  : " + packet2 +
-                "   }," +
-                "" +
-                "   {" +
-                "       \"token\" : 1," +
-                "       \"type\"  : \"audioTracker\", " +
-                "       \"data\"  : " + packet3 +
-                "   }" +
-                "]";
-    }
-
-    private static class CertificationCourseStateRequestListMatcher extends BaseMatcher<CertificateCourseStateRequestList> {
-        private List<CertificateCourseStateRequest> certificationCourseStateRequests;
-
-        public CertificationCourseStateRequestListMatcher(List<CertificateCourseStateRequest> certificationCourseStateRequests) {
-            this.certificationCourseStateRequests = certificationCourseStateRequests;
-        }
-
-        @Override
-        public boolean matches(Object o) {
-            List<CertificateCourseStateRequest> matchRequests = ((CertificateCourseStateRequestList) o).all();
-
-            if (this.certificationCourseStateRequests.size() != matchRequests.size())
-                return false;
-
-            for (int i = 0; i < matchRequests.size(); ++i) {
-                CertificateCourseStateRequest thisRequest = this.certificationCourseStateRequests.get(i);
-                CertificateCourseStateRequest request = matchRequests.get(i);
-
-                if (!(thisRequest.getCallId().equals(request.getCallId())
-                        || thisRequest.getToken().equals(request.getToken())))
-                    return false;
-
-            }
-            return true;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-
-        }
-    }
-
-    private class CallDurationListMatcher extends BaseMatcher<CallDurationList> {
-
-        private List<CallDuration> callDurations;
-
-        public CallDurationListMatcher(List<CallDuration> callDurations) {
-            this.callDurations = callDurations;
-        }
-
-        @Override
-        public boolean matches(Object o) {
-            List<CallDuration> matchDurations = ((CallDurationList) o).all();
-            return CollectionUtils.isEqualCollection(matchDurations, callDurations);
-        }
-
-        @Override
-        public void describeTo(Description description) {
-        }
+    private String getReturnVxml() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
+        builder.append("<form id=\"endCall\">");
+        builder.append("<block><disconnect/></block>");
+        builder.append("</form></vxml>");
+        return builder.toString();
     }
 
 

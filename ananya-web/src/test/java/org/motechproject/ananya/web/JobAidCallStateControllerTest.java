@@ -39,7 +39,7 @@ public class JobAidCallStateControllerTest {
         when(request.getParameter("promptList")).thenReturn("['prompt1', 'prompt2']");
         when(request.getParameter("dataToPost")).thenReturn("[]");
 
-        controller.handleDisconnect(request);
+        String response = controller.handleDisconnect(request);
 
         ArgumentCaptor<JobAidServiceRequest> captor = ArgumentCaptor.forClass(JobAidServiceRequest.class);
         verify(jobAidService).handleDisconnect(captor.capture());
@@ -50,5 +50,18 @@ public class JobAidCallStateControllerTest {
         assertThat(jobAidServiceRequest.getCalledNumber(), is("57711"));
         assertThat(jobAidServiceRequest.getCallDuration(), is(111));
         assertThat(jobAidServiceRequest.getPrompts().size(), is(2));
+        assertThat(response, is(getReturnVxml()));
     }
+
+
+    private String getReturnVxml() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<vxml version=\"2.1\" xsi:schemaLocation=\"http://www.w3.org/2001/vxml http://www.w3.org/TR/voicexml21/vxml.xsd\">");
+        builder.append("<form id=\"endCall\">");
+        builder.append("<block><disconnect/></block>");
+        builder.append("</form></vxml>");
+        return builder.toString();
+    }
+
+
 }

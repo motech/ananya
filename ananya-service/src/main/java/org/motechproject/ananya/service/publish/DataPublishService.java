@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class DataPublishService implements PublishService {
 
     private static Logger log = LoggerFactory.getLogger(DataPublishService.class);
-    
+
     public static final String DB = "db";
 
     private PublishService publishService;
@@ -29,8 +29,9 @@ public class DataPublishService implements PublishService {
     public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
         try {
             publishService.publishCallDisconnectEvent(callId, serviceType);
-        }
-        catch (Exception e) {
+            log.info(callId + "- published call message for " + serviceType.name());
+
+        } catch (Exception e) {
             handlePublishServiceException(e);
         }
     }

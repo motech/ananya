@@ -8,7 +8,7 @@ public class JobAidCallerDataResponse {
     private Integer maxAllowedUsageForOperator;
     private Map<String, Integer> promptsHeard;
 
-    public JobAidCallerDataResponse(boolean callerRegistered, Integer currentJobAidUsage, Integer maxAllowedUsageForOperator, Map<String, Integer> promptsHeard) {
+    public JobAidCallerDataResponse(boolean callerRegistered, Integer currentJobAidUsage, Map<String, Integer> promptsHeard, Integer maxAllowedUsageForOperator) {
         isCallerRegistered = callerRegistered;
         this.currentJobAidUsage = currentJobAidUsage;
         this.maxAllowedUsageForOperator = maxAllowedUsageForOperator;

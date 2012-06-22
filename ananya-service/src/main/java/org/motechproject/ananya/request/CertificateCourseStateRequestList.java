@@ -24,8 +24,8 @@ public class CertificateCourseStateRequestList {
         return list;
     }
 
-    public boolean isEmpty() {
-        return list.isEmpty();
+    public boolean isNotEmpty() {
+        return !list.isEmpty();
     }
 
     public CertificateCourseStateRequest lastRequest() {

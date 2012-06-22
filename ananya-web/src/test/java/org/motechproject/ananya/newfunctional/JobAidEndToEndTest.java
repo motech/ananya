@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 @Ignore
-public class JobAidTest extends SpringIntegrationTest {
+public class JobAidEndToEndTest extends SpringIntegrationTest {
 
     @Autowired
     private JobAidWebService jobAidService;

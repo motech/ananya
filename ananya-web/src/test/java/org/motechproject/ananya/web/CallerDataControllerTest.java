@@ -61,7 +61,7 @@ public class CallerDataControllerTest {
         request.setServletPath("/dynamic/jobaid/caller_data.js");
 
         when(jobAidService.createCallerData(callId, callerId, "airtel", "circle")).thenReturn(
-                new JobAidCallerDataResponse(true, 1000, 2000, new HashMap<String, Integer>()));
+                new JobAidCallerDataResponse(true, 1000, new HashMap<String, Integer>(), 2000));
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
         assertEquals("job_aid_caller_data", callerDataForJobAid.getViewName());

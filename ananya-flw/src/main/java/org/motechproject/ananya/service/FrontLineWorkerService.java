@@ -41,7 +41,7 @@ public class FrontLineWorkerService {
             frontLineWorker.setModified();
 
             allFrontLineWorkers.add(frontLineWorker);
-            log.info("Created:" + frontLineWorker);
+            log.info("created:" + frontLineWorker);
             return frontLineWorker;
         }
 
@@ -53,7 +53,7 @@ public class FrontLineWorkerService {
         frontLineWorker.setModified();
         allFrontLineWorkers.update(frontLineWorker);
 
-        log.info("Updated:" + frontLineWorker);
+        log.info("updated:" + frontLineWorker);
         return frontLineWorker;
     }
 
@@ -62,7 +62,7 @@ public class FrontLineWorkerService {
         if (frontLineWorker.jobAidLastAccessedPreviousMonth()) {
             frontLineWorker.resetJobAidUsageAndPrompts();
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("Reset last jobaid usage for " + frontLineWorker);
+            log.info("reset last jobaid usage for " + frontLineWorker);
         }
         return frontLineWorker;
     }
@@ -78,12 +78,12 @@ public class FrontLineWorkerService {
 
     public void addSMSReferenceNumber(SMSReference smsReference) {
         allSMSReferences.add(smsReference);
-        log.info("Created SMS reference for:" + smsReference.getMsisdn());
+        log.info("created SMS reference for:" + smsReference.getMsisdn());
     }
 
     public void updateSMSReferenceNumber(SMSReference smsReference) {
         allSMSReferences.update(smsReference);
-        log.info("Updated SMS reference for:" + smsReference.getMsisdn());
+        log.info("updated SMS reference for:" + smsReference.getMsisdn());
     }
 
     public void updatePromptsFor(String callerId, List<String> promptList) {
@@ -91,7 +91,7 @@ public class FrontLineWorkerService {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated prompts heard for " + frontLineWorker);
+        log.info("updated prompts heard for " + frontLineWorker);
     }
 
     public void updateJobAidUsageAndAccessTime(String callerId, Integer currentCallDuration) {
@@ -100,12 +100,12 @@ public class FrontLineWorkerService {
         frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated jobaid usage and access time for " + frontLineWorker);
+        log.info("updated jobaid usage and access time for " + frontLineWorker);
     }
 
     public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated certificate course state for " + frontLineWorker);
+        log.info("updated certificate course state for " + frontLineWorker);
     }
 
     public List<FrontLineWorker> getAll() {
@@ -122,13 +122,13 @@ public class FrontLineWorkerService {
             if (existingFrontLineWorkers.size() > 1) {
                 removeDuplicateFLWs(existingFrontLineWorkers);
             }
-            log.info("Created:" + frontLineWorker);
+            log.info("created:" + frontLineWorker);
             return frontLineWorker;
         }
 
         frontLineWorker.update(name, designation, location);
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Updated:" + frontLineWorker);
+        log.info("updated:" + frontLineWorker);
         return frontLineWorker;
     }
 

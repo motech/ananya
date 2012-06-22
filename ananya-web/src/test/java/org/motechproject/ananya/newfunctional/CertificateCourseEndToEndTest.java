@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 @Ignore
-public class CertificateCourseTest extends SpringIntegrationTest {
+public class CertificateCourseEndToEndTest extends SpringIntegrationTest {
 
     @Autowired
     private CertificateCourseWebservice certificateCourseWebService;

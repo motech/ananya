@@ -1,12 +1,8 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.action.TransferDataStateAction;
-import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
-import org.motechproject.ananya.service.CallLoggerService;
+import org.motechproject.ananya.domain.CallerIdParam;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.publish.DataPublishService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +18,11 @@ public class CertificateCourseCallDataController {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
 
-    private CallLoggerService callLoggerService;
     private CertificateCourseService certificateCourseService;
-    private DataPublishService dataPublishService;
 
     @Autowired
-    public CertificateCourseCallDataController(CallLoggerService callLoggerService,
-                                               CertificateCourseService certificateCourseService,
-                                               DataPublishService dataPublishService) {
-        this.callLoggerService = callLoggerService;
+    public CertificateCourseCallDataController(CertificateCourseService certificateCourseService) {
         this.certificateCourseService = certificateCourseService;
-        this.dataPublishService = dataPublishService;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
@@ -43,23 +33,11 @@ public class CertificateCourseCallDataController {
         final String calledNumber = request.getParameter("calledNumber");
         final String jsonData = request.getParameter("dataToPost");
 
-        TransferDataList transferDataList = new TransferDataList(jsonData);
-        CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList(callId, callerId);
-        AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
-        CallDurationList callDurationList = new CallDurationList(callId, callerId, calledNumber);
+        CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber, jsonData);
+        certificateCourseService.handleDisconnect(serviceRequest);
 
-        for (TransferData transferData : transferDataList.all()) {
-            TransferDataStateAction transferDataStateAction = TransferDataStateAction.getFor(transferData.getType());
-            transferDataStateAction.addToRequest(transferData, stateRequestList, audioTrackerList, callDurationList);
-        }
-
-        certificateCourseService.saveState(stateRequestList);
-        certificateCourseService.saveAudioTrackerState(audioTrackerList);
-        callLoggerService.saveAll(callDurationList);
-        dataPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
-
-        log.info("Transfer data completed for: callId=" + callId + "|callerId=" + callerId);
-        log.info("Call ended: " + callId);
+        log.info(callId + "- Course Disconnect completed");
+        log.info(callId + "- Course Call ended");
         return getReturnVxml();
     }
 

@@ -26,7 +26,7 @@ public class CallLoggerService {
         for (CallDuration callDuration : callDurationList.all())
             save(callDuration, callLog);
         allCallLogs.add(callLog);
-        log.info("Saved call duration logs");
+        log.info(callDurationList.getCallId()+ "- saved callDuration logs");
     }
 
     public CallLog getCallLogFor(String callId) {

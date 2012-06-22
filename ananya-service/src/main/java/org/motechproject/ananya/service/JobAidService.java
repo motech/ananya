@@ -38,14 +38,17 @@ public class JobAidService {
     }
 
     public JobAidCallerDataResponse createCallerData(String callId, String callerId, String operator, String circle) {
-        log.info(callId + "- fetching caller data |" + callerId + "|" + operator + "|" + circle);
-
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle);
-        if (frontLineWorker.isModified())
-            registrationLogService.add(new RegistrationLog(callId, callerId, operator, circle));
+        log.info(callId + "- fetched caller data for " + frontLineWorker);
 
-        return new JobAidCallerDataResponse(frontLineWorker.status().isRegistered(), frontLineWorker.getCurrentJobAidUsage(),
-                operatorService.findMaximumUsageFor(operator), frontLineWorker.getPromptsHeard());
+        if (frontLineWorker.isModified()) {
+            registrationLogService.add(new RegistrationLog(callId, callerId, operator, circle));
+            log.info(callId + "- created registrationLog");
+        }
+        return new JobAidCallerDataResponse(
+                frontLineWorker.status().isRegistered(),
+                frontLineWorker.getCurrentJobAidUsage(),
+                frontLineWorker.getPromptsHeard(), operatorService.findMaximumUsageFor(operator));
     }
 
     public void handleDisconnect(JobAidServiceRequest jobAidServiceRequest) {
