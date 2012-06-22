@@ -32,7 +32,7 @@ public class DbPublishServiceTest {
     public void shouldPublishCallDisconnectEventForCertificateCourse() throws Exception {
         String callId = "141414";
 
-        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        dbPublishService.publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(certificateCourseDataHandler).handleCertificateCourseData(captor.capture());
@@ -46,7 +46,7 @@ public class DbPublishServiceTest {
     public void shouldPublishCallDisconnectEventForJobAidCourse() throws Exception {
         String callId = "141414";
 
-        dbPublishService.publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        dbPublishService.publishDisconnectEvent(callId, ServiceType.JOB_AID);
 
         ArgumentCaptor<MotechEvent> captor = ArgumentCaptor.forClass(MotechEvent.class);
         verify(jobAidDataHandler).handleJobAidData(captor.capture());

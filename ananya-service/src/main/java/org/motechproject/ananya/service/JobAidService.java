@@ -45,18 +45,16 @@ public class JobAidService {
             registrationLogService.add(new RegistrationLog(callId, callerId, operator, circle));
             log.info(callId + "- created registrationLog");
         }
-        return new JobAidCallerDataResponse(
-                frontLineWorker.status().isRegistered(),
-                frontLineWorker.getCurrentJobAidUsage(),
-                frontLineWorker.getPromptsHeard(), operatorService.findMaximumUsageFor(operator));
+        Integer maxOperatorUsage = operatorService.findMaximumUsageFor(operator);
+        return new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage);
     }
 
     public void handleDisconnect(JobAidServiceRequest jobAidServiceRequest) {
         frontLineWorkerService.updateJobAidUsageAndAccessTime(jobAidServiceRequest.getCallerId(), jobAidServiceRequest.getCallDuration());
         frontLineWorkerService.updatePromptsFor(jobAidServiceRequest.getCallerId(), jobAidServiceRequest.getPrompts());
-        audioTrackerService.saveAudioTrackerState(jobAidServiceRequest.getAudioTrackerRequestList(), ServiceType.JOB_AID);
+        audioTrackerService.saveAllForJobAid(jobAidServiceRequest.getAudioTrackerRequestList());
         callLoggerService.saveAll(jobAidServiceRequest.getCallDurationList());
-        dataPublishService.publishCallDisconnectEvent(jobAidServiceRequest.getCallId(), ServiceType.JOB_AID);
+        dataPublishService.publishDisconnectEvent(jobAidServiceRequest.getCallId(), ServiceType.JOB_AID);
     }
 }
 

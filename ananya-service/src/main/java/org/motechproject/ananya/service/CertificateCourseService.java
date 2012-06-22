@@ -1,6 +1,6 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.action.ServiceAction;
+import org.motechproject.ananya.action.CertificateCourseServiceAction;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
 import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
@@ -21,11 +21,11 @@ public class CertificateCourseService {
     private static Logger log = LoggerFactory.getLogger(CertificateCourseService.class);
 
     private CertificateCourseLogService certificateCourseLogService;
+    private RegistrationLogService registrationLogService;
     private FrontLineWorkerService frontLineWorkerService;
     private AudioTrackerService audioTrackerService;
-    private RegistrationLogService registrationLogService;
-    private CallLoggerService callLoggerService;
     private DataPublishService dataPublishService;
+    private CallLoggerService callLoggerService;
     private SMSLogService smsLogService;
 
     @Autowired
@@ -64,7 +64,7 @@ public class CertificateCourseService {
         }
         audioTrackerService.saveAllForCourse(certificateCourseServiceRequest.getAudioTrackerRequestList());
         callLoggerService.saveAll(certificateCourseServiceRequest.getCallDurationList());
-        dataPublishService.publishCallDisconnectEvent(certificateCourseServiceRequest.getCallId(), ServiceType.CERTIFICATE_COURSE);
+        dataPublishService.publishDisconnectEvent(certificateCourseServiceRequest.getCallId(), ServiceType.CERTIFICATE_COURSE);
     }
 
     private void updateBookmark(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
@@ -82,7 +82,7 @@ public class CertificateCourseService {
     private void updateScores(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
         String callId = stateRequestList.getCallId();
         for (CertificateCourseStateRequest stateRequest : stateRequestList.all()) {
-            ServiceAction serviceAction = ServiceAction.findFor(stateRequest.getInteractionKey());
+            CertificateCourseServiceAction serviceAction = CertificateCourseServiceAction.findFor(stateRequest.getInteractionKey());
             serviceAction.update(frontLineWorker, stateRequest);
         }
         frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
@@ -105,16 +105,15 @@ public class CertificateCourseService {
         String callId = stateRequestList.getCallId();
         String callerId = stateRequestList.getCallerId();
 
-        CertificateCourseStateRequest firstRequest = stateRequestList.firstRequest();
         CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
         CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
-        CertificationCourseLog courseLog = logMapper.mapFrom(firstRequest);
+        CertificationCourseLog courseLog = logMapper.mapFrom(stateRequestList.firstRequest());
 
         for (CertificateCourseStateRequest stateRequest : stateRequestList.all())
             if (stateRequest.hasContentId())
                 courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
 
         certificateCourseLogService.createNew(courseLog);
-        log.info(callId + "- course completion sms sent for " + callerId);
+        log.info(callId + "- courseLog saved for " + callerId);
     }
 }

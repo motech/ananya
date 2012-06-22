@@ -280,7 +280,7 @@ public class CertificateCourseServiceTest {
         certificateCourseService.handleDisconnect(serviceRequest);
 
         verify(audioTrackerService).saveAllForCourse(audioTrackerRequestList);
-        verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
 
 

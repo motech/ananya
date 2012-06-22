@@ -3,6 +3,8 @@ package org.motechproject.ananya.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
@@ -60,8 +62,14 @@ public class CallerDataControllerTest {
         request.addParameter("circle", "circle");
         request.setServletPath("/dynamic/jobaid/caller_data.js");
 
-        when(jobAidService.createCallerData(callId, callerId, "airtel", "circle")).thenReturn(
-                new JobAidCallerDataResponse(true, 1000, new HashMap<String, Integer>(), 2000));
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
+        frontLineWorker.setCurrentJobAidUsage(1000);
+        frontLineWorker.markPromptHeard("some.wav");
+
+        JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse(frontLineWorker, 2000);
+        when(jobAidService.createCallerData(callId, callerId, "airtel", "circle")).thenReturn(jobAidCallerDataResponse);
+
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
 
         assertEquals("job_aid_caller_data", callerDataForJobAid.getViewName());

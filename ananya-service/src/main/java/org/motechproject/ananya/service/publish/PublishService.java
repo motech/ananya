@@ -3,5 +3,5 @@ package org.motechproject.ananya.service.publish;
 import org.motechproject.ananya.domain.ServiceType;
 
 public interface PublishService {
-    void publishCallDisconnectEvent(String callId, ServiceType serviceType);
+    void publishDisconnectEvent(String callId, ServiceType serviceType);
 }

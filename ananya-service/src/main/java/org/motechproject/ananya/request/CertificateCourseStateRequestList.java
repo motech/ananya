@@ -1,7 +1,7 @@
 package org.motechproject.ananya.request;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.motechproject.ananya.domain.InteractionKeys;
+import org.motechproject.ananya.domain.Interaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class CertificateCourseStateRequestList {
 
     public boolean hasCourseCompletionInteraction() {
         for (CertificateCourseStateRequest stateRequest : list)
-            if (stateRequest.getInteractionKey().equalsIgnoreCase(InteractionKeys.PlayCourseResultInteraction))
+            if (stateRequest.getInteractionKey().equalsIgnoreCase(Interaction.PlayCourseResult))
                 return true;
         return false;
     }

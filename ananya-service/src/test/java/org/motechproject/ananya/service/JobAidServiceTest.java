@@ -107,7 +107,7 @@ public class JobAidServiceTest {
         String callerId = "1234";
         String operator = "airtel";
         String circle = "bihar";
-        String callId = "callid";
+        String callId = "callId";
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
 
@@ -130,20 +130,20 @@ public class JobAidServiceTest {
 
         verify(frontLineWorkerService).updateJobAidUsageAndAccessTime(callerId, callDuration);
         verify(frontLineWorkerService).updatePromptsFor(eq(callerId), anyListOf(String.class));
-        verify(dataPublishService).publishCallDisconnectEvent(callId, ServiceType.JOB_AID);
+        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
 
         ArgumentCaptor<CallDurationList> callDurationCaptor = ArgumentCaptor.forClass(CallDurationList.class);
         ArgumentCaptor<AudioTrackerRequestList> audioTrackerRequestCaptor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
 
         verify(callLoggerService).saveAll(callDurationCaptor.capture());
-        verify(audioTrackerService).saveAudioTrackerState(audioTrackerRequestCaptor.capture(), eq(ServiceType.JOB_AID));
+        verify(audioTrackerService).saveAllForJobAid(audioTrackerRequestCaptor.capture());
 
         CallDurationList callDurationList = callDurationCaptor.getValue();
-        assertThat(callDurationList.getCallId(),is(callId));
-        assertThat(callDurationList.getCallerId(),is(callerId));
+        assertThat(callDurationList.getCallId(), is(callId));
+        assertThat(callDurationList.getCallerId(), is(callerId));
 
         AudioTrackerRequestList audioTrackerRequestList = audioTrackerRequestCaptor.getValue();
-        assertThat(audioTrackerRequestList.getCallId(),is(callId));
-        assertThat(audioTrackerRequestList.getCallerId(),is(callerId));
+        assertThat(audioTrackerRequestList.getCallId(), is(callId));
+        assertThat(audioTrackerRequestList.getCallerId(), is(callerId));
     }
 }

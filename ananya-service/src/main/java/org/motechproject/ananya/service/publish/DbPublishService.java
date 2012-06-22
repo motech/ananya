@@ -21,9 +21,11 @@ public class DbPublishService implements PublishService {
     }
 
     @Override
-    public void publishCallDisconnectEvent(String callId, ServiceType serviceType) {
+    public void publishDisconnectEvent(String callId, ServiceType serviceType) {
+        CallMessage callMessage = new CallMessage(null, callId);
+
         MotechEvent motechEvent = new MotechEvent(ReportPublishEventKeys.DB_PUBLISH_KEY);
-        motechEvent.getParameters().put("logData", new CallMessage(null, callId));
+        motechEvent.getParameters().put("logData", callMessage);
 
         if (serviceType.equals(ServiceType.CERTIFICATE_COURSE))
             certificateCourseDataHandler.handleCertificateCourseData(motechEvent);
