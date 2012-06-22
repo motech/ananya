@@ -13,6 +13,8 @@
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
     <util:properties id="activemqProperties" location="classpath:/activemq.properties"/>
     <util:properties id="apiKeys" location="classpath:/apiKeys.properties"/>
+    <util:properties id="postgresProperties" location="classpath:postgres.properties"/>
+
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:spring-configured/>
