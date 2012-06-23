@@ -61,11 +61,9 @@ public class RegistrationService {
             RegistrationResponse registrationResponse = registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
-                    StringUtils.trimToEmpty(frontLineWorkerRequest.getOperator()),
                     frontLineWorkerRequest.getLocation().getDistrict(),
                     frontLineWorkerRequest.getLocation().getBlock(),
                     frontLineWorkerRequest.getLocation().getPanchayat(),
-                    StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
                     locationList,
                     new DateTime(frontLineWorkerRequest.getLastModified()));
             registrationResponses.add(registrationResponse);
@@ -78,11 +76,9 @@ public class RegistrationService {
         return registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getOperator()),
                 frontLineWorkerRequest.getLocation().getDistrict(),
                 frontLineWorkerRequest.getLocation().getBlock(),
                 frontLineWorkerRequest.getLocation().getPanchayat(),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getCircle()),
                 locationList,
                 new DateTime(frontLineWorkerRequest.getLastModified()));
     }
@@ -106,12 +102,12 @@ public class RegistrationService {
         return filteredFlws;
     }
 
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String operator, String district, String block, String panchayat, String circle, LocationList locationList, DateTime lastModified) {
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, LocationList locationList, DateTime lastModified) {
         Location location = locationList.findFor(district, block, panchayat);
-        RegistrationResponse registrationResponse = new RegistrationResponse(name, callerId, designation, operator, circle, district, block, panchayat);
+        RegistrationResponse registrationResponse = new RegistrationResponse();
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), operator, circle, location, registrationStatus, lastModified);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, registrationStatus, lastModified);
 
         FLWValidationResponse FLWValidationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
         if (FLWValidationResponse.isInValid())

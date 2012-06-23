@@ -18,21 +18,17 @@ public class FrontLineWorkerMapperTest {
         String msisdn = "1234567678890 ";
         String name = " name";
         String designation = Designation.ANM.name();
-        String operator = " airtel";
-        String circle = "bihar  ";
         String district = "D1";
         String block = "B1";
         String panchayat = "P1";
         DateTime lastModified = new DateTime(2000,11,23,20,25);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, operator, circle, new LocationRequest(district, block, panchayat), lastModified.toDate());
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, new LocationRequest(district, block, panchayat), lastModified.toDate());
 
         FrontLineWorker frontLineWorker = FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest);
 
         assertEquals("1234567678890", frontLineWorker.getMsisdn());
         assertEquals("name", frontLineWorker.getName());
         assertEquals(designation, frontLineWorker.getDesignation().name());
-        assertEquals("bihar", frontLineWorker.getCircle());
-        assertEquals("airtel", frontLineWorker.getOperator());
         assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 

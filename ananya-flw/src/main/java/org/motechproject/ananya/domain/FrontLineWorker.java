@@ -87,10 +87,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = registrationStatus;
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, String operator, String circle, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
         this(msisdn, name, designation, location, registrationStatus);
-        this.operator = operator;
-        this.circle = circle;
         this.lastModified = lastModified;
     }
 
@@ -232,13 +230,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.designation = designation;
     }
 
-    public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, String circle, String operator, DateTime lastModified) {
+    public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
         this.name = name;
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
-        this.circle = circle;
-        this.operator = operator;
         if (this.status.weight < registrationStatus.weight)
             this.status = registrationStatus;
     }

@@ -8,21 +8,17 @@ import java.util.Date;
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
     private String msisdn;
-    private String operator;
     private String designation;
-    private String circle;
     private LocationRequest location = new LocationRequest();
     private Date lastModified;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, String operator, String circle, LocationRequest location, Date lastModified) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified) {
         this.name = name;
         this.msisdn = msisdn;
-        this.operator = operator;
         this.designation = designation;
-        this.circle = circle;
         this.location = location;
         this.lastModified = lastModified;
     }
@@ -41,22 +37,6 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public String getCircle() {
-        return circle;
-    }
-
-    public void setCircle(String circle) {
-        this.circle = circle;
     }
 
     public String getDesignation() {

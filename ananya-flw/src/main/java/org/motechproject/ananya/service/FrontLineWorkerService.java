@@ -37,14 +37,12 @@ public class FrontLineWorkerService {
         String name = frontLineWorker.getName();
         Designation designation = Designation.getFor(frontLineWorker.designationName());
         RegistrationStatus registrationStatus = frontLineWorker.getStatus();
-        String circle = frontLineWorker.getCircle();
-        String operator = frontLineWorker.getOperator();
         DateTime lastModified = frontLineWorker.getLastModified();
 
         FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
 
         if (exisitingFrontLineWorker == null) {
-            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, operator, circle, location, registrationStatus, lastModified);
+            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus, lastModified);
             allFrontLineWorkers.add(exisitingFrontLineWorker);
             log.info("Created:" + exisitingFrontLineWorker);
             return exisitingFrontLineWorker;
@@ -52,7 +50,7 @@ public class FrontLineWorkerService {
 
         if (isFLWFromDbOlder(frontLineWorker, exisitingFrontLineWorker)) {
             lastModified = lastModified != null ? lastModified : exisitingFrontLineWorker.getLastModified();
-            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, circle, operator, lastModified);
+            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, lastModified);
             allFrontLineWorkers.update(exisitingFrontLineWorker);
             log.info("Updated:" + exisitingFrontLineWorker);
         }

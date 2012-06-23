@@ -1,9 +1,9 @@
 package org.motechproject.ananya.service.integrationtests;
 
+import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.*;
@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
@@ -72,7 +75,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
 
     @Before
     @After
-    public void tearDown() {
+    public void setUpAndTearDown() {
         allRegistrationLogs.removeAll();
         allAudioTrackerLogs.removeAll();
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
@@ -87,7 +90,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         template.flush();
         template.deleteAll(template.loadAll(JobAidContentMeasure.class));
         template.flush();
-
+        template.clear();
     }
 
     @Test
@@ -159,7 +162,8 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         List<JobAidContentMeasure> jobAidContentMeasureList = template.loadAll(JobAidContentMeasure.class);
         assertEquals(2,  jobAidContentMeasureList.size());
 
-        JobAidContentMeasure jobAidContentMeasure = jobAidContentMeasureList.get(0);
+        List<JobAidContentMeasure> filteredJobAidContentMeasure = filter(having(on(JobAidContentMeasure.class).getDuration(), Matchers.equalTo(10)), jobAidContentMeasureList);
+        JobAidContentMeasure jobAidContentMeasure = filteredJobAidContentMeasure.get(0);
         assertNotNull(jobAidContentMeasure);
 
         JobAidContentDimension jobAidDimension1 = jobAidContentMeasure.getJobAidContentDimension();
@@ -171,9 +175,10 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         assertEquals(locationDimension.getId(), jobAidContentMeasure.getLocationDimension().getId());
 
         assertEquals(callId, jobAidContentMeasure.getCallId());
-        assertEquals(20, (int)jobAidContentMeasure.getDuration());
+        assertEquals(10, (int)jobAidContentMeasure.getDuration());
         assertEquals(new Timestamp(now.getMillis()), jobAidContentMeasure.getTimestamp());
-        assertEquals(20, (int)jobAidContentMeasure.getPercentage());
+        assertEquals(10, (int)jobAidContentMeasure.getPercentage());
     }
+
 
 }

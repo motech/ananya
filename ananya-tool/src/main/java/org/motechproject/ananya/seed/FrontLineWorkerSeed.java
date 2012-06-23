@@ -96,8 +96,6 @@ public class FrontLineWorkerSeed {
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
                     designation,
-                    null,
-                    circle,
                     new LocationRequest(currentDistrict, currentBlock, currentPanchayat),
                     lastModified.toDate()));
 

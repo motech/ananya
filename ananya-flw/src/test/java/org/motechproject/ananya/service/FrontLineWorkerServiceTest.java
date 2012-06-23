@@ -179,20 +179,16 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "919986574410";
         String name = "name";
         Designation designation = Designation.AWW;
-        String operator = "airtel";
-        String circle = "bihar";
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, null), location);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED, null), location);
 
         verify(allFrontLineWorkers).add(frontLineWorker);
         assertEquals(msisdn, frontLineWorker.getMsisdn());
         assertEquals(name, frontLineWorker.getName());
         assertEquals(designation, frontLineWorker.getDesignation());
         assertEquals(location.getExternalId(), frontLineWorker.getLocationId());
-        assertEquals(circle, frontLineWorker.getCircle());
-        assertEquals(operator, frontLineWorker.getOperator());
     }
 
     @Test
@@ -219,20 +215,16 @@ public class FrontLineWorkerServiceTest {
         String name = "name";
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
-        String circle = "bihar";
-        String operator = "airtel";
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED, null);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, null), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED, null), location);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
         FrontLineWorker frontLineWorker = captor.getValue();
         assertEquals(name, frontLineWorker.getName());
         assertEquals(designation, frontLineWorker.getDesignation());
-        assertEquals(circle, frontLineWorker.getCircle());
-        assertEquals(operator, frontLineWorker.getOperator());
         assertEquals(designation, frontLineWorker.getDesignation());
         assertEquals(location.getExternalId(), frontLineWorker.getLocationId());
     }
@@ -369,10 +361,10 @@ public class FrontLineWorkerServiceTest {
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         String circle = "bihar";
         String operator = "airtel";
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, DateTime.now());
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED, DateTime.now());
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, DateTime.now().minusDays(1)), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED, DateTime.now().minusDays(1)), location);
 
         verify(allFrontLineWorkers, never()).update(any(FrontLineWorker.class));
     }
@@ -386,11 +378,11 @@ public class FrontLineWorkerServiceTest {
         String circle = "bihar";
         String operator = "airtel";
 
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED, null);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
         DateTime lastModified = DateTime.now();
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, lastModified), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED, lastModified), location);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());
@@ -409,10 +401,10 @@ public class FrontLineWorkerServiceTest {
         DateTime now = DateUtil.now();
 
         given(DateUtil.now()).willReturn(null);
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, null, null, new Location(), RegistrationStatus.REGISTERED, now);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.REGISTERED, now);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, operator, circle, location, RegistrationStatus.REGISTERED, null), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED, null), location);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
         verify(allFrontLineWorkers).update(captor.capture());

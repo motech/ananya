@@ -73,7 +73,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String operator = "airtel";
         String name = "name";
 
-        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, operator, "bihar", locationRequest, null));
+        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);

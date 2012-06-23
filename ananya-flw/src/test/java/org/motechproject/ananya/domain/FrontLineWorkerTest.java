@@ -13,7 +13,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
-import static org.mockito.BDDMockito.given;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
 @PrepareForTest(DateUtil.class)
@@ -56,12 +55,12 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldUpdateRegistrationStatusOnlyIfTheCurrentStatusIsLessThanTheNewStatus() {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, "bihar", "airtel", null);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, null);
 
         assertEquals(RegistrationStatus.REGISTERED, flw.getStatus());
         assertEquals("newName", flw.getName());
 
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED, null, null, null);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED, null);
 
         assertEquals(RegistrationStatus.REGISTERED, flw.getStatus());
         assertEquals("newName", flw.getName());
@@ -71,7 +70,7 @@ public class FrontLineWorkerTest {
     public void shouldUpdateLastModifiedTimeToGivenTime() {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
         DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
-        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, "bihar", "airtel", lastModified);
+        flw.update("newName", Designation.AWW, new Location(), RegistrationStatus.REGISTERED, lastModified);
 
         assertEquals(lastModified, flw.getLastModified());
     }
@@ -85,7 +84,7 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldAssigntheGivenDateTimeAsLastModifiedTime() {
         DateTime lastModified = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, "operator1", "circle1", new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), RegistrationStatus.PARTIALLY_REGISTERED, lastModified);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), RegistrationStatus.PARTIALLY_REGISTERED, lastModified);
         assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 }
