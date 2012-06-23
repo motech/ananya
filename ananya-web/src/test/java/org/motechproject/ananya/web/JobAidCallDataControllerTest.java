@@ -16,16 +16,16 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class JobAidCallStateControllerTest {
+public class JobAidCallDataControllerTest {
     @Mock
     private JobAidService jobAidService;
 
-    private JobAidCallStateController controller;
+    private JobAidCallDataController controller;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new JobAidCallStateController(jobAidService);
+        controller = new JobAidCallDataController(jobAidService);
     }
 
     @Test

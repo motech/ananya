@@ -31,7 +31,6 @@ public class CourseDataControllerTest {
         controller = new CourseDataController(allNodes);
     }
 
-
     @Test
     public void shouldServeJobAidCourseDataWithoutLevels() throws Exception {
         String testNodeWithoutChildren = "TestNodeWithoutChildren";

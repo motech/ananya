@@ -11,9 +11,8 @@ public class ExceptionView extends AbstractView {
     @Override
     protected void renderMergedOutputModel(
             Map<String, Object> stringObjectMap,
-            HttpServletRequest request, HttpServletResponse httpServletResponse) throws Exception {
-
-        httpServletResponse.getOutputStream().print("var ananyaResponse = \"ANANYA_ERROR\";");
-
+            HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        response.getOutputStream().print("var ananyaResponse = \"ANANYA_ERROR\";");
     }
 }

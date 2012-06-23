@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class JobAidCallStateController {
+public class JobAidCallDataController {
 
-    private static Logger log = LoggerFactory.getLogger(JobAidCallStateController.class);
+    private static Logger log = LoggerFactory.getLogger(JobAidCallDataController.class);
 
     private JobAidService jobAidService;
 
     @Autowired
-    public JobAidCallStateController(JobAidService jobAidService) {
+    public JobAidCallDataController(JobAidService jobAidService) {
         this.jobAidService = jobAidService;
     }
 

@@ -14,8 +14,10 @@ public class AnanyaExceptionResolver extends SimpleMappingExceptionResolver {
     private static Logger log = LoggerFactory.getLogger(AnanyaExceptionResolver.class);
 
     @Override
-    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response,
-                                              Object handler, Exception ex) {
+    protected ModelAndView doResolveException(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              Object handler,
+                                              Exception ex) {
         log.error(getExceptionString(ex));
         return super.doResolveException(request, response, handler, ex);
     }

@@ -5,19 +5,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.JobAidService;
-import org.motechproject.ananya.service.RegistrationLogService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
-import java.util.Properties;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
@@ -26,29 +22,16 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CallerDataControllerTest {
 
     @Mock
-    AllNodes allNodes;
-
-    @Mock
-    FrontLineWorkerService frontLineWorkerService;
-
-    @Mock
     private CertificateCourseService certificateCourseService;
-
     @Mock
     private JobAidService jobAidService;
 
-    @Mock
-    private RegistrationLogService registrationLogService;
-
-    @Mock
-    Properties properties;
     private CallerDataController controller;
 
     @Before
     public void setUp() {
         initMocks(this);
-        when(properties.getProperty("url.version")).thenReturn("v1");
-        controller = new CallerDataController(jobAidService, certificateCourseService, registrationLogService, properties);;
+        controller = new CallerDataController(jobAidService, certificateCourseService);;
     }
 
     @Test
@@ -80,10 +63,10 @@ public class CallerDataControllerTest {
     }
 
     @Test
-    public void shouldReturnCallerDataForCertificateCourseWithUsageValues() throws Exception {
+    public void shouldReturnCallerDataForCertificateCourseWithBookMarkAndScores() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
-        String current_bookmark = "current_bookmark";
         boolean isUserRegistered = true;
+        String current_bookmark = "current_bookmark";
         String callerId = "919986574410";
         String callId = "919986574410-12345";
         String operator = "airtel";

@@ -61,5 +61,4 @@ public class CertificateCourseCallDataControllerTest {
         return builder.toString();
     }
 
-
 }
