@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -27,8 +27,8 @@ public class CourseDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_course_data_without_levels.js")
     @ResponseBody
-    public String serveJobAidCourseDataWithoutLevels(HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
+    public String serveJobAidCourseData(HttpServletResponse response) throws Exception {
+        setContentType(response);
 
         log.info("fetching JobAid course data");
         return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("JobAidCourse"));
@@ -36,18 +36,18 @@ public class CourseDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/jobaid_level_data.js")
     @ResponseBody
-    public String serveJobAidLevelData(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
-        String levelNumber = request.getParameter("levelNumber");
+    public String serveJobAidLevelData(HttpServletResponse response,
+                                       @RequestParam Integer levelNumber) throws Exception {
+        setContentType(response);
 
         log.info("fetching JobAid level data " + levelNumber);
-        return String.format("courseData.children[%s] = %s", Integer.parseInt(levelNumber) - 1, allNodes.nodeAsJson("level " + levelNumber));
+        return String.format("courseData.children[%s] = %s", levelNumber - 1, allNodes.nodeAsJson("level " + levelNumber));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/certification_course_data_without_chapters.js")
     @ResponseBody
     public String serveCertificationCourseData(HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
+        setContentType(response);
 
         log.info("fetching certificate course data");
         return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("CertificationCourse"));
@@ -55,11 +55,15 @@ public class CourseDataController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/certification_course_chapter.js")
     @ResponseBody
-    public String serveCertificationCourseChapter(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("application/javascript");
-        String chapterNumber = request.getParameter("chapterNumber");
+    public String serveCertificationCourseChapter(HttpServletResponse response,
+                                                  @RequestParam Integer chapterNumber) throws Exception {
+        setContentType(response);
 
         log.info("fetching Certification Chapter: " + chapterNumber);
-        return String.format("courseData.children[%s] = %s", Integer.parseInt(chapterNumber) - 1, allNodes.nodeAsJson("Chapter " + chapterNumber));
+        return String.format("courseData.children[%s] = %s", chapterNumber - 1, allNodes.nodeAsJson("Chapter " + chapterNumber));
+    }
+
+    private void setContentType(HttpServletResponse response) {
+        response.setContentType("application/javascript");
     }
 }

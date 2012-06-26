@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class JobAidCallDataController {
@@ -27,19 +26,21 @@ public class JobAidCallDataController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/jobaid/transferdata/disconnect")
     @ResponseBody
-    public String handleDisconnect(HttpServletRequest request) {
-        final String callId = request.getParameter("callId");
-        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
-        final String calledNumber = request.getParameter("calledNumber");
-        final String jsonData = request.getParameter("dataToPost");
-        final String promptList = request.getParameter("promptList");
-        final Integer callDuration = Integer.valueOf(request.getParameter("callDuration"));
+    public String handleDisconnect(@RequestParam String callId,
+                                   @RequestParam String callerId,
+                                   @RequestParam String calledNumber,
+                                   @RequestParam String dataToPost,
+                                   @RequestParam String promptList,
+                                   @RequestParam Integer callDuration) {
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber, jsonData, promptList, callDuration);
+        String callerIdParam = new CallerIdParam(callerId).getValue();
+
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerIdParam,
+                calledNumber, dataToPost, promptList, callDuration);
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
-        log.info(callId + "- JobAid Disconnect completed");
-        log.info(callId + "- JobAid Call ended");
+        log.info(callId + "- jobaid disconnect completed");
+        log.info(callId + "- jobaid call ended");
         return getReturnVxml();
     }
 

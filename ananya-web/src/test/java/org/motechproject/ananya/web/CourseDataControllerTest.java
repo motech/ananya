@@ -4,15 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.repository.AllNodes;
-import org.motechproject.ananya.service.CertificateCourseService;
-import org.motechproject.ananya.service.JobAidService;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -37,7 +32,7 @@ public class CourseDataControllerTest {
         String expectedNodeWithoutLevels = "var courseData = " + testNodeWithoutChildren + ";";
         when(allNodes.nodeWithoutChildrenAsJson("JobAidCourse")).thenReturn(testNodeWithoutChildren);
 
-        String actualNodeWithoutLevels = controller.serveJobAidCourseDataWithoutLevels(new MockHttpServletResponse());
+        String actualNodeWithoutLevels = controller.serveJobAidCourseData(new MockHttpServletResponse());
 
         assertEquals(expectedNodeWithoutLevels, actualNodeWithoutLevels);
     }
@@ -62,7 +57,7 @@ public class CourseDataControllerTest {
         request.addParameter("levelNumber", levelNumber);
         when(allNodes.nodeAsJson("level " + levelNumber)).thenReturn(testLevelData);
 
-        String actualLevelData = controller.serveJobAidLevelData(request, new MockHttpServletResponse());
+        String actualLevelData = controller.serveJobAidLevelData(new MockHttpServletResponse(), 1);
 
         assertEquals(expectedLevelData, actualLevelData);
     }
@@ -76,7 +71,7 @@ public class CourseDataControllerTest {
         request.addParameter("chapterNumber", chapterNumber);
         when(allNodes.nodeAsJson("Chapter " + chapterNumber)).thenReturn(chapterData);
 
-        String actualChapterData = controller.serveCertificationCourseChapter(request, new MockHttpServletResponse());
+        String actualChapterData = controller.serveCertificationCourseChapter(new MockHttpServletResponse(), 1);
 
         assertEquals(expectedChapterData, actualChapterData);
     }

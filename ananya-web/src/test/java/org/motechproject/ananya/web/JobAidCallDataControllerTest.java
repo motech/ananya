@@ -30,16 +30,7 @@ public class JobAidCallDataControllerTest {
 
     @Test
     public void shouldCallJobAidServiceWithServiceRequestFromHttpPayLoad() {
-
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("callId")).thenReturn("123-456");
-        when(request.getParameter("callerId")).thenReturn("123");
-        when(request.getParameter("calledNumber")).thenReturn("57711");
-        when(request.getParameter("callDuration")).thenReturn("111");
-        when(request.getParameter("promptList")).thenReturn("['prompt1', 'prompt2']");
-        when(request.getParameter("dataToPost")).thenReturn("[]");
-
-        String response = controller.handleDisconnect(request);
+        String response = controller.handleDisconnect("123-456", "123", "57711", "[]", "['prompt1', 'prompt2']", 111);
 
         ArgumentCaptor<JobAidServiceRequest> captor = ArgumentCaptor.forClass(JobAidServiceRequest.class);
         verify(jobAidService).handleDisconnect(captor.capture());
