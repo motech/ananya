@@ -5,7 +5,6 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
-import org.motechproject.ananya.functional.CallFlow;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,12 +26,6 @@ public class MyWebClient {
         }
         request.setRequestParameters(parameters);
         return webClient.getPage(request);
-    }
-
-    public CallFlow getCallFlow(String url) throws IOException {
-        webClient.setJavaScriptEnabled(false);
-        Page page = webClient.getPage(url);
-        return new CallFlow(page.getWebResponse().getContentAsString());
     }
 
     public static class PostParam {

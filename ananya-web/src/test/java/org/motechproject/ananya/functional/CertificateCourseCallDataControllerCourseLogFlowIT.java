@@ -16,13 +16,13 @@ import java.io.IOException;
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.ananya.framework.MyWebClient.PostParam.param;
 
-public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
+public class CertificateCourseCallDataControllerCourseLogFlowIT extends SpringIntegrationTest {
 
     private MyWebClient myWebClient;
 
     @Autowired
     private AllCertificateCourseLogs allCertificateCourseLogs;
-    
+
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 
@@ -52,11 +52,12 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
                 "}";
 
         String callId = "99865740001234567890";
-        MyWebClient.PostParam callerId = param("callerId", "919986574000");
         MyWebClient.PostParam callIdParam = param("callId", callId);
+        MyWebClient.PostParam callerIdParam = param("callerId", "919986574000");
+        MyWebClient.PostParam calledNumberParam = param("calledNumber", "57711");
         MyWebClient.PostParam dataToPost = param("dataToPost", "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect",callIdParam, callerId, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callIdParam, callerIdParam, calledNumberParam, dataToPost);
 
         CertificationCourseLog byCallId = allCertificateCourseLogs.findByCallId(callId);
         assertEquals(byCallId.items().size(), 1);
@@ -64,8 +65,8 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         frontLineWorker = allFrontLineWorkers.get(frontLineWorker.getId());
 
         BookMark bookMark = frontLineWorker.bookMark();
-        assertEquals((int)bookMark.getChapterIndex(), 1);
-        assertEquals((int)bookMark.getLessonIndex(), 2);
+        assertEquals((int) bookMark.getChapterIndex(), 1);
+        assertEquals((int) bookMark.getLessonIndex(), 2);
         assertEquals(bookMark.getType(), "playAnswerExplanation");
 
         assertEquals(frontLineWorker.reportCard().scores().size(), 1);
@@ -79,7 +80,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
     @Ignore
     public void shouldSendSMSWhenAtPlayCourseResult() throws IOException {
         String msisdn = "919986574000";
-        FrontLineWorker flw = new FrontLineWorker(msisdn, "name",Designation.AWW, new Location(),RegistrationStatus.REGISTERED);
+        FrontLineWorker flw = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         flw.addBookMark(new BookMark("playFinalScore", 8, 8));
 
         ReportCard reportCard = flw.reportCard();
@@ -169,7 +170,7 @@ public class CertificationCourseLogFlowTest extends SpringIntegrationTest {
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"13\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect",callId, callerId, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callId, callerId, dataToPost);
 
 //        CertificationCourseLog byCallId = allCertificationCourseLogs.findByCallId("99865740001234567890");
 //        assertEquals(byCallId.getCourseLogItems().size(), 1);

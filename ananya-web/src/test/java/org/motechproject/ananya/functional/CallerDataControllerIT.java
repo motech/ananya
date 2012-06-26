@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-public class DynamicJSControllerIT extends SpringIntegrationTest {
+public class CallerDataControllerIT extends SpringIntegrationTest {
 
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;

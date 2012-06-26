@@ -8,14 +8,10 @@ import org.mockito.Mock;
 import org.motechproject.ananya.request.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 
 public class CertificateCourseCallDataControllerTest {
@@ -33,15 +29,8 @@ public class CertificateCourseCallDataControllerTest {
 
     @Test
     public void shouldCallCourseServiceWithServiceRequestFromHttpPayLoad() {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("callId")).thenReturn("123-456");
-        when(request.getParameter("callerId")).thenReturn("123");
-        when(request.getParameter("calledNumber")).thenReturn("57711");
-        when(request.getParameter("dataToPost")).thenReturn("[]");
-
-
         ArgumentCaptor<CertificateCourseServiceRequest> captor = ArgumentCaptor.forClass(CertificateCourseServiceRequest.class);
-        String response = certificateCourseCallDataController.handleDisconnect(request);
+        String response = certificateCourseCallDataController.handleDisconnect("123-456", "123", "57711", "[]");
 
         verify(certificateCourseService).handleDisconnect(captor.capture());
         CertificateCourseServiceRequest certificateCourseServiceRequest = captor.getValue();

@@ -9,7 +9,6 @@ import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.JobAidService;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,14 +35,8 @@ public class CallerDataControllerTest {
 
     @Test
     public void shouldReturnCallerDataForJobAidWithUsageValues() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/joabaid/caller_data.js");
         String callerId = "919986574410";
         String callId = "919986574410-1019877";
-        request.addParameter("callerId", callerId);
-        request.addParameter("callId", callId);
-        request.addParameter("operator", "airtel");
-        request.addParameter("circle", "circle");
-        request.setServletPath("/dynamic/jobaid/caller_data.js");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
@@ -53,7 +46,7 @@ public class CallerDataControllerTest {
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse(frontLineWorker, 2000);
         when(jobAidService.createCallerData(callId, callerId, "airtel", "circle")).thenReturn(jobAidCallerDataResponse);
 
-        ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(request, new MockHttpServletResponse());
+        ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(new MockHttpServletResponse(), callId, callerId, "airtel", "circle");
 
         assertEquals("job_aid_caller_data", callerDataForJobAid.getViewName());
         assertTrue((Boolean) callerDataForJobAid.getModel().get("isCallerRegistered"));
@@ -64,7 +57,6 @@ public class CallerDataControllerTest {
 
     @Test
     public void shouldReturnCallerDataForCertificateCourseWithBookMarkAndScores() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest("GET", "http://localhost:9979/ananya/generated/js/dynamic/caller_data.js");
         boolean isUserRegistered = true;
         String current_bookmark = "current_bookmark";
         String callerId = "919986574410";
@@ -72,15 +64,11 @@ public class CallerDataControllerTest {
         String operator = "airtel";
         String circle = "circle";
         HashMap<String, Integer> scoresByChapter = new HashMap<String, Integer>();
-        request.addParameter("callId", callId);
-        request.addParameter("callerId", callerId);
-        request.addParameter("operator", operator);
-        request.addParameter("circle", circle);
-        request.setServletPath("/dynamic/caller_data.js");
+       
         when(certificateCourseService.createCallerData(callId, callerId, operator, circle)).thenReturn(
                 new CertificateCourseCallerDataResponse(current_bookmark, isUserRegistered, scoresByChapter));
 
-        ModelAndView callerDataForJobAid = controller.getCallerData(request, new MockHttpServletResponse());
+        ModelAndView callerDataForJobAid = controller.getCallerDataForCourse(new MockHttpServletResponse(), callId, callerId, operator, circle);
 
         assertEquals("caller_data", callerDataForJobAid.getViewName());
         assertEquals(current_bookmark, callerDataForJobAid.getModel().get("bookmark"));

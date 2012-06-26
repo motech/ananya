@@ -33,10 +33,10 @@ public class JobAidCallDataController {
                                    @RequestParam String promptList,
                                    @RequestParam Integer callDuration) {
 
-        String callerIdParam = new CallerIdParam(callerId).getValue();
+        callerId = new CallerIdParam(callerId).getValue();
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerIdParam,
-                calledNumber, dataToPost, promptList, callDuration);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber,
+                dataToPost, promptList, callDuration);
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
         log.info(callId + "- jobaid disconnect completed");

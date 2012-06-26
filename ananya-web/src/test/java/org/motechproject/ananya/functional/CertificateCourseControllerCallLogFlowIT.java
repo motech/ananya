@@ -19,7 +19,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.motechproject.ananya.framework.MyWebClient.PostParam.param;
 
-public class CallLogFlowTest extends SpringIntegrationTest {
+public class CertificateCourseControllerCallLogFlowIT extends SpringIntegrationTest {
 
     private MyWebClient myWebClient;
     @Autowired
@@ -49,6 +49,7 @@ public class CallLogFlowTest extends SpringIntegrationTest {
         String callerId = "919986574420";
         MyWebClient.PostParam callerIdParam = param("callerId", callerId);
         MyWebClient.PostParam callIdParam = param("callId", callId);
+        MyWebClient.PostParam calledNumberParam = param("calledNumber", "57711");
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{'time':1330320462642,'callEvent':'CALL_START'}}," +
                         "{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{'time':1330320582936,'callEvent':'REGISTRATION_START'}}," +
@@ -56,7 +57,7 @@ public class CallLogFlowTest extends SpringIntegrationTest {
                         "{\"token\":\"3\",\"type\":\"callDuration\",\"data\":{'time':1330320624871,'callEvent':'JOBAID_START'}}," +
                         "{\"token\":\"4\",\"type\":\"callDuration\",\"data\":{'time':1330320634871,'callEvent':'DISCONNECT'}}]");
 
-        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callIdParam, callerIdParam, dataToPost);
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callIdParam, callerIdParam, calledNumberParam, dataToPost);
 
         CallLog callLog = allCallLogs.findByCallId(callId);
         assertEquals(callId, callLog.getCallId());

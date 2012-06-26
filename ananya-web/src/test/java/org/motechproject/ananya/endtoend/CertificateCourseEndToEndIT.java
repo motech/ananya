@@ -1,4 +1,4 @@
-package org.motechproject.ananya.newfunctional;
+package org.motechproject.ananya.endtoend;
 
 
 import org.junit.After;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 @Ignore
-public class CertificateCourseEndToEndTest extends SpringIntegrationTest {
+public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
 
     @Autowired
     private CertificateCourseWebservice certificateCourseWebService;

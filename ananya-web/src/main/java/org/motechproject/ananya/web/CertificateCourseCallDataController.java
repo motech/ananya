@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class CertificateCourseCallDataController {
@@ -27,17 +26,18 @@ public class CertificateCourseCallDataController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/transferdata/disconnect")
     @ResponseBody
-    public String handleDisconnect(HttpServletRequest request) {
-        final String callId = request.getParameter("callId");
-        final String callerId = new CallerIdParam(request.getParameter("callerId")).getValue();
-        final String calledNumber = request.getParameter("calledNumber");
-        final String jsonData = request.getParameter("dataToPost");
+    public String handleDisconnect(@RequestParam String callId,
+                                   @RequestParam String callerId,
+                                   @RequestParam String calledNumber,
+                                   @RequestParam String dataToPost) {
 
-        CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber, jsonData);
+        callerId = new CallerIdParam(callerId).getValue();
+
+        CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber, dataToPost);
         certificateCourseService.handleDisconnect(serviceRequest);
 
-        log.info(callId + "- Course Disconnect completed");
-        log.info(callId + "- Course Call ended");
+        log.info(callId + "- course disconnect completed");
+        log.info(callId + "- course call ended");
         return getReturnVxml();
     }
 

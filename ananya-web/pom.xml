@@ -77,7 +77,7 @@
                     <printSummary>true</printSummary>
                     <excludes>
                         <exclude>**/functional/**/*.java</exclude>
-                        <exclude>**/newfunctional/**/*.java</exclude>
+                        <exclude>**/endtoend/**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

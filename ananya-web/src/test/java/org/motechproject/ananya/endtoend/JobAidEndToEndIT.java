@@ -1,4 +1,4 @@
-package org.motechproject.ananya.newfunctional;
+package org.motechproject.ananya.endtoend;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 
 @Ignore
-public class JobAidEndToEndTest extends SpringIntegrationTest {
+public class JobAidEndToEndIT extends SpringIntegrationTest {
 
     @Autowired
     private JobAidWebService jobAidService;
