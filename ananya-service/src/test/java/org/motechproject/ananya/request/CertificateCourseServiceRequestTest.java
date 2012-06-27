@@ -9,7 +9,7 @@ public class CertificateCourseServiceRequestTest {
 
     @Test
     public void shouldReturnStateRequestListFromTransferDataList() {
-        CertificateCourseServiceRequest courseServiceRequest = new CertificateCourseServiceRequest("callId", "callerId", "calledNumber", postedData());
+        CertificateCourseServiceRequest courseServiceRequest = new CertificateCourseServiceRequest("callId", "callerId", "calledNumber").withJson(postedData());
         CertificateCourseStateRequestList stateRequestList = courseServiceRequest.getCertificateCourseStateRequestList();
         assertThat(stateRequestList.getCallId(), is("callId"));
         assertThat(stateRequestList.getCallerId(), is("callerId"));

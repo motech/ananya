@@ -9,7 +9,7 @@ public class JobAidServiceRequestTest {
     @Test
     public void shouldReturnAudioTrackerListFromTransferDataList() {
         String json = postedData();
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber", json, "", 0);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber").withJson(json).withPromptList("").withCallDuration(0);
         AudioTrackerRequestList audioTrackerRequestList = jobAidServiceRequest.getAudioTrackerRequestList();
 
         assertEquals(3, audioTrackerRequestList.all().size());
@@ -18,7 +18,7 @@ public class JobAidServiceRequestTest {
     @Test
     public void shouldReturnCallDurationListFromTransferDataList() {
         String json = postedData();
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber", json, "", 0);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber").withJson(json).withCallDuration(0);
         CallDurationList callDurationList = jobAidServiceRequest.getCallDurationList();
 
         assertEquals(2, callDurationList.all().size());
@@ -26,7 +26,7 @@ public class JobAidServiceRequestTest {
 
     @Test
     public void shouldCreateJobAidPromptRequestObjectWhenPassedCorrectParameters() {
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber", postedData(), "['prompt1', 'prompt2']", 111);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest("callId", "callerId", "calledNumber").withJson(postedData()).withPromptList("['prompt1', 'prompt2']").withCallDuration(111);
 
         assertEquals(jobAidServiceRequest.getPrompts().size(), 2);
         assertEquals(jobAidServiceRequest.getPrompts().get(0), "prompt1");

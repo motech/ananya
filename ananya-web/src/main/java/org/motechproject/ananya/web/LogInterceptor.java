@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.domain.CallerIdParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -22,7 +21,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
         while (requestKeys.hasMoreElements()) {
             String key = requestKeys.nextElement();
             String requestParameter = request.getParameter(key);
-            requestParameter = key.equals("callerId") ? new CallerIdParam(requestParameter).getValue() : requestParameter;
             builder.append(key + "=>" + requestParameter + ",");
         }
         builder.append("}]");

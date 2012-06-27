@@ -13,6 +13,7 @@ import org.motechproject.ananya.request.AudioTrackerRequestList;
 import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
+import org.motechproject.ananya.transformers.AllTransformers;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,12 +40,14 @@ public class JobAidServiceTest {
     private RegistrationLogService registrationLogService;
     @Mock
     private CallLoggerService callLoggerService;
+    @Mock
+    private AllTransformers allTransformers;
 
     @Before
     public void setUp() {
         initMocks(this);
         jobAidService = new JobAidService(frontLineWorkerService, operatorService,
-                dataPublishService, audioTrackerService, registrationLogService, callLoggerService);
+                dataPublishService, audioTrackerService, registrationLogService, callLoggerService, allTransformers);
     }
 
     @Test
@@ -54,6 +57,8 @@ public class JobAidServiceTest {
         String promptKey = "prompt";
         String circle = "circle";
         String callId = "callId";
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
+
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
@@ -62,8 +67,9 @@ public class JobAidServiceTest {
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callId, callerId, operator, circle);
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(jobAidServiceRequest);
 
+        verify(allTransformers).process(jobAidServiceRequest);
         verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator, circle);
 
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
@@ -72,7 +78,6 @@ public class JobAidServiceTest {
         RegistrationLog registrationLog = captor.getValue();
         assertEquals(callerId, registrationLog.getCallerId());
         assertEquals(operator, registrationLog.getOperator());
-
 
         assertEquals(callerData.getCurrentJobAidUsage(), new Integer(9));
         assertEquals(callerData.getMaxAllowedUsageForOperator(), new Integer(10));
@@ -85,15 +90,19 @@ public class JobAidServiceTest {
         String callerId = "1234";
         String operator = "airtel";
         String circle = "bihar";
-        String callId = "callid";
+        String callId = "callId";
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
+        
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setModified();
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        jobAidService.createCallerData(callId, callerId, operator, circle);
+        jobAidService.createCallerData(jobAidServiceRequest);
 
+        verify(allTransformers).process(jobAidServiceRequest);
+        
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
         verify(registrationLogService).add(captor.capture());
 
@@ -108,12 +117,16 @@ public class JobAidServiceTest {
         String operator = "airtel";
         String circle = "bihar";
         String callId = "callId";
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
+
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         frontLineWorker.setCircle(circle);
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        jobAidService.createCallerData(callId, callerId, operator, circle);
+        jobAidService.createCallerData(jobAidServiceRequest);
+
+        verify(allTransformers).process(jobAidServiceRequest);
         verify(registrationLogService, never()).add(any(RegistrationLog.class));
     }
 
@@ -124,10 +137,11 @@ public class JobAidServiceTest {
         String calledNumber = "522001";
         int callDuration = 21;
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber, "[]", "", callDuration);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber).withJson("[]").withCallDuration(callDuration);
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
+        verify(allTransformers).process(jobAidServiceRequest);
         verify(frontLineWorkerService).updateJobAidUsageAndAccessTime(callerId, callDuration);
         verify(frontLineWorkerService).updatePromptsFor(eq(callerId), anyListOf(String.class));
         verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);

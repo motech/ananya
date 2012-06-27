@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.domain.CallerIdParam;
 import org.motechproject.ananya.request.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.slf4j.Logger;
@@ -30,10 +29,8 @@ public class CertificateCourseCallDataController {
                                    @RequestParam String callerId,
                                    @RequestParam String calledNumber,
                                    @RequestParam String dataToPost) {
-
-        callerId = new CallerIdParam(callerId).getValue();
-
-        CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber, dataToPost);
+        CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber)
+                .withJson(dataToPost);
         certificateCourseService.handleDisconnect(serviceRequest);
 
         log.info(callId + "- course disconnect completed");

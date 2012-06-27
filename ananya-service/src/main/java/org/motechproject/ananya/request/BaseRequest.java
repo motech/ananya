@@ -6,13 +6,17 @@ public abstract class BaseRequest {
     protected String calledNumber;
     protected String token;
 
-    protected BaseRequest(){
+    protected BaseRequest() {
     }
 
     public BaseRequest(String callId, String callerId, String calledNumber) {
         this.callId = callId;
         this.callerId = callerId;
         this.calledNumber = calledNumber;
+    }
+
+    public BaseRequest(String callId, String callerId) {
+        this(callId, callerId, null);
     }
 
     public String getToken() {
@@ -39,4 +43,7 @@ public abstract class BaseRequest {
         return calledNumber;
     }
 
+    public void setCallerId(String callerId) {
+        this.callerId = callerId;
+    }
 }

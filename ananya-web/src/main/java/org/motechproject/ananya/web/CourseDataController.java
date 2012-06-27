@@ -30,7 +30,7 @@ public class CourseDataController {
     public String serveJobAidCourseData(HttpServletResponse response) throws Exception {
         setContentType(response);
 
-        log.info("fetching JobAid course data");
+        log.info("fetching jobaid course data");
         return String.format("var courseData = %s;", allNodes.nodeWithoutChildrenAsJson("JobAidCourse"));
     }
 
@@ -40,7 +40,7 @@ public class CourseDataController {
                                        @RequestParam Integer levelNumber) throws Exception {
         setContentType(response);
 
-        log.info("fetching JobAid level data " + levelNumber);
+        log.info("fetching jobaid level data " + levelNumber);
         return String.format("courseData.children[%s] = %s", levelNumber - 1, allNodes.nodeAsJson("level " + levelNumber));
     }
 
@@ -59,7 +59,7 @@ public class CourseDataController {
                                                   @RequestParam Integer chapterNumber) throws Exception {
         setContentType(response);
 
-        log.info("fetching Certification Chapter: " + chapterNumber);
+        log.info("fetching certification chapter: " + chapterNumber);
         return String.format("courseData.children[%s] = %s", chapterNumber - 1, allNodes.nodeAsJson("Chapter " + chapterNumber));
     }
 

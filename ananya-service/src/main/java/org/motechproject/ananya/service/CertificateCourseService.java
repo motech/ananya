@@ -9,6 +9,7 @@ import org.motechproject.ananya.request.CertificateCourseStateRequest;
 import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
+import org.motechproject.ananya.transformers.AllTransformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,13 @@ public class CertificateCourseService {
     private DataPublishService dataPublishService;
     private CallLoggerService callLoggerService;
     private SMSLogService smsLogService;
+    private AllTransformers allTransformers;
 
     @Autowired
     public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
                                     AudioTrackerService audioTrackerService, FrontLineWorkerService frontLineWorkerService,
                                     RegistrationLogService registrationLogService, SMSLogService smsLogService,
-                                    CallLoggerService callLoggerService, DataPublishService dataPublishService) {
+                                    CallLoggerService callLoggerService, DataPublishService dataPublishService, AllTransformers allTransformers) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.audioTrackerService = audioTrackerService;
@@ -40,21 +42,33 @@ public class CertificateCourseService {
         this.smsLogService = smsLogService;
         this.callLoggerService = callLoggerService;
         this.dataPublishService = dataPublishService;
+        this.allTransformers = allTransformers;
     }
 
-    public CertificateCourseCallerDataResponse createCallerData(String callId, String callerId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(callerId, operator, circle);
+    public CertificateCourseCallerDataResponse createCallerData(CertificateCourseServiceRequest request) {
+        String callId = request.getCallId();
+        allTransformers.process(request);
+
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(
+                request.getCallerId(),
+                request.getOperator(),
+                request.getCircle());
         log.info(callId + "- fetched caller data for " + frontLineWorker);
 
         if (frontLineWorker.isModified()) {
-            registrationLogService.add(new RegistrationLog(callId, callerId, operator, circle));
+            registrationLogService.add(new RegistrationLog(callId,
+                    request.getCallerId(),
+                    request.getOperator(),
+                    request.getCircle()));
             log.info(callId + "- created registrationLog");
         }
         return new CertificateCourseCallerDataResponse(frontLineWorker);
     }
 
-    public void handleDisconnect(CertificateCourseServiceRequest certificateCourseServiceRequest) {
-        CertificateCourseStateRequestList stateRequestList = certificateCourseServiceRequest.getCertificateCourseStateRequestList();
+    public void handleDisconnect(CertificateCourseServiceRequest request) {
+        allTransformers.process(request);
+
+        CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
         if (stateRequestList.isNotEmpty()) {
             FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
             updateBookmark(frontLineWorker, stateRequestList);
@@ -62,9 +76,9 @@ public class CertificateCourseService {
             sendSMS(frontLineWorker, stateRequestList);
             createCourseLog(stateRequestList);
         }
-        audioTrackerService.saveAllForCourse(certificateCourseServiceRequest.getAudioTrackerRequestList());
-        callLoggerService.saveAll(certificateCourseServiceRequest.getCallDurationList());
-        dataPublishService.publishDisconnectEvent(certificateCourseServiceRequest.getCallId(), ServiceType.CERTIFICATE_COURSE);
+        audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
+        callLoggerService.saveAll(request.getCallDurationList());
+        dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.CERTIFICATE_COURSE);
     }
 
     private void updateBookmark(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
@@ -75,6 +89,7 @@ public class CertificateCourseService {
                 lastRequest.getInteractionKey(),
                 lastRequest.getChapterIndex(),
                 lastRequest.getLessonOrQuestionIndex());
+
         frontLineWorker.addBookMark(bookMark);
         log.info(callId + "- updated bookmark for " + frontLineWorker);
     }

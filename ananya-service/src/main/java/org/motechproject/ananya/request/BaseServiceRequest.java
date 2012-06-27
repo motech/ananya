@@ -7,10 +7,15 @@ import org.motechproject.ananya.domain.TransferDataList;
 public class BaseServiceRequest extends BaseRequest {
 
     protected TransferDataList transferDataList;
+    protected String circle;
+    protected String operator;
 
-    public BaseServiceRequest(String callId, String callerId, String calledNumber, String json) {
+    public BaseServiceRequest(String callId, String callerId, String calledNumber) {
         super(callId, callerId, calledNumber);
-        this.transferDataList = new TransferDataList(json);
+    }
+
+    public BaseServiceRequest(String callId, String callerId) {
+        super(callId,callerId);
     }
 
     public AudioTrackerRequestList getAudioTrackerRequestList() {
@@ -29,4 +34,11 @@ public class BaseServiceRequest extends BaseRequest {
         return callDurationList;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public String getCircle() {
+        return circle;
+    }
 }

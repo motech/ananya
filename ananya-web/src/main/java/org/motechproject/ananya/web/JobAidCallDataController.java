@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.domain.CallerIdParam;
 import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.service.JobAidService;
 import org.slf4j.Logger;
@@ -33,10 +32,9 @@ public class JobAidCallDataController {
                                    @RequestParam String promptList,
                                    @RequestParam Integer callDuration) {
 
-        callerId = new CallerIdParam(callerId).getValue();
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
+                .withCallDuration(callDuration).withPromptList(promptList).withJson(dataToPost);
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber,
-                dataToPost, promptList, callDuration);
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
         log.info(callId + "- jobaid disconnect completed");

@@ -8,6 +8,7 @@ import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.performance.framework.PerformanceData;
 import org.motechproject.ananya.repository.AllNodes;
+import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.service.JobAidService;
 import org.motechproject.ananya.service.OperatorService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
@@ -80,8 +81,11 @@ public class JobAidDataSetup {
             String callerId = msisdnPrefix + prefix + "" + j;
             String callId = callerId + "-" + DateTime.now().getMillisOfDay();
             Operator operator = getOperatorFor(operatorName);
-            jobAidService.createCallerData(callId, callerId, operator.getName(), "circle");
+
+            JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withOperator(operator.getName()).withCircle("BIHAR");
+            jobAidService.createCallerData(jobAidServiceRequest);
             registrationMeasureService.createRegistrationMeasure(callerId, callId);
+
             System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j + "|operator=" + operatorName + "]");
         }
     }

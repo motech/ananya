@@ -1,6 +1,7 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.domain.CallerIdParam;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -37,9 +38,11 @@ public class CallerDataController {
                                                @RequestParam String callerId,
                                                @RequestParam String operator,
                                                @RequestParam String circle) throws Exception {
-        callerId = new CallerIdParam(callerId).getValue();
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(callId, callerId, operator, circle);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).
+                withCircle(circle).withOperator(operator);
+
+        JobAidCallerDataResponse callerData = jobAidService.createCallerData(jobAidServiceRequest);
         log.info(callId + "- fetched caller data for jobaid");
 
         setContentType(response);
@@ -56,9 +59,11 @@ public class CallerDataController {
                                                @RequestParam String callerId,
                                                @RequestParam String operator,
                                                @RequestParam String circle) throws Exception {
-        callerId = new CallerIdParam(callerId).getValue();
 
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callId, callerId, operator, circle);
+        CertificateCourseServiceRequest certificateCourseServiceRequest = new CertificateCourseServiceRequest(callId, callerId)
+                .withCircle(circle).withOperator(operator);
+
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(certificateCourseServiceRequest);
         log.info(callId + "- fetched caller data for course");
 
         setContentType(response);
