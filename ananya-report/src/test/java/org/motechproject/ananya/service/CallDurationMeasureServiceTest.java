@@ -31,7 +31,7 @@ public class CallDurationMeasureServiceTest {
     @Mock
     private ReportDB reportDB;
     @Mock
-    private CallLoggerService callLoggerService;
+    private CallLogService callLoggerService;
     @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Mock

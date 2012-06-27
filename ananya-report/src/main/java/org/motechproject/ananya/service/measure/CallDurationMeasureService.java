@@ -11,7 +11,7 @@ import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.service.CallLoggerService;
+import org.motechproject.ananya.service.CallLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CallDurationMeasureService {
     private static Logger log = LoggerFactory.getLogger(CallDurationMeasureService.class);
 
-    private CallLoggerService callLoggerService;
+    private CallLogService callLoggerService;
     private ReportDB reportDB;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
@@ -32,7 +32,7 @@ public class CallDurationMeasureService {
     }
 
     @Autowired
-    public CallDurationMeasureService(CallLoggerService callLoggerService,
+    public CallDurationMeasureService(CallLogService callLoggerService,
                                       ReportDB reportDB,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures,

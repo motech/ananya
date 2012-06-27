@@ -16,8 +16,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class CallLoggerServiceTest {
-    private CallLoggerService callLoggerService;
+public class CallLogServiceTest {
+    private CallLogService callLoggerService;
 
     @Mock
     private AllCallLogs allCallLogs;
@@ -25,7 +25,7 @@ public class CallLoggerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        callLoggerService = new CallLoggerService(allCallLogs);
+        callLoggerService = new CallLogService(allCallLogs);
     }
 
     @Test

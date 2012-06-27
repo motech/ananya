@@ -39,7 +39,7 @@ public class JobAidServiceTest {
     @Mock
     private RegistrationLogService registrationLogService;
     @Mock
-    private CallLoggerService callLoggerService;
+    private CallLogService callLoggerService;
     @Mock
     private AllTransformers allTransformers;
 

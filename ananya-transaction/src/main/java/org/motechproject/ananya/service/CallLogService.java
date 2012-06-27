@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CallLoggerService {
-    private static Logger log = LoggerFactory.getLogger(CallLoggerService.class);
+public class CallLogService {
+    private static Logger log = LoggerFactory.getLogger(CallLogService.class);
 
     private AllCallLogs allCallLogs;
 
     @Autowired
-    public CallLoggerService(AllCallLogs allCallLogs) {
+    public CallLogService(AllCallLogs allCallLogs) {
         this.allCallLogs = allCallLogs;
     }
 

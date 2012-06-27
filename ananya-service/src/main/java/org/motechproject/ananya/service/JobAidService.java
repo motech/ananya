@@ -21,7 +21,7 @@ public class JobAidService {
     private OperatorService operatorService;
     private AudioTrackerService audioTrackerService;
     private RegistrationLogService registrationLogService;
-    private CallLoggerService callLoggerService;
+    private CallLogService callLoggerService;
     private DataPublishService dataPublishService;
     private AllTransformers allTransformers;
 
@@ -31,7 +31,7 @@ public class JobAidService {
                          DataPublishService dataPublishService,
                          AudioTrackerService audioTrackerService,
                          RegistrationLogService registrationLogService,
-                         CallLoggerService callLoggerService, AllTransformers allTransformers) {
+                         CallLogService callLoggerService, AllTransformers allTransformers) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.dataPublishService = dataPublishService;
