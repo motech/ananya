@@ -44,8 +44,8 @@ public class CalledNumberTransformerTest {
     }
 
     private void verifyFor(String calledNumberInput, String expectedCalledNumber) {
-        BaseRequest request1 = new BaseServiceRequest("callId", "9986574420", calledNumberInput);
-        transformer.transform(request1);
-        assertEquals(expectedCalledNumber, request1.getCalledNumber());
+        BaseRequest request = new BaseServiceRequest("callId", "9986574420", calledNumberInput);
+        transformer.transform(request);
+        assertEquals(expectedCalledNumber, request.getCalledNumber());
     }
 }
