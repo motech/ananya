@@ -13,8 +13,9 @@ public class AllTransformers {
     private List<Transformer> transformers = new ArrayList<Transformer>();
 
     @Autowired
-    public AllTransformers(CallerIdTransformer callerIdTransformer) {
+    public AllTransformers(CallerIdTransformer callerIdTransformer, CalledNumberTransformer calledNumberTransformer) {
         transformers.add(callerIdTransformer);
+        transformers.add(calledNumberTransformer);
     }
 
     public void process(BaseRequest request) {

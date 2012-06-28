@@ -46,4 +46,8 @@ public abstract class BaseRequest {
     public void setCallerId(String callerId) {
         this.callerId = callerId;
     }
+
+    public void setCalledNumber(String calledNumber) {
+        this.calledNumber = calledNumber;
+    }
 }

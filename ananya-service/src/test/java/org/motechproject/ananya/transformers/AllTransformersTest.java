@@ -13,12 +13,14 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 public class AllTransformersTest {
     @Mock
     private CallerIdTransformer callerIdTransformer;
+    @Mock
+    private CalledNumberTransformer calledNumberTransformer;
     private AllTransformers allTransformers;
 
     @Before
     public void setUp(){
         initMocks(this);
-        allTransformers = new AllTransformers(callerIdTransformer);
+        allTransformers = new AllTransformers(callerIdTransformer,calledNumberTransformer);
     }
 
     @Test
@@ -28,5 +30,6 @@ public class AllTransformersTest {
         allTransformers.process(request);
 
         verify(callerIdTransformer).transform(request);
+        verify(calledNumberTransformer).transform(request);
     }
 }
