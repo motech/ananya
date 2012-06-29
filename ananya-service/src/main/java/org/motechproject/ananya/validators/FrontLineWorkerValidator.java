@@ -7,7 +7,7 @@ import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 
-import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class FrontLineWorkerValidator {
@@ -26,21 +26,10 @@ public class FrontLineWorkerValidator {
 
     public FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
                                                             Location location,
-                                                            List<FrontLineWorkerRequest> frontLineWorkerRequests) {
+                                                            Map<String, Integer> msisdnOccurrenceMap) {
         FLWValidationResponse validationResponse = validate(FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest), location);
-        if(hasDuplicates(frontLineWorkerRequest, frontLineWorkerRequests))
+        if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
             validationResponse.forDuplicates();
         return validationResponse;
-    }
-
-    private boolean hasDuplicates(FrontLineWorkerRequest frontLineWorkerRequest, List<FrontLineWorkerRequest> frontLineWorkerRequests) {
-        int count = 0;
-        for (FrontLineWorkerRequest flwRequest : frontLineWorkerRequests) {
-            if (StringUtils.equals(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()), StringUtils.trimToEmpty(flwRequest.getMsisdn())))
-                count++;
-            if(count == 2)
-                return true;
-        }
-        return false;
     }
 }

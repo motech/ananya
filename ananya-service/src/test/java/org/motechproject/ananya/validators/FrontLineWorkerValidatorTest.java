@@ -9,7 +9,8 @@ import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.Assert.*;
 
@@ -69,11 +70,11 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldBulkValidateFLWsAndThrowExceptionsIfThereAreDuplicates() {
-        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), new LocationRequest(), null);
-        frontLineWorkerRequests.add(frontLineWorkerRequest);
-        frontLineWorkerRequests.add(frontLineWorkerRequest);
-        FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), frontLineWorkerRequests);
+        String msisdn = "2345678901";
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null);
+        Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
+        msisdnOccurrenceMap.put(msisdn, 2);
+        FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), msisdnOccurrenceMap);
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Found duplicate FLW with the same MSISDN]", flwValidationResponse.getMessage());
@@ -81,10 +82,12 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldBulkValidateFLWsAndPassValidationIfThereAreNoErrors() {
-        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest("2345678901", "name", Designation.ANM.name(), new LocationRequest(), null);
-        frontLineWorkerRequests.add(frontLineWorkerRequest);
-        FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), frontLineWorkerRequests);
+        String msisdn = "2345678901";
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null);
+        Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
+        msisdnOccurrenceMap.put(msisdn, 1);
+
+        FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), msisdnOccurrenceMap);
 
         assertTrue(flwValidationResponse.isValid());
     }

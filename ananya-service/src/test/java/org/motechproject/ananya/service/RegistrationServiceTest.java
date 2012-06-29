@@ -20,7 +20,6 @@ import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null);
-        when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        when(locationService.findFor("district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "operator"));
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
@@ -74,7 +73,7 @@ public class RegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         Designation designation = Designation.AWW;
-        when(locationService.getAll()).thenReturn(new ArrayList<Location>());
+        when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null);
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
@@ -89,7 +88,8 @@ public class RegistrationServiceTest {
         String callerId = "";
         String name = "name";
         Designation designation = Designation.AWW;
-        when(locationService.getAll()).thenReturn(new ArrayList<Location>());
+        when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
+
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null);
         
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
@@ -114,7 +114,7 @@ public class RegistrationServiceTest {
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
-        when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null);
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
 
@@ -133,7 +133,7 @@ public class RegistrationServiceTest {
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
-        when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null);
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator"));
 
@@ -153,8 +153,8 @@ public class RegistrationServiceTest {
         String name = "name";
         String name1 = " name1";
         String designation = Designation.AWW.name();
-        Location location = new Location("district ", " block", "village", 1, 1, 1);
-        when(locationService.getAll()).thenReturn(Arrays.asList(location));
+        Location location = new Location("district", "block", "village", 1, 1, 1);
+        when(locationService.findFor("district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<FrontLineWorkerRequest>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null));
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("district", "block", "village"), null));

@@ -77,14 +77,6 @@ public class LocationList {
         locations.add(location);
     }
 
-    public Location findFor(String district, String block, String village) {
-        for (Location location : locations) {
-            if (location.equals(new Location(district, block, village, 0, 0, 0)))
-                return location;
-        }
-        return null;
-    }
-
     public List<Location> getUniqueDistrictBlockLocations() {
         ArrayList<Location> uniqueDistrictBlockList = new ArrayList<Location>();
         String emptyPanchayat = "";

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class AllSMSReferencesTest extends FrontLineWorkerBaseIT{
+public class AllSMSReferencesTest extends SpringBaseIT {
 
     @Autowired
     private AllSMSReferences allSMSReferences;

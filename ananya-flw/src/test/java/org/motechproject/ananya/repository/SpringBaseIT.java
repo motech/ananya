@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-flw.xml")
-public abstract class FrontLineWorkerBaseIT {
+public abstract class SpringBaseIT {
 
     @Qualifier("ananyaDbConnector")
     @Autowired

@@ -3,7 +3,10 @@ package org.motechproject.ananya.service;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
@@ -53,18 +56,15 @@ public class RegistrationService {
         this.jobAidContentMeasureService = jobAidContentMeasureService;
     }
 
-    @Transactional
     public List<RegistrationResponse> registerAllFLWs(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
-        LocationList locationList = new LocationList(locationService.getAll());
         List<RegistrationResponse> registrationResponses = new ArrayList<RegistrationResponse>();
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
             RegistrationResponse registrationResponse = registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
-                    frontLineWorkerRequest.getLocation().getDistrict(),
-                    frontLineWorkerRequest.getLocation().getBlock(),
-                    frontLineWorkerRequest.getLocation().getPanchayat(),
-                    locationList,
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getDistrict()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
                     new DateTime(frontLineWorkerRequest.getLastModified()));
             registrationResponses.add(registrationResponse);
         }
@@ -72,14 +72,12 @@ public class RegistrationService {
     }
 
     public RegistrationResponse createOrUpdateFLW(FrontLineWorkerRequest frontLineWorkerRequest) {
-        LocationList locationList = new LocationList(locationService.getAll());
         return registerFlw(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
-                frontLineWorkerRequest.getLocation().getDistrict(),
-                frontLineWorkerRequest.getLocation().getBlock(),
-                frontLineWorkerRequest.getLocation().getPanchayat(),
-                locationList,
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getDistrict()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
                 new DateTime(frontLineWorkerRequest.getLastModified()));
     }
 
@@ -102,8 +100,9 @@ public class RegistrationService {
         return filteredFlws;
     }
 
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, LocationList locationList, DateTime lastModified) {
-        Location location = locationList.findFor(district, block, panchayat);
+    @Transactional
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, DateTime lastModified) {
+        Location location = locationService.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse();
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);

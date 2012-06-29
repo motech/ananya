@@ -86,24 +86,6 @@ public class LocationListTest {
     }
 
     @Test
-    public void shouldFetchForGivenDistrictBlockAndPanchayat() {
-        List<Location> locations = new ArrayList<Location>();
-        Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);
-        locations.add(location1);
-        Location location2 = new Location("D2", "B2", "P5", 1, 1, 1);
-        locations.add(location2);
-        Location location3 = new Location("D1", "B3", "P2", 1, 1, 1);
-        locations.add(location3);
-
-        LocationList locationList = new LocationList(locations);
-
-        assertEquals(location1, locationList.findFor("D1", "b1", "P1 " +
-                ""));
-        assertEquals(location2, locationList.findFor("D2", "b2", "P5"));
-        assertNull(locationList.findFor("D1", "b1", "P45"));
-    }
-
-    @Test
     public void shouldGetUniqueDistrictBlockDefaultLocation(){
         List<Location> locations = new ArrayList<Location>();
         Location location1 = new Location("D1", "B1", "P1", 1, 1, 1);

@@ -1,7 +1,6 @@
 package org.motechproject.ananya.importer.csv.importer;
 
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
@@ -19,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CSVImporter(entity = "FrontLineWorker", bean = FrontLineWorkerRequest.class)
 @Component
@@ -36,20 +37,22 @@ public class FrontLineWorkerImporter {
     }
 
     @Validate
-    public ValidationResponse validate(List<Object> objects) {
+    public ValidationResponse validate(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
         boolean isValid = true;
         int recordCounter = 0;
-        List<Location> locations = locationService.getAll();
-        LocationList locationList = new LocationList(locations);
         List<Error> errors = new ArrayList<Error>();
 
-        List<FrontLineWorkerRequest> frontLineWorkerRequests = convertToFLWRequest(objects);
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         logger.info("Started validating FLW csv records");
         addHeader(errors);
+        Map<String, Integer> msisdnOccurrenceMap = getMsisdnOccurrenceMap(frontLineWorkerRequests);
+
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
-            Location location = getLocationFor(frontLineWorkerRequest.getLocation(), locationList);
-            FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, frontLineWorkerRequests);
+            LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
+            Location location = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+
+            FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, msisdnOccurrenceMap);
+
             if (flwValidationResponse.isInValid()) {
                 isValid = false;
             }
@@ -60,10 +63,19 @@ public class FrontLineWorkerImporter {
         return constructValidationResponse(isValid, errors);
     }
 
+    private Map<String, Integer> getMsisdnOccurrenceMap(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
+        Map<String, Integer> numberOfOccurrencesOfMsisdn = new HashMap<String, Integer>();
+        for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
+            Integer count = numberOfOccurrencesOfMsisdn.containsKey(frontLineWorkerRequest.getMsisdn()) ?
+                    numberOfOccurrencesOfMsisdn.get(frontLineWorkerRequest.getMsisdn()) + 1 : 1;
+            numberOfOccurrencesOfMsisdn.put(frontLineWorkerRequest.getMsisdn(), count);
+        }
+        return numberOfOccurrencesOfMsisdn;
+    }
+
     @Post
-    public void postData(List<Object> objects) {
+    public void postData(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
         logger.info("Started posting FLW data");
-        List<FrontLineWorkerRequest> frontLineWorkerRequests = convertToFLWRequest(objects);
         registrationService.registerAllFLWs(frontLineWorkerRequests);
         logger.info("Finished posting FLW data");
     }
@@ -73,18 +85,6 @@ public class FrontLineWorkerImporter {
         for (Error error : errors)
             validationResponse.addError(error);
         return validationResponse;
-    }
-
-    private Location getLocationFor(LocationRequest locationRequest, LocationList locationList) {
-        return locationList.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
-    }
-
-    private List<FrontLineWorkerRequest> convertToFLWRequest(List<Object> objects) {
-        List<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        for (Object object : objects) {
-            frontLineWorkerRequests.add((FrontLineWorkerRequest) object);
-        }
-        return frontLineWorkerRequests;
     }
 
     private boolean addHeader(List<Error> errors) {

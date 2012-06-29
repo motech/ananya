@@ -40,10 +40,9 @@ public class FrontLineWorkerImporterTest {
 
     @Test
     public void shouldValidateFLWRequests() {
-        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
+        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
+        Location location = new Location("D1", "B1", "P1", 1, 1, 1);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
@@ -56,10 +55,9 @@ public class FrontLineWorkerImporterTest {
 
     @Test
     public void shouldFailValidationIfFLWDoesNotHaveAllTheDetails() {
-        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
+        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
+        Location location = new Location("D1", "B1", "P1", 1, 1, 1);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
@@ -71,10 +69,9 @@ public class FrontLineWorkerImporterTest {
 
     @Test
     public void shouldFailValidationIfThereAreDuplicateFLWs() {
-        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
+        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
+        Location location = new Location("D1", "B1", "P1", 1, 1, 1);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "anotherName", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
 
@@ -88,10 +85,9 @@ public class FrontLineWorkerImporterTest {
 
     @Test
     public void shouldSaveFLW() {
-        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
+        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
+        Location location = new Location("D1", "B1", "P1", 1, 1, 1);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         String msisdn = "1234567890";
         frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
 
@@ -105,10 +101,9 @@ public class FrontLineWorkerImporterTest {
 
     @Test
     public void shouldAddNoValidationErrorsIfFLWHasAllTheDetails() {
-        ArrayList<Object> frontLineWorkerRequests = new ArrayList<Object>();
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 1, 1, 1));
-        when(locationService.getAll()).thenReturn(locations);
+        ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
+        Location location = new Location("D1", "B1", "P1", 1, 1, 1);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
