@@ -4,7 +4,7 @@ import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 
-public class BaseServiceRequest extends BaseRequest {
+public abstract class BaseServiceRequest extends BaseRequest {
 
     protected TransferDataList transferDataList;
     protected String circle;

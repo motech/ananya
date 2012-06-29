@@ -1,5 +1,6 @@
 package org.motechproject.ananya.request;
 
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 
@@ -34,6 +35,11 @@ public class CertificateCourseServiceRequest extends BaseServiceRequest {
     public CertificateCourseServiceRequest withOperator(String operator) {
         this.operator = operator;
         return this;
+    }
+
+    @Override
+    public ServiceType getType() {
+        return ServiceType.CERTIFICATE_COURSE;
     }
 
 }

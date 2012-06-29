@@ -2,6 +2,7 @@ package org.motechproject.ananya.request;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferDataList;
 
 import java.util.List;
@@ -51,6 +52,11 @@ public class JobAidServiceRequest extends BaseServiceRequest {
     public JobAidServiceRequest withOperator(String operator) {
         this.operator = operator;
         return this;
+    }
+
+    @Override
+    public ServiceType getType() {
+        return ServiceType.JOB_AID;
     }
 
 }

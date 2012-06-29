@@ -1,5 +1,7 @@
 package org.motechproject.ananya.request;
 
+import org.motechproject.ananya.domain.ServiceType;
+
 public abstract class BaseRequest {
     protected String callId;
     protected String callerId;
@@ -50,4 +52,9 @@ public abstract class BaseRequest {
     public void setCalledNumber(String calledNumber) {
         this.calledNumber = calledNumber;
     }
+
+    public ServiceType getType() {
+        return null;
+    }
+
 }

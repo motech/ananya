@@ -9,46 +9,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class CalledNumberTransformer implements Transformer {
+
     private static Logger log = LoggerFactory.getLogger(CalledNumberTransformer.class);
-    public static final int valid_shortcode_length = 7;
+
+    private static Integer size = 7;
+    private static List<String> jobAidCodes = new ArrayList<String>();
 
     private AllNodes allNodes;
-    private String shortCode;
+    private String jobAidRootCode;
+    private String courseRootCode;
 
     @Autowired
-    public CalledNumberTransformer(AllNodes allNodes, @Value("#{ananyaProperties['jobaid.shortcode']}") String shortCode) {
+    public CalledNumberTransformer(AllNodes allNodes,
+                                   @Value("#{ananyaProperties['jobaid.shortcode']}") String jobAidRootCode,
+                                   @Value("#{ananyaProperties['course.shortcode']}") String courseRootCode) {
         this.allNodes = allNodes;
-        this.shortCode = shortCode;
+        this.jobAidRootCode = jobAidRootCode;
+        this.courseRootCode = courseRootCode;
+
     }
 
     @Override
     public void transform(BaseRequest baseRequest) {
+
+        if (jobAidCodes.isEmpty()) {
+            List<String> jobAidShortCodes = allNodes.findValuesForKey("shortcode", "JobAidCourse");
+            for (String shortCode : jobAidShortCodes)
+                jobAidCodes.add(jobAidRootCode + shortCode);
+            jobAidCodes.add(jobAidRootCode);
+        }
+        if (baseRequest.getType().isCertificateCourse()) {
+            log(baseRequest, courseRootCode);
+            baseRequest.setCalledNumber(courseRootCode);
+            return;
+        }
         String calledNumber = baseRequest.getCalledNumber();
-
-        if (StringUtils.isEmpty(calledNumber) || calledNumber.equals(shortCode))
-            return;
-
-        if (calledNumber.length() < valid_shortcode_length) {
-            log.info(baseRequest.getCallId() + "- transformed " + calledNumber + " to " + shortCode);
-            baseRequest.setCalledNumber(shortCode);
+        calledNumber = StringUtils.substring(calledNumber, 0, size);
+        if (jobAidCodes.contains(calledNumber)) {
+            log(baseRequest, calledNumber);
+            baseRequest.setCalledNumber(calledNumber);
             return;
         }
-
-        calledNumber = calledNumber.substring(0, valid_shortcode_length);
-
-        if (StringUtils.isNumeric(calledNumber)) {
-            List<String> shortCodes = allNodes.findValuesForKey("shortcode", "JobAidCourse");
-            if (shortCodes.contains(calledNumber)) {
-                log.info(baseRequest.getCallId() + "- transformed " + baseRequest.getCalledNumber() + " to " + calledNumber);
-                baseRequest.setCalledNumber(calledNumber);
-                return;
-            }
-        }
-        baseRequest.setCalledNumber(shortCode);
-        log.info(baseRequest.getCallId() + "- transformed " + calledNumber + " to " + shortCode);
+        log(baseRequest, jobAidRootCode);
+        baseRequest.setCalledNumber(jobAidRootCode);
     }
+
+    private void log(BaseRequest baseRequest, String calledNumber) {
+        log.info(baseRequest.getCallId() + "- transformed " + baseRequest.getCalledNumber() + " to " + calledNumber);
+    }
+
 }

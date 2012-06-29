@@ -5,9 +5,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.request.BaseRequest;
-import org.motechproject.ananya.request.BaseServiceRequest;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.request.JobAidServiceRequest;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -20,31 +21,41 @@ public class CalledNumberTransformerTest {
 
     @Mock
     private AllNodes allnodes;
-    private String shortCode;
+    private String jobAidShortCode;
+    private String courseShortCode;
 
     @Before
     public void setUp() {
         initMocks(this);
-        shortCode = "57711";
-        transformer = new CalledNumberTransformer(allnodes, shortCode);
+        jobAidShortCode = "57711";
+        courseShortCode = "5771102";
     }
 
     @Test
     public void shouldReturnCorrectCalledNumber() {
-
-        List<String> shortCodes = new ArrayList<String>();
-        shortCodes.add("5771110");
-
+        List<String> shortCodes = Arrays.asList("10", "11", "12");
         when(allnodes.findValuesForKey("shortcode", "JobAidCourse")).thenReturn(shortCodes);
-        verifyFor("57711b","57711");
-        verifyFor("5771110","5771110");
-        verifyFor("5771118","57711" );
-        verifyFor("5771110b5","5771110");
-        verifyFor("57711b5567","57711");
+
+        transformer = new CalledNumberTransformer(allnodes, jobAidShortCode, courseShortCode);
+
+        verifyForJobAid("57711b", jobAidShortCode);
+        verifyForJobAid("5771110", "5771110");
+        verifyForJobAid("5771118", jobAidShortCode);
+        verifyForJobAid("5771111b5", "5771111");
+        verifyForJobAid("57711b5567", jobAidShortCode);
+
+        verifyForCourse("5771102b5",courseShortCode);
+        verifyForCourse("5771102",courseShortCode);
     }
 
-    private void verifyFor(String calledNumberInput, String expectedCalledNumber) {
-        BaseRequest request = new BaseServiceRequest("callId", "9986574420", calledNumberInput);
+    private void verifyForJobAid(String calledNumberInput, String expectedCalledNumber) {
+        BaseRequest request = new JobAidServiceRequest("callId", "9986574420", calledNumberInput);
+        transformer.transform(request);
+        assertEquals(expectedCalledNumber, request.getCalledNumber());
+    }
+
+    private void verifyForCourse(String calledNumberInput, String expectedCalledNumber) {
+        BaseRequest request = new CertificateCourseServiceRequest("callId", "9986574420", calledNumberInput);
         transformer.transform(request);
         assertEquals(expectedCalledNumber, request.getCalledNumber());
     }
