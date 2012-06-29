@@ -8,6 +8,8 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.seed.service.CourseItemMeasureSeedService;
 import org.motechproject.ananya.service.SendSMSService;
 import org.motechproject.deliverytools.seed.Seed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.*;
 
 @Service
 public class CertificateCourseDataCorrectionSeed {
+
+    private static Logger log = LoggerFactory.getLogger(CertificateCourseDataCorrectionSeed.class);
 
     private DateTime endDate = new DateTime(2012, 06, 2, 0, 0);
     private DateTime startDate = new DateTime(2012, 05, 23, 0, 0);
@@ -117,7 +121,7 @@ public class CertificateCourseDataCorrectionSeed {
     }
 
     private void print(String message) {
-        System.out.println(message);
+        log.info(message);
     }
 
     private Integer getChapterIndexFromCourseItemDimension(String str) {
