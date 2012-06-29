@@ -48,4 +48,8 @@ public class BaseLog extends MotechBaseDataObject {
     public String getCalledNumber() {
         return calledNumber;
     }
+
+    public void setCalledNumber(String calledNumber) {
+        this.calledNumber = calledNumber;
+    }
 }

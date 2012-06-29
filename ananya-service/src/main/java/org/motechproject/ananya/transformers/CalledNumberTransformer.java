@@ -31,7 +31,6 @@ public class CalledNumberTransformer implements Transformer {
         this.allNodes = allNodes;
         this.jobAidRootCode = jobAidRootCode;
         this.courseRootCode = courseRootCode;
-
     }
 
     @Override
