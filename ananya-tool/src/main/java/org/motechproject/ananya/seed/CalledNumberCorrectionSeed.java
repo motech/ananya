@@ -55,7 +55,7 @@ public class CalledNumberCorrectionSeed {
     }
 
 
-    @Seed(priority = 0, version = "1.3", comment = "Move alpha-numeric calledNumber callLogs from couch to postgres")
+    @Seed(priority = 0, version = "1.3", comment = "Move alpha-numeric calledNumber callLogs from couchdb to postgres")
     public void migrateInvalidLogsFromCouchToPostgres() {
         List<CallLog> callLogs = allCallLogs.getAll();
 
@@ -71,28 +71,28 @@ public class CalledNumberCorrectionSeed {
                 calledNumberTransformer.transform(request);
                 callLog.setCalledNumber(request.getCalledNumber());
                 allCallLogs.update(callLog);
+
                 callDurationMeasureService.createFor(callId);
                 courseContentMeasureService.createFor(callId);
                 courseAudioTrackerMeasureService.createFor(callId);
-                handleSMS(callId);
+
+                SMSLog smslog = smsLogService.getSMSLogFor(callId);
+                if (smslog != null) {
+                    sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+                    smsLogService.deleteFor(smslog);
+                }
                 log.info("Corrected calledNumber for Course: [" + calledNumber + "=>" + callLog.getCalledNumber() + "]");
+
             } else {
                 JobAidServiceRequest request = new JobAidServiceRequest(callId, callerId, calledNumber);
                 calledNumberTransformer.transform(request);
                 callLog.setCalledNumber(request.getCalledNumber());
                 allCallLogs.update(callLog);
+
                 callDurationMeasureService.createFor(callId);
                 jobAidContentMeasureService.createFor(callId);
                 log.info("Corrected calledNumber for JobAid: [" + calledNumber + "=>" + callLog.getCalledNumber() + "]");
             }
-        }
-    }
-
-    private void handleSMS(String callId) {
-        SMSLog smslog = smsLogService.getSMSLogFor(callId);
-        if (smslog != null) {
-            sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
-            smsLogService.deleteFor(smslog);
         }
     }
 
