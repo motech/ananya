@@ -13,6 +13,7 @@ import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,13 +41,18 @@ public class AudioTrackerSynchronizerIT {
     @Qualifier("testDataAccessTemplate")
     private TestDataAccessTemplate template;
 
+    @Autowired
+    private AllTimeDimensions allTimeDimensions;
+
     @Before
     public void setUp() {
+        allTimeDimensions.invalidateCache();
         resetDB();
     }
 
     @After
     public void tearDown() {
+        allTimeDimensions.invalidateCache();
         resetDB();
     }
 
@@ -80,7 +86,7 @@ public class AudioTrackerSynchronizerIT {
         String timeStamp = "1336045431373";
         setUpTransactionData(callerId, newContentId, timeStamp);
         setUpReportDataForCertificateCourse(callId, callerId, oldContentId, timeStamp);
-
+        
         audioTrackerSynchronizer.replicate();
 
         verifyPostgresDataForCertificateCourse(callerId, newContentId);
