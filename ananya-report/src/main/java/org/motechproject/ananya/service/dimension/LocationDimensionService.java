@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.dimension;
 
+import com.googlecode.ehcache.annotations.Cacheable;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,11 @@ public class LocationDimensionService {
         allLocationDimensions.add(locationDimension);
     }
 
-    @Transactional
+    @Cacheable(cacheName = "locationSearchCache")
     public LocationDimension getFor(String externalId) {
         return allLocationDimensions.getFor(externalId);
     }
 
-    @Transactional
     public List<LocationDimension> getFilteredLocations(String district, String block, String panchayat) {
         return allLocationDimensions.getFilteredLocationFor(district, block, panchayat);
     }

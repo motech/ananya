@@ -85,6 +85,11 @@
             <artifactId>motech-bulk-export-import</artifactId>
             <version>0.10.5-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.googlecode.ehcache-spring-annotations</groupId>
+            <artifactId>ehcache-spring-annotations</artifactId>
+            <version>1.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>

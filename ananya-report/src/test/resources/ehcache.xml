@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+
+    <diskStore path="java.io.tmpdir/EhCacheAnanyaReferenceData"/>
+
+    <defaultCache
+            name="default"
+            maxElementsInMemory="5"
+            eternal="false"
+            timeToIdleSeconds="20"
+            timeToLiveSeconds="20"
+            overflowToDisk="false"
+            diskPersistent="false"
+            memoryStoreEvictionPolicy="LRU"
+            />
+
+    <cache name="locationSearchCache" eternal="false"
+           maxElementsInMemory="86400" overflowToDisk="false" diskPersistent="false"
+           timeToIdleSeconds="0" timeToLiveSeconds="3000"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>
