@@ -26,8 +26,9 @@ public class AdminController{
     @ResponseBody
     public String getDiagnostics() throws Exception {
         String diagnosisResult = diagnosticService.getDiagnostics();
-        log.error("9986574410-1234567"+"|"+"NullPointer");
+        log.info("diagnostics called");
         return diagnosisResult;
+
     }
 
 }
