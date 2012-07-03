@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-bulk-export-import</artifactId>
-            <version>0.10.5-SNAPSHOT</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
