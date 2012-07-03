@@ -11,7 +11,7 @@ public class JobAidCallerDataResponse {
     private Map<String, Integer> promptsHeard;
 
     public JobAidCallerDataResponse(FrontLineWorker frontLineWorker, Integer maxUsage) {
-        this.isCallerRegistered = frontLineWorker.status().isRegistered();
+        this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
         this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         this.promptsHeard = frontLineWorker.getPromptsHeard();
         this.maxAllowedUsageForOperator = maxUsage;

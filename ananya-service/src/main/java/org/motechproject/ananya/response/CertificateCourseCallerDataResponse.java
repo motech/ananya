@@ -17,7 +17,7 @@ public class CertificateCourseCallerDataResponse {
 
     public CertificateCourseCallerDataResponse(FrontLineWorker frontLineWorker) {
         this.bookmark = frontLineWorker.bookMark().asJson();
-        this.isCallerRegistered = frontLineWorker.status().isRegistered();
+        this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
         this.scoresByChapter = frontLineWorker.reportCard().scoresByChapterIndex();
     }
 

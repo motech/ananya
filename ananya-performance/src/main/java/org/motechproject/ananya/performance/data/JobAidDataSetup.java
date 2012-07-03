@@ -84,7 +84,7 @@ public class JobAidDataSetup {
 
             JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withOperator(operator.getName()).withCircle("BIHAR");
             jobAidService.createCallerData(jobAidServiceRequest);
-            registrationMeasureService.createRegistrationMeasure(callerId, callId);
+            registrationMeasureService.createFor(callId);
 
             System.out.println("loaded [callerid=" + callerId + "|thread=" + Thread.currentThread().getId() + "|count=" + j + "|operator=" + operatorName + "]");
         }
