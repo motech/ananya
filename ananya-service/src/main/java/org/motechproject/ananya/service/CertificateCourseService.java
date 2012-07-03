@@ -1,13 +1,14 @@
 package org.motechproject.ananya.service;
 
-import org.motechproject.ananya.action.ServiceAction;
-import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.mapper.CertificationCourseLogItemMapper;
-import org.motechproject.ananya.mapper.CertificationCourseLogMapper;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.action.AllCourseActions;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationLog;
+import org.motechproject.ananya.domain.ServiceType;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.service.publish.DataPublishService;
+import org.motechproject.ananya.transformers.AllTransformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,89 +20,60 @@ public class CertificateCourseService {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseService.class);
 
-    private CertificateCourseLogService certificateCourseLogService;
     private FrontLineWorkerService frontLineWorkerService;
-    private AudioTrackerService audioTrackerService;
     private RegistrationLogService registrationLogService;
-    private SMSLogService smsLogService;
+    private AudioTrackerService audioTrackerService;
+    private CallLogService callLoggerService;
+
+    private AllTransformers allTransformers;
+    private AllCourseActions allCourseActions;
+    private DataPublishService dataPublishService;
 
     @Autowired
-    public CertificateCourseService(CertificateCourseLogService certificateCourseLogService,
-                                    AudioTrackerService audioTrackerService,
-                                    FrontLineWorkerService frontLineWorkerService,
-                                    RegistrationLogService registrationLogService, SMSLogService smsLogService) {
-        this.certificateCourseLogService = certificateCourseLogService;
+    public CertificateCourseService(AudioTrackerService audioTrackerService, FrontLineWorkerService frontLineWorkerService,
+                                    RegistrationLogService registrationLogService, CallLogService callLoggerService,
+                                    DataPublishService dataPublishService, AllTransformers allTransformers,
+                                    AllCourseActions allCourseActions) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.audioTrackerService = audioTrackerService;
         this.registrationLogService = registrationLogService;
-        this.smsLogService = smsLogService;
+        this.callLoggerService = callLoggerService;
+        this.dataPublishService = dataPublishService;
+        this.allTransformers = allTransformers;
+        this.allCourseActions = allCourseActions;
     }
 
-    public CertificateCourseCallerDataResponse createCallerData(String callId, String msisdn, String operator, String circle) {
-        log.info("Creating caller data for msisdn: " + msisdn + " for operator " + operator + " for circle" + circle
-                + " for callId " + callId);
+    public CertificateCourseCallerDataResponse createCallerData(CertificateCourseServiceRequest request) {
+        String callId = request.getCallId();
+        allTransformers.process(request);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(msisdn, operator, circle);
-        if (frontLineWorker.isModified())
-            registrationLogService.add(new RegistrationLog(callId, msisdn, operator, circle));
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(
+                request.getCallerId(),
+                request.getOperator(),
+                request.getCircle());
+        log.info(callId + "- fetched caller data for " + frontLineWorker);
 
-        return new CertificateCourseCallerDataResponse(
-                frontLineWorker.bookMark().asJson(),
-                frontLineWorker.getStatus().isRegistered(),
-                frontLineWorker.reportCard().scoresByChapterIndex());
-    }
-
-    public void saveState(CertificationCourseStateRequestList stateRequestList) {
-        log.info("State Request List " + stateRequestList);
-        if (stateRequestList.isEmpty())
-            return;
-        saveBookmarkAndScore(stateRequestList);
-        saveCourseLog(stateRequestList);
-    }
-
-    public void saveAudioTrackerState(AudioTrackerRequestList audioTrackerRequestList) {
-        audioTrackerService.saveAudioTrackerState(audioTrackerRequestList, ServiceType.CERTIFICATE_COURSE);
-    }
-
-    private void saveBookmarkAndScore(CertificationCourseStateRequestList stateRequestList) {
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
-        addBookmark(frontLineWorker, stateRequestList);
-
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
-            ServiceAction serviceAction = ServiceAction.findFor(stateRequest.getInteractionKey());
-            serviceAction.update(frontLineWorker, stateRequest);
+        if (frontLineWorker.isModified()) {
+            registrationLogService.add(new RegistrationLog(callId,
+                    request.getCallerId(),
+                    request.getOperator(),
+                    request.getCircle()));
+            log.info(callId + "- created registrationLog");
         }
-        frontLineWorkerService.updateCertificateCourseStateFor(frontLineWorker);
+        return new CertificateCourseCallerDataResponse(frontLineWorker);
+    }
 
-        if (frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
-            smsLogService.add(
-                    new SMSLog(
-                            stateRequestList.getCallId(),
-                            frontLineWorker.getMsisdn(),
-                            frontLineWorker.getLocationId(),
-                            frontLineWorker.currentCourseAttempt()
-                    )
-            );
-            log.info("Course completion SMS sent for " + frontLineWorker);
+    public void handleDisconnect(CertificateCourseServiceRequest request) {
+        allTransformers.process(request);
+
+        CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
+        if (stateRequestList.isNotEmpty()) {
+            FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
+            allCourseActions.execute(frontLineWorker, stateRequestList);
         }
+        audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
+        callLoggerService.saveAll(request.getCallDurationList());
+        dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.CERTIFICATE_COURSE);
     }
 
-    private void addBookmark(FrontLineWorker frontLineWorker, CertificationCourseStateRequestList stateRequestList) {
-        CertificationCourseStateRequest lastRequest = stateRequestList.lastRequest();
-        final BookMark bookMark = new BookMark(lastRequest.getInteractionKey(), lastRequest.getChapterIndex(), lastRequest.getLessonOrQuestionIndex());
-        frontLineWorker.addBookMark(bookMark);
-    }
-
-    private void saveCourseLog(CertificationCourseStateRequestList stateRequestList) {
-        CertificationCourseStateRequest firstRequest = stateRequestList.firstRequest();
-        CertificationCourseLogMapper logMapper = new CertificationCourseLogMapper();
-        CertificationCourseLogItemMapper logItemMapper = new CertificationCourseLogItemMapper();
-
-        CertificationCourseLog courseLog = logMapper.mapFrom(firstRequest);
-        for (CertificationCourseStateRequest stateRequest : stateRequestList.all()) {
-            if (stateRequest.hasContentId())
-                courseLog.addCourseLogItem(logItemMapper.mapFrom(stateRequest));
-        }
-        certificateCourseLogService.createNew(courseLog);
-    }
 }

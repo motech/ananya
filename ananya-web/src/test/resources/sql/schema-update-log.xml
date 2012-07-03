@@ -206,4 +206,33 @@
         </sql>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="7">
+        <sql>
+           update report.call_duration_measure set called_number = 5771102
+           where type = 'CERTIFICATECOURSE'
+           and called_number &lt;&gt; 33578057
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = 5771102
+            where id in
+                (
+                select cdm1.id from report.call_duration_measure cdm1
+                inner join report.call_duration_measure cdm2 on cdm1.call_id = cdm2.call_id
+                where cdm1.type='CALL'
+                and cdm2.type='CERTIFICATECOURSE'
+                and cdm2.called_number &lt;&gt; 33578057
+                )
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = to_number(substring(trim(to_char(called_number,'9999999999999999999999999999')) from 1 for 7),'9999999')
+            where type in ('JOBAID', 'CALL')
+            and called_number &gt; 5771199
+            and called_number not in(33578056, 33578057)
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = 57711
+            where called_number not in (select distinct short_code from report.job_aid_content_dimension where short_code is not null)
+            and called_number not in(33578056, 33578057, 5771102)
+        </sql>
+    </changeSet>
 </databaseChangeLog>

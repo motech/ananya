@@ -67,6 +67,19 @@ public class AllNodesTest extends SpringIntegrationTest {
     }
 
     @Test
+    public void shouldFetchListOfDataValuesForGivenKeyFromAllNodes(){
+
+        List<String> values = allNodes.findValuesForKey("message", COURSE_NAME);
+
+        assertEquals(values.size(),5);
+        assertTrue(values.contains("Welcome to the course."));
+        assertTrue(values.contains("Welcome to level1 in the course."));
+        assertTrue(values.contains("Welcome to level2 in the course."));
+        assertTrue(values.contains("Welcome to chapter1 in level1."));
+        assertTrue(values.contains("Welcome to chapter2 in level1."));
+    }
+
+    @Test
     public void shouldSaveTree() {
         assertThat(root.getId(), is(notNullValue()));
         Node rootNodeFromDB = allNodes.get(root.getId());

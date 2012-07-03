@@ -3,18 +3,17 @@ package org.motechproject.ananya.request;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class CertificationCourseStateRequestListTest {
 
-    private CertificationCourseStateRequestList courseStateRequestList;
+    private CertificateCourseStateRequestList courseStateRequestList;
 
     @Before
     public void setUp() {
-        courseStateRequestList = new CertificationCourseStateRequestList("123", "12345");
+        courseStateRequestList = new CertificateCourseStateRequestList("123", "12345");
     }
 
     @Test
@@ -33,9 +32,9 @@ public class CertificationCourseStateRequestListTest {
         courseStateRequestList.add(token2, "2");
 
         assertThat(courseStateRequestList.all().size(), is(2));
-        assertFalse(courseStateRequestList.isEmpty());
+        assertTrue(courseStateRequestList.isNotEmpty());
 
-        CertificationCourseStateRequest recentRequest = courseStateRequestList.lastRequest();
+        CertificateCourseStateRequest recentRequest = courseStateRequestList.lastRequest();
         assertThat(recentRequest.getContentName(), is("Chapter 1 Lesson 2"));
     }
 

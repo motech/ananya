@@ -1,10 +1,25 @@
 package org.motechproject.ananya.request;
 
+import org.motechproject.ananya.domain.ServiceType;
+
 public abstract class BaseRequest {
     protected String callId;
     protected String callerId;
     protected String calledNumber;
     protected String token;
+
+    protected BaseRequest() {
+    }
+
+    public BaseRequest(String callId, String callerId, String calledNumber) {
+        this.callId = callId;
+        this.callerId = callerId;
+        this.calledNumber = calledNumber;
+    }
+
+    public BaseRequest(String callId, String callerId) {
+        this(callId, callerId, null);
+    }
 
     public String getToken() {
         return token;
@@ -38,11 +53,8 @@ public abstract class BaseRequest {
         this.calledNumber = calledNumber;
     }
 
-    protected BaseRequest(){
+    public ServiceType getType() {
+        return null;
     }
 
-    protected BaseRequest(String callerId, String calledNumber) {
-        this.callerId = callerId;
-        this.calledNumber = calledNumber;
-    }
 }

@@ -14,6 +14,8 @@ import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,6 +29,7 @@ import java.util.List;
 @Component
 public class FrontLineWorkerSeed {
 
+    private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeed.class);
     @Autowired
     private RegistrationService registrationService;
     @Autowired
@@ -158,20 +161,20 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 0, version = "1.3", comment = "Sanitization of registration status of FLWs")
     public void correctInvalidRegistrationStatusForAllFLWs() {
-        System.out.println("Correcting Registration status of FLWs");
-        int startId = 1; int counter = 0;
+        log.info("Correcting Registration status of FLWs");
+        int startId = 1;
+        int counter = 0;
 
-            System.out.println("Fetching FLWs from start id : " + startId);
-            List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
+        log.info("Fetching FLWs from start id : " + startId);
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
 
-            for(FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-                counter++;
-                seedService.correctRegistrationStatus(frontLineWorkerDimension);
-                if (counter % 100 == 0)
-                    System.out.println("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
-            }
-
-        System.out.println("Correction of registration statuses done.");
+        for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
+            counter++;
+            seedService.correctRegistrationStatus(frontLineWorkerDimension);
+            if (counter % 100 == 0)
+                log.info("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
+        }
+        log.info("Correction of registration statuses done.");
     }
 
 }

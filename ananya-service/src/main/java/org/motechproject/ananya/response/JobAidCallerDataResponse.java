@@ -1,5 +1,7 @@
 package org.motechproject.ananya.response;
 
+import org.motechproject.ananya.domain.FrontLineWorker;
+
 import java.util.Map;
 
 public class JobAidCallerDataResponse {
@@ -8,11 +10,11 @@ public class JobAidCallerDataResponse {
     private Integer maxAllowedUsageForOperator;
     private Map<String, Integer> promptsHeard;
 
-    public JobAidCallerDataResponse(boolean callerRegistered, Integer currentJobAidUsage, Integer maxAllowedUsageForOperator, Map<String, Integer> promptsHeard) {
-        isCallerRegistered = callerRegistered;
-        this.currentJobAidUsage = currentJobAidUsage;
-        this.maxAllowedUsageForOperator = maxAllowedUsageForOperator;
-        this.promptsHeard = promptsHeard;
+    public JobAidCallerDataResponse(FrontLineWorker frontLineWorker, Integer maxUsage) {
+        this.isCallerRegistered = frontLineWorker.status().isRegistered();
+        this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+        this.promptsHeard = frontLineWorker.getPromptsHeard();
+        this.maxAllowedUsageForOperator = maxUsage;
     }
 
     public boolean isCallerRegistered() {

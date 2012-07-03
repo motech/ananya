@@ -42,6 +42,10 @@ public class TransferData implements JsonDeserializer<TransferData> {
         return type.equals(TransferDataState.TYPE_AUDIO_TRACKER);
     }
 
+    public boolean isCallDuration(){
+        return type.equals(TransferDataState.TYPE_CALL_DURATION);
+    }
+
     @Override
     public TransferData deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

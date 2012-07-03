@@ -38,7 +38,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="end_time" COLSPAN="3" ALIGN="LEFT">end_time</TD></TR>
       <TR><TD PORT="called_number" COLSPAN="3" ALIGN="LEFT">called_number</TD></TR>
       <TR><TD PORT="time_id" COLSPAN="3" ALIGN="LEFT">time_id</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">310 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="call_duration_measure.html"
     tooltip="call_duration_measure"
@@ -58,7 +58,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="percentage" COLSPAN="3" ALIGN="LEFT">percentage</TD></TR>
       <TR><TD PORT="call_id" COLSPAN="3" ALIGN="LEFT">call_id</TD></TR>
       <TR><TD PORT="duration" COLSPAN="3" ALIGN="LEFT">duration</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">444 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 4</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">0 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="course_item_measure.html"
     tooltip="course_item_measure"
@@ -74,7 +74,7 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="status" COLSPAN="2" ALIGN="LEFT">status</TD><TD PORT="status.type" ALIGN="LEFT">varchar[30]</TD></TR>
       <TR><TD PORT="designation" COLSPAN="2" ALIGN="LEFT">designation</TD><TD PORT="designation.type" ALIGN="LEFT">varchar[30]</TD></TR>
       <TR><TD PORT="circle" COLSPAN="2" ALIGN="LEFT">circle</TD><TD PORT="circle.type" ALIGN="LEFT">varchar[30]</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">22,278 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 0</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">5 &gt;</TD></TR>
     </TABLE>>
     URL="front_line_worker_dimension.html"
     tooltip="front_line_worker_dimension"
@@ -105,7 +105,8 @@ digraph "oneDegreeRelationshipsDiagram" {
       <TR><TD PORT="location_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">location_id</TD></TR>
       <TR><TD PORT="time_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">time_id</TD></TR>
       <TR><TD PORT="flw_id" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">flw_id</TD></TR>
-      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">22,278 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+      <TR><TD PORT="call_id" COLSPAN="3" ALIGN="LEFT">call_id</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">&lt; 3</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">6 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
     </TABLE>>
     URL="registration_measure.html"
     tooltip="registration_measure"

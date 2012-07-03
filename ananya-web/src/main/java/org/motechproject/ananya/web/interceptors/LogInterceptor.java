@@ -1,6 +1,5 @@
 package org.motechproject.ananya.web.interceptors;
 
-import org.motechproject.ananya.domain.CallerIdParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -14,16 +13,14 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         StringBuilder builder = new StringBuilder();
         builder.append("Request START [uri=" + request.getRequestURI() + "|");
-        builder.append("Parameters={");
+        builder.append("Parameters= {");
 
         Enumeration<String> requestKeys = request.getParameterNames();
         while (requestKeys.hasMoreElements()) {
             String key = requestKeys.nextElement();
             String requestParameter = request.getParameter(key);
-            requestParameter = key.equals("callerId")?new CallerIdParam(requestParameter).getValue(): requestParameter;
             builder.append(key + "=>" + requestParameter + ",");
         }
         builder.append("}]");
@@ -33,6 +30,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        LOG.info("Request END [uri=" + request.getRequestURI()+"]");
+        LOG.info("Request END [uri=" + request.getRequestURI() + "]");
     }
 }

@@ -178,7 +178,7 @@ public class    FrontLineWorkerSeedService {
     public void correctRegistrationStatus(FrontLineWorkerDimension frontLineWorkerDimension) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("" + frontLineWorkerDimension.getMsisdn());
         if (frontLineWorker == null) {
-            System.out.println("FATAL: user present in postgres but not in couch. msisdn - " + frontLineWorkerDimension.getMsisdn());
+            log.info("FATAL: user present in postgres but not in couch. msisdn - " + frontLineWorkerDimension.getMsisdn());
             return;
         }
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
@@ -186,7 +186,7 @@ public class    FrontLineWorkerSeedService {
         RegistrationStatus actualRegistrationStatus = frontLineWorker.getStatus();
         RegistrationStatus expectedRegistrationStatus = frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
         if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
-            System.out.println("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
+            log.info("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
                     " status in couch : " + frontLineWorker.getStatus() +
                     " expected status : " + expectedRegistrationStatus);
@@ -195,7 +195,7 @@ public class    FrontLineWorkerSeedService {
         }
 
         if (expectedRegistrationStatus != actualRegistrationStatus) {
-            System.out.println("Changing registration status of msisdn : " + frontLineWorkerDimension.getMsisdn() +
+            log.info("Changing registration status of msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
                     " status in couch : " + frontLineWorker.getStatus() +
                     " expected status : " + expectedRegistrationStatus);

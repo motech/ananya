@@ -28,7 +28,23 @@ public class CallLogTest {
 
         DateTime startTime = DateUtil.now();
         DateTime endTime = startTime.plusMinutes(2);
-        callLog.addItem(new CallLogItem(null,startTime, endTime));
-        assertThat(callLog.startTime(),is(startTime));
+        callLog.addItem(new CallLogItem(null, startTime, endTime));
+        assertThat(callLog.startTime(), is(startTime));
+    }
+
+    @Test
+    public void shouldReturnType() {
+        CallLog callLogForCourse = new CallLog();
+        callLogForCourse.addItem(new CallLogItem(CallFlowType.CALL, null, null));
+        callLogForCourse.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, null, null));
+
+        assertThat(callLogForCourse.getType(), is(CallFlowType.CERTIFICATECOURSE));
+
+        CallLog callLogForJobAid = new CallLog();
+        callLogForJobAid.addItem(new CallLogItem(CallFlowType.JOBAID, null, null));
+        callLogForJobAid.addItem(new CallLogItem(CallFlowType.CALL, null, null));
+
+        assertThat(callLogForJobAid.getType(), is(CallFlowType.JOBAID));
+
     }
 }

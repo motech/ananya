@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,7 +65,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     }
 
     private void addContentToNode(Node node) {
-        for(String contentId : node.contentIds()) {
+        for (String contentId : node.contentIds()) {
             node.addContent(allStringContents.get(contentId));
         }
     }
@@ -79,7 +80,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
 
     public String nodeAsJson(String treeName) throws IOException {
         String nodeAsJson = cachedTreeJsons.get(treeName);
-        if(nodeAsJson == null){
+        if (nodeAsJson == null) {
             Node node = findByName(treeName);
             nodeAsJson = GSON.toJson(node);
             cachedTreeJsons.putIfAbsent(treeName, nodeAsJson);
@@ -87,14 +88,14 @@ public class AllNodes extends MotechBaseRepository<Node> {
         return nodeAsJson;
     }
 
-    public String nodeWithoutChildrenAsJson(String nodeName) throws  IOException {
+    public String nodeWithoutChildrenAsJson(String nodeName) throws IOException {
         final String mapKey = nodeName + "_without_children";
         String nodeAsJson = cachedTreeJsons.get(mapKey);
-        if(nodeAsJson == null){
-             Node node = findNode(nodeName, "by_name");
-             addContentToNode(node);
-             nodeAsJson = GSON.toJson(node);
-             cachedTreeJsons.putIfAbsent(mapKey, nodeAsJson);
+        if (nodeAsJson == null) {
+            Node node = findNode(nodeName, "by_name");
+            addContentToNode(node);
+            nodeAsJson = GSON.toJson(node);
+            cachedTreeJsons.putIfAbsent(mapKey, nodeAsJson);
         }
         return nodeAsJson;
     }
@@ -104,16 +105,30 @@ public class AllNodes extends MotechBaseRepository<Node> {
     }
 
     private void recursivelyAddNodeWithDescendants(Node node) {
-        for(StringContent stringContentToSave : node.contents()){
+        for (StringContent stringContentToSave : node.contents()) {
             allStringContents.add(stringContentToSave);
             node.addContentId(stringContentToSave.getId());
         }
         add(node);
         final String nodeId = node.getId();
         final List<Node> children = node.children();
-        for(Node childNode : children){
+        for (Node childNode : children) {
             childNode.setParentId(nodeId);
             recursivelyAddNodeWithDescendants(childNode);
         }
+    }
+
+    public List<String> findValuesForKey(String key, String startNode) {
+        List<String> values = new ArrayList<String>();
+        Node node = findByName(startNode);
+        recursiveSearchForKey(key,node,values);
+        return values;
+    }
+
+    private void recursiveSearchForKey(String key, Node node, List<String> values) {
+        if (node.data().containsKey(key))
+            values.add(node.data().get(key));
+        for (Node child : node.children())
+            recursiveSearchForKey(key, child, values);
     }
 }

@@ -3,11 +3,11 @@ package org.motechproject.ananya.mapper;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
-import org.motechproject.ananya.request.CertificationCourseStateRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequest;
 
 public class CertificationCourseLogItemMapper {
 
-    public CertificationCourseLogItem mapFrom(CertificationCourseStateRequest stateRequest) {
+    public CertificationCourseLogItem mapFrom(CertificateCourseStateRequest stateRequest) {
         return new CertificationCourseLogItem(
                 stateRequest.getContentId(),
                 CourseItemType.valueOf(stateRequest.getContentType().toUpperCase()),

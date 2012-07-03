@@ -3,16 +3,18 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.motechproject.ananya.action.AllCourseActions;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificationCourseStateRequestList;
+import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.motechproject.ananya.service.publish.DataPublishService;
+import org.motechproject.ananya.transformers.AllTransformers;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -32,36 +34,49 @@ public class CertificateCourseServiceTest {
     private RegistrationLogService registrationLogService;
     @Mock
     private SMSLogService sendSMSLogService;
+    @Mock
+    private CallLogService callLoggerService;
+    @Mock
+    private DataPublishService dataPublishService;
+    @Mock
+    private AllTransformers allTransformers;
+    @Mock
+    private AllCourseActions allCourseActions;
 
     @Before
     public void setUp() {
         initMocks(this);
-        certificateCourseService = new CertificateCourseService(certificateCourseLogService, audioTrackerService,
-                frontlineWorkerService, registrationLogService, sendSMSLogService);
+        certificateCourseService = new CertificateCourseService(audioTrackerService, frontlineWorkerService,
+                registrationLogService, callLoggerService, dataPublishService, allTransformers, allCourseActions);
     }
 
     @Test
     public void shouldCreateCallerDataForGivenCallerId() {
-        String callerId = "123";
         String callId = "123432";
+        String callerId = "123";
         String operator = "airtel";
         String circle = "circle";
+        CertificateCourseServiceRequest request = new CertificateCourseServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
-
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(callId, callerId, operator, circle);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(request);
+
         assertEquals(bookMark.asJson(), callerData.getBookmark());
+        verify(allTransformers).process(request);
+        verify(registrationLogService, never()).add(any(RegistrationLog.class));
     }
 
     @Test
     public void shouldCreateCallerDataAndRegistrationLogForGivenCallerIdIfFrontLineWorkerDoesNotExist() {
+        String callId = "12342";
         String callerId = "123";
         String operator = "airtel";
         String circle = "circle";
+        CertificateCourseServiceRequest request = new CertificateCourseServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
         BookMark bookMark = new BookMark("type", 1, 2);
@@ -71,8 +86,9 @@ public class CertificateCourseServiceTest {
 
         when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
 
-        certificateCourseService.createCallerData(callerId, callerId,operator, circle);
+        certificateCourseService.createCallerData(request);
 
+        verify(allTransformers).process(request);
         ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
         verify(registrationLogService).add(captor.capture());
         RegistrationLog registrationLog = captor.getValue();
@@ -80,188 +96,37 @@ public class CertificateCourseServiceTest {
     }
 
     @Test
-    public void shouldClearAllScoresForAGivenFLWWhenInteractionIsStartCertificationCourse() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
+    public void shouldCallAllServicesToHandleDisconnectData() {
+        String callId = "123-456";
+        String callerId = "123";
+        String operator = "airtel";
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        frontLineWorker.reportCard().addScore(new Score());
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
+        CertificateCourseStateRequestList stateRequestList = mock(CertificateCourseStateRequestList.class);
+        AudioTrackerRequestList audioTrackerList = mock(AudioTrackerRequestList.class);
+        CallDurationList callDurationList = mock(CallDurationList.class);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        CertificateCourseServiceRequest request = mock(CertificateCourseServiceRequest.class);
 
-        String json = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startCertificationCourse\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
+        when(request.getCallId()).thenReturn(callId);
+        when(request.getCallerId()).thenReturn(callerId);
+        when(request.getCertificateCourseStateRequestList()).thenReturn(stateRequestList);
+        when(request.getAudioTrackerRequestList()).thenReturn(audioTrackerList);
+        when(request.getCallDurationList()).thenReturn(callDurationList);
 
-        certificateCourseService.saveState(stateRequestList);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
-        FrontLineWorker captured = captor.getValue();
-        assertTrue(captured.reportCard().scores().isEmpty());
-    }
-
-    @Test
-    public void shouldClearAllScoresForAGivenFLWWhenInteractionIsStartQuiz() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        String chapterIndexWhoseScoresShouldNotBeCleared = "2";
-        frontLineWorker.reportCard().addScore(new Score("1", "1", true));
-        frontLineWorker.reportCard().addScore(new Score(chapterIndexWhoseScoresShouldNotBeCleared, "1", true));
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
-
-        String json = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startQuiz\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
-
-        certificateCourseService.saveState(stateRequestList);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
-        FrontLineWorker captured = captor.getValue();
-        assertEquals(1, captured.reportCard().scores().size());
-        assertEquals(chapterIndexWhoseScoresShouldNotBeCleared, captured.reportCard().scores().get(0).chapterIndex());
-    }
-
-    @Test
-    public void shouldAddScoresToAChapterForAGivenFLWWhenInteractionIsisPlayAnswerExplanation() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
-
-        String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playAnswerExplanation\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
-
-        certificateCourseService.saveState(stateRequestList);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
-
-        FrontLineWorker captured = captor.getValue();
-        ReportCard reportCard = captured.reportCard();
-        assertEquals(1, reportCard.scores().size());
-
-        Score score = reportCard.scores().get(0);
-        assertEquals("1", score.chapterIndex());
-        assertEquals("0", score.questionIndex());
-        assertTrue(score.result());
-    }
-
-    @Test
-    public void shouldIncrementCourseAttemptsAndLogSendSMSForAGivenFLWWhenInteractionIsCourseCompletionAndScoreIsPassingScore() {
-        String callId = "123456";
-        String callerId = "919986574410";
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList(callId, callerId);
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "airtel");
-        ReportCard reportCard = mock(ReportCard.class);
-        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
-        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
+        when(stateRequestList.isNotEmpty()).thenReturn(true);
+        when(stateRequestList.getCallerId()).thenReturn(callerId);
 
         when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
 
-        String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playCourseResult\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
+        certificateCourseService.handleDisconnect(request);
 
-        certificateCourseService.saveState(stateRequestList);
+        verify(allTransformers).process(request);
+        verify(allCourseActions).execute(frontLineWorker, stateRequestList);
+        verify(audioTrackerService).saveAllForCourse(audioTrackerList);
+        verify(callLoggerService).saveAll(callDurationList);
+        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
-        FrontLineWorker captured = captor.getValue();
-
-        assertEquals(new Integer(1), captured.currentCourseAttempt());
-
-        ArgumentCaptor<SMSLog> captorLog = ArgumentCaptor.forClass(SMSLog.class);
-        verify(sendSMSLogService).add(captorLog.capture());
-        SMSLog SMSLog = captorLog.getValue();
-
-        assertEquals(callId, SMSLog.getCallId());
-        assertEquals(callerId, SMSLog.getCallerId());
-    }
-
-    @Test
-    public void shouldNotLogSendSMSForAGivenFLWWhenInteractionIsNotCourseCompletionAndScoreIsPassingScore() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "airtel");
-        ReportCard reportCard = mock(ReportCard.class);
-        when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
-        ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);
-
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
-
-        String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playAnswerExplanation\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
-
-        certificateCourseService.saveState(stateRequestList);
-
-        verify(sendSMSLogService, never()).add(Matchers.<SMSLog>any());
     }
 
 
-    @Test
-    public void shouldModifyFLWAggregateFromTheCertificateCourseStateRequestList() {
-        CertificationCourseStateRequestList stateRequestList = new CertificationCourseStateRequestList("123456", "123");
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-
-        when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
-
-        String json1 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startCertificationCourse\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
-
-        String json2 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startQuiz\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-
-        String json3 = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playAnswerExplanation\",\"courseItemState\":\"end\"," +
-                "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-
-        stateRequestList.add(json1, "1");
-        stateRequestList.add(json2, "2");
-        stateRequestList.add(json3, "3");
-
-        certificateCourseService.saveState(stateRequestList);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
-        FrontLineWorker captured = captor.getValue();
-
-        ReportCard reportCard = captured.reportCard();
-        assertEquals(1, reportCard.scores().size());
-
-        Score score = reportCard.scores().get(0);
-        assertEquals("1", score.chapterIndex());
-        assertEquals("0", score.questionIndex());
-        assertTrue(score.result());
-    }
-
-    @Test
-    public void shouldSaveAudioTrackerLogs() {
-        String callid = "callid";
-        String callerid = "callerid";
-        String dataToken = "1";
-        String jsonString =
-                "{" +
-                        "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
-                        "    \"duration\" : \"123\",                             " +
-                        "    \"time\" : \"123456789\"                          " +
-                        "}";
-        AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callid, callerid);
-        audioTrackerRequestList.add(jsonString, dataToken);
-
-        certificateCourseService.saveAudioTrackerState(audioTrackerRequestList);
-
-        verify(audioTrackerService).saveAudioTrackerState(audioTrackerRequestList, ServiceType.CERTIFICATE_COURSE);
-    }
 }
