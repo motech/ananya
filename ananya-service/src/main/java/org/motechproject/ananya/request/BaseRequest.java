@@ -1,5 +1,6 @@
 package org.motechproject.ananya.request;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.ServiceType;
 
 public abstract class BaseRequest {
@@ -57,4 +58,7 @@ public abstract class BaseRequest {
         return null;
     }
 
+    public boolean hasEmptyCalledNumber() {
+        return StringUtils.isBlank(calledNumber);
+    }
 }
