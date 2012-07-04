@@ -23,12 +23,18 @@ public class CalledNumberTransformerTest {
     private AllNodes allnodes;
     private String jobAidShortCode;
     private String courseShortCode;
+    private String jobAidLongCode;
+    private String courseLongCode;
+    private Integer codeSize;
 
     @Before
     public void setUp() {
         initMocks(this);
         jobAidShortCode = "57711";
         courseShortCode = "5771102";
+        jobAidLongCode = "08033578056";
+        courseLongCode = "08033578058";
+        codeSize = 7;
     }
 
     @Test
@@ -36,16 +42,18 @@ public class CalledNumberTransformerTest {
         List<String> shortCodes = Arrays.asList("10", "11", "12");
         when(allnodes.findValuesForKey("shortcode", "JobAidCourse")).thenReturn(shortCodes);
 
-        transformer = new CalledNumberTransformer(allnodes, jobAidShortCode, courseShortCode);
+        transformer = new CalledNumberTransformer(allnodes, jobAidShortCode, courseShortCode, jobAidLongCode, courseLongCode, codeSize);
 
         verifyForJobAid("57711b", jobAidShortCode);
         verifyForJobAid("5771110", "5771110");
         verifyForJobAid("5771118", jobAidShortCode);
         verifyForJobAid("5771111b5", "5771111");
         verifyForJobAid("57711b5567", jobAidShortCode);
+        verifyForJobAid("08033578056", jobAidLongCode);
 
-        verifyForCourse("5771102b5",courseShortCode);
-        verifyForCourse("5771102",courseShortCode);
+        verifyForCourse("5771102b5", courseShortCode);
+        verifyForCourse("5771102", courseShortCode);
+        verifyForCourse("08033578058", courseLongCode);
     }
 
     private void verifyForJobAid(String calledNumberInput, String expectedCalledNumber) {

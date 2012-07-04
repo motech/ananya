@@ -6,7 +6,7 @@ import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.seed.service.CourseItemMeasureSeedService;
-import org.motechproject.ananya.service.SendSMSService;
+import org.motechproject.ananya.seed.service.SMSSeedService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class CertificateCourseDataCorrectionSeed {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
-    private SendSMSService sendSMSService;
+    private SMSSeedService smsSeedService;
 
     @Seed(priority = 0, version = "1.3", comment = "Correct incorrect scores data for certificate course.")
     public void correctFlwScoresData() {
@@ -106,7 +106,7 @@ public class CertificateCourseDataCorrectionSeed {
                                 " FLW msisdn is : " + msisdn);
                         if (reportCard.totalScore() > FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
                             print("FLW " + msisdn + "had passed course. Sending FLW an SMS");
-                            sendSMSService.buildAndSendSMS(
+                            smsSeedService.buildAndSendSMS(
                                     frontLineWorker.getMsisdn(),
                                     frontLineWorker.getLocationId(),
                                     frontLineWorker.currentCourseAttempt());
