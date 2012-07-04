@@ -16,9 +16,8 @@ public abstract class BaseAnanyaController {
     public
     @ResponseBody
     String handleException(final Exception exception, HttpServletResponse response) {
-        log.error(getExceptionString(exception));
+        log.error(exception.getClass().getName(), exception);
         response.setStatus(HttpServletResponse.SC_OK);
-
         return "var ananyaResponse = \"ANANYA_ERROR\";";
     }
 
