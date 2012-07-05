@@ -5,6 +5,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.ananya.seed.service.CourseItemMeasureSeedService;
 import org.motechproject.ananya.seed.service.SMSSeedService;
 import org.motechproject.deliverytools.seed.Seed;
@@ -30,13 +31,15 @@ public class CertificateCourseDataCorrectionSeed {
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
     private SMSSeedService smsSeedService;
+    @Autowired
+    private AllSMSReferences allSMSReferences;
 
     @Seed(priority = 0, version = "1.3", comment = "Correct incorrect scores data for certificate course.")
     public void correctFlwScoresData() {
-        print("Correction FLW Scores data:START");
+        log.info("Correction FLW Scores data:START");
 
         List flwCourseHistory = courseItemMeasureSeedService.fetchFlwCourseHistory();
-        print("Fetched course item measure history.");
+        log.info("Fetched course item measure history.");
 
         Iterator iterator = flwCourseHistory.iterator();
         while (iterator.hasNext()) {
@@ -52,11 +55,17 @@ public class CertificateCourseDataCorrectionSeed {
                 flwQuizHistoryMap.put(msisdn, quizInformationList);
             }
         }
-        print("Created Flw quiz history map");
+        log.info("Created Flw quiz history map");
 
         for (String msisdn : flwQuizHistoryMap.keySet()) {
-            print("Correcting the score for FLW with msisdn : " + msisdn);
+            log.info("Correcting the score for FLW with msisdn : " + msisdn);
             FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+
+            if (allSMSReferences.findByMsisdn(msisdn) != null) {
+                log.info("SMS already sent for " + msisdn);
+                continue;
+            }
+
             List<QuizInformation> quizInformationList = flwQuizHistoryMap.get(msisdn);
             ReportCard reportCard = new ReportCard();
             boolean modified = false;
@@ -78,12 +87,12 @@ public class CertificateCourseDataCorrectionSeed {
             int newScore = frontLineWorker.reportCard().totalScore();
 
             if (modified) {
-                print("Updating FLW : " + msisdn + " oldScore - " + oldScore + " newScore - " + newScore);
+                log.info("Updating FLW : " + msisdn + " oldScore - " + oldScore + " newScore - " + newScore);
                 allFrontLineWorkers.update(frontLineWorker);
             }
 
             if (frontLineWorker.currentCourseAttempt() > 0) {
-                print("Checking FLW " + msisdn + " who has completed the course.");
+                log.info("Checking FLW " + msisdn + " who has completed the course.");
                 int previousChapterIndex = -1;
                 int counter = 0;
                 for (QuizInformation quizInformation : quizInformationList) {
@@ -97,15 +106,17 @@ public class CertificateCourseDataCorrectionSeed {
                             reportCard.addScore(new Score(quizInformation.chapterIndex, "" + i, false, ""));
 
                     }
-                    if (Integer.parseInt(quizInformation.chapterIndex) < previousChapterIndex ||
-                            (quizInformation.chapterIndex.equalsIgnoreCase("8") &&
-                                    quizInformation.type.equalsIgnoreCase("END") &&
-                                    counter == quizInformationList.size())) {
-                        print("Switching attempts at " + quizInformation.chapterIndex + " " + quizInformation.type +
+                    if (Integer.parseInt(quizInformation.chapterIndex) < previousChapterIndex
+                            || (quizInformation.chapterIndex.equalsIgnoreCase("8")
+                            && quizInformation.type.equalsIgnoreCase("END")
+                            && counter == quizInformationList.size())) {
+
+                        log.info("Switching attempts at " + quizInformation.chapterIndex + " " + quizInformation.type +
                                 " previousChapterIndex is " + previousChapterIndex +
                                 " FLW msisdn is : " + msisdn);
+
                         if (reportCard.totalScore() > FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE) {
-                            print("FLW " + msisdn + "had passed course. Sending FLW an SMS");
+                            log.info("FLW " + msisdn + "had passed course. Sending FLW an SMS");
                             smsSeedService.buildAndSendSMS(
                                     frontLineWorker.getMsisdn(),
                                     frontLineWorker.getLocationId(),
@@ -117,11 +128,7 @@ public class CertificateCourseDataCorrectionSeed {
                 }
             }
         }
-        print("Correction FLW Scores data:END");
-    }
-
-    private void print(String message) {
-        log.info(message);
+        log.info("Correction FLW Scores data:END");
     }
 
     private Integer getChapterIndexFromCourseItemDimension(String str) {
