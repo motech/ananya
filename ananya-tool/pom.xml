@@ -39,7 +39,7 @@
             <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya</groupId>
             <artifactId>motech-diagnostics</artifactId>
             <version>${motech.contrib.version}</version>
         </dependency>

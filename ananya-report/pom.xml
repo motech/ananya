@@ -81,7 +81,7 @@
             <version>3.0.5.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya</groupId>
             <artifactId>motech-bulk-export-import</artifactId>
             <version>${motech.contrib.version}</version>
         </dependency>

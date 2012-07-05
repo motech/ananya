@@ -1,6 +1,5 @@
 package org.motechproject.ananya.mapper;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.request.AudioTrackerRequest;
