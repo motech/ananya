@@ -14,7 +14,7 @@ public class CertificateCoursePostDataSetup {
 
     private final int noOfChapters = 9;
     private final String usersPerOperator = "25000";
-    private final String msisdnPrefix = "9999";
+    private final String msisdnPrefix = "99";
 
     @Autowired
     private AllNodes allNodes;

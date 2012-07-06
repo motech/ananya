@@ -23,7 +23,7 @@ import java.util.List;
 public class JobAidDataSetup {
 
     private final int usersPerOperator = 25000;
-    private final String msisdnPrefix = "9999";
+    private final String msisdnPrefix = "99";
     private final String noOfOperators = "6";
 
     private OperatorService operatorService;
