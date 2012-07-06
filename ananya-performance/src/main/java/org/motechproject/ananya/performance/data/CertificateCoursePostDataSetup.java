@@ -13,7 +13,7 @@ import java.io.*;
 public class CertificateCoursePostDataSetup {
 
     private final int noOfChapters = 9;
-    private final String usersPerOperator = "25";
+    private final String usersPerOperator = "25000";
     private final String msisdnPrefix = "9999";
 
     @Autowired

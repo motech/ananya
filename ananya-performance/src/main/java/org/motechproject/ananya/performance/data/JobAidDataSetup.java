@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 public class JobAidDataSetup {
 
-    private final int usersPerOperator = 25;
+    private final int usersPerOperator = 25000;
     private final String msisdnPrefix = "9999";
     private final String noOfOperators = "6";
 
