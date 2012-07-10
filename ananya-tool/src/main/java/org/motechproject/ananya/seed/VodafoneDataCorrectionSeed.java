@@ -54,7 +54,7 @@ public class VodafoneDataCorrectionSeed {
         }
     }
 
-    @Seed(priority = 0, version = "1.4", comment = "send sms and create measure for pending smsLogs after July7th. Refer bug #122")
+    @Seed(priority = 0, version = "1.5", comment = "send sms and create measure for pending smsLogs after July7th. Refer bug #122")
     public void correctSMSLogs() {
         List<SMSLog> smsLogs = allSMSLogs.getAll();
         for (SMSLog smslog : smsLogs) {
