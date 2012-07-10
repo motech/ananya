@@ -1,13 +1,9 @@
 package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.motechproject.ananya.domain.SMSReference;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.measure.SMSSentMeasure;
-import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
-import org.motechproject.ananya.service.measure.SMSSentMeasureService;
+import org.motechproject.ananya.domain.SMSLog;
+import org.motechproject.ananya.repository.AllSMSLogs;
+import org.motechproject.ananya.seed.service.SMSSeedService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
@@ -19,39 +15,25 @@ import java.util.List;
 @Component
 public class SMSSynchroniser implements Synchroniser {
 
-    private AllSMSReferences allSMSReferences;
-    private SMSSentMeasureService smsSentMeasureService;
-    private AllSMSSentMeasures allSMSSentMeasures;
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-
+    private AllSMSLogs allSMSLogs;
+    private SMSSeedService smsSeedService;
 
     @Autowired
-    public SMSSynchroniser(AllSMSReferences allSMSReferences,
-                           SMSSentMeasureService smsSentMeasureService,
-                           AllSMSSentMeasures allSMSSentMeasures,
-                           AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
-        this.allSMSReferences = allSMSReferences;
-        this.smsSentMeasureService = smsSentMeasureService;
-        this.allSMSSentMeasures = allSMSSentMeasures;
-        this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+    public SMSSynchroniser(AllSMSLogs allSMSLogs, SMSSeedService smsSeedService) {
+        this.allSMSLogs = allSMSLogs;
+        this.smsSeedService = smsSeedService;
     }
 
     @Override
     public SynchroniserLog replicate() {
         SynchroniserLog synchroniserLog = new SynchroniserLog("SMS");
-        List<SMSReference> smsReferences = allSMSReferences.getAll();
-        
-        for (SMSReference smsReference : smsReferences) {
-            String callerId = smsReference.getMsisdn();
+        List<SMSLog> smsLogs = allSMSLogs.getAll();
+        for (SMSLog smslog : smsLogs) {
             try {
-                FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
-                SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
-                if (smsSentMeasure == null) {
-                    smsSentMeasureService.createSMSSentMeasure(callerId);
-                    synchroniserLog.add(callerId, "Success");
-                }
+                smsSeedService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+                synchroniserLog.add(smslog.getCallerId(), "Success");
             } catch (Exception e) {
-                synchroniserLog.add(callerId, "Error:" + ExceptionUtils.getFullStackTrace(e));
+                synchroniserLog.add(smslog.getCallerId(), "Error:" + ExceptionUtils.getFullStackTrace(e));
             }
         }
         return synchroniserLog;
