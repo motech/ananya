@@ -3,7 +3,10 @@ package org.motechproject.ananya.seed;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.BaseLog;
 import org.motechproject.ananya.domain.RegistrationLog;
+import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
+import org.motechproject.ananya.repository.AllSMSLogs;
+import org.motechproject.ananya.seed.service.SMSSeedService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
@@ -22,15 +25,19 @@ public class VodafoneDataCorrectionSeed {
 
     private AllRegistrationLogs allRegistrationLogs;
 
+    private AllSMSLogs allSMSLogs;
+
+    private SMSSeedService smsSeedService;
+
     @Autowired
-    public VodafoneDataCorrectionSeed(AllRegistrationLogs allRegistrationLogs) {
+    public VodafoneDataCorrectionSeed(AllRegistrationLogs allRegistrationLogs, AllSMSLogs allSMSLogs, SMSSeedService smsSeedService) {
         this.allRegistrationLogs = allRegistrationLogs;
+        this.allSMSLogs = allSMSLogs;
+        this.smsSeedService = smsSeedService;
     }
 
-    @Seed(priority = 0, version = "1.4", comment = "update registrationLogs sent for Vodafone w/o callIds after July7th release. " +
-            "Refer bug#122, reflection used as setter not present in given build")
+    @Seed(priority = 0, version = "1.4", comment = "update registrationLogs sent for Vodafone w/o callIds after July7th release.Refer bug#122")
     public void correctRegistrationLogsWithMissingCallIds() throws NoSuchFieldException {
-
         Long time = DateUtil.newDateTime(2012, 7, 7).withHourOfDay(1).getMillis();
 
         Field callIdField = BaseLog.class.getDeclaredField("callId");
@@ -38,9 +45,7 @@ public class VodafoneDataCorrectionSeed {
 
         List<RegistrationLog> registrationLogs = allRegistrationLogs.getAll();
         for (RegistrationLog registrationLog : registrationLogs) {
-
             if (StringUtils.isNotBlank(registrationLog.getCallId())) continue;
-
             String callerId = registrationLog.getCallerId();
             ReflectionUtils.setField(callIdField, registrationLog, callerId + "-" + time);
             allRegistrationLogs.update(registrationLog);
@@ -48,4 +53,16 @@ public class VodafoneDataCorrectionSeed {
 
         }
     }
+
+    @Seed(priority = 0, version = "1.4", comment = "send sms and create measure for pending smsLogs after July7th. Refer bug #122")
+    public void correctSMSLogs() {
+        List<SMSLog> smsLogs = allSMSLogs.getAll();
+        for (SMSLog smslog : smsLogs) {
+            smsSeedService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+            log.info("sent SMS and created measure for " + smslog.getCallerId());
+            allSMSLogs.remove(smslog);
+        }
+    }
+
 }
+
