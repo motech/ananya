@@ -3,7 +3,6 @@ package org.motechproject.ananya.support.synchroniser;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 import org.motechproject.ananya.support.synchroniser.base.Priority;
@@ -22,9 +21,9 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
     private RegistrationLogService registrationLogService;
 
     @Autowired
-    public FrontLineWorkerSynchroniser(FrontLineWorkerService frontLineWorkerService,
-                                       RegistrationMeasureService registrationMeasureService,
-                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, RegistrationLogService registrationLogService) {
+    public FrontLineWorkerSynchroniser(RegistrationMeasureService registrationMeasureService,
+                                       RegistrationLogService registrationLogService,
+                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
         this.registrationMeasureService = registrationMeasureService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.registrationLogService = registrationLogService;
@@ -39,10 +38,8 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
             Long msisdn = registrationLog.callerIdAsLong();
             String callId = registrationLog.getCallId();
             try {
-                if (allFrontLineWorkerDimensions.fetchFor(msisdn) == null) {
-                    registrationMeasureService.createFor(callId);
-                    synchroniserLog.add(msisdn.toString(), "Success");
-                }
+                registrationMeasureService.createFor(callId);
+                synchroniserLog.add(msisdn.toString(), "Success");
             } catch (Exception e) {
                 synchroniserLog.add(msisdn.toString(), "Error: " + ExceptionUtils.getFullStackTrace(e));
             }
