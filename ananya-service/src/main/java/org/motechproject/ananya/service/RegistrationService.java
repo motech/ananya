@@ -33,19 +33,13 @@ public class RegistrationService {
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 
-        RegistrationStatus registrationStatus = isInvalidNameOrDesignation(name, designation)
-                ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdate(
-                callerId, name, Designation.getFor(designation), location, registrationStatus);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateForImport(
+                callerId, name, Designation.getFor(designation), location);
 
         registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn(), "");
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
-    }
-
-    private boolean isInvalidNameOrDesignation(String name, String designation) {
-        return StringUtils.isBlank(name) || Designation.isInValid(designation);
     }
 
     private boolean isInvalidCallerId(String callerId) {

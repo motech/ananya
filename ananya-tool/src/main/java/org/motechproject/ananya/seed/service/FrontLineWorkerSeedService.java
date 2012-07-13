@@ -184,7 +184,7 @@ public class FrontLineWorkerSeedService {
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
 
         RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
-        RegistrationStatus expectedRegistrationStatus = frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+        RegistrationStatus expectedRegistrationStatus = frontLineWorkerService.deduceRegistrationStatusOld(frontLineWorker, location);
         if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
             log.info("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +

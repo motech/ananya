@@ -61,7 +61,7 @@ public class CertificateCourseServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
-        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.createOrUpdateForCall(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(request);
 
@@ -84,7 +84,7 @@ public class CertificateCourseServiceTest {
         frontLineWorker.setCircle(circle);
         frontLineWorker.setModified();
 
-        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.createOrUpdateForCall(callerId, operator, circle)).thenReturn(frontLineWorker);
 
         certificateCourseService.createCallerData(request);
 

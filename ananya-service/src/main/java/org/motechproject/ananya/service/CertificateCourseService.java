@@ -47,7 +47,7 @@ public class CertificateCourseService {
         String callId = request.getCallId();
         allTransformers.process(request);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateForCall(
                 request.getCallerId(),
                 request.getOperator(),
                 request.getCircle());
