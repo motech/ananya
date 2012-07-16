@@ -18,6 +18,7 @@ import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -204,6 +205,25 @@ public class FrontLineWorkerSeedService {
             frontLineWorker.setRegistrationStatus(expectedRegistrationStatus);
             allFrontLineWorkers.update(frontLineWorker);
         }
+    }
+
+    @Transactional
+    public void activateNewRegistrationStatusForFLW(FrontLineWorker frontLineWorker) {
+        Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+
+        boolean hasCalledSystem = DataAccessUtils.intResult(template.find(
+                "select count(*) from CallDurationMeasure cdm where cdm.frontLineWorkerDimension.id = " +
+                        frontLineWorkerDimension.getId())) > 0;
+
+        RegistrationStatus newRegistrationStatus = !hasCalledSystem
+                ? RegistrationStatus.UNREGISTERED
+                : frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+
+        frontLineWorker.setRegistrationStatus(newRegistrationStatus);
+        allFrontLineWorkers.update(frontLineWorker);
+        frontLineWorkerDimension.setStatus(newRegistrationStatus.toString());
+        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
     }
 
 }

@@ -34,4 +34,10 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         if (workers == null || workers.isEmpty()) return null;
         return workers;
     }
+
+    public List<FrontLineWorker> getMsisdnsFrom(String startKey, int count) {
+        return db.queryView(
+                createQuery("by_msisdn").startKey(startKey).limit(count).includeDocs(true),
+                FrontLineWorker.class);
+    }
 }

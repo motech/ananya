@@ -4,6 +4,7 @@ import liquibase.util.csv.CSVReader;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.LocationService;
@@ -30,6 +31,8 @@ public class FrontLineWorkerSeed {
     private LocationService locationService;
     @Autowired
     private FrontLineWorkerSeedService seedService;
+    @Autowired
+    private AllFrontLineWorkers allFrontLineWorkers;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
@@ -141,6 +144,31 @@ public class FrontLineWorkerSeed {
                 log.info("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
         }
         log.info("Correction of registration statuses done.");
+    }
+
+    @Seed(priority = 0, version = "1.6", comment = "Changing registration status of FLWs based on new definition")
+    public void activateNewRegistrationStatusesForAllFLWs() {
+        int batchSize = 1000;
+        String startKey = "";
+        List<FrontLineWorker> frontLineWorkers;
+
+        while (true) {
+            frontLineWorkers = allFrontLineWorkers.getMsisdnsFrom(startKey, batchSize);
+
+            if (frontLineWorkers.size() < batchSize) break;
+
+            for (FrontLineWorker frontLineWorker : frontLineWorkers.subList(0, frontLineWorkers.size() - 1)) {
+                log.info("Changing registration status for FLW with msisdn : " + frontLineWorker.getMsisdn());
+                seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+            }
+
+            startKey = frontLineWorkers.get(frontLineWorkers.size() - 1).getMsisdn();
+        }
+
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
+            log.info("Changing registration status for FLW with msisdn : " + frontLineWorker.getMsisdn());
+            seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+        }
     }
 
 }

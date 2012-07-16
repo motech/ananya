@@ -1,5 +1,7 @@
 package org.motechproject.ananya.repository;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
@@ -7,6 +9,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -15,6 +18,12 @@ import static junit.framework.Assert.assertTrue;
 public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
+
+    @Before
+    @After
+    public void setUp() throws IOException {
+        allFrontLineWorkers.removeAll();
+    }
 
     @Test
     public void shouldAddAndRetrieveRecord() {
@@ -63,5 +72,32 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
         List<FrontLineWorker> allForMsisdn = allFrontLineWorkers.getAllForMsisdn(msisdn);
 
         assertEquals(2, allForMsisdn.size());
+    }
+
+    @Test
+    public void shouldRetrieveOnlyRequestedCountOfMsisdns() {
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9999991", "airtel");
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9999992", "airtel");
+        FrontLineWorker frontLineWorker3 = new FrontLineWorker("9999993", "airtel");
+        FrontLineWorker frontLineWorker4 = new FrontLineWorker("9999994", "airtel");
+        FrontLineWorker frontLineWorker5 = new FrontLineWorker("9999995", "airtel");
+        FrontLineWorker frontLineWorker6 = new FrontLineWorker("9999996", "airtel");
+        allFrontLineWorkers.add(frontLineWorker1);
+        allFrontLineWorkers.add(frontLineWorker2);
+        allFrontLineWorkers.add(frontLineWorker3);
+        allFrontLineWorkers.add(frontLineWorker4);
+        allFrontLineWorkers.add(frontLineWorker5);
+        allFrontLineWorkers.add(frontLineWorker6);
+
+        List<FrontLineWorker> fetchedFrontLineWorkers;
+        fetchedFrontLineWorkers = allFrontLineWorkers.getMsisdnsFrom(frontLineWorker3.getMsisdn(), 2);
+
+        assertEquals(2, fetchedFrontLineWorkers.size());
+        assertEquals(frontLineWorker3.getMsisdn(), fetchedFrontLineWorkers.get(0).getMsisdn());
+        assertEquals(frontLineWorker4.getMsisdn(), fetchedFrontLineWorkers.get(1).getMsisdn());
+
+        fetchedFrontLineWorkers = allFrontLineWorkers.getMsisdnsFrom(frontLineWorker6.getMsisdn(), 3);
+        assertEquals(1, fetchedFrontLineWorkers.size());
+        assertEquals(frontLineWorker6.getMsisdn(), fetchedFrontLineWorkers.get(0).getMsisdn());
     }
 }
