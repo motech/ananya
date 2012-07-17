@@ -37,4 +37,6 @@
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
     </bean>
+
+    <bean id="metricsAgent" class="org.motechproject.metrics.impl.MultipleMetricsAgentImpl"/>
 </beans>
