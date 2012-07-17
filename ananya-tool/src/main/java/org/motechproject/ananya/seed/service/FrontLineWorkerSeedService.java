@@ -212,9 +212,12 @@ public class FrontLineWorkerSeedService {
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
 
-        boolean hasCalledSystem = DataAccessUtils.intResult(template.find(
-                "select count(*) from CallDurationMeasure cdm where cdm.frontLineWorkerDimension.id = " +
-                        frontLineWorkerDimension.getId())) > 0;
+        boolean hasCalledSystem =
+                frontLineWorkerDimension != null
+                        ? DataAccessUtils.intResult(template.find(
+                            "select count(*) from CallDurationMeasure cdm where cdm.frontLineWorkerDimension.id = " +
+                                    frontLineWorkerDimension.getId())) > 0
+                        : false;
 
         RegistrationStatus newRegistrationStatus = !hasCalledSystem
                 ? RegistrationStatus.UNREGISTERED
@@ -222,8 +225,11 @@ public class FrontLineWorkerSeedService {
 
         frontLineWorker.setRegistrationStatus(newRegistrationStatus);
         allFrontLineWorkers.update(frontLineWorker);
-        frontLineWorkerDimension.setStatus(newRegistrationStatus.toString());
-        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+
+        if (frontLineWorkerDimension != null) {
+            frontLineWorkerDimension.setStatus(newRegistrationStatus.toString());
+            allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+        }
     }
 
 }

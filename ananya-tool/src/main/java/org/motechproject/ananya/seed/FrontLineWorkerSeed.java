@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -45,7 +46,7 @@ public class FrontLineWorkerSeed {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
         FrontLineWorkerSeed frontLineWorkerSeed =
                 (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
-        frontLineWorkerSeed.correctInvalidRegistrationStatusForAllFLWs();
+        frontLineWorkerSeed.activateNewRegistrationStatusesForAllFLWs();
     }
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
@@ -148,7 +149,7 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 0, version = "1.6", comment = "Changing registration status of FLWs based on new definition")
     public void activateNewRegistrationStatusesForAllFLWs() {
-        int batchSize = 1000;
+        int batchSize = 100;
         String startKey = "";
         List<FrontLineWorker> frontLineWorkers;
 
@@ -158,15 +159,19 @@ public class FrontLineWorkerSeed {
             if (frontLineWorkers.size() < batchSize) break;
 
             for (FrontLineWorker frontLineWorker : frontLineWorkers.subList(0, frontLineWorkers.size() - 1)) {
-                log.info("Changing registration status for FLW with msisdn : " + frontLineWorker.getMsisdn());
-                seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+                log.info("Changing registration status (1) for FLW with msisdn : " + frontLineWorker.getMsisdn());
+                try {
+                    seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+                } catch (Exception e) {
+                    log.error("Error converting reg status " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
+                }
             }
 
             startKey = frontLineWorkers.get(frontLineWorkers.size() - 1).getMsisdn();
         }
 
         for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            log.info("Changing registration status for FLW with msisdn : " + frontLineWorker.getMsisdn());
+            log.info("Changing registration status (2) for FLW with msisdn : " + frontLineWorker.getMsisdn());
             seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
         }
     }
