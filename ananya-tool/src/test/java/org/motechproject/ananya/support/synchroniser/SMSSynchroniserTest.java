@@ -41,6 +41,8 @@ public class SMSSynchroniserTest {
 
         verify(smsSeedService).buildAndSendSMS("callerId1", "locationId1", 1);
         verify(smsSeedService).buildAndSendSMS("callerId2", "locationId2", 2);
+        verify(allSMSLogs).remove(smsLog1);
+        verify(allSMSLogs).remove(smsLog2);
 
         assertEquals(2, synchroniserLog.getItems().size());
         assertEquals("callerId1: Success", synchroniserLog.getItems().get(0).print());

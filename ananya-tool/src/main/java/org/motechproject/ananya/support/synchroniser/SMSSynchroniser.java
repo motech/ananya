@@ -32,6 +32,7 @@ public class SMSSynchroniser implements Synchroniser {
             try {
                 smsSeedService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
                 synchroniserLog.add(smslog.getCallerId(), "Success");
+                allSMSLogs.remove(smslog);
             } catch (Exception e) {
                 synchroniserLog.add(smslog.getCallerId(), "Error:" + ExceptionUtils.getFullStackTrace(e));
             }
