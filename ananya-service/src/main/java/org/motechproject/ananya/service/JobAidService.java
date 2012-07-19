@@ -64,10 +64,7 @@ public class JobAidService {
 
     public void handleDisconnect(JobAidServiceRequest request) {
         allTransformers.process(request);
-
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(request.getCallerId(), request.getCallDuration());
-        frontLineWorkerService.updatePromptsFor(request.getCallerId(), request.getPrompts());
-
+        frontLineWorkerService.updateJobAidState(request.getCallerId(), request.getPrompts(), request.getCallDuration());
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);
