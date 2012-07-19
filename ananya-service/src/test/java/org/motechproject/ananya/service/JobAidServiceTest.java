@@ -142,8 +142,7 @@ public class JobAidServiceTest {
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
         verify(allTransformers).process(jobAidServiceRequest);
-        verify(frontLineWorkerService).updateJobAidUsageAndAccessTime(callerId, callDuration);
-        verify(frontLineWorkerService).updatePromptsFor(eq(callerId), anyListOf(String.class));
+        verify(frontLineWorkerService).updateJobAidState(eq(callerId), anyListOf(String.class), eq(callDuration));
         verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
 
         ArgumentCaptor<CallDurationList> callDurationCaptor = ArgumentCaptor.forClass(CallDurationList.class);

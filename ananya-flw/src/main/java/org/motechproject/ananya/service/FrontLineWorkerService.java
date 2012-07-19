@@ -90,21 +90,17 @@ public class FrontLineWorkerService {
         log.info("updated SMS reference for:" + smsReference.getMsisdn());
     }
 
-    public void updatePromptsFor(String callerId, List<String> promptList) {
+    public void updateJobAidState(String callerId, List<String> promptList, Integer currentCallDuration) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated prompts heard for " + frontLineWorker);
-    }
 
-    public void updateJobAidUsageAndAccessTime(String callerId, Integer currentCallDuration) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
+
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated jobaid usage and access time for " + frontLineWorker);
+        log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker);
     }
 
     public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {

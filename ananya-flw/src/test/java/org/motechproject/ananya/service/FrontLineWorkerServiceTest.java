@@ -13,8 +13,10 @@ import org.motechproject.ananya.repository.AllSMSReferences;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -123,37 +125,6 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdatePromptsForFLW() {
-        String callerId = "callerId";
-        List<String> promptIds = Arrays.asList("prompt1", "prompt2");
-
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(mockedFrontLineWorker);
-
-        try {
-            frontLineWorkerService.updatePromptsFor(callerId, promptIds);
-        } catch (Exception e) {
-        }
-
-        verify(mockedFrontLineWorker).markPromptHeard(promptIds.get(0));
-        verify(mockedFrontLineWorker).markPromptHeard(promptIds.get(1));
-        verify(allFrontLineWorkers).update(mockedFrontLineWorker);
-    }
-
-    @Test
-    public void shouldUpdateTheFrontLineWorkerWithUsage() {
-        String callerId = "callerId";
-        String operator = "airtel";
-        Integer currentUsage = 20;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, currentUsage);
-
-        assertEquals(currentUsage, frontLineWorker.getCurrentJobAidUsage());
-        verify(allFrontLineWorkers).update(frontLineWorker);
-    }
-
-    @Test
     public void shouldFindByCallerId() {
         FrontLineWorker expectedFrontLineWorker = new FrontLineWorker();
         when(allFrontLineWorkers.findByMsisdn("123")).thenReturn(expectedFrontLineWorker);
@@ -202,45 +173,6 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldUpdateFLWUsageByAddingCurrentCallDuration() {
-        String callerId = "callerId";
-        String operator = "airtel";
-        Integer currentUsage = 20;
-        int callDuration = 15;
-        int newUsage = currentUsage + callDuration;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        frontLineWorker.setCurrentJobAidUsage(currentUsage);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-
-        FrontLineWorker captorValue = captor.getValue();
-        assertEquals((Object) newUsage, captorValue.getCurrentJobAidUsage());
-    }
-
-    @Test
-    public void shouldUpdateTheLastAccessTimeForFlw() {
-        String callerId = "callerId";
-        String operator = "airtel";
-        int callDuration = 15;
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(callerId, callDuration);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-
-        FrontLineWorker captorValue = captor.getValue();
-        assertEquals(captorValue.getLastJobAidAccessTime().getMonthOfYear(), DateTime.now().getMonthOfYear());
-        assertEquals(captorValue.getLastJobAidAccessTime().getYear(), DateTime.now().getYear());
-    }
-
-    @Test
     public void shouldResetLastAccessTimeForJobAidAndMaxUsagePromptHeardAtBeginningOfTheMonth() {
         String callerId = "callerId";
         String randomPromptKey = "random";
@@ -257,9 +189,38 @@ public class FrontLineWorkerServiceTest {
 
         FrontLineWorker flwForJobAidCallerData = frontLineWorkerService.findForJobAidCallerData("callerId", "operator", circle);
 
-
         assertEquals((Object) 0, flwForJobAidCallerData.getCurrentJobAidUsage());
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey(promptKey));
+    }
+
+    @Test
+    public void shouldUpdateJobAidState() {
+        String callerId = "callerId";
+        String operator = "airtel";
+
+        int currentUsage = 20;
+        int callDuration = 15;
+        int newUsage = currentUsage + callDuration;
+
+        List<String> promptIds = Arrays.asList("prompt1", "prompt2");
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        frontLineWorker.setCurrentJobAidUsage(currentUsage);
+        when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+
+        frontLineWorkerService.updateJobAidState(callerId, promptIds, callDuration);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+
+        FrontLineWorker captured = captor.getValue();
+        assertEquals(new Integer(newUsage), captured.getCurrentJobAidUsage());
+        Map<String,Integer> promptsHeard = captured.getPromptsHeard();
+        assertEquals(new Integer(1), promptsHeard.get("prompt1"));
+        assertEquals(new Integer(1), promptsHeard.get("prompt2"));
+
+        assertEquals(captured.getLastJobAidAccessTime().getMonthOfYear(), DateTime.now().getMonthOfYear());
+        assertEquals(captured.getLastJobAidAccessTime().getYear(), DateTime.now().getYear());
     }
 
     @Test
@@ -370,15 +331,15 @@ public class FrontLineWorkerServiceTest {
         Location defaultLocation = Location.getDefaultLocation();
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation , RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation , RegistrationStatus.REGISTERED);
+                "1234", "", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation , RegistrationStatus.REGISTERED);
+                "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", Designation.INVALID, completeLocation , RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.INVALID, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation , RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.ANM, defaultLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
                 "1234", "name", Designation.ANM, incompleteLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
