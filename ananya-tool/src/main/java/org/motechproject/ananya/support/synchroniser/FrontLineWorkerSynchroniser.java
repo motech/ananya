@@ -9,12 +9,14 @@ import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Properties;
 
 @Component
-public class FrontLineWorkerSynchroniser implements Synchroniser {
+public class FrontLineWorkerSynchroniser extends BaseSynchronizer implements Synchroniser {
 
     private RegistrationMeasureService registrationMeasureService;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -23,10 +25,12 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
     @Autowired
     public FrontLineWorkerSynchroniser(RegistrationMeasureService registrationMeasureService,
                                        RegistrationLogService registrationLogService,
-                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions) {
+                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                       @Qualifier("ananyaProperties") Properties properties) {
         this.registrationMeasureService = registrationMeasureService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.registrationLogService = registrationLogService;
+        this.properties = properties;
     }
 
     @Override
@@ -38,6 +42,7 @@ public class FrontLineWorkerSynchroniser implements Synchroniser {
             Long msisdn = registrationLog.callerIdAsLong();
             String callId = registrationLog.getCallId();
             try {
+                if(!shouldProcessLog(registrationLog)) continue;
                 registrationMeasureService.createFor(callId);
                 synchroniserLog.add(msisdn.toString(), "Success");
             } catch (Exception e) {

@@ -8,21 +8,25 @@ import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Properties;
 
 @Component
-public class CertificateCourseItemSynchroniser implements Synchroniser {
+public class CertificateCourseItemSynchroniser extends BaseSynchronizer implements Synchroniser {
 
     private CertificateCourseLogService certificateCourseLogService;
     private CourseContentMeasureService courseContentMeasureService;
 
     @Autowired
     public CertificateCourseItemSynchroniser(CertificateCourseLogService certificateCourseLogService,
-                                             CourseContentMeasureService courseContentMeasureService) {
+                                             CourseContentMeasureService courseContentMeasureService,
+                                             @Qualifier("ananyaProperties") Properties properties) {
         this.certificateCourseLogService = certificateCourseLogService;
         this.courseContentMeasureService = courseContentMeasureService;
+        this.properties = properties;
     }
 
     @Override
@@ -31,6 +35,7 @@ public class CertificateCourseItemSynchroniser implements Synchroniser {
         List<CertificationCourseLog> courseLogs = certificateCourseLogService.getAll();
         for (CertificationCourseLog courseLog : courseLogs) {
             try {
+                if(!shouldProcessLog(courseLog)) continue;
                 courseContentMeasureService.createFor(courseLog.getCallId());
                 synchroniserLog.add(courseLog.getCallId(), "Success");
             } catch (Exception e) {

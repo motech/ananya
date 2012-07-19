@@ -8,21 +8,25 @@ import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Properties;
 
 @Component
-public class CallDurationSychroniser implements Synchroniser {
+public class CallDurationSychroniser extends BaseSynchronizer implements Synchroniser {
 
     private CallLogService callLoggerService;
     private CallDurationMeasureService callDurationMeasureService;
 
     @Autowired
     public CallDurationSychroniser(CallLogService callLoggerService,
-                                   CallDurationMeasureService callDurationMeasureService) {
+                                   CallDurationMeasureService callDurationMeasureService,
+                                   @Qualifier("ananyaProperties") Properties properties) {
         this.callLoggerService = callLoggerService;
         this.callDurationMeasureService = callDurationMeasureService;
+        this.properties = properties;
     }
 
     @Override
@@ -31,6 +35,7 @@ public class CallDurationSychroniser implements Synchroniser {
         List<CallLog> callLogs = callLoggerService.getAll();
         for (CallLog callLog : callLogs) {
             try {
+                if(!shouldProcessLog(callLog)) continue;
                 callDurationMeasureService.createFor(callLog.getCallId());
                 synchroniserLog.add(callLog.getCallId(), "Success");
             } catch (Exception e) {
