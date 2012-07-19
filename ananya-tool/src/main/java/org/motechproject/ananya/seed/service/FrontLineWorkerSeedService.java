@@ -171,7 +171,7 @@ public class FrontLineWorkerSeedService {
 
     @Transactional
     public List<FrontLineWorkerDimension> getFrontLineWorkers() {
-        return (List<FrontLineWorkerDimension>)template.find("select f from FrontLineWorkerDimension f");
+        return (List<FrontLineWorkerDimension>) template.find("select f from FrontLineWorkerDimension f");
     }
 
     @Transactional
@@ -184,7 +184,7 @@ public class FrontLineWorkerSeedService {
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
 
         RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
-        RegistrationStatus expectedRegistrationStatus = frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+        RegistrationStatus expectedRegistrationStatus = deduceRegistrationStatus(frontLineWorker, location);
         if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
             log.info("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
@@ -204,6 +204,20 @@ public class FrontLineWorkerSeedService {
             frontLineWorker.setRegistrationStatus(expectedRegistrationStatus);
             allFrontLineWorkers.update(frontLineWorker);
         }
+    }
+
+    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
+        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
+
+        if (!(locationAbsent || locationIncomplete || designationInvalid || nameInvalid))
+            return RegistrationStatus.REGISTERED;
+
+        if (locationAbsent && designationInvalid && nameInvalid) return RegistrationStatus.UNREGISTERED;
+
+        return RegistrationStatus.PARTIALLY_REGISTERED;
     }
 
 }
