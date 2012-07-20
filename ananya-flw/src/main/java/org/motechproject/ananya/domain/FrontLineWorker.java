@@ -294,4 +294,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public int hashCode() {
         return msisdn != null ? msisdn.hashCode() : 0;
     }
+
+    @JsonIgnore
+    public boolean isUnRegistered() {
+        return status.equals(RegistrationStatus.UNREGISTERED);
+    }
+
+    @JsonIgnore
+    public boolean isAlreadyRegistered() {
+        return !isUnRegistered();
+    }
 }

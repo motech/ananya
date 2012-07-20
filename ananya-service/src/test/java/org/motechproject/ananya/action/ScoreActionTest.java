@@ -46,7 +46,7 @@ public class ScoreActionTest {
         scoreAction.process(frontLineWorker, stateRequestList);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        verify(frontlineWorkerService).updateCertificateCourseState(captor.capture());
         FrontLineWorker captured = captor.getValue();
         assertTrue(captured.reportCard().scores().isEmpty());
     }
@@ -68,7 +68,7 @@ public class ScoreActionTest {
         scoreAction.process(frontLineWorker, stateRequestList);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        verify(frontlineWorkerService).updateCertificateCourseState(captor.capture());
         FrontLineWorker captured = captor.getValue();
         assertEquals(1, captured.reportCard().scores().size());
         assertEquals(chapterIndexWhoseScoresShouldNotBeCleared, captured.reportCard().scores().get(0).chapterIndex());
@@ -90,7 +90,7 @@ public class ScoreActionTest {
         scoreAction.process(frontLineWorker, stateRequestList);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        verify(frontlineWorkerService).updateCertificateCourseState(captor.capture());
 
         FrontLineWorker captured = captor.getValue();
         ReportCard reportCard = captured.reportCard();
@@ -122,7 +122,7 @@ public class ScoreActionTest {
         scoreAction.process(frontLineWorker, stateRequestList);
 
         ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontlineWorkerService).updateCertificateCourseStateFor(captor.capture());
+        verify(frontlineWorkerService).updateCertificateCourseState(captor.capture());
         FrontLineWorker captured = captor.getValue();
         assertEquals(new Integer(1), captured.currentCourseAttempt());
     }
