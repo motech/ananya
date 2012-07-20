@@ -221,7 +221,7 @@ public class FrontLineWorkerSeedService {
 
         RegistrationStatus newRegistrationStatus = !hasCalledSystem
                 ? RegistrationStatus.UNREGISTERED
-                : frontLineWorkerService.deduceRegistrationStatus(frontLineWorker, location);
+                : deduceRegistrationStatus(frontLineWorker, location);
 
         frontLineWorker.setRegistrationStatus(newRegistrationStatus);
         allFrontLineWorkers.update(frontLineWorker);
@@ -243,6 +243,17 @@ public class FrontLineWorkerSeedService {
         if (locationAbsent && designationInvalid && nameInvalid)
             return RegistrationStatus.UNREGISTERED;
         return RegistrationStatus.PARTIALLY_REGISTERED;
+    }
+
+    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
+        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
+
+        if (locationAbsent || locationIncomplete || designationInvalid || nameInvalid)
+            return RegistrationStatus.PARTIALLY_REGISTERED;
+        return RegistrationStatus.REGISTERED;
     }
 
 

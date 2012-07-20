@@ -304,4 +304,17 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public boolean isAlreadyRegistered() {
         return !isUnRegistered();
     }
+
+    public void decideRegistrationStatus(Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(designationName());
+        boolean nameInvalid = StringUtils.isBlank(name);
+
+        if (locationAbsent || locationIncomplete || designationInvalid || nameInvalid) {
+            status = RegistrationStatus.PARTIALLY_REGISTERED;
+            return;
+        }
+        status = RegistrationStatus.REGISTERED;
+    }
 }

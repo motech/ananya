@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
@@ -20,10 +19,12 @@ public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
+    private LocationService locationService;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService) {
         this.allFrontLineWorkers = allFrontLineWorkers;
+        this.locationService = locationService;
     }
 
     public FrontLineWorker findByCallerId(String callerId) {
@@ -43,10 +44,11 @@ public class FrontLineWorkerService {
     public FrontLineWorker createOrUpdateForCall(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
+        //create new FLW
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, operator);
+            frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
             frontLineWorker.setCircle(circle);
-            frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
             frontLineWorker.setModified();
 
             allFrontLineWorkers.add(frontLineWorker);
@@ -54,12 +56,13 @@ public class FrontLineWorkerService {
             return frontLineWorker;
         }
 
+        //no change in FLW
         if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle) && frontLineWorker.isAlreadyRegistered()) {
             return frontLineWorker;
         }
 
-        if (frontLineWorker.isUnRegistered())
-            frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
+        //circle or operator is updated
+        frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setModified();
@@ -80,7 +83,7 @@ public class FrontLineWorkerService {
         }
 
         frontLineWorker.update(name, designation, location);
-        frontLineWorker.setRegistrationStatus(deduceRegistrationStatus(frontLineWorker, location));
+        frontLineWorker.decideRegistrationStatus(location);
         allFrontLineWorkers.update(frontLineWorker);
         log.info("updated:" + frontLineWorker);
         return frontLineWorker;
@@ -111,17 +114,6 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
-    }
-
-    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
-        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
-        boolean locationIncomplete = location.isMissingDetails();
-        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
-        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
-
-        if (locationAbsent || locationIncomplete || designationInvalid || nameInvalid)
-            return RegistrationStatus.PARTIALLY_REGISTERED;
-        return RegistrationStatus.REGISTERED;
     }
 
 
