@@ -33,7 +33,7 @@ public class FrontLineWorkerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, allSMSReferences);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers);
     }
 
     @Test
@@ -240,23 +240,6 @@ public class FrontLineWorkerServiceTest {
         assertFalse(flwForJobAidCallerData.getPromptsHeard().containsKey("Max_Usage"));
     }
 
-    @Test
-    public void shouldAddSMSReferenceNumber() {
-        SMSReference smsReference = new SMSReference("1234", "123456");
-
-        frontLineWorkerService.addSMSReferenceNumber(smsReference);
-
-        verify(allSMSReferences).add(smsReference);
-    }
-
-    @Test
-    public void shouldUpdateSMSReferenceNumber() {
-        SMSReference smsReference = new SMSReference("1234", "123456");
-
-        frontLineWorkerService.updateSMSReferenceNumber(smsReference);
-
-        verify(allSMSReferences).update(smsReference);
-    }
 
     @Test
     public void shouldGetAllFrontLineWorkers() {

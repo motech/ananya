@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.service.FrontLineWorkerService;
+import org.motechproject.ananya.service.SMSReferenceService;
 import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 
 import static junit.framework.Assert.*;
@@ -26,13 +27,14 @@ public class SendSMSClientTest {
     private FrontLineWorkerService frontLineWorkerService;
     @Mock
     private SMSSentMeasureService smsSentMeasureService;
-    
+    @Mock
+    private SMSReferenceService smsReferenceService;
     private String senderId = "BI-577110";
 
     @Before
     public void setUp() {
         initMocks(this);
-        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, smsSentMeasureService, senderId);
+        sendSMSClient = new SendSMSClient(onMobileSendSMSService, frontLineWorkerService, smsSentMeasureService, smsReferenceService, senderId);
     }
 
     @Test
@@ -44,12 +46,12 @@ public class SendSMSClientTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
         when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.getSMSReferenceNumber(mobileNumber)).thenReturn(null);
+        when(smsReferenceService.getSMSReferenceNumber(mobileNumber)).thenReturn(null);
 
         sendSMSClient.sendSingleSMS(mobileNumber, smsMessage, smsRefNum);
 
         ArgumentCaptor<SMSReference> captor = ArgumentCaptor.forClass(SMSReference.class);
-        verify(frontLineWorkerService).addSMSReferenceNumber(captor.capture());
+        verify(smsReferenceService).addSMSReferenceNumber(captor.capture());
         SMSReference value = captor.getValue();
         assertEquals(mobileNumber, value.getMsisdn());
 
@@ -65,12 +67,12 @@ public class SendSMSClientTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
         when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
-        when(frontLineWorkerService.getSMSReferenceNumber(mobileNumber)).thenReturn(smsReference);
+        when(smsReferenceService.getSMSReferenceNumber(mobileNumber)).thenReturn(smsReference);
 
         sendSMSClient.sendSingleSMS(mobileNumber, smsMessage, smsRefNum);
 
         ArgumentCaptor<SMSReference> captor = ArgumentCaptor.forClass(SMSReference.class);
-        verify(frontLineWorkerService).updateSMSReferenceNumber(captor.capture());
+        verify(smsReferenceService).updateSMSReferenceNumber(captor.capture());
         SMSReference value = captor.getValue();
         assertEquals(mobileNumber, value.getMsisdn());
         assertEquals(smsReference, value);
