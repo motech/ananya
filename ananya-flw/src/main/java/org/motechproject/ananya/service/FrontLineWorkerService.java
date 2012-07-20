@@ -75,12 +75,6 @@ public class FrontLineWorkerService {
         if (frontLineWorker == null) {
             frontLineWorker = new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.UNREGISTERED);
             allFrontLineWorkers.add(frontLineWorker);
-
-            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(frontLineWorker.getMsisdn());
-            if (existingFrontLineWorkers.size() > 1) {
-                log.warn("duplicate caller-ids found in system. deleting");
-                removeDuplicates(existingFrontLineWorkers);
-            }
             log.info("created:" + frontLineWorker);
             return frontLineWorker;
         }
@@ -117,11 +111,6 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
-    }
-
-    private void removeDuplicates(List<FrontLineWorker> existingFrontLineWorkers) {
-        for (int i = 0; i < existingFrontLineWorkers.size() - 1; i++)
-            allFrontLineWorkers.remove(existingFrontLineWorkers.get(i));
     }
 
     public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {

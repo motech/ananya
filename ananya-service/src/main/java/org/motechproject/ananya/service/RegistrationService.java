@@ -33,11 +33,8 @@ public class RegistrationService {
         if (location == null)
             return registrationResponse.withInvalidLocationStatus();
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateForImport(
-                callerId, name, Designation.getFor(designation), location);
-
+        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateForImport(callerId, name, Designation.getFor(designation), location);
         registrationMeasureService.createRegistrationMeasure(frontLineWorker.getMsisdn(), "");
-
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }

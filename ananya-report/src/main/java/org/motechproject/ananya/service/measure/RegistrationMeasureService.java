@@ -53,7 +53,6 @@ public class RegistrationMeasureService {
             return;
         }
         createMeasure(registrationLog.getCallerId(), callId);
-
         registrationLogService.delete(registrationLog);
         log.info(callId + "- registrationLog removed");
     }
