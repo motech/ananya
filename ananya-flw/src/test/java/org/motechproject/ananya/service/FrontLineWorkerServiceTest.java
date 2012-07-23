@@ -60,16 +60,17 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String circle = "circle";
         String operator = "airtel";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, new Location(), RegistrationStatus.REGISTERED);
+        Location location = new Location();
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, RegistrationStatus.REGISTERED);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
+        when(locationService.findByExternalId(anyString())).thenReturn(location);
 
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkerService.createOrUpdateForCall(msisdn, operator, circle);
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
-        verify(allFrontLineWorkers, never()).update(frontLineWorker);
         assertEquals(frontLineWorker, frontLineWorkerFromDb);
     }
 

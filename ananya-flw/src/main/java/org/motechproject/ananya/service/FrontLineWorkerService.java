@@ -58,6 +58,8 @@ public class FrontLineWorkerService {
 
         //no change in FLW
         if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle) && frontLineWorker.isAlreadyRegistered()) {
+            frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
+            allFrontLineWorkers.update(frontLineWorker);
             return frontLineWorker;
         }
 
