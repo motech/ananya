@@ -66,14 +66,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = 0;
     }
 
-    public FrontLineWorker(String msisdn, String operator) {
+    public FrontLineWorker(String msisdn, String operator, String circle) {
         this();
         this.msisdn = msisdn.length() == 10 ? "91" + msisdn : msisdn;
-        this.operator = operator == null ? this.operator : operator;
+        if (circle != null) this.circle = circle;
+        if (operator != null) this.operator = operator;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        this(msisdn, null);
+        this(msisdn, null, null);
         this.name = name;
         this.designation = designation;
         this.locationId = location.getExternalId();
@@ -316,5 +317,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
             return;
         }
         status = RegistrationStatus.REGISTERED;
+    }
+
+    public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
+        return this;
     }
 }

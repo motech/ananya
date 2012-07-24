@@ -40,7 +40,7 @@ public class RegistrationServiceTest {
         Designation designation = Designation.AWW;
         LocationList locationList = new LocationList(Arrays.asList(location));
 
-        when(frontLineWorkerService.createOrUpdateForImport(callerId, name, designation, location)).thenReturn(new FrontLineWorker(callerId, "operator"));
+        when(frontLineWorkerService.createOrUpdateForImport(callerId, name, designation, location)).thenReturn(new FrontLineWorker(callerId, "operator", "circle"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
 
@@ -94,7 +94,8 @@ public class RegistrationServiceTest {
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
 
-        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), eq(designation), any(Location.class))).thenReturn(new FrontLineWorker(callerId,"operator"));
+        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), eq(designation), any(Location.class)))
+                .thenReturn(new FrontLineWorker(callerId,"operator", "circle"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation.name(), "district", "block", "village", locationList);
 
@@ -111,7 +112,8 @@ public class RegistrationServiceTest {
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
 
-        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class))).thenReturn(new FrontLineWorker(callerId,"operator"));
+        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), eq(Designation.INVALID), any(Location.class)))
+                .thenReturn(new FrontLineWorker(callerId,"operator", "circle"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village", locationList);
 

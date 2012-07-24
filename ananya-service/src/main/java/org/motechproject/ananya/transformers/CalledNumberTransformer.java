@@ -2,7 +2,7 @@ package org.motechproject.ananya.transformers;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.repository.AllNodes;
-import org.motechproject.ananya.request.BaseRequest;
+import org.motechproject.ananya.contract.BaseRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

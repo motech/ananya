@@ -56,7 +56,7 @@ public class RegistrationMeasureServiceTest {
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
@@ -91,7 +91,7 @@ public class RegistrationMeasureServiceTest {
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
@@ -128,7 +128,7 @@ public class RegistrationMeasureServiceTest {
         String operator = "operator";
         String circle = "circle";
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");

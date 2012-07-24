@@ -3,7 +3,7 @@ package org.motechproject.ananya.mapper;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
-import org.motechproject.ananya.request.CertificateCourseStateRequest;
+import org.motechproject.ananya.contract.CertificateCourseStateRequest;
 
 public class CertificationCourseLogItemMapper {
 

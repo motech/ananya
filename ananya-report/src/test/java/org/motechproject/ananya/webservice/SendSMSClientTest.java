@@ -43,7 +43,7 @@ public class SendSMSClientTest {
         String smsMessage = "Hello";
         String smsRefNum = "141241";
         SMSReference smsReference = new SMSReference(mobileNumber, smsRefNum);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel", "circle");
         when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
         when(smsReferenceService.getSMSReferenceNumber(mobileNumber)).thenReturn(null);
@@ -64,7 +64,7 @@ public class SendSMSClientTest {
         String smsMessage = "Hello";
         String smsRefNum = "141241";
         SMSReference smsReference = new SMSReference(mobileNumber, smsRefNum);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(mobileNumber, "airtel", "circle");
         when(onMobileSendSMSService.singlePush(argThat(is(mobileNumber)), argThat(is(senderId)), argThat(is(smsRefNum)))).thenReturn("success");
         when(frontLineWorkerService.findByCallerId(mobileNumber)).thenReturn(frontLineWorker);
         when(smsReferenceService.getSMSReferenceNumber(mobileNumber)).thenReturn(smsReference);

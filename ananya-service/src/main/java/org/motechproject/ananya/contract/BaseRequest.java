@@ -1,4 +1,4 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.contract;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.ServiceType;

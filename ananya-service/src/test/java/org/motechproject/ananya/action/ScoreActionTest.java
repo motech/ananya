@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -107,7 +107,7 @@ public class ScoreActionTest {
         String callId = "123456";
         String callerId = "919986574410";
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "airtel");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "airtel", "circle");
         ReportCard reportCard = mock(ReportCard.class);
         when(reportCard.totalScore()).thenReturn(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE + 1);
         ReflectionTestUtils.setField(frontLineWorker, "reportCard", reportCard);

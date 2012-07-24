@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +30,7 @@ public class CertificateCourseCallDataControllerTest {
     @Test
     public void shouldCallCourseServiceWithServiceRequestFromHttpPayLoad() {
         ArgumentCaptor<CertificateCourseServiceRequest> captor = ArgumentCaptor.forClass(CertificateCourseServiceRequest.class);
-        String response = certificateCourseCallDataController.handleDisconnect("123-456", "123", "57711", "[]");
+        String response = certificateCourseCallDataController.handleDisconnect("123-456", "123","airtel","bihar", "57711", "[]");
 
         verify(certificateCourseService).handleDisconnect(captor.capture());
         CertificateCourseServiceRequest certificateCourseServiceRequest = captor.getValue();

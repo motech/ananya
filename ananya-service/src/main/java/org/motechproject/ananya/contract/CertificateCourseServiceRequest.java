@@ -1,4 +1,4 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.contract;
 
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;

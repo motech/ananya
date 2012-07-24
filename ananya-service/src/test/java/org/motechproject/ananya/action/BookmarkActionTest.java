@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

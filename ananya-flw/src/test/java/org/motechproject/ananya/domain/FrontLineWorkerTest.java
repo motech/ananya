@@ -40,7 +40,7 @@ public class FrontLineWorkerTest {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
         assertEquals("919986554790", flw.getMsisdn());
 
-        FrontLineWorker flw2 = new FrontLineWorker("9986554790", "airtel");
+        FrontLineWorker flw2 = new FrontLineWorker("9986554790", "airtel", "circle");
         assertEquals("919986554790", flw2.getMsisdn());
     }
 

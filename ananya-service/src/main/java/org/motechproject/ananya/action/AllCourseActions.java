@@ -1,7 +1,7 @@
 package org.motechproject.ananya.action;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

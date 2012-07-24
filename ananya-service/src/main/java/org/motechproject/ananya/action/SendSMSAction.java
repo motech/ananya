@@ -2,7 +2,7 @@ package org.motechproject.ananya.action;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSLog;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.SMSLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

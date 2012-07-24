@@ -1,10 +1,10 @@
 package org.motechproject.ananya.service;
 
+import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
+import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,20 +20,23 @@ public class FrontLineWorkerService {
 
     private AllFrontLineWorkers allFrontLineWorkers;
     private LocationService locationService;
+    private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService,
+                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.locationService = locationService;
+        this.allFrontLineWorkerKeys = allFrontLineWorkerKeys;
     }
 
     public FrontLineWorker findByCallerId(String callerId) {
         return allFrontLineWorkers.findByMsisdn(callerId);
     }
 
-    public FrontLineWorker findForJobAidCallerData(String callerId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = createOrUpdateForCall(callerId, operator, circle);
-        if (frontLineWorker.jobAidLastAccessedPreviousMonth()) {
+    public FrontLineWorker findForJobAidCallerData(String callerId) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+        if (frontLineWorker != null && frontLineWorker.jobAidLastAccessedPreviousMonth()) {
             frontLineWorker.resetJobAidUsageAndPrompts();
             allFrontLineWorkers.update(frontLineWorker);
             log.info("reset last jobaid usage for " + frontLineWorker);
@@ -41,37 +44,36 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public FrontLineWorker createOrUpdateForCall(String callerId, String operator, String circle) {
+    public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
-        //create new FLW
         if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, operator);
-            frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
-            frontLineWorker.setCircle(circle);
-            frontLineWorker.setModified();
+            try {
+                allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
+                frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+                frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
+                allFrontLineWorkers.add(frontLineWorker);
 
-            allFrontLineWorkers.add(frontLineWorker);
-            log.info("created:" + frontLineWorker);
-            return frontLineWorker;
+                log.info("created:" + frontLineWorker);
+
+                return new FrontLineWorkerCreateResponse(frontLineWorker, true);
+            } catch (UpdateConflictException e) {
+                frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+                return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+            }
         }
 
-        //no change in FLW
-        if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle) && frontLineWorker.isAlreadyRegistered()) {
-            frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
-            allFrontLineWorkers.update(frontLineWorker);
-            return frontLineWorker;
-        }
+        boolean shouldModify = !frontLineWorker.circleIs(circle) || !frontLineWorker.operatorIs(operator) || frontLineWorker.isUnRegistered();
+        if (!shouldModify) return new FrontLineWorkerCreateResponse(frontLineWorker, false);
 
-        //circle or operator is updated
-        frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
-        frontLineWorker.setModified();
-        allFrontLineWorkers.update(frontLineWorker);
+        frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
+        allFrontLineWorkers.updateFlw(frontLineWorker);
 
         log.info("updated:" + frontLineWorker);
-        return frontLineWorker;
+
+        return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }
 
     public FrontLineWorker createOrUpdateForImport(String callerId, String name, Designation designation, Location location) {
@@ -96,8 +98,7 @@ public class FrontLineWorkerService {
         log.info("updated certificate course state for " + frontLineWorker);
     }
 
-    public void updateJobAidState(String callerId, List<String> promptList, Integer currentCallDuration) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+    public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
 

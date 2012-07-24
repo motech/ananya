@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Interaction;
 import org.motechproject.ananya.domain.Score;
-import org.motechproject.ananya.request.CertificateCourseStateRequest;
+import org.motechproject.ananya.contract.CertificateCourseStateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

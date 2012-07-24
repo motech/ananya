@@ -1,6 +1,6 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.service.JobAidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +27,16 @@ public class JobAidCallDataController {
     @ResponseBody
     public String handleDisconnect(@RequestParam String callId,
                                    @RequestParam String callerId,
+                                   @RequestParam String operator,
+                                   @RequestParam String circle,
                                    @RequestParam String calledNumber,
                                    @RequestParam String dataToPost,
                                    @RequestParam String promptList,
                                    @RequestParam Integer callDuration) {
 
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
-                .withCallDuration(callDuration).withPromptList(promptList).withJson(dataToPost);
+                .withCallDuration(callDuration).withPromptList(promptList).withOperator(operator).withCircle(circle)
+                .withJson(dataToPost);
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 

@@ -136,7 +136,7 @@ public class FrontLineWorkerSeedTest {
     }
 
     private FrontLineWorker getFrontLineWorker(String msisdn, String operator, RegistrationStatus registrationStatus, Location location) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator, "");
         frontLineWorker.setRegistrationStatus(registrationStatus);
         if (location != null) frontLineWorker.setLocation(location);
         return frontLineWorker;

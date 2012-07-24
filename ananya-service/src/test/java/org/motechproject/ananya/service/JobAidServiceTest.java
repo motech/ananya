@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.ananya.contract.AudioTrackerRequestList;
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.domain.CallDurationList;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.JobAidServiceRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
@@ -18,7 +18,6 @@ import org.motechproject.ananya.transformers.AllTransformers;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -51,83 +50,52 @@ public class JobAidServiceTest {
     }
 
     @Test
-    public void shouldCreateNewFlwWithUsageAndAlsoPublishToReportModule() {
+    public void shouldReturnFlwCallerData() {
         String operator = "airtel";
         String callerId = "callerId";
         String promptKey = "prompt";
         String circle = "circle";
         String callId = "callId";
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.markPromptHeard(promptKey);
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
-        frontLineWorker.setModified();
 
-        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.findForJobAidCallerData(callerId)).thenReturn(frontLineWorker);
         when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(jobAidServiceRequest);
+        JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
 
         verify(allTransformers).process(jobAidServiceRequest);
-        verify(frontLineWorkerService).findForJobAidCallerData(callerId, operator, circle);
 
-        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
-        verify(registrationLogService).add(captor.capture());
-
-        RegistrationLog registrationLog = captor.getValue();
-        assertEquals(callerId, registrationLog.getCallerId());
-        assertEquals(operator, registrationLog.getOperator());
-
-        assertEquals(callerData.getCurrentJobAidUsage(), new Integer(9));
-        assertEquals(callerData.getMaxAllowedUsageForOperator(), new Integer(10));
-        assertEquals(callerData.getPromptsHeard().get(promptKey), new Integer(1));
-        assertEquals(callerData.isCallerRegistered(), false);
+        assertEquals(new Integer(9), callerData.getCurrentJobAidUsage());
+        assertEquals(new Integer(10), callerData.getMaxAllowedUsageForOperator());
+        assertEquals(new Integer(1), callerData.getPromptsHeard().get(promptKey));
+        assertEquals(false, callerData.isCallerRegistered());
     }
 
     @Test
-    public void shouldCreateFrontLineWorkerAndRegistrationLogWhileCreatingCallerDataIfNotInOnlineDB() {
+    public void shouldReturnBlankCallerDataIfNotInOnlineDB() {
         String callerId = "1234";
         String operator = "airtel";
         String circle = "bihar";
         String callId = "callId";
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
-        
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        frontLineWorker.setCircle(circle);
-        frontLineWorker.setModified();
+        int maxUsageOperator = 20;
 
-        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
-        jobAidService.createCallerData(jobAidServiceRequest);
+        when(frontLineWorkerService.findForJobAidCallerData(callerId)).thenReturn(null);
+        when(operatorService.findMaximumUsageFor(operator)).thenReturn(maxUsageOperator);
 
-        verify(allTransformers).process(jobAidServiceRequest);
-        
-        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
-        verify(registrationLogService).add(captor.capture());
-
-        RegistrationLog registrationLog = captor.getValue();
-        assertEquals(callerId, registrationLog.getCallerId());
-        assertEquals(operator, registrationLog.getOperator());
-    }
-
-    @Test
-    public void shouldReturnCallerDataWithoutCreatingRegistrationLogIfFrontLineWorkerExists() {
-        String callerId = "1234";
-        String operator = "airtel";
-        String circle = "bihar";
-        String callId = "callId";
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId,callerId).withCircle(circle).withOperator(operator);
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        frontLineWorker.setCircle(circle);
-
-        when(frontLineWorkerService.findForJobAidCallerData(callerId, operator, circle)).thenReturn(frontLineWorker);
-
-        jobAidService.createCallerData(jobAidServiceRequest);
+        JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
 
         verify(allTransformers).process(jobAidServiceRequest);
-        verify(registrationLogService, never()).add(any(RegistrationLog.class));
+
+        assertEquals(0, callerData.getPromptsHeard().size());
+        assertEquals(false, callerData.isCallerRegistered());
+        assertEquals(0, (int) callerData.getCurrentJobAidUsage());
+        assertEquals(maxUsageOperator, (int) callerData.getMaxAllowedUsageForOperator());
     }
 
     @Test
@@ -135,15 +103,26 @@ public class JobAidServiceTest {
         String callId = "1234";
         String callerId = "1234";
         String calledNumber = "522001";
+        String operator = "operator";
         int callDuration = 21;
+        String circle = "circle";
 
-        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber).withJson("[]").withCallDuration(callDuration);
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
+                .withOperator(operator).withCircle(circle).withJson("[]").withCallDuration(callDuration);
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        when(frontLineWorkerService.createOrUpdateForCall(callerId,operator, circle))
+                .thenReturn(new FrontLineWorkerCreateResponse(frontLineWorker, false));
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
         verify(allTransformers).process(jobAidServiceRequest);
-        verify(frontLineWorkerService).updateJobAidState(eq(callerId), anyListOf(String.class), eq(callDuration));
-        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
+        verify(frontLineWorkerService).createOrUpdateForCall(eq(callerId),eq(operator), eq(circle));
+
+        ArgumentCaptor<FrontLineWorker> frontLineWorkerArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(frontLineWorkerService).updateJobAidState(frontLineWorkerArgumentCaptor.capture(), anyListOf(String.class), eq(callDuration));
+        FrontLineWorker actualFrontLineWorker = frontLineWorkerArgumentCaptor.getValue();
+        assertEquals(callerId, actualFrontLineWorker.getMsisdn());
 
         ArgumentCaptor<CallDurationList> callDurationCaptor = ArgumentCaptor.forClass(CallDurationList.class);
         ArgumentCaptor<AudioTrackerRequestList> audioTrackerRequestCaptor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
@@ -158,5 +137,7 @@ public class JobAidServiceTest {
         AudioTrackerRequestList audioTrackerRequestList = audioTrackerRequestCaptor.getValue();
         assertThat(audioTrackerRequestList.getCallId(), is(callId));
         assertThat(audioTrackerRequestList.getCallerId(), is(callerId));
+
+        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
     }
 }

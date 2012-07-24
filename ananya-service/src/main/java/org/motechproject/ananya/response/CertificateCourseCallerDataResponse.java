@@ -2,6 +2,7 @@ package org.motechproject.ananya.response;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CertificateCourseCallerDataResponse {
@@ -19,6 +20,10 @@ public class CertificateCourseCallerDataResponse {
         this.bookmark = frontLineWorker.bookMark().asJson();
         this.isCallerRegistered = frontLineWorker.status().isRegistered();
         this.scoresByChapter = frontLineWorker.reportCard().scoresByChapterIndex();
+    }
+
+    public static CertificateCourseCallerDataResponse blankCertificateCourseCallerDataResponse() {
+        return new CertificateCourseCallerDataResponse("", false, new HashMap<String, Integer>());
     }
 
     public String getBookmark() {

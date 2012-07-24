@@ -1,4 +1,4 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.contract;
 
 import org.junit.Test;
 import org.motechproject.ananya.domain.CallDurationList;

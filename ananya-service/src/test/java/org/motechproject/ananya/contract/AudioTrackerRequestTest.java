@@ -1,4 +1,4 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.contract;
 
 
 import org.joda.time.DateTime;

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.request;
+package org.motechproject.ananya.contract;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

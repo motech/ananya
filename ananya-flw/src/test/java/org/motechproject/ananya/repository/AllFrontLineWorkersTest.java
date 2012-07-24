@@ -59,9 +59,9 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     public void shouldRetrieveAllFrontLineWorkersForMsisdn() {
         String msisdn = "654321";
         String anotherMsisdn = "4321";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "airtel");
-        FrontLineWorker duplicateFrontLineWorker = new FrontLineWorker(msisdn, "airtel");
-        FrontLineWorker notTheSameFLW = new FrontLineWorker(anotherMsisdn, "airtel");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle");
+        FrontLineWorker duplicateFrontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle");
+        FrontLineWorker notTheSameFLW = new FrontLineWorker(anotherMsisdn, "airtel", "circle");
         allFrontLineWorkers.add(frontLineWorker);
         allFrontLineWorkers.add(duplicateFrontLineWorker);
         allFrontLineWorkers.add(notTheSameFLW);
@@ -76,12 +76,12 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
 
     @Test
     public void shouldRetrieveOnlyRequestedCountOfMsisdns() {
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9999991", "airtel");
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9999992", "airtel");
-        FrontLineWorker frontLineWorker3 = new FrontLineWorker("9999993", "airtel");
-        FrontLineWorker frontLineWorker4 = new FrontLineWorker("9999994", "airtel");
-        FrontLineWorker frontLineWorker5 = new FrontLineWorker("9999995", "airtel");
-        FrontLineWorker frontLineWorker6 = new FrontLineWorker("9999996", "airtel");
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9999991", "airtel", "circle");
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9999992", "airtel", "circle");
+        FrontLineWorker frontLineWorker3 = new FrontLineWorker("9999993", "airtel", "circle");
+        FrontLineWorker frontLineWorker4 = new FrontLineWorker("9999994", "airtel", "circle");
+        FrontLineWorker frontLineWorker5 = new FrontLineWorker("9999995", "airtel", "circle");
+        FrontLineWorker frontLineWorker6 = new FrontLineWorker("9999996", "airtel", "circle");
         allFrontLineWorkers.add(frontLineWorker1);
         allFrontLineWorkers.add(frontLineWorker2);
         allFrontLineWorkers.add(frontLineWorker3);

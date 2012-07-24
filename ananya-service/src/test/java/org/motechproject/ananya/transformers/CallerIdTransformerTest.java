@@ -1,8 +1,8 @@
 package org.motechproject.ananya.transformers;
 
 import org.junit.Test;
-import org.motechproject.ananya.request.BaseRequest;
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.BaseRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
