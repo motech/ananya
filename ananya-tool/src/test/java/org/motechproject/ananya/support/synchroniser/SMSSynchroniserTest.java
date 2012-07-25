@@ -62,7 +62,7 @@ public class SMSSynchroniserTest {
     @Test
     public void shouldFigureOutWhetherToProcessLog() throws Exception {
         BaseLog shouldProcessLog = new BaseLog("asd-" + DateTime.now().minusDays(3).getMillis(), "");
-        BaseLog shouldNotProcessLog = new BaseLog("asd-" + DateTime.now().minusDays(2).getMillis(), "");
+        BaseLog shouldNotProcessLog = new BaseLog("asd-" + DateTime.now().minusDays(1).getMillis(), "");
         when(properties.getProperty("synchroniser.log.delta.days")).thenReturn("2");
 
         assertTrue(smsSynchroniser.shouldProcessLog(shouldProcessLog));
