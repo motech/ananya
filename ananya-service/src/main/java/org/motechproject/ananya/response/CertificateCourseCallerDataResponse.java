@@ -22,7 +22,7 @@ public class CertificateCourseCallerDataResponse {
         this.scoresByChapter = frontLineWorker.reportCard().scoresByChapterIndex();
     }
 
-    public static CertificateCourseCallerDataResponse blankCertificateCourseCallerDataResponse() {
+    public static CertificateCourseCallerDataResponse forNewUser() {
         return new CertificateCourseCallerDataResponse("", false, new HashMap<String, Integer>());
     }
 

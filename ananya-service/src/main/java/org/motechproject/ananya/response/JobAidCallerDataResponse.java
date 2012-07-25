@@ -21,7 +21,7 @@ public class JobAidCallerDataResponse {
     public JobAidCallerDataResponse() {
     }
 
-    public static JobAidCallerDataResponse blankJobAidCallerDataResponse(Integer maxOperatorUsage) {
+    public static JobAidCallerDataResponse forNewUser(Integer maxOperatorUsage) {
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
 
         jobAidCallerDataResponse.isCallerRegistered = false;

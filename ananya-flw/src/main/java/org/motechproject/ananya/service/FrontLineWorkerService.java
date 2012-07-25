@@ -47,6 +47,7 @@ public class FrontLineWorkerService {
     public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
+        //new flw
         if (frontLineWorker == null) {
             try {
                 allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
@@ -55,7 +56,6 @@ public class FrontLineWorkerService {
                 allFrontLineWorkers.add(frontLineWorker);
 
                 log.info("created:" + frontLineWorker);
-
                 return new FrontLineWorkerCreateResponse(frontLineWorker, true);
             } catch (UpdateConflictException e) {
                 frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
@@ -63,14 +63,15 @@ public class FrontLineWorkerService {
             }
         }
 
-        boolean shouldModify = !frontLineWorker.circleIs(circle) || !frontLineWorker.operatorIs(operator) || frontLineWorker.isUnRegistered();
-        if (!shouldModify) return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+        //no-change flw
+        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered())
+            return new FrontLineWorkerCreateResponse(frontLineWorker, false);
 
+        //updated flw
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         allFrontLineWorkers.updateFlw(frontLineWorker);
-
         log.info("updated:" + frontLineWorker);
 
         return new FrontLineWorkerCreateResponse(frontLineWorker, true);

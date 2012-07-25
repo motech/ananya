@@ -1,6 +1,5 @@
 package org.motechproject.ananya.repository;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
@@ -20,7 +19,6 @@ public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
     private AllFrontLineWorkers allFrontLineWorkers;
 
     @Before
-    @After
     public void setUp() throws IOException {
         allFrontLineWorkers.removeAll();
     }

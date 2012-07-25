@@ -51,7 +51,7 @@ public class JobAidService {
         Integer maxOperatorUsage = operatorService.findMaximumUsageFor(request.getOperator());
         return (frontLineWorker != null)
                 ? new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage)
-                : JobAidCallerDataResponse.blankJobAidCallerDataResponse(maxOperatorUsage);
+                : JobAidCallerDataResponse.forNewUser(maxOperatorUsage);
     }
 
     public void handleDisconnect(JobAidServiceRequest request) {

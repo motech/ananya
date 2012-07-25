@@ -54,7 +54,7 @@ public class CertificateCourseService {
 
         return (frontLineWorker != null)
                 ? new CertificateCourseCallerDataResponse(frontLineWorker)
-                : CertificateCourseCallerDataResponse.blankCertificateCourseCallerDataResponse();
+                : CertificateCourseCallerDataResponse.forNewUser();
     }
 
     public void handleDisconnect(CertificateCourseServiceRequest request) {
