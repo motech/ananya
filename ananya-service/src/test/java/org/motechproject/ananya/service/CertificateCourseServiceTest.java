@@ -89,7 +89,7 @@ public class CertificateCourseServiceTest {
         verify(allTransformers).process(request);
 
         assertEquals(0, callerData.getScoresByChapter().size());
-        assertEquals("", callerData.getBookmark());
+        assertEquals("{}", callerData.getBookmark());
         assertEquals(false, callerData.isCallerRegistered());
     }
 

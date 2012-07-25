@@ -6,10 +6,7 @@ import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.CourseItemDimension;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
@@ -18,6 +15,7 @@ import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -52,6 +50,8 @@ public class ReportDb {
     private AllJobAidContentMeasures allJobAidContentMeasures;
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;
+    @Autowired
+    private AllTimeDimensions allTimeDimensions;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
@@ -133,4 +133,17 @@ public class ReportDb {
         allAudioTrackerLogs.deleteFor(callId);
     }
 
+    public ReportDb confirmFlwDoesNotExist(String callerId) {
+        assertNull(allFrontLineWorkerDimensions.fetchFor(new Long(callerId)));
+        return this;
+    }
+
+    public ReportDb createMeasuresAndDimensionsForFlw(String callerId, String callId, String operator, String circle) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
+                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED");
+        LocationDimension locationDimension = allLocationDimensions.getFor(Location.getDefaultLocation().getExternalId());
+        TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
+        allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));
+        return this;
+    }
 }

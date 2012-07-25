@@ -23,7 +23,7 @@ public class CertificateCourseCallerDataResponse {
     }
 
     public static CertificateCourseCallerDataResponse forNewUser() {
-        return new CertificateCourseCallerDataResponse("", false, new HashMap<String, Integer>());
+        return new CertificateCourseCallerDataResponse("{}", false, new HashMap<String, Integer>());
     }
 
     public String getBookmark() {

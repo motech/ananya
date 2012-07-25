@@ -5,10 +5,12 @@ public class CertificateCourseRequest {
     private String operator;
     private String jsonData;
     private String callId;
+    private String circle;
 
-    public CertificateCourseRequest(String callerId, String operator, String callId) {
+    public CertificateCourseRequest(String callerId, String operator, String circle, String callId) {
         this.callerId = callerId;
         this.operator = operator;
+        this.circle = circle;
         this.callId = callId;
     }
 
@@ -30,5 +32,9 @@ public class CertificateCourseRequest {
 
     public String getJsonPostData() {
         return this.jsonData;
+    }
+
+    public String getCircle() {
+        return circle;
     }
 }

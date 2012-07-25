@@ -18,7 +18,8 @@ public class CertificateCourseWebservice {
     private MyWebClient webClient = new MyWebClient();
 
     public CertificateCourseResponse requestForCallerData(CertificateCourseRequest request) throws IOException {
-        String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
+        String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId()
+                + "&operator=" + request.getOperator()+"&callId="+request.getCallId()+"&circle="+request.getCircle();
         return makeRequest(webPage);
     }
 
@@ -38,7 +39,6 @@ public class CertificateCourseWebservice {
         Page page = webClient.getPage(getAppServerUrl() + webPage);
         return CertificateCourseResponse.make(page.getWebResponse().getContentAsString());
     }
-
 
     private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost) throws IOException {
         Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost);
