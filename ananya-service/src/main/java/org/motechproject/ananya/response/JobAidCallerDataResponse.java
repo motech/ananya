@@ -23,12 +23,10 @@ public class JobAidCallerDataResponse {
 
     public static JobAidCallerDataResponse forNewUser(Integer maxOperatorUsage) {
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
-
         jobAidCallerDataResponse.isCallerRegistered = false;
         jobAidCallerDataResponse.currentJobAidUsage = 0;
         jobAidCallerDataResponse.promptsHeard = new HashMap<String, Integer>();
         jobAidCallerDataResponse.maxAllowedUsageForOperator = maxOperatorUsage;
-
         return jobAidCallerDataResponse;
     }
 

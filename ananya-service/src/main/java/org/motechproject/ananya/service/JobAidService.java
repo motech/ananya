@@ -43,12 +43,12 @@ public class JobAidService {
     }
 
     public JobAidCallerDataResponse getCallerData(JobAidServiceRequest request) {
+
         allTransformers.process(request);
-
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(request.getCallerId());
-        log.info(request.getCallId() + "- fetched caller data for " + frontLineWorker);
-
         Integer maxOperatorUsage = operatorService.findMaximumUsageFor(request.getOperator());
+
+        log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
         return (frontLineWorker != null)
                 ? new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage)
                 : JobAidCallerDataResponse.forNewUser(maxOperatorUsage);
@@ -60,13 +60,10 @@ public class JobAidService {
         FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
                 request.getCallerId(), request.getOperator(), request.getCircle());
 
-        if (frontLineWorkerCreateResponse.isModified()) {
-            registrationLogService.add(new RegistrationLog(
-                    request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
-        }
+        if (frontLineWorkerCreateResponse.isModified())
+            registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
-        frontLineWorkerService.updateJobAidState(
-                frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCallDuration());
+        frontLineWorkerService.updateJobAidState(frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCallDuration());
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);

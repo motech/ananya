@@ -47,11 +47,9 @@ public class CertificateCourseService {
 
     public CertificateCourseCallerDataResponse createCallerData(CertificateCourseServiceRequest request) {
         allTransformers.process(request);
-
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(request.getCallerId());
 
-        log.info(request.getCallId() + "- fetched caller data for " + frontLineWorker);
-
+        log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
         return (frontLineWorker != null)
                 ? new CertificateCourseCallerDataResponse(frontLineWorker)
                 : CertificateCourseCallerDataResponse.forNewUser();
@@ -63,15 +61,13 @@ public class CertificateCourseService {
         FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
                 request.getCallerId(), request.getOperator(), request.getCircle());
 
-        if (frontLineWorkerCreateResponse.isModified()) {
-            registrationLogService.add(new RegistrationLog(
-                    request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
-        }
+        if (frontLineWorkerCreateResponse.isModified())
+            registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
         CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
-        if (stateRequestList.isNotEmpty()) {
+        if (stateRequestList.isNotEmpty())
             allCourseActions.execute(frontLineWorkerCreateResponse.getFrontLineWorker(), stateRequestList);
-        }
+
         audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.CERTIFICATE_COURSE);
