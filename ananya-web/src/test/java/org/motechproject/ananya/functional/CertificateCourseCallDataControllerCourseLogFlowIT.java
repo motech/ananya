@@ -9,11 +9,13 @@ import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.framework.MyWebClient;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static org.motechproject.ananya.framework.MyWebClient.PostParam.param;
 
 public class CertificateCourseCallDataControllerCourseLogFlowIT extends SpringIntegrationTest {
@@ -25,6 +27,8 @@ public class CertificateCourseCallDataControllerCourseLogFlowIT extends SpringIn
 
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
+    @Autowired
+    private AllRegistrationLogs allRegistrationLogs;
 
     @Before
     public void setUp() throws Exception {
@@ -74,6 +78,52 @@ public class CertificateCourseCallDataControllerCourseLogFlowIT extends SpringIn
 
         markForDeletion(frontLineWorker);
         markForDeletion(byCallId);
+    }
+
+    @Test
+    public void shouldLogRegistrationLogAndCourseLogAndAudioLogWhenFLWDoesNotExist() throws IOException {
+        String packet1 = "{" +
+                "    \"chapterIndex\" : 1,                                     " +
+                "    \"lessonOrQuestionIndex\" : 2,                            " +
+                "    \"questionResponse\" : 1,                                 " +
+                "    \"result\" : true,                                        " +
+                "    \"interactionKey\" : \"playAnswerExplanation\",           " +
+
+                "    \"contentId\" : \"e79139b5540bf3fc8d96635bc2926f90\",     " +
+                "    \"contentType\" : \"lesson\",                             " +
+                "    \"courseItemState\" : \"START\",                          " +
+                "    \"contentData\" : 6,                                      " +
+                "    \"certificateCourseId\" : \"e79139b5540bf3fc8d96635bc2926f90\"  " +
+                "}";
+
+        String callId = "99865740001234567890";
+        String callerId = "919986574000";
+        MyWebClient.PostParam callIdParam = param("callId", callId);
+        MyWebClient.PostParam callerIdParam = param("callerId", callerId);
+        MyWebClient.PostParam calledNumberParam = param("calledNumber", "57711");
+        MyWebClient.PostParam operatorParam = param("operator", "operator");
+        MyWebClient.PostParam circleParam = param("circle", "circle");
+        MyWebClient.PostParam dataToPost = param("dataToPost", "[{\"token\":\"0\",\"type\":\"ccState\",\"data\":" + packet1 + "}]");
+
+        myWebClient.post(getAppServerHostUrl() + "/ananya/transferdata/disconnect", callIdParam, callerIdParam, calledNumberParam, operatorParam, circleParam, dataToPost);
+
+        RegistrationLog registrationLog = allRegistrationLogs.findByCallId(callId);
+        assertNotNull(registrationLog);
+
+        FrontLineWorker frontLineWorkerFromDB = allFrontLineWorkers.findByMsisdn(callerId);
+        BookMark bookMark = frontLineWorkerFromDB.bookMark();
+        assertEquals((int) bookMark.getChapterIndex(), 1);
+        assertEquals((int) bookMark.getLessonIndex(), 2);
+        assertEquals(bookMark.getType(), "playAnswerExplanation");
+
+        assertEquals(frontLineWorkerFromDB.reportCard().scores().size(), 1);
+        assertEquals(frontLineWorkerFromDB.reportCard().scores().get(0).result(), true);
+
+        CertificationCourseLog courseLog = allCertificateCourseLogs.findByCallId(callId);
+        assertEquals(courseLog.items().size(), 1);
+
+        markForDeletion(frontLineWorkerFromDB);
+        markForDeletion(courseLog);
     }
 
     @Test

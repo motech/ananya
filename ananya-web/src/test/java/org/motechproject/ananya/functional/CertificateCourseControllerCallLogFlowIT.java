@@ -52,8 +52,6 @@ public class CertificateCourseControllerCallLogFlowIT extends SpringIntegrationT
         MyWebClient.PostParam calledNumberParam = param("calledNumber", "57711");
         MyWebClient.PostParam dataToPost = param("dataToPost",
                 "[{\"token\":\"0\",\"type\":\"callDuration\",\"data\":{'time':1330320462642,'callEvent':'CALL_START'}}," +
-                        "{\"token\":\"1\",\"type\":\"callDuration\",\"data\":{'time':1330320582936,'callEvent':'REGISTRATION_START'}}," +
-                        "{\"token\":\"2\",\"type\":\"callDuration\",\"data\":{'time':1330320606087,'callEvent':'REGISTRATION_END'}}," +
                         "{\"token\":\"3\",\"type\":\"callDuration\",\"data\":{'time':1330320624871,'callEvent':'JOBAID_START'}}," +
                         "{\"token\":\"4\",\"type\":\"callDuration\",\"data\":{'time':1330320634871,'callEvent':'DISCONNECT'}}]");
 
@@ -71,11 +69,6 @@ public class CertificateCourseControllerCallLogFlowIT extends SpringIntegrationT
         assertEquals(callStartTime.toDateTime(DateTimeZone.UTC), callLogForCall.getStartTime().toDateTime(DateTimeZone.UTC));
         assertEquals(disconnectTime.toDateTime(DateTimeZone.UTC), callLogForCall.getEndTime().toDateTime(DateTimeZone.UTC));
         assertEquals(CallFlowType.CALL, callLogForCall.getCallFlowType());
-
-        CallLogItem callLogForRegistration = callLogItems.get(1);
-        assertEquals(regStartTime.toDateTime(DateTimeZone.UTC), callLogForRegistration.getStartTime().toDateTime(DateTimeZone.UTC));
-        assertEquals(regEndTime.toDateTime(DateTimeZone.UTC), callLogForRegistration.getEndTime().toDateTime(DateTimeZone.UTC));
-        assertEquals(CallFlowType.REGISTRATION, callLogForRegistration.getCallFlowType());
 
         CallLogItem callLogForJobAid = callLogItems.get(2);
         assertEquals(jobAidStartTime.toDateTime(DateTimeZone.UTC), callLogForJobAid.getStartTime().toDateTime(DateTimeZone.UTC));
