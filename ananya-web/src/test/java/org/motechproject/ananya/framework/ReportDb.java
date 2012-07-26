@@ -60,22 +60,18 @@ public class ReportDb {
         assertNotNull(frontLineWorkerDimension);
         assertThat(frontLineWorkerDimension.getOperator(), is(operator));
         assertFalse(RegistrationStatus.valueOf(frontLineWorkerDimension.getStatus()).isRegistered());
-
         return this;
     }
 
     public ReportDb confirmRegistrationMeasureForPartiallyRegistered(String callerId) {
-
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
-
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
-        assertTrue(registrationMeasure.getTimeDimension().matches(new DateTime()));
-
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
         Location defaultLocation = Location.getDefaultLocation();
+
+        assertTrue(registrationMeasure.getTimeDimension().matches(new DateTime()));
         assertTrue(locationDimension.getBlock().equals(defaultLocation.getBlock()));
         assertTrue(locationDimension.getDistrict().equals(defaultLocation.getDistrict()));
-        assertTrue(locationDimension.getPanchayat().equals(defaultLocation.getPanchayat()));
         return this;
     }
 
@@ -108,9 +104,9 @@ public class ReportDb {
 
     public JobAidContentDimension getExistingAudioDimension() {
         List<JobAidContentDimension> jobAidContentDimensionList = template.loadAll(JobAidContentDimension.class);
-        for(JobAidContentDimension jobAidContentDimension : jobAidContentDimensionList) {
+        for(JobAidContentDimension jobAidContentDimension : jobAidContentDimensionList) 
             if (jobAidContentDimension.getType().equalsIgnoreCase("audio")) return jobAidContentDimension;
-        }
+
         return null;
     }
 

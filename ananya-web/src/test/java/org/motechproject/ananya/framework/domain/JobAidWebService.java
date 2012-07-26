@@ -29,12 +29,14 @@ public class JobAidWebService {
         String webPage ="/ananya/jobaid/transferdata/disconnect";
         MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
         MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
+        MyWebClient.PostParam operator = MyWebClient.PostParam.param("operator", request.getOperator());
+        MyWebClient.PostParam circle = MyWebClient.PostParam.param("circle", request.getCircle());
         MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
         MyWebClient.PostParam calledNumber = MyWebClient.PostParam.param("calledNumber", request.getCalledNumber());
         MyWebClient.PostParam callDuration = MyWebClient.PostParam.param("callDuration", request.getCallDuration());
         MyWebClient.PostParam promptList = MyWebClient.PostParam.param("promptList", request.getPromptList());
 
-        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, calledNumber, callDuration, promptList);
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, calledNumber, callDuration, promptList, operator, circle);
         return JobAidResponse.makeForNonJson(page.getWebResponse().getContentAsString());
     }
 

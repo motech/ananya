@@ -1,10 +1,7 @@
 package org.motechproject.ananya.framework;
 
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.AllOperators;
-import org.motechproject.ananya.repository.AllSMSReferences;
+import org.motechproject.ananya.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,15 +14,14 @@ public class CouchDb {
 
     @Autowired
     private AllLocations allLocations;
-
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
-
     @Autowired
     private AllOperators allOperators;
-
     @Autowired
     private AllSMSReferences allSMSReferences;
+    @Autowired
+    private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
 
     public CouchDb confirmPartiallyRegistered(String callerId, String operator) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
@@ -37,7 +33,7 @@ public class CouchDb {
     public CouchDb confirmUsage(String callerId, Integer currentUsage, Integer maxUsage) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
         Operator operator = allOperators.findByName(worker.getOperator());
-        assertEquals(new Integer(currentUsage * 60 * 1000), worker.getCurrentJobAidUsage());
+        assertEquals(currentUsage, worker.getCurrentJobAidUsage());
         assertEquals(new Integer(maxUsage * 60 * 1000), operator.getAllowedUsagePerMonth());
         return this;
     }
@@ -47,6 +43,7 @@ public class CouchDb {
         FrontLineWorker byMsisdn = allFrontLineWorkers.findByMsisdn(callerId);
         if (byMsisdn == null) return;
         allFrontLineWorkers.remove(byMsisdn);
+        allFrontLineWorkerKeys.removeAll();
     }
 
     public void clearSMSReferences(String callerId) {
@@ -109,6 +106,13 @@ public class CouchDb {
         for (Score score : scores)
             frontLineWorker.reportCard().addScore(score);
         allFrontLineWorkers.update(frontLineWorker);
+        return this;
+    }
+
+    public CouchDb confirmPromptsHeard(String callerId, List<String> prompts) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        for (String prompt : prompts)
+            assert(frontLineWorker.getPromptsHeard().containsKey(prompt));
         return this;
     }
 }

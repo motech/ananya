@@ -1,7 +1,5 @@
 package org.motechproject.ananya.domain;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.motechproject.cmslite.api.model.StringContent;
@@ -19,7 +17,7 @@ public class Node extends MotechBaseDataObject {
     @JsonProperty
     private String parentId;
     @JsonProperty
-    private List<String>  contentIds;
+    private List<String> contentIds;
 
     private List<Node> children;
     private List<StringContent> contents;
