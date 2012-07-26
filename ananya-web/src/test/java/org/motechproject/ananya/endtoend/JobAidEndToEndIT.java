@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class JobAidEndToEndIT extends SpringIntegrationTest {
 
@@ -69,7 +70,8 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         String callDuration = "30";
         String promptList = "['prompt1', 'prompt2']";
 
-        String json = testJsonData.forJobAidDisconnect(Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3"));
+        List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");
+        String json = testJsonData.forJobAidDisconnect(nodeNames);
 
         JobAidDisconnectRequest request = new JobAidDisconnectRequest(callerId, callId, operator, circle, calledNumber, callDuration, promptList, json);
         jobAidWebService.requestForDisconnect(request);
@@ -81,10 +83,11 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId);
 
-        //verify measure for callLog, verify transformations
-        //verify measure for Audiotrackerlog
+        reportDb.confirmJobAidContentMeasure(callId, callerId, nodeNames)
+                .confirmCallDurationMeasure(callId, callerId, "5771122");
 
-
+        reportDb.clearJobAidMeasureAndAudioTrackerLogs(callId)
+                .clearCallDurationMeasure(callId);
     }
 
     private void clearFLWData() {

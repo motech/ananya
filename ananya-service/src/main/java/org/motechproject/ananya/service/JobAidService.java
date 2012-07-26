@@ -56,7 +56,6 @@ public class JobAidService {
 
     public void handleDisconnect(JobAidServiceRequest request) {
         allTransformers.process(request);
-
         FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
                 request.getCallerId(), request.getOperator(), request.getCircle());
 
