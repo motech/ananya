@@ -32,13 +32,9 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     private String circle = "bihar";
     private String operator = "airtel";
 
+    @Before
     @After
     public void after() {
-        clearFLWData();
-    }
-
-    @Before
-    public void before() {
         clearFLWData();
     }
 
@@ -77,7 +73,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         jobAidWebService.requestForDisconnect(request);
 
         couchDb.confirmPartiallyRegistered(callerId, operator)
-                .confirmUsage(callerId, Integer.parseInt(callDuration), 39)
+                .confirmJobAidUsage(callerId, Integer.parseInt(callDuration), 39)
                 .confirmPromptsHeard(callerId, Arrays.asList("prompt1", "prompt2"));
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
@@ -86,12 +82,12 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         reportDb.confirmJobAidContentMeasure(callId, callerId, nodeNames)
                 .confirmCallDurationMeasure(callId, callerId, "5771122");
 
-        reportDb.clearJobAidMeasureAndAudioTrackerLogs(callId)
+        reportDb.clearJobAidMeasure(callId)
                 .clearCallDurationMeasure(callId);
     }
 
     private void clearFLWData() {
-        reportDb.clearDimensionAndMeasures(callerId);
+        reportDb.clearFLWDimensionAndMeasures(callerId);
         couchDb.clearFLWData(callerId);
     }
 

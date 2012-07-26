@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
+import org.motechproject.ananya.domain.EmptyBookmark;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
@@ -23,36 +24,33 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
 
     @Autowired
     private CertificateCourseWebservice certificateCourseWebService;
-
     @Autowired
     private CouchDb couchDb;
-
     @Autowired
     private ReportDb reportDb;
+    @Autowired
+    private TestJsonData testJsonData;
 
-    private String callerId = "987654";
+    private String callerId = "919987345645";
+    private String callId = "919987345645-123456789";
     private String operator = "airtel";
-    private String callId = "2345678";
     private String circle = "circle";
-
+    private String calledNumber = "5771122";
 
     @Before
-    public void setUp() throws Exception {
-    }
-
     @After
-    public void after() {
+    public void setUp() {
         clearFLWData();
     }
 
     private void clearFLWData() {
-        reportDb.clearDimensionAndMeasures(callerId);
+        reportDb.clearFLWDimensionAndMeasures(callerId);
         couchDb.clearFLWData(callerId);
     }
 
     @Test
     public void shouldReturnADefaultResponseForANewCaller() throws IOException {
-        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId);
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
         CertificateCourseResponse certificateCourseResponse = certificateCourseWebService.requestForCallerData(request);
 
         certificateCourseResponse.confirmPartiallyRegistered().confirmEmptyBookMark().confirmEmptyScores();
@@ -73,9 +71,39 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
         couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 3, 4).updateScores(callerId, scores);
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
-        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId);
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
         CertificateCourseResponse certificateCourseResponse = certificateCourseWebService.requestForCallerData(request);
         certificateCourseResponse.confirmPartiallyRegistered().confirmBookMarkAt(3, 4).confirmScores(scoresMap);
+    }
+
+    @Test
+    public void shouldCreateLogsDimensionsMeasuresForDisconnectOfACallerFinishingCourse() throws IOException {
+        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 8, 3).updateScores(callerId, presetScores());
+        reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
+
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
+        request.setJsonPostData(testJsonData.forCourseDisconnect());
+        certificateCourseWebService.requestForDisconnect(request);
+
+        couchDb.confirmBookmarkUpdated(callerId, new EmptyBookmark())
+                .confirmSMSReference(callerId, "00000091998734564501");
+
+        reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
+                .confirmRegistrationMeasureForPartiallyRegistered(callerId)
+                .confirmCallDurationMeasure(callId, callerId, "5771102")
+                .confirmSMSSent(callerId, "00000091998734564501")
+                .confirmCourseItemMeasure(callId, callerId);
+
+        couchDb.clearSMSReferences(callerId);
+        reportDb.clearCallDurationMeasure(callId).clearSMSSentMeasure(callerId).clearCourseItemMeasure(callId);
+    }
+
+    private List<Score> presetScores() {
+        List<Score> scores = new ArrayList<Score>();
+        for (int chapIndex = 0; chapIndex < 9; chapIndex++)
+            for (int lessonIndex = 0; lessonIndex < 4; lessonIndex++)
+                scores.add(new Score(String.valueOf(chapIndex), String.valueOf(lessonIndex), true));
+        return scores;
     }
 
 

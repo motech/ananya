@@ -18,6 +18,8 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 
 public class AllCourseItemMeasureTest extends SpringIntegrationTest {
@@ -81,7 +83,8 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, event,callId);
         allCourseItemMeasures.save(courseItemMeasure);
 
-        CourseItemMeasure measure = allCourseItemMeasures.fetchFor(frontLineWorkerDimension.getId(), courseItemDimension, String.valueOf(event));
+        List<CourseItemMeasure> measures = allCourseItemMeasures.fetchFor(callId);
+        CourseItemMeasure measure = measures.get(0);
         assertEquals(event, measure.getEvent());
         assertEquals(courseItemDimensionName, measure.getCourseItemDimension().getName());
         assertEquals(chapter, measure.getCourseItemDimension().getType());

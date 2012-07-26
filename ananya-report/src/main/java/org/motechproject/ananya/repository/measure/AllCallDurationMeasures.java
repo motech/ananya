@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public class AllCallDurationMeasures {
@@ -19,8 +21,7 @@ public class AllCallDurationMeasures {
         template.save(callDurationMeasure);
     }
 
-    public CallDurationMeasure findByCallId(String callId) {
-        return (CallDurationMeasure) template.getUniqueResult(CallDurationMeasure.FIND_BY_CALL_ID,
-                new String[]{"callId"}, new Object[]{callId});
+    public List<CallDurationMeasure> findByCallId(String callId) {
+        return (List<CallDurationMeasure>) template.findByNamedQueryAndNamedParam(CallDurationMeasure.FIND_BY_CALL_ID, new String[]{"callId"}, new Object[]{callId});
     }
 }

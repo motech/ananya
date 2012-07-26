@@ -30,7 +30,7 @@ public class CouchDb {
         return this;
     }
 
-    public CouchDb confirmUsage(String callerId, Integer currentUsage, Integer maxUsage) {
+    public CouchDb confirmJobAidUsage(String callerId, Integer currentUsage, Integer maxUsage) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
         Operator operator = allOperators.findByName(worker.getOperator());
         assertEquals(currentUsage, worker.getCurrentJobAidUsage());
@@ -38,6 +38,36 @@ public class CouchDb {
         return this;
     }
 
+
+    public CouchDb confirmBookmarkUpdated(String callerId, BookMark bookmark) {
+        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
+        assertEquals(bookmark.asJson(), worker.bookMark().asJson());
+        return this;
+    }
+
+    public CouchDb confirmScoresSaved(String callerId, ReportCard reportCard) {
+        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
+        assertTrue(worker.reportCard().scores().containsAll(reportCard.scores()));
+        return this;
+    }
+
+    public CouchDb confirmFlwDoesNotExist(String callerId) {
+        assertNull(allFrontLineWorkers.findByMsisdn(callerId));
+        return this;
+    }
+
+    public CouchDb confirmPromptsHeard(String callerId, List<String> prompts) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+        for (String prompt : prompts)
+            assert(frontLineWorker.getPromptsHeard().containsKey(prompt));
+        return this;
+    }
+
+    public CouchDb confirmSMSReference(String callerId, String smsReferenceNumber) {
+        SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
+        assertEquals(smsReferenceNumber,smsReference.referenceNumbers(1));
+        return this;
+    }
 
     public void clearFLWData(String callerId) {
         FrontLineWorker byMsisdn = allFrontLineWorkers.findByMsisdn(callerId);
@@ -49,23 +79,6 @@ public class CouchDb {
     public void clearSMSReferences(String callerId) {
         SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
         allSMSReferences.remove(smsReference);
-    }
-
-    public CouchDb confirmBookmarkUpdated(String callerId, BookMark playCourseResultBookMark) {
-        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
-        assertEquals(playCourseResultBookMark, worker.bookMark());
-        return this;
-    }
-
-    public CouchDb confirmScoresSaved(String callerId, ReportCard reportCard) {
-        FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
-        assertEquals(reportCard.scores(), worker.reportCard().scores());
-        return this;
-    }
-
-    public CouchDb confirmFlwDoesNotExist(String callerId) {
-        assertNull(allFrontLineWorkers.findByMsisdn(callerId));
-        return this;
     }
 
     public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operator, String circle) {
@@ -89,10 +102,6 @@ public class CouchDb {
         return this;
     }
 
-    private Integer convertToMilliSec(int expected) {
-        return expected * 60 * 1000;
-    }
-
     public CouchDb updateBookMark(String callerId, int chapIndex, int lessonIndex) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         BookMark bookmark = new BookMark("",chapIndex,lessonIndex);
@@ -109,10 +118,7 @@ public class CouchDb {
         return this;
     }
 
-    public CouchDb confirmPromptsHeard(String callerId, List<String> prompts) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-        for (String prompt : prompts)
-            assert(frontLineWorker.getPromptsHeard().containsKey(prompt));
-        return this;
+    private Integer convertToMilliSec(int expected) {
+        return expected * 60 * 1000;
     }
 }

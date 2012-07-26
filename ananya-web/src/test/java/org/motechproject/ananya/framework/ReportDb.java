@@ -2,11 +2,11 @@ package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.*;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.*;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
@@ -49,6 +49,7 @@ public class ReportDb {
     @Autowired
     private AllCallDurationMeasures allCallDurationMeasures;
 
+
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
 
@@ -70,22 +71,12 @@ public class ReportDb {
         return this;
     }
 
-    public ReportDb confirmCourseItemMeasure(String callerId, BookMark bookMark, String eventType) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
-        int questionIndex = bookMark.getLessonIndex() + 1;
-        int chapterIndex = bookMark.getChapterIndex() + 1;
-        String courseItemDimensionName = "Chapter " + chapterIndex + " Lesson " + questionIndex;
-        CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(courseItemDimensionName, CourseItemType.LESSON);
-
-        CourseItemMeasure courseItemMeasure = allCourseItemMeasures.fetchFor(frontLineWorkerDimension.getId(), courseItemDimension, eventType);
-        assertNotNull(courseItemMeasure);
-        return this;
-    }
-
     public ReportDb confirmCallDurationMeasure(String callId, String callerId, String calledNumber) {
-        CallDurationMeasure callDurationMeasure = allCallDurationMeasures.findByCallId(callId);
-        assertEquals(Long.valueOf(callerId), callDurationMeasure.getFrontLineWorkerDimension().getMsisdn());
-        assertEquals(Long.valueOf(calledNumber), callDurationMeasure.getCalledNumber());
+        List<CallDurationMeasure> callDurationMeasures = allCallDurationMeasures.findByCallId(callId);
+        for (CallDurationMeasure callDurationMeasure : callDurationMeasures) {
+            assertEquals(Long.valueOf(callerId), callDurationMeasure.getFrontLineWorkerDimension().getMsisdn());
+            assertEquals(Long.valueOf(calledNumber), callDurationMeasure.getCalledNumber());
+        }
         return this;
     }
 
@@ -98,6 +89,13 @@ public class ReportDb {
             assertEquals((Integer) 100, jobAidContentMeasure.getPercentage());
             assertTrue(nodeNames.contains(jobAidContentMeasure.getJobAidContentDimension().getParent().getName()));
         }
+        return this;
+    }
+
+    public ReportDb confirmCourseItemMeasure(String callId, String callerId) {
+        List<CourseItemMeasure> courseItemMeasures = allCourseItemMeasures.fetchFor(callId);
+        for (CourseItemMeasure courseItemMeasure : courseItemMeasures)
+            assertEquals(Long.valueOf(callerId), courseItemMeasure.getFrontLineWorkerDimension().getMsisdn());
         return this;
     }
 
@@ -114,7 +112,7 @@ public class ReportDb {
         return this;
     }
 
-    public ReportDb clearDimensionAndMeasures(String callerId) {
+    public ReportDb clearFLWDimensionAndMeasures(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         if (frontLineWorkerDimension != null) {
             RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
@@ -124,25 +122,31 @@ public class ReportDb {
         return this;
     }
 
+    public ReportDb clearCallDurationMeasure(String callId) {
+        List<CallDurationMeasure> callDurationMeasures = allCallDurationMeasures.findByCallId(callId);
+        for (CallDurationMeasure callDurationMeasure : callDurationMeasures)
+            template.delete(callDurationMeasure);
+        return this;
+    }
+
+    public ReportDb clearCourseItemMeasure(String callId) {
+        List<CourseItemMeasure> courseItemMeasures = allCourseItemMeasures.fetchFor(callId);
+        for (CourseItemMeasure courseItemMeasure : courseItemMeasures)
+            template.delete(courseItemMeasure);
+        return this;
+    }
+
+    public ReportDb clearJobAidMeasure(String callId) {
+        List<JobAidContentMeasure> jobAidContentMeasures = allJobAidContentMeasures.findByCallId(callId);
+        for (JobAidContentMeasure jobAidContentMeasure : jobAidContentMeasures)
+            template.delete(jobAidContentMeasure);
+        return this;
+    }
+
     public ReportDb clearSMSSentMeasure(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId));
         SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorkerDimension.getId());
         template.delete(smsSentMeasure);
-        return this;
-    }
-
-    public ReportDb clearJobAidMeasureAndAudioTrackerLogs(String callId) {
-        List<JobAidContentMeasure> jobAidContentMeasures = allJobAidContentMeasures.findByCallId(callId);
-        for (JobAidContentMeasure jobAidContentMeasure : jobAidContentMeasures)
-            template.delete(jobAidContentMeasure);
-
-        allAudioTrackerLogs.deleteFor(callId);
-        return this;
-    }
-
-    public ReportDb clearCallDurationMeasure(String callId) {
-        CallDurationMeasure callDurationMeasure = allCallDurationMeasures.findByCallId(callId);
-        template.delete(callDurationMeasure);
         return this;
     }
 
@@ -154,5 +158,4 @@ public class ReportDb {
         allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));
         return this;
     }
-
 }
