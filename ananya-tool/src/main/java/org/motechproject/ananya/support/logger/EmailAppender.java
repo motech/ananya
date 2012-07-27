@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.logger;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Layout;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.helpers.LogLog;
@@ -37,7 +38,9 @@ public class EmailAppender extends SMTPAppender {
             LoggingEvent logEvent = cb.get();
             if (i == 0) {
                 Layout subjectLayout = new PatternLayout(getSubject());
-                msg.setSubject(MimeUtility.encodeText(subjectLayout.format(logEvent), "UTF-8", null));
+                String subject = subjectLayout.format(logEvent);
+                subject = subject + getSubjectHash(logEvent);
+                msg.setSubject(MimeUtility.encodeText(subject, "UTF-8", null));
             }
             buffer.append(layout.format(logEvent));
 
@@ -47,6 +50,15 @@ public class EmailAppender extends SMTPAppender {
                 for (String aThrowableStrRep : throwableStrRep)
                     buffer.append(aThrowableStrRep).append(Layout.LINE_SEP);
         }
+    }
+
+    private String getSubjectHash(LoggingEvent loggingEvent) {
+        String[] strings = loggingEvent.getThrowableStrRep();
+        StringBuffer sb = new StringBuffer();
+        for(String str : strings) {
+            sb.append(str);
+        }
+        return DigestUtils.md5Hex(sb.toString());
     }
 
     private void sendEmail(MimeBodyPart mimeBodyPart) throws MessagingException {
