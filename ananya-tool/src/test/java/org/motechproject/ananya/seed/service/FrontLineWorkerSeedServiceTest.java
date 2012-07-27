@@ -31,7 +31,7 @@ public class FrontLineWorkerSeedServiceTest {
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
                 "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", Designation.INVALID, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
                 "1234", "name", Designation.ANM, defaultLocation, RegistrationStatus.REGISTERED);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(

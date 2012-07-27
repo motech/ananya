@@ -18,7 +18,6 @@ import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -212,12 +211,8 @@ public class FrontLineWorkerSeedService {
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
 
-        boolean hasCalledSystem =
-                frontLineWorkerDimension != null
-                        ? DataAccessUtils.intResult(template.find(
-                        "select count(*) from CallDurationMeasure cdm where cdm.frontLineWorkerDimension.id = " +
-                                frontLineWorkerDimension.getId())) > 0
-                        : false;
+        // Operator information is only present for FLWs who have called the system.
+        boolean hasCalledSystem = !StringUtils.isBlank(frontLineWorker.getOperator());
 
         RegistrationStatus newRegistrationStatus = !hasCalledSystem
                 ? RegistrationStatus.UNREGISTERED
@@ -257,4 +252,18 @@ public class FrontLineWorkerSeedService {
     }
 
 
+    public void removeInvalidDesignation(FrontLineWorker frontLineWorker) {
+        String existingDesignation = frontLineWorker.designationName();
+        if (existingDesignation == null || !existingDesignation.equalsIgnoreCase("INVALID")) return;
+
+        log.info("Changing designation for FLW : " + frontLineWorker + " old designation is : " + existingDesignation);
+
+        frontLineWorker.setDesignation(null);
+        allFrontLineWorkers.update(frontLineWorker);
+
+        FrontLineWorkerDimension frontLineWorkerDimension =
+                allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        frontLineWorkerDimension.setDesignation(null);
+        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+    }
 }

@@ -7,6 +7,7 @@ import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.seed.service.FrontLineWorkerExecutable;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.LocationService;
 import org.motechproject.ananya.service.RegistrationService;
@@ -147,9 +148,10 @@ public class FrontLineWorkerSeed {
         log.info("Correction of registration statuses done.");
     }
 
-    @Seed(priority = 0, version = "1.6", comment = "Changing registration status of FLWs based on new definition")
-    public void activateNewRegistrationStatusesForAllFLWs() {
-        int batchSize = 100;
+    private void doWithBatch(FrontLineWorkerExecutable executable, int batchSize) {
+        // if (batchSize > 1000)
+        //      You're treading on thin ice buddy. Couch can die on you
+
         String startKey = "";
         List<FrontLineWorker> frontLineWorkers;
 
@@ -159,11 +161,11 @@ public class FrontLineWorkerSeed {
             if (frontLineWorkers.size() < batchSize) break;
 
             for (FrontLineWorker frontLineWorker : frontLineWorkers.subList(0, frontLineWorkers.size() - 1)) {
-                log.info("Changing registration status (1) for FLW with msisdn : " + frontLineWorker.getMsisdn());
+                log.info("Modifying (1) for FLW with msisdn : " + frontLineWorker.getMsisdn());
                 try {
-                    seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+                    executable.execute(frontLineWorker);
                 } catch (Exception e) {
-                    log.error("Error converting reg status " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
+                    log.error("Error modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
                 }
             }
 
@@ -171,9 +173,47 @@ public class FrontLineWorkerSeed {
         }
 
         for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            log.info("Changing registration status (2) for FLW with msisdn : " + frontLineWorker.getMsisdn());
-            seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+            log.info("Modifying (2) FLW with msisdn : " + frontLineWorker.getMsisdn());
+            try {
+                executable.execute(frontLineWorker);
+            } catch (Exception e) {
+                log.error("Error modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
+            }
         }
+    }
+
+    public void countInvalidFLWs() {
+        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
+        int counter = 0;
+        for(FrontLineWorker frontLineWorker : frontLineWorkers) {
+            String existingDesignation = frontLineWorker.designationName();
+            if (existingDesignation == null || !existingDesignation.equalsIgnoreCase("INVALID")) continue;
+
+            counter++;
+            log.info("FLW Invalid : " + frontLineWorker.getMsisdn() + "  -  " + existingDesignation);
+        }
+
+        log.info("FLW - total invalid count - " + counter);
+    }
+
+    @Seed(priority = 1, version = "1.6", comment = "Remove invalid designations")
+    public void removeInvalidDesignations() {
+        doWithBatch(new FrontLineWorkerExecutable() {
+            @Override
+            public void execute(FrontLineWorker frontLineWorker) {
+                seedService.removeInvalidDesignation(frontLineWorker);
+            }
+        }, 100);
+    }
+
+    @Seed(priority = 0, version = "1.6", comment = "Changing registration status of FLWs based on new definition")
+    public void activateNewRegistrationStatusesForAllFLWs() {
+        doWithBatch(new FrontLineWorkerExecutable() {
+            @Override
+            public void execute(FrontLineWorker frontLineWorker) {
+                seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+            }
+        }, 100);
     }
 
 }

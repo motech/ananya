@@ -66,7 +66,7 @@ public class FrontLineWorkerTest {
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutDesignation.status());
 
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", Designation.INVALID, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         flwWithInvalidDesignation.decideRegistrationStatus(completeLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithInvalidDesignation.status());
 

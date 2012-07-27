@@ -1,9 +1,16 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 public enum Designation {
     ANM,
     ASHA,
     AWW,
+
+    /*
+     * This value is only being maintained so that the seed can de-serialize incorrect object with
+     * INVALID value (for correction). It is not used anywhere else in the code.
+     */
     INVALID;
 
     private static boolean contains(String value) {
@@ -17,12 +24,11 @@ public enum Designation {
 
     public static boolean isInValid(String designation) {
         return
-                designation == null ||
-                designation.equalsIgnoreCase(Designation.INVALID.toString()) ||
+                StringUtils.isBlank(designation) ||
                 !Designation.contains(designation);
     }
     
     public static Designation getFor(String designation) {
-        return Designation.isInValid(designation) ? Designation.INVALID : Designation.valueOf(designation);
+        return Designation.isInValid(designation) ? null : Designation.valueOf(designation);
     }
 }
