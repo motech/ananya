@@ -181,8 +181,8 @@
                         <configuration>
                             <argLine>-XX:MaxPermSize=1024M</argLine>
                             <includes>
-                                <include>**/functional/**/*Test.java</include>
-                                <include>**/newfunctional/**/*Test.java</include>
+                                <include>**/functional/**/*IT.java</include>
+                                <include>**/endtoend/**/*IT.java</include>
                             </includes>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         </configuration>
