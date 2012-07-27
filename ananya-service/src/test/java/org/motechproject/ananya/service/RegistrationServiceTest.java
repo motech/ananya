@@ -112,12 +112,12 @@ public class RegistrationServiceTest {
         LocationList locationList = new LocationList(Arrays.asList(location));
         registrationService = new RegistrationService(frontLineWorkerService, registrationMeasureService);
 
-        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), null, any(Location.class)))
+        when(frontLineWorkerService.createOrUpdateForImport(eq(callerId), eq(name), any(Designation.class), any(Location.class)))
                 .thenReturn(new FrontLineWorker(callerId,"operator", "circle"));
 
         RegistrationResponse registrationResponse = registrationService.registerFlw(callerId, name, designation, "district", "block", "village", locationList);
 
         assertEquals("New FrontlineWorker added", registrationResponse.getMessage());
-        verify(frontLineWorkerService).createOrUpdateForImport(eq(callerId), eq(name), null, any(Location.class));
+        verify(frontLineWorkerService).createOrUpdateForImport(eq(callerId), eq(name), any(Designation.class), any(Location.class));
     }
 }

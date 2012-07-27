@@ -1,7 +1,6 @@
 package org.motechproject.ananya.seed;
 
 import junit.framework.Assert;
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,7 +13,6 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
@@ -146,22 +144,13 @@ public class FrontLineWorkerSeedTest {
         return allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn()).getStatus();
     }
 
-    private void saveCallDurationMeasure(FrontLineWorkerDimension frontLineWorkerDimension,
-                                         LocationDimension locationDimension, TimeDimension timeDimension) {
-        template.save(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension,
-                null, 0L, 0, DateTime.now(), DateTime.now(), ""));
-    }
-
     @Test
     public void shouldActivateNewRegistrationStatusesForAllFLWs() {
         Location location = new Location("district", "block", "panchayat", 1, 1, 1);
         allLocations.add(location);
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
-        template.save(locationDimension);
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
 
-        FrontLineWorker notCalledPartialFLW = getFrontLineWorker("9999991", "airtel", RegistrationStatus.PARTIALLY_REGISTERED, null);
-        FrontLineWorker notCalledRegisteredFLW = getFrontLineWorker("9999993", "airtel", RegistrationStatus.REGISTERED, location);
+        FrontLineWorker notCalledPartialFLW = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
+        FrontLineWorker notCalledRegisteredFLW = getFrontLineWorker("9999993", "", RegistrationStatus.REGISTERED, location);
         FrontLineWorker calledUnregisteredFLW = getFrontLineWorker("9999994", "airtel", RegistrationStatus.UNREGISTERED, null);
         FrontLineWorker calledRegisteredFLW = getFrontLineWorker("9999995", "airtel", RegistrationStatus.REGISTERED, location);
         calledRegisteredFLW.setName("name"); calledRegisteredFLW.setDesignation(Designation.ANM);
@@ -184,10 +173,6 @@ public class FrontLineWorkerSeedTest {
         template.save(calledUnregisteredFLWDimension);
         template.save(calledRegisteredFLWDimension);
         template.save(calledPartialFLWDimension);
-
-        saveCallDurationMeasure(calledUnregisteredFLWDimension, locationDimension, timeDimension);
-        saveCallDurationMeasure(calledRegisteredFLWDimension, locationDimension, timeDimension);
-        saveCallDurationMeasure(calledPartialFLWDimension, locationDimension, timeDimension);
 
         frontLineWorkerSeed.activateNewRegistrationStatusesForAllFLWs();
 
