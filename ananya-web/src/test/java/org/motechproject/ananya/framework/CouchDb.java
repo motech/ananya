@@ -22,6 +22,17 @@ public class CouchDb {
     private AllSMSReferences allSMSReferences;
     @Autowired
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
+    @Autowired
+    private AllCertificateCourseLogs allCertificateCourseLogs;
+    @Autowired
+    private AllAudioTrackerLogs allAudioTrackerLogs;
+    @Autowired
+    private AllRegistrationLogs allRegistrationLogs;
+    @Autowired
+    private AllSMSLogs allSMSLogs;
+    @Autowired
+    private AllCallLogs allCallLogs;
+
 
     public CouchDb confirmPartiallyRegistered(String callerId, String operator) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
@@ -59,13 +70,13 @@ public class CouchDb {
     public CouchDb confirmPromptsHeard(String callerId, List<String> prompts) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         for (String prompt : prompts)
-            assert(frontLineWorker.getPromptsHeard().containsKey(prompt));
+            assert (frontLineWorker.getPromptsHeard().containsKey(prompt));
         return this;
     }
 
     public CouchDb confirmSMSReference(String callerId, String smsReferenceNumber) {
         SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
-        assertEquals(smsReferenceNumber,smsReference.referenceNumbers(1));
+        assertEquals(smsReferenceNumber, smsReference.referenceNumbers(1));
         return this;
     }
 
@@ -74,11 +85,16 @@ public class CouchDb {
         if (byMsisdn == null) return;
         allFrontLineWorkers.remove(byMsisdn);
         allFrontLineWorkerKeys.removeAll();
+        allSMSReferences.removeAll();
     }
 
-    public void clearSMSReferences(String callerId) {
-        SMSReference smsReference = allSMSReferences.findByMsisdn(callerId);
-        allSMSReferences.remove(smsReference);
+    public CouchDb clearAllLogs() {
+        allRegistrationLogs.removeAll();
+        allAudioTrackerLogs.removeAll();
+        allCallLogs.removeAll();
+        allSMSLogs.removeAll();
+        allCertificateCourseLogs.removeAll();
+        return this;
     }
 
     public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operator, String circle) {
@@ -104,7 +120,7 @@ public class CouchDb {
 
     public CouchDb updateBookMark(String callerId, int chapIndex, int lessonIndex) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-        BookMark bookmark = new BookMark("",chapIndex,lessonIndex);
+        BookMark bookmark = new BookMark("", chapIndex, lessonIndex);
         frontLineWorker.addBookMark(bookmark);
         allFrontLineWorkers.update(frontLineWorker);
         return this;
@@ -120,5 +136,34 @@ public class CouchDb {
 
     private Integer convertToMilliSec(int expected) {
         return expected * 60 * 1000;
+    }
+
+    public CouchDb confirmNoRegistrationLogFor(String callId) {
+        assertNull(allRegistrationLogs.findByCallId(callId));
+        return this;
+    }
+
+    public CouchDb confirmNoAudioTrackerLogFor(String callId) {
+        assertNull(allAudioTrackerLogs.findByCallId(callId));
+        return this;
+    }
+
+    public CouchDb confirmNoCallLogFor(String callId) {
+        assertNull(allCallLogs.findByCallId(callId));
+        return this;
+    }
+
+    public CouchDb confirmNoCourseLogFor(String callId) {
+        assertNull(allCertificateCourseLogs.findByCallId(callId));
+        return this;
+    }
+
+    public CouchDb confirmNoSMSLog(String callId) {
+        assertNull(allSMSLogs.findByCallId(callId));
+        return this;
+    }
+
+    public Boolean confirmSMSSent(String callerId) {
+        return allSMSReferences.findByMsisdn(callerId) != null;
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
+import org.motechproject.ananya.framework.TestJsonData;
 import org.motechproject.ananya.framework.domain.JobAidDisconnectRequest;
 import org.motechproject.ananya.framework.domain.JobAidRequest;
 import org.motechproject.ananya.framework.domain.JobAidResponse;
@@ -79,6 +80,12 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId);
 
+        couchDb.confirmNoRegistrationLogFor(callId)
+                .confirmNoAudioTrackerLogFor(callId)
+                .confirmNoCallLogFor(callId)
+                .confirmNoCourseLogFor(callId)
+                .confirmNoSMSLog(callId);
+
         reportDb.confirmJobAidContentMeasure(callId, callerId, nodeNames)
                 .confirmCallDurationMeasure(callId, callerId, "5771122");
 
@@ -89,6 +96,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     private void clearFLWData() {
         reportDb.clearFLWDimensionAndMeasures(callerId);
         couchDb.clearFLWData(callerId);
+        couchDb.clearAllLogs();
     }
 
 }

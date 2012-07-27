@@ -1,4 +1,4 @@
-package org.motechproject.ananya.endtoend;
+package org.motechproject.ananya.framework;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;

@@ -9,6 +9,7 @@ import org.motechproject.ananya.domain.EmptyBookmark;
 import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
+import org.motechproject.ananya.framework.TestJsonData;
 import org.motechproject.ananya.framework.domain.CertificateCourseRequest;
 import org.motechproject.ananya.framework.domain.CertificateCourseResponse;
 import org.motechproject.ananya.framework.domain.CertificateCourseWebservice;
@@ -40,12 +41,9 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
     @Before
     @After
     public void setUp() {
-        clearFLWData();
-    }
-
-    private void clearFLWData() {
         reportDb.clearFLWDimensionAndMeasures(callerId);
         couchDb.clearFLWData(callerId);
+        couchDb.clearAllLogs();
     }
 
     @Test
@@ -77,7 +75,7 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldCreateLogsDimensionsMeasuresForDisconnectOfACallerFinishingCourse() throws IOException {
+    public void shouldCreateLogsDimensionsMeasuresForDisconnectOfACallerFinishingCourse() throws IOException, InterruptedException {
         couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 8, 3).updateScores(callerId, presetScores());
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
@@ -85,17 +83,25 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
         request.setJsonPostData(testJsonData.forCourseDisconnect());
         certificateCourseWebService.requestForDisconnect(request);
 
-        couchDb.confirmBookmarkUpdated(callerId, new EmptyBookmark())
-                .confirmSMSReference(callerId, "00000091998734564501");
+
+        couchDb.confirmBookmarkUpdated(callerId, new EmptyBookmark());
+//              .confirmSMSReference(callerId, "00000091998734564501");
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId)
                 .confirmCallDurationMeasure(callId, callerId, "5771102")
-                .confirmSMSSent(callerId, "00000091998734564501")
                 .confirmCourseItemMeasure(callId, callerId);
+//              .confirmSMSSent(callerId, "00000091998734564501")
 
-        couchDb.clearSMSReferences(callerId);
-        reportDb.clearCallDurationMeasure(callId).clearSMSSentMeasure(callerId).clearCourseItemMeasure(callId);
+        couchDb.confirmNoRegistrationLogFor(callId)
+                .confirmNoAudioTrackerLogFor(callId)
+                .confirmNoCallLogFor(callId)
+                .confirmNoCourseLogFor(callId);
+//              .confirmNoSMSLog(callId);
+
+        reportDb.clearCallDurationMeasure(callId)
+                .clearCourseItemMeasure(callId);
+//              .clearSMSSentMeasure(callerId)
     }
 
     private List<Score> presetScores() {

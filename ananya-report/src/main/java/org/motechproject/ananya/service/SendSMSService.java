@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.motechproject.ananya.service.handler.SendSMSHandler;
 import org.motechproject.context.EventContext;
@@ -38,7 +37,7 @@ public class SendSMSService {
         parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);
         parameters.put(SendSMSHandler.PARAMETER_SMS_REFERENCE_NUMBER, referenceNumber);
 
-        log.info("Sending SMS event : Key SUBJECT_SEND_SINGLE_SMS " + ToStringBuilder.reflectionToString(parameters));
+        log.info("published sms message: " + callerId + "|" + referenceNumber);
         eventContext.send(SendSMSHandler.SUBJECT_SEND_SINGLE_SMS, parameters);
     }
 
@@ -55,7 +54,7 @@ public class SendSMSService {
     private String extractCode(String locationId, String startCode) {
         String result = "";
         int indexStart = locationId.indexOf(startCode);
-        if(indexStart != -1)
+        if (indexStart != -1)
             result = locationId.substring(indexStart + 1, indexStart + 4);
         return result;
     }
