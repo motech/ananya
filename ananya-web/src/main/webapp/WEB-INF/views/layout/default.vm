@@ -1,0 +1,16 @@
+##set($username = $request.getSession().getAttribute("loggedInUser").getUsername())
+##set($menuMap = $request.getSession().getAttribute("loggedInUser").getMenuMap())
+
+#head()
+<body>
+    #navbar()
+<div class=container-fluid>
+    <div class="row-fluid mainbox">
+        #sidebar()
+        <div class="span10">
+            $screen_content
+        </div>
+    </div>
+    #footer()
+</div>
+</body>
