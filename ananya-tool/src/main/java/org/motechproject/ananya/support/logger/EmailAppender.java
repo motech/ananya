@@ -54,6 +54,8 @@ public class EmailAppender extends SMTPAppender {
 
     private String getSubjectHash(LoggingEvent loggingEvent) {
         String[] strings = loggingEvent.getThrowableStrRep();
+        if (strings == null || strings.length == 0) return "";
+
         StringBuffer sb = new StringBuffer();
         for(String str : strings) {
             sb.append(str);

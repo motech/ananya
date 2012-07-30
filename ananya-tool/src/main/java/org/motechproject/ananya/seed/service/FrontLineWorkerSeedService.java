@@ -266,4 +266,30 @@ public class FrontLineWorkerSeedService {
         frontLineWorkerDimension.setDesignation(null);
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
     }
+
+    public void correctDesignationBasedOnCSVFile(String msisdn, String designation) {
+        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
+
+        Designation expectedDesignation = Designation.getFor(designation);
+        Designation actualDesignation = frontLineWorker.getDesignation();
+
+        if (actualDesignation != expectedDesignation) {
+            log.info("Modifying designation in couch for FLW with msisdn : " + msisdn + " expected designation : " +
+                    expectedDesignation + " actual designation : " + actualDesignation);
+            frontLineWorker.setDesignation(expectedDesignation);
+            allFrontLineWorkers.update(frontLineWorker);
+        }
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+
+        String expectedDesignationString = expectedDesignation == null ? null : expectedDesignation.toString();
+        String actualDesignationString = frontLineWorkerDimension.getDesignation();
+
+        if (!StringUtils.equalsIgnoreCase(expectedDesignationString, actualDesignationString)) {
+            log.info("Modifying designation in postgres for FLW with msisdn : " + msisdn + " expected designation : " +
+                    expectedDesignationString + " actual designation string : " + actualDesignationString);
+            frontLineWorkerDimension.setDesignation(expectedDesignationString);
+            allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+        }
+    }
 }

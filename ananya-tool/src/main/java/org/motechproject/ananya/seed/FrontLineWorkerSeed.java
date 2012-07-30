@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
@@ -43,11 +44,11 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
         FrontLineWorkerSeed frontLineWorkerSeed =
                 (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
-        frontLineWorkerSeed.activateNewRegistrationStatusesForAllFLWs();
+        frontLineWorkerSeed.correctAllDesignations();
     }
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
@@ -165,7 +166,7 @@ public class FrontLineWorkerSeed {
                 try {
                     executable.execute(frontLineWorker);
                 } catch (Exception e) {
-                    log.error("Error modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
+                    log.error("Error (1) modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
                 }
             }
 
@@ -177,7 +178,7 @@ public class FrontLineWorkerSeed {
             try {
                 executable.execute(frontLineWorker);
             } catch (Exception e) {
-                log.error("Error modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
+                log.error("Error (2) modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
             }
         }
     }
@@ -197,7 +198,36 @@ public class FrontLineWorkerSeed {
     }
 
     @Seed(priority = 1, version = "1.6", comment = "Remove invalid designations")
-    public void removeInvalidDesignations() {
+    public void correctAllDesignations() throws IOException {
+        String inputCSVFile = environment.equals("prod")
+                ? inputFileName : getClass().getResource(inputFileName).getPath();
+
+        String msisdn, designation;
+        String[] currentRow;
+
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        csvReader.readNext();
+        currentRow = csvReader.readNext();
+
+        log.info("Correcting FLW designations from CSV file.");
+
+        int counter = 0;
+        while (currentRow != null) {
+            counter++;
+            msisdn = StringUtils.trim(currentRow[0]);
+            if (msisdn.length() == 10) msisdn = "91" + msisdn;
+            designation = StringUtils.trim(currentRow[2]);
+            try {
+                seedService.correctDesignationBasedOnCSVFile(msisdn, designation);
+            } catch (Exception e) {
+                log.error("Error while correcting designation for FLW : " + msisdn, e);
+            }
+            currentRow = csvReader.readNext();
+
+            if (counter % 1000 == 0) log.info("Corrected designation for " + counter + " FLWs");
+        }
+
+        log.info("Correcting FLW invalid designations.");
         doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
