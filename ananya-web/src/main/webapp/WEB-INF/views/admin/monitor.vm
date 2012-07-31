@@ -1,7 +1,19 @@
-<div id="couchdb-monitor">
-    <ul>
-        #foreach($entry in $couchdbData.entrySet())
-            <li>"$entry.key" : $entry.value</li>
-        #end
-    </ul>
+<div id="all_monitors">
+    <div class="span6">
+        <h3>COUCHDB</h3>
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Document</th>
+                <th>Total Count</th>
+            </tr>
+            </thead>
+            #foreach($entry in $couchdbData.entrySet())
+                <tr>
+                    <td>$entry.key</td>
+                    <td>$entry.value</td>
+                </tr>
+            #end
+        </table>
+    </div>
 </div>

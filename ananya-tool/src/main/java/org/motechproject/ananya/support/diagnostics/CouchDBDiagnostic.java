@@ -3,6 +3,7 @@ package org.motechproject.ananya.support.diagnostics;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class CouchDBDiagnostic implements Diagnostic {
@@ -50,16 +53,22 @@ public class CouchDBDiagnostic implements Diagnostic {
 
     public Map<String, String> getResult() throws IOException {
         HttpClient httpClient = new HttpClient();
-        Map<String, String> results = new HashMap();
+        Map<String, String> results = new TreeMap<String, String>();
         for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
             GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
             httpClient.executeMethod(method);
-            results.put(diagnosticUrl.description(), getCountFrom(method.getResponseBodyAsString()));
+            results.put(getDescription(diagnosticUrl), getCountFrom(method.getResponseBodyAsString()));
         }
         return results;
     }
 
-    private String getCountFrom(String responseBodyAsString) {
-        return responseBodyAsString;
+    public String getCountFrom(String responseBody) {
+        Pattern r = Pattern.compile("(\\d+)");
+        Matcher m = r.matcher(responseBody);
+        return m.find() && m.groupCount() != 0 ? m.group(0) : responseBody;
+    }
+
+    private String getDescription(DiagnosticUrl diagnosticUrl) {
+        return StringUtils.remove(diagnosticUrl.description(), "Total number of");
     }
 }
