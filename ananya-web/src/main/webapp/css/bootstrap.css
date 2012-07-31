@@ -1200,7 +1200,7 @@ table {
   text-align: left;
   vertical-align: top;
   border-top: 1px solid #dddddd;
-  font-size: 13px;
+  /*font-size: 13px;*/
 }
 .table th {
   font-weight: bold;

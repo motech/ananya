@@ -9,7 +9,7 @@ import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
+import java.util.*;
 
 @Component
 public class PostgresDiagnostic implements Diagnostic {
@@ -23,10 +23,14 @@ public class PostgresDiagnostic implements Diagnostic {
         diagnosticLog.add("Opening session with database");
         Session session = dataAccessTemplate.getSessionFactory().openSession();
         try {
-            flwDiagnosis(diagnosticLog, session);
-            jobAidDiagnosis(diagnosticLog, session);
-            certificateCourseDiagnosis(diagnosticLog, session);
-            SMSSentDiagnosis(diagnosticLog, session);
+            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_FLWS, DiagnosticQuery.FIND_FLWS_REG_TODAY));
+            Map<String, String> groupResults = getGroupResultsFor(session, DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS, DiagnosticQuery.FIND_FLWS_BY_STATUS_TODAY);
+            for (String key : groupResults.keySet())
+                diagnosticLog.add(key + ":" + groupResults.get(key));
+
+            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS, DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS));
+            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS, DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS));
+            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT, DiagnosticQuery.FIND_TODAY_SMS_SENT));
         } catch (Exception e) {
             diagnosticLog.add("Opening session failed");
             diagnosticLog.addError(e);
@@ -36,61 +40,38 @@ public class PostgresDiagnostic implements Diagnostic {
         return diagnosticLog;
     }
 
-    private void flwDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now();
-        int flwTotalCount = getCountFor(session, (DiagnosticQuery.FIND_TOTAL_FLWS).getQuery());
-        diagnosticLog.add("FrontlineWorkers in database : " + flwTotalCount);
-
-        int flwRegisteredTodayCount = getCountFor(session, DiagnosticQuery.FIND_FLWS_REG_TODAY.getQuery(today));
-        diagnosticLog.add("FrontlineWorkers registered today are : " + flwRegisteredTodayCount);
-
-        Iterator totalCountByRegisteredStatus = (session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS.getQuery()).list().iterator());
-        diagnosticLog.add("FrontlineWorkers registered by registration status are : ");
-        while (totalCountByRegisteredStatus.hasNext()) {
-            Object[] row = (Object[]) totalCountByRegisteredStatus.next();
-            Long count = (Long) row[0];
-            String status = (String) row[1];
-            diagnosticLog.add(status + ":" + count + "");
-        }
-
-        Iterator totalCountByStatusAndDate = (session.createQuery(DiagnosticQuery.FIND_FLWS_BY_STATUS_TODAY.getQuery(today))).list().iterator();
-        diagnosticLog.add("FrontlineWorkers registered today by registration status are : ");
-        while (totalCountByStatusAndDate.hasNext()) {
-            Object[] row = (Object[]) totalCountByStatusAndDate.next();
-            Long count = (Long) row[0];
-            String status = (String) row[1];
-            diagnosticLog.add(status + ":" + count + "");
-        }
+    private Map<String, Integer> getResultsFor(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
+        Map<String, Integer> results = new HashMap<String, Integer>();
+        results.put(totalCountQuery.getDescription(), getCountFor(session, totalCountQuery.getQuery()));
+        results.put(todayCountQuery.getDescription(), getCountFor(session, todayCountQuery.getQuery(DateTime.now())));
+        return results;
     }
 
-    private void jobAidDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now();
-        int jobAidCallCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery());
-        diagnosticLog.add("Total calls made to JobAid : " + jobAidCallCount);
+    private Map<String, String> getGroupResultsFor(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
+        Map<String, String> results = new HashMap<String, String>();
+        Iterator totalCount = (session.createQuery(totalCountQuery.getQuery()).list().iterator());
+        iterateAndAdd(totalCountQuery, results, totalCount);
 
-        int jobAidCallCountForToday = getCountFor(session, DiagnosticQuery.FIND_JOB_AID_CALLS_TODAY.getQuery(today));
-        diagnosticLog.add("Total calls made today to JobAid : " + jobAidCallCountForToday);
-    }
-
-    private void certificateCourseDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now();
-        int certificateCourseCallCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery());
-        diagnosticLog.add("Total calls made to Certificate Course : " + certificateCourseCallCount);
-
-        int certificateCourseCallCountForToday = getCountFor(session, DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today));
-        diagnosticLog.add("Total calls made today to Certificate Course : " + certificateCourseCallCountForToday);
-    }
-
-    private void SMSSentDiagnosis(DiagnosticLog diagnosticLog, Session session) {
-        DateTime today = DateTime.now();
-        int smsTotalCount = getCountFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery());
-        diagnosticLog.add("Total SMS sent : " + smsTotalCount);
-
-        int smsTotalCountForToday = getCountFor(session, DiagnosticQuery.FIND_SMS_SENT_TODAY.getQuery(today));
-        diagnosticLog.add("Total SMS sent today: " + smsTotalCountForToday);
+        Iterator todayCount = (session.createQuery(todayCountQuery.getQuery(DateTime.now())).list().iterator());
+        iterateAndAdd(todayCountQuery, results, todayCount);
+        return results;
     }
 
     private int getCountFor(Session session, String query) {
         return ((Long) session.createQuery(query).uniqueResult()).intValue();
+    }
+
+    private void addToLog(DiagnosticLog diagnosticLog, Map<String, Integer> resultMap) {
+        for (String key : resultMap.keySet())
+            diagnosticLog.add(key + ":" + resultMap.get(key));
+    }
+
+    private void iterateAndAdd(DiagnosticQuery query, Map<String, String> results, Iterator iterator) {
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            Long count = (Long) row[0];
+            String status = (String) row[1];
+            results.put(query.getDescription(), status + ":" + count + "");
+        }
     }
 }

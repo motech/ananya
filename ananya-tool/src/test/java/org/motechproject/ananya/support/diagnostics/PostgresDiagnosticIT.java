@@ -135,7 +135,7 @@ public class PostgresDiagnosticIT {
         allJobAidContentMeasures.add(new JobAidContentMeasure("123", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
 
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_JOB_AID_CALLS_TODAY.getQuery(today)).uniqueResult()).intValue());
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS.getQuery(today)).uniqueResult()).intValue());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class PostgresDiagnosticIT {
         allCourseItemMeasures.save(new CourseItemMeasure(anotherTimeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "456"));
 
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_CCOURSE_CALLS_TODAY.getQuery(today)).uniqueResult()).intValue());
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS.getQuery(today)).uniqueResult()).intValue());
     }
 
     @Test
@@ -165,7 +165,7 @@ public class PostgresDiagnosticIT {
         allSMSSentMeasures.save(new SMSSentMeasure(1,"",false,frontLineWorkerDimension, timeDimension, locationDimension));
 
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_SMS_SENT_TODAY.getQuery(today)).uniqueResult()).intValue());
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_SMS_SENT.getQuery(today)).uniqueResult()).intValue());
     }
 
     @Test
