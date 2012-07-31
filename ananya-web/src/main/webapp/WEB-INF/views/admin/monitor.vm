@@ -1,18 +1,7 @@
-
-$ananyaMonitorResponse.totalCallsJobAid;
-
-$ananyaMonitorResponse.todayCallsJobAid;
-
-$ananyaMonitorResponse.totalCallsCertificateCourse;
-
-$ananyaMonitorResponse.todayCallsCertificateCourse;
-
-$ananyaMonitorResponse.totalSMSCertificateCourse;
-
-$ananyaMonitorResponse.todaySMSCertificateSMS;
-
-$ananyaMonitorResponse.registeredFLWCount;
-
-$ananyaMonitorResponse.partiallyRegisteredFLWCount;
-
-$ananyaMonitorResponse.unregisteredFLWCount;
+<div id="couchdb-monitor">
+    <ul>
+        #foreach($entry in $couchdbData.entrySet())
+            <li>"$entry.key" : $entry.value</li>
+        #end
+    </ul>
+</div>

@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class CouchDBDiagnostic implements Diagnostic {
 
@@ -33,18 +37,29 @@ public class CouchDBDiagnostic implements Diagnostic {
             ananyaDBInstance.getConnection().head("/");
             diagnosticLog.add("Databases present : " + ananyaDBInstance.getAllDatabases().toString());
 
-            HttpClient httpClient = new HttpClient();
-            for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
-                GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
-                httpClient.executeMethod(method);
-                String httpResponse = method.getResponseBodyAsString();
-                diagnosticLog.add(diagnosticUrl.description()+" : "+httpResponse);
-            }
+            Map<String, String> results = getResult();
+            for (String result : results.keySet())
+                diagnosticLog.add(result + " : " + results.get(result));
 
         } catch (Exception e) {
             diagnosticLog.add("Couch DB connection failed");
             diagnosticLog.addError(e);
         }
         return diagnosticLog;
+    }
+
+    public Map<String, String> getResult() throws IOException {
+        HttpClient httpClient = new HttpClient();
+        Map<String, String> results = new HashMap();
+        for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
+            GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
+            httpClient.executeMethod(method);
+            results.put(diagnosticUrl.description(), getCountFrom(method.getResponseBodyAsString()));
+        }
+        return results;
+    }
+
+    private String getCountFrom(String responseBodyAsString) {
+        return responseBodyAsString;
     }
 }

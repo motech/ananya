@@ -1,6 +1,6 @@
-package org.motechproject.ananya.response;
+package org.motechproject.ananya.domain;
 
-public class LinkMenuView implements Comparable<LinkMenuView>{
+public class MenuLink implements Comparable<MenuLink>{
 
     private String displayString;
 
@@ -8,7 +8,7 @@ public class LinkMenuView implements Comparable<LinkMenuView>{
 
     private int position;
 
-    public LinkMenuView(String displayString, String url, int position) {
+    public MenuLink(String displayString, String url, int position) {
         this.displayString = displayString;
         this.url = url;
         this.position = position;
@@ -27,8 +27,8 @@ public class LinkMenuView implements Comparable<LinkMenuView>{
     }
 
     @Override
-    public int compareTo(LinkMenuView linkMenuView) {
-        return this.position - linkMenuView.position;
+    public int compareTo(MenuLink linkMenu) {
+        return this.position - linkMenu.position;
     }
 }
 
