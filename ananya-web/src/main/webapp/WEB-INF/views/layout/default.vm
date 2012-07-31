@@ -1,6 +1,3 @@
-##set($username = $request.getSession().getAttribute("loggedInUser").getUsername())
-##set($menuMap = $request.getSession().getAttribute("loggedInUser").getMenuMap())
-
 #head()
 <body>
     #navbar()

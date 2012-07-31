@@ -44,12 +44,12 @@
 <div class="span2">
     <div class="well sidebar-nav">
         <ul class="nav nav-list">
-            #foreach($topMenuItem in $menuMap.entrySet())
-                <li class="nav-header">$topMenuItem.key</li>
-                #foreach($linkMenuItem in $topMenuItem.value)
-                    <li><a href="$linkMenuItem.getUrl()">$linkMenuItem.getDisplayString()</a></li>
-                #end
-            #end
+##            #foreach($topMenuItem in $menuMap.entrySet())
+##                <li class="nav-header">$topMenuItem.key</li>
+##                #foreach($linkMenuItem in $topMenuItem.value)
+##                    <li><a href="$linkMenuItem.getUrl()">$linkMenuItem.getDisplayString()</a></li>
+##                #end
+##            #end
         </ul>
     </div>
 </div>
