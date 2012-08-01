@@ -197,7 +197,7 @@ public class FrontLineWorkerSeed {
         log.info("FLW - total invalid count - " + counter);
     }
 
-    @Seed(priority = 1, version = "1.6", comment = "Remove invalid designations")
+    @Seed(priority = 1, version = "1.7", comment = "Remove invalid designations")
     public void correctAllDesignations() throws IOException {
         String inputCSVFile = environment.equals("prod")
                 ? inputFileName : getClass().getResource(inputFileName).getPath();
@@ -236,7 +236,7 @@ public class FrontLineWorkerSeed {
         }, 100);
     }
 
-    @Seed(priority = 0, version = "1.6", comment = "Changing registration status of FLWs based on new definition")
+    @Seed(priority = 0, version = "1.7", comment = "Changing registration status of FLWs based on new definition")
     public void activateNewRegistrationStatusesForAllFLWs() {
         doWithBatch(new FrontLineWorkerExecutable() {
             @Override
