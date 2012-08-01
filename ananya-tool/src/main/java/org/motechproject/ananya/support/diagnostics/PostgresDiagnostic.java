@@ -23,14 +23,11 @@ public class PostgresDiagnostic implements Diagnostic {
         diagnosticLog.add("Opening session with database");
         Session session = dataAccessTemplate.getSessionFactory().openSession();
         try {
-            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_FLWS, DiagnosticQuery.FIND_FLWS_REG_TODAY));
             Map<String, String> groupResults = getGroupResultsFor(session, DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS, DiagnosticQuery.FIND_FLWS_BY_STATUS_TODAY);
             for (String key : groupResults.keySet())
                 diagnosticLog.add(key + ":" + groupResults.get(key));
 
-            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS, DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS));
-            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS, DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS));
-            addToLog(diagnosticLog, getResultsFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT, DiagnosticQuery.FIND_TODAY_SMS_SENT));
+            addToLog(diagnosticLog, getAllPostgresResults());
         } catch (Exception e) {
             diagnosticLog.add("Opening session failed");
             diagnosticLog.addError(e);
@@ -38,6 +35,16 @@ public class PostgresDiagnostic implements Diagnostic {
             session.close();
         }
         return diagnosticLog;
+    }
+
+    public Map<String, Integer> getAllPostgresResults(){
+        Session session = dataAccessTemplate.getSessionFactory().openSession();
+        Map<String, Integer> results = new HashMap<String, Integer>();
+        results.putAll(getResultsFor(session, DiagnosticQuery.FIND_TOTAL_FLWS, DiagnosticQuery.FIND_FLWS_REG_TODAY));
+        results.putAll(getResultsFor(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS, DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS));
+        results.putAll(getResultsFor(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS, DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS));
+        results.putAll(getResultsFor(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT, DiagnosticQuery.FIND_TODAY_SMS_SENT));
+        return results;
     }
 
     private Map<String, Integer> getResultsFor(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
