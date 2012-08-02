@@ -57,9 +57,8 @@ public class CertificateCourseDataHandler {
 
     private void handleSMS(String callId) {
         SMSLog smslog = smsLogService.getSMSLogFor(callId);
-        if (smslog != null) {
+        if (smslog != null)
             sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
-            smsLogService.deleteFor(smslog);
-        }
+
     }
 }
