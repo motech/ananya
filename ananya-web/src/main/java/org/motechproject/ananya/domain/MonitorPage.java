@@ -24,8 +24,8 @@ public class MonitorPage {
     }
 
     public ModelAndView display() throws IOException {
-        Map<String, String> couchDbData = couchDBDiagnostic.getResult();
-        Map<String, Integer> postgresData = postgresDiagnostics.getAllPostgresResults();
+        Map<String, String> couchDbData = couchDBDiagnostic.collect();
+        Map<String, String> postgresData = postgresDiagnostics.collect();
 
         return new ModelAndView(view)
                 .addObject("menuMap", new Sidebar().getMenu())
@@ -33,5 +33,6 @@ public class MonitorPage {
                 .addObject("postgresData", postgresData);
     }
 
+    
 
 }

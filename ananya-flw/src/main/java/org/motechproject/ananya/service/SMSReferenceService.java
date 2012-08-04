@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.slf4j.Logger;
@@ -31,6 +32,11 @@ public class SMSReferenceService {
     public void updateSMSReferenceNumber(SMSReference smsReference) {
         allSMSReferences.update(smsReference);
         log.info("updated SMS reference for:" + smsReference.getMsisdn());
+    }
+
+    public boolean isSMSSentFor(FrontLineWorker frontLineWorker) {
+        SMSReference smsReference = allSMSReferences.findByMsisdn(frontLineWorker.getMsisdn());
+        return smsReference != null && smsReference.referenceNumbers(frontLineWorker.currentCourseAttempt()) != null;
     }
 
 }

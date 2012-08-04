@@ -40,7 +40,7 @@ public class CouchDBDiagnostic implements Diagnostic {
             ananyaDBInstance.getConnection().head("/");
             diagnosticLog.add("Databases present : " + ananyaDBInstance.getAllDatabases().toString());
 
-            Map<String, String> results = getResult();
+            Map<String, String> results = collect();
             for (String result : results.keySet())
                 diagnosticLog.add(result + " : " + results.get(result));
 
@@ -51,7 +51,7 @@ public class CouchDBDiagnostic implements Diagnostic {
         return diagnosticLog;
     }
 
-    public Map<String, String> getResult() throws IOException {
+    public Map<String, String> collect() throws IOException {
         HttpClient httpClient = new HttpClient();
         Map<String, String> results = new TreeMap<String, String>();
         for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {

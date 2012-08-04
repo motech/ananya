@@ -63,7 +63,7 @@ public enum DiagnosticQuery {
         return (String.format(query, today.getDayOfYear(), today.getMonthOfYear(), today.getYear()));
     }
 
-    public String getDescription() {
+    public String title() {
         return description;
     }
 }
