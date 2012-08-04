@@ -102,7 +102,7 @@ public class PostgresDiagnosticIT {
         allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, ""));
 
         assertEquals(4, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_FLWS_REG_TODAY.getQuery(today)).uniqueResult()).intValue());
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_FLWS.getQuery(today)).uniqueResult()).intValue());
 
         List<Object[]> resultSet = session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS.getQuery()).list();
         for (Object[] resultRow : resultSet) {
@@ -150,8 +150,8 @@ public class PostgresDiagnosticIT {
         allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "123"));
         allCourseItemMeasures.save(new CourseItemMeasure(anotherTimeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "456"));
 
-        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS.getQuery(today)).uniqueResult()).intValue());
+        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_COURSE_CALLS.getQuery()).uniqueResult()).intValue());
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_COURSE_CALLS.getQuery(today)).uniqueResult()).intValue());
     }
 
     @Test

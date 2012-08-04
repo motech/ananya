@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.classic.Session;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -32,13 +33,13 @@ public class PostgresDiagnostic implements Diagnostic {
 
     public Map<String, String> collect() {
         Session session = dataAccessTemplate.getSessionFactory().openSession();
-        Map<String, String> results = new HashMap<String, String>();
+        Map<String, String> results = new LinkedHashMap<String, String>();
         try {
-            results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_FLWS, DiagnosticQuery.FIND_FLWS_REG_TODAY));
+            results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_FLWS, DiagnosticQuery.FIND_TODAY_FLWS));
+            results.putAll(runGroupQueries(session, DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS, DiagnosticQuery.FIND_TODAY_FLWS_BY_STATUS));
             results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS, DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS));
-            results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_CCOURSE_CALLS, DiagnosticQuery.FIND_TODAY_CCOURSE_CALLS));
+            results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_COURSE_CALLS, DiagnosticQuery.FIND_TODAY_COURSE_CALLS));
             results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT, DiagnosticQuery.FIND_TODAY_SMS_SENT));
-            results.putAll(runGroupQueries(session, DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS, DiagnosticQuery.FIND_FLWS_BY_STATUS_TODAY));
         } finally {
             session.close();
         }
@@ -46,7 +47,7 @@ public class PostgresDiagnostic implements Diagnostic {
     }
 
     private Map<String, String> runQueries(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
-        Map<String, String> results = new HashMap<String, String>();
+        Map<String, String> results = new LinkedHashMap<String, String>();
         String totalCount = session.createQuery(totalCountQuery.getQuery()).uniqueResult().toString();
         results.put(totalCountQuery.title(), totalCount);
 
@@ -56,7 +57,7 @@ public class PostgresDiagnostic implements Diagnostic {
     }
 
     private Map<String, String> runGroupQueries(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
-        Map<String, String> results = new HashMap<String, String>();
+        Map<String, String> results = new LinkedHashMap<String, String>();
         Iterator totalCount = (session.createQuery(totalCountQuery.getQuery()).list().iterator());
         iterateAndAdd(totalCountQuery, results, totalCount);
 
@@ -66,11 +67,14 @@ public class PostgresDiagnostic implements Diagnostic {
     }
 
     private void iterateAndAdd(DiagnosticQuery query, Map<String, String> results, Iterator iterator) {
+        List<String> statusList = new ArrayList<String>();
         while (iterator.hasNext()) {
             Object[] row = (Object[]) iterator.next();
             Long count = (Long) row[0];
             String status = (String) row[1];
-            results.put(query.title(), status + ":" + count + "");
+            statusList.add(status + ": " + count);
         }
+        Collections.sort(statusList);
+        results.put(query.title(), StringUtils.join(statusList," | "));
     }
 }

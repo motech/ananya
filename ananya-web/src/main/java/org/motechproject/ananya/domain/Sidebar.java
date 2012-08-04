@@ -11,8 +11,8 @@ public class Sidebar {
         Map<String, List<MenuLink>> menu = new HashMap<String, List<MenuLink>>();
 
         List<MenuLink> links = new ArrayList<MenuLink>();
-        links.add(new MenuLink("Monitor", "/admin/monitor", 0));
-        links.add(new MenuLink("Inquiry", "/admin/inquiry", 0));
+        links.add(new MenuLink("Monitor", "admin/monitor", 0));
+        links.add(new MenuLink("Inquiry", "admin/inquiry", 0));
 
         menu.put("Production", links);
         return menu;

@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,7 +53,7 @@ public class CouchDBDiagnostic implements Diagnostic {
 
     public Map<String, String> collect() throws IOException {
         HttpClient httpClient = new HttpClient();
-        Map<String, String> results = new TreeMap<String, String>();
+        Map<String, String> results = new LinkedHashMap<String, String>();
         for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
             GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
             httpClient.executeMethod(method);
