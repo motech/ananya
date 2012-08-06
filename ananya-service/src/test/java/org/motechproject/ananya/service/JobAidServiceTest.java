@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.contract.AudioTrackerRequestList;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
@@ -116,19 +117,21 @@ public class JobAidServiceTest {
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
-        verify(allTransformers).process(jobAidServiceRequest);
-        verify(frontLineWorkerService).createOrUpdateForCall(eq(callerId),eq(operator), eq(circle));
+        InOrder inOrder = inOrder(allTransformers, frontLineWorkerService, audioTrackerService, callLoggerService, dataPublishService);
+
+        inOrder.verify(allTransformers).process(jobAidServiceRequest);
+        inOrder.verify(frontLineWorkerService).createOrUpdateForCall(eq(callerId),eq(operator), eq(circle));
 
         ArgumentCaptor<FrontLineWorker> frontLineWorkerArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(frontLineWorkerService).updateJobAidState(frontLineWorkerArgumentCaptor.capture(), anyListOf(String.class), eq(callDuration));
+        inOrder.verify(frontLineWorkerService).updateJobAidState(frontLineWorkerArgumentCaptor.capture(), anyListOf(String.class), eq(callDuration));
         FrontLineWorker actualFrontLineWorker = frontLineWorkerArgumentCaptor.getValue();
         assertEquals(callerId, actualFrontLineWorker.getMsisdn());
 
         ArgumentCaptor<CallDurationList> callDurationCaptor = ArgumentCaptor.forClass(CallDurationList.class);
         ArgumentCaptor<AudioTrackerRequestList> audioTrackerRequestCaptor = ArgumentCaptor.forClass(AudioTrackerRequestList.class);
 
-        verify(callLoggerService).saveAll(callDurationCaptor.capture());
-        verify(audioTrackerService).saveAllForJobAid(audioTrackerRequestCaptor.capture());
+        inOrder.verify(audioTrackerService).saveAllForJobAid(audioTrackerRequestCaptor.capture());
+        inOrder.verify(callLoggerService).saveAll(callDurationCaptor.capture());
 
         CallDurationList callDurationList = callDurationCaptor.getValue();
         assertThat(callDurationList.getCallId(), is(callId));
@@ -138,6 +141,6 @@ public class JobAidServiceTest {
         assertThat(audioTrackerRequestList.getCallId(), is(callId));
         assertThat(audioTrackerRequestList.getCallerId(), is(callerId));
 
-        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
+        inOrder.verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.JOB_AID);
     }
 }

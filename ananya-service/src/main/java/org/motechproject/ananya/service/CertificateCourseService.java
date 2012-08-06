@@ -1,4 +1,3 @@
-
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.action.AllCourseActions;
@@ -58,15 +57,16 @@ public class CertificateCourseService {
     public void handleDisconnect(CertificateCourseServiceRequest request) {
         allTransformers.process(request);
 
-        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
-                request.getCallerId(), request.getOperator(), request.getCircle());
-
+        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(request.getCallerId(), request.getOperator(), request.getCircle());
         if (frontLineWorkerCreateResponse.isModified())
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
         CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
-        if (stateRequestList.isNotEmpty())
-            allCourseActions.execute(frontLineWorkerCreateResponse.getFrontLineWorker(), stateRequestList);
+        if (stateRequestList.isNotEmpty()) {
+            FrontLineWorker frontLineWorker = frontLineWorkerCreateResponse.getFrontLineWorker();
+            allCourseActions.execute(frontLineWorker, stateRequestList);
+            frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
+        }
 
         audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());

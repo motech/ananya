@@ -9,6 +9,10 @@ import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class FrontLineWorkerTest {
     @Test
@@ -85,5 +89,19 @@ public class FrontLineWorkerTest {
         flwWithNoDetails.decideRegistrationStatus(defaultLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.status());
 
+    }
+
+    @Test
+    public void shouldCallBookmarkToCheckIfCourseIsInProgress() {
+        BookMark bookMark = mock(BookMark.class);
+        when(bookMark.notAtPlayCourseResult()).thenReturn(true);
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.addBookMark(bookMark);
+
+        boolean courseInProgress = frontLineWorker.courseInProgress();
+
+        verify(bookMark).notAtPlayCourseResult();
+        assertTrue(courseInProgress);
     }
 }

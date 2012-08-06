@@ -2,6 +2,7 @@ package org.motechproject.ananya.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.action.AllCourseActions;
 import org.motechproject.ananya.contract.AudioTrackerRequestList;
@@ -14,6 +15,7 @@ import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -121,10 +123,13 @@ public class CertificateCourseServiceTest {
 
         certificateCourseService.handleDisconnect(request);
 
-        verify(allTransformers).process(request);
-        verify(allCourseActions).execute(frontLineWorker, stateRequestList);
-        verify(audioTrackerService).saveAllForCourse(audioTrackerList);
-        verify(callLoggerService).saveAll(callDurationList);
-        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        InOrder inOrder = inOrder(allTransformers, allCourseActions, frontlineWorkerService, audioTrackerService, callLoggerService, dataPublishService);
+
+        inOrder.verify(allTransformers).process(request);
+        inOrder.verify(allCourseActions).execute(frontLineWorker, stateRequestList);
+        inOrder.verify(frontlineWorkerService).updateCertificateCourseState(frontLineWorker);
+        inOrder.verify(audioTrackerService).saveAllForCourse(audioTrackerList);
+        inOrder.verify(callLoggerService).saveAll(callDurationList);
+        inOrder.verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
 }

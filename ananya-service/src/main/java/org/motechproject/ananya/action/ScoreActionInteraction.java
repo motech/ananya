@@ -8,15 +8,8 @@ import org.motechproject.ananya.contract.CertificateCourseStateRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public enum CourseInteractionAction {
+public enum ScoreActionInteraction {
 
-    CourseCompletion(Interaction.PlayCourseResult) {
-        @Override
-        public void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
-            frontLineWorker.incrementCertificateCourseAttempts();
-            log.info("course completed, incremented attempts for " + frontLineWorker);
-        }
-    },
     StartCourse(Interaction.StartCertificationCourse) {
         @Override
         public void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest) {
@@ -51,18 +44,18 @@ public enum CourseInteractionAction {
         }
     };
 
-    private static Logger log = LoggerFactory.getLogger(CourseInteractionAction.class);
+    private static Logger log = LoggerFactory.getLogger(ScoreActionInteraction.class);
     private String interactionKey;
 
-    CourseInteractionAction(String interactionKey) {
+    ScoreActionInteraction(String interactionKey) {
         this.interactionKey = interactionKey;
     }
 
-    public static CourseInteractionAction findFor(String interactionKey) {
-        for (CourseInteractionAction serviceAction : CourseInteractionAction.values())
-            if (StringUtils.endsWithIgnoreCase(serviceAction.interactionKey, interactionKey))
-                return serviceAction;
-        return CourseInteractionAction.Default;
+    public static ScoreActionInteraction findFor(String interactionKey) {
+        for (ScoreActionInteraction scoreActionInteraction : ScoreActionInteraction.values())
+            if (StringUtils.endsWithIgnoreCase(scoreActionInteraction.interactionKey, interactionKey))
+                return scoreActionInteraction;
+        return ScoreActionInteraction.Default;
     }
 
     public abstract void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequest stateRequest);

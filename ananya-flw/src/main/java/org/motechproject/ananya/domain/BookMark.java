@@ -64,4 +64,8 @@ public class BookMark {
     public String asJson() {
         return new Gson().toJson(this);
     }
+
+    public boolean notAtPlayCourseResult() {
+        return !Interaction.PlayCourseResult.equals(type);
+    }
 }

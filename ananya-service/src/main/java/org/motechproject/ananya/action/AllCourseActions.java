@@ -14,11 +14,12 @@ public class AllCourseActions {
     private List<CourseAction> courseActions;
 
     @Autowired
-    public AllCourseActions(BookmarkAction bookmarkAction,
-                            ScoreAction scoreAction,
-                            SendSMSAction sendSMSAction,
-                            CourseLogAction courseLogAction) {
-        courseActions = Arrays.asList(bookmarkAction, scoreAction, sendSMSAction, courseLogAction);
+    public AllCourseActions(
+            ScoreAction scoreAction,
+            SendSMSAction sendSMSAction,
+            BookmarkAction bookmarkAction,
+            CourseLogAction courseLogAction) {
+        courseActions = Arrays.asList(scoreAction, sendSMSAction, bookmarkAction, courseLogAction);
     }
 
     public void execute(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {

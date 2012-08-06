@@ -322,4 +322,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
         return this;
     }
+
+    public boolean courseInProgress() {
+        return bookMark().notAtPlayCourseResult();
+    }
 }

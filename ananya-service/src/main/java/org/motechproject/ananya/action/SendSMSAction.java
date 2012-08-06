@@ -23,7 +23,9 @@ public class SendSMSAction implements CourseAction {
 
     @Override
     public void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
-        if (frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
+        if (frontLineWorker.courseInProgress() && frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
+            frontLineWorker.incrementCertificateCourseAttempts();
+
             String callId = stateRequestList.getCallId();
             SMSLog smsLog = new SMSLog(stateRequestList.getCallId(),
                     frontLineWorker.getMsisdn(),
