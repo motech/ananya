@@ -27,6 +27,7 @@
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-services.xml"/>
     <import resource="classpath:applicationContext-tool.xml"/>
+    <import resource="classpath:applicationSecurityContext.xml"/>
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
@@ -38,17 +39,6 @@
         <constructor-arg ref="ananyaDbInstance"/>
     </bean>
 
-    <bean id="config" name="propertiesConfigurer"
-          class="org.motechproject.ananya.velocity.CachingPropertyHolder">
-        <property name="locations">
-            <list>
-                <value>classpath:web.properties</value>
-            </list>
-        </property>
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="contextOverride" value="true"/>
-        <property name="searchContextAttributes" value="true"/>
-    </bean>
+
 
 </beans>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="$label.home.page.title">
     <meta name="author" content="$label.home.author">
-    <base href="/$app/">
+    <base href="/ananya/">
 
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -30,8 +30,6 @@
                     <li><a href="admin/monitor">$label.topbar.home.link</a></li>
                 </ul>
                 <p class="navbar-text pull-right">
-                    $label.topbar.logged.in $username |
-                    <a href="change_password">$label.topbar.change.password.link</a> |
                     <a href="security/j_spring_security_logout">$label.topbar.app.logout.link</a>
                 </p>
             </div>

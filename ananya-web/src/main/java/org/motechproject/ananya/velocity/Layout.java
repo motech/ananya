@@ -7,7 +7,9 @@ public class Layout {
     private static Map<String, String> map = new LinkedHashMap<String, String>();
 
     static {
-        map.put("/admin/.*", "layout/default.vm");
+        map.put("/admin/monitor", "layout/admin-default.vm");
+        map.put("/admin/inquiry", "layout/admin-default.vm");
+        map.put("/admin/login", "layout/admin-login.vm");
     }
 
     public static String get(String path) {

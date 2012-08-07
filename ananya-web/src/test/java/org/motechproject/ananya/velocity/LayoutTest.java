@@ -10,8 +10,9 @@ public class LayoutTest {
 
     @Test
     public void shouldReturnLayoutTemplateForAdminUrls(){
-        assertThat(Layout.get("/admin/monitor"), is("layout/default.vm"));
-        assertThat(Layout.get("/admin/inquiry"), is("layout/default.vm"));
+        assertThat(Layout.get("/admin/monitor"), is("layout/admin-default.vm"));
+        assertThat(Layout.get("/admin/inquiry"), is("layout/admin-default.vm"));
+        assertThat(Layout.get("/admin/login"), is("layout/admin-login.vm"));
         assertNull(Layout.get("/admin23/inquiry"));
         assertNull(Layout.get("/generated/js/callerdata.js"));
     }

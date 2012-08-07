@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.LoginPage;
 import org.motechproject.ananya.domain.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,11 +23,13 @@ public class AdminControllerTest {
     private DiagnosticService diagnosticService;
     @Mock
     private MonitorPage monitorPage;
+    @Mock
+    private LoginPage loginPage;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new AdminController(diagnosticService, monitorPage);
+        controller = new AdminController(diagnosticService, monitorPage, loginPage);
     }
 
     @Test
