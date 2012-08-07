@@ -1,5 +1,6 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.page;
 
+import org.motechproject.ananya.domain.Sidebar;
 import org.motechproject.ananya.support.diagnostics.CouchDBDiagnostic;
 import org.motechproject.ananya.support.diagnostics.PostgresDiagnostic;
 import org.springframework.beans.factory.annotation.Autowired;

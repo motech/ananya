@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.page;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;

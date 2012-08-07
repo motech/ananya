@@ -1,6 +1,6 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.grid;
 
-public class AcademyKunjiCallContent {
+public class CallContentGridUnit {
     private String name;
     private String msisdn;
     private String callId;
@@ -8,7 +8,7 @@ public class AcademyKunjiCallContent {
     private String contentName;
     private String contentFileName;
 
-    public AcademyKunjiCallContent(String name, String msisdn, String callId, String timeStamp, String contentName, String contentFileName) {
+    public CallContentGridUnit(String name, String msisdn, String callId, String timeStamp, String contentName, String contentFileName) {
         this.name = name;
         this.msisdn = msisdn;
         this.callId = callId;

@@ -1,4 +1,4 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.grid;
 
 import java.util.LinkedHashMap;
 import java.util.List;

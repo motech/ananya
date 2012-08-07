@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.page.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.CouchDBDiagnostic;
 import org.motechproject.ananya.support.diagnostics.PostgresDiagnostic;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,9 +1,9 @@
 package org.motechproject.ananya.web;
 
 
-import org.motechproject.ananya.domain.InquiryPage;
-import org.motechproject.ananya.domain.LoginPage;
-import org.motechproject.ananya.domain.MonitorPage;
+import org.motechproject.ananya.domain.page.InquiryPage;
+import org.motechproject.ananya.domain.page.LoginPage;
+import org.motechproject.ananya.domain.page.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,18 +36,18 @@ public class AdminController {
         this.inquiryPage = inquiryPage;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/login")
-    public ModelAndView login(HttpServletRequest request) {
-        final String error = request.getParameter("login_error");
-        return loginPage.display(error);
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/admin/diagnostics")
     @ResponseBody
     public String getDiagnostics() throws Exception {
         String diagnosisResult = diagnosticService.getDiagnostics();
         log.info("diagnostics called");
         return diagnosisResult;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/login")
+    public ModelAndView login(HttpServletRequest request) {
+        final String error = request.getParameter("login_error");
+        return loginPage.display(error);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/monitor")

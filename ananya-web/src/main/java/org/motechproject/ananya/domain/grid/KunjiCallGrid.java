@@ -1,13 +1,13 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.grid;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class KunjiCalls implements DataGrid {
+public class KunjiCallGrid implements DataGrid {
     private LinkedHashMap<String, String> header;
-    private List<AcademyKunjiCallContent> content;
+    private List<CallContentGridUnit> content;
 
-    private KunjiCalls(List<AcademyKunjiCallContent> content) {
+    public KunjiCallGrid(List<CallContentGridUnit> content) {
         initHeaders();
         this.content = content;
     }
@@ -22,15 +22,11 @@ public class KunjiCalls implements DataGrid {
         header.put("contentFileName", "Content FileName");
     }
 
-    public static KunjiCalls forContent(List<AcademyKunjiCallContent> content) {
-        return new KunjiCalls(content);
-    }
-
     public LinkedHashMap<String, String> getHeader() {
         return header;
     }
 
-    public List<AcademyKunjiCallContent> getContent() {
+    public List<CallContentGridUnit> getContent() {
         return content;
     }
 }

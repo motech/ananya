@@ -1,5 +1,7 @@
-package org.motechproject.ananya.domain;
+package org.motechproject.ananya.domain.page;
 
+import org.motechproject.ananya.domain.Sidebar;
+import org.motechproject.ananya.domain.grid.*;
 import org.motechproject.ananya.mapper.AcademyCallsMapper;
 import org.motechproject.ananya.mapper.CallDetailsMapper;
 import org.motechproject.ananya.mapper.KunjiCallsMapper;
@@ -16,15 +18,15 @@ public class InquiryPage {
     public Map<String, Object> display(String msisdn) {
         Map<String, Object> result = new HashMap<String, Object>();
 
-        List<AcademyKunjiCallContent> academyCallsContent = AcademyCallsMapper.mapFrom(null); //TODO
-        List<AcademyKunjiCallContent> kunjiCallsContent = KunjiCallsMapper.mapFrom(null); //TODO
-        List<CallDetails.Content> callDetailsContent = CallDetailsMapper.mapFrom(null); //TODO
+        List<CallContentGridUnit> academyCalls = AcademyCallsMapper.mapFrom(null); //TODO
+        List<CallContentGridUnit> kunjiCalls = KunjiCallsMapper.mapFrom(null); //TODO
+        List<CallDetailGridUnit> callDetails = CallDetailsMapper.mapFrom(null); //TODO
 
         String callerDataJs = "var callerData = {}"; //TODO
 
-        result.put("academyCalls", AcademyCalls.forContent(academyCallsContent));
-        result.put("kunjiCalls", KunjiCalls.forContent(kunjiCallsContent));
-        result.put("callDetails", CallDetails.forContent(callDetailsContent));
+        result.put("academyCalls", new AcademyCallGrid(academyCalls));
+        result.put("kunjiCalls", new KunjiCallGrid(kunjiCalls));
+        result.put("callDetails", new CallDetailGrid(callDetails));
         result.put("callerDataJs", callerDataJs);
 
         return result;

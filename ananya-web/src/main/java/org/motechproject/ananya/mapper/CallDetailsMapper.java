@@ -1,12 +1,12 @@
 package org.motechproject.ananya.mapper;
 
-import org.motechproject.ananya.domain.CallDetails;
+import org.motechproject.ananya.domain.grid.CallDetailGridUnit;
 
 import java.util.Collections;
 import java.util.List;
 
 public class CallDetailsMapper {
-    public static List<CallDetails.Content> mapFrom(Object o) {
+    public static List<CallDetailGridUnit> mapFrom(Object o) {
         return Collections.EMPTY_LIST;
     }
 }
