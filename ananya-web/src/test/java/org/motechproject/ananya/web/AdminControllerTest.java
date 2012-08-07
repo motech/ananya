@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.InquiryPage;
 import org.motechproject.ananya.domain.LoginPage;
 import org.motechproject.ananya.domain.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
@@ -16,6 +17,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+
 public class AdminControllerTest {
 
     private AdminController controller;
@@ -25,11 +27,13 @@ public class AdminControllerTest {
     private MonitorPage monitorPage;
     @Mock
     private LoginPage loginPage;
+    @Mock
+    private InquiryPage inquiryPage;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new AdminController(diagnosticService, monitorPage, loginPage);
+        controller = new AdminController(diagnosticService, monitorPage, loginPage, inquiryPage);
     }
 
     @Test

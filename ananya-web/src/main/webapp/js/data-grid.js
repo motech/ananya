@@ -1,8 +1,73 @@
 /******
-* DataGrid: Version 1.0
+* Version 1.0
 * This contains three objects: DataGrid, Pagination and GoToPage
-* http://github.com/f1code/nithi/blob/master/data-grid.js
+*
 */
+
+/**
+ * Sample json
+ * ~~~~~~~~~~~
+ * var singleDataElementJson = {
+ *      'header' : {
+ *          'id'            : 'SSN no.',
+ *          'name'          : 'Name of Guy',
+ *          'occupation'    : 'Occupation what?'
+ *      },
+ *      'content': [
+ *          {
+ *              'id'        : 23,
+ *              'name'      : 'billoo',
+ *              'occupation': 'Politician'
+ *          },
+ *          {
+ *              'id'        : 24,
+ *              'name'      : 'sorabji'
+ *              'occupation': 'Coder'
+ *          }
+ *      ],
+ *      'count': 2
+ * };
+ *
+ * var multipleDataElementJson = {
+ *      'personJobDetails': {
+ *          'header' : {
+ *              'id'            : 'SSN no.',
+ *              'name'          : 'Name of Guy',
+ *              'occupation'    : 'Occupation what?'
+ *          },
+ *          'content': [
+ *              {
+ *                  'id'        : 23,
+ *                  'name'      : 'billoo',
+ *                  'occupation': 'Politician'
+ *              },
+ *              {
+ *                  'id'        : 24,
+ *                  'name'      : 'sorabji'
+ *                  'occupation': 'Coder'
+ *              }
+ *          ],
+ *          'count': 2
+ *      },
+ *      'occupationHazardDetails' : {
+ *          'header' : {
+ *              'occupation'    : 'Occupation',
+ *              'hazard'        : 'Occupational hazard'
+ *          },
+ *          'content' : [
+ *              {
+ *                  'occupation': 'Politician',
+ *                  'hazard'    : 'Corruption'
+ *              },
+ *              {
+ *                  'occupation': 'Coder',
+ *                  'hazard'    : 'Backache'
+ *              }
+ *          ]
+ *      }
+ * };
+ *
+ */
 
 DataGrid = function(params){
     var rows;
@@ -12,73 +77,80 @@ DataGrid = function(params){
     var to;
     var count;
     var contentKeys;
-    var startDate, endDate;
-    var baseSortBy;
-
     this.init = function(params){
         this.tableId = params['tableId'];
         this.rows = params['rows'];
         this.dataUrl = params['dataUrl'];
+        this.root = params['root'];
+        this.data = params['data'];
         this.from = 0;
         this.to = this.from + this.rows;
-        this.fromDate = $("#startDate").val();
-        this.toDate = $("#endDate").val();
-        this.baseSortBy = params['baseSortBy'];
-        this.district = $('#location_district').val();
-        this.block = $('#location_block').val();
-        this.panchayat = $('#location_panchayat').val();
 
+        if(this.dataUrl) {
+            var dataGrid = this;
+            $.ajax({
+                url: this.dataUrl,
+                data: 'from='+this.from+'&to='+this.to+'&header'+'&count',
+                dataType: 'json',
+                error: function(){
+                    dataGrid.handleError("An error has occurred, please try again.")
+                }
+            }).done(function(data){
+                dataGrid.initWithData(data);
+            });
+        } else if(this.data) {
+            this.initWithData(this.data);
+        }
+    }
+
+    this.initWithData = function(data) {
         var dataGrid = this;
-        this.sortTable = new SortTable({
-            "tableId" : dataGrid.tableId,
-            "onSort" : function(){
-                dataGrid.next(1);
-            },
-            "baseSortBy" : dataGrid.baseSortBy
-        });
+        data = dataGrid.fromRoot(data);
 
-        $.ajax({
-            url: this.dataUrl,
-            data: 'startDate='+this.fromDate+'&endDate='+this.toDate+'&from='+this.from+'&to='+this.to+'&header'+'&count'+'&location_district=' + this.district + '&location_block=' + this.block +  '&location_panchayat=' + this.panchayat +this.sortTable.sortParams(),
-            dataType: 'json',
-            error: function(){
-                dataGrid.handleError("An error has occurred, please try again.")
-            }
-        }).done(function(data){
-            dataGrid.count = data.count;
-            dataGrid.extractContentKeys(data.header);
-            dataGrid.loadHeader(data.header);
-            dataGrid.loadContent(data.content);
+        dataGrid.count = data.count;
+        dataGrid.extractContentKeys(data.header);
+        dataGrid.loadHeader(data.header);
+        dataGrid.loadContent(data.content);
 
-            var numPages = Math.ceil(dataGrid.count / dataGrid.rows);
+        var numPages = Math.ceil(dataGrid.count / dataGrid.rows);
 
-            if(numPages == 0){
-                $('#' + dataGrid.tableId + '_pagination').find('.pagination').remove();
-                $('#' + dataGrid.tableId + '_go_to_page').find('.form-search').remove();
-            }
-            if(numPages > 0){
-                dataGrid.pagination = new Pagination({
+        if(numPages == 0){
+            $('#' + dataGrid.tableId + '_pagination').find('.pagination').remove();
+            $('#' + dataGrid.tableId + '_go_to_page').find('.form-search').remove();
+        }
+        if(numPages > 0){
+            dataGrid.pagination = new Pagination({
+                "numPages" : numPages,
+                "showNumPages" : 4,
+                "where" : $('#' + dataGrid.tableId + '_pagination'),
+                "click" : function(pageNum){
+                    dataGrid.next(pageNum);
+                }
+            });
+
+            if(numPages > 1){
+                new GoToPage({
                     "numPages" : numPages,
-                    "showNumPages" : 4,
-                    "where" : $('#' + dataGrid.tableId + '_pagination'),
+                    "where" : $('#' + dataGrid.tableId + '_go_to_page'),
                     "click" : function(pageNum){
                         dataGrid.next(pageNum);
                     }
                 });
-
-                if(numPages > 1){
-                    new GoToPage({
-                        "numPages" : numPages,
-                        "where" : $('#' + dataGrid.tableId + '_go_to_page'),
-                        "click" : function(pageNum){
-                            dataGrid.next(pageNum);
-                        }
-                    });
-                }
             }
+        }
+    }
 
-            dataGrid.sortTable.refresh();
-        });
+    this.fromRoot = function(data){
+        if(this.root == undefined) {
+            return data;
+        }
+
+        var keysArray = this.root.split(".")
+        for(var i in keysArray) {
+            data = data[keysArray[i]];
+        }
+
+        return data;
     }
 
     this.extractContentKeys = function(header){
@@ -134,19 +206,19 @@ DataGrid = function(params){
         this.from = (page - 1) * this.rows;
         this.to = this.from + this.rows;
         this.to = this.to > this.count ? this.count : this.to;
-        this.fromDate = $("#startDate").val();
-        this.toDate = $("#endDate").val();
 
         $('div.alert-error').remove();
         var dataGrid = this;
         $.ajax({
             url: this.dataUrl,
-            data: 'startDate='+this.fromDate+'&endDate='+this.toDate+'&from='+this.from+'&to='+this.to+this.sortTable.sortParams(),
+            data: 'from='+this.from+'&to='+this.to,
             dataType: 'json',
             error: function(){
                 dataGrid.handleError("An error has occurred, please try again.")
             }
         }).done(function(data){
+            data = dataGrid.fromRoot(data);
+
             dataGrid.loadContent(data.content);
             dataGrid.pagination.refresh(page);
         });
@@ -290,85 +362,6 @@ GoToPage = function(params){
             }
             goToPageForm.find('input:text').val('');
         });
-    }
-
-    this.init(params);
-}
-
-SortTable = function(params){
-    this.init = function(params){
-        this.table = $('#' + params.tableId);
-        this.baseSortBy = params.baseSortBy;
-
-        var self = this;
-        this.table.undelegate('th','click');
-        this.table.delegate('th', 'click', function(event){
-            var th = $(event.target);
-            var key = th.attr('header-key');
-
-            if(key == self.baseSortBy){
-                self.toggleSort(th);
-            } else {
-                var baseSortTh = self.table.find('th[header-key="'+self.baseSortBy+'"]');
-                var baseSortOrder = self.getSortOrder(baseSortTh);
-                var sortOrder = self.getSortOrder(th);
-
-                self.table.find('th').removeClass('sort-order-asc');
-                self.table.find('th').removeClass('sort-order-desc');
-
-                if(sortOrder != ""){
-                    th.addClass('sort-order-' + sortOrder);
-                }
-                baseSortTh.addClass('sort-order-' + baseSortOrder);
-
-                self.toggleSort(th, 'sort-order-asc');
-            }
-
-            params.onSort();
-        });
-    }
-
-    this.refresh = function(){
-        var baseSortTh = this.table.find('th[header-key="'+this.baseSortBy+'"]');
-        this.toggleSort(baseSortTh, 'sort-order-asc');
-    }
-
-    this.toggleSort = function(ele, defaultSortClass){
-        ele = $(ele);
-        if(ele.hasClass('sort-order-asc')){
-            ele.removeClass('sort-order-asc');
-            ele.addClass('sort-order-desc');
-        } else if (ele.hasClass('sort-order-desc')){
-            ele.removeClass('sort-order-desc');
-            ele.addClass('sort-order-asc');
-        } else {
-            ele.addClass(defaultSortClass);
-        }
-    }
-
-    this.sortParams = function(){
-        var result = "";
-        var baseSortOrder = this.getSortOrder(this.table.find('th[header-key="'+this.baseSortBy+'"]'));
-        result += "&baseSortBy="+this.baseSortBy+"&baseSortOrder="+baseSortOrder;
-
-        var otherSortBy = this.table.find('th[header-key!="'+this.baseSortBy+'"]').filter('.sort-order-asc,.sort-order-desc');
-        if(otherSortBy.length != 0){
-            var otherSortOrder = this.getSortOrder(otherSortBy);
-            result += "&sortBy="+otherSortBy.attr('header-key')+"&sortOrder="+otherSortOrder;
-        }
-
-        return result;
-    }
-
-    this.getSortOrder = function(ele){
-        ele = $(ele);
-        if(ele.hasClass('sort-order-asc')){
-            return "asc";
-        } else if (ele.hasClass('sort-order-desc')){
-            return "desc";
-        } else {
-            return "";
-        }
     }
 
     this.init(params);
