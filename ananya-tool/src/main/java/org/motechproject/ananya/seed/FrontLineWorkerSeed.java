@@ -2,7 +2,6 @@ package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -53,8 +52,7 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
-
-        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+        String inputCSVFile = getInputCSVFile();
         String outputFilePath = new File(inputCSVFile).getParent();
         String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
 
@@ -108,8 +106,7 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 4, version = "1.3", comment = "Correction of invalid status for AWW [P+C]. If getting rid of designation from couchdb, updated only the postgres entries.")
     public void correctInvalidDesignationsForAnganwadi() throws IOException {
-
-        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+        String inputCSVFile = getInputCSVFile();
         String outputFilePath = new File(inputCSVFile).getParent();
         String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
 
@@ -131,119 +128,69 @@ public class FrontLineWorkerSeed {
         }
     }
 
-    @Seed(priority = 0, version = "1.3", comment = "Sanitization of registration status of FLWs")
+    @Seed(priority = 0, version = "1.3", comment = "Clean-up of registration status of FLWs")
     public void correctInvalidRegistrationStatusForAllFLWs() {
-        log.info("Correcting Registration status of FLWs");
-        int startId = 1;
-        int counter = 0;
-
-        log.info("Fetching FLWs from start id : " + startId);
+        int count = 0;
+        int logBreak = 100;
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
-
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-            counter++;
+            count++;
             seedService.correctRegistrationStatus(frontLineWorkerDimension);
-            if (counter % 100 == 0)
-                log.info("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
+            if (count % logBreak == 0)
+                log.info("completed " + count + " of " + frontLineWorkerDimensions.size() + " FLWs");
         }
-        log.info("Correction of registration statuses done.");
-    }
-
-    private void doWithBatch(FrontLineWorkerExecutable executable, int batchSize) {
-        // if (batchSize > 1000)
-        //      You're treading on thin ice buddy. Couch can die on you
-
-        String startKey = "";
-        List<FrontLineWorker> frontLineWorkers;
-
-        while (true) {
-            frontLineWorkers = allFrontLineWorkers.getMsisdnsFrom(startKey, batchSize);
-
-            if (frontLineWorkers.size() < batchSize) break;
-
-            for (FrontLineWorker frontLineWorker : frontLineWorkers.subList(0, frontLineWorkers.size() - 1)) {
-                log.info("Modifying (1) for FLW with msisdn : " + frontLineWorker.getMsisdn());
-                try {
-                    executable.execute(frontLineWorker);
-                } catch (Exception e) {
-                    log.error("Error (1) modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
-                }
-            }
-
-            startKey = frontLineWorkers.get(frontLineWorkers.size() - 1).getMsisdn();
-        }
-
-        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
-            log.info("Modifying (2) FLW with msisdn : " + frontLineWorker.getMsisdn());
-            try {
-                executable.execute(frontLineWorker);
-            } catch (Exception e) {
-                log.error("Error (2) modifying FLW " + e.getMessage() + ExceptionUtils.getFullStackTrace(e));
-            }
-        }
-    }
-
-    public void countInvalidFLWs() {
-        List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        int counter = 0;
-        for(FrontLineWorker frontLineWorker : frontLineWorkers) {
-            String existingDesignation = frontLineWorker.designationName();
-            if (existingDesignation == null || !existingDesignation.equalsIgnoreCase("INVALID")) continue;
-
-            counter++;
-            log.info("FLW Invalid : " + frontLineWorker.getMsisdn() + "  -  " + existingDesignation);
-        }
-
-        log.info("FLW - total invalid count - " + counter);
     }
 
     @Seed(priority = 1, version = "1.7", comment = "Remove invalid designations")
     public void correctAllDesignations() throws IOException {
-        String inputCSVFile = environment.equals("prod")
-                ? inputFileName : getClass().getResource(inputFileName).getPath();
-
+        String inputCSVFile = getInputCSVFile();
         String msisdn, designation;
-        String[] currentRow;
+        String[] row;
+        int batchSize = 100;
 
         CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
         csvReader.readNext();
-        currentRow = csvReader.readNext();
+        row = csvReader.readNext();
 
-        log.info("Correcting FLW designations from CSV file.");
-
+        log.info("correcting flw designations using csv file...");
         int counter = 0;
-        while (currentRow != null) {
+        while (row != null) {
             counter++;
-            msisdn = StringUtils.trim(currentRow[0]);
+            msisdn = StringUtils.trim(row[0]);
             if (msisdn.length() == 10) msisdn = "91" + msisdn;
-            designation = StringUtils.trim(currentRow[2]);
+            designation = StringUtils.trim(row[2]);
             try {
                 seedService.correctDesignationBasedOnCSVFile(msisdn, designation);
             } catch (Exception e) {
-                log.error("Error while correcting designation for FLW : " + msisdn, e);
+                log.error("error while correcting designation for: " + msisdn, e);
             }
-            currentRow = csvReader.readNext();
-
-            if (counter % 1000 == 0) log.info("Corrected designation for " + counter + " FLWs");
+            row = csvReader.readNext();
+            if (counter % batchSize == 0)
+                log.info("corrected designation for " + counter + " users");
         }
 
-        log.info("Correcting FLW invalid designations.");
-        doWithBatch(new FrontLineWorkerExecutable() {
+        log.info("removing invalid designations...");
+        seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
                 seedService.removeInvalidDesignation(frontLineWorker);
             }
-        }, 100);
+        }, batchSize);
     }
 
     @Seed(priority = 0, version = "1.7", comment = "Changing registration status of FLWs based on new definition")
     public void activateNewRegistrationStatusesForAllFLWs() {
-        doWithBatch(new FrontLineWorkerExecutable() {
+        int batchSize = 100;
+        seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
                 seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
             }
-        }, 100);
+        }, batchSize);
+    }
+
+    private String getInputCSVFile() {
+        return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
     }
 
 }

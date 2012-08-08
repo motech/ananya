@@ -14,7 +14,6 @@ import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,46 +27,44 @@ public class FrontLineWorkerSeedService {
 
     private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeedService.class);
 
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-    private AllFrontLineWorkers allFrontLineWorkers;
     private DataAccessTemplate template;
-    private AllRegistrationMeasures allRegistrationMeasures;
     private AllLocations allLocations;
-    private FrontLineWorkerService frontLineWorkerService;
+    private AllFrontLineWorkers allFrontLineWorkers;
+    private AllRegistrationMeasures allRegistrationMeasures;
+    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
     public FrontLineWorkerSeedService() {
-
     }
 
     @Autowired
     public FrontLineWorkerSeedService(AllFrontLineWorkers allFrontLineWorkers,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      DataAccessTemplate template, AllRegistrationMeasures allRegistrationMeasures, AllLocations allLocations, FrontLineWorkerService frontLineWorkerService) {
-        this.allFrontLineWorkers = allFrontLineWorkers;
-        this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+                                      DataAccessTemplate template,
+                                      AllRegistrationMeasures allRegistrationMeasures,
+                                      AllLocations allLocations) {
         this.template = template;
-        this.allRegistrationMeasures = allRegistrationMeasures;
         this.allLocations = allLocations;
-        this.frontLineWorkerService = frontLineWorkerService;
+        this.allFrontLineWorkers = allFrontLineWorkers;
+        this.allRegistrationMeasures = allRegistrationMeasures;
+        this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
     }
-
 
     @Transactional
     public void correctRegistrationStatusInCouchAndPostgres() {
         int lastSequenceOfPreImportedFLWs = 20988;
         template.bulkUpdate("update FrontLineWorkerDimension set status = '" + RegistrationStatus.UNREGISTERED + "' where id >= " + lastSequenceOfPreImportedFLWs);
-        log.info("RegistrationStatus:Postgres FrontLineWorkerDimensions >= 20988 to unregistered status");
+        log.info("RegistrationStatus:postgres frontLineWorkerDimensions >= 20988 to unregistered status");
 
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
             FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(frontLineWorkerDimension.getMsisdn().toString());
             if (frontLineWorker == null) {
-                log.error("RegistrationStatus: Db mismatch, Couchdb missing : " + frontLineWorkerDimension.getMsisdn());
+                log.error("RegistrationStatus:db mismatch, couchdb missing : " + frontLineWorkerDimension.getMsisdn());
                 continue;
             }
             frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("RegistrationStatus: Updated Couchdb doc to unregistered status for :" + frontLineWorker);
+            log.info("RegistrationStatus: updated couchdb doc to unregistered status for :" + frontLineWorker);
         }
     }
 
@@ -85,7 +82,7 @@ public class FrontLineWorkerSeedService {
                 finalFrontLineWorker.merge(frontLineWorker);
                 allFrontLineWorkers.update(finalFrontLineWorker);
                 allFrontLineWorkers.remove(frontLineWorker);
-                log.info("Duplicates: Merged Couchdb docs from : " + frontLineWorker + " to final version : " + finalFrontLineWorker);
+                log.info("Duplicates:merged couchdb docs from " + frontLineWorker + " to " + finalFrontLineWorker);
 
                 FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
                 FrontLineWorkerDimension finalFrontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(finalFrontLineWorker.msisdn());
@@ -96,14 +93,14 @@ public class FrontLineWorkerSeedService {
                 finalRegistrationMeasure.merge(registrationMeasure);
                 allRegistrationMeasures.update(finalRegistrationMeasure);
                 allRegistrationMeasures.remove(registrationMeasure);
-                log.info("Duplicates: Merged Postgres measure from : " + registrationMeasure + " to final version : " + finalRegistrationMeasure);
+                log.info("Duplicates:merged postgres measure from " + registrationMeasure + " to " + finalRegistrationMeasure);
 
                 allFrontLineWorkerDimensions.update(finalFrontLineWorkerDimension);
                 allFrontLineWorkerDimensions.remove(frontLineWorkerDimension);
-                log.info("Duplicates: Merged Postgres dimensions from : " + frontLineWorkerDimension + " to final version : " + finalFrontLineWorkerDimension);
+                log.info("Duplicates:merged postgres dimensions from " + frontLineWorkerDimension + " to " + finalFrontLineWorkerDimension);
 
             } catch (Exception e) {
-                log.error("Duplicates: Exception while correcting duplicates for:" + msisdn + " " + ExceptionUtils.getFullStackTrace(e));
+                log.error("Duplicates:exception while correcting duplicates for:" + msisdn + " " + ExceptionUtils.getFullStackTrace(e));
             }
         }
     }
@@ -119,13 +116,13 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker.setMsisdn(correctedMsisdn);
                 frontLineWorker.setCircle(defaultCircle);
                 allFrontLineWorkers.update(frontLineWorker);
-                log.info("Updated: Correct msisdn, circle in Couchdb for: " + frontLineWorker);
+                log.info("Updated:correct msisdn, circle in couchdb for: " + frontLineWorker);
 
                 FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(msisdn));
                 if (frontLineWorkerDimension == null)
                     frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.valueOf(correctedMsisdn));
                 if (frontLineWorkerDimension == null) {
-                    log.error("Updated: Db mismatch, Postgres missing : " + frontLineWorker.getMsisdn());
+                    log.error("Updated:db mismatch, postgres missing : " + frontLineWorker.getMsisdn());
                     continue;
                 }
                 frontLineWorkerDimension.setOperator(frontLineWorker.getOperator());
@@ -133,9 +130,9 @@ public class FrontLineWorkerSeedService {
                 frontLineWorkerDimension.setMsisdn(Long.valueOf(correctedMsisdn));
                 frontLineWorkerDimension.setCircle(frontLineWorker.getCircle());
                 allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-                log.info("Updated: Correct msisdn, circle in Postgres dimension for: " + frontLineWorkerDimension);
+                log.info("Updated: correct msisdn, circle in postgres dimension for: " + frontLineWorkerDimension);
             } catch (Exception e) {
-                log.error("Updated: Exception while updating:" + msisdn + " " + ExceptionUtils.getFullStackTrace(e));
+                log.error("Updated: exception while updating:" + msisdn + " " + ExceptionUtils.getFullStackTrace(e));
             }
         }
     }
@@ -148,7 +145,7 @@ public class FrontLineWorkerSeedService {
     public void correctInvalidDesignationsForAnganwadi(String msisdn) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("91" + msisdn);
         if (frontLineWorker == null) {
-            log.error("Designation: Missing FrontlineWorker in couchdb: " + msisdn);
+            log.error("Designation: missing flw in couchdb: " + msisdn);
             return;
         }
         frontLineWorker.setDesignation(Designation.AWW);
@@ -156,17 +153,17 @@ public class FrontLineWorkerSeedService {
             frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
 
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("Designation: Corrected invalid designation in couchdb: " + frontLineWorker);
+        log.info("Designation: corrected invalid designation in couchdb: " + frontLineWorker);
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         if (frontLineWorkerDimension == null) {
-            log.error("Designation: Missing FrontlineWorker in postgres: " + msisdn);
+            log.error("Designation: missing flw in postgres: " + msisdn);
             return;
         }
         frontLineWorkerDimension.setDesignation(frontLineWorker.designationName());
         frontLineWorkerDimension.setStatus(frontLineWorker.status().toString());
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-        log.info("Designation: Corrected invalid designation in postgres: " + frontLineWorkerDimension);
+        log.info("Designation: corrected invalid designation in postgres: " + frontLineWorkerDimension);
     }
 
     @Transactional
@@ -178,7 +175,7 @@ public class FrontLineWorkerSeedService {
     public void correctRegistrationStatus(FrontLineWorkerDimension frontLineWorkerDimension) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("" + frontLineWorkerDimension.getMsisdn());
         if (frontLineWorker == null) {
-            log.info("FATAL: user present in postgres but not in couch. msisdn - " + frontLineWorkerDimension.getMsisdn());
+            log.error("flw present in postgres but not in couch. msisdn - " + frontLineWorkerDimension.getMsisdn());
             return;
         }
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
@@ -186,16 +183,15 @@ public class FrontLineWorkerSeedService {
         RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
         RegistrationStatus expectedRegistrationStatus = deduceRegistrationStatusOld(frontLineWorker, location);
         if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
-            log.info("FATAL: postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
+            log.error("postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
                     " status in couch : " + frontLineWorker.getStatus() +
                     " expected status : " + expectedRegistrationStatus);
-            // to ensure both couch and postgres get updated.
             actualRegistrationStatus = null;
         }
 
         if (expectedRegistrationStatus != actualRegistrationStatus) {
-            log.info("Changing registration status of msisdn : " + frontLineWorkerDimension.getMsisdn() +
+            log.info("changing registration status of msisdn : " + frontLineWorkerDimension.getMsisdn() +
                     " status in postgres : " + frontLineWorkerDimension.getStatus() +
                     " status in couch : " + frontLineWorker.getStatus() +
                     " expected status : " + expectedRegistrationStatus);
@@ -208,23 +204,19 @@ public class FrontLineWorkerSeedService {
 
     @Transactional
     public void activateNewRegistrationStatusForFLW(FrontLineWorker frontLineWorker) {
-        Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-
-        // Operator information is only present for FLWs who have called the system.
-        boolean hasCalledSystem = !StringUtils.isBlank(frontLineWorker.getOperator());
-
-        RegistrationStatus newRegistrationStatus = !hasCalledSystem
-                ? RegistrationStatus.UNREGISTERED
-                : deduceRegistrationStatus(frontLineWorker, location);
-
-        frontLineWorker.setRegistrationStatus(newRegistrationStatus);
+        boolean hasCalledSystem = StringUtils.isNotBlank(frontLineWorker.getOperator());
+        RegistrationStatus newStatus = hasCalledSystem ?
+                deduceRegistrationStatusNew(frontLineWorker, allLocations.findByExternalId(frontLineWorker.getLocationId())) :
+                RegistrationStatus.UNREGISTERED;
+        frontLineWorker.setRegistrationStatus(newStatus);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("modified status in couch:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.status() + "=>" + newStatus);
 
-        if (frontLineWorkerDimension != null) {
-            frontLineWorkerDimension.setStatus(newRegistrationStatus.toString());
-            allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-        }
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        if (frontLineWorkerDimension == null) return;
+        frontLineWorkerDimension.setStatus(newStatus.toString());
+        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+        log.info("modified status in postgres:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.status() + "=>" + newStatus);
     }
 
     public RegistrationStatus deduceRegistrationStatusOld(FrontLineWorker frontLineWorker, Location location) {
@@ -240,7 +232,7 @@ public class FrontLineWorkerSeedService {
         return RegistrationStatus.PARTIALLY_REGISTERED;
     }
 
-    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
+    public RegistrationStatus deduceRegistrationStatusNew(FrontLineWorker frontLineWorker, Location location) {
         boolean locationAbsent = (Location.getDefaultLocation().equals(location));
         boolean locationIncomplete = location.isMissingDetails();
         boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
@@ -251,45 +243,63 @@ public class FrontLineWorkerSeedService {
         return RegistrationStatus.REGISTERED;
     }
 
-
     public void removeInvalidDesignation(FrontLineWorker frontLineWorker) {
-        String existingDesignation = frontLineWorker.designationName();
-        if (existingDesignation == null || !existingDesignation.equalsIgnoreCase("INVALID")) return;
-
-        log.info("Changing designation for FLW : " + frontLineWorker + " old designation is : " + existingDesignation);
+        if (!"INVALID".equalsIgnoreCase(frontLineWorker.designationName())) return;
 
         frontLineWorker.setDesignation(null);
         allFrontLineWorkers.update(frontLineWorker);
+        log.info("removed invalid designation in couchdb for " + frontLineWorker);
 
-        FrontLineWorkerDimension frontLineWorkerDimension =
-                allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        if (frontLineWorkerDimension == null) return;
         frontLineWorkerDimension.setDesignation(null);
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
+        log.info("removed invalid designation in postgres for " + frontLineWorker);
     }
 
     public void correctDesignationBasedOnCSVFile(String msisdn, String designation) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn);
         if (frontLineWorker == null) return;
-
         Designation expectedDesignation = Designation.getFor(designation);
         Designation actualDesignation = frontLineWorker.getDesignation();
-
         if (actualDesignation != expectedDesignation) {
             frontLineWorker.setDesignation(expectedDesignation);
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("Modified designation in couch for " + msisdn + " to " + expectedDesignation + " from : " + actualDesignation);
+            log.info("modified designation in couch: " + msisdn + "|" + actualDesignation + "=>" + expectedDesignation);
         }
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         if (frontLineWorkerDimension == null) return;
-
         String expectedDesignationString = expectedDesignation == null ? null : expectedDesignation.toString();
         String actualDesignationString = frontLineWorkerDimension.getDesignation();
-
         if (!StringUtils.equalsIgnoreCase(expectedDesignationString, actualDesignationString)) {
             frontLineWorkerDimension.setDesignation(expectedDesignationString);
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-            log.info("Modified designation in postgres for " + msisdn + " to " + expectedDesignationString + "from " + actualDesignationString);
+            log.info("modified designation in postgres: " + msisdn + "|" + actualDesignationString + "=>" + expectedDesignationString);
+        }
+    }
+
+    public void doWithBatch(FrontLineWorkerExecutable executable, int batchSize) {
+        String startKey = "";
+        List<FrontLineWorker> frontLineWorkers;
+        while (true) {
+            frontLineWorkers = allFrontLineWorkers.getMsisdnsFrom(startKey, batchSize);
+            if (frontLineWorkers.size() < batchSize) break;
+            int size = frontLineWorkers.size() - 1;
+            loopAndDo(executable, frontLineWorkers.subList(0, size));
+            startKey = frontLineWorkers.get(size).getMsisdn();
+        }
+        loopAndDo(executable, frontLineWorkers);
+    }
+
+    private void loopAndDo(FrontLineWorkerExecutable executable, List<FrontLineWorker> workerList) {
+        for (FrontLineWorker frontLineWorker : workerList) {
+            log.info("modifying flw: " + frontLineWorker.getMsisdn());
+            try {
+                executable.execute(frontLineWorker);
+            } catch (Exception e) {
+                log.error("error modifying flw:" + frontLineWorker.getMsisdn() + "|" + ExceptionUtils.getFullStackTrace(e));
+            }
         }
     }
 }
