@@ -50,28 +50,28 @@ public class AdminInquiryService {
     }
 
     public String getCallerDataJs(String msisdn) {
-        JobAidCallerDataResponse jobAidCallerData = JobAidCallerDataResponse.forNewUser(0);
-        CertificateCourseCallerDataResponse certificateCourseCallerData = CertificateCourseCallerDataResponse.forNewUser();
+        String jsonJobAidCallerData = "{}";
+        String jsonCertificateCourseCallerData = "{}";
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);
         if (frontLineWorker != null) {
-            jobAidCallerData = new JobAidCallerDataResponse(
+            JobAidCallerDataResponse jobAidCallerData = new JobAidCallerDataResponse(
                     frontLineWorker,
                     StringUtils.isEmpty(frontLineWorker.getOperator())
                             ? 0
                             : operatorService.findMaximumUsageFor(frontLineWorker.getOperator())
             );
 
-            certificateCourseCallerData = new CertificateCourseCallerDataResponse(frontLineWorker);
+            CertificateCourseCallerDataResponse certificateCourseCallerData = new CertificateCourseCallerDataResponse(frontLineWorker);
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            jsonJobAidCallerData = gson.toJson(jobAidCallerData);
+            jsonCertificateCourseCallerData = gson.toJson(certificateCourseCallerData);
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonJobAidCallerData = gson.toJson(jobAidCallerData);
-        String jsonCertificateCourseCallerData = gson.toJson(certificateCourseCallerData);
 
         return String.format(
                 "var jobAidCallerData = %s;" +
-                        "\n" +
                         "\n" +
                         "var certificateCourseCallerData = %s;",
                 jsonJobAidCallerData,
