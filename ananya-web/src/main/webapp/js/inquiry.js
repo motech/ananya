@@ -17,11 +17,15 @@ var callDetailsDataGrid = new DataGrid({
         });
 
 $(document).ready(function() {
-    initDataGrids("");
+    initDataGrids("0");
     initSearchForm();
 });
 
 var initDataGrids = function(msisdn) {
+    if (msisdn.length <= 10) {
+        msisdn = "91" + msisdn;
+    }
+
     $.ajax({
                 url: "admin/inquiry/data",
                 data: 'msisdn=' + msisdn,
@@ -47,13 +51,24 @@ var initDataGrids = function(msisdn) {
 var initSearchForm = function() {
     $("#msisdn_form").submit(function(event) {
         event.preventDefault();
-        return false;
-    });
-
-    $("#msisdn").keyup(function(event) {
-        event.preventDefault();
-        if (event.keyCode == 13) {
-            initDataGrids($("#msisdn").val());
+        var msisdn = $("#msisdn").val();
+        if (validateMsisdn(msisdn)) {
+            initDataGrids(msisdn);
         }
     });
+}
+
+var validateMsisdn = function (msisdn) {
+    var isValid = msisdn.match(/^(91)?[1-9]\d{9}$/) != null;
+    var infoLabel = $("#msisdn_info");
+
+    if (!isValid) {
+        infoLabel.text("Enter a valid msisdn. eg 9988776655 or 91998776655")
+        infoLabel.addClass("label-warning");
+    } else if (infoLabel.hasClass("label-warning")) {
+        infoLabel.text("Enter MSISDN")
+        infoLabel.removeClass("label-warning");
+    }
+
+    return isValid;
 }
