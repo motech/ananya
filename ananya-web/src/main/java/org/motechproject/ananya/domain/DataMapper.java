@@ -15,36 +15,36 @@ public enum DataMapper {
     AcademyCalls(AdminInquiryService.ACADEMY_CALLS) {
         @Override
         protected DataGrid dataFor(Map<String, Object> data) {
-            return new AcademyCallGrid((List<CallContent>) data.get(this.name()));
+            return new AcademyCallGrid((List<CallContent>) data.get(this.key));
         }
     },
     KunjiCalls(AdminInquiryService.KUNJI_CALLS) {
         @Override
         protected DataGrid dataFor(Map<String, Object> data) {
-            return new KunjiCallGrid((List<CallContent>) data.get(this.name()));
+            return new KunjiCallGrid((List<CallContent>) data.get(this.key));
         }
     },
     CallDetails(AdminInquiryService.CALL_DETAILS) {
         @Override
         protected DataGrid dataFor(Map<String, Object> data) {
-            return new CallDetailGrid((List<CallDetail>) data.get(this.name()));
+            return new CallDetailGrid((List<CallDetail>) data.get(this.key));
         }
     },
     CallerDataJs(AdminInquiryService.CALLER_DATA_JS) {
         @Override
         protected String dataFor(Map<String, Object> data) {
-            return (String) data.get(this.name());
+            return (String) data.get(this.key);
         }
     };
 
-    private String key;
-    private DataMapper(String key) {
+    protected String key;
+    DataMapper(String key) {
         this.key = key;
     }
 
     public static Object prepareDataFor(String key, Map<String, Object> data) {
         for (DataMapper mapper : DataMapper.values()) {
-            if (mapper.key.equalsIgnoreCase(key))
+            if (mapper.key.equals(key))
                 return mapper.dataFor(data);
         }
 
