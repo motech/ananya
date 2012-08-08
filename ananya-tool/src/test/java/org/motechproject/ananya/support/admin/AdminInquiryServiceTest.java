@@ -88,7 +88,7 @@ public class AdminInquiryServiceTest {
         String callerId = "919988776655";
         setUpAcademyCalls(callerId);
 
-        List<CallContent> academyCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.ACADEMY_CALLS_KEY);
+        List<CallContent> academyCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.ACADEMY_CALLS);
 
         assertEquals(2, academyCallsContent.size());
     }
@@ -98,7 +98,7 @@ public class AdminInquiryServiceTest {
         String callerId = "919988776644";
         setUpKunjiCalls(callerId);
 
-        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.KUNJI_CALLS_KEY);
+        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.KUNJI_CALLS);
 
         assertEquals(2, kunjiCallsContent.size());
     }
@@ -108,7 +108,7 @@ public class AdminInquiryServiceTest {
         String callerId = "919988776633";
         setUpCallDetails(callerId);
 
-        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALL_DETAILS_KEY);
+        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALL_DETAILS);
 
         assertEquals(2, kunjiCallsContent.size());
     }

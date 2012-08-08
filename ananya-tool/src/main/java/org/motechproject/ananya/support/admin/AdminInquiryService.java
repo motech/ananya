@@ -23,10 +23,10 @@ import java.util.Map;
 
 @Service
 public class AdminInquiryService {
-    public static final String ACADEMY_CALLS_KEY = "academyCalls";
-    public static final String KUNJI_CALLS_KEY = "kunjiCalls";
-    public static final String CALL_DETAILS_KEY = "callDetails";
-    public static final String CALLER_DATA_JS_KEY = "callerDataJs";
+    public static final String ACADEMY_CALLS = "academyCalls";
+    public static final String KUNJI_CALLS = "kunjiCalls";
+    public static final String CALL_DETAILS = "callDetails";
+    public static final String CALLER_DATA_JS = "callerDataJs";
     
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
@@ -45,10 +45,10 @@ public class AdminInquiryService {
             openSession();
 
             Map<String, Object> result = new HashMap<String, Object>();
-            result.put(ACADEMY_CALLS_KEY, getAcademyCallsContent(msisdn));
-            result.put(KUNJI_CALLS_KEY, getKunjiCallsContent(msisdn));
-            result.put(CALL_DETAILS_KEY, getCallDetails(msisdn));
-            result.put(CALLER_DATA_JS_KEY, getCallerDataJs(msisdn));
+            result.put(ACADEMY_CALLS, getAcademyCallsContent(msisdn));
+            result.put(KUNJI_CALLS, getKunjiCallsContent(msisdn));
+            result.put(CALL_DETAILS, getCallDetails(msisdn));
+            result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
 
             return result;
         } finally {
