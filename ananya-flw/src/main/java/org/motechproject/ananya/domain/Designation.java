@@ -23,11 +23,9 @@ public enum Designation {
     }
 
     public static boolean isInValid(String designation) {
-        return
-                StringUtils.isBlank(designation) ||
-                !Designation.contains(designation);
+        return StringUtils.isBlank(designation) || !Designation.contains(designation);
     }
-    
+
     public static Designation getFor(String designation) {
         return Designation.isInValid(designation) ? null : Designation.valueOf(designation.toUpperCase());
     }

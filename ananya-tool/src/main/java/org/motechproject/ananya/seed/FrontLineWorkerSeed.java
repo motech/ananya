@@ -52,36 +52,33 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
-        String inputCSVFile = getInputCSVFile();
-        String outputFilePath = new File(inputCSVFile).getParent();
-        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
-
-        File file = new File(outputCSVFile);
+        String inputCSV = getInputCSV();
+        String outputCSV = getOutputCSV(new File(inputCSV).getParent());
+        File file = new File(outputCSV);
         file.createNewFile();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputCSVFile));
-        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputCSV));
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSV));
         LocationList locationList = new LocationList(locationService.getAll());
 
         String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
-        String[] currentRow;
+        String[] row;
         csvReader.readNext();
-        currentRow = csvReader.readNext();
+        row = csvReader.readNext();
 
-        while (currentRow != null) {
-            msisdn = currentRow[0];
-            name = currentRow[1];
-            designation = currentRow[2];
-            currentDistrict = currentRow[3];
-            currentBlock = currentRow[4];
-            currentPanchayat = currentRow[5];
+        while (row != null) {
+            msisdn = row[0];
+            name = row[1];
+            designation = row[2];
+            currentDistrict = row[3];
+            currentBlock = row[4];
+            currentPanchayat = row[5];
 
-            RegistrationResponse registrationResponse = registrationService.registerFlw(
-                    msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
+            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
 
             writer.write(msisdn + " : " + registrationResponse.getMessage());
             writer.newLine();
-            currentRow = csvReader.readNext();
+            row = csvReader.readNext();
         }
         writer.close();
     }
@@ -93,26 +90,25 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 6, version = "1.1", comment = "1) merging duplicates")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
-        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        List<FrontLineWorker> allFrontLineWorkers = seedService.allFrontLineWorkers();
         seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
     }
 
     @Seed(priority = 5, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
         String defaultCircle = "bihar";
-        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        List<FrontLineWorker> allFrontLineWorkers = seedService.allFrontLineWorkers();
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }
 
     @Seed(priority = 4, version = "1.3", comment = "Correction of invalid status for AWW [P+C]. If getting rid of designation from couchdb, updated only the postgres entries.")
     public void correctInvalidDesignationsForAnganwadi() throws IOException {
-        String inputCSVFile = getInputCSVFile();
-        String outputFilePath = new File(inputCSVFile).getParent();
-        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+        String inputCSV = getInputCSV();
+        String outputCSV = getOutputCSV(new File(inputCSV).getParent());
 
-        File file = new File(outputCSVFile);
+        File file = new File(outputCSV);
         file.createNewFile();
-        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSV));
 
         String msisdn, designation;
         String[] currentRow;
@@ -132,7 +128,7 @@ public class FrontLineWorkerSeed {
     public void correctInvalidRegistrationStatusForAllFLWs() {
         int count = 0;
         int logBreak = 100;
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.allFrontLineWorkerDimensions();
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
             count++;
             seedService.correctRegistrationStatus(frontLineWorkerDimension);
@@ -143,7 +139,7 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 1, version = "1.7", comment = "Remove invalid designations")
     public void correctAllDesignations() throws IOException {
-        String inputCSVFile = getInputCSVFile();
+        String inputCSVFile = getInputCSV();
         String msisdn, designation;
         String[] row;
         int batchSize = 100;
@@ -153,20 +149,20 @@ public class FrontLineWorkerSeed {
         row = csvReader.readNext();
 
         log.info("correcting flw designations using csv file...");
-        int counter = 0;
+        int count = 0;
         while (row != null) {
-            counter++;
+            count++;
             msisdn = StringUtils.trim(row[0]);
-            if (msisdn.length() == 10) msisdn = "91" + msisdn;
             designation = StringUtils.trim(row[2]);
+            if (msisdn.length() == 10) msisdn = "91" + msisdn;
             try {
                 seedService.correctDesignationBasedOnCSVFile(msisdn, designation);
             } catch (Exception e) {
                 log.error("error while correcting designation for: " + msisdn, e);
             }
             row = csvReader.readNext();
-            if (counter % batchSize == 0)
-                log.info("corrected designation for " + counter + " users");
+            if (count % batchSize == 0)
+                log.info("corrected designation for " + count + " users");
         }
 
         log.info("removing invalid designations...");
@@ -189,8 +185,12 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
-    private String getInputCSVFile() {
+    private String getInputCSV() {
         return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+    }
+
+    private String getOutputCSV(String outputFilePath) {
+        return outputFilePath + File.separator + outputFileName + new Date().getTime();
     }
 
 }

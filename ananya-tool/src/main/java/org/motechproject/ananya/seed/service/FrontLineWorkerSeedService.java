@@ -49,6 +49,16 @@ public class FrontLineWorkerSeedService {
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
     }
 
+
+    public List<FrontLineWorker> allFrontLineWorkers() {
+        return allFrontLineWorkers.getAll();
+    }
+
+    @Transactional
+    public List<FrontLineWorkerDimension> allFrontLineWorkerDimensions() {
+        return (List<FrontLineWorkerDimension>) template.find("select f from FrontLineWorkerDimension f");
+    }
+
     @Transactional
     public void correctRegistrationStatusInCouchAndPostgres() {
         int lastSequenceOfPreImportedFLWs = 20988;
@@ -137,10 +147,6 @@ public class FrontLineWorkerSeedService {
         }
     }
 
-    public List<FrontLineWorker> getAllFromCouchDb() {
-        return allFrontLineWorkers.getAll();
-    }
-
     @Transactional
     public void correctInvalidDesignationsForAnganwadi(String msisdn) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn("91" + msisdn);
@@ -164,11 +170,6 @@ public class FrontLineWorkerSeedService {
         frontLineWorkerDimension.setStatus(frontLineWorker.status().toString());
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
         log.info("Designation: corrected invalid designation in postgres: " + frontLineWorkerDimension);
-    }
-
-    @Transactional
-    public List<FrontLineWorkerDimension> getFrontLineWorkers() {
-        return (List<FrontLineWorkerDimension>) template.find("select f from FrontLineWorkerDimension f");
     }
 
     @Transactional
@@ -270,7 +271,7 @@ public class FrontLineWorkerSeedService {
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         if (frontLineWorkerDimension == null) return;
-        String expectedDesignationString = expectedDesignation == null ? null : expectedDesignation.toString();
+        String expectedDesignationString = (expectedDesignation == null) ? null : expectedDesignation.toString();
         String actualDesignationString = frontLineWorkerDimension.getDesignation();
         if (!StringUtils.equalsIgnoreCase(expectedDesignationString, actualDesignationString)) {
             frontLineWorkerDimension.setDesignation(expectedDesignationString);
