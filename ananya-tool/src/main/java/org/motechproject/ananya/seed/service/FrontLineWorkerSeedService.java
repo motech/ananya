@@ -293,13 +293,12 @@ public class FrontLineWorkerSeedService {
         loopAndDo(executable, frontLineWorkers);
     }
 
-    private void loopAndDo(FrontLineWorkerExecutable executable, List<FrontLineWorker> workerList) {
-        for (FrontLineWorker frontLineWorker : workerList) {
-            log.info("modifying flw: " + frontLineWorker.getMsisdn());
+    private void loopAndDo(FrontLineWorkerExecutable executable, List<FrontLineWorker> frontLineWorkers) {
+        for (FrontLineWorker frontLineWorker : frontLineWorkers) {
             try {
                 executable.execute(frontLineWorker);
             } catch (Exception e) {
-                log.error("error modifying flw:" + frontLineWorker.getMsisdn() + "|" + ExceptionUtils.getFullStackTrace(e));
+                log.error("error modifying flw:" + frontLineWorker.getMsisdn(), e);
             }
         }
     }

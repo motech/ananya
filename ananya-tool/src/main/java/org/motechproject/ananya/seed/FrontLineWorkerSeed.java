@@ -5,7 +5,6 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.LocationList;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.service.FrontLineWorkerExecutable;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -33,8 +31,6 @@ public class FrontLineWorkerSeed {
     private LocationService locationService;
     @Autowired
     private FrontLineWorkerSeedService seedService;
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
 
     @Value("#{ananyaProperties['seed.flw.file']}")
     private String inputFileName;
@@ -43,17 +39,13 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
-    public static void main(String[] args) throws IOException {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
-        FrontLineWorkerSeed frontLineWorkerSeed =
-                (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
-        frontLineWorkerSeed.correctAllDesignations();
-    }
-
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
+        String[] row;
         String inputCSV = getInputCSV();
         String outputCSV = getOutputCSV(new File(inputCSV).getParent());
+        String msisdn, name, designation, district, block, panchayat;
+
         File file = new File(outputCSV);
         file.createNewFile();
 
@@ -61,21 +53,11 @@ public class FrontLineWorkerSeed {
         CSVReader csvReader = new CSVReader(new FileReader(inputCSV));
         LocationList locationList = new LocationList(locationService.getAll());
 
-        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
-        String[] row;
         csvReader.readNext();
         row = csvReader.readNext();
-
         while (row != null) {
-            msisdn = row[0];
-            name = row[1];
-            designation = row[2];
-            currentDistrict = row[3];
-            currentBlock = row[4];
-            currentPanchayat = row[5];
-
-            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, locationList);
-
+            msisdn = row[0]; name = row[1]; designation = row[2]; district = row[3]; block = row[4]; panchayat = row[5];
+            RegistrationResponse registrationResponse = registrationService.registerFlw(msisdn, name, designation, district, block, panchayat, locationList);
             writer.write(msisdn + " : " + registrationResponse.getMessage());
             writer.newLine();
             row = csvReader.readNext();
@@ -148,7 +130,6 @@ public class FrontLineWorkerSeed {
         csvReader.readNext();
         row = csvReader.readNext();
 
-        log.info("correcting flw designations using csv file...");
         int count = 0;
         while (row != null) {
             count++;
@@ -165,7 +146,6 @@ public class FrontLineWorkerSeed {
                 log.info("corrected designation for " + count + " users");
         }
 
-        log.info("removing invalid designations...");
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
