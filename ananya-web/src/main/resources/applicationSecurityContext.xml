@@ -18,6 +18,7 @@
                 logout-success-url="/admin/login"/>
 
         <intercept-url pattern="/admin/monitor" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/inquiry" access="hasRole('admin')" requires-channel="any"/>
     </http>
 
     <beans:bean name="authenticationProvider" class="org.motechproject.ananya.security.AuthenticationProvider"/>
@@ -26,7 +27,7 @@
         <authentication-provider ref="authenticationProvider"/>
     </authentication-manager>
 
-    <beans:bean id="authenticationEntryPoint" class="org.motechproject.ananya.security.AnanyaAuthenticationEntryPoint">
+    <beans:bean id="authenticationEntryPoint" class="org.motechproject.ananya.security.AuthenticationEntryPoint">
         <beans:property name="loginFormUrl" value="/admin/login"/>
         <beans:property name="forceHttps" value="false"/>
     </beans:bean>
