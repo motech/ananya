@@ -27,13 +27,15 @@ public class InquiryPage {
 
     public Map<String, Object> display(String msisdn) {
         msisdn = nineOneize(msisdn);
-        
+
         Map<String, Object> result = new HashMap<String, Object>();
 
-        List<CallContent> academyCalls = adminInquiryService.getAcademyCallsContent(msisdn);
-        List<CallContent> kunjiCalls = adminInquiryService.getKunjiCallsContent(msisdn);
-        List<CallDetail> callDetails = adminInquiryService.getCallDetails(msisdn);
-        String callerDataJs = adminInquiryService.getCallerDataJs(msisdn);
+        Map<String, Object> inquiryData = adminInquiryService.getInquiryData(msisdn);
+
+        List<CallContent> academyCalls = (List<CallContent>) inquiryData.get(AdminInquiryService.ACADEMY_CALLS_KEY);
+        List<CallContent> kunjiCalls = (List<CallContent>) inquiryData.get(AdminInquiryService.KUNJI_CALLS_KEY);
+        List<CallDetail> callDetails = (List<CallDetail>) inquiryData.get(AdminInquiryService.CALL_DETAILS_KEY);
+        String callerDataJs = (String) inquiryData.get(AdminInquiryService.CALLER_DATA_JS_KEY);
 
         result.put("academyCalls", new AcademyCallGrid(academyCalls));
         result.put("kunjiCalls", new KunjiCallGrid(kunjiCalls));

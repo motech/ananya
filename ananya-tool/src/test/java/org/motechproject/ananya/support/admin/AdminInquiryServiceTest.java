@@ -9,11 +9,9 @@ import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.dimension.*;
-import org.motechproject.ananya.domain.measure.CourseItemMeasure;
-import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
-import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.domain.measure.SMSSentMeasure;
+import org.motechproject.ananya.domain.measure.*;
 import org.motechproject.ananya.repository.dimension.*;
+import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.support.admin.domain.CallContent;
@@ -45,7 +43,9 @@ public class AdminInquiryServiceTest {
     private AllJobAidContentDimensions allJobAidContentDimensions;
     @Autowired
     private AllJobAidContentMeasures allJobAidContentMeasures;
-
+    @Autowired
+    private AllCallDurationMeasures allCallDurationMeasures;
+    
     @Qualifier("testDataAccessTemplate")
     @Autowired
     private TestDataAccessTemplate template;
@@ -88,7 +88,7 @@ public class AdminInquiryServiceTest {
         String callerId = "919988776655";
         setUpAcademyCalls(callerId);
 
-        List<CallContent> academyCallsContent = adminInquiryService.getAcademyCallsContent(callerId);
+        List<CallContent> academyCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.ACADEMY_CALLS_KEY);
 
         assertEquals(2, academyCallsContent.size());
     }
@@ -98,9 +98,26 @@ public class AdminInquiryServiceTest {
         String callerId = "919988776644";
         setUpKunjiCalls(callerId);
 
-        List<CallContent> kunjiCallsContent = adminInquiryService.getKunjiCallsContent(callerId);
+        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.KUNJI_CALLS_KEY);
 
         assertEquals(2, kunjiCallsContent.size());
+    }
+
+    @Test
+    public void shouldRetrieveListOfCallDetails() {
+        String callerId = "919988776633";
+        setUpCallDetails(callerId);
+
+        List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALL_DETAILS_KEY);
+
+        assertEquals(2, kunjiCallsContent.size());
+    }
+
+    private void setUpCallDetails(String callerId) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "bsnl", "bihar", "Raji", "ANGANWADI", "REGISTERED");
+
+        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionTwoDaysAgo, callerId + "444", 555444L, 30, twoDaysAgo, twoDaysAgo.plusMinutes(30), "JOBAID"));
+        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionNow, callerId + "888", 555444L, 10, now, now.plusMinutes(30), "CC"));
     }
 
     private void setUpKunjiCalls(String callerId) {

@@ -17,39 +17,69 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdminInquiryService {
+    public static final String ACADEMY_CALLS_KEY = "academyCalls";
+    public static final String KUNJI_CALLS_KEY = "kunjiCalls";
+    public static final String CALL_DETAILS_KEY = "callDetails";
+    public static final String CALLER_DATA_JS_KEY = "callerDataJs";
+    
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
+    private DataAccessTemplate dataAccessTemplate;
     private Session session;
 
     @Autowired
     public AdminInquiryService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, DataAccessTemplate dataAccessTemplate) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
-        this.session = dataAccessTemplate.getSessionFactory().openSession();
+        this.dataAccessTemplate = dataAccessTemplate;
     }
 
-    public List<CallContent> getAcademyCallsContent(String callerId) {
-        AdminQuery academyCalls = AdminQuery.ACADEMY_CALLS;
+    public Map<String, Object> getInquiryData(String msisdn) {
+        try {
+            openSession();
 
-        return callContentQueryResult(callerId, academyCalls);
+            Map<String, Object> result = new HashMap<String, Object>();
+            result.put(ACADEMY_CALLS_KEY, getAcademyCallsContent(msisdn));
+            result.put(KUNJI_CALLS_KEY, getKunjiCallsContent(msisdn));
+            result.put(CALL_DETAILS_KEY, getCallDetails(msisdn));
+            result.put(CALLER_DATA_JS_KEY, getCallerDataJs(msisdn));
+
+            return result;
+        } finally {
+            closeSession();
+        }
     }
 
-    public List<CallContent> getKunjiCallsContent(String callerId) {
-        AdminQuery kunjiCalls = AdminQuery.KUNJI_CALLS;
-
-        return callContentQueryResult(callerId, kunjiCalls);
+    private void openSession() {
+        session = dataAccessTemplate.getSessionFactory().openSession();
     }
 
-    public List<CallDetail> getCallDetails(String msisdn) {
-        return Collections.EMPTY_LIST;
+    private void closeSession() {
+        if (session != null)
+            session.close();
+
+        session = null;
     }
 
-    public String getCallerDataJs(String msisdn) {
+    private List<CallContent> getAcademyCallsContent(String callerId) {
+        return callContentQueryResult(callerId, AdminQuery.ACADEMY_CALLS);
+    }
+
+    private List<CallContent> getKunjiCallsContent(String callerId) {
+        return callContentQueryResult(callerId, AdminQuery.KUNJI_CALLS);
+    }
+
+    private List<CallDetail> getCallDetails(String callerId) {
+        return callDetailQueryResult(callerId, AdminQuery.CALL_DETAILS);
+    }
+
+    private String getCallerDataJs(String msisdn) {
         String jsonJobAidCallerData = "{}";
         String jsonCertificateCourseCallerData = "{}";
 
@@ -83,7 +113,7 @@ public class AdminInquiryService {
         List<CallContent> result = new ArrayList<CallContent>();
 
         callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
-        
+
         String query = queryType.getQuery(callerId);
         List<Object[]> list = this.session.createQuery(query).list();
         for (Object[] row : list) {
@@ -94,14 +124,30 @@ public class AdminInquiryService {
             String contentName = String.valueOf(row[4]);
             String contentFileName = String.valueOf(row[5]);
 
-            result.add(new CallContent(
-                    name,
-                    msisdn,
-                    callId,
-                    timeStamp,
-                    contentName,
-                    contentFileName
-            ));
+            result.add(new CallContent(name, msisdn, callId, timeStamp, contentName, contentFileName));
+        }
+
+        return result;
+    }
+
+    private List<CallDetail> callDetailQueryResult(String callerId, AdminQuery queryType) {
+        List<CallDetail> result = new ArrayList<CallDetail>();
+
+        callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
+
+        String query = queryType.getQuery(callerId);
+        List<Object[]> list = this.session.createQuery(query).list();
+        for (Object[] row : list) {
+            String name = String.valueOf(row[0]);
+            String msisdn = String.valueOf(row[1]);
+            String callId = String.valueOf(row[2]);
+            String startTime = String.valueOf(row[3]);
+            String endTime = String.valueOf(row[4]);
+            String duration = String.valueOf(row[5]);
+            String calledNumber = String.valueOf(row[6]);
+            String type = String.valueOf(row[7]);
+
+            result.add(new CallDetail(name, msisdn, callId, startTime, endTime, duration, calledNumber, type));
         }
 
         return result;

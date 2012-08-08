@@ -27,6 +27,17 @@ public enum AdminQuery {
                     "   and jacd.id = jacm.jobAidContentDimension.id" +
                     " order by timeStamp",
             "Kunji Calls"
+    ),
+    CALL_DETAILS(
+            "select flwd.name as name, flwd.msisdn as msidn, cdm.callId as callId, cdm.startTime, cdm.endTime, cdm.duration, cdm.calledNumber, cdm.type" +
+                    " from" +
+                    "   FrontLineWorkerDimension flwd," +
+                    "   CallDurationMeasure cdm" +
+                    " where" +
+                    "   flwd.msisdn = %s" +
+                    "   and cdm.frontLineWorkerDimension.id = flwd.id" +
+                    " order by cdm.startTime",
+            "Calls Details"
     );
     private String query;
     private String description;
