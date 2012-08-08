@@ -18,8 +18,12 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
 
     private static Logger log = LoggerFactory.getLogger(AuthenticationProvider.class);
 
-    @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    public AuthenticationProvider(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,

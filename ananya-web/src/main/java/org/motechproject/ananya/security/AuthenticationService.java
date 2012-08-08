@@ -25,7 +25,7 @@ public class AuthenticationService {
         if (user == null)
             throw new BadCredentialsException(USER_NOT_EXISTS_ERROR);
 
-        if (user.passwordIs(password))
+        if (!user.passwordIs(password))
             throw new BadCredentialsException(INVALID_PASSWORD_ERROR);
 
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
