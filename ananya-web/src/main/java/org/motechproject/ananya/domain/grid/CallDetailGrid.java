@@ -1,13 +1,15 @@
 package org.motechproject.ananya.domain.grid;
 
+import org.motechproject.ananya.support.admin.domain.CallDetail;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CallDetailGrid implements DataGrid {
     private LinkedHashMap<String, String> header;
-    private List<CallDetailGridUnit> content;
+    private List<CallDetail> content;
 
-    public CallDetailGrid(List<CallDetailGridUnit> content) {
+    public CallDetailGrid(List<CallDetail> content) {
         initHeaders();
         this.content = content;
     }
@@ -28,7 +30,7 @@ public class CallDetailGrid implements DataGrid {
         return header;
     }
 
-    public List<CallDetailGridUnit> getContent() {
+    public List<CallDetail> getContent() {
         return content;
     }
 
