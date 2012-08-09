@@ -13,6 +13,7 @@ import org.motechproject.ananya.service.OperatorService;
 import org.motechproject.ananya.support.admin.domain.AdminQuery;
 import org.motechproject.ananya.support.admin.domain.CallContent;
 import org.motechproject.ananya.support.admin.domain.CallDetail;
+import org.motechproject.ananya.support.admin.domain.CallerDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,8 @@ public class AdminInquiryService {
     public static final String KUNJI_CALLS = "kunjiCalls";
     public static final String CALL_DETAILS = "callDetails";
     public static final String CALLER_DATA_JS = "callerDataJs";
-    
+    public static final String CALLER_DETAIL = "callerDetail";
+
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
     private DataAccessTemplate dataAccessTemplate;
@@ -49,6 +51,7 @@ public class AdminInquiryService {
             result.put(KUNJI_CALLS, getKunjiCallsContent(msisdn));
             result.put(CALL_DETAILS, getCallDetails(msisdn));
             result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
+            result.put(CALLER_DETAIL, getCallerDetail(msisdn));
 
             return result;
         } finally {
@@ -77,6 +80,28 @@ public class AdminInquiryService {
 
     private List<CallDetail> getCallDetails(String callerId) {
         return callDetailQueryResult(callerId, AdminQuery.CALL_DETAILS);
+    }
+
+    private CallerDetail getCallerDetail(String callerId) {
+        return callerDetailQueryResult(callerId, AdminQuery.CALLER_DETAIL);
+    }
+
+    private CallerDetail callerDetailQueryResult(String callerId, AdminQuery queryType) {
+        CallerDetail result = new CallerDetail();
+
+        callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
+
+        String query = queryType.getQuery(callerId);
+        Object queryResult = this.session.createQuery(query).uniqueResult();
+        if (queryResult != null) {
+            Object[] row = (Object[]) queryResult;
+            String msisdn = toString(row[0]);
+            String name = toString(row[1]);
+
+            result = new CallerDetail(msisdn, name);
+        }
+
+        return result;
     }
 
     private String getCallerDataJs(String msisdn) {
@@ -117,14 +142,12 @@ public class AdminInquiryService {
         String query = queryType.getQuery(callerId);
         List<Object[]> list = this.session.createQuery(query).list();
         for (Object[] row : list) {
-            String name = String.valueOf(row[0]);
-            String msisdn = String.valueOf(row[1]);
-            String callId = String.valueOf(row[2]);
-            String timeStamp = String.valueOf(row[3]);
-            String contentName = String.valueOf(row[4]);
-            String contentFileName = String.valueOf(row[5]);
+            String callId = toString(row[0]);
+            String timeStamp = toString(row[1]);
+            String contentName = toString(row[2]);
+            String contentFileName = toString(row[3]);
 
-            result.add(new CallContent(name, msisdn, callId, timeStamp, contentName, contentFileName));
+            result.add(new CallContent(callId, timeStamp, contentName, contentFileName));
         }
 
         return result;
@@ -138,18 +161,20 @@ public class AdminInquiryService {
         String query = queryType.getQuery(callerId);
         List<Object[]> list = this.session.createQuery(query).list();
         for (Object[] row : list) {
-            String name = String.valueOf(row[0]);
-            String msisdn = String.valueOf(row[1]);
-            String callId = String.valueOf(row[2]);
-            String startTime = String.valueOf(row[3]);
-            String endTime = String.valueOf(row[4]);
-            String duration = String.valueOf(row[5]);
-            String calledNumber = String.valueOf(row[6]);
-            String type = String.valueOf(row[7]);
+            String callId = toString(row[0]);
+            String startTime = toString(row[1]);
+            String endTime = toString(row[2]);
+            String duration = toString(row[3]);
+            String calledNumber = toString(row[4]);
+            String type = toString(row[5]);
 
-            result.add(new CallDetail(name, msisdn, callId, startTime, endTime, duration, calledNumber, type));
+            result.add(new CallDetail(callId, startTime, endTime, duration, calledNumber, type));
         }
 
         return result;
+    }
+
+    private String toString(Object o) {
+        return o == null ? "N/A" : String.valueOf(o);
     }
 }

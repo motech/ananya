@@ -7,6 +7,7 @@ import org.motechproject.ananya.domain.grid.KunjiCallGrid;
 import org.motechproject.ananya.support.admin.AdminInquiryService;
 import org.motechproject.ananya.support.admin.domain.CallContent;
 import org.motechproject.ananya.support.admin.domain.CallDetail;
+import org.motechproject.ananya.support.admin.domain.CallerDetail;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,12 @@ public enum DataMapper {
         @Override
         protected String dataFor(Map<String, Object> data) {
             return (String) data.get(this.key);
+        }
+    },
+    CallerDetail(AdminInquiryService.CALLER_DETAIL) {
+        @Override
+        protected CallerDetail dataFor(Map<String, Object> data) {
+            return (CallerDetail) data.get(this.key);
         }
     };
 

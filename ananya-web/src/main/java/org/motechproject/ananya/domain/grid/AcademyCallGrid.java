@@ -16,12 +16,10 @@ public class AcademyCallGrid implements DataGrid {
 
     private void initHeaders() {
         header = new LinkedHashMap<String, String>();
-        header.put("name", "Name");
-        header.put("msisdn", "MSISDN");
-        header.put("callId", "CallId");
-        header.put("timeStamp", "TimeStamp");
+        header.put("callId", "Call Id");
+        header.put("timeStamp", "Time Stamp");
         header.put("contentName", "Content Name");
-        header.put("contentFileName", "Content FileName");
+        header.put("contentFileName", "Content File Name");
     }
 
     public LinkedHashMap<String, String> getHeader() {
