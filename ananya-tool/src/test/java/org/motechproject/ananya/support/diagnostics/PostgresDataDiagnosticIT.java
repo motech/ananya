@@ -33,10 +33,10 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class PostgresDiagnosticIT {
+public class PostgresDataDiagnosticIT {
 
     @Autowired
-    private PostgresDiagnostic postgresDiagnostic;
+    private PostgresDataDiagnostic postgresDiagnostic;
     @Qualifier("testDataAccessTemplate")
     @Autowired
     private TestDataAccessTemplate template;

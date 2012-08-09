@@ -14,7 +14,7 @@ import java.util.*;
 
 //TODO: Add @Diagnose annotatation
 @Component
-public class PostgresDiagnostic {
+public class PostgresDataDiagnostic {
 
     @Autowired
     private DataAccessTemplate dataAccessTemplate;
