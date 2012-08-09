@@ -6,8 +6,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -53,12 +53,12 @@ public class CallerDataControllerTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse(frontLineWorker, 2000);
 
-        when(jobAidService.createCallerData(any(JobAidServiceRequest.class))).thenReturn(jobAidCallerDataResponse);
+        when(jobAidService.getCallerData(any(JobAidServiceRequest.class))).thenReturn(jobAidCallerDataResponse);
 
         ModelAndView callerDataForJobAid = controller.getCallerDataForJobAid(response, callId, callerId, operator, circle);
 
         ArgumentCaptor<JobAidServiceRequest> captor = ArgumentCaptor.forClass(JobAidServiceRequest.class);
-        verify(jobAidService).createCallerData(captor.capture());
+        verify(jobAidService).getCallerData(captor.capture());
         JobAidServiceRequest captured = captor.getValue();
         assertEquals(callId, captured.getCallId());
         assertEquals(callerId, captured.getCallerId());

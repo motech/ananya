@@ -5,7 +5,6 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
@@ -25,7 +24,6 @@ public class FrontLineWorkerMapper {
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                 Designation.getFor(StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation())),
                 new Location(frontLineWorkerRequest.getLocation().getDistrict(), frontLineWorkerRequest.getLocation().getBlock(), frontLineWorkerRequest.getLocation().getPanchayat(), 0, 0, 0),
-                RegistrationStatus.PARTIALLY_REGISTERED,
                 new DateTime(frontLineWorkerRequest.getLastModified()));
     }
 }

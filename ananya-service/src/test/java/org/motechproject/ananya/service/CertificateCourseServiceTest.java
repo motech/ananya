@@ -2,20 +2,20 @@ package org.motechproject.ananya.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.action.AllCourseActions;
+import org.motechproject.ananya.contract.AudioTrackerRequestList;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.*;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -61,38 +61,38 @@ public class CertificateCourseServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         BookMark bookMark = new BookMark("type", 1, 2);
         frontLineWorker.addBookMark(bookMark);
-        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
+        frontLineWorker.reportCard().addScore(new Score("0", "0", true));
+        frontLineWorker.reportCard().addScore(new Score("0", "1", true));
+        frontLineWorker.reportCard().addScore(new Score("1", "2", true));
+        frontLineWorker.reportCard().addScore(new Score("1", "3", false));
+        when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
 
         CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(request);
 
         assertEquals(bookMark.asJson(), callerData.getBookmark());
+        assertEquals(2, callerData.getScoresByChapter().keySet().size());
+        assertEquals(2, (int)callerData.getScoresByChapter().get("0"));
+        assertEquals(1, (int)callerData.getScoresByChapter().get("1"));
         verify(allTransformers).process(request);
-        verify(registrationLogService, never()).add(any(RegistrationLog.class));
     }
 
     @Test
-    public void shouldCreateCallerDataAndRegistrationLogForGivenCallerIdIfFrontLineWorkerDoesNotExist() {
+    public void shouldCreateCallerDataForGivenCallerIdIfFrontLineWorkerDoesNotExist() {
         String callId = "12342";
         String callerId = "123";
         String operator = "airtel";
         String circle = "circle";
         CertificateCourseServiceRequest request = new CertificateCourseServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
-        BookMark bookMark = new BookMark("type", 1, 2);
-        frontLineWorker.addBookMark(bookMark);
-        frontLineWorker.setCircle(circle);
-        frontLineWorker.setModified();
+        when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(null);
 
-        when(frontlineWorkerService.createOrUpdateUnregistered(callerId, operator, circle)).thenReturn(frontLineWorker);
-
-        certificateCourseService.createCallerData(request);
+        CertificateCourseCallerDataResponse callerData = certificateCourseService.createCallerData(request);
 
         verify(allTransformers).process(request);
-        ArgumentCaptor<RegistrationLog> captor = ArgumentCaptor.forClass(RegistrationLog.class);
-        verify(registrationLogService).add(captor.capture());
-        RegistrationLog registrationLog = captor.getValue();
-        assertEquals(callerId, registrationLog.getCallerId());
+
+        assertEquals(0, callerData.getScoresByChapter().size());
+        assertEquals("{}", callerData.getBookmark());
+        assertEquals(false, callerData.isCallerRegistered());
     }
 
     @Test
@@ -100,11 +100,12 @@ public class CertificateCourseServiceTest {
         String callId = "123-456";
         String callerId = "123";
         String operator = "airtel";
+        String circle = "circle";
 
         CertificateCourseStateRequestList stateRequestList = mock(CertificateCourseStateRequestList.class);
         AudioTrackerRequestList audioTrackerList = mock(AudioTrackerRequestList.class);
         CallDurationList callDurationList = mock(CallDurationList.class);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         CertificateCourseServiceRequest request = mock(CertificateCourseServiceRequest.class);
 
         when(request.getCallId()).thenReturn(callId);
@@ -112,21 +113,23 @@ public class CertificateCourseServiceTest {
         when(request.getCertificateCourseStateRequestList()).thenReturn(stateRequestList);
         when(request.getAudioTrackerRequestList()).thenReturn(audioTrackerList);
         when(request.getCallDurationList()).thenReturn(callDurationList);
+        when(request.getOperator()).thenReturn(operator);
+        when(request.getCircle()).thenReturn(circle);
 
         when(stateRequestList.isNotEmpty()).thenReturn(true);
         when(stateRequestList.getCallerId()).thenReturn(callerId);
 
-        when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
+        when(frontlineWorkerService.createOrUpdateForCall(callerId, operator, circle)).thenReturn(new FrontLineWorkerCreateResponse(frontLineWorker, false));
 
         certificateCourseService.handleDisconnect(request);
 
-        verify(allTransformers).process(request);
-        verify(allCourseActions).execute(frontLineWorker, stateRequestList);
-        verify(audioTrackerService).saveAllForCourse(audioTrackerList);
-        verify(callLoggerService).saveAll(callDurationList);
-        verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
+        InOrder inOrder = inOrder(allTransformers, allCourseActions, frontlineWorkerService, audioTrackerService, callLoggerService, dataPublishService);
 
+        inOrder.verify(allTransformers).process(request);
+        inOrder.verify(allCourseActions).execute(frontLineWorker, stateRequestList);
+        inOrder.verify(frontlineWorkerService).updateCertificateCourseState(frontLineWorker);
+        inOrder.verify(audioTrackerService).saveAllForCourse(audioTrackerList);
+        inOrder.verify(callLoggerService).saveAll(callDurationList);
+        inOrder.verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
-
-
 }

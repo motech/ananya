@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.CertificateCourseLogService;
 
 import java.util.List;

@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
@@ -105,8 +104,7 @@ public class RegistrationService {
         Location location = locationService.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse();
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
-        RegistrationStatus registrationStatus = getRegistrationStatus(designation, name);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, registrationStatus, lastModified);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, lastModified);
 
         FLWValidationResponse FLWValidationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
         if (FLWValidationResponse.isInValid())
@@ -118,9 +116,4 @@ public class RegistrationService {
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }
-
-    private RegistrationStatus getRegistrationStatus(String designation, String name) {
-        return Designation.isInValid(designation) || StringUtils.isBlank(name) ? RegistrationStatus.PARTIALLY_REGISTERED : RegistrationStatus.REGISTERED;
-    }
-
 }

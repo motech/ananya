@@ -1,6 +1,6 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +27,12 @@ public class CertificateCourseCallDataController extends BaseAnanyaController {
     @ResponseBody
     public String handleDisconnect(@RequestParam String callId,
                                    @RequestParam String callerId,
+                                   @RequestParam String operator,
+                                   @RequestParam String circle,
                                    @RequestParam String calledNumber,
                                    @RequestParam String dataToPost) {
         CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber)
-                .withJson(dataToPost);
+                .withJson(dataToPost).withCircle(circle).withOperator(operator);
         certificateCourseService.handleDisconnect(serviceRequest);
 
         log.info(callId + "- course disconnect completed");

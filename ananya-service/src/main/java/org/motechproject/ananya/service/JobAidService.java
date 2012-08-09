@@ -1,9 +1,10 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
@@ -41,33 +42,27 @@ public class JobAidService {
         this.allTransformers = allTransformers;
     }
 
-    public JobAidCallerDataResponse createCallerData(JobAidServiceRequest request) {
-        String callId = request.getCallId();
+    public JobAidCallerDataResponse getCallerData(JobAidServiceRequest request) {
+
         allTransformers.process(request);
-
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(
-                request.getCallerId(),
-                request.getOperator(),
-                request.getCircle());
-        log.info(callId + "- fetched caller data for " + frontLineWorker);
-
-        if (frontLineWorker.isModified()) {
-            registrationLogService.add(new RegistrationLog(callId,
-                    request.getCallerId(),
-                    request.getOperator(),
-                    request.getCircle()));
-            log.info(callId + "- created registrationLog");
-        }
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(request.getCallerId());
         Integer maxOperatorUsage = operatorService.findMaximumUsageFor(request.getOperator());
-        return new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage);
+
+        log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
+        return (frontLineWorker != null)
+                ? new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage)
+                : JobAidCallerDataResponse.forNewUser(maxOperatorUsage);
     }
 
     public void handleDisconnect(JobAidServiceRequest request) {
         allTransformers.process(request);
+        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
+                request.getCallerId(), request.getOperator(), request.getCircle());
 
-        frontLineWorkerService.updateJobAidUsageAndAccessTime(request.getCallerId(), request.getCallDuration());
-        frontLineWorkerService.updatePromptsFor(request.getCallerId(), request.getPrompts());
+        if (frontLineWorkerCreateResponse.isModified())
+            registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
+        frontLineWorkerService.updateJobAidState(frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCallDuration());
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);

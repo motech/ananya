@@ -10,14 +10,16 @@ import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 @Component
-public class AudioTrackerSynchroniser implements Synchroniser {
+public class AudioTrackerSynchroniser extends BaseSynchronizer implements Synchroniser {
 
     private AudioTrackerLogService audioTrackerLogService;
     private CourseAudioTrackerMeasureService courseItemMeasureService;
@@ -26,10 +28,12 @@ public class AudioTrackerSynchroniser implements Synchroniser {
     @Autowired
     public AudioTrackerSynchroniser(AudioTrackerLogService audioTrackerLogService,
                                     CourseAudioTrackerMeasureService courseItemMeasureService,
-                                    JobAidContentMeasureService jobAidContentMeasureService) {
+                                    JobAidContentMeasureService jobAidContentMeasureService,
+                                    @Qualifier("ananyaProperties") Properties properties) {
         this.audioTrackerLogService = audioTrackerLogService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.jobAidContentMeasureService = jobAidContentMeasureService;
+        this.properties = properties;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class AudioTrackerSynchroniser implements Synchroniser {
         correctContentIds(audioTrackerLogs);
         for (AudioTrackerLog audioTrackerLog : audioTrackerLogs) {
             try {
+                if(!shouldProcessLog(audioTrackerLog)) continue;
                 if (audioTrackerLog.typeIsCertificateCourse()) {
                     courseItemMeasureService.createFor(audioTrackerLog.getCallId());
                 } else

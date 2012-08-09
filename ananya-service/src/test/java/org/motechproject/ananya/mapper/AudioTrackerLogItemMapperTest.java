@@ -2,7 +2,7 @@ package org.motechproject.ananya.mapper;
 
 import org.junit.Test;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
-import org.motechproject.ananya.request.AudioTrackerRequest;
+import org.motechproject.ananya.contract.AudioTrackerRequest;
 
 import static junit.framework.Assert.assertEquals;
 

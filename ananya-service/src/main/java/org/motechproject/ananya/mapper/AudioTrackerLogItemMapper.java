@@ -1,7 +1,7 @@
 package org.motechproject.ananya.mapper;
 
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
-import org.motechproject.ananya.request.AudioTrackerRequest;
+import org.motechproject.ananya.contract.AudioTrackerRequest;
 
 public class AudioTrackerLogItemMapper {
     public static AudioTrackerLogItem mapFrom(AudioTrackerRequest audioTrackerRequest) {

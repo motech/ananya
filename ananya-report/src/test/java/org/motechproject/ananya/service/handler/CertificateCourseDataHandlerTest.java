@@ -17,6 +17,7 @@ import org.motechproject.model.MotechEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -55,7 +56,8 @@ public class CertificateCourseDataHandlerTest {
         map.put("1", logData);
         MotechEvent event = new MotechEvent("", map);
 
-        when(smsLogService.getSMSLogFor(callId)).thenReturn(new SMSLog(callId, callerId, "location", 1));
+        SMSLog smsLog = new SMSLog(callId, callerId, "location", 1);
+        when(smsLogService.getSMSLogFor(callId)).thenReturn(smsLog);
 
         handler.handleCertificateCourseData(event);
 
@@ -63,5 +65,6 @@ public class CertificateCourseDataHandlerTest {
         verify(callDurationMeasureService).createFor(callId);
         verify(courseAudioTrackerMeasureService).createFor(callId);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
+        verify(smsLogService,never()).deleteFor(smsLog);
     }
 }

@@ -2,11 +2,12 @@ package org.motechproject.ananya.action;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AllCourseActionsTest {
@@ -24,7 +25,7 @@ public class AllCourseActionsTest {
     @Before
     public void setUp() {
         initMocks(this);
-        allCourseActions = new AllCourseActions(bookMarkAction, scoreAction, sendSMSAction, courseLogAction);
+        allCourseActions = new AllCourseActions(scoreAction, sendSMSAction, bookMarkAction, courseLogAction);
     }
 
     @Test
@@ -34,9 +35,11 @@ public class AllCourseActionsTest {
 
         allCourseActions.execute(frontLineWorker, stateRequestList);
 
-        verify(bookMarkAction).process(frontLineWorker, stateRequestList);
-        verify(scoreAction).process(frontLineWorker, stateRequestList);
-        verify(sendSMSAction).process(frontLineWorker, stateRequestList);
-        verify(courseLogAction).process(frontLineWorker, stateRequestList);
+        InOrder inOrder = inOrder(scoreAction, sendSMSAction, bookMarkAction, courseLogAction);
+
+        inOrder.verify(scoreAction).process(frontLineWorker, stateRequestList);
+        inOrder.verify(sendSMSAction).process(frontLineWorker, stateRequestList);
+        inOrder.verify(bookMarkAction).process(frontLineWorker, stateRequestList);
+        inOrder.verify(courseLogAction).process(frontLineWorker, stateRequestList);
     }
 }

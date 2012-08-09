@@ -1,0 +1,36 @@
+<div class="row-fluid">
+    <div class="span5">
+        <form action="/ananya/security/j_spring_security_check" name="f" method="post" class="form-horizontal">
+            <fieldset>
+                <legend>$label.page.login.title</legend>
+                #if($error)
+                    <div class="alert alert-error">
+                        $label.page.login.error
+                        <a class="close" data-dismiss="alert">x</a>
+                    </div>
+                #end
+                <div class="control-group">
+                    <label class="control-label" for="j_username">$label.page.login.username</label>
+                    <div class="controls">
+                        <input name="j_username" id="j_username" type="text" class="input-large">
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="j_password">$label.page.login.password</label>
+                    <div class="controls">
+                        <input name="j_password" id="j_password" type="password" class="input-large">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <input value="Submit" type="submit" id="proceed" class="btn btn-primary">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#j_username").focus();
+</script>

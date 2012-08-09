@@ -53,9 +53,13 @@ public class RegistrationMeasureService {
             return;
         }
         createMeasure(registrationLog.getCallerId(), callId);
-
         registrationLogService.delete(registrationLog);
         log.info(callId + "- registrationLog removed");
+    }
+
+    @Transactional
+    public void createRegistrationMeasure(String callerId, String callId) {
+        createMeasure(callerId, callId);
     }
 
     private void createMeasure(String callerId, String callId) {

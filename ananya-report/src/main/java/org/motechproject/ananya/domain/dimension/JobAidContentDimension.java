@@ -73,4 +73,12 @@ public class JobAidContentDimension {
     public void setShortCode(Long shortCode) {
         this.shortCode = shortCode;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public JobAidContentDimension getParent() {
+        return parent;
+    }
 }

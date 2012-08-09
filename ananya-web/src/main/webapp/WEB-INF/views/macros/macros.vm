@@ -1,0 +1,61 @@
+#macro(head)
+<head>
+    <title>$label.home.page.title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="$label.home.page.title">
+    <meta name="author" content="$label.home.author">
+    <base href="/ananya/">
+
+    <link rel="shortcut icon" href="assets/ico/favicon.ico">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/tablesorter.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/ananya.css" rel="stylesheet">
+
+    <script src="js/html5.js"></script>
+    <script src="js/jquery-min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/validation.js"></script>
+</head>
+#end
+
+#macro(navbar)
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="admin/monitor">$label.topbar.app.link</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li><a href="admin/monitor">$label.topbar.home.link</a></li>
+                </ul>
+                <p class="navbar-text pull-right">
+                    <a href="security/j_spring_security_logout">$label.topbar.app.logout.link</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+#macro(sidebar)
+<div class="span2">
+    <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+            #foreach($topMenuItem in $menuMap.entrySet())
+                <li class="nav-header">$topMenuItem.key</li>
+                #foreach($linkMenuItem in $topMenuItem.value)
+                    <li class="menu-link"><a href="$linkMenuItem.getUrl()">$linkMenuItem.getDisplayString()</a></li>
+                #end
+            #end
+        </ul>
+    </div>
+</div>
+#end
+
+#macro(footer)
+<hr>
+<footer>
+    <p>&copy; $label.home.footer.copyright</p>
+</footer>
+#end

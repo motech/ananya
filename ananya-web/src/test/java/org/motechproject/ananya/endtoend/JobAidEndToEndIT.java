@@ -1,13 +1,12 @@
 package org.motechproject.ananya.endtoend;
 
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
+import org.motechproject.ananya.framework.TestJsonData;
 import org.motechproject.ananya.framework.domain.JobAidDisconnectRequest;
 import org.motechproject.ananya.framework.domain.JobAidRequest;
 import org.motechproject.ananya.framework.domain.JobAidResponse;
@@ -15,118 +14,89 @@ import org.motechproject.ananya.framework.domain.JobAidWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-@Ignore
 public class JobAidEndToEndIT extends SpringIntegrationTest {
 
     @Autowired
-    private JobAidWebService jobAidService;
-
+    private JobAidWebService jobAidWebService;
     @Autowired
     private CouchDb couchDb;
-
     @Autowired
     private ReportDb reportDb;
+    @Autowired
+    private TestJsonData testJsonData;
 
-    String callerId = "919686577090";
-    String callId = "1234";
-    String operator = "airtel";
-    String circle = "bihar";
+    private String callerId = "919686577090";
+    private String callId = "919686577090-1234567890";
+    private String circle = "bihar";
+    private String operator = "airtel";
 
+    @Before
     @After
     public void after() {
         clearFLWData();
     }
 
-    @Before
-    public void before() {
-        clearFLWData();
-    }
+    @Test
+    public void shouldReturnADefaultResponseForANewCaller() throws IOException {
+        JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
+        JobAidResponse jobAidResponse = jobAidWebService.requestForCallerData(request);
 
-    private void clearFLWData() {
-        reportDb.clearDimensionAndMeasures(callerId);
-        couchDb.clearFLWData(callerId);
+        jobAidResponse.confirmCurrentUsage(0).confirmNoPromptsHeard().confirmPartiallyRegistered().confirmMaxUsage(39);
+        couchDb.confirmFlwDoesNotExist(callerId);
+        reportDb.confirmFlwDoesNotExist(callerId);
     }
 
     @Test
-    public void onFetchingCallerData_shouldPartiallyRegisterFLW_andPersistInCouchAndPostgres() throws IOException {
-        int expectedMaxUsage = 39;
-        int expectedCurrentUsage = 0;
+    public void shouldReturnValidResponseForExistingCaller() throws IOException {
+        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle)
+                .updatePromptsHeard(callerId, "welcome.wav")
+                .updateCurrentJobAidUsage(callerId, 23);
+        reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
         JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
-        JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
+        JobAidResponse jobAidResponse = jobAidWebService.requestForCallerData(request);
+        jobAidResponse.confirmPartiallyRegistered().confirmMaxUsage(39).confirmPromptHeard("welcome.wav", 1).confirmCurrentUsage(23);
+    }
 
-        response.confirmPartiallyRegistered()
-                .confirmMaxUsage(expectedMaxUsage)
-                .confirmCurrentUsage(expectedCurrentUsage);
+    @Test
+    public void shouldCreateLogsDimensionsMeasuresAtDisconnectForNewCaller() throws IOException {
+        String calledNumber = "5771122334455";
+        String callDuration = "30";
+        String promptList = "['prompt1', 'prompt2']";
+
+        List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");
+        String json = testJsonData.forJobAidDisconnect(nodeNames);
+
+        JobAidDisconnectRequest request = new JobAidDisconnectRequest(callerId, callId, operator, circle, calledNumber, callDuration, promptList, json);
+        jobAidWebService.requestForDisconnect(request);
 
         couchDb.confirmPartiallyRegistered(callerId, operator)
-                .confirmUsage(callerId, expectedCurrentUsage, expectedMaxUsage);
+                .confirmJobAidUsage(callerId, Integer.parseInt(callDuration), 39)
+                .confirmPromptsHeard(callerId, Arrays.asList("prompt1", "prompt2"));
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId);
+
+        couchDb.confirmNoRegistrationLogFor(callId)
+                .confirmNoAudioTrackerLogFor(callId)
+                .confirmNoCallLogFor(callId)
+                .confirmNoCourseLogFor(callId)
+                .confirmNoSMSLog(callId);
+
+        reportDb.confirmJobAidContentMeasure(callId, callerId, nodeNames)
+                .confirmCallDurationMeasure(callId, callerId, "5771122");
+
+        reportDb.clearJobAidMeasure(callId)
+                .clearCallDurationMeasure(callId);
     }
 
-    @Test
-    public void shouldUpdateJobAidDataAndPostDisconnectEvent() throws IOException {
-        JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
-        JobAidResponse registrationResponse = jobAidService.whenRequestedForCallerData(request);
-
-        registrationResponse.confirmNoPromptsHeard();
-        String currentUsage = "21";
-        String maxUsagePrompt = "[MaxUsage]";
-        String dataToPost = postedData();
-
-        JobAidDisconnectRequest jobAidDisconnectRequest = new JobAidDisconnectRequest(callerId, operator, callId, "12345", "1260000", maxUsagePrompt);
-        String dateTimeString = new Long(DateTime.now().getMillis()).toString();
-        dataToPost = String.format(dataToPost, dateTimeString, reportDb.getExistingAudioDimension().getContentId(),
-                dateTimeString, dateTimeString);
-        jobAidDisconnectRequest.setJsonPostData(dataToPost);
-        jobAidService.requestForDisconnect(jobAidDisconnectRequest);
-
-        reportDb.confirmJobAidContentMeasureForDisconnectEvent(callId);
-        reportDb.clearJobAidMeasureAndAudioTrackerLogs(callId);
-
-        JobAidResponse response = jobAidService.whenRequestedForCallerData(request);
-        response.confirmCurrentUsage(Integer.valueOf(currentUsage));
-        response.verifyPromptHeard(maxUsagePrompt, 1);
+    private void clearFLWData() {
+        reportDb.clearFLWDimensionAndMeasures(callerId);
+        couchDb.clearFLWData(callerId);
+        couchDb.clearAllLogs();
     }
 
-    private String postedData() {
-        String packet1 = "{" +
-                "   \"callEvent\" : \"CALL_START\"," +
-                "   \"time\"  : %s" +
-                "}";
-
-        String packet2 = "{" +
-                "    \"contentId\" : \"%s\",     " +
-                "    \"duration\" : \"123\",                             " +
-                "    \"time\" : \"%s\"                          " +
-                "}";
-
-        String packet3 = "{" +
-                "   \"callEvent\" : \"DISCONNECT\"," +
-                "   \"time\"  : %s" +
-                "}";
-
-        return "[" +
-                "   {" +
-                "       \"token\" : 0," +
-                "       \"type\"  : \"callDuration\", " +
-                "       \"data\"  : " + packet1 +
-                "   }," +
-                "" +
-                "   {" +
-                "       \"token\" : 1," +
-                "       \"type\"  : \"audioTracker\", " +
-                "       \"data\"  : " + packet2 +
-                "   }," +
-                "" +
-                "   {" +
-                "       \"token\" : 2," +
-                "       \"type\"  : \"callDuration\", " +
-                "       \"data\"  : " + packet3 +
-                "   }" +
-                "]";
-    }
 }

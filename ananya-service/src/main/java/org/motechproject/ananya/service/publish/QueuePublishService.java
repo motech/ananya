@@ -32,10 +32,12 @@ public class QueuePublishService implements PublishService {
     }
 
     private void publishCertificateCourseData(CallMessage logData) {
+        log.info("published course message: "+logData.getCallId());
         eventContext.send(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE, logData);
     }
 
     private void publishJobAidContentData(CallMessage logData) {
+        log.info("published jobaid message: "+logData.getCallId());
         eventContext.send(ReportPublishEventKeys.JOBAID_CALL_MESSAGE, logData);
     }
 }

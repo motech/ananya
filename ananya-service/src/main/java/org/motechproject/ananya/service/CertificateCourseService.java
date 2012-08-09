@@ -1,11 +1,12 @@
 package org.motechproject.ananya.service;
 
 import org.motechproject.ananya.action.AllCourseActions;
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
-import org.motechproject.ananya.request.CertificateCourseStateRequestList;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
@@ -44,33 +45,29 @@ public class CertificateCourseService {
     }
 
     public CertificateCourseCallerDataResponse createCallerData(CertificateCourseServiceRequest request) {
-        String callId = request.getCallId();
         allTransformers.process(request);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(request.getCallerId());
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateUnregistered(
-                request.getCallerId(),
-                request.getOperator(),
-                request.getCircle());
-        log.info(callId + "- fetched caller data for " + frontLineWorker);
-
-        if (frontLineWorker.isModified()) {
-            registrationLogService.add(new RegistrationLog(callId,
-                    request.getCallerId(),
-                    request.getOperator(),
-                    request.getCircle()));
-            log.info(callId + "- created registrationLog");
-        }
-        return new CertificateCourseCallerDataResponse(frontLineWorker);
+        log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
+        return (frontLineWorker != null)
+                ? new CertificateCourseCallerDataResponse(frontLineWorker)
+                : CertificateCourseCallerDataResponse.forNewUser();
     }
 
     public void handleDisconnect(CertificateCourseServiceRequest request) {
         allTransformers.process(request);
 
+        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(request.getCallerId(), request.getOperator(), request.getCircle());
+        if (frontLineWorkerCreateResponse.isModified())
+            registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
+
         CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
         if (stateRequestList.isNotEmpty()) {
-            FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(stateRequestList.getCallerId());
+            FrontLineWorker frontLineWorker = frontLineWorkerCreateResponse.getFrontLineWorker();
             allCourseActions.execute(frontLineWorker, stateRequestList);
+            frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
         }
+
         audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.CERTIFICATE_COURSE);

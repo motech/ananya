@@ -1,13 +1,8 @@
 <?xml version="1.0"?>
 <toolbox>
     <tool scope="application">
-        <key>bundle</key>
+        <key>label</key>
         <class>org.apache.velocity.tools.generic.ResourceTool</class>
-        <parameter name="bundles" value="bundles/vxmlbundle"/>
-    </tool>
-    <tool scope="application">
-        <key>bundle-airtel</key>
-        <class>org.apache.velocity.tools.generic.ResourceTool</class>
-        <parameter name="bundles" value="bundles/vxmlbundle_airtel"/>
+        <parameter name="bundles" value="labels"/>
     </tool>
 </toolbox>

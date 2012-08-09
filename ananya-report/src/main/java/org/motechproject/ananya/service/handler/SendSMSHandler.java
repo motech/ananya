@@ -1,6 +1,5 @@
 package org.motechproject.ananya.service.handler;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.motechproject.ananya.webservice.SendSMSClient;
 import org.motechproject.model.MotechEvent;
@@ -28,15 +27,12 @@ public class SendSMSHandler {
 
     @MotechListener(subjects = {SUBJECT_SEND_SINGLE_SMS})
     public void sendSingleSMS(MotechEvent motechEvent) {
-        Map<String,Object> eventParams = motechEvent.getParameters();
-
-        LOG.info("Event Params are " + ToStringBuilder.reflectionToString(eventParams));
-
-        Map parameters = (Map) eventParams.get("0");
+        Map parameters = (Map) motechEvent.getParameters().get("0");
         String smsMessage = (String) parameters.get(PARAMETER_SMS_MESSAGE);
         String mobileNumber = (String) parameters.get(PARAMETER_MOBILE_NUMBER);
         String smsReferenceNumber = (String) parameters.get(PARAMETER_SMS_REFERENCE_NUMBER);
 
+        LOG.info("received sms message:" + mobileNumber);
         smsClient.sendSingleSMS(mobileNumber, smsMessage, smsReferenceNumber);
     }
 }

@@ -6,25 +6,27 @@ public enum Designation {
     ANM,
     ASHA,
     AWW,
+
+    /*
+     * This value is only being maintained so that the seed can de-serialize incorrect object with
+     * INVALID value (for correction). It is not used anywhere else in the code.
+     */
     INVALID;
 
-    public static Designation getFor(String designation) {
-        return Designation.isInValid(designation) ? Designation.INVALID : Designation.valueOf(StringUtils.trimToEmpty(designation).toUpperCase());
-    }
 
     private static boolean contains(String value) {
         for (Designation designation : Designation.values()) {
-            if (designation.name().equals(StringUtils.trimToEmpty(value).toUpperCase())) {
+            if (designation.name().equalsIgnoreCase(StringUtils.trimToEmpty(value)))
                 return true;
-            }
         }
         return false;
     }
 
     public static boolean isInValid(String designation) {
-        return
-                designation == null ||
-                designation.equalsIgnoreCase(Designation.INVALID.toString()) ||
-                !Designation.contains(designation);
+        return StringUtils.isBlank(designation) || !Designation.contains(designation);
+    }
+
+    public static Designation getFor(String designation) {
+        return Designation.isInValid(designation) ? null : Designation.valueOf(designation.trim().toUpperCase());
     }
 }

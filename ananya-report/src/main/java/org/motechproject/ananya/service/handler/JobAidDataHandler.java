@@ -32,7 +32,7 @@ public class JobAidDataHandler {
         for (Object object : event.getParameters().values()) {
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
-            log.info("Received jobaid call message for callId: " + callId);
+            log.info("received jobaid message: " + callId);
 
             registrationMeasureService.createFor(callId);
             callDurationMeasureService.createFor(callId);

@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class BookMarkTest {
     @Test
@@ -43,4 +45,21 @@ public class BookMarkTest {
         assertThat(bookMarkJson.get("chapterIndex").getAsInt(), is(0));
     }
 
+    @Test
+    public void shouldReturnTrueWhenCurrentInteractionKeyIsNotPlayCourseResult() {
+        BookMark bookMark = new BookMark("playThanks", 9, 0);
+
+        boolean isNotAtPlayCourseResult = bookMark.notAtPlayCourseResult();
+
+        assertTrue(isNotAtPlayCourseResult);
+    }
+
+    @Test
+    public void shouldReturnFalseWhenCurrentInteractionKeyIsAtPlayCourseResult() {
+        BookMark bookMark = new BookMark(Interaction.PlayCourseResult, 9, 0);
+
+        boolean isNotAtPlayCourseResult = bookMark.notAtPlayCourseResult();
+
+        assertFalse(isNotAtPlayCourseResult);
+    }
 }

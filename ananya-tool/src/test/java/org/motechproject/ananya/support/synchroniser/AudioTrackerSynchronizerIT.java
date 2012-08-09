@@ -66,7 +66,7 @@ public class AudioTrackerSynchronizerIT {
     @Test
     public void shouldMigrateAudioTrackerLogsFromCouchDbToPostgresForCertificateCourse() {
         String callerId = "1234";
-        String callId = "12345678";
+        String callId = "12345678-12312332";
         String contentId = "contentId";
         String timeStamp = "1336045431373";
         setUpTransactionData(callerId, contentId, timeStamp);
@@ -80,7 +80,7 @@ public class AudioTrackerSynchronizerIT {
     @Test
     public void shouldMigrateAudioTrackerLogsFromCouchDbToPostgresAndReplaceOldContentIds() {
         String callerId = "1234";
-        String callId = "12345678";
+        String callId = "12345678-123123232";
         String newContentId = "7a823ae22badc42018c6542c597c9520";
         String oldContentId = "5fc654d8ec2bac6c906be72af6704a63";
         String timeStamp = "1336045431373";
@@ -95,7 +95,7 @@ public class AudioTrackerSynchronizerIT {
     @Test
     public void shouldMigrateAudioTrackerLogsFromCouchDbToPostgresForJobAid() {
         String callerId = "1234";
-        String callId = "12345678";
+        String callId = "12345678-12312312";
         String contentId = "contentId";
         String timeStamp = "1336045431373";
         setUpTransactionData(callerId, contentId, timeStamp);

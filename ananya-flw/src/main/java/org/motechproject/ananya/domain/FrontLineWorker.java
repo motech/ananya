@@ -69,9 +69,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = 0;
     }
 
-    public FrontLineWorker(String msisdn, String operator) {
+    public FrontLineWorker(String msisdn, String operator, String circle) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
+        this.circle = circle == null ? this.circle : circle;
         this.operator = operator == null ? this.operator : operator;
     }
 
@@ -80,15 +81,18 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        this(msisdn, null);
+        this(msisdn, null, null);
         this.name = name;
         this.designation = designation;
         this.locationId = location == null ? null : location.getExternalId();
         this.status = registrationStatus;
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
-        this(msisdn, name, designation, location, registrationStatus);
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified) {
+        this(msisdn, null, null);
+        this.name = name;
+        this.designation = designation;
+        this.locationId = location == null ? null : location.getExternalId();
         this.lastModified = lastModified;
     }
 
@@ -224,19 +228,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location) {
-        this.name = name;
-        this.locationId = location.getExternalId();
-        this.designation = designation;
-    }
-
-    public void update(String name, Designation designation, Location location, RegistrationStatus registrationStatus, DateTime lastModified) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified) {
         this.name = name;
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
-        if (this.status.weight < registrationStatus.weight)
-            this.status = registrationStatus;
+        decideRegistrationStatus(location);
     }
 
     public boolean hasPassedTheCourse() {
@@ -314,5 +311,36 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @Override
     public int hashCode() {
         return msisdn != null ? msisdn.hashCode() : 0;
+    }
+
+    @JsonIgnore
+    public boolean isUnRegistered() {
+        return status.equals(RegistrationStatus.UNREGISTERED);
+    }
+
+    @JsonIgnore
+    public boolean isAlreadyRegistered() {
+        return !isUnRegistered();
+    }
+
+    public void decideRegistrationStatus(Location location) {
+        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+        boolean locationIncomplete = location.isMissingDetails();
+        boolean designationInvalid = Designation.isInValid(designationName());
+        boolean nameInvalid = StringUtils.isBlank(name);
+
+        if (locationAbsent || locationIncomplete || designationInvalid || nameInvalid) {
+            status = RegistrationStatus.PARTIALLY_REGISTERED;
+            return;
+        }
+        status = RegistrationStatus.REGISTERED;
+    }
+
+    public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
+        return this;
+    }
+
+    public boolean courseInProgress() {
+        return bookMark().notAtPlayCourseResult();
     }
 }

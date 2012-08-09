@@ -1,10 +1,11 @@
 package org.motechproject.ananya.service;
 
-import org.apache.commons.lang.StringUtils;
+import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
+import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,15 @@ public class FrontLineWorkerService {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorkerService.class);
 
     private AllFrontLineWorkers allFrontLineWorkers;
-    private AllSMSReferences allSMSReferences;
+    private LocationService locationService;
+    private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
 
     @Autowired
-    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers,
-                                  AllSMSReferences allSMSReferences) {
+    public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService,
+                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys) {
         this.allFrontLineWorkers = allFrontLineWorkers;
-        this.allSMSReferences = allSMSReferences;
+        this.locationService = locationService;
+        this.allFrontLineWorkerKeys = allFrontLineWorkerKeys;
     }
 
     public FrontLineWorker findByCallerId(String callerId) {
@@ -34,66 +37,34 @@ public class FrontLineWorkerService {
 
     public FrontLineWorker createOrUpdate(FrontLineWorker frontLineWorker, Location location) {
         String callerId = frontLineWorker.getMsisdn();
-        String name = frontLineWorker.getName();
-        Designation designation = Designation.getFor(frontLineWorker.designationName());
-        RegistrationStatus registrationStatus = frontLineWorker.getStatus();
-        DateTime lastModified = frontLineWorker.getLastModified();
+        FrontLineWorker existingFrontLineWorker = findByCallerId(callerId);
 
-        FrontLineWorker exisitingFrontLineWorker = findByCallerId(callerId);
-
-        if (exisitingFrontLineWorker == null) {
-            exisitingFrontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus, lastModified);
-            allFrontLineWorkers.add(exisitingFrontLineWorker);
-            log.info("Created:" + exisitingFrontLineWorker);
-            return exisitingFrontLineWorker;
-        }
-
-        if (isFLWFromDbOlder(frontLineWorker, exisitingFrontLineWorker)) {
-            lastModified = lastModified != null ? lastModified : exisitingFrontLineWorker.getLastModified();
-            exisitingFrontLineWorker.update(name, designation, location, registrationStatus, lastModified);
-            allFrontLineWorkers.update(exisitingFrontLineWorker);
-            log.info("Updated:" + exisitingFrontLineWorker);
-        }
-        
-        return exisitingFrontLineWorker;
-    }
-
-    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker exisitingFrontLineWorker) {
-        if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
-            return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
-        return true;
-    }
-
-
-    public FrontLineWorker createOrUpdateUnregistered(String callerId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
-        if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, operator);
-            frontLineWorker.setCircle(circle);
-            frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
-            frontLineWorker.setModified();
-
+        //NEW
+        if (existingFrontLineWorker == null) {
+            frontLineWorker.decideRegistrationStatus(location);
             allFrontLineWorkers.add(frontLineWorker);
-            log.info("created:" + frontLineWorker);
+            log.info("Created:" + frontLineWorker);
             return frontLineWorker;
         }
 
-        if (frontLineWorker.operatorIs(operator) && frontLineWorker.circleIs(circle))
-            return frontLineWorker;
+        //UPDATE
+        if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
+            String name = frontLineWorker.getName();
+            Designation designation = Designation.getFor(frontLineWorker.designationName());
+            DateTime lastModified = frontLineWorker.getLastModified();
 
-        frontLineWorker.setOperator(operator);
-        frontLineWorker.setCircle(circle);
-        frontLineWorker.setModified();
-        allFrontLineWorkers.update(frontLineWorker);
+            lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
+            existingFrontLineWorker.update(name, designation, location, lastModified);
+            allFrontLineWorkers.update(existingFrontLineWorker);
+            log.info("Updated:" + existingFrontLineWorker);
+        }
 
-        log.info("updated:" + frontLineWorker);
-        return frontLineWorker;
+        return existingFrontLineWorker;
     }
 
-    public FrontLineWorker findForJobAidCallerData(String callerId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = createOrUpdateUnregistered(callerId, operator, circle);
-        if (frontLineWorker.jobAidLastAccessedPreviousMonth()) {
+    public FrontLineWorker findForJobAidCallerData(String callerId) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+        if (frontLineWorker != null && frontLineWorker.jobAidLastAccessedPreviousMonth()) {
             frontLineWorker.resetJobAidUsageAndPrompts();
             allFrontLineWorkers.update(frontLineWorker);
             log.info("reset last jobaid usage for " + frontLineWorker);
@@ -101,93 +72,68 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public int getCurrentCourseAttempt(String callerId) {
+    public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        return frontLineWorker.currentCourseAttempt();
+
+        //new flw
+        if (frontLineWorker == null) {
+            try {
+                allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
+                frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+                frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
+                allFrontLineWorkers.add(frontLineWorker);
+
+                log.info("created:" + frontLineWorker);
+                return new FrontLineWorkerCreateResponse(frontLineWorker, true);
+            } catch (UpdateConflictException e) {
+                frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+                return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+            }
+        }
+
+        //no-change flw
+        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered())
+            return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+
+        //updated flw
+        frontLineWorker.setOperator(operator);
+        frontLineWorker.setCircle(circle);
+        frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
+        allFrontLineWorkers.updateFlw(frontLineWorker);
+        log.info("updated:" + frontLineWorker);
+
+        return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }
 
-    public SMSReference getSMSReferenceNumber(String callerId) {
-        return allSMSReferences.findByMsisdn(callerId);
+    public void updateCertificateCourseState(FrontLineWorker frontLineWorker) {
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("updated certificate course state for " + frontLineWorker);
     }
 
-    public void addSMSReferenceNumber(SMSReference smsReference) {
-        allSMSReferences.add(smsReference);
-        log.info("created SMS reference for:" + smsReference.getMsisdn());
-    }
-
-    public void updateSMSReferenceNumber(SMSReference smsReference) {
-        allSMSReferences.update(smsReference);
-        log.info("updated SMS reference for:" + smsReference.getMsisdn());
-    }
-
-    public void updatePromptsFor(String callerId, List<String> promptList) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+    public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated prompts heard for " + frontLineWorker);
-    }
 
-    public void updateJobAidUsageAndAccessTime(String callerId, Integer currentCallDuration) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
         Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
+
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated jobaid usage and access time for " + frontLineWorker);
+        log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker);
     }
 
-    public void updateCertificateCourseStateFor(FrontLineWorker frontLineWorker) {
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated certificate course state for " + frontLineWorker);
+    public int getCurrentCourseAttempt(String callerId) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+        return frontLineWorker.currentCourseAttempt();
     }
 
     public List<FrontLineWorker> getAll() {
         return allFrontLineWorkers.getAll();
     }
 
-    public FrontLineWorker createOrUpdate(String callerId, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
-        if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, registrationStatus);
-            allFrontLineWorkers.add(frontLineWorker);
-            List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(frontLineWorker.getMsisdn());
-            if (existingFrontLineWorkers.size() > 1) {
-                removeDuplicateFLWs(existingFrontLineWorkers);
-            }
-            log.info("created:" + frontLineWorker);
-            return frontLineWorker;
-        }
-
-        frontLineWorker.update(name, designation, location);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated:" + frontLineWorker);
-        return frontLineWorker;
-    }
-
-    private void removeDuplicateFLWs(List<FrontLineWorker> existingFrontLineWorkers) {
-        for (int i = 0; i < existingFrontLineWorkers.size() - 1; i++) {
-            allFrontLineWorkers.remove(existingFrontLineWorkers.get(i));
-        }
-    }
-
-    /*
-    * Returns a registration status of the FrontLineWorker based on the current information of the
-    * in the database, like location and designation etc. This is a non-transient field and is not
-    * picked up from the db field registrationStatus.
-    */
-    public RegistrationStatus deduceRegistrationStatus(FrontLineWorker frontLineWorker, Location location) {
-        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
-        boolean locationIncomplete = location.isMissingDetails();
-        boolean designationInvalid = Designation.isInValid(frontLineWorker.designationName());
-        boolean nameInvalid = StringUtils.isBlank(frontLineWorker.getName());
-
-        if (!(locationAbsent || locationIncomplete || designationInvalid || nameInvalid))
-            return RegistrationStatus.REGISTERED;
-
-        if (locationAbsent && designationInvalid && nameInvalid) return RegistrationStatus.UNREGISTERED;
-
-        return RegistrationStatus.PARTIALLY_REGISTERED;
+    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker exisitingFrontLineWorker) {
+        if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
+            return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
+        return true;
     }
 }

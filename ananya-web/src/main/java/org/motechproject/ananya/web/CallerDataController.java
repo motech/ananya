@@ -1,7 +1,7 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
@@ -42,7 +42,7 @@ public class CallerDataController extends BaseAnanyaController {
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).
                 withCircle(circle).withOperator(operator);
 
-        JobAidCallerDataResponse callerData = jobAidService.createCallerData(jobAidServiceRequest);
+        JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
         log.info(callId + "- fetched caller data for jobaid");
 
         setContentType(response);

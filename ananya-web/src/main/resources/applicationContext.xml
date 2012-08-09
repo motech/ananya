@@ -31,6 +31,7 @@
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-services.xml"/>
     <import resource="classpath:applicationContext-tool.xml"/>
+    <import resource="classpath:applicationSecurityContext.xml"/>
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
@@ -41,4 +42,7 @@
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
     </bean>
+
+
+
 </beans>

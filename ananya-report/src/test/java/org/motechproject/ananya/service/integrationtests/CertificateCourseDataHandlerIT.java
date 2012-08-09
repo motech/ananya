@@ -211,23 +211,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
             }
         };
     }
-    
-    private Matcher<RegistrationMeasure> registrationMeasureMatcher(final String msisdn, final Integer timeDimensionId, final String locationId) {
-        return new BaseMatcher<RegistrationMeasure>() {
-            @Override
-            public boolean matches(Object o) {
-                RegistrationMeasure o1 = (RegistrationMeasure) o;
-                return o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(msisdn)) &&
-                       o1.getTimeDimension().getId().equals(timeDimensionId) &&
-                       o1.getLocationDimension().getId().equals(locationId);
-            }
 
-            @Override
-            public void describeTo(Description description) {
-            }
-        };
-    }
-    
     private Matcher<CallDurationMeasure> callDurationMeasureMatcher(final String callId,
             final String callerId, final Integer locationId, final Integer timeId,
             final int duration, final String type, final Timestamp startTime, final Timestamp endTime) {

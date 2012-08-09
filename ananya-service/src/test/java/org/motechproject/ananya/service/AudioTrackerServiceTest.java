@@ -6,7 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.request.AudioTrackerRequestList;
+import org.motechproject.ananya.contract.AudioTrackerRequestList;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.never;

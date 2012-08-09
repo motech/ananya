@@ -45,7 +45,7 @@ public class CertificateCourseDataHandler {
         for (Object object : event.getParameters().values()) {
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
-            log.info("Received the certificate course call message for callId: " + callId);
+            log.info("received course message: " + callId);
 
             registrationMeasureService.createFor(callId);
             callDurationMeasureService.createFor(callId);
@@ -57,9 +57,8 @@ public class CertificateCourseDataHandler {
 
     private void handleSMS(String callId) {
         SMSLog smslog = smsLogService.getSMSLogFor(callId);
-        if (smslog != null) {
+        if (smslog != null)
             sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
-            smsLogService.deleteFor(smslog);
-        }
+
     }
 }

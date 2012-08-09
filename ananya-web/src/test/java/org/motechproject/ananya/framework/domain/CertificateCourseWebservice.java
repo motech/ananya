@@ -18,7 +18,8 @@ public class CertificateCourseWebservice {
     private MyWebClient webClient = new MyWebClient();
 
     public CertificateCourseResponse requestForCallerData(CertificateCourseRequest request) throws IOException {
-        String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId() + "&operator=" + request.getOperator();
+        String webPage = "/ananya/generated/js/dynamic/caller_data.js?callerId=" + request.getCallerId()
+                + "&operator=" + request.getOperator()+"&callId="+request.getCallId()+"&circle="+request.getCircle();
         return makeRequest(webPage);
     }
 
@@ -31,7 +32,10 @@ public class CertificateCourseWebservice {
         MyWebClient.PostParam callId = MyWebClient.PostParam.param("callId", request.getCallId());
         MyWebClient.PostParam callerId = MyWebClient.PostParam.param("callerId", request.getCallerId());
         MyWebClient.PostParam dataToPost = MyWebClient.PostParam.param("dataToPost", request.getJsonPostData());
-        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost);
+        MyWebClient.PostParam operator = MyWebClient.PostParam.param("operator", request.getOperator());
+        MyWebClient.PostParam circle = MyWebClient.PostParam.param("circle", request.getCircle());
+        MyWebClient.PostParam calledNumber = MyWebClient.PostParam.param("calledNumber", request.getCalledNumber());
+        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost, circle, operator, calledNumber);
     }
 
     private CertificateCourseResponse makeRequest(String webPage) throws IOException {
@@ -39,9 +43,8 @@ public class CertificateCourseWebservice {
         return CertificateCourseResponse.make(page.getWebResponse().getContentAsString());
     }
 
-
-    private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost) throws IOException {
-        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost);
+    private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost, MyWebClient.PostParam circle, MyWebClient.PostParam operator, MyWebClient.PostParam calledNumber) throws IOException {
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, operator, circle, calledNumber);
         return CertificateCourseResponse.makeForNonJson(page.getWebResponse().getContentAsString());
     }
 }

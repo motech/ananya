@@ -2,6 +2,7 @@ package org.motechproject.ananya.response;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class JobAidCallerDataResponse {
@@ -15,6 +16,18 @@ public class JobAidCallerDataResponse {
         this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         this.promptsHeard = frontLineWorker.getPromptsHeard();
         this.maxAllowedUsageForOperator = maxUsage;
+    }
+
+    public JobAidCallerDataResponse() {
+    }
+
+    public static JobAidCallerDataResponse forNewUser(Integer maxOperatorUsage) {
+        JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
+        jobAidCallerDataResponse.isCallerRegistered = false;
+        jobAidCallerDataResponse.currentJobAidUsage = 0;
+        jobAidCallerDataResponse.promptsHeard = new HashMap<String, Integer>();
+        jobAidCallerDataResponse.maxAllowedUsageForOperator = maxOperatorUsage;
+        return jobAidCallerDataResponse;
     }
 
     public boolean isCallerRegistered() {

@@ -26,11 +26,6 @@ public class AllJobAidContentMeasures {
         template.save(jobAidContentMeasure);
     }
 
-    public JobAidContentMeasure findByCallId(String callId) {
-        return (JobAidContentMeasure) template.getUniqueResult(JobAidContentMeasure.FIND_BY_CALL_ID,
-                new String[]{"call_id"}, new Object[]{callId});
-    }
-
     public List<Long> getFilteredFrontLineWorkerMsisdns(Date startDate, Date endDate) {
         DetachedCriteria criteria = DetachedCriteria.forClass(JobAidContentMeasure.class);
         criteria.createAlias("timeDimension", "td");
@@ -39,5 +34,9 @@ public class AllJobAidContentMeasures {
         criteria.add(Restrictions.between("td.date", startDate, endDate));
 
         return template.findByCriteria(criteria);
+    }
+
+    public List<JobAidContentMeasure> findByCallId(String callId) {
+        return (List<JobAidContentMeasure>) template.findByNamedQueryAndNamedParam(JobAidContentMeasure.FIND_BY_CALL_ID, new String[]{"call_id"}, new Object[]{callId});
     }
 }

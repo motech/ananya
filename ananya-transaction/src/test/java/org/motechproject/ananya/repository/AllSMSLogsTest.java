@@ -24,4 +24,16 @@ public class AllSMSLogsTest extends SpringIntegrationTest{
 
         assertNotNull(allSMSLogs.findByCallId(callId));
     }
+    
+    @Test
+    public void shouldFindByCallerIdAndAttempts(){
+        String callId = "callId";
+        String callerId = "9988776655";
+        int courseAttempts = 2;
+        SMSLog entity = new SMSLog(callId, callerId, "", courseAttempts);
+        allSMSLogs.add(entity);
+        markForDeletion(entity);
+
+        assertNotNull(allSMSLogs.findByCallerIdAndAttempts(callerId, courseAttempts));
+    }
 }

@@ -3,8 +3,8 @@ package org.motechproject.ananya.transformers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.request.BaseRequest;
-import org.motechproject.ananya.request.BaseServiceRequest;
+import org.motechproject.ananya.contract.BaseRequest;
+import org.motechproject.ananya.contract.BaseServiceRequest;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;

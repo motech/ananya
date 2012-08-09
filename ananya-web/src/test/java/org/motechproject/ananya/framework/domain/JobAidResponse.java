@@ -56,8 +56,8 @@ public class JobAidResponse {
         return this;
     }
 
-    public JobAidResponse verifyPromptHeard(String maxUsagePrompt, Integer times) {
-        assertEquals(times, promptsHeard.get(maxUsagePrompt));
+    public JobAidResponse confirmPromptHeard(String prompt, Integer times) {
+        assertEquals(times, promptsHeard.get(prompt));
         return this;
     }
 

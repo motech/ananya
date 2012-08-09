@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -8,6 +9,7 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.seed.service.FrontLineWorkerExecutable;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationService;
@@ -18,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -49,26 +50,19 @@ public class FrontLineWorkerSeed {
     private String environment;
     private BufferedWriter writer;
 
-    public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
-        FrontLineWorkerSeed frontLineWorkerSeed =
-                (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
-        frontLineWorkerSeed.correctInvalidRegistrationStatusForAllFLWs();
-    }
-
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
+        String[] row;
+        String inputCSV = getInputCSV();
+        String outputCSV = getOutputCSV(new File(inputCSV).getParent());
+        String msisdn, name, designation, district, block, panchayat;
 
-        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
-        String outputFilePath = new File(inputCSVFile).getParent();
-        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
-
-        File file = new File(outputCSVFile);
+        File file = new File(outputCSV);
         file.createNewFile();
 
-        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+        writer = new BufferedWriter(new FileWriter(outputCSV));
 
-        loadFromCsv(inputCSVFile);
+        loadFromCsv(inputCSV);
     }
 
     /*
@@ -123,27 +117,25 @@ public class FrontLineWorkerSeed {
 
     @Seed(priority = 6, version = "1.1", comment = "1) merging duplicates")
     public void updateCorrectCallerIdsCircleOperatorAndDesignation() {
-        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        List<FrontLineWorker> allFrontLineWorkers = seedService.allFrontLineWorkers();
         seedService.correctDuplicatesInCouchAndPostgres(allFrontLineWorkers);
     }
 
     @Seed(priority = 5, version = "1.1", comment = "1) Appending 91 to callerIds [P+C], 2) Update missing designation, operator [P], 3) Add default circle [C] ")
     public void updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb() {
         String defaultCircle = "bihar";
-        List<FrontLineWorker> allFrontLineWorkers = seedService.getAllFromCouchDb();
+        List<FrontLineWorker> allFrontLineWorkers = seedService.allFrontLineWorkers();
         seedService.updateOperatorDesignationCircleAndCorrectMsisdnInPostgresAndCouchDb(allFrontLineWorkers, defaultCircle);
     }
 
     @Seed(priority = 4, version = "1.3", comment = "Correction of invalid status for AWW [P+C]. If getting rid of designation from couchdb, updated only the postgres entries.")
     public void correctInvalidDesignationsForAnganwadi() throws IOException {
+        String inputCSV = getInputCSV();
+        String outputCSV = getOutputCSV(new File(inputCSV).getParent());
 
-        String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
-        String outputFilePath = new File(inputCSVFile).getParent();
-        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
-
-        File file = new File(outputCSVFile);
+        File file = new File(outputCSV);
         file.createNewFile();
-        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSV));
 
         String msisdn, designation;
         String[] currentRow;
@@ -159,22 +151,71 @@ public class FrontLineWorkerSeed {
         }
     }
 
-    @Seed(priority = 0, version = "1.3", comment = "Sanitization of registration status of FLWs")
+    @Seed(priority = 0, version = "1.3", comment = "Clean-up of registration status of FLWs")
     public void correctInvalidRegistrationStatusForAllFLWs() {
-        log.info("Correcting Registration status of FLWs");
-        int startId = 1;
-        int counter = 0;
-
-        log.info("Fetching FLWs from start id : " + startId);
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.getFrontLineWorkers();
-
+        int count = 0;
+        int logBreak = 100;
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = seedService.allFrontLineWorkerDimensions();
         for (FrontLineWorkerDimension frontLineWorkerDimension : frontLineWorkerDimensions) {
-            counter++;
+            count++;
             seedService.correctRegistrationStatus(frontLineWorkerDimension);
-            if (counter % 100 == 0)
-                log.info("Completed " + counter + " of " + frontLineWorkerDimensions.size() + " FLWs");
+            if (count % logBreak == 0)
+                log.info("completed " + count + " of " + frontLineWorkerDimensions.size() + " FLWs");
         }
-        log.info("Correction of registration statuses done.");
+    }
+
+    @Seed(priority = 1, version = "1.7", comment = "Remove invalid designations")
+    public void correctAllDesignations() throws IOException {
+        String inputCSVFile = getInputCSV();
+        String msisdn, designation;
+        String[] row;
+        int batchSize = 100;
+
+        CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
+        csvReader.readNext();
+        row = csvReader.readNext();
+
+        int count = 0;
+        while (row != null) {
+            count++;
+            msisdn = StringUtils.trim(row[0]);
+            designation = StringUtils.trim(row[2]);
+            if (msisdn.length() == 10) msisdn = "91" + msisdn;
+            try {
+                seedService.correctDesignationBasedOnCSVFile(msisdn, designation);
+            } catch (Exception e) {
+                log.error("error while correcting designation for: " + msisdn, e);
+            }
+            row = csvReader.readNext();
+            if (count % batchSize == 0)
+                log.info("corrected designation for " + count + " users");
+        }
+
+        seedService.doWithBatch(new FrontLineWorkerExecutable() {
+            @Override
+            public void execute(FrontLineWorker frontLineWorker) {
+                seedService.removeInvalidDesignation(frontLineWorker);
+            }
+        }, batchSize);
+    }
+
+    @Seed(priority = 0, version = "1.7", comment = "Changing registration status of FLWs based on new definition")
+    public void activateNewRegistrationStatusesForAllFLWs() {
+        int batchSize = 100;
+        seedService.doWithBatch(new FrontLineWorkerExecutable() {
+            @Override
+            public void execute(FrontLineWorker frontLineWorker) {
+                seedService.activateNewRegistrationStatusForFLW(frontLineWorker);
+            }
+        }, batchSize);
+    }
+
+    private String getInputCSV() {
+        return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
+    }
+
+    private String getOutputCSV(String outputFilePath) {
+        return outputFilePath + File.separator + outputFileName + new Date().getTime();
     }
 
 }

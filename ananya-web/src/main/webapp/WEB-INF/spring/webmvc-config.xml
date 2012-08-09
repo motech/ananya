@@ -16,12 +16,6 @@
     </context:component-scan>
     <mvc:annotation-driven/>
 
-    <!--
-        DO NOT remove the following line.
-        The following defines the Resource Handler for static content.
-        If you add a static file and find that it is not being served by the app server,
-        please add a mime type mapping for the extension of the file in web.xml
-    -->
     <mvc:resources location="/" mapping="/**"/>
 
     <mvc:interceptors>
@@ -38,6 +32,7 @@
                 <props>
                     <prop key="/generated/js/**">86400</prop>
                     <prop key="/generated/js/dynamic/**">0</prop>
+                    <prop key="/admin/**">0</prop>
                 </props>
             </property>
         </bean>
@@ -57,14 +52,18 @@
     <bean class="org.springframework.ui.context.support.ResourceBundleThemeSource" id="themeSource"/>
     <bean class="org.springframework.web.servlet.theme.CookieThemeResolver" id="themeResolver" p:cookieName="theme"
           p:defaultThemeName="standard"/>
-    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+
+    <bean class="org.motechproject.ananya.velocity.AnanyaViewResolver">
         <property name="prefix" value="/"/>
         <property name="suffix" value=".vm"/>
         <property name="exposeSpringMacroHelpers" value="true"/>
         <property name="toolboxConfigLocation" value="/WEB-INF/velocity/toolbox.xml"/>
         <property name="contentType" value="text/html; charset=utf-8"/>
+        <property name="layoutUrl" value="layout/empty.vm"/>
     </bean>
+
     <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-        <property name="resourceLoaderPath" value="/WEB-INF/velocity/views"/>
+        <property name="resourceLoaderPath" value="/WEB-INF/views"/>
+        <property name="configLocation" value="/WEB-INF/velocity/velocity.properties"/>
     </bean>
 </beans>

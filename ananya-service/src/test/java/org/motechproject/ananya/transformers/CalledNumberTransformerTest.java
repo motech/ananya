@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.repository.AllNodes;
-import org.motechproject.ananya.request.BaseRequest;
-import org.motechproject.ananya.request.CertificateCourseServiceRequest;
-import org.motechproject.ananya.request.JobAidServiceRequest;
+import org.motechproject.ananya.contract.BaseRequest;
+import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 
 import java.util.Arrays;
 import java.util.List;

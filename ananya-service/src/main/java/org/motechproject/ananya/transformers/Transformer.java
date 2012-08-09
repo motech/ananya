@@ -1,6 +1,6 @@
 package org.motechproject.ananya.transformers;
 
-import org.motechproject.ananya.request.BaseRequest;
+import org.motechproject.ananya.contract.BaseRequest;
 
 public interface Transformer {
 

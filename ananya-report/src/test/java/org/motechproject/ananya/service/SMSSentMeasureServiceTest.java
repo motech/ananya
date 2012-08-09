@@ -31,23 +31,21 @@ public class SMSSentMeasureServiceTest {
 
     @Mock
     FrontLineWorkerService frontLineWorkerService;
-
     @Mock
     AllFrontLineWorkerDimensions frontLineWorkerDimensions;
-
     @Mock
     AllTimeDimensions timeDimensions;
-
     @Mock
     AllRegistrationMeasures allRegistrationMeasures;
-
     @Mock
     ReportDB db;
+    @Mock
+    private SMSReferenceService smsReferenceService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        service = new SMSSentMeasureService(db, frontLineWorkerDimensions, timeDimensions, frontLineWorkerService, allRegistrationMeasures);
+        service = new SMSSentMeasureService(db, frontLineWorkerService, smsReferenceService, frontLineWorkerDimensions, timeDimensions, allRegistrationMeasures);
     }
 
     @Test
@@ -64,7 +62,7 @@ public class SMSSentMeasureServiceTest {
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
         SMSReference smsReference = new SMSReference(callerId,flwId);
         smsReference.add(smsRefNum, courseAttemptNum);
-        when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
+        when(smsReferenceService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
@@ -97,7 +95,7 @@ public class SMSSentMeasureServiceTest {
 
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
-        when(frontLineWorkerService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
+        when(smsReferenceService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
 

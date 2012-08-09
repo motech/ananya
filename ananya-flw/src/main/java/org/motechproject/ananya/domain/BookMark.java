@@ -3,8 +3,6 @@ package org.motechproject.ananya.domain;
 import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.text.MessageFormat;
-
 public class BookMark {
     @JsonProperty
     private String type;
@@ -64,7 +62,10 @@ public class BookMark {
     }
 
     public String asJson() {
-        //TODO: Is creating a Gson obj costly? if so, then could we use a single instance? Will there be any threading issues.
         return new Gson().toJson(this);
+    }
+
+    public boolean notAtPlayCourseResult() {
+        return !Interaction.PlayCourseResult.equals(type);
     }
 }

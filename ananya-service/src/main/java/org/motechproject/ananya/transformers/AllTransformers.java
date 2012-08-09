@@ -1,6 +1,6 @@
 package org.motechproject.ananya.transformers;
 
-import org.motechproject.ananya.request.BaseRequest;
+import org.motechproject.ananya.contract.BaseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

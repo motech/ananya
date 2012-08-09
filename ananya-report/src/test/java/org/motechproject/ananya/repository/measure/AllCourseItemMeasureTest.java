@@ -85,7 +85,8 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, event,callId);
         allCourseItemMeasures.save(courseItemMeasure);
 
-        CourseItemMeasure measure = allCourseItemMeasures.fetchFor(frontLineWorkerDimension.getId(), courseItemDimension, String.valueOf(event));
+        List<CourseItemMeasure> measures = allCourseItemMeasures.fetchFor(callId);
+        CourseItemMeasure measure = measures.get(0);
         assertEquals(event, measure.getEvent());
         assertEquals(courseItemDimensionName, measure.getCourseItemDimension().getName());
         assertEquals(chapter, measure.getCourseItemDimension().getType());

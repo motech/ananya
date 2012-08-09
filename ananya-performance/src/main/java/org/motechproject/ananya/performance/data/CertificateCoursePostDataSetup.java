@@ -7,14 +7,15 @@ import org.motechproject.ananya.repository.AllNodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 @Component
 public class CertificateCoursePostDataSetup {
 
     private final int noOfChapters = 9;
-    private final String usersPerOperator = "25";
-    private final String msisdnPrefix = "9999";
+    private final String usersPerOperator = "25000";
+    private final String msisdnPrefix = "99";
 
     @Autowired
     private AllNodes allNodes;
