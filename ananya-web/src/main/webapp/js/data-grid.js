@@ -70,13 +70,7 @@
  */
 
 DataGrid = function(params){
-    var rows;
-    var dataUrl;
-    var tableId;
-    var from;
-    var to;
-    var count;
-    var contentKeys;
+
     this.init = function(params){
         this.tableId = params['tableId'];
         this.rows = params['rows'];
@@ -106,19 +100,19 @@ DataGrid = function(params){
     this.initWithData = function(data) {
         var dataGrid = this;
         data = dataGrid.fromRoot(data);
+        dataGrid.data = data;
 
-        dataGrid.count = data.count;
+        dataGrid.count = data.count == undefined ? data.content.length : data.count;
         dataGrid.extractContentKeys(data.header);
         dataGrid.loadHeader(data.header);
         dataGrid.loadContent(data.content);
 
         var numPages = Math.ceil(dataGrid.count / dataGrid.rows);
 
-        if(numPages == 0){
+        if(numPages <= 1){
             $('#' + dataGrid.tableId + '_pagination').find('.pagination').remove();
             $('#' + dataGrid.tableId + '_go_to_page').find('.form-search').remove();
-        }
-        if(numPages > 0){
+        } else {
             dataGrid.pagination = new Pagination({
                 "numPages" : numPages,
                 "showNumPages" : 4,
@@ -128,15 +122,13 @@ DataGrid = function(params){
                 }
             });
 
-            if(numPages > 1){
-                new GoToPage({
-                    "numPages" : numPages,
-                    "where" : $('#' + dataGrid.tableId + '_go_to_page'),
-                    "click" : function(pageNum){
-                        dataGrid.next(pageNum);
-                    }
-                });
-            }
+            new GoToPage({
+                "numPages" : numPages,
+                "where" : $('#' + dataGrid.tableId + '_go_to_page'),
+                "click" : function(pageNum){
+                    dataGrid.next(pageNum);
+                }
+            });
         }
     }
 
@@ -171,7 +163,7 @@ DataGrid = function(params){
     this.loadContent = function(contents){
         var id = this.tableId;
         $('#'+id+' tbody').find('tr').remove();
-        for(var i in contents){
+        for(var i = this.from; i < contents.length && i < this.to; ++i){
             var content = contents[i];
             $('#'+id+' tbody:last').append(this.buildTableContentRow(content));
         }
@@ -208,20 +200,25 @@ DataGrid = function(params){
         this.to = this.to > this.count ? this.count : this.to;
 
         $('div.alert-error').remove();
-        var dataGrid = this;
-        $.ajax({
-            url: this.dataUrl,
-            data: 'from='+this.from+'&to='+this.to,
-            dataType: 'json',
-            error: function(){
-                dataGrid.handleError("An error has occurred, please try again.")
-            }
-        }).done(function(data){
-            data = dataGrid.fromRoot(data);
+        if(this.dataUrl) {
+            var dataGrid = this;
+            $.ajax({
+                url: this.dataUrl,
+                data: 'from='+this.from+'&to='+this.to,
+                dataType: 'json',
+                error: function(){
+                    dataGrid.handleError("An error has occurred, please try again.")
+                }
+            }).done(function(data){
+                data = dataGrid.fromRoot(data);
 
-            dataGrid.loadContent(data.content);
-            dataGrid.pagination.refresh(page);
-        });
+                dataGrid.loadContent(data.content);
+                dataGrid.pagination.refresh(page);
+            });
+        } else if (this.data) {
+            this.loadContent(this.data.content);
+            this.pagination.refresh(page);
+        }
     }
 
     this.handleError = function(msg) {

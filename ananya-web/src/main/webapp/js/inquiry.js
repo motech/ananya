@@ -1,19 +1,19 @@
 var academyCallsDataGrid = new DataGrid({
             "tableId": "academy_calls_table",
             "root" : "academyCalls",
-            "rows": 100
+            "rows": 10
         });
 
 var kunjiCallsDataGrid = new DataGrid({
             "tableId": "kunji_calls_table",
             "root" : "kunjiCalls",
-            "rows": 100
+            "rows": 10
         });
 
 var callDetailsDataGrid = new DataGrid({
             "tableId": "call_details_table",
             "root" : "callDetails",
-            "rows": 100
+            "rows": 10
         });
 
 $(document).ready(function() {
