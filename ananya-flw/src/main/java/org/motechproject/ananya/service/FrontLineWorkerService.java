@@ -3,7 +3,10 @@ package org.motechproject.ananya.service;
 import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.FrontLineWorkerKey;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.util.DateUtil;
@@ -39,24 +42,11 @@ public class FrontLineWorkerService {
         String callerId = frontLineWorker.getMsisdn();
         FrontLineWorker existingFrontLineWorker = findByCallerId(callerId);
 
-        //NEW
         if (existingFrontLineWorker == null) {
-            frontLineWorker.decideRegistrationStatus(location);
-            allFrontLineWorkers.add(frontLineWorker);
-            log.info("Created:" + frontLineWorker);
-            return frontLineWorker;
+            return createNewFrontlineWorker(frontLineWorker, location);
         }
-
-        //UPDATE
         if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
-            String name = frontLineWorker.getName();
-            Designation designation = Designation.getFor(frontLineWorker.designationName());
-            DateTime lastModified = frontLineWorker.getLastModified();
-
-            lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
-            existingFrontLineWorker.update(name, designation, location, lastModified);
-            allFrontLineWorkers.update(existingFrontLineWorker);
-            log.info("Updated:" + existingFrontLineWorker);
+            updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
         }
 
         return existingFrontLineWorker;
@@ -135,5 +125,23 @@ public class FrontLineWorkerService {
         if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
             return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
         return true;
+    }
+
+    private FrontLineWorker createNewFrontlineWorker(FrontLineWorker frontLineWorker, Location location) {
+        frontLineWorker.decideRegistrationStatus(location);
+        allFrontLineWorkers.add(frontLineWorker);
+        log.info("Created:" + frontLineWorker);
+        return frontLineWorker;
+    }
+
+    private void updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
+        String name = frontLineWorker.getName();
+        Designation designation = Designation.getFor(frontLineWorker.designationName());
+        DateTime lastModified = frontLineWorker.getLastModified();
+
+        lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
+        existingFrontLineWorker.update(name, designation, location, lastModified);
+        allFrontLineWorkers.update(existingFrontLineWorker);
+        log.info("Updated:" + existingFrontLineWorker);
     }
 }
