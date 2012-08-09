@@ -15,6 +15,7 @@ import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.support.admin.domain.CallContent;
+import org.motechproject.ananya.support.admin.domain.CallerDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -111,6 +112,17 @@ public class AdminInquiryServiceTest {
         List<CallContent> kunjiCallsContent = (List<CallContent>) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALL_DETAILS);
 
         assertEquals(2, kunjiCallsContent.size());
+    }
+
+    @Test
+    public void shouldGetCallerDetail() {
+        String callerId = "919988776622";
+        String name = "Aanchal";
+        allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "bihar", name, "ASHA", "REGISTERED");
+
+        CallerDetail callerDetail = (CallerDetail) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALLER_DETAIL);
+
+        assertEquals(name, callerDetail.getName());
     }
 
     private void setUpCallDetails(String callerId) {

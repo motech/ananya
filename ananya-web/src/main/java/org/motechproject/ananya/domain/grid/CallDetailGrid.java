@@ -16,9 +16,7 @@ public class CallDetailGrid implements DataGrid {
 
     private void initHeaders() {
         header = new LinkedHashMap<String, String>();
-        header.put("name", "Name");
-        header.put("msisdn", "MSISDN");
-        header.put("callId", "CallId");
+        header.put("callId", "Call Id");
         header.put("startTime", "Start Time");
         header.put("endTime", "End Time");
         header.put("duration", "Duration");

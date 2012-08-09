@@ -1,8 +1,6 @@
 package org.motechproject.ananya.support.admin.domain;
 
 public class CallDetail {
-    private String name;
-    private String msisdn;
     private String callId;
     private String startTime;
     private String endTime;
@@ -10,23 +8,13 @@ public class CallDetail {
     private String calledNumber;
     private String type;
 
-    public CallDetail(String name, String msisdn, String callId, String startTime, String endTime, String duration, String calledNumber, String type) {
-        this.name = name;
-        this.msisdn = msisdn;
+    public CallDetail(String callId, String startTime, String endTime, String duration, String calledNumber, String type) {
         this.callId = callId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.duration = duration;
         this.calledNumber = calledNumber;
         this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getMsisdn() {
-        return msisdn;
     }
 
     public String getCallId() {

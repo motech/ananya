@@ -2,7 +2,7 @@ package org.motechproject.ananya.support.admin.domain;
 
 public enum AdminQuery {
     ACADEMY_CALLS(
-            "select flwd.name as name, flwd.msisdn as msidn, cim.callId as callId, cim.timestamp as timeStamp, cid.name as contentName, cid.fileName as contentFileName" +
+            "select cim.callId as callId, cim.timestamp as timeStamp, cid.name as contentName, cid.fileName as contentFileName" +
                     " from" +
                     "   FrontLineWorkerDimension flwd," +
                     "   CourseItemMeasure cim," +
@@ -16,7 +16,7 @@ public enum AdminQuery {
     ),
 
     KUNJI_CALLS(
-            "select flwd.name as name, flwd.msisdn as msidn, jacm.callId as callId, jacm.timestamp as timeStamp, jacd.name as contentName, jacd.fileName as contentFileName" +
+            "select jacm.callId as callId, jacm.timestamp as timeStamp, jacd.name as contentName, jacd.fileName as contentFileName" +
                     " from" +
                     "   FrontLineWorkerDimension flwd," +
                     "   JobAidContentMeasure jacm," +
@@ -29,7 +29,7 @@ public enum AdminQuery {
             "Kunji Calls"
     ),
     CALL_DETAILS(
-            "select flwd.name as name, flwd.msisdn as msidn, cdm.callId as callId, cdm.startTime, cdm.endTime, cdm.duration, cdm.calledNumber, cdm.type" +
+            "select cdm.callId as callId, cdm.startTime, cdm.endTime, cdm.duration, cdm.calledNumber, cdm.type" +
                     " from" +
                     "   FrontLineWorkerDimension flwd," +
                     "   CallDurationMeasure cdm" +
@@ -38,6 +38,14 @@ public enum AdminQuery {
                     "   and cdm.frontLineWorkerDimension.id = flwd.id" +
                     " order by cdm.startTime",
             "Calls Details"
+    ),
+    CALLER_DETAIL(
+            "select flwd.msisdn, flwd.name" +
+                    " from" +
+                    "   FrontLineWorkerDimension flwd" +
+                    " where" +
+                    "   flwd.msisdn = %s",
+            "Caller Detail"
     );
     private String query;
     private String description;

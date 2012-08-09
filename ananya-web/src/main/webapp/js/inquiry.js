@@ -45,6 +45,11 @@ var initDataGrids = function(msisdn) {
                     $("#caller_data_to_ivr").text(data.callerDataJs);
                     prettyPrint();
                 }
+
+                if (data.callerDetail) {
+                    $("#caller_name").text(data.callerDetail.name);
+                    $("#caller_msisdn").text(data.callerDetail.msisdn);
+                }
             });
 }
 
