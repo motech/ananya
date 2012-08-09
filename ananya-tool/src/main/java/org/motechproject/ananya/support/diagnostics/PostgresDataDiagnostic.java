@@ -6,29 +6,25 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
+import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 
-//TODO: Add @Diagnose annotatation
 @Component
 public class PostgresDataDiagnostic {
 
     @Autowired
     private DataAccessTemplate dataAccessTemplate;
 
-    public DiagnosticLog performDiagnosis() {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
-        diagnosticLog.add("Opening session with database");
-        try {
-            diagnosticLog.add(collect());
-        } catch (Exception e) {
-            diagnosticLog.add("Opening session failed");
-            diagnosticLog.addError(e);
-        }
-        return diagnosticLog;
+    @Diagnostic(name = "postgresDataDiagnostics")
+    public DiagnosticsResult performDiagnosis() {
+        DiagnosticLog diagnosticLog = diagnose();
+        DiagnosticsResult diagnosticsResult = new DiagnosticsResult(true, diagnosticLog.toString());
+        return diagnosticsResult;
     }
 
     public Map<String, String> collect() {
@@ -54,6 +50,18 @@ public class PostgresDataDiagnostic {
         String todayCount = session.createQuery(todayCountQuery.getQuery(DateTime.now())).uniqueResult().toString();
         results.put(todayCountQuery.title(), todayCount);
         return results;
+    }
+
+    private DiagnosticLog diagnose() {
+        DiagnosticLog diagnosticLog = new DiagnosticLog("POSTGRES");
+        diagnosticLog.add("Opening session with database");
+        try {
+            diagnosticLog.add(collect());
+        } catch (Exception e) {
+            diagnosticLog.add("Opening session failed");
+            diagnosticLog.addError(e);
+        }
+        return diagnosticLog;
     }
 
     private Map<String, String> runGroupQueries(Session session, DiagnosticQuery totalCountQuery, DiagnosticQuery todayCountQuery) {
