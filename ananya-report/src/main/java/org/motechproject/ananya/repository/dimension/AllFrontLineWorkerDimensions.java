@@ -1,5 +1,9 @@
 package org.motechproject.ananya.repository.dimension;
 
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +52,30 @@ public class AllFrontLineWorkerDimensions {
 
     public void remove(FrontLineWorkerDimension frontLineWorkerDimension) {
         template.delete(frontLineWorkerDimension);
+    }
+
+    public List<FrontLineWorkerDimension> getFilteredFLWFor(List<Long> allFilteredMsisdns, Long msisdn, String name, String registrationStatus, String designation, String operator, String circle) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(FrontLineWorkerDimension.class);
+
+        if (!allFilteredMsisdns.isEmpty())
+            criteria.add(Restrictions.in("msisdn", allFilteredMsisdns));
+        if (msisdn != null)
+            criteria.add(Restrictions.eq("msisdn", msisdn));
+        if (registrationStatus != null)
+            criteria.add(Restrictions.eq("status", registrationStatus));
+        if (name != null)
+            criteria.add(Restrictions.ilike("name", name, MatchMode.ANYWHERE));
+        if (designation != null) {
+            if(StringUtils.equalsIgnoreCase("null", StringUtils.trimToEmpty(designation)))
+                criteria.add(Restrictions.isNull("designation"));
+            else
+                criteria.add(Restrictions.eq("designation", designation));
+        }
+        if (operator != null)
+            criteria.add(Restrictions.eq("operator", operator).ignoreCase());
+        if (circle != null)
+            criteria.add(Restrictions.eq("circle", circle).ignoreCase());
+
+        return template.findByCriteria(criteria);
     }
 }

@@ -2,7 +2,6 @@ package org.motechproject.ananya.repository;
 
 
 import org.ektorp.UpdateConflictException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.FrontLineWorkerKey;
@@ -11,7 +10,7 @@ import org.springframework.test.annotation.ExpectedException;
 
 import static junit.framework.Assert.assertNotNull;
 
-public class AllFrontLineWorkerKeysTest extends FrontLineWorkerBaseIT {
+public class AllFrontLineWorkerKeysTest extends SpringBaseIT {
 
     @Autowired
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;

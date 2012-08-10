@@ -69,6 +69,15 @@ public class FrontLineWorkerSeedTest {
         timeSeed.createDimensionsInPostgres();
     }
 
+    @After
+    public void tearDown() {
+        allLocations.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+        allFrontLineWorkers.removeAll();
+        allFrontLineWorkerDimensions.removeAll();
+        template.deleteAll(template.loadAll(CallDurationMeasure.class));
+    }
+
     @Test
     public void shouldRegisterFrontLineWorkersThroughTheFrontLineWorkerSeed() throws IOException {
         frontLineWorkerSeed.createFrontlineWorkersFromCSVFile();
@@ -94,7 +103,7 @@ public class FrontLineWorkerSeedTest {
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
 
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(msisdn.toString());
-        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }
 
     @Test
@@ -240,14 +249,5 @@ public class FrontLineWorkerSeedTest {
         assertEquals(null, allFrontLineWorkerDimensions.fetchFor(919000000003L).getDesignation());
         assertEquals(null, allFrontLineWorkerDimensions.fetchFor(919000000004L).getDesignation());
         assertEquals(null, allFrontLineWorkerDimensions.fetchFor(919000000005L).getDesignation());
-    }
-
-    @After
-    public void tearDown() {
-        allLocations.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
-        allFrontLineWorkers.removeAll();
-        allFrontLineWorkerDimensions.removeAll();
-        template.deleteAll(template.loadAll(CallDurationMeasure.class));
     }
 }

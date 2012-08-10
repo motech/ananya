@@ -81,6 +81,11 @@ public class RegistrationMeasure {
         this.locationDimension = registrationMeasure.locationDimension;
     }
 
+    public RegistrationMeasure update(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "RegistrationMeasure{" +

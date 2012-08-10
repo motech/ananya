@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class CertificateCourseCallDataController {
+public class CertificateCourseCallDataController extends BaseAnanyaController {
 
     private static Logger log = LoggerFactory.getLogger(CertificateCourseCallDataController.class);
 

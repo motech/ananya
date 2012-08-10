@@ -73,7 +73,7 @@ public class RegistrationMeasureService {
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
-                frontLineWorker.status().toString());
+                frontLineWorker.getStatus().toString());
         log.info(callId + "- flwDimension created or updated for " + frontLineWorker);
 
         if (dimensionAlreadyExists) {
@@ -86,8 +86,31 @@ public class RegistrationMeasureService {
                 locationDimension,
                 timeDimension,
                 callId);
-        allRegistrationMeasures.add(registrationMeasure);
+        allRegistrationMeasures.createOrUpdate(registrationMeasure);
         log.info(callId + "- registrationMeasure created for " + frontLineWorker);
+    }
+
+    @Transactional
+    public void createOrUpdateFor(String callerId) {
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
+        LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
+        boolean flwDimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
+        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
+
+        FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
+                frontLineWorker.msisdn(),
+                frontLineWorker.getOperator(),
+                frontLineWorker.getCircle(),
+                frontLineWorker.name(),
+                frontLineWorker.designationName(),
+                frontLineWorker.getStatus().toString());
+
+        RegistrationMeasure registrationMeasure = flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
+                                                                            : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);
+        allRegistrationMeasures.createOrUpdate(registrationMeasure);
+
+        log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
+                "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");
     }
 
 }

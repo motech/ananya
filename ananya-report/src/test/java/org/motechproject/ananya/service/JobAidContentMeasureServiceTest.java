@@ -21,6 +21,10 @@ import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
@@ -120,5 +124,17 @@ public class JobAidContentMeasureServiceTest {
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);
         jobAidContentMeasureService.createFor(callId);
         verify(allJobAidContentMeasures,never()).add(any(JobAidContentMeasure.class));
+    }
+
+    @Test
+    public void shouldGetFilteredFLWs() {
+        Date startDate = DateTime.now().toDate();
+        Date endDate = DateTime.now().plusDays(1).toDate();
+        ArrayList<Long> listOfMsisdns = new ArrayList<Long>();
+        when(allJobAidContentMeasures.getFilteredFrontLineWorkerMsisdns(startDate, endDate)).thenReturn(listOfMsisdns);
+
+        List<Long> actualFilteredFLWs = jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(startDate, endDate);
+
+        assertEquals(listOfMsisdns, actualFilteredFLWs);
     }
 }

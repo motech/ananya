@@ -30,16 +30,12 @@ public class AllRegistrationMeasures {
                 new Object[]{flwId});
     }
 
-    public void add(RegistrationMeasure registrationMeasure) {
+    public void createOrUpdate(RegistrationMeasure registrationMeasure) {
         template.saveOrUpdate(registrationMeasure);
     }
 
     public void removeAll() {
         template.bulkUpdate("delete from RegistrationMeasure");
-    }
-
-    public void update(RegistrationMeasure registrationMeasure) {
-        template.update(registrationMeasure);
     }
 
     public void remove(RegistrationMeasure registrationMeasure) {

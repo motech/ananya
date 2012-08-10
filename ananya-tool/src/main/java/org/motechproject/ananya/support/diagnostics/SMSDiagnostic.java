@@ -1,8 +1,9 @@
 package org.motechproject.ananya.support.diagnostics;
 
-import org.motechproject.ananya.support.diagnostics.base.Diagnostic;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticLog;
 import org.motechproject.ananya.webservice.OnMobileSendSMSService;
+import org.motechproject.diagnostics.annotation.Diagnostic;
+import org.motechproject.diagnostics.diagnostics.DiagnosticLog;
+import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.jms.JMSException;
 
 @Component
-public class SMSDiagnostic implements Diagnostic {
+public class SMSDiagnostic {
 
     private OnMobileSendSMSService smsService;
     private String mobileNumber;
@@ -26,9 +27,10 @@ public class SMSDiagnostic implements Diagnostic {
         this.senderId = senderId;
     }
 
-    @Override
-    public DiagnosticLog performDiagnosis() throws JMSException {
-        DiagnosticLog diagnosticLog = new DiagnosticLog("SMS");
+    @Diagnostic(name = "sms")
+    public DiagnosticsResult performDiagnosis() throws JMSException {
+        boolean isSuccess = true;
+        DiagnosticLog diagnosticLog = new DiagnosticLog();
         try {
             String result = smsService.singlePush(mobileNumber, senderId, smsMessage);
             if ("failure".equals(result))
@@ -36,7 +38,8 @@ public class SMSDiagnostic implements Diagnostic {
         } catch (Exception e) {
             diagnosticLog.add("Error in sending SMS");
             diagnosticLog.addError(e);
+            isSuccess = false;
         }
-        return diagnosticLog;
+        return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
     }
 }

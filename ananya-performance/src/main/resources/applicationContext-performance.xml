@@ -24,6 +24,7 @@
     <import resource="classpath:applicationContext-services.xml"/>
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
+    <import resource="classpath:applicationContext-csv-importer.xml"/>
 
 
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">

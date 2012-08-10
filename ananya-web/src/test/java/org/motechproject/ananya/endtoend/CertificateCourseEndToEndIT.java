@@ -111,6 +111,4 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
                 scores.add(new Score(String.valueOf(chapIndex), String.valueOf(lessonIndex), true));
         return scores;
     }
-
-
 }

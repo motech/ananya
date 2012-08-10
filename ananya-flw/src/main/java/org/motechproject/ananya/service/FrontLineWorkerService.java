@@ -3,9 +3,13 @@ package org.motechproject.ananya.service;
 import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.FrontLineWorkerKey;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,20 @@ public class FrontLineWorkerService {
 
     public FrontLineWorker findByCallerId(String callerId) {
         return allFrontLineWorkers.findByMsisdn(callerId);
+    }
+
+    public FrontLineWorker createOrUpdate(FrontLineWorker frontLineWorker, Location location) {
+        String callerId = frontLineWorker.getMsisdn();
+        FrontLineWorker existingFrontLineWorker = findByCallerId(callerId);
+
+        if (existingFrontLineWorker == null) {
+            return createNewFrontlineWorker(frontLineWorker, location);
+        }
+        if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
+            updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
+        }
+
+        return existingFrontLineWorker;
     }
 
     public FrontLineWorker findForJobAidCallerData(String callerId) {
@@ -77,23 +95,6 @@ public class FrontLineWorkerService {
         return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }
 
-    public FrontLineWorker createOrUpdateForImport(String callerId, String name, Designation designation, Location location) {
-        FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
-        if (frontLineWorker == null) {
-            frontLineWorker = new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.UNREGISTERED);
-            allFrontLineWorkers.add(frontLineWorker);
-            log.info("created:" + frontLineWorker);
-            return frontLineWorker;
-        }
-
-        frontLineWorker.update(name, designation, location);
-        frontLineWorker.decideRegistrationStatus(location);
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated:" + frontLineWorker);
-        return frontLineWorker;
-    }
-
     public void updateCertificateCourseState(FrontLineWorker frontLineWorker) {
         allFrontLineWorkers.update(frontLineWorker);
         log.info("updated certificate course state for " + frontLineWorker);
@@ -120,5 +121,27 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.getAll();
     }
 
+    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker exisitingFrontLineWorker) {
+        if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
+            return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
+        return true;
+    }
 
+    private FrontLineWorker createNewFrontlineWorker(FrontLineWorker frontLineWorker, Location location) {
+        frontLineWorker.decideRegistrationStatus(location);
+        allFrontLineWorkers.add(frontLineWorker);
+        log.info("Created:" + frontLineWorker);
+        return frontLineWorker;
+    }
+
+    private void updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
+        String name = frontLineWorker.getName();
+        Designation designation = Designation.getFor(frontLineWorker.designationName());
+        DateTime lastModified = frontLineWorker.getLastModified();
+
+        lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
+        existingFrontLineWorker.update(name, designation, location, lastModified);
+        allFrontLineWorkers.update(existingFrontLineWorker);
+        log.info("Updated:" + existingFrontLineWorker);
+    }
 }

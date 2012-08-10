@@ -1,20 +1,24 @@
 package org.motechproject.ananya.domain;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.motechproject.util.DateUtil;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+@PrepareForTest(DateUtil.class)
+@RunWith(PowerMockRunner.class)
 public class FrontLineWorkerTest {
+
     @Test
     public void shouldReturnEmptyBookmarkIfThereIsNoBookmark() {
         FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
@@ -49,6 +53,28 @@ public class FrontLineWorkerTest {
     }
 
     @Test
+    public void shouldUpdateLastModifiedTimeToGivenTime() {
+        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
+        flw.update("newName", Designation.AWW, new Location(), lastModified);
+
+        assertEquals(lastModified, flw.getLastModified());
+    }
+
+    @Test
+    public void shouldCreateAnFlwWhenMsisdnIsNotGiven() {
+        FrontLineWorker flw = new FrontLineWorker(null, "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        assertNull(flw.getMsisdn());
+    }
+
+    @Test
+    public void shouldAssigntheGivenDateTimeAsLastModifiedTime() {
+        DateTime lastModified = DateTime.now();
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), lastModified);
+        assertEquals(lastModified, frontLineWorker.getLastModified());
+    }
+
+    @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformation() {
         Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1);
         Location incompleteLocation = new Location("district", "block", "", 1, 1, 0);
@@ -57,37 +83,37 @@ public class FrontLineWorkerTest {
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
                 "1234", "name", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
         flwWithCompleteDetails.decideRegistrationStatus(completeLocation);
-        assertEquals(RegistrationStatus.REGISTERED, flwWithCompleteDetails.status());
+        assertEquals(RegistrationStatus.REGISTERED, flwWithCompleteDetails.getStatus());
 
         FrontLineWorker flwWithoutName = new FrontLineWorker(
                 "1234", "", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
         flwWithoutName.decideRegistrationStatus(completeLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutName.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutName.getStatus());
 
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
                 "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         flwWithoutDesignation.decideRegistrationStatus(completeLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutDesignation.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutDesignation.getStatus());
 
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
                 "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
         flwWithInvalidDesignation.decideRegistrationStatus(completeLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithInvalidDesignation.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithInvalidDesignation.getStatus());
 
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
                 "1234", "name", Designation.ANM, defaultLocation, RegistrationStatus.REGISTERED);
         flwWithDefaultLocation.decideRegistrationStatus(defaultLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithDefaultLocation.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithDefaultLocation.getStatus());
 
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
                 "1234", "name", Designation.ANM, incompleteLocation, RegistrationStatus.REGISTERED);
         flwWithIncompleteLocation.decideRegistrationStatus(incompleteLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithIncompleteLocation.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithIncompleteLocation.getStatus());
 
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
                 "1234", "", null, defaultLocation, RegistrationStatus.REGISTERED);
         flwWithNoDetails.decideRegistrationStatus(defaultLocation);
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.getStatus());
 
     }
 

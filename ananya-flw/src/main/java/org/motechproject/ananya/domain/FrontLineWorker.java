@@ -56,6 +56,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private DateTime lastJobAidAccessTime;
 
     @JsonProperty
+    private DateTime lastModified;
+
+    @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
     @JsonIgnore
@@ -68,17 +71,29 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public FrontLineWorker(String msisdn, String operator, String circle) {
         this();
-        this.msisdn = msisdn.length() == 10 ? "91" + msisdn : msisdn;
-        if (circle != null) this.circle = circle;
-        if (operator != null) this.operator = operator;
+        this.msisdn = prefixMsisdnWith91(msisdn);
+        this.circle = circle == null ? this.circle : circle;
+        this.operator = operator == null ? this.operator : operator;
+    }
+
+    private String prefixMsisdnWith91(String msisdn) {
+        return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
         this(msisdn, null, null);
         this.name = name;
         this.designation = designation;
-        this.locationId = location.getExternalId();
+        this.locationId = location == null ? null : location.getExternalId();
         this.status = registrationStatus;
+    }
+
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified) {
+        this(msisdn, null, null);
+        this.name = name;
+        this.designation = designation;
+        this.locationId = location == null ? null : location.getExternalId();
+        this.lastModified = lastModified;
     }
 
     @Override
@@ -136,10 +151,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public BookMark bookMark() {
         return bookmark != null ? bookmark : new EmptyBookmark();
-    }
-
-    public RegistrationStatus status() {
-        return status;
     }
 
     public ReportCard reportCard() {
@@ -205,6 +216,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return lastJobAidAccessTime;
     }
 
+    public DateTime getLastModified() {
+        return lastModified;
+    }
+
     public boolean operatorIs(String operator) {
         return StringUtils.equalsIgnoreCase(this.operator, operator);
     }
@@ -213,10 +228,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified) {
         this.name = name;
+        this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
+        decideRegistrationStatus(location);
     }
 
     public boolean hasPassedTheCourse() {
@@ -264,7 +281,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void merge(FrontLineWorker frontLineWorker) {
         if (this.status.equals(RegistrationStatus.UNREGISTERED)) {
-            this.status = frontLineWorker.status();
+            this.status = frontLineWorker.getStatus();
             this.locationId = frontLineWorker.getLocationId();
             this.designation = frontLineWorker.getDesignation();
             this.name = frontLineWorker.name();

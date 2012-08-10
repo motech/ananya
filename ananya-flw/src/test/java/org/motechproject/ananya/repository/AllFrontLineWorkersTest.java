@@ -14,7 +14,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class AllFrontLineWorkersTest extends FrontLineWorkerBaseIT {
+public class AllFrontLineWorkersTest extends SpringBaseIT {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
 

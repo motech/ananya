@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class FrontLineWorkerSeedService {
+public class    FrontLineWorkerSeedService {
 
     private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeedService.class);
 
@@ -101,7 +101,7 @@ public class FrontLineWorkerSeedService {
                 RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
                 RegistrationMeasure finalRegistrationMeasure = allRegistrationMeasures.fetchFor(finalFrontLineWorkerDimension.getId());
                 finalRegistrationMeasure.merge(registrationMeasure);
-                allRegistrationMeasures.update(finalRegistrationMeasure);
+                allRegistrationMeasures.createOrUpdate(finalRegistrationMeasure);
                 allRegistrationMeasures.remove(registrationMeasure);
                 log.info("Duplicates:merged postgres measure from " + registrationMeasure + " to " + finalRegistrationMeasure);
 
@@ -167,7 +167,7 @@ public class FrontLineWorkerSeedService {
             return;
         }
         frontLineWorkerDimension.setDesignation(frontLineWorker.designationName());
-        frontLineWorkerDimension.setStatus(frontLineWorker.status().toString());
+        frontLineWorkerDimension.setStatus(frontLineWorker.getStatus().toString());
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
         log.info("Designation: corrected invalid designation in postgres: " + frontLineWorkerDimension);
     }
@@ -181,7 +181,7 @@ public class FrontLineWorkerSeedService {
         }
         Location location = allLocations.findByExternalId(frontLineWorker.getLocationId());
 
-        RegistrationStatus actualRegistrationStatus = frontLineWorker.status();
+        RegistrationStatus actualRegistrationStatus = frontLineWorker.getStatus();
         RegistrationStatus expectedRegistrationStatus = deduceRegistrationStatusOld(frontLineWorker, location);
         if (!frontLineWorkerDimension.statusIs(actualRegistrationStatus)) {
             log.error("postgres and couch out of sync! msisdn : " + frontLineWorkerDimension.getMsisdn() +
@@ -211,13 +211,13 @@ public class FrontLineWorkerSeedService {
                 RegistrationStatus.UNREGISTERED;
         frontLineWorker.setRegistrationStatus(newStatus);
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("modified status in couch:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.status() + "=>" + newStatus);
+        log.info("modified status in couch:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.getStatus() + "=>" + newStatus);
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         if (frontLineWorkerDimension == null) return;
         frontLineWorkerDimension.setStatus(newStatus.toString());
         allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
-        log.info("modified status in postgres:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.status() + "=>" + newStatus);
+        log.info("modified status in postgres:" + frontLineWorker.getMsisdn() + "|" + frontLineWorker.getStatus() + "=>" + newStatus);
     }
 
     public RegistrationStatus deduceRegistrationStatusOld(FrontLineWorker frontLineWorker, Location location) {

@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
@@ -13,6 +14,9 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
+import org.motechproject.util.DateUtil;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.powermock.api.mockito.PowerMockito.spy;
 
+@PrepareForTest(DateUtil.class)
+@RunWith(PowerMockRunner.class)
 public class FrontLineWorkerServiceTest {
 
     private FrontLineWorkerService frontLineWorkerService;
@@ -40,6 +48,9 @@ public class FrontLineWorkerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
+        DateTime now = DateTime.now();
+        spy(DateUtil.class);
+        given(DateUtil.now()).willReturn(now);
         frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys);
     }
 
@@ -57,7 +68,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker savedFrontLineWorker = captor.getValue();
         assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
-        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.status());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.getStatus());
     }
 
     @Test
@@ -69,7 +80,6 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, RegistrationStatus.REGISTERED);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
-
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
         FrontLineWorkerCreateResponse frontLineWorkerResponse = frontLineWorkerService.createOrUpdateForCall(msisdn, operator, circle);
@@ -133,25 +143,6 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldCreateFLWIfNotExists() {
-        String msisdn = "919986574410";
-        String name = "name";
-        Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
-
-        FrontLineWorker frontLineWorker = frontLineWorkerService.createOrUpdateForImport(
-                msisdn, name, designation, location);
-
-        verify(allFrontLineWorkers).add(frontLineWorker);
-        assertEquals(frontLineWorker.getMsisdn(), msisdn);
-        assertEquals(frontLineWorker.getName(), name);
-        assertEquals(frontLineWorker.getDesignation(), designation);
-        assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
-        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.status());
-    }
-
-    @Test
     public void shouldUpdateFLWIfExists() {
         String msisdn = "123";
         String name = "name";
@@ -161,13 +152,13 @@ public class FrontLineWorkerServiceTest {
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        frontLineWorker = frontLineWorkerService.createOrUpdateForImport(msisdn, name, designation, location);
+        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.REGISTERED), location);
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker.getName(), name);
         assertEquals(frontLineWorker.getDesignation(), designation);
         assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
-        assertEquals(RegistrationStatus.REGISTERED, frontLineWorker.status());
+        assertEquals(RegistrationStatus.REGISTERED, frontLineWorker.getStatus());
     }
 
     @Test
@@ -231,9 +222,6 @@ public class FrontLineWorkerServiceTest {
     @Test
     public void shouldCreateANewFrontLineWorkerWithIfDoesNotExist() {
         String callerId = "1234";
-        String circle = "bihar";
-        String operator = "airtel";
-
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(null);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(callerId);
@@ -241,4 +229,54 @@ public class FrontLineWorkerServiceTest {
         assertNull(frontLineWorker);
     }
 
+    @Test
+    public void shouldNotUpdateExistingFLWWhenGivenModificationTimeIsOlderThanExistingOne() {
+        String msisdn = "123";
+        String name = "name";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), DateTime.now());
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
+
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, DateTime.now().minusDays(1)), location);
+
+        verify(allFrontLineWorkers, never()).update(any(FrontLineWorker.class));
+    }
+
+    @Test
+    public void shouldUpdateExistingFLWWhenLastModifiedTimeIsGiven() {
+        String msisdn = "123";
+        String name = "name";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
+        DateTime lastModified = DateTime.now();
+
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, lastModified), location);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(lastModified, frontLineWorker.getLastModified());
+    }
+
+    @Test
+    public void shouldUpdateExistingFLWWithExistingLastModificationDateIfNewLastModifiedTimeIsNull() {
+        String msisdn = "123";
+        String name = "name";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125);
+        DateTime now = DateUtil.now();
+        given(DateUtil.now()).willReturn(null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), now);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
+
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, RegistrationStatus.PARTIALLY_REGISTERED), location);
+
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        verify(allFrontLineWorkers).update(captor.capture());
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(now, frontLineWorker.getLastModified());
+    }
 }

@@ -41,6 +41,12 @@ public class LocationSeedTest {
         template.deleteAll(template.loadAll(LocationDimension.class));
     }
 
+    @After
+    public void tearDown() {
+        allLocations.removeAll();
+        template.deleteAll(template.loadAll(LocationDimension.class));
+    }
+
     @Test
     public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
         locationSeed.loadLocationsFromCSVFile();
@@ -54,11 +60,5 @@ public class LocationSeedTest {
         Assert.assertEquals(location.getDistrict(), locationDimension.getDistrict());
         Assert.assertEquals(location.getBlock(), locationDimension.getBlock());
         Assert.assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
-    }
-
-    @After
-    public void tearDown() {
-        allLocations.removeAll();
-        template.deleteAll(template.loadAll(LocationDimension.class));
     }
 }

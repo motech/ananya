@@ -12,7 +12,6 @@
 
     <artifactId>ananya-tool</artifactId>
 
-
     <dependencies>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
@@ -37,7 +36,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya</groupId>
+            <artifactId>motech-diagnostics</artifactId>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>

@@ -1,26 +1,24 @@
 package org.motechproject.ananya.seed;
 
 import liquibase.util.csv.CSVReader;
-import org.motechproject.ananya.domain.LocationList;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.LocationRegistrationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
-import org.motechproject.ananya.service.LocationService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class LocationSeed {
     @Autowired
     private LocationRegistrationService locationRegistrationService;
-    
-    @Autowired
-    private LocationService locationService;
-    
+
     @Value("#{ananyaProperties['seed.location.file']}")
     private String inputFileName;
 
@@ -51,11 +49,11 @@ public class LocationSeed {
     }
 
     private void loadFromCsv(String path) throws IOException {
-        LocationList locationList = new LocationList(locationService.getAll());
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
-
+        List<LocationRequest> locationList = new ArrayList<LocationRequest>();
+        //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
         while (currentRow != null) {
@@ -63,17 +61,19 @@ public class LocationSeed {
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            LocationRegistrationResponse response = locationRegistrationService.registerLocation(currentDistrict,
-                    currentBlock, currentPanchayat,locationList);
+            locationList.add(new LocationRequest(currentDistrict, currentBlock, currentPanchayat));
 
-            writer.write(response.getMessage() +" => District: " + currentDistrict + " Block: "+ currentBlock
-                    + " Panchayat : " + currentPanchayat);
-            writer.newLine();
             currentRow = csvReader.readNext();
         }
-        locationRegistrationService.registerDefaultLocationForDistrictBlock(locationList);
-        writer.close();
+        List<LocationRegistrationResponse> responses = locationRegistrationService.registerAllLocationsWithDefaultLocations(locationList);
+        logResponses(responses);
     }
 
-
+    private void logResponses(List<LocationRegistrationResponse> responses) throws IOException {
+        for (LocationRegistrationResponse response : responses) {
+            writer.write(response.getMessage() + response.getLocationDetails());
+            writer.newLine();
+        }
+        writer.close();
+    }
 }

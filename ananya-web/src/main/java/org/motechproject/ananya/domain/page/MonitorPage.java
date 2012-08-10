@@ -2,7 +2,7 @@ package org.motechproject.ananya.domain.page;
 
 import org.motechproject.ananya.domain.Sidebar;
 import org.motechproject.ananya.support.diagnostics.CouchDBDiagnostic;
-import org.motechproject.ananya.support.diagnostics.PostgresDiagnostic;
+import org.motechproject.ananya.support.diagnostics.PostgresDataDiagnostic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,10 +16,10 @@ public class MonitorPage {
     private String view = "admin/monitor";
 
     private CouchDBDiagnostic couchDBDiagnostic;
-    private PostgresDiagnostic postgresDiagnostics;
+    private PostgresDataDiagnostic postgresDiagnostics;
 
     @Autowired
-    public MonitorPage(CouchDBDiagnostic couchDBDiagnostic, PostgresDiagnostic postgresDiagnostics) {
+    public MonitorPage(CouchDBDiagnostic couchDBDiagnostic, PostgresDataDiagnostic postgresDiagnostics) {
         this.couchDBDiagnostic = couchDBDiagnostic;
         this.postgresDiagnostics = postgresDiagnostics;
     }

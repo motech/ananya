@@ -1,21 +1,18 @@
 package org.motechproject.ananya.response;
 
 public class RegistrationResponse {
-
     private String message;
 
-    public RegistrationResponse withInvalidLocationStatus() {
-        message = "Invalid Location";
-        return this;
+    public RegistrationResponse() {
     }
 
-    public RegistrationResponse withInvalidCallerId() {
-        message = "Invalid CallerId";
+    public RegistrationResponse withValidationResponse(FLWValidationResponse FLWValidationResponse) {
+        this.message = FLWValidationResponse.getMessage();
         return this;
     }
 
     public RegistrationResponse withNewRegistrationDone() {
-        message = "New FrontlineWorker added";
+        this.message = "Created/Updated FLW record";
         return this;
     }
 

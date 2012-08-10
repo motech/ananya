@@ -6,18 +6,14 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.page.InquiryPage;
 import org.motechproject.ananya.domain.page.LoginPage;
 import org.motechproject.ananya.domain.page.MonitorPage;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.mock;
@@ -28,8 +24,6 @@ public class AdminControllerTest {
 
     private AdminController controller;
     @Mock
-    private DiagnosticService diagnosticService;
-    @Mock
     private MonitorPage monitorPage;
     @Mock
     private LoginPage loginPage;
@@ -39,16 +33,7 @@ public class AdminControllerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new AdminController(diagnosticService, monitorPage, loginPage, inquiryPage);
-    }
-
-    @Test
-    public void shouldCallDiagnosticService() throws Exception {
-        String diagnosis = "diagnosis";
-        when(diagnosticService.getDiagnostics()).thenReturn(diagnosis);
-
-        String results = controller.getDiagnostics();
-        assertThat(results, is(diagnosis));
+        controller = new AdminController(monitorPage, loginPage, inquiryPage);
     }
 
     @Test

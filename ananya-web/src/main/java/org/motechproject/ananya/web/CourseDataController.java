@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/generated/js")
-public class CourseDataController {
+public class CourseDataController extends BaseAnanyaController {
 
     private static Logger log = LoggerFactory.getLogger(CourseDataController.class);
 

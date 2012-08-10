@@ -209,8 +209,9 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.jvnet.jax-ws-commons</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <goals>
@@ -238,6 +239,21 @@
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-flw</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-exporter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya</groupId>
+            <artifactId>motech-diagnostics</artifactId>
+            <version>${motech.contrib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-importer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -361,17 +377,17 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-sms-api</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>

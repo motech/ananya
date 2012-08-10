@@ -155,7 +155,7 @@ public class ReportDb {
                 new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED");
         LocationDimension locationDimension = allLocationDimensions.getFor(Location.getDefaultLocation().getExternalId());
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
-        allRegistrationMeasures.add(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));
+        allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));
         return this;
     }
 }

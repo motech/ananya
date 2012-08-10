@@ -1,5 +1,7 @@
 package org.motechproject.ananya.repository.dimension;
 
+import com.googlecode.ehcache.annotations.Cacheable;
+import com.googlecode.ehcache.annotations.TriggersRemove;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -37,10 +39,15 @@ public class AllTimeDimensions {
         template.update(timeDimension);
     }
 
+    @Cacheable(cacheName = "timeDimensionCache")
     public TimeDimension getFor(DateTime dateTime) {
         return (TimeDimension) template.getUniqueResult(
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR,
                 new String[]{"year", "month", "day"},
                 new Object[]{dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfYear()});
+    }
+
+    @TriggersRemove(cacheName = "timeDimensionCache", removeAll = true)
+    public void invalidateCache() {
     }
 }

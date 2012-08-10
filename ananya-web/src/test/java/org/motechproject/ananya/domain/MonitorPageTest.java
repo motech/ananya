@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.page.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.CouchDBDiagnostic;
-import org.motechproject.ananya.support.diagnostics.PostgresDiagnostic;
+import org.motechproject.ananya.support.diagnostics.PostgresDataDiagnostic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,7 +25,7 @@ public class MonitorPageTest {
     @Mock
     private CouchDBDiagnostic couchDBDiagnostic;
     @Mock
-    private PostgresDiagnostic postgresDiagnostic;
+    private PostgresDataDiagnostic postgresDiagnostic;
 
     @Before
     public void setup() {

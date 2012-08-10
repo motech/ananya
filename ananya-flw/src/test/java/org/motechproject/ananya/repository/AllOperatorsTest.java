@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
 
-public class AllOperatorsTest extends FrontLineWorkerBaseIT {
+public class AllOperatorsTest extends SpringBaseIT {
     @Autowired
     private AllOperators allOperators;
 

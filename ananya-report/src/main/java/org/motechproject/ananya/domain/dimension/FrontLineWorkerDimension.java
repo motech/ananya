@@ -116,6 +116,34 @@ public class FrontLineWorkerDimension {
         this.designation = designation;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FrontLineWorkerDimension)) return false;
+
+        FrontLineWorkerDimension that = (FrontLineWorkerDimension) o;
+
+        if (circle != null ? !circle.equals(that.circle) : that.circle != null) return false;
+        if (designation != null ? !designation.equals(that.designation) : that.designation != null) return false;
+        if (!msisdn.equals(that.msisdn)) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (operator != null ? !operator.equals(that.operator) : that.operator != null) return false;
+        if (status != null ? !status.equals(that.status) : that.status != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = msisdn.hashCode();
+        result = 31 * result + (operator != null ? operator.hashCode() : 0);
+        result = 31 * result + (circle != null ? circle.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (designation != null ? designation.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        return result;
+    }
+
     public void merge(FrontLineWorkerDimension frontLineWorkerDimension) {
         this.name = frontLineWorkerDimension.name;
         this.status = frontLineWorkerDimension.status;

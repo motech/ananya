@@ -36,7 +36,7 @@ public class LocationServiceTest {
 
         List<Location> actualLocations = locationService.getAll();
 
-        assertEquals(1,actualLocations.size());
+        assertEquals(1, actualLocations.size());
     }
 
     @Test
@@ -46,6 +46,16 @@ public class LocationServiceTest {
         locationService.add(location);
 
         verify(allLocations).add(location);
+    }
+
+    @Test
+    public void shouldGetLocation() {
+        Location expectedLocation = new Location();
+        when(allLocations.findByDistrictBlockPanchayat("D1", "B1", "P1")).thenReturn(expectedLocation);
+
+        Location actualLocation = locationService.findFor("D1", "B1", "P1");
+
+        assertEquals(expectedLocation, actualLocation);
     }
 
     @Test

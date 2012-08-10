@@ -13,11 +13,11 @@ public enum Designation {
      */
     INVALID;
 
+
     private static boolean contains(String value) {
         for (Designation designation : Designation.values()) {
-            if (designation.name().equalsIgnoreCase(value)) {
+            if (designation.name().equalsIgnoreCase(StringUtils.trimToEmpty(value)))
                 return true;
-            }
         }
         return false;
     }
@@ -27,6 +27,6 @@ public enum Designation {
     }
 
     public static Designation getFor(String designation) {
-        return Designation.isInValid(designation) ? null : Designation.valueOf(designation.toUpperCase());
+        return Designation.isInValid(designation) ? null : Designation.valueOf(designation.trim().toUpperCase());
     }
 }

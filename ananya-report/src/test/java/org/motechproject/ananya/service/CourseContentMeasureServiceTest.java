@@ -195,5 +195,4 @@ public class CourseContentMeasureServiceTest {
         verify(allCourseItemDimensions, never()).getFor(contentName, contentType);
         verify(certificateCourseLogService).remove(certificationCourseLog);
     }
-
 }

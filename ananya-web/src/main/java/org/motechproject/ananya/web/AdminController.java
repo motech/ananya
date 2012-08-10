@@ -4,7 +4,6 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.domain.page.InquiryPage;
 import org.motechproject.ananya.domain.page.LoginPage;
 import org.motechproject.ananya.domain.page.MonitorPage;
-import org.motechproject.ananya.support.diagnostics.base.DiagnosticService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +22,15 @@ public class AdminController {
 
     private static Logger log = LoggerFactory.getLogger(AdminController.class);
 
-    private DiagnosticService diagnosticService;
     private MonitorPage monitorPage;
     private LoginPage loginPage;
     private InquiryPage inquiryPage;
 
     @Autowired
-    public AdminController(DiagnosticService diagnosticService, MonitorPage monitorPage, LoginPage loginPage, InquiryPage inquiryPage) {
-        this.diagnosticService = diagnosticService;
+    public AdminController(MonitorPage monitorPage, LoginPage loginPage, InquiryPage inquiryPage) {
         this.monitorPage = monitorPage;
         this.loginPage = loginPage;
         this.inquiryPage = inquiryPage;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/diagnostics")
-    @ResponseBody
-    public String getDiagnostics() throws Exception {
-        String diagnosisResult = diagnosticService.getDiagnostics();
-        log.info("diagnostics called");
-        return diagnosisResult;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/login")

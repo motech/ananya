@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/generated/js")
-public class CallerDataController {
+public class CallerDataController extends BaseAnanyaController {
 
     private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
 

@@ -26,7 +26,7 @@
          <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-server-api</artifactId>
-            <version>0.10</version>
+            <version>${motech.platform.version}</version>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -79,6 +79,16 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>3.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya</groupId>
+            <artifactId>motech-bulk-export-import</artifactId>
+            <version>${motech.contrib.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.ehcache-spring-annotations</groupId>
+            <artifactId>ehcache-spring-annotations</artifactId>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 

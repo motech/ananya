@@ -28,4 +28,8 @@ public class LocationService {
     public void add(Location location) {
         allLocations.add(location);
     }
+
+    public Location findFor(String district, String block, String panchayat) {
+        return allLocations.findByDistrictBlockPanchayat(district, block, panchayat);
+    }
 }

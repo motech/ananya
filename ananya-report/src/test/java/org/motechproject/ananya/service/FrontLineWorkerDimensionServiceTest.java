@@ -65,4 +65,22 @@ public class FrontLineWorkerDimensionServiceTest {
         boolean exists = frontLineWorkerDimensionService.exists(123L);
         assertFalse(exists);
     }
+
+    @Test
+    public void shouldGetFilteredFlws() {
+        String msisdn = "123";
+        String operator = "Airtel";
+        String circle = "circle";
+        String name = "name";
+        String designation = Designation.ANM.name();
+        String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
+        ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle));
+        when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
+
+        List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle);
+
+        assertEquals(filteredFLWs.size(), 1);
+        assertTrue(filteredFLWs.contains(frontLineWorkerDimensions.get(0)));
+    }
 }

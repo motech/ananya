@@ -2,6 +2,7 @@ package org.motechproject.ananya.repository.measure;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.CourseItemState;
@@ -39,6 +40,7 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
     @Autowired
     AllLocationDimensions allLocationDimensions;
 
+    @Before
     @After
     public void tearDown() {
         template.deleteAll(template.loadAll(CourseItemDimension.class));
@@ -91,4 +93,35 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         assertEquals(msisdn, measure.getFrontLineWorkerDimension().getMsisdn());
     }
 
+    @Test
+    public void shouldFetchAllFrontLineWorkerIdsBetweenADateRange() {
+        CourseItemType chapter = CourseItemType.CHAPTER;
+        Long msisdn1 = Long.valueOf("987654");
+        Long msisdn2 = Long.valueOf("123456");
+        String callId = "callId";
+        CourseItemState event = CourseItemState.END;
+        DateTime today = DateTime.now();
+        String courseItemDimensionName = "name" + DateTime.now();
+
+        LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
+        CourseItemDimension courseItemDimension = new CourseItemDimension(courseItemDimensionName, "contentId", chapter, null);
+        FrontLineWorkerDimension frontLineWorkerDimension1 = allFrontLineWorkerDimensions.createOrUpdate(msisdn1, "operator", "circle", "name", "ASHA", "REGISTERED");
+        TimeDimension timeDimensionForYesterday = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
+        allCourseItemDimensions.add(courseItemDimension);
+        allLocationDimensions.add(locationDimension);
+        CourseItemMeasure courseItemMeasureForYesterday = new CourseItemMeasure(timeDimensionForYesterday, courseItemDimension, frontLineWorkerDimension1, locationDimension, DateTime.now(), 0, event,callId);
+
+        FrontLineWorkerDimension frontLineWorkerDimension2 = allFrontLineWorkerDimensions.createOrUpdate(msisdn2, "operator", "circle", "name", "ASHA", "REGISTERED");
+        TimeDimension timeDimensionForToday = allTimeDimensions.makeFor(today);
+        allLocationDimensions.add(locationDimension);
+        CourseItemMeasure courseItemMeasureForToday = new CourseItemMeasure(timeDimensionForToday, courseItemDimension, frontLineWorkerDimension2, locationDimension, DateTime.now(), 0, event,callId);
+
+        allCourseItemMeasures.save(courseItemMeasureForYesterday);
+        allCourseItemMeasures.save(courseItemMeasureForToday);
+
+        List<Long> filteredFrontLineWorkerIds = allCourseItemMeasures.getFilteredFrontLineWorkerMsisdns(today.toDate(), DateTime.now().plusDays(1).toDate());
+
+        assertEquals(1, filteredFrontLineWorkerIds.size());
+        assertEquals(msisdn2, filteredFrontLineWorkerIds.get(0));
+    }
 }

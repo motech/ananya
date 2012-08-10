@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<setup xmlns="http://databene.org/benerator/0.7.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://databene.org/benerator/0.7.0 http://databene.org/benerator-0.7.0.xsd">
+
+    <generate name="locations_100" count="100">
+        <variable name="address" generator="org.databene.domain.address.AddressGenerator" dataset="IN" />
+
+        <attribute name="district" type="string" script="address.state" unique="true"/>
+        <attribute name="block" type="string" script="address.city.name" unique="true"/>
+        <attribute name="panchayat" type="string" script="address.street" unique="true"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/locations_100.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="locations_500" count="500">
+        <variable name="address" generator="org.databene.domain.address.AddressGenerator" dataset="IN" />
+
+        <attribute name="district" type="string" script="address.state" unique="true"/>
+        <attribute name="block" type="string" script="address.city.name" unique="true"/>
+        <attribute name="panchayat" type="string" script="address.street" unique="true"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/locations_500.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="locations_1000" count="1000">
+        <variable name="address" generator="org.databene.domain.address.AddressGenerator" dataset="IN" />
+
+        <attribute name="district" type="string" script="address.state" unique="true"/>
+        <attribute name="block" type="string" script="address.city.name" unique="true"/>
+        <attribute name="panchayat" type="string" script="address.street" unique="true"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/locations_1000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="locations_2500" count="2500">
+        <variable name="address" generator="org.databene.domain.address.AddressGenerator" dataset="IN" validator="UniqueValidator" />
+
+        <attribute name="district" type="string" script="address.state" />
+        <attribute name="block" type="string" script="address.city.name"/>
+        <attribute name="panchayat" type="string" script="address.street" />
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/locations_2500.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="locations_5000" count="5000">
+        <variable name="address" generator="org.databene.domain.address.AddressGenerator" dataset="IN" />
+
+        <attribute name="district" type="string" script="address.state" unique="true"/>
+        <attribute name="block" type="string" script="address.city.name" unique="true"/>
+        <attribute name="panchayat" type="string" script="address.street" unique="true"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/locations_5000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_100" count="100">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_100.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_500" count="500">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"
+                  distribution="random"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_500.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+    <generate name="flws_1000" count="1000">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"
+                  distribution="random"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_1000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_5000" count="5000">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_5000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_10000" count="10000">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"
+                  distribution="random"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_10000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_25000" count="25000">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"
+                  distribution="random"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_25000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+
+    <generate name="flws_50000" count="50000">
+        <attribute name="msisdn" type="long"
+                   pattern="[7-9][0-9]{9}" unique="true"/>
+        <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
+        <attribute name="name" type="string" script="person.givenName"/>
+
+        <attribute name="designation" type="string" pattern="(ANM|ASHA|ANGANWADI)" distribution="random"/>
+        <variable name="locationsCSV" type="entity" source="../../test/resources/locations_5000.csv"
+                  distribution="random"/>
+        <attribute name="district" type="string" script="locationsCSV.district"/>
+        <attribute name="block" type="string" script="locationsCSV.block"/>
+        <attribute name="panchayat" type="string" script="locationsCSV.panchayat"/>
+
+        <consumer class="org.databene.platform.csv.CSVEntityExporter">
+            <property name="uri" value="src/test/resources/flws_50000.csv"/>
+            <property name="encoding" value="UTF-8"/>
+            <property name="columns" value="msisdn,name,designation,district,block,panchayat"/>
+        </consumer>
+    </generate>
+</setup>
