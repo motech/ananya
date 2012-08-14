@@ -10,6 +10,7 @@ public class Layout {
         map.put("/admin/monitor", "layout/admin-default.vm");
         map.put("/admin/inquiry", "layout/admin-default.vm");
         map.put("/admin/login", "layout/admin-login.vm");
+        map.put("/admin/logs", "layout/admin-default.vm");
     }
 
     public static String get(String path) {

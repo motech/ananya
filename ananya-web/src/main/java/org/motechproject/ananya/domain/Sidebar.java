@@ -13,6 +13,7 @@ public class Sidebar {
         List<MenuLink> links = new ArrayList<MenuLink>();
         links.add(new MenuLink("Monitor", "admin/monitor", 0));
         links.add(new MenuLink("Inquiry", "admin/inquiry", 0));
+        links.add(new MenuLink("Logs", "admin/logs", 0));
 
         menu.put("Production", links);
         return menu;

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.page.InquiryPage;
 import org.motechproject.ananya.domain.page.LoginPage;
+import org.motechproject.ananya.domain.page.LogsPage;
 import org.motechproject.ananya.domain.page.MonitorPage;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,11 +29,13 @@ public class AdminControllerTest {
     private LoginPage loginPage;
     @Mock
     private InquiryPage inquiryPage;
+    @Mock
+    private LogsPage logsPage;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new AdminController(monitorPage, loginPage, inquiryPage);
+        controller = new AdminController(monitorPage, loginPage, inquiryPage, logsPage);
     }
 
     @Test
