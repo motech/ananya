@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.service.handler.SendSMSHandler;
-import org.motechproject.context.EventContext;
+import org.motechproject.scheduler.context.EventContext;
 
 import java.util.HashMap;
 import java.util.Map;

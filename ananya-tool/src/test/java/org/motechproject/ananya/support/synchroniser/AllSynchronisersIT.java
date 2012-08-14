@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.synchroniser;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.support.synchroniser.base.AllSynchronisers;
@@ -16,6 +17,7 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
+@Ignore
 public class AllSynchronisersIT {
 
     @Autowired

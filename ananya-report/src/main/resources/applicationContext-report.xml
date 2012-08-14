@@ -3,23 +3,23 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+       xmlns:cache="http://www.springframework.org/schema/cache"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-                           http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
     <context:property-placeholder location="classpath*:*.properties"/>
     <context:annotation-config/>
     <context:spring-configured/>
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
-
-    <context:component-scan base-package="org.motechproject.ananya"/>
-
     <import resource="classpath:applicationContext-hibernate.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
+
+    <context:component-scan base-package="org.motechproject.ananya"/>
+
 
     <bean id="smsService"
           class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
@@ -32,8 +32,14 @@
         <property name="lookupServiceOnStartup" value="false"/>
     </bean>
 
-    <ehcache:annotation-driven cache-manager="ehCacheManager"/>
-    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
+
+    <cache:annotation-driven cache-manager="cacheManager"/>
+    <bean id="defaultEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="defaultEhCacheManager"/>
+    </bean>
 
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 </beans>

@@ -8,8 +8,8 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
-import org.motechproject.export.annotation.Report;
-import org.motechproject.export.annotation.ReportGroup;
+import org.motechproject.export.annotation.CSVDataSource;
+import org.motechproject.export.annotation.DataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-@ReportGroup(name = "FRONTLINEWORKER")
+@CSVDataSource(name = "FRONTLINEWORKER")
 public class FlwDataSource {
 
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
@@ -32,7 +32,7 @@ public class FlwDataSource {
         this.jobAidContentMeasureService = jobAidContentMeasureService;
     }
 
-    @Report
+    @DataProvider
     public List<FlwReportData> queryReport(HashMap<String, String> criteria) {
         if(criteria == null)
             criteria = new HashMap<String, String>();

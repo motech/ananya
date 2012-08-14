@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.dataSources.reportData.LocationReportData;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
-import org.motechproject.export.annotation.ReportGroup;
+import org.motechproject.export.annotation.CSVDataSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class LocationDataSourceTest {
 
     @Test
     public void shouldVerifyThatItBelongsToLocationReportGroup() {
-        assertEquals("LOCATION", locationDataSource.getClass().getAnnotation(ReportGroup.class).name());
+        assertEquals("LOCATION", locationDataSource.getClass().getAnnotation(CSVDataSource.class).name());
     }
 
     @Test

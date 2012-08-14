@@ -12,14 +12,12 @@ import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.CourseAudioTrackerMeasureService;
 import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
-import org.motechproject.model.MotechEvent;
+import org.motechproject.scheduler.domain.MotechEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CertificateCourseDataHandlerTest {

@@ -1,11 +1,11 @@
 package org.motechproject.ananya.repository.dimension;
 
-import com.googlecode.ehcache.annotations.Cacheable;
-import com.googlecode.ehcache.annotations.TriggersRemove;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +39,7 @@ public class AllTimeDimensions {
         template.update(timeDimension);
     }
 
-    @Cacheable(cacheName = "timeDimensionCache")
+    @Cacheable("timeDimensionCache")
     public TimeDimension getFor(DateTime dateTime) {
         return (TimeDimension) template.getUniqueResult(
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR,
@@ -47,7 +47,7 @@ public class AllTimeDimensions {
                 new Object[]{dateTime.getYear(), dateTime.getMonthOfYear(), dateTime.getDayOfYear()});
     }
 
-    @TriggersRemove(cacheName = "timeDimensionCache", removeAll = true)
+    @CacheEvict(value = "timeDimensionCache", allEntries = true)
     public void invalidateCache() {
     }
 }

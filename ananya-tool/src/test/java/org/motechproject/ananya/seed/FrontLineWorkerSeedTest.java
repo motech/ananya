@@ -32,6 +32,8 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
+@Ignore
+//TODO Aravind/Imdad has issues with ehcahe.
 public class FrontLineWorkerSeedTest {
 
     @Autowired

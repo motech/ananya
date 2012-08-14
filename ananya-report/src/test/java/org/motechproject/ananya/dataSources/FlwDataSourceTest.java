@@ -12,7 +12,7 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.service.CourseItemMeasureService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
-import org.motechproject.export.annotation.ReportGroup;
+import org.motechproject.export.annotation.CSVDataSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +43,8 @@ public class FlwDataSourceTest {
 
     @Test
     public void shouldVerifyThatItBelongsToFrontLineWorkerReportGroup() {
-        assertEquals("FRONTLINEWORKER", flwDataSource.getClass().getAnnotation(ReportGroup.class).name());
-        assertTrue(StringUtils.isAllUpperCase(flwDataSource.getClass().getAnnotation(ReportGroup.class).name()));
+        assertEquals("FRONTLINEWORKER", flwDataSource.getClass().getAnnotation(CSVDataSource.class).name());
+        assertTrue(StringUtils.isAllUpperCase(flwDataSource.getClass().getAnnotation(CSVDataSource.class).name()));
     }
 
     @Test

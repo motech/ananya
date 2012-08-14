@@ -4,7 +4,7 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
-import org.motechproject.context.EventContext;
+import org.motechproject.scheduler.context.EventContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +32,12 @@ public class QueuePublishService implements PublishService {
     }
 
     private void publishCertificateCourseData(CallMessage logData) {
-        log.info("published course message: "+logData.getCallId());
+        log.info("published course message: " + logData.getCallId());
         eventContext.send(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE, logData);
     }
 
     private void publishJobAidContentData(CallMessage logData) {
-        log.info("published jobaid message: "+logData.getCallId());
+        log.info("published jobaid message: " + logData.getCallId());
         eventContext.send(ReportPublishEventKeys.JOBAID_CALL_MESSAGE, logData);
     }
 }

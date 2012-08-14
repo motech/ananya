@@ -4,8 +4,8 @@ import org.motechproject.ananya.dataSources.mappers.LocationDataMapper;
 import org.motechproject.ananya.dataSources.reportData.LocationReportData;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
-import org.motechproject.export.annotation.Report;
-import org.motechproject.export.annotation.ReportGroup;
+import org.motechproject.export.annotation.CSVDataSource;
+import org.motechproject.export.annotation.DataProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-@ReportGroup(name = "LOCATION")
+@CSVDataSource(name = "LOCATION")
 public class LocationDataSource {
 
     private LocationDimensionService locationDimensionService;
@@ -24,7 +24,7 @@ public class LocationDataSource {
         this.locationDimensionService = locationDimensionService;
     }
 
-    @Report
+    @DataProvider
     public ArrayList<LocationReportData> queryReport(HashMap<String, String> criteria) {
         if(criteria == null)
             criteria = new HashMap<String, String>();

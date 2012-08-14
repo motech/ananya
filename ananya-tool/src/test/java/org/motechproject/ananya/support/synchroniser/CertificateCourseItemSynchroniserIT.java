@@ -4,6 +4,7 @@ package org.motechproject.ananya.support.synchroniser;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
@@ -35,6 +36,7 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
+@Ignore
 public class CertificateCourseItemSynchroniserIT {
 
     @Autowired

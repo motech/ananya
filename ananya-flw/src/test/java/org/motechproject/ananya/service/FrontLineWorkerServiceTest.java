@@ -3,7 +3,6 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
@@ -15,8 +14,6 @@ import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.util.DateUtil;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,13 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.spy;
 
-@PrepareForTest(DateUtil.class)
-@RunWith(PowerMockRunner.class)
 public class FrontLineWorkerServiceTest {
 
     private FrontLineWorkerService frontLineWorkerService;
@@ -48,9 +41,6 @@ public class FrontLineWorkerServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        DateTime now = DateTime.now();
-        spy(DateUtil.class);
-        given(DateUtil.now()).willReturn(now);
         frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys);
     }
 
@@ -268,7 +258,6 @@ public class FrontLineWorkerServiceTest {
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "panchayat", 123, 124, 125);
         DateTime now = DateUtil.now();
-        given(DateUtil.now()).willReturn(null);
         FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), now);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 

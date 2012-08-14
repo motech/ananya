@@ -1,9 +1,9 @@
 package org.motechproject.ananya.service.dimension;
 
-import com.googlecode.ehcache.annotations.Cacheable;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class LocationDimensionService {
         allLocationDimensions.add(locationDimension);
     }
 
-    @Cacheable(cacheName = "locationSearchCache")
+    @Cacheable("locationSearchCache")
     public LocationDimension getFor(String externalId) {
         return allLocationDimensions.getFor(externalId);
     }

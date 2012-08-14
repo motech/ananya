@@ -1,6 +1,6 @@
 package org.motechproject.ananya.console;
 
-import org.motechproject.export.annotation.ReportValue;
+import org.motechproject.export.annotation.ExportValue;
 
 public class SampleData {
 
@@ -10,12 +10,12 @@ public class SampleData {
         this.msisdn = msisdn;
     }
 
-    @ReportValue(index = 0)
+    @ExportValue(index = 0)
     public String getmsisdn() {
         return msisdn;
     }
 
-    @ReportValue(column = "Custom column name", index = 1)
+    @ExportValue(column = "Custom column name", index = 1)
     public String columnWithTitle() {
         return "title";
     }

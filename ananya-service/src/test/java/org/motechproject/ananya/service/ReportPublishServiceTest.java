@@ -8,11 +8,9 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.ReportPublishEventKeys;
 import org.motechproject.ananya.service.publish.QueuePublishService;
-import org.motechproject.context.EventContext;
+import org.motechproject.scheduler.context.EventContext;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -30,19 +28,19 @@ public class ReportPublishServiceTest {
     }
 
     @Test
-    public void shouldPublishCertificateCourseDisconnectEvent(){
+    public void shouldPublishCertificateCourseDisconnectEvent() {
         String callId = "callID";
         reportPublishService.publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
 
         ArgumentCaptor<CallMessage> captor = ArgumentCaptor.forClass(CallMessage.class);
         verify(eventContext).send(eq(ReportPublishEventKeys.CERTIFICATE_COURSE_CALL_MESSAGE), captor.capture());
         CallMessage logData = captor.getValue();
-        
+
         assertEquals(callId, logData.getCallId());
     }
 
     @Test
-    public void shouldPublishJobAidDisconnectEvent(){
+    public void shouldPublishJobAidDisconnectEvent() {
         String callId = "callID";
         reportPublishService.publishDisconnectEvent(callId, ServiceType.JOB_AID);
 
