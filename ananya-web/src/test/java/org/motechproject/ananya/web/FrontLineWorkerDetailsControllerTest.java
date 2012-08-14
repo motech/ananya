@@ -70,7 +70,6 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         locationRegistrationService.addNewLocation(locationRequest);
         String msisdn = "91234545354";
         String designation = Designation.ANM.name();
-        String operator = "airtel";
         String name = "name";
 
         RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null));

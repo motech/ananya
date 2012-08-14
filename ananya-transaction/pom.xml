@@ -15,7 +15,6 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-cmslite-api</artifactId>
-            <version>${motech.platform.version}</version>
         </dependency>
     </dependencies>
 

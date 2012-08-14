@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class OperatorServiceTest {
 
@@ -35,13 +35,11 @@ public class OperatorServiceTest {
     }
 
     @Test
-    public void shouldDelegateToAllOperatorsRepositoryToFetchAllOperators(){
+    public void shouldDelegateToAllOperatorsRepositoryToFetchAllOperators() {
         List<Operator> expectedOperators = Arrays.asList(new Operator());
         when(allOperators.getAll()).thenReturn(expectedOperators);
 
         List<Operator> operators = operatorService.getAllOperators();
-        assertEquals(expectedOperators,operators);
+        assertEquals(expectedOperators, operators);
     }
-
-
 }

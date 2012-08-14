@@ -1,5 +1,6 @@
 package org.motechproject.ananya.exporter.csv.console;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -24,10 +25,10 @@ public class CsvExporterTest {
     public void shouldInvokeExporterServiceToExportCSVData() throws Exception {
         CsvExporter csvExporter = new CsvExporter(exportService);
         String sampleEntity = "SampleEntity";
-        String outputFilePath = this.getClass().getResource("/out.txt").getPath();
         String filterFilePath = this.getClass().getResource("/filters.txt").getPath();
+        String fileOut = FileUtils.getTempDirectoryPath() + "/out.txt";
 
-        csvExporter.buildReport(sampleEntity, outputFilePath, filterFilePath);
+        csvExporter.buildReport(sampleEntity, fileOut, filterFilePath);
 
         ArgumentCaptor<Writer> writerArgumentCaptor = ArgumentCaptor.forClass(Writer.class);
         ArgumentCaptor<Object> objectArgumentCaptor = ArgumentCaptor.forClass(Object.class);

@@ -1,6 +1,7 @@
 package org.motechproject.ananya.seed;
 
 import junit.framework.Assert;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,8 +33,6 @@ import static junit.framework.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-@Ignore
-//TODO Aravind/Imdad has issues with ehcahe.
 public class FrontLineWorkerSeedTest {
 
     @Autowired
@@ -69,6 +68,10 @@ public class FrontLineWorkerSeedTest {
         allFrontLineWorkerDimensions.removeAll();
         locationSeed.loadLocationsFromCSVFile();
         timeSeed.createDimensionsInPostgres();
+        try {
+            allTimeDimensions.getFor(DateTime.now());
+        } catch (Exception e) {
+        }
     }
 
     @After
@@ -81,6 +84,7 @@ public class FrontLineWorkerSeedTest {
     }
 
     @Test
+    @Ignore
     public void shouldRegisterFrontLineWorkersThroughTheFrontLineWorkerSeed() throws IOException {
         frontLineWorkerSeed.createFrontlineWorkersFromCSVFile();
 

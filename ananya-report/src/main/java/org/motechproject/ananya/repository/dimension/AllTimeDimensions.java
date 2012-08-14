@@ -39,7 +39,7 @@ public class AllTimeDimensions {
         template.update(timeDimension);
     }
 
-    @Cacheable("timeDimensionCache")
+    @Cacheable(value = "timeDimensionCache")
     public TimeDimension getFor(DateTime dateTime) {
         return (TimeDimension) template.getUniqueResult(
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR,

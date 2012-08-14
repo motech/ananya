@@ -15,11 +15,8 @@ import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class CertificateCourseServiceTest {
 

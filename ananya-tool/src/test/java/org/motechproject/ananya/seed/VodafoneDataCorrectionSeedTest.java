@@ -8,18 +8,15 @@ import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.AllSMSLogs;
 import org.motechproject.ananya.seed.service.SMSSeedService;
-import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.when;
+
 
 public class VodafoneDataCorrectionSeedTest {
     @Mock

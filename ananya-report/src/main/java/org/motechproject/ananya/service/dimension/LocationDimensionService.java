@@ -27,7 +27,7 @@ public class LocationDimensionService {
         allLocationDimensions.add(locationDimension);
     }
 
-    @Cacheable("locationSearchCache")
+    @Cacheable(value = "locationSearchCache")
     public LocationDimension getFor(String externalId) {
         return allLocationDimensions.getFor(externalId);
     }

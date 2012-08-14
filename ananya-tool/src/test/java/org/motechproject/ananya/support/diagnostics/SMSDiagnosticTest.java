@@ -8,8 +8,8 @@ import org.motechproject.ananya.webservice.OnMobileSendSMSService;
 import javax.jms.JMSException;
 
 import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.when;
 
 public class SMSDiagnosticTest {
 
@@ -29,7 +29,6 @@ public class SMSDiagnosticTest {
 
     @Test
     public void shouldUseSMSWebServiceToSendSMSAndLogIfErrorOccurs() throws JMSException {
-
         String message = "Ananya Test SMS from Production";
         when(smsService.singlePush(mobileNumber, senderId, message)).thenReturn("failure");
 

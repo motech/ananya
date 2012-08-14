@@ -6,9 +6,9 @@ import org.mockito.Mock;
 import org.motechproject.ananya.contract.BaseRequest;
 import org.motechproject.ananya.contract.BaseServiceRequest;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class AllTransformersTest {
     @Mock

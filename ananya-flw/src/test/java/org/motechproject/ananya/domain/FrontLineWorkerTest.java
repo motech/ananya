@@ -4,8 +4,6 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.util.DateUtil;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.Map;
 
@@ -15,7 +13,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@PrepareForTest(DateUtil.class)
 @RunWith(MockitoJUnitRunner.class)
 public class FrontLineWorkerTest {
 

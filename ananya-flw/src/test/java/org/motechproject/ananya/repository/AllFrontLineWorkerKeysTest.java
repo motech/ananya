@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.FrontLineWorkerKey;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.ExpectedException;
 
 import static junit.framework.Assert.assertNotNull;
 
@@ -20,8 +19,7 @@ public class AllFrontLineWorkerKeysTest extends SpringBaseIT {
         allFrontLineWorkerKeys.removeAll();
     }
 
-    @Test
-    @ExpectedException(UpdateConflictException.class)
+    @Test(expected = UpdateConflictException.class)
     public void shouldThrowUpIfDuplicateExists() {
         FrontLineWorkerKey worker1 = new FrontLineWorkerKey("1234");
         FrontLineWorkerKey worker2 = new FrontLineWorkerKey("1234");

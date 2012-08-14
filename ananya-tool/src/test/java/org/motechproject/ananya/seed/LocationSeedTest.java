@@ -22,8 +22,6 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-@Ignore
-//TODO Aravind/Imdad has issues with ehcahe.
 public class LocationSeedTest {
 
     @Autowired
@@ -51,6 +49,7 @@ public class LocationSeedTest {
     }
 
     @Test
+    @Ignore
     public void shouldLoadAllTheLocationsFromTheCSVFile() throws IOException {
         locationSeed.loadLocationsFromCSVFile();
 
