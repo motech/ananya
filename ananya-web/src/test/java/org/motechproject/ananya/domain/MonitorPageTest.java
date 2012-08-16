@@ -53,7 +53,7 @@ public class MonitorPageTest {
         
         assertEquals(couchdbDiagnosticResult, model.get("couchdbData"));
         assertEquals(postgresDiagnosticResult, model.get("postgresData"));
-        assertEquals(2, menu.size());
+        assertEquals(3, menu.size());
         assertEquals("Monitor",menu.get(0).getDisplayString());
         assertEquals("Inquiry",menu.get(1).getDisplayString());
     }
