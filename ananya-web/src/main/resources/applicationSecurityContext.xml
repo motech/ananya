@@ -22,7 +22,7 @@
         <intercept-url pattern="/admin/inquiry" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/inquiry/" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/logs" access="hasRole('admin')" requires-channel="any"/>
-        <intercept-url pattern="/admin/logs/" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/logs/*" access="hasRole('admin')" requires-channel="any"/>
     </http>
 
     <beans:bean name="authenticationProvider" class="org.motechproject.ananya.security.AuthenticationProvider"/>
