@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
@@ -27,7 +28,7 @@ public class LogsPageTest {
 
         assertEquals(2, filesInfo.size());
         FileInfo fileInfo = filesInfo.get(0);
-        assertEquals("ananya.file", fileInfo.getName());
+        assertTrue(fileInfo.getName().contains("ananya.file"));
         assertNotNull(fileInfo.getSize());
         assertNotNull(fileInfo.getLastUpdated());
     }
