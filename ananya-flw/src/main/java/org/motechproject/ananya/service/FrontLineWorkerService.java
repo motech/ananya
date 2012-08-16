@@ -43,7 +43,7 @@ public class FrontLineWorkerService {
         FrontLineWorker existingFrontLineWorker = findByCallerId(callerId);
 
         if (existingFrontLineWorker == null) {
-            return createNewFrontlineWorker(frontLineWorker, location);
+            return createNewFrontLineWorker(frontLineWorker, location);
         }
         if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
             updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
@@ -121,13 +121,13 @@ public class FrontLineWorkerService {
         return allFrontLineWorkers.getAll();
     }
 
-    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker exisitingFrontLineWorker) {
-        if (exisitingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
-            return (DateUtil.isOnOrBefore(exisitingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
+    private boolean isFLWFromDbOlder(FrontLineWorker frontLineWorker, FrontLineWorker existingFrontLineWorker) {
+        if (existingFrontLineWorker.getLastModified() != null && frontLineWorker.getLastModified() != null)
+            return (DateUtil.isOnOrBefore(existingFrontLineWorker.getLastModified(), frontLineWorker.getLastModified()));
         return true;
     }
 
-    private FrontLineWorker createNewFrontlineWorker(FrontLineWorker frontLineWorker, Location location) {
+    private FrontLineWorker createNewFrontLineWorker(FrontLineWorker frontLineWorker, Location location) {
         frontLineWorker.decideRegistrationStatus(location);
         allFrontLineWorkers.add(frontLineWorker);
         log.info("Created:" + frontLineWorker);
