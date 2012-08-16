@@ -1,27 +1,19 @@
 package org.motechproject.ananya.domain.page;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.FileInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
 public class LogsPageTest {
-    @Autowired
     private LogsPage logsPage;
 
     @Test
-    public void shouldReturnModelContainingListOfAllFilesInLogDirectory() {
+    public void shouldReturnModelContainingListOfAllFilesInLogDirectoryForDev() {
+        logsPage = new LogsPage("/logs","dev");
         ModelAndView modelAndView = logsPage.display();
 
         List<FileInfo> filesInfo = (List<FileInfo>) modelAndView.getModel().get("logFilesInfo");
@@ -33,5 +25,13 @@ public class LogsPageTest {
         assertNotNull(fileInfo.getLastUpdated());
     }
 
+    @Test
+    public void shouldReturnModelContainingListOfAllFilesInLogDirectoryForProd() {
+        logsPage = new LogsPage("/logs","prod");
+        ModelAndView modelAndView = logsPage.display();
 
+        List<FileInfo> filesInfo = (List<FileInfo>) modelAndView.getModel().get("logFilesInfo");
+
+        assertEquals(0, filesInfo.size());
+    }
 }

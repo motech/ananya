@@ -18,17 +18,19 @@ public class LogsPage {
     private File logDirectory;
 
     @Autowired
-    public LogsPage(@Value("#{ananyaProperties['log.location']}") String logLocation) {
-        this.logDirectory = new File(getClass().getResource(logLocation).getPath());
+    public LogsPage(@Value("#{ananyaProperties['log.location']}") String logLocation,
+                    @Value("#{ananyaProperties['environment']}") String environment) {
+        this.logDirectory = environment.equals("prod") ?
+                new File(logLocation) : new File(getClass().getResource(logLocation).getPath());
     }
 
     public ModelAndView display() {
-        File[] logs = logDirectory.listFiles();
-
         List<FileInfo> logFilesInfo = new ArrayList<FileInfo>();
-        for (File log : logs)
-            logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
-
+        if(logDirectory.exists()){
+            File[] logs = logDirectory.listFiles();
+            for (File log : logs)
+                logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
+        }
         return new ModelAndView(view)
                 .addObject("logFilesInfo", logFilesInfo)
                 .addObject("menuMap", new Sidebar().getMenu());

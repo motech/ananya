@@ -10,6 +10,7 @@ import org.motechproject.ananya.domain.page.MonitorPage;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ public class AdminControllerTest {
     private InquiryPage inquiryPage;
     @Mock
     private LogsPage logsPage;
+    @Mock
+    private FileInputStream mockFileInputStream;
 
     @Before
     public void setUp() {
@@ -84,5 +87,16 @@ public class AdminControllerTest {
 
         verify(inquiryPage).display(msisdn);
         assertSame(map, resultMap);
+    }
+
+    @Test
+    public void shouldCallLogsPageToDisplay() throws Exception {
+        ModelAndView expectedModelAndView = new ModelAndView();
+        when(logsPage.display()).thenReturn(expectedModelAndView);
+
+        ModelAndView modelAndView = controller.showLogs();
+
+        verify(logsPage).display();
+        assertSame(expectedModelAndView, modelAndView);
     }
 }
