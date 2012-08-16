@@ -26,10 +26,8 @@ public class LogsPage {
         File[] logs = logDirectory.listFiles();
 
         List<FileInfo> logFilesInfo = new ArrayList<FileInfo>();
-        for (File log : logs) {
+        for (File log : logs)
             logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
-        }
-
 
         return new ModelAndView(view)
                 .addObject("logFilesInfo", logFilesInfo)
@@ -43,10 +41,8 @@ public class LogsPage {
                 return name.equals(logFilename);
             }
         });
-
-        if (files.length > 0) {
+        if (files.length > 0)
             return new FileInputStream(files[0]);
-        }
 
         throw new FileNotFoundException(String.format("%s log file not found", logFilename));
     }

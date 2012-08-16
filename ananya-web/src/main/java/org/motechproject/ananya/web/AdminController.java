@@ -70,7 +70,6 @@ public class AdminController {
         log.info(String.format("%s log file requested", logFilename));
 
         IOUtils.copy(logsPage.getLogFile(logFilename), response.getOutputStream());
-
         response.setContentType("text/plain");
         response.flushBuffer();
     }
