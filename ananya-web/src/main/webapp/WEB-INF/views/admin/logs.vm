@@ -6,15 +6,13 @@
                 <th>Name</th>
                 <th>File Size</th>
                 <th>Last Updated</th>
-                <th>Action</th>
             </tr>
             </thead><tbody>
                 #foreach($entry in $logFilesInfo)
                 <tr>
-                    <td>$entry.getName()</td>
+                    <td><a href="admin/logs/$entry.getName()">$entry.getName()</a></td>
                     <td>$entry.getSize()</td>
                     <td>$entry.getLastUpdated()</td>
-                    <td><a href="admin/logs/$entry.getName()">download</a></td>
                 </tr>
                 #end
             </tbody>
