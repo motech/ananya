@@ -33,7 +33,4 @@ public class MonitorPage {
                 .addObject("couchdbData", couchDbData)
                 .addObject("postgresData", postgresData);
     }
-
-    
-
 }

@@ -2,6 +2,7 @@ package org.motechproject.ananya.web;
 
 
 import org.apache.commons.io.IOUtils;
+import org.motechproject.ananya.domain.PeerServer;
 import org.motechproject.ananya.domain.page.InquiryPage;
 import org.motechproject.ananya.domain.page.LoginPage;
 import org.motechproject.ananya.domain.page.LogsPage;
@@ -26,13 +27,15 @@ public class AdminController {
     private LoginPage loginPage;
     private InquiryPage inquiryPage;
     private LogsPage logsPage;
+    private PeerServer peerServer;
 
     @Autowired
-    public AdminController(MonitorPage monitorPage, LoginPage loginPage, InquiryPage inquiryPage, LogsPage logsPage) {
+    public AdminController(MonitorPage monitorPage, LoginPage loginPage, InquiryPage inquiryPage, LogsPage logsPage, PeerServer peerServer) {
         this.monitorPage = monitorPage;
         this.loginPage = loginPage;
         this.inquiryPage = inquiryPage;
         this.logsPage = logsPage;
+        this.peerServer = peerServer;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/login")
@@ -41,10 +44,16 @@ public class AdminController {
         return loginPage.display(error);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/monitor")
+    @RequestMapping(method = RequestMethod.GET, value = {"/admin/monitor", "/internal/admin/monitor"})
     public ModelAndView showMonitorPage() throws Exception {
-        log.info("monitor page displayed");
+        log.info("monitor page displayed for active box");
         return monitorPage.display();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/peer/monitor")
+    public void showMonitorPageForPeerBox(HttpServletResponse response) throws Exception {
+        log.info("monitor page displayed for passive box");
+        peerServer.copyResponse("internal/admin/monitor", response);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/admin/inquiry")
@@ -60,17 +69,31 @@ public class AdminController {
         return inquiryPage.display(msisdn);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/logs")
+    @RequestMapping(method = RequestMethod.GET, value = {"/admin/logs","/internal/admin/logs"})
     public ModelAndView showLogs() throws Exception {
+        log.info("logs page displayed for active box");
         return logsPage.display();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/logs/{file_name:.*}")
-    public void getLog(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
-        log.info(String.format("%s log file requested", logFilename));
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/peer/logs")
+    public void showLogsForPeerBox(HttpServletResponse response) throws Exception {
+        log.info("logs page displayed for passive box");
+        peerServer.copyResponse("internal/admin/logs", response);
+    }
 
+    @RequestMapping(method = RequestMethod.GET, value = {"/admin/logs/{file_name:.*}","/internal/admin/logs/{file_name:.*}"})
+    public void getLog(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
+        log.info(String.format("%s log file requested from active box", logFilename));
         IOUtils.copy(logsPage.getLogFile(logFilename), response.getOutputStream());
         response.setContentType("text/plain");
         response.flushBuffer();
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/peer/logs/{file_name:.*}")
+    public void getLogFromPeerBox(@PathVariable("file_name") String logFilename, HttpServletResponse response) throws Exception {
+        log.info(String.format("%s log file requested from passive box", logFilename));
+        peerServer.copyResponse("internal/admin/logs/" + logFilename, response);
+    }
+
+
 }

@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.PeerServer;
 import org.motechproject.ananya.domain.page.InquiryPage;
 import org.motechproject.ananya.domain.page.LoginPage;
 import org.motechproject.ananya.domain.page.LogsPage;
@@ -10,16 +11,16 @@ import org.motechproject.ananya.domain.page.MonitorPage;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+
 
 public class AdminControllerTest {
 
@@ -34,11 +35,13 @@ public class AdminControllerTest {
     private LogsPage logsPage;
     @Mock
     private FileInputStream mockFileInputStream;
+    @Mock
+    private PeerServer peerServer;
 
     @Before
     public void setUp() {
         initMocks(this);
-        controller = new AdminController(monitorPage, loginPage, inquiryPage, logsPage);
+        controller = new AdminController(monitorPage, loginPage, inquiryPage, logsPage, peerServer);
     }
 
     @Test
@@ -97,5 +100,26 @@ public class AdminControllerTest {
 
         verify(logsPage).display();
         assertSame(expectedModelAndView, modelAndView);
+    }
+
+    @Test
+    public void shouldCallPeerServerToDisplayMonitorPage() throws Exception {
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        controller.showMonitorPageForPeerBox(response);
+        verify(peerServer).copyResponse("internal/admin/monitor", response);
+    }
+
+    @Test
+    public void shouldCallPeerServerToDisplayLogsPage() throws Exception {
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        controller.showLogsForPeerBox(response);
+        verify(peerServer).copyResponse("internal/admin/logs", response);
+    }
+
+    @Test
+    public void shouldCallPeerServerToGetLogFile() throws Exception {
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        controller.getLogFromPeerBox("file1.log",response);
+        verify(peerServer).copyResponse("internal/admin/logs/file1.log", response);
     }
 }
