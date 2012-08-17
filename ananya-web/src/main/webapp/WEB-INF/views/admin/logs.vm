@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>File Size</th>
+                <th>File Size (MB)</th>
                 <th>Last Updated</th>
             </tr>
             </thead><tbody>

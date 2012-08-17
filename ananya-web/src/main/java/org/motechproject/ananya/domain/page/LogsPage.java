@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,6 +35,8 @@ public class LogsPage {
             for (File log : logs)
                 logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
         }
+        Collections.sort(logFilesInfo);
+
         return new ModelAndView(view)
                 .addObject("logFilesInfo", logFilesInfo)
                 .addObject("menuMap", new Sidebar().getMenu());
