@@ -21,7 +21,10 @@ public class JobAidDataHandler {
     private RegistrationMeasureService registrationMeasureService;
 
     @Autowired
-    public JobAidDataHandler(JobAidContentMeasureService jobAidContentMeasureService, CallDurationMeasureService callDurationMeasureService, RegistrationMeasureService registrationMeasureService) {
+    public JobAidDataHandler(JobAidContentMeasureService jobAidContentMeasureService,
+                             CallDurationMeasureService callDurationMeasureService,
+                             RegistrationMeasureService registrationMeasureService) {
+        
         this.jobAidContentMeasureService = jobAidContentMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.registrationMeasureService = registrationMeasureService;

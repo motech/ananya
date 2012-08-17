@@ -10,8 +10,7 @@
 
         <form-login login-page="/admin/login"
                     login-processing-url="/security/j_spring_security_check"
-                    authentication-failure-url="/admin/login?login_error=t"
-                    default-target-url="/admin/monitor"/>
+                    authentication-failure-url="/admin/login?login_error=t"/>
 
         <logout logout-url="/security/j_spring_security_logout"
                 invalidate-session="true"
@@ -19,10 +18,15 @@
 
         <intercept-url pattern="/admin/monitor" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/monitor/" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/peer/monitor" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/peer/monitor/" access="hasRole('admin')" requires-channel="any"/>
+
         <intercept-url pattern="/admin/inquiry" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/inquiry/" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/logs" access="hasRole('admin')" requires-channel="any"/>
         <intercept-url pattern="/admin/logs/*" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/peer/logs" access="hasRole('admin')" requires-channel="any"/>
+        <intercept-url pattern="/admin/peer/logs/*" access="hasRole('admin')" requires-channel="any"/>
     </http>
 
     <beans:bean name="authenticationProvider" class="org.motechproject.ananya.security.AuthenticationProvider"/>
