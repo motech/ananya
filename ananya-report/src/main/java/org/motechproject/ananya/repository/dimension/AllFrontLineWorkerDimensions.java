@@ -1,6 +1,6 @@
 package org.motechproject.ananya.repository.dimension;
 
-import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
@@ -68,7 +68,7 @@ public class AllFrontLineWorkerDimensions {
 
         for (List<Long> filteredMsisdns : filteredMsisdnLists) {
             List filteredFLW = getFilteredFLW(msisdn, name, registrationStatus, designation, operator, circle, filteredMsisdns);
-            ListUtils.union(accumulatedFrontLineWorkers, filteredFLW);
+            accumulatedFrontLineWorkers = (List<FrontLineWorkerDimension>) CollectionUtils.union(accumulatedFrontLineWorkers, filteredFLW);
         }
         return accumulatedFrontLineWorkers;
     }
