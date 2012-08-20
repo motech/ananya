@@ -45,14 +45,12 @@ public class AdminInquiryService {
     public Map<String, Object> getInquiryData(String msisdn) {
         try {
             openSession();
-
             Map<String, Object> result = new HashMap<String, Object>();
             result.put(ACADEMY_CALLS, getAcademyCallsContent(msisdn));
             result.put(KUNJI_CALLS, getKunjiCallsContent(msisdn));
             result.put(CALL_DETAILS, getCallDetails(msisdn));
             result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
             result.put(CALLER_DETAIL, getCallerDetail(msisdn));
-
             return result;
         } finally {
             closeSession();
@@ -64,9 +62,7 @@ public class AdminInquiryService {
     }
 
     private void closeSession() {
-        if (session != null)
-            session.close();
-
+        if (session != null) session.close();
         session = null;
     }
 
@@ -87,21 +83,15 @@ public class AdminInquiryService {
     }
 
     private CallerDetail callerDetailQueryResult(String callerId, AdminQuery queryType) {
-        CallerDetail result = new CallerDetail();
-
-        callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
-
-        String query = queryType.getQuery(callerId);
+        String query = queryType.getQuery(correctIfEmpty(callerId));
         Object queryResult = this.session.createQuery(query).uniqueResult();
         if (queryResult != null) {
             Object[] row = (Object[]) queryResult;
             String msisdn = toString(row[0]);
             String name = toString(row[1]);
-
-            result = new CallerDetail(msisdn, name);
+            return new CallerDetail(msisdn, name);
         }
-
-        return result;
+        return new CallerDetail();
     }
 
     private String getCallerDataJs(String msisdn) {
@@ -112,54 +102,38 @@ public class AdminInquiryService {
         if (frontLineWorker != null) {
             JobAidCallerDataResponse jobAidCallerData = new JobAidCallerDataResponse(
                     frontLineWorker,
-                    StringUtils.isEmpty(frontLineWorker.getOperator())
-                            ? 0
-                            : operatorService.findMaximumUsageFor(frontLineWorker.getOperator())
-            );
+                    frontLineWorker.hasNoOperator() ? 0 : operatorService.findMaximumUsageFor(frontLineWorker.getOperator()));
 
             CertificateCourseCallerDataResponse certificateCourseCallerData = new CertificateCourseCallerDataResponse(frontLineWorker);
-
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             jsonJobAidCallerData = gson.toJson(jobAidCallerData);
             jsonCertificateCourseCallerData = gson.toJson(certificateCourseCallerData);
         }
-
-
-        return String.format(
-                "var jobAidCallerData = %s;" +
-                        "\n" +
-                        "var certificateCourseCallerData = %s;",
+        return String.format("var jobAidCallerData = %s; \n var certificateCourseCallerData = %s;",
                 jsonJobAidCallerData,
-                jsonCertificateCourseCallerData
-        );
+                jsonCertificateCourseCallerData);
     }
 
     private List<CallContent> callContentQueryResult(String callerId, AdminQuery queryType) {
-        List<CallContent> result = new ArrayList<CallContent>();
-
-        callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
-
-        String query = queryType.getQuery(callerId);
+        List<CallContent> callContents = new ArrayList<CallContent>();
+        String query = queryType.getQuery(correctIfEmpty(callerId));
         List<Object[]> list = this.session.createQuery(query).list();
+
         for (Object[] row : list) {
             String callId = toString(row[0]);
             String timeStamp = toString(row[1]);
             String contentName = toString(row[2]);
             String contentFileName = toString(row[3]);
-
-            result.add(new CallContent(callId, timeStamp, contentName, contentFileName));
+            callContents.add(new CallContent(callId, timeStamp, contentName, contentFileName));
         }
-
-        return result;
+        return callContents;
     }
 
     private List<CallDetail> callDetailQueryResult(String callerId, AdminQuery queryType) {
-        List<CallDetail> result = new ArrayList<CallDetail>();
-
-        callerId = StringUtils.isEmpty(callerId) ? "0" : callerId;
-
-        String query = queryType.getQuery(callerId);
+        List<CallDetail> callDetails = new ArrayList<CallDetail>();
+        String query = queryType.getQuery(correctIfEmpty(callerId));
         List<Object[]> list = this.session.createQuery(query).list();
+
         for (Object[] row : list) {
             String callId = toString(row[0]);
             String startTime = toString(row[1]);
@@ -167,14 +141,16 @@ public class AdminInquiryService {
             String duration = toString(row[3]);
             String calledNumber = toString(row[4]);
             String type = toString(row[5]);
-
-            result.add(new CallDetail(callId, startTime, endTime, duration, calledNumber, type));
+            callDetails.add(new CallDetail(callId, startTime, endTime, duration, calledNumber, type));
         }
-
-        return result;
+        return callDetails;
     }
 
     private String toString(Object o) {
         return o == null ? "N/A" : String.valueOf(o);
+    }
+
+    private String correctIfEmpty(String callerId) {
+        return StringUtils.isEmpty(callerId) ? "0" : callerId;
     }
 }

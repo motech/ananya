@@ -30,6 +30,7 @@ public class PeerServer {
     public void copyResponse(String url, HttpServletResponse response) throws IOException {
         HttpMethod method = new GetMethod("http://" + host + ":" + port + "/" + context + "/" + url);
         new HttpClient().executeMethod(method);
+        response.setContentType("text/html");
         IOUtils.copy(method.getResponseBodyAsStream(), response.getWriter());
     }
 

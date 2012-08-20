@@ -1,8 +1,8 @@
 package org.motechproject.ananya.security;
 
 
-import org.motechproject.ananya.support.console.AdminUser;
-import org.motechproject.ananya.support.console.AllAdminUsers;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
+import org.motechproject.ananya.support.admin.repository.AllAdminUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;

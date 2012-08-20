@@ -343,4 +343,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public boolean courseInProgress() {
         return bookMark().notAtPlayCourseResult();
     }
+
+    public boolean hasNoOperator() {
+        return StringUtils.isEmpty(operator);
+    }
 }
