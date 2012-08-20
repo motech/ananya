@@ -25,4 +25,15 @@ public class AllLocationsTest extends SpringBaseIT {
         assertNotNull(actualLocation);
         assertEquals("D1", actualLocation.getDistrict());
     }
+
+    @Test
+    public void shouldGetLocationByDistrictBlockPanchayatAndShouldBeCaseInsensitive() {
+        Location location1 = new Location("D1", "B1", "p1", 11, 12, 13);
+        allLocations.add(location1);
+        markForDeletion(location1);
+
+        Location actualLocation = allLocations.findByDistrictBlockPanchayat("d1", "B1", "P1");
+        assertNotNull(actualLocation);
+        assertEquals("D1", actualLocation.getDistrict());
+    }
 }
