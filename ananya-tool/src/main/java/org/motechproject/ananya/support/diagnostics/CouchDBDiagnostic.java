@@ -4,6 +4,7 @@ package org.motechproject.ananya.support.diagnostics;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.ektorp.impl.StdCouchDbInstance;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticUrl;
 import org.motechproject.diagnostics.annotation.Diagnostic;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -47,20 +47,24 @@ public class CouchDBDiagnostic {
                 diagnosticLog.add(result + " : " + results.get(result));
 
         } catch (Exception e) {
-            diagnosticLog.add("Couch DB connection failed");
+            diagnosticLog.add("CouchDB connection failed");
             diagnosticLog.addError(e);
             isSuccess = false;
         }
         return new DiagnosticsResult(isSuccess, diagnosticLog.toString());
     }
 
-    public Map<String, String> collect() throws IOException {
+    public Map<String, String> collect() {
         HttpClient httpClient = new HttpClient();
         Map<String, String> results = new LinkedHashMap<String, String>();
-        for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
-            GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
-            httpClient.executeMethod(method);
-            results.put(getDescription(diagnosticUrl), getCountFrom(method.getResponseBodyAsString()));
+        try {
+            for (DiagnosticUrl diagnosticUrl : DiagnosticUrl.values()) {
+                GetMethod method = new GetMethod(diagnosticUrl.getFor(server, port));
+                httpClient.executeMethod(method);
+                results.put(getDescription(diagnosticUrl), getCountFrom(method.getResponseBodyAsString()));
+            }
+        } catch (Exception e) {
+            results.put("error", "CouchDB connection failed: " + ExceptionUtils.getFullStackTrace(e));
         }
         return results;
     }

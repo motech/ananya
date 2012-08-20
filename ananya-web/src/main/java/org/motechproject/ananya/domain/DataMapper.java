@@ -42,9 +42,22 @@ public enum DataMapper {
         protected CallerDetail dataFor(Map<String, Object> data) {
             return (CallerDetail) data.get(this.key);
         }
+    },
+    CouchError(AdminInquiryService.COUCHDB_ERROR) {
+        @Override
+        protected String dataFor(Map<String, Object> data) {
+            return (String) data.get(this.key);
+        }
+    },
+    PostgresError(AdminInquiryService.POSTGRES_ERROR) {
+        @Override
+        protected String dataFor(Map<String, Object> data) {
+            return (String) data.get(this.key);
+        }
     };
 
     protected String key;
+
     DataMapper(String key) {
         this.key = key;
     }
@@ -54,7 +67,6 @@ public enum DataMapper {
             if (mapper.key.equals(key))
                 return mapper.dataFor(data);
         }
-
         return null;
     }
 
