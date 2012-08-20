@@ -55,20 +55,24 @@ public class AllJobAidContentMeasuresTest extends SpringIntegrationTest {
     public void shouldGetFilteredMsisdns() {
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         TimeDimension timeDimension1 = new TimeDimension(DateTime.now().minusDays(1));
+        TimeDimension timeDimension2 = new TimeDimension(DateTime.now().minusDays(2));
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name());
         FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name());
         LocationDimension locationDimension = new LocationDimension("S02123431243", "D1", "B1", "P1");
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "fileName", "type", 123);
         JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, DateTime.now(), 123, 12);
         JobAidContentMeasure jobAidContentMeasure1 = new JobAidContentMeasure("callId", frontLineWorkerDimension1, locationDimension, jobAidContentDimension, timeDimension1, DateTime.now(), 123, 12);
+        JobAidContentMeasure jobAidContentMeasure2 = new JobAidContentMeasure("callId", frontLineWorkerDimension1, locationDimension, jobAidContentDimension, timeDimension2, DateTime.now(), 123, 12);
         template.save(timeDimension);
         template.save(timeDimension1);
+        template.save(timeDimension2);
         template.save(frontLineWorkerDimension);
         template.save(frontLineWorkerDimension1);
         template.save(locationDimension);
         template.save(jobAidContentDimension);
         template.save(jobAidContentMeasure);
         template.save(jobAidContentMeasure1);
+        template.save(jobAidContentMeasure2);
 
         List<Long> filteredFrontLineWorkerMsisdns = allJobAidContentMeasures.getFilteredFrontLineWorkerMsisdns(DateTime.now().toDate(), DateTime.now().toDate());
 

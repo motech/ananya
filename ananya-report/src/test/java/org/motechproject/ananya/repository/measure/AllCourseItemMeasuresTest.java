@@ -23,7 +23,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class AllCourseItemMeasureTest extends SpringIntegrationTest {
+public class AllCourseItemMeasuresTest extends SpringIntegrationTest {
 
     @Autowired
     AllCourseItemMeasures allCourseItemMeasures;
@@ -101,6 +101,7 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         String callId = "callId";
         CourseItemState event = CourseItemState.END;
         DateTime today = DateTime.now();
+        DateTime tomorrow = DateTime.now().plusDays(1);
         String courseItemDimensionName = "name" + DateTime.now();
 
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
@@ -116,8 +117,12 @@ public class AllCourseItemMeasureTest extends SpringIntegrationTest {
         allLocationDimensions.add(locationDimension);
         CourseItemMeasure courseItemMeasureForToday = new CourseItemMeasure(timeDimensionForToday, courseItemDimension, frontLineWorkerDimension2, locationDimension, DateTime.now(), 0, event,callId);
 
+        TimeDimension timeDimensionForTomorrow = allTimeDimensions.makeFor(tomorrow);
+        CourseItemMeasure courseItemMeasureForTomorrow = new CourseItemMeasure(timeDimensionForTomorrow, courseItemDimension, frontLineWorkerDimension2, locationDimension, DateTime.now(), 0, event,callId);
+
         allCourseItemMeasures.save(courseItemMeasureForYesterday);
         allCourseItemMeasures.save(courseItemMeasureForToday);
+        allCourseItemMeasures.save(courseItemMeasureForTomorrow);
 
         List<Long> filteredFrontLineWorkerIds = allCourseItemMeasures.getFilteredFrontLineWorkerMsisdns(today.toDate(), DateTime.now().plusDays(1).toDate());
 
