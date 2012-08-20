@@ -30,7 +30,7 @@ public class AllJobAidContentMeasures {
         DetachedCriteria criteria = DetachedCriteria.forClass(JobAidContentMeasure.class);
         criteria.createAlias("timeDimension", "td");
         criteria.createAlias("frontLineWorkerDimension", "flw");
-        criteria.setProjection(Projections.projectionList().add(Projections.property("flw.msisdn")));
+        criteria.setProjection(Projections.distinct(Projections.property("flw.msisdn")));
         criteria.add(Restrictions.between("td.date", startDate, endDate));
 
         return template.findByCriteria(criteria);
