@@ -17,11 +17,12 @@ var callDetailsDataGrid = new DataGrid({
 });
 
 $(document).ready(function() {
+    resetForm();
     initDataGrids("0");
-    initSearchForm();
+    fetchAndDisplay();
 });
 
-var initSearchForm = function() {
+var fetchAndDisplay = function() {
     $("#msisdn_form").submit(function(event) {
         event.preventDefault();
         var msisdn = $("#msisdn").val();
@@ -31,23 +32,49 @@ var initSearchForm = function() {
     });
 }
 
-var showCallDetails = function(data) {
+var showPostgresDetails = function(data) {
+    $("#postgres_details").show();
+
     academyCallsDataGrid.initWithData(data);
     kunjiCallsDataGrid.initWithData(data);
     callDetailsDataGrid.initWithData(data);
+
     $("#academy_calls_table").show();
     $("#kunji_calls_table").show();
     $("#call_details_table").show();
+
+    if (data.callerDetail) {
+        $("#caller_name").text(data.callerDetail.name);
+        $("#caller_msisdn").text(data.callerDetail.msisdn);
+    }
+    $("#postgres_error").hide();
 }
 
-var showCallerDetails = function(data) {
+var showCouchDbDetails = function(data) {
+    $("#couchdb_details").show();
+    
     if (data.callerDataJs) {
         $("#caller_data_to_ivr").text(data.callerDataJs);
         prettyPrint();
     }
-    if (data.callerDetail) {
-        $("#caller_name").text(data.callerDetail.name);
-        $("#caller_msisdn").text(data.callerDetail.msisdn);
+    $("#couchdb_error").hide();
+
+}
+
+var showAllDetails = function(data) {
+    if (data.postgresError) {
+        $("#postgres_details").hide();
+        $("#postgres_error").html(data.postgresError);
+        $("#postgres_error").show();
+    } else {
+        showPostgresDetails(data);
+    }
+    if (data.couchdbError) {
+        $("#couchdb_details").hide();
+        $("#couchdb_error").html(data.couchdbError);
+        $("#couchdb_error").show();
+    } else {
+        showCouchDbDetails(data);
     }
 }
 
@@ -55,31 +82,22 @@ var initDataGrids = function(msisdn) {
     if (msisdn.length <= 10) {
         msisdn = "91" + msisdn;
     }
-
+    resetForm();
     $.ajax({
         url: "admin/inquiry/data",
         data: 'msisdn=' + msisdn,
         dataType: 'json'
 
-    }).done(function(data) {
-            if (data.postgresError) {
-                $("#postgres_error").html(data.postgresError);
-                $("#postgres_error").show();
-            } else {
-                showCallDetails(data);
-                $("#postgres_error").hide();
-            }
-            if (data.couchdbError) {
-                $("#couchdb_error").html(data.couchdbError);
-                $("#couchdb_error").show();
-                $("#caller_data_to_ivr").hide();
-            } else {
-                showCallerDetails(data);
-                $("#couchdb_error").hide();
-            }
-        });
+    }).done(showAllDetails);
 }
 
+var resetForm = function() {
+    $("#postgres_error").hide();
+    $("#postgres_details").show();
+    $("#couchdb_error").hide();
+    $("#couchdb_details").show();
+
+}
 
 var validateMsisdn = function (msisdn) {
     var isValid = msisdn.match(/^(91)?[1-9]\d{9}$/) != null;

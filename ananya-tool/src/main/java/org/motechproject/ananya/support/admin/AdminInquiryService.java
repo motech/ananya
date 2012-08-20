@@ -3,7 +3,6 @@ package org.motechproject.ananya.support.admin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.classic.Session;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -55,14 +54,14 @@ public class AdminInquiryService {
             result.put(CALL_DETAILS, callDetailQueryResult(msisdn, AdminQuery.CALL_DETAILS));
             result.put(CALLER_DETAIL, callerDetailQueryResult(msisdn, AdminQuery.CALLER_DETAIL));
         } catch (Exception e) {
-            result.put(POSTGRES_ERROR, "Postgres connection failed: "+ ExceptionUtils.getFullStackTrace(e));
+            result.put(POSTGRES_ERROR, "Postgres connection failed");
         } finally {
             closeSession();
         }
         try {
             result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
         } catch (Exception e) {
-            result.put(COUCHDB_ERROR, "Couchdb connection failed: " + ExceptionUtils.getFullStackTrace(e));
+            result.put(COUCHDB_ERROR, "Couchdb connection failed");
         }
         return result;
     }
