@@ -11,8 +11,8 @@
 <div class="row-fluid">
     <div class="span6">
         <form class="form-search" id="msisdn_form">
-            <input type="text" class="input-medium search-query" name="msisdn" id="msisdn" placeholder="Search">
             <label class="control-label" for="msisdn"><span id="msisdn_info" class="label">Enter MSISDN</span></label>
+            <input type="text" class="input-medium search-query" name="msisdn" id="msisdn" placeholder="Search">
         </form>
     </div>
 </div>
