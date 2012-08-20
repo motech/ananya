@@ -22,11 +22,9 @@ public class InquiryPage {
 
     public Map<String, Object> display(String msisdn) {
         Map<String, Object> inquiryData = adminInquiryService.getInquiryData(msisdn);
-
         Map<String, Object> result = new HashMap<String, Object>();
         for (String key : inquiryData.keySet())
             result.put(key, DataMapper.prepareDataFor(key, inquiryData));
-
         return result;
     }
 

@@ -3,6 +3,7 @@ package org.motechproject.ananya.support.admin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.classic.Session;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -29,6 +30,9 @@ public class AdminInquiryService {
     public static final String CALL_DETAILS = "callDetails";
     public static final String CALLER_DATA_JS = "callerDataJs";
     public static final String CALLER_DETAIL = "callerDetail";
+    public static final String CALLER_DATA_JSON = "var jobAidCallerData = %s; \n var certificateCourseCallerData = %s;";
+    public static final String COUCHDB_ERROR = "couchdbError";
+    public static final String POSTGRES_ERROR = "postgresError";
 
     private FrontLineWorkerService frontLineWorkerService;
     private OperatorService operatorService;
@@ -43,18 +47,24 @@ public class AdminInquiryService {
     }
 
     public Map<String, Object> getInquiryData(String msisdn) {
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
             openSession();
-            Map<String, Object> result = new HashMap<String, Object>();
-            result.put(ACADEMY_CALLS, getAcademyCallsContent(msisdn));
-            result.put(KUNJI_CALLS, getKunjiCallsContent(msisdn));
-            result.put(CALL_DETAILS, getCallDetails(msisdn));
-            result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
-            result.put(CALLER_DETAIL, getCallerDetail(msisdn));
-            return result;
+            result.put(ACADEMY_CALLS, callContentQueryResult(msisdn, AdminQuery.ACADEMY_CALLS));
+            result.put(KUNJI_CALLS, callContentQueryResult(msisdn, AdminQuery.KUNJI_CALLS));
+            result.put(CALL_DETAILS, callDetailQueryResult(msisdn, AdminQuery.CALL_DETAILS));
+            result.put(CALLER_DETAIL, callerDetailQueryResult(msisdn, AdminQuery.CALLER_DETAIL));
+        } catch (Exception e) {
+            result.put(POSTGRES_ERROR, "Postgres connection failed: "+ ExceptionUtils.getFullStackTrace(e));
         } finally {
             closeSession();
         }
+        try {
+            result.put(CALLER_DATA_JS, getCallerDataJs(msisdn));
+        } catch (Exception e) {
+            result.put(COUCHDB_ERROR, "Couchdb connection failed: " + ExceptionUtils.getFullStackTrace(e));
+        }
+        return result;
     }
 
     private void openSession() {
@@ -64,22 +74,6 @@ public class AdminInquiryService {
     private void closeSession() {
         if (session != null) session.close();
         session = null;
-    }
-
-    private List<CallContent> getAcademyCallsContent(String callerId) {
-        return callContentQueryResult(callerId, AdminQuery.ACADEMY_CALLS);
-    }
-
-    private List<CallContent> getKunjiCallsContent(String callerId) {
-        return callContentQueryResult(callerId, AdminQuery.KUNJI_CALLS);
-    }
-
-    private List<CallDetail> getCallDetails(String callerId) {
-        return callDetailQueryResult(callerId, AdminQuery.CALL_DETAILS);
-    }
-
-    private CallerDetail getCallerDetail(String callerId) {
-        return callerDetailQueryResult(callerId, AdminQuery.CALLER_DETAIL);
     }
 
     private CallerDetail callerDetailQueryResult(String callerId, AdminQuery queryType) {
@@ -95,31 +89,24 @@ public class AdminInquiryService {
     }
 
     private String getCallerDataJs(String msisdn) {
-        String jsonJobAidCallerData = "{}";
-        String jsonCertificateCourseCallerData = "{}";
-
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);
-        if (frontLineWorker != null) {
-            JobAidCallerDataResponse jobAidCallerData = new JobAidCallerDataResponse(
-                    frontLineWorker,
-                    frontLineWorker.hasNoOperator() ? 0 : operatorService.findMaximumUsageFor(frontLineWorker.getOperator()));
+        if (frontLineWorker == null)
+            return String.format(CALLER_DATA_JSON, "{}", "{}");
 
-            CertificateCourseCallerDataResponse certificateCourseCallerData = new CertificateCourseCallerDataResponse(frontLineWorker);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            jsonJobAidCallerData = gson.toJson(jobAidCallerData);
-            jsonCertificateCourseCallerData = gson.toJson(certificateCourseCallerData);
-        }
-        return String.format("var jobAidCallerData = %s; \n var certificateCourseCallerData = %s;",
-                jsonJobAidCallerData,
-                jsonCertificateCourseCallerData);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        int maxUsage = operatorService.findMaximumUsageFor(frontLineWorker.getOperator());
+
+        return String.format(CALLER_DATA_JSON,
+                gson.toJson(new JobAidCallerDataResponse(frontLineWorker, maxUsage)),
+                gson.toJson(new CertificateCourseCallerDataResponse(frontLineWorker)));
     }
 
     private List<CallContent> callContentQueryResult(String callerId, AdminQuery queryType) {
         List<CallContent> callContents = new ArrayList<CallContent>();
         String query = queryType.getQuery(correctIfEmpty(callerId));
-        List<Object[]> list = this.session.createQuery(query).list();
+        List<Object[]> queryObjects = this.session.createQuery(query).list();
 
-        for (Object[] row : list) {
+        for (Object[] row : queryObjects) {
             String callId = toString(row[0]);
             String timeStamp = toString(row[1]);
             String contentName = toString(row[2]);
@@ -132,9 +119,9 @@ public class AdminInquiryService {
     private List<CallDetail> callDetailQueryResult(String callerId, AdminQuery queryType) {
         List<CallDetail> callDetails = new ArrayList<CallDetail>();
         String query = queryType.getQuery(correctIfEmpty(callerId));
-        List<Object[]> list = this.session.createQuery(query).list();
+        List<Object[]> queryObjects = this.session.createQuery(query).list();
 
-        for (Object[] row : list) {
+        for (Object[] row : queryObjects) {
             String callId = toString(row[0]);
             String startTime = toString(row[1]);
             String endTime = toString(row[2]);

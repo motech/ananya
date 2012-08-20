@@ -1,6 +1,7 @@
 package org.motechproject.ananya.support.diagnostics;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.classic.Session;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.repository.DataAccessTemplate;
@@ -36,8 +37,10 @@ public class PostgresDataDiagnostic {
             results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS, DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS));
             results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_COURSE_CALLS, DiagnosticQuery.FIND_TODAY_COURSE_CALLS));
             results.putAll(runQueries(session, DiagnosticQuery.FIND_TOTAL_SMS_SENT, DiagnosticQuery.FIND_TODAY_SMS_SENT));
+        } catch (Exception e) {
+            results.put("error", "Postgres connection failed: " + ExceptionUtils.getFullStackTrace(e));
         } finally {
-            session.close();
+            if (session != null) session.close();
         }
         return results;
     }
@@ -83,6 +86,6 @@ public class PostgresDataDiagnostic {
             statusList.add(status + ": " + count);
         }
         Collections.sort(statusList);
-        results.put(query.title(), StringUtils.join(statusList," | "));
+        results.put(query.title(), StringUtils.join(statusList, " | "));
     }
 }
