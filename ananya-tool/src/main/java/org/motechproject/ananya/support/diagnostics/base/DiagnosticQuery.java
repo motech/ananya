@@ -34,21 +34,21 @@ public enum DiagnosticQuery {
             "JobAid Calls Today"),
 
     FIND_TOTAL_COURSE_CALLS("select count(distinct callId) from CourseItemMeasure", "CertificateCourse Calls"),
-
+    
     FIND_TODAY_COURSE_CALLS(
             " select count(distinct cim.callId) from CourseItemMeasure cim, TimeDimension td " +
                     " where td.id = cim.timeDimension.id " +
                     " and td.day = %s and td.month = %s and td.year = %s",
             "CertificateCourse Calls Today"),
 
-    FIND_TOTAL_SMS_SENT("select count(*) from SMSSentMeasure where smsSent = true", "SMS"),
+    FIND_TOTAL_SMS_SENT("select count(*) from SMSSentMeasure where smsSent = true", "SMS Sent"),
 
     FIND_TODAY_SMS_SENT(
             "select count(*) from SMSSentMeasure ssm, TimeDimension td " +
                     " where ssm.smsSent = true " +
                     " and td.id = ssm.timeDimension.id " +
                     " and td.day = %s and td.month = %s and td.year = %s",
-            "SMS Today");
+            "SMS Sent Today");
 
     private String query;
     private String description;

@@ -11,7 +11,7 @@ public enum AdminQuery {
                     "   flwd.msisdn = %s" +
                     "   and cim.frontLineWorkerDimension.id = flwd.id" +
                     "   and cid.id = cim.courseItemDimension.id" +
-                    " order by timeStamp",
+                    " order by timeStamp desc",
             "Academy Calls"
     ),
 
@@ -25,7 +25,7 @@ public enum AdminQuery {
                     "   flwd.msisdn = %s" +
                     "   and jacm.frontLineWorkerDimension.id = flwd.id" +
                     "   and jacd.id = jacm.jobAidContentDimension.id" +
-                    " order by timeStamp",
+                    " order by timeStamp desc",
             "Kunji Calls"
     ),
     CALL_DETAILS(
@@ -36,7 +36,7 @@ public enum AdminQuery {
                     " where" +
                     "   flwd.msisdn = %s" +
                     "   and cdm.frontLineWorkerDimension.id = flwd.id" +
-                    " order by cdm.startTime",
+                    " order by cdm.startTime desc",
             "Calls Details"
     ),
     CALLER_DETAIL(
