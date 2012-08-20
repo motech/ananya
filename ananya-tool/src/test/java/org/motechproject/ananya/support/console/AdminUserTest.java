@@ -1,6 +1,7 @@
 package org.motechproject.ananya.support.console;
 
 import org.junit.Test;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;

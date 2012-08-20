@@ -3,6 +3,8 @@ package org.motechproject.ananya.support.console;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
+import org.motechproject.ananya.support.admin.repository.AllAdminUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

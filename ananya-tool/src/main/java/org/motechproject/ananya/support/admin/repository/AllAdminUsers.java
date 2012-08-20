@@ -1,9 +1,10 @@
-package org.motechproject.ananya.support.console;
+package org.motechproject.ananya.support.admin.repository;
 
 import org.apache.commons.lang.StringUtils;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

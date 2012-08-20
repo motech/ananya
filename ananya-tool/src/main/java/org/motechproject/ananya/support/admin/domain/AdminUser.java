@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.console;
+package org.motechproject.ananya.support.admin.domain;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonProperty;

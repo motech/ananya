@@ -1,7 +1,7 @@
 package org.motechproject.ananya.seed;
 
-import org.motechproject.ananya.support.console.AdminUser;
-import org.motechproject.ananya.support.console.AllAdminUsers;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
+import org.motechproject.ananya.support.admin.repository.AllAdminUsers;
 import org.motechproject.deliverytools.seed.Seed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,8 +3,8 @@ package org.motechproject.ananya.security;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.ananya.support.console.AdminUser;
-import org.motechproject.ananya.support.console.AllAdminUsers;
+import org.motechproject.ananya.support.admin.domain.AdminUser;
+import org.motechproject.ananya.support.admin.repository.AllAdminUsers;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import static junit.framework.Assert.assertTrue;
