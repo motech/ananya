@@ -26,6 +26,20 @@ public class LogsPageTest {
     }
 
     @Test
+    public void shouldReturnModelContainingListOfAllFilesInLogDirectoryForPeerBox() {
+        logsPage = new LogsPage("/logs","dev");
+        ModelAndView modelAndView = logsPage.displayAsPeerLogs();
+
+        List<FileInfo> filesInfo = (List<FileInfo>) modelAndView.getModel().get("logFilesInfo");
+
+        assertEquals(2, filesInfo.size());
+        FileInfo fileInfo = filesInfo.get(0);
+        assertTrue(fileInfo.getName().contains("ananya.file"));
+        assertNotNull(fileInfo.getSize());
+        assertNotNull(fileInfo.getLastUpdated());
+    }
+
+    @Test
     public void shouldReturnModelContainingListOfAllFilesInLogDirectoryForProd() {
         logsPage = new LogsPage("/logs","prod");
         ModelAndView modelAndView = logsPage.display();

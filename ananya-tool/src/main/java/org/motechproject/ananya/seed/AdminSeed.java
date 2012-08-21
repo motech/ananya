@@ -18,12 +18,7 @@ public class AdminSeed {
 
     @Seed(priority = 0, version = "1.7", comment = "Create and persist admin user for console in couchdb")
     public void createAdminConsoleUser() {
-        if(allAdminUsers.findByName("admin") != null){
-            log.info("Admin user already exists.");
-            return;
-        }
         allAdminUsers.add(new AdminUser("admin", "p@ssw0rd"));
         log.info("created admin user for prod console");
-
     }
 }
