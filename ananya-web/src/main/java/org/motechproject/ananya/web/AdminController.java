@@ -69,7 +69,13 @@ public class AdminController {
         return inquiryPage.display(msisdn);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = {"/admin/logs","/internal/admin/logs"})
+    @RequestMapping(method = RequestMethod.GET, value = "/internal/admin/logs")
+    public ModelAndView showPeerLogs() throws Exception {
+        log.info("logs page displayed for active box");
+        return logsPage.displayAsPeerLogs();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/admin/logs")
     public ModelAndView showLogs() throws Exception {
         log.info("logs page displayed for active box");
         return logsPage.display();

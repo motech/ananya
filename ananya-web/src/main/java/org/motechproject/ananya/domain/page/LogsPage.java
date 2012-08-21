@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public class LogsPage {
     private String view = "admin/logs";
+    private String peerView = "admin/peer_logs";
 
     private File logDirectory;
 
@@ -29,17 +30,11 @@ public class LogsPage {
     }
 
     public ModelAndView display() {
-        List<FileInfo> logFilesInfo = new ArrayList<FileInfo>();
-        if(logDirectory.exists()){
-            File[] logs = logDirectory.listFiles();
-            for (File log : logs)
-                logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
-        }
-        Collections.sort(logFilesInfo);
+        return displayLogsWithView(view);
+    }
 
-        return new ModelAndView(view)
-                .addObject("logFilesInfo", logFilesInfo)
-                .addObject("menuMap", new Sidebar().getMenu());
+    public ModelAndView displayAsPeerLogs() {
+        return displayLogsWithView(peerView);
     }
 
     public FileInputStream getLogFile(final String logFilename) throws FileNotFoundException {
@@ -53,5 +48,19 @@ public class LogsPage {
             return new FileInputStream(files[0]);
 
         throw new FileNotFoundException(String.format("%s log file not found", logFilename));
+    }
+
+    private ModelAndView displayLogsWithView(String view) {
+        List<FileInfo> logFilesInfo = new ArrayList<FileInfo>();
+        if(logDirectory.exists()){
+            File[] logs = logDirectory.listFiles();
+            for (File log : logs)
+                logFilesInfo.add(new FileInfo(log.getName(), log.length(), log.lastModified()));
+        }
+        Collections.sort(logFilesInfo);
+
+        return new ModelAndView(view)
+                .addObject("logFilesInfo", logFilesInfo)
+                .addObject("menuMap", new Sidebar().getMenu());
     }
 }
