@@ -289,6 +289,8 @@ public class    FrontLineWorkerSeedService {
             int size = frontLineWorkers.size() - 1;
             loopAndDo(executable, frontLineWorkers.subList(0, size));
             startKey = frontLineWorkers.get(size).getMsisdn();
+            //required to work around socket timeout
+            allFrontLineWorkers.findByMsisdn(startKey);
         }
         loopAndDo(executable, frontLineWorkers);
     }
