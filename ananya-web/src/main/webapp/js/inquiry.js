@@ -96,7 +96,6 @@ var resetForm = function() {
     $("#postgres_details").show();
     $("#couchdb_error").hide();
     $("#couchdb_details").show();
-
 }
 
 var validateMsisdn = function (msisdn) {
