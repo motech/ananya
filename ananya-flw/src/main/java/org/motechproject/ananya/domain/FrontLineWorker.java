@@ -233,7 +233,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
-        decideRegistrationStatus(location);
+        if (isAlreadyRegistered())
+            decideRegistrationStatus(location);
     }
 
     public boolean hasPassedTheCourse() {

@@ -50,9 +50,21 @@ public class FrontLineWorkerTest {
     public void shouldUpdateLastModifiedTimeToGivenTime() {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.PARTIALLY_REGISTERED);
         DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
-        flw.update("newName", Designation.AWW, new Location(), lastModified);
+
+        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1), lastModified);
 
         assertEquals(lastModified, flw.getLastModified());
+        assertEquals(RegistrationStatus.REGISTERED, flw.getStatus());
+    }
+
+    @Test
+    public void shouldNotUpdateRegistrationStatusIfRegistrationStatusIsPartiallyRegistered() {
+        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), RegistrationStatus.UNREGISTERED);
+        DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
+
+        flw.update("newName", Designation.AWW, new Location(), lastModified);
+
+        assertEquals(RegistrationStatus.UNREGISTERED, flw.getStatus());
     }
 
     @Test

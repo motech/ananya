@@ -3,10 +3,7 @@ package org.motechproject.ananya.service;
 import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.FrontLineWorkerKey;
-import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.util.DateUtil;
@@ -43,7 +40,7 @@ public class FrontLineWorkerService {
         FrontLineWorker existingFrontLineWorker = findByCallerId(callerId);
 
         if (existingFrontLineWorker == null) {
-            return createNewFrontLineWorker(frontLineWorker, location);
+            return createNewFrontLineWorker(frontLineWorker);
         }
         if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
             updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
@@ -127,8 +124,8 @@ public class FrontLineWorkerService {
         return true;
     }
 
-    private FrontLineWorker createNewFrontLineWorker(FrontLineWorker frontLineWorker, Location location) {
-        frontLineWorker.decideRegistrationStatus(location);
+    private FrontLineWorker createNewFrontLineWorker(FrontLineWorker frontLineWorker) {
+        frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
         log.info("Created:" + frontLineWorker);
         return frontLineWorker;
