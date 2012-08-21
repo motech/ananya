@@ -6,38 +6,38 @@ public enum DiagnosticQuery {
 
     FIND_TOTAL_FLWS("select count(*) from FrontLineWorkerDimension", "FLWs"),
 
-
-    FIND_TODAY_FLWS(
-            " select count(*) from FrontLineWorkerDimension flwd, RegistrationMeasure rm, TimeDimension td" +
-                    " where flwd.id = rm.frontLineWorkerDimension.id" +
-                    " and td.id = rm.timeDimension.id" +
-                    " and td.day =  %s and td.month = %s and td.year = %s",
-            "FLWs Called Today"),
-
     FIND_TOTAL_FLWS_BY_STATUS("select count(*),status from FrontLineWorkerDimension group by status", "FLWs by Status"),
 
+    FIND_TODAY_FLWS(
+            " select count(distinct cdm.frontLineWorkerDimension.id) from CallDurationMeasure cdm, TimeDimension td" +
+                    " where td.id = cdm.timeDimension.id" +
+                    " and cdm.type='CALL'" +
+                    " and td.day = %s and td.month = %s and td.year = %s",
+            "FLWs Called Today"),
 
     FIND_TODAY_FLWS_BY_STATUS(
-            " select count(*),flwd.status from FrontLineWorkerDimension flwd, RegistrationMeasure rm, TimeDimension td " +
-                    " where flwd.id = rm.frontLineWorkerDimension.id" +
-                    " and td.id = rm.timeDimension.id " +
+            "select count(distinct cdm.frontLineWorkerDimension.id), cdm.frontLineWorkerDimension.status from CallDurationMeasure cdm, TimeDimension td" +
+                    " where td.id = cdm.timeDimension.id" +
+                    " and cdm.type='CALL'" +
                     " and td.day = %s and td.month = %s and td.year = %s" +
-                    " group by flwd.status",
+                    " group by cdm.frontLineWorkerDimension.status",
             "FLWs Called Today By Status"),
 
-    FIND_TOTAL_JOB_AID_CALLS("select count(distinct callId) from JobAidContentMeasure", "JobAid Calls"),
+    FIND_TOTAL_JOB_AID_CALLS("select count(distinct callId) from CallDurationMeasure cdm where cdm.type='JOBAID'", "JobAid Calls"),
 
     FIND_TODAY_JOB_AID_CALLS(
-            " select count(distinct jacm.callId) from JobAidContentMeasure jacm, TimeDimension td" +
-                    " where td.id = jacm.timeDimension.id" +
+            " select count(distinct cdm.callId) from CallDurationMeasure cdm, TimeDimension td" +
+                    " where td.id = cdm.timeDimension.id" +
+                    " and cdm.type='JOBAID'" +
                     " and td.day = %s and td.month = %s and td.year = %s",
             "JobAid Calls Today"),
 
-    FIND_TOTAL_COURSE_CALLS("select count(distinct callId) from CourseItemMeasure", "CertificateCourse Calls"),
-    
+    FIND_TOTAL_COURSE_CALLS("select count(distinct callId) from CallDurationMeasure cdm where cdm.type='CERTIFICATECOURSE'", "CertificateCourse Calls"),
+
     FIND_TODAY_COURSE_CALLS(
-            " select count(distinct cim.callId) from CourseItemMeasure cim, TimeDimension td " +
-                    " where td.id = cim.timeDimension.id " +
+            " select count(distinct cdm.callId) from CallDurationMeasure cdm , TimeDimension td " +
+                    " where td.id = cdm.timeDimension.id " +
+                    " and cdm.type='CERTIFICATECOURSE'" +
                     " and td.day = %s and td.month = %s and td.year = %s",
             "CertificateCourse Calls Today"),
 
