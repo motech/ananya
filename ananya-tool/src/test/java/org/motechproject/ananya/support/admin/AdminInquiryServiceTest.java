@@ -85,7 +85,6 @@ public class AdminInquiryServiceTest {
 
     @Test
     public void shouldRetrieveListOfAcademyCallsContent() {
-
         String callerId = "919988776655";
         setUpAcademyCalls(callerId);
 

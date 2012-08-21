@@ -25,6 +25,7 @@
     <div class="navbar-inner">
         <div class="container-fluid">
             <a class="brand" href="admin/monitor">$label.topbar.app.link</a>
+
             <div class="nav-collapse">
                 <ul class="nav">
                     <li><a href="admin/monitor">$label.topbar.home.link</a></li>
@@ -48,6 +49,10 @@
                     <li class="menu-link"><a href="$linkMenuItem.getUrl()">$linkMenuItem.getDisplayString()</a></li>
                 #end
             #end
+            <li class="nav-header">$label.sidebar.support.app</li>
+            <li class="menu-link"><a href="$label.sidebar.nagios.link">$label.sidebar.nagios.label</a></li>
+            <li class="menu-link"><a href="$label.sidebar.reports.link">$label.sidebar.reports.label</a></li>
+            <li class="menu-link"><a href="$label.sidebar.batch.link">$label.sidebar.batch.label</a></li>
         </ul>
     </div>
 </div>

@@ -103,6 +103,17 @@ public class AdminControllerTest {
     }
 
     @Test
+    public void shouldCallLogsPageToDisplayLogsForPeer() throws Exception {
+        ModelAndView expectedModelAndView = new ModelAndView();
+        when(logsPage.displayAsPeerLogs()).thenReturn(expectedModelAndView);
+
+        ModelAndView modelAndView = controller.showPeerLogs();
+
+        verify(logsPage).displayAsPeerLogs();
+        assertSame(expectedModelAndView, modelAndView);
+    }
+
+    @Test
     public void shouldCallPeerServerToDisplayMonitorPage() throws Exception {
         HttpServletResponse response = mock(HttpServletResponse.class);
         controller.showMonitorPageForPeerBox(response);
