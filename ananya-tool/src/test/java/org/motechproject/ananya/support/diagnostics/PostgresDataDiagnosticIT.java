@@ -7,28 +7,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.CourseItemState;
-import org.motechproject.ananya.domain.CourseItemType;
+import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.dimension.*;
-import org.motechproject.ananya.domain.measure.CourseItemMeasure;
-import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
-import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.domain.measure.SMSSentMeasure;
-import org.motechproject.ananya.repository.dimension.*;
-import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
-import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
-import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.domain.measure.*;
+import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
-import org.motechproject.diagnostics.response.DiagnosticsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -44,32 +40,19 @@ public class PostgresDataDiagnosticIT {
     @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Autowired
-    private AllCourseItemDimensions allCourseItemDimensions;
-    @Autowired
     private AllLocationDimensions allLocationDimensions;
     @Autowired
-    private AllJobAidContentDimensions allJobAidContentDimensions;
-    @Autowired
-    private AllJobAidContentMeasures allJobAidContentMeasures;
-    @Autowired
-    private AllRegistrationMeasures allRegistrationMeasures;
-    @Autowired
-    private AllCourseItemMeasures allCourseItemMeasures;
-    @Autowired
     private AllSMSSentMeasures allSMSSentMeasures;
+    @Autowired
+    private AllCallDurationMeasures allCallDurationMeasures;
 
     private Session session;
-    private String callId;
-    private DateTime today;
-    private DateTime anotherDay;
 
     @Before
     public void setUp() {
         resetDB();
+        setupDB();
         session = template.getSessionFactory().openSession();
-        callId = "123";
-        today = DateTime.now();
-        anotherDay = new DateTime(1234l);
     }
 
     @After
@@ -77,101 +60,108 @@ public class PostgresDataDiagnosticIT {
         resetDB();
     }
 
-    private void resetDB() {
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
-        template.deleteAll(template.loadAll(LocationDimension.class));
-        template.deleteAll(template.loadAll(CourseItemDimension.class));
-        template.deleteAll(template.loadAll(JobAidContentDimension.class));
-        template.deleteAll(template.loadAll(JobAidContentMeasure.class));
-        template.deleteAll(template.loadAll(CourseItemMeasure.class));
-        template.deleteAll(template.loadAll(RegistrationMeasure.class));
-        template.deleteAll(template.loadAll(SMSSentMeasure.class));
-    }
-
     @Test
-    public void shouldTestFLWCount() throws Exception {
-        String circle = "circle";
-        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", circle, "", "", "REGISTERED");
-        allFrontLineWorkerDimensions.createOrUpdate(654L, "", circle, "", "", "UNREGISTERED");
-        allFrontLineWorkerDimensions.createOrUpdate(653L, "", circle, "", "", "UNREGISTERED");
-        allFrontLineWorkerDimensions.createOrUpdate(321L, "", circle, "", "", "PARTIALLY_REGISTERED");
-        allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, ""));
-
-        assertEquals(4, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_FLWS.getQuery(today)).uniqueResult()).intValue());
+    public void shouldVerifyFLWTotalCountQueries() throws Exception {
+        int totalFLWs = ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS.getQuery()).uniqueResult()).intValue();
+        assertEquals(4, totalFLWs);
 
         List<Object[]> resultSet = session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS.getQuery()).list();
         for (Object[] resultRow : resultSet) {
-            if (resultRow[1].equals("REGISTERED"))
-                assertEquals(Long.valueOf(1), resultRow[0]);
-            else if (resultRow[1].equals("UNREGISTERED"))
-                assertEquals(Long.valueOf(2), resultRow[0]);
-            else if (resultRow[1].equals("PARTIALLY_REGISTERED"))
-                assertEquals(Long.valueOf(1), resultRow[0]);
-        }
-
-        List<Object[]> resultSetForToday = session.createQuery(DiagnosticQuery.FIND_TOTAL_FLWS_BY_STATUS.getQuery()).list();
-        for (Object[] resultRow : resultSetForToday) {
-            if (resultRow[1].equals("REGISTERED"))
-                assertEquals(Long.valueOf(1), resultRow[0]);
+            Object status = resultRow[1];
+            Object count = resultRow[0];
+            if (status.equals("REGISTERED")) assertEquals(1L, count);
+            else if (status.equals("UNREGISTERED")) assertEquals(2L, count);
+            else if (status.equals("PARTIALLY_REGISTERED")) assertEquals(1L, count);
         }
     }
 
     @Test
-    public void shouldTestJobAidCallCount() throws Exception {
+    public void shouldVerifyFLWTodayCountQueries() {
+        DateTime today = DateTime.now();
+        int todayFLWs = ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_FLWS.getQuery(today)).uniqueResult()).intValue();
+        assertEquals(2, todayFLWs);
 
-        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
-        TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
-        allJobAidContentDimensions.add(new JobAidContentDimension("contentId", null, "", "", "", 0));
-        JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId("contentId");
-        allJobAidContentMeasures.add(new JobAidContentMeasure("123", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
-        allJobAidContentMeasures.add(new JobAidContentMeasure("456", frontLineWorkerDimension, locationDimension, jobAidContentDimension, anotherTimeDimension, today, 0, 0));
-        allJobAidContentMeasures.add(new JobAidContentMeasure("123", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, today, 0, 0));
-
-        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS.getQuery(today)).uniqueResult()).intValue());
+        List<Object[]> resultSet = session.createQuery(DiagnosticQuery.FIND_TODAY_FLWS_BY_STATUS.getQuery(today)).list();
+        for (Object[] resultRow : resultSet) {
+            Object status = resultRow[1];
+            Object count = resultRow[0];
+            if (status.equals("REGISTERED")) assertEquals(1L, count);
+            else if (status.equals("UNREGISTERED")) assertEquals(1L, count);
+            else if (status.equals("PARTIALLY_REGISTERED")) assertEquals(0L, count);
+        }
     }
 
     @Test
-    public void shouldTestCertificateCourseCallCount() throws Exception {
-        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
-        TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
-        allCourseItemDimensions.add(new CourseItemDimension("", "contenId", CourseItemType.COURSE, null));
-        CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor("contenId");
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "123"));
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "123"));
-        allCourseItemMeasures.save(new CourseItemMeasure(anotherTimeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 0, CourseItemState.START, "456"));
+    public void shouldVerifyAllSMSQueries() {
+        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery()).uniqueResult()).intValue());
+        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_SMS_SENT.getQuery(DateTime.now())).uniqueResult()).intValue());
+    }
 
+    @Test
+    public void shouldVerifyTotalCallsQueries() {
         assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_COURSE_CALLS.getQuery()).uniqueResult()).intValue());
+        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_JOB_AID_CALLS.getQuery()).uniqueResult()).intValue());
+    }
+
+    @Test
+    public void shouldVerifyTodayCallsQueries() {
+        DateTime today = DateTime.now();
+        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_JOB_AID_CALLS.getQuery(today)).uniqueResult()).intValue());
         assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_COURSE_CALLS.getQuery(today)).uniqueResult()).intValue());
     }
 
-    @Test
-    public void shouldTestSMSSentCount() throws Exception {
-        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension("id", "", "", ""));
-        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(today);
-        TimeDimension anotherTimeDimension = allTimeDimensions.addOrUpdate(anotherDay);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(987L, "", "circle", "", "", "REGISTERED");
-        allSMSSentMeasures.save(new SMSSentMeasure(1,"",true,frontLineWorkerDimension, timeDimension, locationDimension));
-        allSMSSentMeasures.save(new SMSSentMeasure(1,"",true,frontLineWorkerDimension, anotherTimeDimension, locationDimension));
-        allSMSSentMeasures.save(new SMSSentMeasure(1,"",false,frontLineWorkerDimension, timeDimension, locationDimension));
+    private void setupDB() {
+        String circle = "circle";
+        String operator = "airtel";
+        DateTime today = DateTime.now();
+        DateTime yesterday = today.minusDays(1);
+        long calledNumber = 57711L;
 
-        assertEquals(2, ((Long) session.createQuery(DiagnosticQuery.FIND_TOTAL_SMS_SENT.getQuery()).uniqueResult()).intValue());
-        assertEquals(1, ((Long) session.createQuery(DiagnosticQuery.FIND_TODAY_SMS_SENT.getQuery(today)).uniqueResult()).intValue());
+        Location defaultLocation = Location.getDefaultLocation();
+        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat()));
+
+        TimeDimension todayTimeDimension = allTimeDimensions.addOrUpdate(today);
+        TimeDimension yesterdayTimeDimension = allTimeDimensions.addOrUpdate(yesterday);
+
+        FrontLineWorkerDimension flw1 = allFrontLineWorkerDimensions.createOrUpdate(99986574410L, operator, circle, "name", "AWW", "REGISTERED");
+        FrontLineWorkerDimension flw2 = allFrontLineWorkerDimensions.createOrUpdate(99986574411L, operator, circle, "", "", "UNREGISTERED");
+        FrontLineWorkerDimension flw3 = allFrontLineWorkerDimensions.createOrUpdate(99986574412L, operator, circle, "", "", "UNREGISTERED");
+        FrontLineWorkerDimension flw4 = allFrontLineWorkerDimensions.createOrUpdate(99986574413L, operator, circle, "", "", "PARTIALLY_REGISTERED");
+
+        CallDurationMeasure call1 = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "JOBAID");
+        CallDurationMeasure call1Peer = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "CALL");
+        CallDurationMeasure call2 = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CERTIFICATECOURSE");
+        CallDurationMeasure call2Peer = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CALL");
+        CallDurationMeasure call3 = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "JOBAID");
+        CallDurationMeasure call3Peer = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL");
+        CallDurationMeasure call4 = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CERTIFICATECOURSE");
+        CallDurationMeasure call4Peer = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL");
+
+        allCallDurationMeasures.add(call1);
+        allCallDurationMeasures.add(call1Peer);
+        allCallDurationMeasures.add(call2);
+        allCallDurationMeasures.add(call2Peer);
+        allCallDurationMeasures.add(call3);
+        allCallDurationMeasures.add(call3Peer);
+        allCallDurationMeasures.add(call4);
+        allCallDurationMeasures.add(call4Peer);
+
+        allSMSSentMeasures.save(new SMSSentMeasure(1, "", true, flw1, todayTimeDimension, locationDimension));
+        allSMSSentMeasures.save(new SMSSentMeasure(1, "", true, flw2, todayTimeDimension, locationDimension));
+        allSMSSentMeasures.save(new SMSSentMeasure(1, "", false, flw3, yesterdayTimeDimension, locationDimension));
+
     }
 
-    @Test
-    public void shouldDoPostgresDiagnostics() {
-        DiagnosticsResult diagnosticsResult = postgresDiagnostic.performDiagnosis();
+    private void resetDB() {
+        List<Class<? extends Object>> entities = Arrays.asList(
+                FrontLineWorkerDimension.class, TimeDimension.class, LocationDimension.class,
+                CourseItemDimension.class, JobAidContentDimension.class, JobAidContentMeasure.class,
+                CourseItemMeasure.class, RegistrationMeasure.class, SMSSentMeasure.class);
 
-        assertNotNull(diagnosticsResult.getMessage());
-        assertTrue(diagnosticsResult.getStatus());
+        for (Class<? extends Object> entity : entities)
+            template.deleteAll(template.loadAll(entity));
+
     }
+
+
 }
