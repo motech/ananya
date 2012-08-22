@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.page.MonitorPage;
 import org.motechproject.ananya.support.diagnostics.CouchDBDiagnostic;
+import org.motechproject.ananya.support.diagnostics.MachineDiagnostic;
 import org.motechproject.ananya.support.diagnostics.PostgresDataDiagnostic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,11 +27,13 @@ public class MonitorPageTest {
     private CouchDBDiagnostic couchDBDiagnostic;
     @Mock
     private PostgresDataDiagnostic postgresDiagnostic;
+    @Mock
+    private MachineDiagnostic machineDiagnostic;
 
     @Before
     public void setup() {
         initMocks(this);
-        monitorPage = new MonitorPage(couchDBDiagnostic, postgresDiagnostic);
+        monitorPage = new MonitorPage(couchDBDiagnostic, postgresDiagnostic, machineDiagnostic);
     }
 
     @Test
@@ -38,9 +41,11 @@ public class MonitorPageTest {
 
         Map<String, String> couchdbDiagnosticResult = new HashMap<String, String>();
         Map<String, String> postgresDiagnosticResult = new HashMap<String, String>();
+        Map<String, String> machineDiagnosticResult = new HashMap<String, String>();
 
         when(couchDBDiagnostic.collect()).thenReturn(couchdbDiagnosticResult);
         when(postgresDiagnostic.collect()).thenReturn(postgresDiagnosticResult);
+        when(machineDiagnostic.collect()).thenReturn(machineDiagnosticResult);
 
         ModelAndView monitorDisplay = monitorPage.display();
 
@@ -50,11 +55,12 @@ public class MonitorPageTest {
 
         verify(couchDBDiagnostic).collect();
         verify(postgresDiagnostic).collect();
-        
+        verify(machineDiagnostic).collect();
+
         assertEquals(couchdbDiagnosticResult, model.get("couchdbData"));
         assertEquals(postgresDiagnosticResult, model.get("postgresData"));
+        assertEquals(machineDiagnosticResult, model.get("machineData"));
         assertEquals(5, menu.size());
         assertEquals("Monitor",menu.get(0).getDisplayString());
-        assertEquals("Monitor [peer]",menu.get(1).getDisplayString());
-    }
+        assertEquals("Monitor [peer]",menu.get(1).getDisplayString());    }
 }
