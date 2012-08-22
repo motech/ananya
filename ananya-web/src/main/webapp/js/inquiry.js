@@ -52,7 +52,7 @@ var showPostgresDetails = function(data) {
 
 var showCouchDbDetails = function(data) {
     $("#couchdb_details").show();
-    
+
     if (data.callerDataJs) {
         $("#caller_data_to_ivr").text(data.callerDataJs);
         prettyPrint();
@@ -99,15 +99,16 @@ var resetForm = function() {
 }
 
 var validateMsisdn = function (msisdn) {
-    var isValid = msisdn.match(/^(91)?[1-9]\d{9}$/) != null;
-    var infoLabel = $("#msisdn_info");
-
-    if (!isValid) {
-        infoLabel.text("Enter a valid msisdn. eg 9988776655 or 91998776655")
-        infoLabel.addClass("label-warning");
-    } else if (infoLabel.hasClass("label-warning")) {
-        infoLabel.text("Enter MSISDN")
-        infoLabel.removeClass("label-warning");
-    }
-    return isValid;
+//    var isValid = msisdn.match(/^(91)?[1-9]\d{9}$/) != null;
+//    var infoLabel = $("#msisdn_info");
+//
+//    if (!isValid) {
+//        infoLabel.text("Enter a valid msisdn. eg 9988776655 or 91998776655")
+//        infoLabel.addClass("label-warning");
+//    } else if (infoLabel.hasClass("label-warning")) {
+//        infoLabel.text("Enter MSISDN")
+//        infoLabel.removeClass("label-warning");
+//    }
+//    return isValid;
+    return true;
 }
