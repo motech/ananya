@@ -29,7 +29,7 @@ import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

@@ -17,16 +17,14 @@ import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.requests.CallMessageType;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
@@ -47,13 +45,9 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;
     @Autowired
-    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-    @Autowired
     private AllTimeDimensions allTimeDimensions;
     @Autowired
     private AllLocationDimensions allLocationDimensions;
-    @Autowired
-    private AllRegistrationMeasures allRegistrationMeasures;
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired

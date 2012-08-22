@@ -2,8 +2,8 @@ package org.motechproject.ananya.service.handler;
 
 import org.apache.log4j.Logger;
 import org.motechproject.ananya.webservice.SendSMSClient;
-import org.motechproject.scheduler.domain.MotechEvent;
-import org.motechproject.server.event.annotations.MotechListener;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.event.annotations.MotechListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

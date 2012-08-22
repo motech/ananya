@@ -8,8 +8,7 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.requests.CallMessage;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.ananya.service.handler.JobAidDataHandler;
-import org.motechproject.scheduler.domain.MotechEvent;
-
+import org.motechproject.event.MotechEvent;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;

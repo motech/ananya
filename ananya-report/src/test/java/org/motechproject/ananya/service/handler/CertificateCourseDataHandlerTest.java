@@ -12,7 +12,7 @@ import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.CourseAudioTrackerMeasureService;
 import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
-import org.motechproject.scheduler.domain.MotechEvent;
+import org.motechproject.event.MotechEvent;
 
 import java.util.HashMap;
 import java.util.Map;
