@@ -28,7 +28,7 @@
         <db.server>localhost</db.server>
         <db.name>ananya</db.name>
         <db.port>5984</db.port>
-        <motech.platform.version>0.12-SNAPSHOT</motech.platform.version>
+        <motech.platform.version>0.12</motech.platform.version>
     </properties>
 
     <distributionManagement>
