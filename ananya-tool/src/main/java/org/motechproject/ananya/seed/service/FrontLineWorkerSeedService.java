@@ -7,13 +7,18 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
+import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class    FrontLineWorkerSeedService {
+public class FrontLineWorkerSeedService {
 
     private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeedService.class);
 
@@ -32,21 +37,26 @@ public class    FrontLineWorkerSeedService {
     private AllFrontLineWorkers allFrontLineWorkers;
     private AllRegistrationMeasures allRegistrationMeasures;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    private AllTimeDimensions allTimeDimensions;
+    private AllLocationDimensions allLocationDimensions;
 
     public FrontLineWorkerSeedService() {
     }
 
     @Autowired
-    public FrontLineWorkerSeedService(AllFrontLineWorkers allFrontLineWorkers,
+    public FrontLineWorkerSeedService(DataAccessTemplate template, AllFrontLineWorkers allFrontLineWorkers,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
-                                      DataAccessTemplate template,
                                       AllRegistrationMeasures allRegistrationMeasures,
-                                      AllLocations allLocations) {
+                                      AllLocations allLocations,
+                                      AllTimeDimensions allTimeDimensions,
+                                      AllLocationDimensions allLocationDimensions) {
         this.template = template;
         this.allLocations = allLocations;
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
+        this.allTimeDimensions = allTimeDimensions;
+        this.allLocationDimensions = allLocationDimensions;
     }
 
 
@@ -278,6 +288,33 @@ public class    FrontLineWorkerSeedService {
             allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
             log.info("modified designation in postgres: " + msisdn + "|" + actualDesignationString + "=>" + expectedDesignationString);
         }
+    }
+
+    public void createDimensionAndRegistrationMeasureFor(FrontLineWorker frontLineWorker) {
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
+        if (frontLineWorkerDimension != null) return;
+
+        frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
+                frontLineWorker.msisdn(),
+                frontLineWorker.getOperator(),
+                frontLineWorker.getCircle(),
+                frontLineWorker.name(),
+                frontLineWorker.designationName(),
+                frontLineWorker.getStatus().toString());
+        log.info("frontlineWorkerDimension created for missing " + frontLineWorker);
+
+        String callId = frontLineWorker.msisdn() + String.valueOf(DateUtil.now().getMillis());
+
+        TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
+        LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
+
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(
+                frontLineWorkerDimension,
+                locationDimension,
+                timeDimension,
+                callId);
+        allRegistrationMeasures.createOrUpdate(registrationMeasure);
+        log.info("registrationMeasure created for missing " + frontLineWorker);
     }
 
     public void doWithBatch(FrontLineWorkerExecutable executable, int batchSize) {
