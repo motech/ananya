@@ -18,6 +18,8 @@
 
     <context:component-scan base-package="org.motechproject.ananya"/>
 
+    <import resource="classpath:applicationContext-csv-importer.xml"/>
+    <import resource="classpath:applicationContext-csv-exporter.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationCmsLiteApi.xml"/>
