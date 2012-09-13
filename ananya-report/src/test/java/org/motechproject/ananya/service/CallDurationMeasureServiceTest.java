@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
@@ -13,13 +14,15 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -29,16 +32,19 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CallDurationMeasureServiceTest {
     private CallDurationMeasureService callDurationMeasureService;
     @Mock
-    private ReportDB reportDB;
+    private AllCallDurationMeasures allCallDurationMeasures;
     @Mock
     private CallLogService callLoggerService;
     @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Mock
     private AllTimeDimensions allTimeDimensions;
-
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
+    @Mock
+    private LocationDimensionService locationDimensionService;
+    @Captor
+    private ArgumentCaptor<List<CallDurationMeasure>> captor;
 
     private String callId = "callId";
     private long callerId = 123456789L;
@@ -54,7 +60,7 @@ public class CallDurationMeasureServiceTest {
         frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered");
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, reportDB, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, allCallDurationMeasures, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions, locationDimensionService);
     }
 
     @Test
@@ -71,7 +77,7 @@ public class CallDurationMeasureServiceTest {
         callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
-        verify(reportDB).add(captor.capture());
+        verify(allCallDurationMeasures).add(captor.capture());
 
         CallDurationMeasure callDurationMeasure = captor.getValue();
         assertEquals(frontLineWorkerDimension, callDurationMeasure.getFrontLineWorkerDimension());
@@ -91,7 +97,7 @@ public class CallDurationMeasureServiceTest {
 
         callDurationMeasureService.createFor(callId);
 
-        verify(reportDB, never()).add(any());
+        verify(allCallDurationMeasures, never()).add(any(CallDurationMeasure.class));
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
         verify(callLoggerService).delete(callLog);
     }
@@ -122,7 +128,7 @@ public class CallDurationMeasureServiceTest {
         callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
-        verify(reportDB, times(2)).add(captor.capture());
+        verify(allCallDurationMeasures, times(2)).add(captor.capture());
         List<CallDurationMeasure> callDurationMeasures = captor.getAllValues();
         assertEquals(2, callDurationMeasures.size());
 
@@ -154,7 +160,7 @@ public class CallDurationMeasureServiceTest {
         callDurationMeasureService.createFor(callId);
 
         ArgumentCaptor<CallDurationMeasure> captor = ArgumentCaptor.forClass(CallDurationMeasure.class);
-        verify(reportDB).add(captor.capture());
+        verify(allCallDurationMeasures).add(captor.capture());
         CallDurationMeasure callDurationMeasure = captor.getValue();
 
         assertEquals(new Timestamp(startTime.getMillis()), callDurationMeasure.getStartTime());
@@ -168,8 +174,26 @@ public class CallDurationMeasureServiceTest {
 
         callDurationMeasureService.createFor(callId);
 
-        verify(reportDB, never()).add(any());
+        verify(allCallDurationMeasures, never()).add(any(CallDurationMeasure.class));
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
         verify(callLoggerService, never()).delete(any(CallLog.class));
+    }
+
+    @Test
+    public void shouldUpdateLocationForAllMeasuresForCallerId() {
+        String locationId = "location_id";
+        final CallDurationMeasure expectedCallDurationMeasure = new CallDurationMeasure();
+        when(allCallDurationMeasures.findByCallerId(callerId)).thenReturn(new ArrayList<CallDurationMeasure>() {{
+            add(expectedCallDurationMeasure);
+        }});
+        LocationDimension expectedLocationDimension = new LocationDimension();
+        when(locationDimensionService.getFor(locationId)).thenReturn(expectedLocationDimension);
+
+        callDurationMeasureService.updateLocation(callerId, locationId);
+
+        verify(allCallDurationMeasures).updateAll(captor.capture());
+        List<CallDurationMeasure> actualCallDurationMeasures = captor.getValue();
+        assertEquals(1, actualCallDurationMeasures.size());
+        assertEquals(expectedLocationDimension, actualCallDurationMeasures.get(0).getLocationDimension());
     }
 }

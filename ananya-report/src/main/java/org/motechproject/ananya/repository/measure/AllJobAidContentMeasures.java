@@ -16,10 +16,14 @@ import java.util.List;
 @Transactional
 public class AllJobAidContentMeasures {
 
-    @Autowired
     private DataAccessTemplate template;
 
     public AllJobAidContentMeasures() {
+    }
+
+    @Autowired
+    public AllJobAidContentMeasures(DataAccessTemplate template) {
+        this.template = template;
     }
 
     public void add(JobAidContentMeasure jobAidContentMeasure) {
@@ -38,5 +42,17 @@ public class AllJobAidContentMeasures {
 
     public List<JobAidContentMeasure> findByCallId(String callId) {
         return (List<JobAidContentMeasure>) template.findByNamedQueryAndNamedParam(JobAidContentMeasure.FIND_BY_CALL_ID, new String[]{"call_id"}, new Object[]{callId});
+    }
+
+    public List<JobAidContentMeasure> findByCallerId(Long callerId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(JobAidContentMeasure.class);
+        criteria.createAlias("frontLineWorkerDimension", "flw");
+        criteria.add(Restrictions.eq("flw.msisdn", callerId));
+
+        return template.findByCriteria(criteria);
+    }
+
+    public void updateAll(List<JobAidContentMeasure> jobAidContentMeasureList) {
+        template.saveOrUpdateAll(jobAidContentMeasureList);
     }
 }

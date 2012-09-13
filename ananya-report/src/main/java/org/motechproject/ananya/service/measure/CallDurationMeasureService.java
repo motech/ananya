@@ -7,41 +7,47 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.CallLogService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CallDurationMeasureService {
     private static Logger log = LoggerFactory.getLogger(CallDurationMeasureService.class);
 
     private CallLogService callLoggerService;
-    private ReportDB reportDB;
+    private AllCallDurationMeasures allCallDurationMeasures;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
     private AllTimeDimensions allTimeDimensions;
+    private LocationDimensionService locationDimensionService;
 
     public CallDurationMeasureService() {
     }
 
     @Autowired
     public CallDurationMeasureService(CallLogService callLoggerService,
-                                      ReportDB reportDB,
+                                      AllCallDurationMeasures allCallDurationMeasures,
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures,
-                                      AllTimeDimensions allTimeDimensions) {
+                                      AllTimeDimensions allTimeDimensions,
+                                      LocationDimensionService locationDimensionService) {
         this.callLoggerService = callLoggerService;
-        this.reportDB = reportDB;
+        this.allCallDurationMeasures = allCallDurationMeasures;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.allTimeDimensions = allTimeDimensions;
+        this.locationDimensionService = locationDimensionService;
     }
 
 
@@ -74,7 +80,7 @@ public class CallDurationMeasureService {
                     callId, calledNumber,
                     callLogItem.duration(), callLogItem.getStartTime(),
                     callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
-            reportDB.add(callDurationMeasure);
+            allCallDurationMeasures.add(callDurationMeasure);
         }
         log.info(callId + "- callLog callDurationMeasures added");
         removeLog(callId, callLog);
@@ -83,5 +89,15 @@ public class CallDurationMeasureService {
     private void removeLog(String callId, CallLog callLog) {
         callLoggerService.delete(callLog);
         log.info(callId + "- callLog removed");
+    }
+
+    public void updateLocation(Long callerId, String locationId) {
+        List<CallDurationMeasure> callDurationMeasureList = allCallDurationMeasures.findByCallerId(callerId);
+        LocationDimension locationDimension = locationDimensionService.getFor(locationId);
+
+        for (CallDurationMeasure callDurationMeasure : callDurationMeasureList) {
+            callDurationMeasure.setLocationDimension(locationDimension);
+        }
+        allCallDurationMeasures.updateAll(callDurationMeasureList);
     }
 }

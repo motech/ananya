@@ -1,73 +1,28 @@
 package org.motechproject.ananya.repository.measure;
 
-import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ananya.SpringIntegrationTest;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.domain.measure.SMSSentMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 
-import static junit.framework.Assert.assertEquals;
+import java.util.ArrayList;
 
-public class AllSMSSentMeasuresTest extends SpringIntegrationTest{
+import static org.mockito.Mockito.verify;
 
-    @Autowired 
-    AllSMSSentMeasures allSMSSentMeasures;
-    
-    @Autowired
-    AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-    
-    @Autowired
-    AllTimeDimensions allTimeDimensions;
+@RunWith(MockitoJUnitRunner.class)
+public class AllSMSSentMeasuresTest {
+    @Mock
+    private DataAccessTemplate template;
 
-    @Autowired
-    AllLocationDimensions allLocationDimensions;
-    
-    @Before
-    public void setUp(){
-        template.deleteAll(template.loadAll(SMSSentMeasure.class));
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
-        template.deleteAll(template.loadAll(LocationDimension.class));
-    }
-
-    @After
-    public void TearDown(){
-        template.deleteAll(template.loadAll(SMSSentMeasure.class));
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
-        template.deleteAll(template.loadAll(LocationDimension.class));
-    }
-    
-    @Test(expected = DataIntegrityViolationException.class)
-    public void shouldNotInsertSMSSentMeasureWhenFLWDimensionIsNull() {
-        template.save(new SMSSentMeasure(2, "23123123", false, null, new TimeDimension(DateTime.now()),null));
-    }
-
-    @Test(expected = DataIntegrityViolationException.class)
-    public void shouldNotInsertSMSSentMeasureWhenTimeDimensionIsNull() {
-        template.save(new SMSSentMeasure(2, "23123123", false, new FrontLineWorkerDimension(9876543210L, "", "", "", "", ""), null,null));
-    }
-    
     @Test
-    public void shouldFetchBasedOnFLW(){
-        String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED");
-        TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
-        allLocationDimensions.add(locationDimension);
-        allSMSSentMeasures.save(new SMSSentMeasure(1, smsReferenceNumber,true,frontLineWorker, timeDimension, locationDimension));
+    public void shouldUpdateAllSMSSentMeasures() {
+        AllSMSSentMeasures allSMSSentMeasures = new AllSMSSentMeasures(template);
+        ArrayList<SMSSentMeasure> expectedSMSSentMeasures = new ArrayList<SMSSentMeasure>();
 
-        SMSSentMeasure smsSentMeasure = allSMSSentMeasures.fetchFor(frontLineWorker.getId());
+        allSMSSentMeasures.updateAll(expectedSMSSentMeasures);
 
-        assertEquals(smsReferenceNumber,smsSentMeasure.getSmsReferenceNumber());
+        verify(template).saveOrUpdateAll(expectedSMSSentMeasures);
     }
 }

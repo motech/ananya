@@ -8,10 +8,10 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.AudioTrackerLogService;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class CourseAudioTrackerMeasureService {
 
     private static final Logger log = LoggerFactory.getLogger(CourseAudioTrackerMeasureService.class);
 
-    private ReportDB reportDB;
+    private AllCourseItemMeasures allCourseItemMeasures;
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
     private AudioTrackerLogService audioTrackerLogService;
@@ -36,13 +36,13 @@ public class CourseAudioTrackerMeasureService {
     }
 
     @Autowired
-    public CourseAudioTrackerMeasureService(ReportDB reportDB,
+    public CourseAudioTrackerMeasureService(AllCourseItemMeasures allCourseItemMeasures,
                                             AllTimeDimensions allTimeDimensions,
                                             AllCourseItemDimensions allCourseItemDimensions,
                                             AudioTrackerLogService audioTrackerLogService,
                                             AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                             AllRegistrationMeasures allRegistrationMeasures) {
-        this.reportDB = reportDB;
+        this.allCourseItemMeasures = allCourseItemMeasures;
         this.allTimeDimensions = allTimeDimensions;
         this.allCourseItemDimensions = allCourseItemDimensions;
         this.audioTrackerLogService = audioTrackerLogService;
@@ -77,7 +77,7 @@ public class CourseAudioTrackerMeasureService {
                     logItem.getTime(), logItem.getDuration(),
                     logItem.getPercentage(courseItemDimension.getDuration())
             );
-            reportDB.add(courseItemMeasure);
+            allCourseItemMeasures.save(courseItemMeasure);
         }
         log.info(callId + "- audioTrackerLog courseItemMeasures added");
         removeLog(callId, audioTrackerLog);

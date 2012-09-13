@@ -23,7 +23,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class AllCourseItemMeasuresTest extends SpringIntegrationTest {
+public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
 
     @Autowired
     AllCourseItemMeasures allCourseItemMeasures;
@@ -128,5 +128,22 @@ public class AllCourseItemMeasuresTest extends SpringIntegrationTest {
 
         assertEquals(1, filteredFrontLineWorkerIds.size());
         assertEquals(msisdn2, filteredFrontLineWorkerIds.get(0));
+    }
+
+    @Test
+    public void shouldFetchAllCourseItemMeasuresForACallerId() {
+        Long callerId = 1234L;
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED");
+        CourseItemDimension courseItemDimension = new CourseItemDimension("name", "contentId", CourseItemType.CHAPTER, null);
+        LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
+        TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
+        allLocationDimensions.add(locationDimension);
+        allCourseItemDimensions.add(courseItemDimension);
+        CourseItemMeasure actualCourseItemMeasure = new CourseItemMeasure("callId", timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, DateTime.now(), 20, 20);
+        allCourseItemMeasures.save(actualCourseItemMeasure);
+
+        List<CourseItemMeasure> courseItemMeasureFromDb = allCourseItemMeasures.findByCallerId(callerId);
+
+        assertEquals(callerId, courseItemMeasureFromDb.get(0).getFrontLineWorkerDimension().getMsisdn());
     }
 }

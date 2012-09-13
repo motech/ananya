@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
@@ -19,6 +20,7 @@ import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 
 import java.util.ArrayList;
@@ -27,9 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class JobAidContentMeasureServiceTest {
@@ -46,6 +46,10 @@ public class JobAidContentMeasureServiceTest {
     private AllRegistrationMeasures allRegistrationMeasures;
     @Mock
     private AllJobAidContentMeasures allJobAidContentMeasures;
+    @Mock
+    private LocationDimensionService locationDimensionService;
+    @Captor
+    private ArgumentCaptor<List<JobAidContentMeasure>> captor;
 
     private JobAidContentMeasureService jobAidContentMeasureService;
 
@@ -72,7 +76,7 @@ public class JobAidContentMeasureServiceTest {
 
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         jobAidContentMeasureService = new JobAidContentMeasureService(audioTrackerLogService, allFrontLineWorkerDimensions,
-                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures);
+                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures, locationDimensionService);
     }
 
     @Test
@@ -136,5 +140,23 @@ public class JobAidContentMeasureServiceTest {
         List<Long> actualFilteredFLWs = jobAidContentMeasureService.getAllFrontLineWorkerMsisdnsBetween(startDate, endDate);
 
         assertEquals(listOfMsisdns, actualFilteredFLWs);
+    }
+
+    @Test
+    public void shouldUpdateLocationIdForAGivenCallerID() {
+        long callerId = 1234L;
+        String location_id = "location_id";
+        final JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure();
+        ArrayList<JobAidContentMeasure> jobAidContentMeasures = new ArrayList<JobAidContentMeasure>() {{
+            add(jobAidContentMeasure); }};
+        LocationDimension expectedLocationDimension = new LocationDimension();
+        when(locationDimensionService.getFor(location_id)).thenReturn(expectedLocationDimension);
+        when(allJobAidContentMeasures.findByCallerId(callerId)).thenReturn(jobAidContentMeasures);
+
+        jobAidContentMeasureService.updateLocation(callerId, location_id);
+
+        verify(allJobAidContentMeasures).updateAll(captor.capture());
+        List<JobAidContentMeasure> actualJobAidContentMeasure = captor.getValue();
+        assertEquals(expectedLocationDimension, actualJobAidContentMeasure.get(0).getLocationDimension());
     }
 }

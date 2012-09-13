@@ -15,10 +15,10 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.measure.CourseContentMeasureService;
 
@@ -32,7 +32,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CourseContentMeasureServiceTest {
 
     @Mock
-    private ReportDB reportDB;
+    private AllCourseItemMeasures allCourseItemMeasures;
     @Mock
     private AllTimeDimensions allTimeDimensions;
     @Mock
@@ -67,7 +67,7 @@ public class CourseContentMeasureServiceTest {
         frontLineWorkerDimension.setId(flwId);
         courseContentMeasureService = new CourseContentMeasureService(
                 certificateCourseLogService, allTimeDimensions, allCourseItemDimensions, allFrontLineWorkerDimensions,
-                allRegistrationMeasures, reportDB);
+                allRegistrationMeasures, allCourseItemMeasures);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class CourseContentMeasureServiceTest {
         courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
-        verify(reportDB).add(captor.capture());
+        verify(allCourseItemMeasures).save(captor.capture());
         verify(certificateCourseLogService).remove(certificationCourseLog);
 
         CourseItemMeasure courseItemMeasure = captor.getValue();
@@ -122,7 +122,7 @@ public class CourseContentMeasureServiceTest {
         courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
-        verify(reportDB).add(captor.capture());
+        verify(allCourseItemMeasures).save(captor.capture());
         verify(certificateCourseLogService).remove(certificationCourseLog);
 
         CourseItemMeasure courseItemMeasure = captor.getValue();
@@ -156,7 +156,7 @@ public class CourseContentMeasureServiceTest {
         courseContentMeasureService.createFor(callId);
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
-        verify(reportDB, times(2)).add(captor.capture());
+        verify(allCourseItemMeasures, times(2)).save(captor.capture());
         verify(certificateCourseLogService).remove(certificationCourseLog);
 
         List<CourseItemMeasure> allValues = captor.getAllValues();
@@ -178,7 +178,7 @@ public class CourseContentMeasureServiceTest {
     @Test
     public void shouldDoNothingWhenNoCertificateCourseLogIsPresentForACallId() {
         courseContentMeasureService.createFor("callId");
-        verify(reportDB, never()).add(any(CourseItemMeasure.class));
+        verify(allCourseItemMeasures, never()).save(any(CourseItemMeasure.class));
     }
 
     @Test

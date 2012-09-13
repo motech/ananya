@@ -12,10 +12,10 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.measure.CourseAudioTrackerMeasureService;
 
@@ -29,7 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CourseAudioTrackerMeasureServiceTest {
 
     @Mock
-    private ReportDB reportDB;
+    private AllCourseItemMeasures allCourseItemMeasures;
     @Mock
     private AllTimeDimensions allTimeDimensions;
     @Mock
@@ -65,7 +65,7 @@ public class CourseAudioTrackerMeasureServiceTest {
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
         courseAudioTrackerMeasureService = new CourseAudioTrackerMeasureService(
-                reportDB, allTimeDimensions, allCourseItemDimensions, audioTrackerLogService, allFrontLineWorkerDimensions, allRegistrationMeasures);
+                allCourseItemMeasures, allTimeDimensions, allCourseItemDimensions, audioTrackerLogService, allFrontLineWorkerDimensions, allRegistrationMeasures);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class CourseAudioTrackerMeasureServiceTest {
 
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
         verify(audioTrackerLogService).remove(audioTrackerLog);
-        verify(reportDB).add(captor.capture());
+        verify(allCourseItemMeasures).save(captor.capture());
         CourseItemMeasure courseItemMeasure = captor.getValue();
 
         assertEquals(frontLineWorkerDimension, courseItemMeasure.getFrontLineWorkerDimension());
@@ -120,7 +120,7 @@ public class CourseAudioTrackerMeasureServiceTest {
     @Test
     public void shouldDoNothingIfAudioTrackerLogIsNull() {
         courseAudioTrackerMeasureService.createFor(callId);
-        verify(reportDB, never()).add(any(CourseItemMeasure.class));
+        verify(allCourseItemMeasures, never()).save(any(CourseItemMeasure.class));
     }
 
 }

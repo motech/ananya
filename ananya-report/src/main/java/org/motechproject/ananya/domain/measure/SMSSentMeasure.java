@@ -74,4 +74,8 @@ public class SMSSentMeasure {
     public LocationDimension getLocationDimension() {
         return locationDimension;
     }
+
+    public void setLocationDimension(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+    }
 }

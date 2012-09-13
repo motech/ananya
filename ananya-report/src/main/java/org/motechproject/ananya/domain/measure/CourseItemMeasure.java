@@ -93,6 +93,10 @@ public class CourseItemMeasure {
     public CourseItemMeasure() {
     }
 
+    public void setLocationDimension(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+    }
+
     public CourseItemMeasure(TimeDimension timeDimension,
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,

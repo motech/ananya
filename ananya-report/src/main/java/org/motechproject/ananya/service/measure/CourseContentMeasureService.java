@@ -8,10 +8,10 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.ReportDB;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.CertificateCourseLogService;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class CourseContentMeasureService {
 
     private static final Logger log = LoggerFactory.getLogger(CourseContentMeasureService.class);
 
-    private ReportDB reportDB;
+    private AllCourseItemMeasures allCourseItemMeasures;
     private AllTimeDimensions allTimeDimensions;
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
@@ -36,8 +36,13 @@ public class CourseContentMeasureService {
     }
 
     @Autowired
-    public CourseContentMeasureService(CertificateCourseLogService certificateCourseLogService, AllTimeDimensions allTimeDimensions, AllCourseItemDimensions allCourseItemDimensions, AllFrontLineWorkerDimensions allFrontLineWorkerDimensions, AllRegistrationMeasures allRegistrationMeasures, ReportDB reportDB) {
-        this.reportDB = reportDB;
+    public CourseContentMeasureService(CertificateCourseLogService certificateCourseLogService,
+                                       AllTimeDimensions allTimeDimensions,
+                                       AllCourseItemDimensions allCourseItemDimensions,
+                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
+                                       AllRegistrationMeasures allRegistrationMeasures,
+                                       AllCourseItemMeasures allCourseItemMeasures) {
+        this.allCourseItemMeasures = allCourseItemMeasures;
         this.allTimeDimensions = allTimeDimensions;
         this.allCourseItemDimensions = allCourseItemDimensions;
         this.certificateCourseLogService = certificateCourseLogService;
@@ -73,7 +78,7 @@ public class CourseContentMeasureService {
                     frontLineWorkerDimension, locationDimension,
                     logItem.getTime(), logItem.giveScore(), logItem.getCourseItemState(), callId);
 
-            reportDB.add(courseItemMeasure);
+            allCourseItemMeasures.save(courseItemMeasure);
         }
         log.info(callId + "- courseLog courseItemMeasures added");
         removeLog(callId, courseLog);

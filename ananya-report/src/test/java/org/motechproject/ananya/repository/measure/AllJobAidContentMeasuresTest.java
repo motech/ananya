@@ -1,55 +1,26 @@
 package org.motechproject.ananya.repository.measure;
 
 import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ananya.SpringIntegrationTest;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.motechproject.ananya.repository.DataAccessTemplate;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
-public class AllJobAidContentMeasuresTest extends SpringIntegrationTest {
-
-    @Autowired
-    AllCourseItemMeasures allCourseItemMeasures;
-
-    @Autowired
-    AllTimeDimensions allTimeDimensions;
-
-    @Autowired
-    AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-
-    @Autowired
-    AllJobAidContentDimensions allJobAidContentDimensions;
-
-    @Autowired
-    AllJobAidContentMeasures allJobAidContentMeasures;
-
-    @Autowired
-    AllLocationDimensions allLocationDimensions;
-
-    @Before
-    @After
-    public void tearDown() {
-        template.deleteAll(template.loadAll(JobAidContentDimension.class));
-        template.deleteAll(template.loadAll(JobAidContentMeasure.class));
-        template.deleteAll(template.loadAll(TimeDimension.class));
-        template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
-        template.deleteAll(template.loadAll(LocationDimension.class));
-    }
+@RunWith(MockitoJUnitRunner.class)
+public class AllJobAidContentMeasuresTest {
+    @Mock
+    private DataAccessTemplate template;
 
     @Test
     public void shouldGetFilteredMsisdns() {
@@ -73,10 +44,14 @@ public class AllJobAidContentMeasuresTest extends SpringIntegrationTest {
         template.save(jobAidContentMeasure);
         template.save(jobAidContentMeasure1);
         template.save(jobAidContentMeasure2);
+    }
 
-        List<Long> filteredFrontLineWorkerMsisdns = allJobAidContentMeasures.getFilteredFrontLineWorkerMsisdns(DateTime.now().toDate(), DateTime.now().toDate());
+    public void shouldUpdateAllJobAidContentMeasures() {
+        ArrayList<JobAidContentMeasure> expectedJobAidContentMeasureList = new ArrayList<JobAidContentMeasure>();
+        AllJobAidContentMeasures allJobAidContentMeasures = new AllJobAidContentMeasures(template);
 
-        assertEquals(1, filteredFrontLineWorkerMsisdns.size());
-        assertEquals((Long)911234567890L, filteredFrontLineWorkerMsisdns.get(0));
+        allJobAidContentMeasures.updateAll(expectedJobAidContentMeasureList);
+
+        verify(template).saveOrUpdateAll(expectedJobAidContentMeasureList);
     }
 }

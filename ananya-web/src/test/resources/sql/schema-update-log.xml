@@ -235,4 +235,17 @@
             and called_number not in(33578056, 33578057, 5771102)
         </sql>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.4" id="8">
+        <sql>
+            update report.call_duration_measure cdm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = cdm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = cdm.flw_id order by id desc limit 1);
+
+            update report.course_item_measure cim set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = cim.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = cim.flw_id order by id desc limit 1);
+
+            update report.job_aid_content_measure jacm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = jacm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = jacm.flw_id order by id desc limit 1);
+
+            update report.sms_sent_measure smsm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = smsm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = smsm.flw_id order by id desc limit 1);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

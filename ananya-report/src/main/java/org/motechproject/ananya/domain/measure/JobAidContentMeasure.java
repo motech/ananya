@@ -96,4 +96,8 @@ public class JobAidContentMeasure {
     public Integer getDuration() {
         return duration;
     }
+
+    public void setLocationDimension(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+    }
 }

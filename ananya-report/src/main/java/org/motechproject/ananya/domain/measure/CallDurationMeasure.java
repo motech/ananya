@@ -103,4 +103,8 @@ public class CallDurationMeasure {
     public TimeDimension getTimeDimension() {
         return timeDimension;
     }
+
+    public void setLocationDimension(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+    }
 }

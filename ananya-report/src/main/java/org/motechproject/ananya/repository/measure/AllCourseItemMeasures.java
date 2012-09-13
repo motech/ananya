@@ -16,10 +16,14 @@ import java.util.List;
 @Transactional
 public class AllCourseItemMeasures {
 
-    @Autowired
     private DataAccessTemplate template;
 
     public AllCourseItemMeasures() {
+    }
+
+    @Autowired
+    public AllCourseItemMeasures(DataAccessTemplate template) {
+        this.template = template;
     }
 
     public List<Long> getFilteredFrontLineWorkerMsisdns(Date startDate, Date endDate) {
@@ -38,5 +42,17 @@ public class AllCourseItemMeasures {
 
     public List<CourseItemMeasure> fetchFor(String callId) {
         return template.findByNamedQueryAndNamedParam(CourseItemMeasure.FIND_BY_CALL_ID, new String[]{"callId"}, new Object[]{callId});
+    }
+
+    public List<CourseItemMeasure> findByCallerId(Long callerId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CourseItemMeasure.class);
+        criteria.createAlias("frontLineWorkerDimension", "flw");
+        criteria.add(Restrictions.eq("flw.msisdn", callerId));
+
+        return template.findByCriteria(criteria);
+    }
+
+    public void updateAll(List<CourseItemMeasure> courseItemMeasures) {
+        template.saveOrUpdateAll(courseItemMeasures);
     }
 }

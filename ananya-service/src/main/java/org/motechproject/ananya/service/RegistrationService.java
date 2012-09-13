@@ -13,8 +13,10 @@ import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
+import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 import org.motechproject.ananya.validators.FrontLineWorkerValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,8 @@ public class RegistrationService {
     private RegistrationMeasureService registrationMeasureService;
     private LocationService locationService;
     private JobAidContentMeasureService jobAidContentMeasureService;
+    private CallDurationMeasureService callDurationMeasureService;
+    private SMSSentMeasureService smsSentMeasureService;
 
     public RegistrationService() {
     }
@@ -46,13 +50,17 @@ public class RegistrationService {
                                FrontLineWorkerDimensionService frontLineWorkerDimensionService,
                                RegistrationMeasureService registrationMeasureService,
                                LocationService locationService,
-                               JobAidContentMeasureService jobAidContentMeasureService) {
+                               JobAidContentMeasureService jobAidContentMeasureService,
+                               CallDurationMeasureService callDurationMeasureService,
+                               SMSSentMeasureService smsSentMeasureService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.registrationMeasureService = registrationMeasureService;
         this.locationService = locationService;
         this.jobAidContentMeasureService = jobAidContentMeasureService;
+        this.callDurationMeasureService = callDurationMeasureService;
+        this.smsSentMeasureService = smsSentMeasureService;
     }
 
     public List<RegistrationResponse> registerAllFLWs(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
@@ -111,9 +119,17 @@ public class RegistrationService {
             return registrationResponse.withValidationResponse(FLWValidationResponse);
 
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
-        registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());
+        updateAllMeasures(frontLineWorker);
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
+    }
+
+    private void updateAllMeasures(FrontLineWorker frontLineWorker) {
+        registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());
+        courseItemMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
+        callDurationMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
+        jobAidContentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
+        smsSentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
     }
 }

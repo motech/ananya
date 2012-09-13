@@ -16,8 +16,10 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
+import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +47,18 @@ public class RegistrationServiceTest {
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     @Mock
     private CourseItemMeasureService courseItemMeasureService;
+    @Mock
+    private CallDurationMeasureService callDurationMeasureService;
+    @Mock
+    private SMSSentMeasureService smsSentMeasureService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
+        registrationService = new RegistrationService(
+                frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService,
+                registrationMeasureService, locationService, jobAidContentMeasureService,
+                callDurationMeasureService, smsSentMeasureService);
     }
 
     @Test
@@ -67,6 +76,28 @@ public class RegistrationServiceTest {
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));
         verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location);
         verify(registrationMeasureService).createOrUpdateFor(callerId);
+    }
+
+    @Test
+    public void shouldUpdateAllMeasuresForExistingFLW() {
+        String callerId = "919986574410";
+        String name = "name";
+        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Designation designation = Designation.AWW;
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null);
+        when(locationService.findFor("district", "block", "village")).thenReturn(location);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator", Designation.ANM, location, RegistrationStatus.REGISTERED);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location)).thenReturn(frontLineWorker);
+
+        RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
+
+        assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));
+        verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, RegistrationStatus.REGISTERED), location);
+        verify(registrationMeasureService).createOrUpdateFor(callerId);
+        verify(courseItemMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
+        verify(jobAidContentMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
+        verify(callDurationMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
+        verify(smsSentMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
     }
 
     @Test
@@ -114,7 +145,7 @@ public class RegistrationServiceTest {
         String name = "name";
         String designation = "invalid_designation";
         Location location = new Location("district", "block", "village", 1, 1, 1);
-        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService);
+        registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null);
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
@@ -140,13 +171,13 @@ public class RegistrationServiceTest {
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<FrontLineWorkerRequest>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null));
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("district", "block", "village"), null));
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId, "airtel", "bihar"));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId.trim(), "airtel", "bihar"));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, RegistrationStatus.REGISTERED), location)).thenReturn(new FrontLineWorker(callerId1, "airtel", "bihar"));
 
         List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequestList);
 
         assertTrue(StringUtils.contains(registrationResponses.get(0).getMessage(), "Created/Updated FLW record"));
-        verify(registrationMeasureService).createOrUpdateFor(callerId);
+        verify(registrationMeasureService).createOrUpdateFor(callerId.trim());
         assertTrue(StringUtils.contains(registrationResponses.get(1).getMessage(), "Created/Updated FLW record"));
         verify(registrationMeasureService).createOrUpdateFor(callerId1);
     }

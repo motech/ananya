@@ -14,6 +14,7 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.AudioTrackerLogService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class JobAidContentMeasureService {
     private AllJobAidContentDimensions allJobAidContentDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllJobAidContentMeasures allJobAidContentMeasures;
+    private LocationDimensionService locationDimensionService;
 
     public JobAidContentMeasureService() {
     }
@@ -44,13 +46,14 @@ public class JobAidContentMeasureService {
                                        AllRegistrationMeasures allRegistrationMeasures,
                                        AllJobAidContentDimensions allJobAidContentDimensions,
                                        AllTimeDimensions allTimeDimensions,
-                                       AllJobAidContentMeasures allJobAidContentMeasures) {
+                                       AllJobAidContentMeasures allJobAidContentMeasures, LocationDimensionService locationDimensionService) {
         this.audioTrackerLogService = audioTrackerLogService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.allJobAidContentDimensions = allJobAidContentDimensions;
         this.allTimeDimensions = allTimeDimensions;
         this.allJobAidContentMeasures = allJobAidContentMeasures;
+        this.locationDimensionService = locationDimensionService;
     }
 
     @Transactional
@@ -96,5 +99,15 @@ public class JobAidContentMeasureService {
 
     public List<Long> getAllFrontLineWorkerMsisdnsBetween(Date startDate, Date endDate) {
         return allJobAidContentMeasures.getFilteredFrontLineWorkerMsisdns(startDate, endDate);
+    }
+
+    public void updateLocation(long callerId, String locationId) {
+        List<JobAidContentMeasure> jobAidContentMeasureList = allJobAidContentMeasures.findByCallerId(callerId);
+        LocationDimension locationDimension = locationDimensionService.getFor(locationId);
+
+        for (JobAidContentMeasure jobAidContentMeasure : jobAidContentMeasureList) {
+            jobAidContentMeasure.setLocationDimension(locationDimension);
+        }
+        allJobAidContentMeasures.updateAll(jobAidContentMeasureList);
     }
 }
