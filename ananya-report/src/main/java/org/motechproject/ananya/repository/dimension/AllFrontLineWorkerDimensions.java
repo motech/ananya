@@ -64,7 +64,6 @@ public class AllFrontLineWorkerDimensions {
 
     private List<FrontLineWorkerDimension> hackToGetOverPostgresParametersLimit(List<Long> allFilteredMsisdns, Long msisdn, String name, String registrationStatus, String designation, String operator, String circle) {
         List<List<Long>> filteredMsisdnLists = splitParametersIntoSublist(allFilteredMsisdns);
-
         List<FrontLineWorkerDimension> accumulatedFrontLineWorkers = new ArrayList<FrontLineWorkerDimension>();
 
         for (List<Long> filteredMsisdns : filteredMsisdnLists) {
@@ -76,7 +75,6 @@ public class AllFrontLineWorkerDimensions {
 
     private List<List<Long>> splitParametersIntoSublist(List<Long> allFilteredMsisdns) {
         int startIndex = 0, endIndex = 0;
-
         List<List<Long>> splitList = new ArrayList<List<Long>>();
 
         while (endIndex != allFilteredMsisdns.size()) {
