@@ -95,6 +95,4 @@ public class TestJsonData {
     private String quote(String input) {
         return StringUtils.isBlank(input) ? null : "\"" + input + "\"";
     }
-
-
 }

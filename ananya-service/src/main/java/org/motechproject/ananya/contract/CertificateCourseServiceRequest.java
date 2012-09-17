@@ -41,5 +41,4 @@ public class CertificateCourseServiceRequest extends BaseServiceRequest {
     public ServiceType getType() {
         return ServiceType.CERTIFICATE_COURSE;
     }
-
 }

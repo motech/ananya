@@ -28,6 +28,12 @@
             <artifactId>ananya-flw</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.kubek2k</groupId>
+            <artifactId>springockito-annotations</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
