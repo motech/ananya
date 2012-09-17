@@ -11,6 +11,7 @@
     <util:properties id="activemqProperties" location="classpath:/activemq.properties"/>
 
     <import resource="classpath:applicationContext-services.xml"/>
+    <import resource="classpath:applicationBulkExportContext.xml"/>
     <import resource="classpath:applicationBulkImportContext.xml"/>
     <import resource="classpath:applicationContext-report.xml"/>
 
