@@ -1,12 +1,11 @@
 package org.motechproject.ananya.web;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ananya.service.FailedRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -20,8 +19,13 @@ public class FailedRecordsController {
         this.failedRecordsService = failedRecordsService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/failedrecords/process")
-    public void processFailedRecords(@PathVariable DateTime recordDate) throws IOException {
-        failedRecordsService.processFailedRecords(recordDate);
+    @RequestMapping(method = RequestMethod.GET, value = "/failedrecords/process")
+    public
+    @ResponseBody
+    String processFailedRecords(@RequestParam String recordDate) throws IOException {
+        DateTime forRecordDate = DateTime.parse(recordDate, DateTimeFormat.forPattern("dd-MM-yyyy"));
+        failedRecordsService.processFailedRecords(forRecordDate);
+
+        return "OK";
     }
 }

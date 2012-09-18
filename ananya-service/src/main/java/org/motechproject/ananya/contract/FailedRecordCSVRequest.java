@@ -3,10 +3,11 @@ package org.motechproject.ananya.contract;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.importer.annotation.ColumnName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FailedRecordCSVRequest {
+public class FailedRecordCSVRequest implements Serializable {
 
     @ColumnName(name = "MSISDN")
     private String msisdn;

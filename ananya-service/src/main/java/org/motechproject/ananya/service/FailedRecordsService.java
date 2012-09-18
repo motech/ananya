@@ -97,6 +97,6 @@ public class FailedRecordsService {
     }
 
     private String getRemoteFileName(DateTime recordDate) {
-        return "failed_records_" + recordDate.toString("dd_MM_yyyy") + ".csv";
+        return String.format("datapostmaxretry.%s.csv", recordDate.toString("dd-MM-yyyy"));
     }
 }
