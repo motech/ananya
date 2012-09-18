@@ -267,6 +267,10 @@
             <artifactId>motech-diagnostics</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+            <artifactId>motech-web-utils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-csv-importer</artifactId>
             <version>${project.version}</version>
