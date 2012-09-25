@@ -210,17 +210,6 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
-    @Seed(priority = 0, version = "1.8", comment = "Adding ")
-    public void createDimensionAndRegistrationMeasureForMissingFLWs() {
-        int batchSize = 100;
-        seedService.doWithBatch(new FrontLineWorkerExecutable() {
-            @Override
-            public void execute(FrontLineWorker frontLineWorker) {
-                seedService.createDimensionAndRegistrationMeasureFor(frontLineWorker);
-            }
-        }, batchSize);
-    }
-
     private String getInputCSV() {
         return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
     }
