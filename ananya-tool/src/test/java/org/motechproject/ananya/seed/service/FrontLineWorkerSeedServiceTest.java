@@ -166,7 +166,13 @@ public class FrontLineWorkerSeedServiceTest {
         Field lastModifiedField = FrontLineWorker.class.getDeclaredField("lastModified");
         lastModifiedField.setAccessible(true);
 
+        lastModifiedField.set(frontLineWorker1, null);
         lastModifiedField.set(frontLineWorker2, now);
+        seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
+        assertEquals(now, frontLineWorker1.getLastModified());
+
+        lastModifiedField.set(frontLineWorker1, now);
+        lastModifiedField.set(frontLineWorker2, null);
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
         assertEquals(now, frontLineWorker1.getLastModified());
 
@@ -187,6 +193,11 @@ public class FrontLineWorkerSeedServiceTest {
         assertEquals(now, frontLineWorker1.getLastJobAidAccessTime());
 
         frontLineWorker1.setLastJobAidAccessTime(now);
+        frontLineWorker2.setLastJobAidAccessTime(null);
+        seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
+        assertEquals(now, frontLineWorker1.getLastJobAidAccessTime());
+
+        frontLineWorker1.setLastJobAidAccessTime(now);
         frontLineWorker2.setLastJobAidAccessTime(now.plusDays(1));
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
         assertEquals(now.plusDays(1), frontLineWorker1.getLastJobAidAccessTime());
@@ -203,6 +214,11 @@ public class FrontLineWorkerSeedServiceTest {
         assertEquals(now, frontLineWorker1.getRegisteredDate());
 
         frontLineWorker1.setRegisteredDate(now);
+        frontLineWorker2.setRegisteredDate(null);
+        seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
+        assertEquals(now, frontLineWorker1.getRegisteredDate());
+
+        frontLineWorker1.setRegisteredDate(now);
         frontLineWorker2.setRegisteredDate(now.plusDays(1));
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
         assertEquals(now, frontLineWorker1.getRegisteredDate());
@@ -215,6 +231,11 @@ public class FrontLineWorkerSeedServiceTest {
 
         frontLineWorker1.setCurrentJobAidUsage(null);
         frontLineWorker2.setCurrentJobAidUsage(100);
+        seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
+        assertEquals(100, (int) frontLineWorker1.getCurrentJobAidUsage());
+
+        frontLineWorker1.setCurrentJobAidUsage(100);
+        frontLineWorker2.setCurrentJobAidUsage(null);
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
         assertEquals(100, (int) frontLineWorker1.getCurrentJobAidUsage());
 
