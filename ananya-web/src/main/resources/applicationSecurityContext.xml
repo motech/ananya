@@ -9,7 +9,6 @@
     <http auto-config="false" use-expressions="true" entry-point-ref="authenticationEntryPoint">
 
         <form-login login-page="/admin/login"
-                    default-target-url="/admin/monitor"
                     login-processing-url="/security/j_spring_security_check"
                     authentication-failure-url="/admin/login?login_error=t"/>
 
