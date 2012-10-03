@@ -4,7 +4,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.ektorp.CouchDbConnector;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -368,14 +367,20 @@ public class FrontLineWorkerSeedService {
             // using reflection since we didn't want to add a setter on account of the support module
             Field lastModifiedField = FrontLineWorker.class.getDeclaredField("lastModified");
             lastModifiedField.setAccessible(true);
-            lastModifiedField.set(frontLineWorker1, moreRecentOf(frontLineWorker1.getLastModified(), frontLineWorker2.getLastModified()));
+            lastModifiedField.set(frontLineWorker1,
+                    frontLineWorker1.getLastModified() != null && frontLineWorker1.getLastModified().isAfter(frontLineWorker2.getLastModified())
+                            ? frontLineWorker1.getLastModified() : frontLineWorker2.getLastModified());
         } catch (Exception e) {
             log.info("lastModified not accessible: " + e);
         }
 
-        frontLineWorker1.setLastJobAidAccessTime(moreRecentOf(frontLineWorker1.getLastJobAidAccessTime(), frontLineWorker2.getLastJobAidAccessTime()));
+        frontLineWorker1.setLastJobAidAccessTime(
+                frontLineWorker1.getLastJobAidAccessTime() != null && frontLineWorker1.getLastJobAidAccessTime().isAfter(frontLineWorker2.getLastJobAidAccessTime())
+                        ? frontLineWorker1.getLastJobAidAccessTime() : frontLineWorker2.getLastJobAidAccessTime());
 
-        frontLineWorker1.setRegisteredDate(lessRecentOf(frontLineWorker1.getRegisteredDate(), frontLineWorker2.getRegisteredDate()));
+        frontLineWorker1.setRegisteredDate(
+                frontLineWorker1.getRegisteredDate() != null && frontLineWorker1.getRegisteredDate().isBefore(frontLineWorker2.getRegisteredDate())
+                        ? frontLineWorker1.getRegisteredDate() : frontLineWorker2.getRegisteredDate());
 
         frontLineWorker1.setCurrentJobAidUsage(
                 frontLineWorker1.getCurrentJobAidUsage() != null && frontLineWorker1.getCurrentJobAidUsage() >= frontLineWorker2.getCurrentJobAidUsage()
@@ -424,16 +429,6 @@ public class FrontLineWorkerSeedService {
         }
 
         frontLineWorker1.getPromptsHeard().putAll(frontLineWorker2.getPromptsHeard());
-    }
-
-    private DateTime lessRecentOf(DateTime dateTime1, DateTime dateTime2) {
-        return dateTime2 == null || (dateTime1 != null && dateTime1.isBefore(dateTime2))
-                ? dateTime1 : dateTime2;
-    }
-
-    private DateTime moreRecentOf(DateTime dateTime1, DateTime dateTime2) {
-        return dateTime2 == null || (dateTime1 != null && dateTime1.isAfter(dateTime2))
-                ? dateTime1 : dateTime2;
     }
 
     private Location getCorrectLocation(final String locationId1, final String locationId2) {

@@ -211,7 +211,7 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
-    @Seed(priority = 1, version = "1.8", comment = "Removing conflicted FrontLineWorkers")
+    @Seed(priority = 0, version = "1.8", comment = "Removing conflicted FrontLineWorkers")
     public void removeConflictedFLWs(){
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
@@ -221,7 +221,7 @@ public class FrontLineWorkerSeed {
         }, 100);
     }
 
-    @Seed(priority = 0, version = "1.8", comment = "Removing duplicate FrontLineWorkers")
+    @Seed(priority = 1, version = "1.8", comment = "Removing duplicate FrontLineWorkers")
     public void removeDuplicateFLWs(){
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
