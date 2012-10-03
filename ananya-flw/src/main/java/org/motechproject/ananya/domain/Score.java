@@ -1,7 +1,6 @@
 package org.motechproject.ananya.domain;
 
 import org.apache.commons.collections.Predicate;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Score {
@@ -91,10 +90,5 @@ public class Score {
 
     public String getCallId() {
         return callId;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -1,11 +1,11 @@
 package org.motechproject.ananya.seed.service;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.ektorp.CouchDbConnector;
-import org.joda.time.DateTimeUtils;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
@@ -17,16 +17,13 @@ import org.motechproject.ananya.seed.domain.FrontLineWorkerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FrontLineWorkerSeedService {
+public class    FrontLineWorkerSeedService {
 
     private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeedService.class);
 
@@ -35,10 +32,6 @@ public class FrontLineWorkerSeedService {
     private AllFrontLineWorkers allFrontLineWorkers;
     private AllRegistrationMeasures allRegistrationMeasures;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
-
-    @Qualifier("ananyaDbConnector")
-    @Autowired
-    private CouchDbConnector db;
 
     public FrontLineWorkerSeedService() {
     }
@@ -310,204 +303,5 @@ public class FrontLineWorkerSeedService {
                 log.error("error modifying flw:" + frontLineWorker.getMsisdn(), e);
             }
         }
-    }
-
-    public void mergeAndUpdateConflictedFLWs(FrontLineWorker frontLineWorker) {
-        String frontLineWorkerId = frontLineWorker.getId();
-        FrontLineWorker frontLineWorkerWithConflicts = db.getWithConflicts(FrontLineWorker.class, frontLineWorkerId);
-        if (frontLineWorkerWithConflicts.hasConflict()) {
-            log.info("Merging conflicted FLWs for id - " + frontLineWorker.getId());
-            log.info("Original FLW : " + frontLineWorkerWithConflicts);
-
-            List<String> conflictingRevisions = frontLineWorkerWithConflicts.getConflicts();
-            for (String conflictingRevision : conflictingRevisions) {
-                FrontLineWorker nextConflictingFLW = db.get(FrontLineWorker.class, frontLineWorkerId, conflictingRevision);
-
-                mergeFrontLineWorker(frontLineWorkerWithConflicts, nextConflictingFLW);
-
-                log.info("Conflicted FLW : " + nextConflictingFLW);
-                db.delete(nextConflictingFLW);
-            }
-
-            log.info("Original FLW after merge : " + frontLineWorkerWithConflicts);
-            db.update(frontLineWorkerWithConflicts);
-        }
-    }
-
-    public void mergeAndRemoveDuplicateFLWs(FrontLineWorker frontLineWorker) {
-        List<FrontLineWorker> existingFrontLineWorkers = allFrontLineWorkers.getAllForMsisdn(frontLineWorker.getMsisdn());
-        if (existingFrontLineWorkers.size() <= 1) return;
-
-        log.info("Merging duplicated FLWs for msisdn - " + frontLineWorker.getMsisdn());
-        log.info("Original FLW : " + frontLineWorker);
-
-        for (FrontLineWorker duplicateFLW : existingFrontLineWorkers) {
-            if (duplicateFLW.getId().equals(frontLineWorker.getId())) continue;
-
-            mergeFrontLineWorker(frontLineWorker, duplicateFLW);
-
-            log.info("Duplicate FLW : " + duplicateFLW);
-            allFrontLineWorkers.remove(duplicateFLW);
-        }
-
-        log.info("After merge : " + frontLineWorker);
-        allFrontLineWorkers.update(frontLineWorker);
-    }
-
-    public void mergeFrontLineWorker(FrontLineWorker frontLineWorker1, FrontLineWorker frontLineWorker2) {
-        if (!StringUtils.equals(frontLineWorker1.getOperator(), frontLineWorker2.getOperator())) {
-            log.info("Different operators, flw1 : " + frontLineWorker1.getOperator() + ", flw2 : " + frontLineWorker2.getOperator());
-        }
-
-        frontLineWorker1.setName(getNonNullOf(frontLineWorker1.getName(), frontLineWorker2.getName()));
-        frontLineWorker1.setDesignation(getNonNullOf(frontLineWorker1.getDesignation(), frontLineWorker2.getDesignation()));
-        frontLineWorker1.setCircle(getNonNullOf(frontLineWorker1.getCircle(), frontLineWorker2.getCircle()));
-        frontLineWorker1.setLocation(getCorrectLocation(frontLineWorker1.getLocationId(), frontLineWorker2.getLocationId()));
-        try {
-            // using reflection since we didn't want to add a setter on account of the support module
-            Field lastModifiedField = FrontLineWorker.class.getDeclaredField("lastModified");
-            lastModifiedField.setAccessible(true);
-            lastModifiedField.set(frontLineWorker1,
-                    frontLineWorker1.getLastModified() != null && frontLineWorker1.getLastModified().isAfter(frontLineWorker2.getLastModified())
-                            ? frontLineWorker1.getLastModified() : frontLineWorker2.getLastModified());
-        } catch (Exception e) {
-            log.info("lastModified not accessible: " + e);
-        }
-
-        frontLineWorker1.setLastJobAidAccessTime(
-                frontLineWorker1.getLastJobAidAccessTime() != null && frontLineWorker1.getLastJobAidAccessTime().isAfter(frontLineWorker2.getLastJobAidAccessTime())
-                        ? frontLineWorker1.getLastJobAidAccessTime() : frontLineWorker2.getLastJobAidAccessTime());
-
-        frontLineWorker1.setRegisteredDate(
-                frontLineWorker1.getRegisteredDate() != null && frontLineWorker1.getRegisteredDate().isBefore(frontLineWorker2.getRegisteredDate())
-                        ? frontLineWorker1.getRegisteredDate() : frontLineWorker2.getRegisteredDate());
-
-        frontLineWorker1.setCurrentJobAidUsage(
-                frontLineWorker1.getCurrentJobAidUsage() != null && frontLineWorker1.getCurrentJobAidUsage() >= frontLineWorker2.getCurrentJobAidUsage()
-                        ? frontLineWorker1.getCurrentJobAidUsage() : frontLineWorker2.getCurrentJobAidUsage());
-
-        frontLineWorker1.setRegistrationStatus(
-                frontLineWorker1.getStatus().weight >= frontLineWorker2.getStatus().weight
-                        ? frontLineWorker1.getStatus() : frontLineWorker2.getStatus());
-
-        if (frontLineWorker1.currentCourseAttempt() == frontLineWorker2.currentCourseAttempt()) {
-            if (bookmarkAfter(frontLineWorker2, frontLineWorker1)) {
-                log.info("FLWs have SAME course attempts. Merging bookmark.");
-                frontLineWorker1.addBookMark(frontLineWorker2.bookMark());
-            }
-
-            ReportCard mergedReportCard = new ReportCard();
-            List<Score> frontLineWorker1Scores = frontLineWorker1.reportCard().scores();
-            List<Score> frontLineWorker2Scores = frontLineWorker2.reportCard().scores();
-            for (int i = 0; i < 9; i++) {
-                for (int j = 4; j < 8; j++) {
-                    Score frontLineWorker1Score = (Score) CollectionUtils.find(frontLineWorker1Scores,
-                            Score.findByChapterIdAndQuestionId(String.valueOf(i), String.valueOf(j)));
-                    Score frontLineWorker2Score = (Score) CollectionUtils.find(frontLineWorker2Scores,
-                            Score.findByChapterIdAndQuestionId(String.valueOf(i), String.valueOf(j)));
-
-                    Score recentScoreFromFrontLineWorkerScores = getRecentScoreFromFrontLineWorkerScores(frontLineWorker1Score, frontLineWorker2Score);
-                    if (recentScoreFromFrontLineWorkerScores != null)
-                        mergedReportCard.addScore(recentScoreFromFrontLineWorkerScores);
-                }
-            }
-
-            frontLineWorker1.reportCard().clearAllScores();
-            for (Score score : mergedReportCard.scores()) {
-                frontLineWorker1.reportCard().addScore(score);
-            }
-        } else if (frontLineWorker2.currentCourseAttempt() > frontLineWorker1.currentCourseAttempt()) {
-            log.info("FLWs have DIFFERENT course attempts. Merging bookmark and score blindly.");
-            while (frontLineWorker1.currentCourseAttempt() < frontLineWorker2.currentCourseAttempt()) {
-                frontLineWorker1.incrementCertificateCourseAttempts();
-            }
-
-            frontLineWorker1.addBookMark(frontLineWorker2.bookMark());
-            frontLineWorker1.reportCard().clearAllScores();
-            for (Score score : frontLineWorker2.reportCard().scores())
-                frontLineWorker1.reportCard().addScore(score);
-        }
-
-        frontLineWorker1.getPromptsHeard().putAll(frontLineWorker2.getPromptsHeard());
-    }
-
-    private Location getCorrectLocation(final String locationId1, final String locationId2) {
-        if (locationId1.equalsIgnoreCase(Location.getDefaultLocation().getExternalId()))
-            return new Location() {
-                @Override
-                public String getExternalId() {
-                    return locationId2;
-                }
-            };
-
-        return new Location() {
-            @Override
-            public String getExternalId() {
-                return locationId1;
-            }
-        };
-    }
-
-    private <T> T getNonNullOf(T object1, T object2) {
-        if (object1 == null) return object2;
-
-        return object1;
-    }
-
-    private Score getRecentScoreFromFrontLineWorkerScores(Score frontLineWorker1Score, Score frontLineWorker2Score) {
-        if (frontLineWorker1Score == null) return frontLineWorker2Score;
-
-        if (frontLineWorker2Score != null) {
-            String timestamp1 = frontLineWorker1Score.getCallId().split("-")[1];
-            String timestamp2 = frontLineWorker2Score.getCallId().split("-")[1];
-
-            if (timestamp1.compareTo(timestamp2) > 0) {
-                return frontLineWorker1Score;
-            } else {
-                log.info(String.format("Result changed for chapter[%s],question[%s] from [%s] to [%s]",
-                        frontLineWorker1Score.chapterIndex(),
-                        frontLineWorker1Score.questionIndex(),
-                        frontLineWorker1Score.result(),
-                        frontLineWorker2Score.result()));
-                return frontLineWorker2Score;
-            }
-        }
-
-        return frontLineWorker1Score;
-    }
-
-    private boolean bookmarkAfter(FrontLineWorker frontLineWorker1, FrontLineWorker frontLineWorker2) {
-        BookMark bookMark1 = frontLineWorker1.bookMark();
-        BookMark bookMark2 = frontLineWorker2.bookMark();
-
-        if (isBookmarkNull(bookMark1)) return false;
-
-        if (isBookmarkNull(bookMark2)) return true;
-
-        int chapterIndex1 = valIfNull(bookMark1.getChapterIndex());
-        int chapterIndex2 = valIfNull(bookMark2.getChapterIndex());
-        if (chapterIndex1 > chapterIndex2) return true;
-
-        int lessonIndex1 = valIfNull(bookMark1.getLessonIndex());
-        int lessonIndex2 = valIfNull(bookMark2.getLessonIndex());
-        if ((chapterIndex1 == chapterIndex2) &&
-                lessonIndex1 >= lessonIndex2) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isBookmarkNull(BookMark bookMark) {
-        if (bookMark == null) return true;
-
-        if (bookMark.getChapterIndex() == null && bookMark.getLessonIndex() == null && bookMark.getType() == null)
-            return true;
-
-        return false;
-    }
-
-    private int valIfNull(Integer value) {
-        return value == null ? -1 : value;
     }
 }

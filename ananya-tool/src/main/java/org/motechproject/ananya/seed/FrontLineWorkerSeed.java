@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -211,26 +210,6 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
-    @Seed(priority = 0, version = "1.8", comment = "Removing conflicted FrontLineWorkers")
-    public void removeConflictedFLWs(){
-        seedService.doWithBatch(new FrontLineWorkerExecutable() {
-            @Override
-            public void execute(FrontLineWorker frontLineWorker) {
-                seedService.mergeAndUpdateConflictedFLWs(frontLineWorker);
-            }
-        }, 100);
-    }
-
-    @Seed(priority = 1, version = "1.8", comment = "Removing duplicate FrontLineWorkers")
-    public void removeDuplicateFLWs(){
-        seedService.doWithBatch(new FrontLineWorkerExecutable() {
-            @Override
-            public void execute(FrontLineWorker frontLineWorker) {
-                seedService.mergeAndRemoveDuplicateFLWs(frontLineWorker);
-            }
-        }, 100);
-    }
-
     private String getInputCSV() {
         return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
     }
@@ -238,13 +217,5 @@ public class FrontLineWorkerSeed {
     private String getOutputCSV(String outputFilePath) {
         return outputFilePath + File.separator + outputFileName + new Date().getTime();
     }
-
-//    public static void main(String[] args) throws IOException {
-//        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
-//        FrontLineWorkerSeed frontLineWorkerSeed =
-//                (FrontLineWorkerSeed) context.getBean("frontLineWorkerSeed");
-//
-//        log.info("******************Done***************");
-//    }
 
 }

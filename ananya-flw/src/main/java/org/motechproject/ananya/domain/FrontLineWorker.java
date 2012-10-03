@@ -1,7 +1,6 @@
 package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -99,7 +98,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+        return "FrontLineWorker{" + msisdn + "}";
     }
 
     public void setCurrentJobAidUsage(Integer currentJobAidUsage) {

@@ -2,7 +2,6 @@ package org.motechproject.ananya.domain;
 
 import ch.lambdaj.group.Group;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -76,11 +75,6 @@ public class ReportCard {
             Score scoreToMatch = (Score) o;
             return scoreToMatch.result();
         }
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
     }
 }
 
