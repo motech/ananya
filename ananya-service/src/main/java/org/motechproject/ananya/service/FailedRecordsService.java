@@ -1,5 +1,8 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
@@ -17,8 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class FailedRecordsService {
@@ -60,38 +62,71 @@ public class FailedRecordsService {
     }
 
     public void publishFailedRecordsForProcessing(List<FailedRecordCSVRequest> failedRecordCSVRequests) {
-        failedRecordsPublishService.publishFailedRecordsMessage(failedRecordCSVRequests);
+        List<List<FailedRecordCSVRequest>> byMsisdnAndRecordTypeList = groupByMsisdnAndRecordType(failedRecordCSVRequests);
+        for (List<FailedRecordCSVRequest> byMsisdnAndRecordType : byMsisdnAndRecordTypeList) {
+            failedRecordsPublishService.publishFailedRecordsMessage(byMsisdnAndRecordType);
+        }
+    }
+
+    private List<List<FailedRecordCSVRequest>> groupByMsisdnAndRecordType(final List<FailedRecordCSVRequest> failedRecordCSVRequests) {
+        List<List<FailedRecordCSVRequest>> result = new ArrayList<>();
+
+        collectForRecord(CallFlowType.CERTIFICATECOURSE.name(), failedRecordCSVRequests, result);
+        collectForRecord(CallFlowType.JOBAID.name(), failedRecordCSVRequests, result);
+
+        return result;
+    }
+
+    private void collectForRecord(final String recordType, List<FailedRecordCSVRequest> failedRecordCSVRequests, List<List<FailedRecordCSVRequest>> result) {
+        List<FailedRecordCSVRequest> typeSpecificRecords = (List<FailedRecordCSVRequest>) CollectionUtils.select(failedRecordCSVRequests, new Predicate() {
+            @Override
+            public boolean evaluate(Object object) {
+                FailedRecordCSVRequest failedRecordCSVRequest = (FailedRecordCSVRequest) object;
+                return recordType.equalsIgnoreCase(failedRecordCSVRequest.getApplicationName());
+            }
+        });
+
+        Set<String> msisdns = new LinkedHashSet<>((List<String>) CollectionUtils.collect(typeSpecificRecords, new Transformer() {
+            @Override
+            public Object transform(Object input) {
+                FailedRecordCSVRequest failedRecordCSVRequest = (FailedRecordCSVRequest) input;
+                return failedRecordCSVRequest.getMsisdn();
+            }
+        }));
+
+        for (final String msisdn : msisdns) {
+            result.add((List<FailedRecordCSVRequest>) CollectionUtils.select(typeSpecificRecords, new Predicate() {
+                @Override
+                public boolean evaluate(Object object) {
+                    FailedRecordCSVRequest failedRecordCSVRequest = (FailedRecordCSVRequest) object;
+                    return msisdn.equals(failedRecordCSVRequest.getMsisdn());
+                }
+            }));
+        }
     }
 
     public void processFailedCSVRequests(List<FailedRecordCSVRequest> failedRecordCSVRequests) {
         log.info("Processing Failed Record Requests : Count(" + failedRecordCSVRequests.size() + ")");
 
-        List<JobAidServiceRequest> jobAidServiceRequests = new ArrayList<>();
-        List<CertificateCourseServiceRequest> certificateCourseServiceRequests = new ArrayList<>();
+        String applicationName = failedRecordCSVRequests.get(0).getApplicationName();
 
-        for (FailedRecordCSVRequest failedRecordCSVRequest : failedRecordCSVRequests) {
-            if (failedRecordCSVRequest.getApplicationName().equalsIgnoreCase(CallFlowType.CERTIFICATECOURSE.toString())) {
-                certificateCourseServiceRequests.add(CertificateCourseServiceRequestMapper.map(failedRecordCSVRequest));
-            } else if (failedRecordCSVRequest.getApplicationName().equalsIgnoreCase(CallFlowType.JOBAID.toString())) {
-                jobAidServiceRequests.add(JobAidServiceRequestMapper.map(failedRecordCSVRequest));
+        if (applicationName.equalsIgnoreCase(CallFlowType.CERTIFICATECOURSE.name())) {
+            for (FailedRecordCSVRequest failedRecordCSVRequest : failedRecordCSVRequests) {
+                CertificateCourseServiceRequest certificateCourseServiceRequest = CertificateCourseServiceRequestMapper.map(failedRecordCSVRequest);
+                try {
+                    certificateCourseService.handleDisconnect(certificateCourseServiceRequest);
+                } catch (Exception e) {
+                    throw new RuntimeException(String.format("Error while processing failed certificate course service request{%s}: ", certificateCourseServiceRequest.toString()) + e.getMessage(), e);
+                }
             }
-        }
-
-        for (JobAidServiceRequest jobAidServiceRequest : jobAidServiceRequests) {
-            try {
-                jobAidService.handleDisconnect(jobAidServiceRequest);
-            } catch (Exception e) {
-                log.error("Error while processing failed job aid service request : " +
-                        jobAidServiceRequest.toString(), e);
-            }
-        }
-
-        for (CertificateCourseServiceRequest certificateCourseServiceRequest : certificateCourseServiceRequests) {
-            try {
-                certificateCourseService.handleDisconnect(certificateCourseServiceRequest);
-            } catch (Exception e) {
-                log.error("Error while processing failed certificate course service request : " +
-                        certificateCourseServiceRequest.toString(), e);
+        } else if (applicationName.equalsIgnoreCase(CallFlowType.JOBAID.name())) {
+            for (FailedRecordCSVRequest failedRecordCSVRequest : failedRecordCSVRequests) {
+                JobAidServiceRequest jobAidServiceRequest = JobAidServiceRequestMapper.map(failedRecordCSVRequest);
+                try {
+                    jobAidService.handleDisconnect(jobAidServiceRequest);
+                } catch (Exception e) {
+                    throw new RuntimeException(String.format("Error while processing failed job aid service request{%s}: ", jobAidServiceRequest.toString()) + e.getMessage(), e);
+                }
             }
         }
     }
