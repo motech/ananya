@@ -15,12 +15,10 @@ import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
-import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
@@ -36,7 +34,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
@@ -54,8 +51,9 @@ public class FrontLineWorkerSeedTest {
     @Autowired
     private AllLocations allLocations;
 
+    @Qualifier("testDataAccessTemplate")
     @Autowired
-    private AllTimeDimensions allTimeDimensions;
+    private TestDataAccessTemplate template;
 
     @Autowired
     private LocationSeed locationSeed;
@@ -64,11 +62,7 @@ public class FrontLineWorkerSeedTest {
     private TimeSeed timeSeed;
 
     @Autowired
-    private AllRegistrationMeasures allRegistrationMeasures;
-
-    @Qualifier("testDataAccessTemplate")
-    @Autowired
-    private TestDataAccessTemplate template;
+    private AllTimeDimensions allTimeDimensions;
 
     @Autowired
     private EhCacheManagerFactoryBean defaultEhCacheManager;
@@ -273,47 +267,4 @@ public class FrontLineWorkerSeedTest {
         assertEquals(null, allFrontLineWorkerDimensions.fetchFor(919000000004L).getDesignation());
         assertEquals(null, allFrontLineWorkerDimensions.fetchFor(919000000005L).getDesignation());
     }
-
-    @Test
-    public void shouldNotCreateDimensionAndMeasureIfFLWAlreadyExistsInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1);
-        allLocations.add(location);
-
-        FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
-        allFrontLineWorkers.add(frontLineWorker);
-
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
-                frontLineWorker.msisdn(),
-                frontLineWorker.getOperator(),
-                frontLineWorker.getCircle(),
-                frontLineWorker.name(),
-                frontLineWorker.designationName(),
-                frontLineWorker.getStatus().toString());
-
-        frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
-
-        FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getId(), frontLineWorkerDimensionFromDb.getId());
-
-        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
-        assertNull(registrationMeasure);
-    }
-
-    @Test
-    public void shouldCreateDimensionAndMeasureIfFLWNotInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1);
-        allLocations.add(location);
-
-        FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
-        allFrontLineWorkers.add(frontLineWorker);
-
-        frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
-
-        FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
-        assertNotNull(frontLineWorkerDimensionFromDb);
-
-        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimensionFromDb.getId());
-        assertNotNull(registrationMeasure);
-    }
-
 }
