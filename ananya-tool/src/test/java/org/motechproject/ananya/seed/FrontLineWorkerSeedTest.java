@@ -23,6 +23,10 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.cache.interceptor.CacheAspectSupport;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -66,18 +70,25 @@ public class FrontLineWorkerSeedTest {
     @Autowired
     private TestDataAccessTemplate template;
 
+    @Autowired
+    private EhCacheManagerFactoryBean defaultEhCacheManager;
+
+    @Autowired
+    private CacheAspectSupport cacheAspectSupport;
+
     @Before
     public void setUp() throws IOException {
+        EhCacheCacheManager cacheManager = new EhCacheCacheManager();
+        cacheManager.setCacheManager(defaultEhCacheManager.getObject());
+        cacheAspectSupport.setCacheManager(cacheManager);
+
         allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
         allFrontLineWorkers.removeAll();
         allFrontLineWorkerDimensions.removeAll();
         locationSeed.loadLocationsFromCSVFile();
         timeSeed.createDimensionsInPostgres();
-        try {
-            allTimeDimensions.getFor(DateTime.now());
-        } catch (Exception e) {
-        }
+        allTimeDimensions.getFor(DateTime.now());
     }
 
     @After
