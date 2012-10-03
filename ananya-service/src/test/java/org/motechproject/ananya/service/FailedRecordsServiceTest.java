@@ -1,29 +1,28 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
-import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
 import org.motechproject.ananya.contract.JobAidServiceRequest;
-import org.motechproject.ananya.mapper.CertificateCourseServiceRequestMapper;
 import org.motechproject.ananya.service.publish.FailedRecordsPublishService;
 import org.motechproject.ananya.utils.OMFtpSource;
 import org.motechproject.importer.CSVDataImporter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,6 +40,8 @@ public class FailedRecordsServiceTest {
     private CSVDataImporter csvDataImporter;
     @Mock
     private OMFtpSource OMFtpSource;
+    @Mock
+    private FrontLineWorkerService frontLineWorkerService;
 
     private FailedRecordsService failedRecordsService;
 
@@ -51,7 +52,7 @@ public class FailedRecordsServiceTest {
         when(ananyaProperties.getProperty("om.ftpservice.username")).thenReturn("username");
         when(ananyaProperties.getProperty("om.ftpservice.password")).thenReturn("password");
 
-        failedRecordsService = new FailedRecordsService(failedRecordPublisherService, jobAidService, certificateCourseService, csvDataImporter, OMFtpSource);
+        failedRecordsService = new FailedRecordsService(failedRecordPublisherService, jobAidService, certificateCourseService, csvDataImporter, OMFtpSource, frontLineWorkerService);
     }
 
     @Test
@@ -188,5 +189,28 @@ public class FailedRecordsServiceTest {
         assertEquals(1, list3.size());
         assertEquals(msisdn2, list3.get(0).getMsisdn());
         assertEquals(typeJA, list3.get(0).getApplicationName());
+    }
+
+    @Test
+    public void shouldProcessFailedRecordsForRecordDate() throws IOException {
+        DateTime recordDate = DateTime.now();
+        DateTime lastProcessedDate = recordDate.minusDays(2);
+        when(frontLineWorkerService.getLastFailedRecordsProcessedDate()).thenReturn(lastProcessedDate);
+
+        ArrayList<File> failedRecordsCSVs = new ArrayList<>();
+        File mockFile1 = mock(File.class);
+        when(mockFile1.getAbsolutePath()).thenReturn("filePath1");
+        failedRecordsCSVs.add(mockFile1);
+        File mockFile2 = mock(File.class);
+        when(mockFile2.getAbsolutePath()).thenReturn("filePath2");
+        failedRecordsCSVs.add(mockFile2);
+        when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
+
+        failedRecordsService.processFailedRecords(recordDate);
+
+        verify(csvDataImporter).importData(argThat(is("FailedRecordCSVRequest")), argThat(is("filePath1")), argThat(is("filePath2")));
+        verify(mockFile1).delete();
+        verify(mockFile2).delete();
+        verify(frontLineWorkerService).updateLastFailedRecordsProcessedDate(recordDate);
     }
 }

@@ -30,9 +30,9 @@ public class FailedRecordsService {
     private CertificateCourseService certificateCourseService;
     private CSVDataImporter csvDataImporter;
     private OMFtpSource OMFtpSource;
+    private FrontLineWorkerService frontLineWorkerService;
 
     public static final String FAILED_RECORDS_PUBLISH_MESSAGE = "org.motechproject.ananya.service.failed.records.publish";
-
     private static Logger log = LoggerFactory.getLogger(FailedRecordsService.class);
 
     @Autowired
@@ -40,25 +40,39 @@ public class FailedRecordsService {
                                 JobAidService jobAidService,
                                 CertificateCourseService certificateCourseService,
                                 CSVDataImporter csvDataImporter,
-                                OMFtpSource OMFtpSource) {
+                                OMFtpSource OMFtpSource, FrontLineWorkerService frontLineWorkerService) {
         this.failedRecordsPublishService = failedRecordsPublishService;
         this.jobAidService = jobAidService;
         this.certificateCourseService = certificateCourseService;
         this.csvDataImporter = csvDataImporter;
         this.OMFtpSource = OMFtpSource;
+        this.frontLineWorkerService = frontLineWorkerService;
     }
 
     public void processFailedRecords(DateTime recordDate) throws IOException {
-        File csvFile = OMFtpSource.downloadCsvFile(getRemoteFileName(recordDate));
+        DateTime lastFailedRecordsProcessedDate = frontLineWorkerService.getLastFailedRecordsProcessedDate();
+        List<File> csvFiles = OMFtpSource.downloadAllCsvFilesBetween(lastFailedRecordsProcessedDate == null ? recordDate.minusDays(1) : lastFailedRecordsProcessedDate, recordDate);
 
-        if (csvFile == null) {
+        if (csvFiles.isEmpty()) {
             log.info("File not present for " + recordDate + ". Returning.");
             return;
         }
 
-        csvDataImporter.importData("FailedRecordCSVRequest", csvFile.getAbsolutePath());
+        csvDataImporter.importData("FailedRecordCSVRequest", getAbsolutePaths(csvFiles));
 
-        csvFile.delete();
+        for (File file : csvFiles) {
+            file.delete();
+        }
+
+        frontLineWorkerService.updateLastFailedRecordsProcessedDate(recordDate);
+    }
+
+    private String[] getAbsolutePaths(List<File> csvFiles) {
+        String[] csvFilePaths = new String[csvFiles.size()];
+        for(int i = 0; i < csvFilePaths.length; ++i){
+            csvFilePaths[i] = csvFiles.get(i).getAbsolutePath();
+        }
+        return csvFilePaths;
     }
 
     public void publishFailedRecordsForProcessing(List<FailedRecordCSVRequest> failedRecordCSVRequests) {
@@ -129,9 +143,5 @@ public class FailedRecordsService {
                 }
             }
         }
-    }
-
-    private String getRemoteFileName(DateTime recordDate) {
-        return String.format("datapostmaxretry.%s.csv", recordDate.toString("dd-MM-yyyy"));
     }
 }

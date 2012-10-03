@@ -11,14 +11,17 @@ import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import org.motechproject.ananya.SpringIntegrationTest;
+import org.motechproject.ananya.domain.FailedRecordsProcessingState;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.framework.CouchDb;
 import org.motechproject.ananya.framework.ReportDb;
 import org.motechproject.ananya.framework.TimedRunner;
+import org.motechproject.ananya.repository.AllFailedRecordsProcessingStates;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertTrue;
@@ -37,6 +40,9 @@ public class FailedRecordsControllerIT extends SpringIntegrationTest {
 
     @Autowired
     private Properties ananyaProperties;
+
+    @Autowired
+    private AllFailedRecordsProcessingStates allFailedRecordsProcessingStates;
 
     private String certificateCourseCallerId = "919886000002";
     private String jobaidCallerId = "919886000003";
@@ -58,6 +64,8 @@ public class FailedRecordsControllerIT extends SpringIntegrationTest {
 
         fakeFtpServer.addUserAccount(new UserAccount("motech", "password", "/"));
         fakeFtpServer.start();
+
+        allFailedRecordsProcessingStates.removeAll();
     }
 
     @After
@@ -89,6 +97,15 @@ public class FailedRecordsControllerIT extends SpringIntegrationTest {
             }
         }.executeWithTimeout();
         assertTrue(successfulCertificateCourseDisconnect);
+
+        boolean successfullyAddedLastProcessedDate = new TimedRunner(20, 500) {
+            @Override
+            protected boolean run() {
+                List<FailedRecordsProcessingState> failedRecordsProcessingStates = allFailedRecordsProcessingStates.getAll();
+                return !failedRecordsProcessingStates.isEmpty();
+            }
+        }.executeWithTimeout();
+        assertTrue(successfullyAddedLastProcessedDate);
     }
 
     private void clearFLWData() {
@@ -99,5 +116,7 @@ public class FailedRecordsControllerIT extends SpringIntegrationTest {
         reportDb.clearFLWDimensionAndMeasures(jobaidCallerId);
         couchDb.clearFLWData(jobaidCallerId);
         couchDb.clearAllLogs();
+
+        allFailedRecordsProcessingStates.removeAll();
     }
 }

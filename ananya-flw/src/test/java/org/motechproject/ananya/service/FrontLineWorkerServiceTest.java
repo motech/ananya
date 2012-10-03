@@ -6,19 +6,14 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.repository.AllFailedRecordsProcessingStates;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
 import org.motechproject.util.DateUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
@@ -37,11 +32,13 @@ public class FrontLineWorkerServiceTest {
     private LocationService locationService;
     @Mock
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
+    @Mock
+    private AllFailedRecordsProcessingStates allFailedRecordsProcessingStates;
 
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys, allFailedRecordsProcessingStates);
     }
 
     @Test
@@ -267,5 +264,55 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).update(captor.capture());
         FrontLineWorker frontLineWorker = captor.getValue();
         assertEquals(now, frontLineWorker.getLastModified());
+    }
+
+    @Test
+    public void shouldGetLastFailedRecordsProcessedDate_whenAvailable() {
+        ArrayList<FailedRecordsProcessingState> failedRecordsProcessingStates = new ArrayList<FailedRecordsProcessingState>();
+        FailedRecordsProcessingState failedRecordsProcessingState = new FailedRecordsProcessingState(DateTime.now());
+        failedRecordsProcessingStates.add(failedRecordsProcessingState);
+        when(allFailedRecordsProcessingStates.getAll()).thenReturn(failedRecordsProcessingStates);
+
+        DateTime lastFailedRecordsProcessedDate = frontLineWorkerService.getLastFailedRecordsProcessedDate();
+
+        assertEquals(failedRecordsProcessingState.getLastProcessedDate(), lastFailedRecordsProcessedDate);
+    }
+
+    @Test
+    public void shouldReturnNullForGetLastFailedRecordsProcessedDate_whenNotAvailable() {
+        List<FailedRecordsProcessingState> failedRecordsProcessingStates = Collections.emptyList();
+        when(allFailedRecordsProcessingStates.getAll()).thenReturn(failedRecordsProcessingStates);
+
+        DateTime lastFailedRecordsProcessedDate = frontLineWorkerService.getLastFailedRecordsProcessedDate();
+
+        assertNull(lastFailedRecordsProcessedDate);
+    }
+
+    @Test
+    public void shouldUpdateLastFailedRecordsProcessedDate() {
+        DateTime recordDate = DateTime.now().plusDays(1);
+        ArrayList<FailedRecordsProcessingState> failedRecordsProcessingStates = new ArrayList<FailedRecordsProcessingState>();
+        FailedRecordsProcessingState failedRecordsProcessingState = mock(FailedRecordsProcessingState.class);
+        failedRecordsProcessingStates.add(failedRecordsProcessingState);
+        when(allFailedRecordsProcessingStates.getAll()).thenReturn(failedRecordsProcessingStates);
+
+        frontLineWorkerService.updateLastFailedRecordsProcessedDate(recordDate);
+
+        verify(failedRecordsProcessingState).update(recordDate);
+        verify(allFailedRecordsProcessingStates).update(failedRecordsProcessingState);
+    }
+
+    @Test
+    public void shouldAddLastFailedRecordsProcessedDate() {
+        DateTime recordDate = DateTime.now().plusDays(1);
+        List<FailedRecordsProcessingState> failedRecordsProcessingStates = Collections.emptyList();
+        when(allFailedRecordsProcessingStates.getAll()).thenReturn(failedRecordsProcessingStates);
+
+        frontLineWorkerService.updateLastFailedRecordsProcessedDate(recordDate);
+
+        ArgumentCaptor<FailedRecordsProcessingState> failedRecordsProcessingStateArgumentCaptor = ArgumentCaptor.forClass(FailedRecordsProcessingState.class);
+        verify(allFailedRecordsProcessingStates).add(failedRecordsProcessingStateArgumentCaptor.capture());
+        FailedRecordsProcessingState failedRecordsProcessingState = failedRecordsProcessingStateArgumentCaptor.getValue();
+        assertEquals(recordDate, failedRecordsProcessingState.getLastProcessedDate());
     }
 }

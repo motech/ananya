@@ -4,6 +4,7 @@ import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.repository.AllFailedRecordsProcessingStates;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.util.DateUtil;
@@ -22,13 +23,15 @@ public class FrontLineWorkerService {
     private AllFrontLineWorkers allFrontLineWorkers;
     private LocationService locationService;
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
+    private AllFailedRecordsProcessingStates allFailedRecordsProcessingStates;
 
     @Autowired
     public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService,
-                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys) {
+                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys, AllFailedRecordsProcessingStates allFailedRecordsProcessingStates) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.locationService = locationService;
         this.allFrontLineWorkerKeys = allFrontLineWorkerKeys;
+        this.allFailedRecordsProcessingStates = allFailedRecordsProcessingStates;
     }
 
     public FrontLineWorker findByCallerId(String callerId) {
@@ -140,5 +143,27 @@ public class FrontLineWorkerService {
         existingFrontLineWorker.update(name, designation, location, lastModified);
         allFrontLineWorkers.update(existingFrontLineWorker);
         log.info("Updated:" + existingFrontLineWorker);
+    }
+
+
+    public DateTime getLastFailedRecordsProcessedDate() {
+        List<FailedRecordsProcessingState> failedRecordsProcessingStates = allFailedRecordsProcessingStates.getAll();
+        if (failedRecordsProcessingStates.isEmpty())
+            return null;
+
+        FailedRecordsProcessingState failedRecordsProcessingState = failedRecordsProcessingStates.get(0);
+        return failedRecordsProcessingState.getLastProcessedDate();
+    }
+
+    public void updateLastFailedRecordsProcessedDate(DateTime recordDate) {
+        List<FailedRecordsProcessingState> failedRecordsProcessingStates = allFailedRecordsProcessingStates.getAll();
+
+        if (failedRecordsProcessingStates.isEmpty()) {
+            allFailedRecordsProcessingStates.add(new FailedRecordsProcessingState(recordDate));
+        } else {
+            FailedRecordsProcessingState failedRecordsProcessingState = failedRecordsProcessingStates.get(0);
+            failedRecordsProcessingState.update(recordDate);
+            allFailedRecordsProcessingStates.update(failedRecordsProcessingState);
+        }
     }
 }
