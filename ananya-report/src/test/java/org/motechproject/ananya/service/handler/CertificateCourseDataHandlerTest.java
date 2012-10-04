@@ -52,6 +52,7 @@ public class CertificateCourseDataHandlerTest {
         CallMessage logData = new CallMessage(CallMessageType.CERTIFICATE_COURSE_DATA, callId);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("1", logData);
+        map.put("2", new Integer(3)); //some other parameter
         MotechEvent event = new MotechEvent("", map);
 
         SMSLog smsLog = new SMSLog(callId, callerId, "location", 1);
@@ -63,6 +64,6 @@ public class CertificateCourseDataHandlerTest {
         verify(callDurationMeasureService).createFor(callId);
         verify(courseAudioTrackerMeasureService).createFor(callId);
         verify(sendSMSService).buildAndSendSMS(callerId, "location", 1);
-        verify(smsLogService,never()).deleteFor(smsLog);
+        verify(smsLogService, never()).deleteFor(smsLog);
     }
 }

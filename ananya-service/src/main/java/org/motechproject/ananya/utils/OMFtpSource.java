@@ -4,6 +4,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Component
 public class OMFtpSource {
+
+    private static final Logger log = LoggerFactory.getLogger(OMFtpSource.class);
 
     private final String hostname;
     private final Integer port;
@@ -37,9 +41,10 @@ public class OMFtpSource {
         this.ftpClient = new FTPClient();
     }
 
-    public List<File> downloadAllCsvFilesBetween(DateTime lastProcessedDate, DateTime today) throws IOException {
+    public List<File> downloadAllCsvFilesBetween(DateTime lastProcessedDate, DateTime today) {
         lastProcessedDate = lastProcessedDate.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
         today = today.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
+        log.info(String.format("Attempting to download files from FTP between lastProcessedDate{%s} and recordDate{%s}", lastProcessedDate.toString("dd-MM-yyyy"), today.toString("dd-MM-yyyy")));
 
         List<File> filesToProcess = new ArrayList<>();
 
@@ -56,8 +61,14 @@ public class OMFtpSource {
 
                 nextDate = nextDate.plusDays(1);
             }
+        } catch (IOException ioe) {
+            log.error("Error retrieving file from FTP: ", ioe.getMessage());
         } finally {
-            ftpClient.disconnect();
+            try {
+                ftpClient.disconnect();
+            } catch (IOException e) {
+                log.error("Error disconnecting from FTP: ", e.getMessage());
+            }
         }
 
         return filesToProcess;

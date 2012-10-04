@@ -49,7 +49,7 @@ public class FailedRecordsService {
         this.frontLineWorkerService = frontLineWorkerService;
     }
 
-    public void processFailedRecords(DateTime recordDate) throws IOException {
+    public void processFailedRecords(DateTime recordDate) {
         DateTime lastFailedRecordsProcessedDate = frontLineWorkerService.getLastFailedRecordsProcessedDate();
         List<File> csvFiles = OMFtpSource.downloadAllCsvFilesBetween(lastFailedRecordsProcessedDate == null ? recordDate.minusDays(1) : lastFailedRecordsProcessedDate, recordDate);
 
@@ -77,6 +77,8 @@ public class FailedRecordsService {
 
     public void publishFailedRecordsForProcessing(List<FailedRecordCSVRequest> failedRecordCSVRequests) {
         List<List<FailedRecordCSVRequest>> byMsisdnAndRecordTypeList = groupByMsisdnAndRecordType(failedRecordCSVRequests);
+
+        log.info("Publishing failed records for processing: " + byMsisdnAndRecordTypeList);
         for (List<FailedRecordCSVRequest> byMsisdnAndRecordType : byMsisdnAndRecordTypeList) {
             failedRecordsPublishService.publishFailedRecordsMessage(byMsisdnAndRecordType);
         }

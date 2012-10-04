@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 import static junit.framework.Assert.*;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -137,7 +138,7 @@ public class FailedRecordsServiceTest {
             add(failedRecordCSVRequest);
         }};
 
-        doThrow(new IllegalStateException(expectedErrorMessage)).when(certificateCourseService).handleDisconnect(any(CertificateCourseServiceRequest.class));
+        doThrow(new IllegalStateException(expectedErrorMessage)).when(certificateCourseService).handleDisconnect(argThat(is(any(CertificateCourseServiceRequest.class))));
 
         try {
             failedRecordsService.processFailedCSVRequests(failedRecordsCSVRequests);
@@ -212,5 +213,20 @@ public class FailedRecordsServiceTest {
         verify(mockFile1).delete();
         verify(mockFile2).delete();
         verify(frontLineWorkerService).updateLastFailedRecordsProcessedDate(recordDate);
+    }
+
+    @Test
+    public void shouldNotProcessFailedRecordsForRecordDate_whenNoFilesPresent() throws IOException {
+        DateTime recordDate = DateTime.now();
+        DateTime lastProcessedDate = recordDate.minusDays(2);
+        when(frontLineWorkerService.getLastFailedRecordsProcessedDate()).thenReturn(lastProcessedDate);
+
+        ArrayList<File> failedRecordsCSVs = new ArrayList<>();
+        when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
+
+        failedRecordsService.processFailedRecords(recordDate);
+
+        verify(csvDataImporter, never()).importData(argThat(is("FailedRecordCSVRequest")), argThat(is(any(String.class))), argThat(is(any(String.class))));
+        verify(frontLineWorkerService, never()).updateLastFailedRecordsProcessedDate(argThat(is(any(DateTime.class))));
     }
 }

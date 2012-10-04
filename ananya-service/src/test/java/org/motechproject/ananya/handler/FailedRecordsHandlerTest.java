@@ -34,13 +34,18 @@ public class FailedRecordsHandlerTest {
 
     @Test
     public void shouldHandleFailedRecords() {
-        List<FailedRecordCSVRequest> expectedFailedRecords= new ArrayList<>();
+        List<FailedRecordCSVRequest> expectedFailedRecords = new ArrayList<>();
         FailedRecordCSVRequest failedRecordCSVRequest = new FailedRecordCSVRequest();
         String msisdn = "1234567890";
         failedRecordCSVRequest.setMsisdn(msisdn);
         expectedFailedRecords.add(failedRecordCSVRequest);
         MotechEvent event = new MotechEvent(FailedRecordsService.FAILED_RECORDS_PUBLISH_MESSAGE);
         event.getParameters().put("0", expectedFailedRecords);
+        event.getParameters().put("1", new Integer(2)); //some other parameters
+        event.getParameters().put("2", new ArrayList<>());
+        event.getParameters().put("3", new ArrayList<Integer>() {{
+            add(new Integer(1));
+        }});
 
         failedRecordsHandler.handleFailedRecords(event);
 

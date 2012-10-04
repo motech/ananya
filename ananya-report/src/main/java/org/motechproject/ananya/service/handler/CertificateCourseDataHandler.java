@@ -47,6 +47,11 @@ public class CertificateCourseDataHandler {
     public void handleCertificateCourseData(MotechEvent event) {
 
         for (Object object : event.getParameters().values()) {
+            if (!(object instanceof CallMessage)) {
+                log.info("received unknown object: " + object.toString());
+                continue;
+            }
+
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
             log.info("received course message: " + callId);

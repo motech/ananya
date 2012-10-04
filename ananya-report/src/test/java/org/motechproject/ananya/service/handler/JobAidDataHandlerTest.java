@@ -40,7 +40,8 @@ public class JobAidDataHandlerTest {
         String callId = "callId";
         CallMessage logData = new CallMessage(CallMessageType.JOBAID, callId);
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("1", logData);
+        map.put("1", new Integer(3)); //some other parameter
+        map.put("2", logData);
         MotechEvent event = new MotechEvent("", map);
 
         handler.handleJobAidData(event);

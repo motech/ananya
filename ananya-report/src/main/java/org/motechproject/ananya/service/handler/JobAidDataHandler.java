@@ -33,6 +33,11 @@ public class JobAidDataHandler {
     @MotechListener(subjects = {ReportPublishEventKeys.JOBAID_CALL_MESSAGE})
     public void handleJobAidData(MotechEvent event) {
         for (Object object : event.getParameters().values()) {
+            if (!(object instanceof CallMessage)) {
+                log.info("received unknown object: " + object.toString());
+                continue;
+            }
+
             CallMessage callMessage = (CallMessage) object;
             String callId = callMessage.getCallId();
             log.info("received jobaid message: " + callId);

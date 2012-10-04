@@ -160,10 +160,12 @@ public class FrontLineWorkerService {
 
         if (failedRecordsProcessingStates.isEmpty()) {
             allFailedRecordsProcessingStates.add(new FailedRecordsProcessingState(recordDate));
+            log.info("Added last processed date:" + recordDate);
         } else {
             FailedRecordsProcessingState failedRecordsProcessingState = failedRecordsProcessingStates.get(0);
             failedRecordsProcessingState.update(recordDate);
             allFailedRecordsProcessingStates.update(failedRecordsProcessingState);
+            log.info("Updated last processed date:" + recordDate);
         }
     }
 }

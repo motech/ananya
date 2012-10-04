@@ -22,7 +22,7 @@ public class FailedRecordsController {
     @RequestMapping(method = RequestMethod.GET, value = "/failedrecords/process")
     public
     @ResponseBody
-    String processFailedRecords(@RequestParam String recordDate) throws IOException {
+    String processFailedRecords(@RequestParam String recordDate) {
         DateTime forRecordDate = DateTime.parse(recordDate, DateTimeFormat.forPattern("dd-MM-yyyy"));
         failedRecordsService.processFailedRecords(forRecordDate);
 
