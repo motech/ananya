@@ -13,5 +13,6 @@
 
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationBulkExportContext.xml"/>
+    <import resource="classpath:applicationBulkImportContext.xml"/>
 
 </beans>
