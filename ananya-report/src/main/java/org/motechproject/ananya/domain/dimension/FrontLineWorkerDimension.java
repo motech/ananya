@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain.dimension;
 import org.motechproject.ananya.domain.RegistrationStatus;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "front_line_worker_dimension")
@@ -39,6 +40,9 @@ public class FrontLineWorkerDimension {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "flw_guid")
+    private String flwGuid;
+
     public FrontLineWorkerDimension() {
     }
 
@@ -49,6 +53,7 @@ public class FrontLineWorkerDimension {
         this.designation = designation;
         this.status = status;
         this.circle = circle;
+        this.flwGuid = UUID.randomUUID().toString();
     }
 
     public Long getMsisdn() {
@@ -114,6 +119,10 @@ public class FrontLineWorkerDimension {
 
     public void setDesignation(String designation) {
         this.designation = designation;
+    }
+
+    public String getFlwGuid() {
+        return flwGuid;
     }
 
     @Override
