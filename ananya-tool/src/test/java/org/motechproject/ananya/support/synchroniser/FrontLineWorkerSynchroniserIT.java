@@ -28,6 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -103,7 +104,7 @@ public class FrontLineWorkerSynchroniserIT {
     }
 
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), null, UUID.randomUUID().toString());
         String callId = msisdn + "-" + DateTime.now().getMillisOfDay();
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);

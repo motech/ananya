@@ -8,12 +8,17 @@ import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
+
+    private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
 
@@ -65,6 +70,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonIgnore
     private boolean modified;
 
+    @JsonProperty
+    private String flwGuid;
+
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
         this.currentJobAidUsage = 0;
@@ -73,28 +81,19 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker(String msisdn, String operator, String circle) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
-        this.circle = circle == null ? this.circle : circle;
-        this.operator = operator == null ? this.operator : operator;
+        this.circle = circle;
+        this.operator = operator;
+        this.flwGuid = UUID.randomUUID().toString();
     }
 
-    private String prefixMsisdnWith91(String msisdn) {
-        return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
-    }
-
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, RegistrationStatus registrationStatus) {
-        this(msisdn, null, null);
-        this.name = name;
-        this.designation = designation;
-        this.locationId = location == null ? null : location.getExternalId();
-        this.status = registrationStatus;
-    }
-
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified) {
-        this(msisdn, null, null);
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, String flwGuid) {
+        this();
+        this.msisdn = prefixMsisdnWith91(msisdn);
         this.name = name;
         this.designation = designation;
         this.locationId = location == null ? null : location.getExternalId();
         this.lastModified = lastModified;
+        this.flwGuid = flwGuid;
     }
 
     @Override
@@ -229,13 +228,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, DateTime lastModified) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified, String flwGuid) {
         this.name = name;
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
         if (isAlreadyRegistered())
             decideRegistrationStatus(location);
+        updateFlwGuid(flwGuid);
     }
 
     public boolean hasPassedTheCourse() {
@@ -279,6 +279,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    public String getFlwGuid() {
+        return flwGuid;
+    }
+
+    public void setFlwGuid(String flwGuid) {
+        this.flwGuid = flwGuid;
     }
 
     public void merge(FrontLineWorker frontLineWorker) {
@@ -348,5 +356,17 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public boolean hasNoOperator() {
         return StringUtils.isEmpty(operator);
+    }
+
+    private String prefixMsisdnWith91(String msisdn) {
+        return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
+    }
+
+    private void updateFlwGuid(String flwGuid) {
+        if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
+            log.warn(String.format("Changing FLW GUID for msisdn[%s]", this.msisdn));
+        }
+
+        this.flwGuid = flwGuid;
     }
 }

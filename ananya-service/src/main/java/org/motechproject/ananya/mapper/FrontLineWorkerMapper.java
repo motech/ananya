@@ -24,6 +24,6 @@ public class FrontLineWorkerMapper {
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                 Designation.getFor(StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation())),
                 new Location(frontLineWorkerRequest.getLocation().getDistrict(), frontLineWorkerRequest.getLocation().getBlock(), frontLineWorkerRequest.getLocation().getPanchayat(), 0, 0, 0),
-                new DateTime(frontLineWorkerRequest.getLastModified()));
+                new DateTime(frontLineWorkerRequest.getLastModified()), frontLineWorkerRequest.getFlwGuid());
     }
 }

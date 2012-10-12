@@ -20,6 +20,8 @@ public class FrontLineWorkerValidator {
             flwValidationResponse.forInvalidName();
         if (locationOfFrontLineWorker == null)
             flwValidationResponse.forInvalidLocation();
+        if (StringUtils.isBlank(frontLineWorker.getFlwGuid()))
+            flwValidationResponse.forInvalidFlwGuid();
 
         return flwValidationResponse;
     }

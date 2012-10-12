@@ -62,7 +62,7 @@ public class SMSSentMeasureServiceTest {
         Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
         String flwId = "77abcd";
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", "flwGuid");
         frontLineWorkerDimension.setId(1);
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
@@ -95,7 +95,7 @@ public class SMSSentMeasureServiceTest {
         String flwId = "77abcd";
         int flwd_id = 1;
 
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", "flwGuid");
         frontLineWorkerDimension.setId(flwd_id);
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());

@@ -1,6 +1,8 @@
 package org.motechproject.ananya.domain.dimension;
 
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -12,6 +14,7 @@ import java.util.UUID;
         @NamedQuery(name = FrontLineWorkerDimension.FIND_ALL_UNREGISTERED, query = "select f from FrontLineWorkerDimension f where f.status='UNREGISTERED'")
 })
 public class FrontLineWorkerDimension {
+    private static Logger log = LoggerFactory.getLogger(FrontLineWorkerDimension.class);
 
     public static final String FIND_BY_MSISDN = "find.by.msisdn";
 
@@ -46,14 +49,14 @@ public class FrontLineWorkerDimension {
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, String flwGuid) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
         this.designation = designation;
         this.status = status;
         this.circle = circle;
-        this.flwGuid = UUID.randomUUID().toString();
+        this.flwGuid = flwGuid;
     }
 
     public Long getMsisdn() {
@@ -104,12 +107,13 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation) {
+    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, String flwGuid) {
         this.operator = operator;
         this.name = name;
         this.status = status;
         this.designation = designation;
         this.circle = circle;
+        updateFlwGuid(flwGuid);
         return this;
     }
 
@@ -174,5 +178,13 @@ public class FrontLineWorkerDimension {
                 ", designation='" + designation + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    private void updateFlwGuid(String flwGuid) {
+        if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
+            log.warn(String.format("Changing FLWDimension GUID for msisdn[%s]", this.msisdn));
+        }
+
+        this.flwGuid = flwGuid;
     }
 }

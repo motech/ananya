@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -28,7 +27,8 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 2, 3, 4);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, RegistrationStatus.REGISTERED);
+        String flwGuid = "flwGuid";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwGuid);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -37,6 +37,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkers.get(0);
         assertEquals(msisdn, frontLineWorkerFromDb.getMsisdn());
         assertEquals("S01D002B003V004", frontLineWorkerFromDb.getLocationId());
+        assertEquals(flwGuid, frontLineWorkerFromDb.getFlwGuid());
         assertTrue(frontLineWorkerFromDb.isAnganwadi());
     }
 
@@ -44,7 +45,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, "flwGuid");
 
         allFrontLineWorkers.add(frontLineWorker);
 

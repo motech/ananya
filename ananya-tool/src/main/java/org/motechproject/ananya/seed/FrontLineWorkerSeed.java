@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -73,7 +72,7 @@ public class FrontLineWorkerSeed {
     */
     public void loadFromCsv(String inputCSVFile) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
-        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
+        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, flwGuid;
         String circle = null;
         String[] currentRow;
         DateTime lastModified = DateUtil.now();
@@ -90,12 +89,13 @@ public class FrontLineWorkerSeed {
             currentDistrict = currentRow[3];
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
+            flwGuid = currentRow[6];
 
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
                     designation,
                     new LocationRequest(currentDistrict, currentBlock, currentPanchayat),
-                    lastModified.toDate()));
+                    lastModified.toDate(), flwGuid));
 
             currentRow = csvReader.readNext();
         }
@@ -238,6 +238,17 @@ public class FrontLineWorkerSeed {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
                 seedService.createDimensionAndRegistrationMeasureFor(frontLineWorker);
+            }
+        }, batchSize);
+    }
+
+    @Seed(priority = 0, version = "1.9", comment = "Fill flw guids from FLWDimensions")
+    public void copyFlwGuidFromFLWDimensionToAllFlwsInCouch() {
+        int batchSize = 100;
+        seedService.doWithBatch(new FrontLineWorkerExecutable() {
+            @Override
+            public void execute(FrontLineWorker frontLineWorker) {
+                seedService.copyFlwGuidFromFLWDimension(frontLineWorker);
             }
         }, batchSize);
     }

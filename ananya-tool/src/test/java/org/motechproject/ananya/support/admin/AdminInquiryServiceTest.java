@@ -117,7 +117,7 @@ public class AdminInquiryServiceTest {
     public void shouldGetCallerDetail() {
         String callerId = "919988776622";
         String name = "Aanchal";
-        allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "bihar", name, "ASHA", "REGISTERED");
+        allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "bihar", name, "ASHA", "REGISTERED", "flwGuid");
 
         CallerDetail callerDetail = (CallerDetail) adminInquiryService.getInquiryData(callerId).get(AdminInquiryService.CALLER_DETAIL);
 
@@ -125,14 +125,14 @@ public class AdminInquiryServiceTest {
     }
 
     private void setUpCallDetails(String callerId) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "bsnl", "bihar", "Raji", "ANGANWADI", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "bsnl", "bihar", "Raji", "ANGANWADI", "REGISTERED", "flwGuid1");
 
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionTwoDaysAgo, callerId + "444", 555444L, 30, twoDaysAgo, twoDaysAgo.plusMinutes(30), "JOBAID"));
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionNow, callerId + "888", 555444L, 10, now, now.plusMinutes(30), "CC"));
     }
 
     private void setUpKunjiCalls(String callerId) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "vodafone", "bihar", "Ambala", "ANGANWADI", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "vodafone", "bihar", "Ambala", "ANGANWADI", "REGISTERED", "flwGuid2");
 
         JobAidContentDimension root = new JobAidContentDimension("root", null, "Welcome", "root.mp3", "root", 50);
         allJobAidContentDimensions.add(root);
@@ -146,7 +146,7 @@ public class AdminInquiryServiceTest {
     }
 
     private void setUpAcademyCalls(String callerId) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "bihar", "Santoshi", "ASHA", "REGISTERED");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "bihar", "Santoshi", "ASHA", "REGISTERED", "flwGuid3");
         CourseItemDimension root = allCourseItemDimensions.add(new CourseItemDimension("course", "c1l1", CourseItemType.COURSE, null));
         CourseItemDimension c1l1 = allCourseItemDimensions.add(new CourseItemDimension("chapter 1 lesson 1", "c1l1", CourseItemType.LESSON, root));
         CourseItemDimension c1l2 = allCourseItemDimensions.add(new CourseItemDimension("chapter 1 lesson 2", "c1l2", CourseItemType.LESSON, root));

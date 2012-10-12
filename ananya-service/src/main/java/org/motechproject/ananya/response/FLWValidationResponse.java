@@ -39,4 +39,10 @@ public class FLWValidationResponse {
         isValid = false;
         return this;
     }
+
+    public FLWValidationResponse forInvalidFlwGuid() {
+        message += "[Invalid flwGuid]";
+        isValid = false;
+        return this;
+    }
 }

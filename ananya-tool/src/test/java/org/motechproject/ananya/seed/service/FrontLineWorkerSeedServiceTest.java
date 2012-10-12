@@ -3,20 +3,48 @@ package org.motechproject.ananya.seed.service;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllLocations;
+import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
+import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.lang.reflect.Field;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class FrontLineWorkerSeedServiceTest {
 
     private FrontLineWorkerSeedService seedService;
+    @Mock
+    private DataAccessTemplate template;
+    @Mock
+    private AllLocations allLocations;
+    @Mock
+    private AllFrontLineWorkers allFrontLineWorkers;
+    @Mock
+    private AllRegistrationMeasures allRegistrationMeasures;
+    @Mock
+    private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Mock
+    private AllTimeDimensions allTimeDimensions;
+    @Mock
+    private AllLocationDimensions allLocationDimensions;
 
     @Before
     public void setUp() {
-        seedService = new FrontLineWorkerSeedService();
+        initMocks(this);
+        seedService = new FrontLineWorkerSeedService(template, allFrontLineWorkers, allFrontLineWorkerDimensions, allRegistrationMeasures,
+                allLocations, allTimeDimensions, allLocationDimensions);
     }
 
     @Test
@@ -26,19 +54,19 @@ public class FrontLineWorkerSeedServiceTest {
         Location defaultLocation = Location.getDefaultLocation();
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.ANM, completeLocation, null, "flwGuid");
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "", Designation.ANM, completeLocation, null, "flwGuid");
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", null, completeLocation, null, "flwGuid");
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", null, completeLocation, null, "flwGuid");
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.ANM, defaultLocation, null, "flwGuid");
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, RegistrationStatus.REGISTERED);
+                "1234", "name", Designation.ANM, incompleteLocation, null, "flwGuid");
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, RegistrationStatus.REGISTERED);
+                "1234", "", null, defaultLocation, null, "flwGuid");
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));
@@ -259,5 +287,18 @@ public class FrontLineWorkerSeedServiceTest {
         frontLineWorker2.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
         assertEquals(RegistrationStatus.REGISTERED, frontLineWorker1.getStatus());
+    }
+
+    @Test
+    public void shouldCopyGUIDsFromFLWDimension() {
+        FrontLineWorker frontlineWorker = new FrontLineWorker("911234567890", "Airtel", "Circle");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
+        when(allFrontLineWorkerDimensions.fetchFor(frontlineWorker.msisdn())).thenReturn(frontLineWorkerDimension);
+
+        seedService.copyFlwGuidFromFLWDimension(frontlineWorker);
+
+        verify(allFrontLineWorkerDimensions).fetchFor(frontlineWorker.msisdn());
+        assertEquals(frontLineWorkerDimension.getFlwGuid(), frontlineWorker.getFlwGuid());
+        verify(allFrontLineWorkers).update(frontlineWorker);
     }
 }

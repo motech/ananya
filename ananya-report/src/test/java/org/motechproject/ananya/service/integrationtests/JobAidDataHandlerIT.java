@@ -106,7 +106,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         DateTime jobAidEndTime = now.plusSeconds(15);
 
         Location location = new Location("", "", "", 0, 0, 0);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, RegistrationStatus.UNREGISTERED);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, "flwGuid");
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));

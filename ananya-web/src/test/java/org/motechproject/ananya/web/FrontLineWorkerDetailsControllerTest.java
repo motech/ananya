@@ -72,7 +72,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String designation = Designation.ANM.name();
         String name = "name";
 
-        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null));
+        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, "flwGuid"));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
@@ -86,7 +86,7 @@ public class FrontLineWorkerDetailsControllerTest extends SpringIntegrationTest 
         String msisdn = "1234";
         String status = "REGISTERED";
         String name = "name";
-        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status));
+        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status, "flwGuid"));
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
         when(request.getParameter("status")).thenReturn(status);

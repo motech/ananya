@@ -138,9 +138,10 @@ public class FrontLineWorkerService {
         String name = frontLineWorker.getName();
         Designation designation = Designation.getFor(frontLineWorker.designationName());
         DateTime lastModified = frontLineWorker.getLastModified();
-
         lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
-        existingFrontLineWorker.update(name, designation, location, lastModified);
+
+        existingFrontLineWorker.update(name, designation, location, lastModified, frontLineWorker.getFlwGuid());
+
         allFrontLineWorkers.update(existingFrontLineWorker);
         log.info("Updated:" + existingFrontLineWorker);
     }

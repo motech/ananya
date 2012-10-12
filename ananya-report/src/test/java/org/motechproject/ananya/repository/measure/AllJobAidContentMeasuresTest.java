@@ -27,8 +27,8 @@ public class AllJobAidContentMeasuresTest {
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         TimeDimension timeDimension1 = new TimeDimension(DateTime.now().minusDays(1));
         TimeDimension timeDimension2 = new TimeDimension(DateTime.now().minusDays(2));
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name());
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), "flwGuid1");
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), "flwGuid2");
         LocationDimension locationDimension = new LocationDimension("S02123431243", "D1", "B1", "P1");
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "fileName", "type", 123);
         JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, DateTime.now(), 123, 12);

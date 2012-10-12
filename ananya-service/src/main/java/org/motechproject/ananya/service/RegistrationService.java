@@ -72,7 +72,8 @@ public class RegistrationService {
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getDistrict()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
-                    new DateTime(frontLineWorkerRequest.getLastModified()));
+                    new DateTime(frontLineWorkerRequest.getLastModified()),
+                    StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwGuid()));
             registrationResponses.add(registrationResponse);
         }
         return registrationResponses;
@@ -85,7 +86,8 @@ public class RegistrationService {
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getDistrict()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
-                new DateTime(frontLineWorkerRequest.getLastModified()));
+                new DateTime(frontLineWorkerRequest.getLastModified()),
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwGuid()));
     }
 
     public List<FrontLineWorkerResponse> getFilteredFLW(Long msisdn, String name, String status, String designation, String operator, String circle, Date activityStartDate, Date activityEndDate) {
@@ -108,11 +110,11 @@ public class RegistrationService {
     }
 
     @Transactional
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, DateTime lastModified) {
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, DateTime lastModified, String flwGuid) {
         Location location = locationService.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse();
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, lastModified);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, name, Designation.getFor(designation), location, lastModified, flwGuid);
 
         FLWValidationResponse FLWValidationResponse = frontLineWorkerValidator.validate(frontLineWorker, location);
         if (FLWValidationResponse.isInValid())
