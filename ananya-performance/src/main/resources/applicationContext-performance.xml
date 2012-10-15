@@ -27,10 +27,12 @@
     <import resource="classpath:applicationContext-csv-importer.xml"/>
 
 
+    <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean">
+        <property name="properties" ref="couchdbProperties"/>
+    </bean>
+
     <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
-        <constructor-arg>
-            <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
-        </constructor-arg>
+        <constructor-arg ref="httpClient"/>
     </bean>
 
     <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">

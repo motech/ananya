@@ -32,11 +32,14 @@
     <import resource="classpath:applicationSecurityContext.xml"/>
     <import resource="classpath:applicationContext-csv-exporter.xml"/>
 
-    <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
-        <constructor-arg>
-            <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
-        </constructor-arg>
+    <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean">
+        <property name="properties" ref="couchdbProperties"/>
     </bean>
+
+    <bean id="ananyaDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
+        <constructor-arg ref="httpClient"/>
+    </bean>
+
     <bean id="ananyaDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
