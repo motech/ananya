@@ -212,7 +212,7 @@ public class FrontLineWorkerSeed {
     }
 
     @Seed(priority = 2, version = "1.8", comment = "Removing conflicted FrontLineWorkers")
-    public void removeConflictedFLWs(){
+    public void removeConflictedFLWs() {
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {
@@ -222,7 +222,7 @@ public class FrontLineWorkerSeed {
     }
 
     @Seed(priority = 1, version = "1.8", comment = "Removing duplicate FrontLineWorkers")
-    public void removeDuplicateFLWs(){
+    public void removeDuplicateFLWs() {
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
             @Override
             public void execute(FrontLineWorker frontLineWorker) {

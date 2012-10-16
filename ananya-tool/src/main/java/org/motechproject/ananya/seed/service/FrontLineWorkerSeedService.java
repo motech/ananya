@@ -466,7 +466,7 @@ public class FrontLineWorkerSeedService {
         Long msisdn = frontLineWorker.msisdn();
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
 
-        if(frontLineWorkerDimension == null) {
+        if (frontLineWorkerDimension == null) {
             log.error(String.format("FrontLineWorkerDimension for msisdn[%s] does NOT exist.", msisdn));
         }
 
