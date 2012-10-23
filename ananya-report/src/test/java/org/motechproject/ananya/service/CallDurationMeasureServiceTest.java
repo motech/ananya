@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.CallFlowType;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
+import org.motechproject.ananya.domain.CallUsageDetails;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -20,6 +21,7 @@ import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
+import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -195,5 +197,40 @@ public class CallDurationMeasureServiceTest {
         List<CallDurationMeasure> actualCallDurationMeasures = captor.getValue();
         assertEquals(1, actualCallDurationMeasures.size());
         assertEquals(expectedLocationDimension, actualCallDurationMeasures.get(0).getLocationDimension());
+    }
+
+    @Test
+    public void shouldGetFlwUsageDetails() {
+        String msisdn = "2134567890";
+        ArrayList<CallUsageDetails> jobAidCallDetails = new ArrayList<CallUsageDetails>() {{
+            add(new CallUsageDetails(123L, 213L, 2012, 1));
+        }};
+        when(allCallDurationMeasures.getCallUsageDetailsByMonthAndYear(Long.parseLong(msisdn))).thenReturn(jobAidCallDetails);
+
+        CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
+
+        assertEquals(jobAidCallDetails, callDetails.getCallUsageDetailsList());
+    }
+
+    @Test
+    public void shouldGetRecentJobAidCallDetails() {
+        String msisdn = "2134567890";
+        ArrayList<CallDurationMeasure> callDurationMeasures = new ArrayList<>();
+        when(allCallDurationMeasures.getRecentJobAidCallDetails(Long.parseLong(msisdn))).thenReturn(callDurationMeasures);
+
+        CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
+
+        assertEquals(callDurationMeasures, callDetails.getRecentJobAidCallDetailsList());
+    }
+
+    @Test
+    public void shouldGetRecentCertificateCourseCallDetails() {
+        String msisdn = "2134567890";
+        ArrayList<CallDurationMeasure> callDurationMeasures = new ArrayList<>();
+        when(allCallDurationMeasures.getRecentCertificateCourseCallDetails(Long.parseLong(msisdn))).thenReturn(callDurationMeasures);
+
+        CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
+
+        assertEquals(callDurationMeasures, callDetails.getRecentCertificateCourseCallDetailsList());
     }
 }

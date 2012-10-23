@@ -122,7 +122,6 @@ public class LocationRegistrationServiceTest {
         assertEquals(district, locationResponses.get(0).getDistrict());
         assertEquals(block, locationResponses.get(0).getBlock());
         assertEquals(panchayat, locationResponses.get(0).getPanchayat());
-        assertEquals(externalId, locationResponses.get(0).getExternalId());
     }
 
     @Test

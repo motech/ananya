@@ -53,4 +53,12 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         }
         return frontLineWorker;
     }
+
+    @GenerateView
+    public FrontLineWorker findByFlwGuid(String flwGuid){
+        ViewQuery viewQuery = createQuery("by_flwGuid").key(flwGuid).includeDocs(true);
+        List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
+        if (workers == null || workers.isEmpty()) return null;
+        return workers.get(0);
+    }
 }

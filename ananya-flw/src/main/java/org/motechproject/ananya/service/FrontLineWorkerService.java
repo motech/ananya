@@ -169,4 +169,8 @@ public class FrontLineWorkerService {
             log.info("Updated last processed date:" + recordDate);
         }
     }
+
+    public FrontLineWorker findByFlwGuid(String flwGuid) {
+        return allFrontLineWorkers.findByFlwGuid(flwGuid);
+    }
 }

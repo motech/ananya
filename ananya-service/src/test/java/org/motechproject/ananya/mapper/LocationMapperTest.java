@@ -23,7 +23,6 @@ public class LocationMapperTest {
         assertEquals(district,locationResponse.getDistrict());
         assertEquals(block,locationResponse.getBlock());
         assertEquals(panchayat,locationResponse.getPanchayat());
-        assertEquals(locationId,locationResponse.getExternalId());
     }
 
     @Test

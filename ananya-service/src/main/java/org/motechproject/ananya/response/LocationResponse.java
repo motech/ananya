@@ -4,13 +4,11 @@ public class LocationResponse {
     private String district;
     private String block;
     private String panchayat;
-    private String externalId;
 
-    public LocationResponse(String district, String block, String panchayat, String externalId) {
+    public LocationResponse(String district, String block, String panchayat) {
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
-        this.externalId = externalId;
     }
 
     public String getDistrict() {
@@ -25,17 +23,12 @@ public class LocationResponse {
         return panchayat;
     }
 
-    public String getExternalId() {
-        return externalId;
-    }
-
     @Override
     public String toString() {
         return "{" +
                 "\"district\"=\"" + district + "\"" +
                 ", \"block\"=\"" + block + "\"" +
                 ", \"panchayat\"=\"" + panchayat + "\"" +
-                ", \"externalId\"=\"" + externalId + "\"" +
                 '}';
     }
 }

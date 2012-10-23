@@ -9,8 +9,8 @@ public class LocationMapper {
     public static LocationResponse mapFrom(LocationDimension locationDimension) {
         return new LocationResponse(locationDimension.getDistrict(),
                 locationDimension.getBlock(),
-                locationDimension.getPanchayat(),
-                locationDimension.getLocationId());
+                locationDimension.getPanchayat()
+        );
     }
 
     public static Location mapFrom(LocationRequest locationRequest) {

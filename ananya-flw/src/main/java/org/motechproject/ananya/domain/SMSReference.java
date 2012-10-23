@@ -17,14 +17,13 @@ public class SMSReference extends MotechBaseDataObject {
     private String flwDocId;
 
     @JsonProperty
-    private Map<Integer, String> referenceNumbers;
+    private Map<Integer, String> referenceNumbers = new HashMap<>();
 
     public SMSReference() {
     }
 
     public SMSReference(String msisdn, String flwId) {
         this.msisdn = msisdn;
-        this.referenceNumbers = new HashMap<Integer, String>();
         flwDocId = flwId;
     }
 
@@ -34,6 +33,10 @@ public class SMSReference extends MotechBaseDataObject {
 
     public void add(String smsReferenceNumber, Integer certificateCourseAttempts) {
         this.referenceNumbers.put(certificateCourseAttempts, smsReferenceNumber);
+    }
+
+    public Map<Integer, String> getReferenceNumbers() {
+        return referenceNumbers;
     }
 
     public String referenceNumbers(int courseAttempt) {

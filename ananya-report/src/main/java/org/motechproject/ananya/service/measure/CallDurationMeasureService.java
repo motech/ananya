@@ -2,6 +2,8 @@ package org.motechproject.ananya.service.measure;
 
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
+import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
+import org.motechproject.ananya.domain.CallUsageDetails;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -86,11 +88,6 @@ public class CallDurationMeasureService {
         removeLog(callId, callLog);
     }
 
-    private void removeLog(String callId, CallLog callLog) {
-        callLoggerService.delete(callLog);
-        log.info(callId + "- callLog removed");
-    }
-
     public void updateLocation(Long callerId, String locationId) {
         List<CallDurationMeasure> callDurationMeasureList = allCallDurationMeasures.findByCallerId(callerId);
         LocationDimension locationDimension = locationDimensionService.getFor(locationId);
@@ -99,5 +96,19 @@ public class CallDurationMeasureService {
             callDurationMeasure.setLocationDimension(locationDimension);
         }
         allCallDurationMeasures.updateAll(callDurationMeasureList);
+    }
+
+    public CallDetailsResponse getCallDetails(String msisdn) {
+        Long msisdnInLong = Long.valueOf(msisdn);
+        List<CallUsageDetails> callUsageDetailsList = allCallDurationMeasures.getCallUsageDetailsByMonthAndYear(msisdnInLong);
+        List<CallDurationMeasure> recentJobAidCallDetailsList = allCallDurationMeasures.getRecentJobAidCallDetails(msisdnInLong);
+        List<CallDurationMeasure> recentCertificateCourseCallDetailsList = allCallDurationMeasures.getRecentCertificateCourseCallDetails(msisdnInLong);
+
+        return new CallDetailsResponse(callUsageDetailsList, recentJobAidCallDetailsList, recentCertificateCourseCallDetailsList);
+    }
+
+    private void removeLog(String callId, CallLog callLog) {
+        callLoggerService.delete(callLog);
+        log.info(callId + "- callLog removed");
     }
 }

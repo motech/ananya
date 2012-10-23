@@ -318,4 +318,17 @@ public class FrontLineWorkerServiceTest {
         FailedRecordsProcessingState failedRecordsProcessingState = failedRecordsProcessingStateArgumentCaptor.getValue();
         assertEquals(recordDate, failedRecordsProcessingState.getLastProcessedDate());
     }
+
+    @Test
+    public void shouldFetchFLWByFlwGuid() {
+        String flwGuid = "flwGuid";
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        when(allFrontLineWorkers.findByFlwGuid(flwGuid)).thenReturn(frontLineWorker);
+
+        FrontLineWorker actualFrontLineWorker = frontLineWorkerService.findByFlwGuid(flwGuid);
+
+        assertEquals(frontLineWorker, actualFrontLineWorker);
+    }
+
+
 }

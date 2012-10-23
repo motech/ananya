@@ -18,7 +18,7 @@ public class AllCallDurationMeasuresTest {
 
     @Test
     public void shouldUpdateCallDurationMeasure() {
-        AllCallDurationMeasures allCallDurationMeasures = new AllCallDurationMeasures(template);
+        AllCallDurationMeasures allCallDurationMeasures = new AllCallDurationMeasures(template, "0", "0", "0");
         ArrayList<CallDurationMeasure> callDurationMeasureList = new ArrayList<CallDurationMeasure>();
 
         allCallDurationMeasures.updateAll(callDurationMeasureList);
