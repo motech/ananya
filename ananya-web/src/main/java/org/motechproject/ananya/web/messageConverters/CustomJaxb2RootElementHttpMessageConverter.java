@@ -15,9 +15,7 @@ import javax.xml.transform.Result;
 import java.io.IOException;
 import java.util.Map;
 
-public class CustomJaxb2RootElementHttpMessageConverter extends
-
-{
+public class CustomJaxb2RootElementHttpMessageConverter extends Jaxb2RootElementHttpMessageConverter {
     private Map<String, ?> marshallerProperties;
 
     public void setMarshallerProperties(Map<String, ?> properties) {
