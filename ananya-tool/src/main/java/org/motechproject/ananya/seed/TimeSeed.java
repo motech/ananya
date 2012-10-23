@@ -9,13 +9,11 @@ import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Component
@@ -91,5 +89,4 @@ public class TimeSeed {
             }
         }
     }
-
 }
