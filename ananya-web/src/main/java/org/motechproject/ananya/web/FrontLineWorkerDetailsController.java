@@ -58,7 +58,7 @@ public class FrontLineWorkerDetailsController extends BaseDataAPIController {
         return registrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{flwGuid}/usage")
+    @RequestMapping(method = RequestMethod.GET, value = "/{flwGuid}/usage", produces = {"application/json", "application/xml"})
     public
     @ResponseBody
     FrontLineWorkerUsageResponse getFLWUsageDetails(@PathVariable String flwGuid, @RequestParam String channel){

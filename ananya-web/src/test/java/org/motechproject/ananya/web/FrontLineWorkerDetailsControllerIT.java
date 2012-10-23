@@ -15,22 +15,30 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
-import org.motechproject.ananya.response.FrontLineWorkerResponse;
-import org.motechproject.ananya.response.RegistrationResponse;
+import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.FLWDetailsService;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.utils.TestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.server.MvcResult;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.ananya.utils.MVCTestUtils.mockMvc;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 
 public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
     @Autowired
@@ -101,6 +109,34 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
 
         assertEquals(1, filteredFLWs.size());
         assertEquals(msisdn, filteredFLWs.get(0).getMsisdn());
+    }
+    
+    @Test
+    public void shouldGetFlwUsageXmlResponse() throws Exception {
+        ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>(){{
+            add(new FLWUsageDetail(2012, 12, 1234L, 1234L));
+        }};
+        ArrayList<FLWCallDetail> flwCallDetails = new ArrayList<FLWCallDetail>(){{
+            add(new FLWCallDetail(CallType.MOBILE_ACADEMY, "12-12-2012 12:12:12", "12-12-2012 12:12:12", 2));
+        }};
+        ArrayList<String> smsReferenceNumbers = new ArrayList<String>(){{
+            add("1234");
+        }};
+        frontLineWorkerDetailsController = new FrontLineWorkerDetailsController(registrationService, flwDetailsService);
+        FrontLineWorkerUsageResponse expectedResponse = new FrontLineWorkerUsageResponse("my_name", "ANM", "unregistered",
+                new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
+                new FLWBookmark(1, 1), smsReferenceNumbers);
+        when(flwDetailsService.getUsageData("flwGuid")).thenReturn(expectedResponse);
+
+        MvcResult result = mockMvc(frontLineWorkerDetailsController)
+                .perform(get("/flw/flwGuid/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
+                .andExpect(status().isOk())
+                .andExpect(content().type("application/xml"))
+                .andReturn();
+
+        String responseString = result.getResponse().getContentAsString();
+        FrontLineWorkerUsageResponse actualResponse = TestUtils.fromXml(FrontLineWorkerUsageResponse.class, responseString);
+        assertTrue(expectedResponse.equals(actualResponse));
     }
 
     private void clearAllData() {
