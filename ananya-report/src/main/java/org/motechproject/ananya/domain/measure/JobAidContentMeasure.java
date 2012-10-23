@@ -89,6 +89,10 @@ public class JobAidContentMeasure {
         return timeDimension;
     }
 
+    public void setTimeDimension(TimeDimension timeDimension) {
+        this.timeDimension = timeDimension;
+    }
+
     public JobAidContentDimension getJobAidContentDimension() {
         return jobAidContentDimension;
     }

@@ -1,6 +1,7 @@
 package org.motechproject.ananya.repository.dimension;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class AllTimeDimensions {
 
     @Cacheable(value = "timeDimensionCache")
     public TimeDimension getFor(DateTime dateTime) {
+        dateTime = dateTime.toDateTime(DateTimeZone.getDefault());
         return (TimeDimension) template.getUniqueResult(
                 TimeDimension.FIND_BY_DAY_MONTH_YEAR,
                 new String[]{"year", "month", "day"},

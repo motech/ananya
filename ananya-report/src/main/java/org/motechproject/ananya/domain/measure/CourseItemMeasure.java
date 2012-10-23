@@ -62,6 +62,10 @@ public class CourseItemMeasure {
         return timeDimension;
     }
 
+    public void setTimeDimension(TimeDimension timeDimension) {
+        this.timeDimension = timeDimension;
+    }
+
     public CourseItemDimension getCourseItemDimension() {
         return courseItemDimension;
     }
