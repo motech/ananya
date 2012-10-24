@@ -12,9 +12,22 @@
     <context:component-scan base-package="org.motechproject.diagnostics" use-default-filters="false">
         <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
-    <mvc:annotation-driven/>
-
-    <mvc:resources location="/" mapping="/**"/>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.motechproject.ananya.web.messageConverters.CustomJaxb2RootElementHttpMessageConverter">
+                <property name="marshallerProperties">
+                    <map>
+                        <entry key="jaxb.fragment">
+                            <value type="boolean">true</value>
+                        </entry>
+                        <entry key="jaxb.formatted.output">
+                            <value type="boolean">true</value>
+                        </entry>
+                    </map>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <mvc:interceptors>
         <bean class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>
@@ -36,22 +49,8 @@
         </bean>
     </mvc:interceptors>
 
-    <mvc:annotation-driven>
-        <mvc:message-converters>
-            <bean class="org.motechproject.ananya.web.messageConverters.CustomJaxb2RootElementHttpMessageConverter">
-                <property name="marshallerProperties">
-                    <map>
-                        <entry key="jaxb.fragment">
-                            <value type="boolean">true</value>
-                        </entry>
-                        <entry key="jaxb.formatted.output">
-                            <value type="boolean">true</value>
-                        </entry>
-                    </map>
-                </property>
-            </bean>
-        </mvc:message-converters>
-    </mvc:annotation-driven>
+    <mvc:resources location="/" mapping="/**"/>
+
 
     <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource"
           p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application" p:fallbackToSystemLocale="false"/>

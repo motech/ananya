@@ -14,7 +14,6 @@ import java.util.Properties;
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     private final static Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
     private Properties apiKeys;
-    private final String unauthorizedErrorMessage = "API key does not match.";
 
 
     @Autowired
