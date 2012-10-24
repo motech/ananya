@@ -14,18 +14,7 @@
     </context:component-scan>
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean class="org.motechproject.ananya.web.messageConverters.CustomJaxb2RootElementHttpMessageConverter">
-                <property name="marshallerProperties">
-                    <map>
-                        <entry key="jaxb.fragment">
-                            <value type="boolean">true</value>
-                        </entry>
-                        <entry key="jaxb.formatted.output">
-                            <value type="boolean">true</value>
-                        </entry>
-                    </map>
-                </property>
-            </bean>
+            <bean class="org.motechproject.web.message.converters.CustomJaxb2RootElementHttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
