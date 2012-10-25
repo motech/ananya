@@ -1,5 +1,6 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
 import org.ektorp.spring.HttpClientFactoryBean;
@@ -8,7 +9,6 @@ import org.junit.Test;
 import org.motechproject.event.MotechEventConfig;
 import org.springframework.jms.connection.CachingConnectionFactory;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 import java.util.Properties;
 
@@ -26,10 +26,11 @@ public class ConfigurationDiagnosticTest {
     private Queue eventQueue = new ActiveMQQueue();
     private Queue schedulerQueue = new ActiveMQQueue();
     private MotechEventConfig motechEventConfig = new MotechEventConfig();
+    private ComboPooledDataSource dataSource = new ComboPooledDataSource();
 
     @Before
     public void setUp() {
-        diagnostic = new AnanyaConfigurationDiagnostic(ananyaProperties, couchdbProperties, activemqProperties, httpClient, connectionFactory, eventQueue, schedulerQueue, motechEventConfig);
+        diagnostic = new AnanyaConfigurationDiagnostic(ananyaProperties, couchdbProperties, activemqProperties, httpClient, connectionFactory, eventQueue, schedulerQueue, motechEventConfig, dataSource);
     }
 
     @Test
@@ -48,6 +49,8 @@ public class ConfigurationDiagnosticTest {
         ActiveMQConnectionFactory targetConnectionFactory = (ActiveMQConnectionFactory) connectionFactory.getTargetConnectionFactory();
         targetConnectionFactory.setBrokerURL("tcp://localhost:61616?jms.prefetchPolicy.all=0");
 
+        dataSource.setJdbcUrl("jdbc:postgresql://localhost/ananya/");
+
 
         String diagnosticLog = diagnostic.performDiagnosis().getMessage();
 
@@ -56,7 +59,10 @@ public class ConfigurationDiagnosticTest {
         assertTrue(diagnosticLog.contains("AN2=AN2Value"));
         assertTrue(diagnosticLog.contains("A1=A1Value"));
         assertTrue(diagnosticLog.contains("A2=A2Value"));
+
         assertTrue(diagnosticLog.contains("host=localhost3"));
         assertTrue(diagnosticLog.contains("broker.url=tcp://localhost:61616"));
+
+        assertTrue(diagnosticLog.contains("jdbc.url=jdbc:postgresql://localhost/ananya/"));
     }
 }

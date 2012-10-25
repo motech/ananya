@@ -1,8 +1,7 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQQueue;
-import org.ektorp.impl.StdCouchDbInstance;
 import org.ektorp.spring.HttpClientFactoryBean;
 import org.motechproject.diagnostics.annotation.Diagnostic;
 import org.motechproject.diagnostics.diagnostics.DiagnosticLog;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.stereotype.Component;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Queue;
 import java.lang.reflect.Field;
@@ -31,6 +29,7 @@ public class AnanyaConfigurationDiagnostic {
     private Queue eventQueue;
     private Queue schedulerQueue;
     private MotechEventConfig motechEventConfig;
+    private ComboPooledDataSource dataSource;
 
     @Autowired
     public AnanyaConfigurationDiagnostic(@Qualifier("ananyaProperties") Properties ananyaProperties,
@@ -40,7 +39,8 @@ public class AnanyaConfigurationDiagnostic {
                                          CachingConnectionFactory connectionFactory,
                                          Queue eventQueue,
                                          Queue schedulerQueue,
-                                         MotechEventConfig motechEventConfig) {
+                                         MotechEventConfig motechEventConfig,
+                                         ComboPooledDataSource dataSource) {
         this.ananyaProperties = ananyaProperties;
         this.couchdbProperties = couchdbProperties;
         this.activemqProperties = activemqProperties;
@@ -49,24 +49,44 @@ public class AnanyaConfigurationDiagnostic {
         this.eventQueue = eventQueue;
         this.schedulerQueue = schedulerQueue;
         this.motechEventConfig = motechEventConfig;
+        this.dataSource = dataSource;
     }
 
     @Diagnostic(name = "ananyaConfiguration")
     public DiagnosticsResult performDiagnosis() throws JMSException {
         DiagnosticLog diagnosticLog = new DiagnosticLog();
 
-        logPropertiesFileFor(diagnosticLog, "ananya.properties", ananyaProperties);
+        logPropertiesForAnanya(diagnosticLog);
         logPropertiesForCouchDb(diagnosticLog);
         logPropertiesForActiveMQ(diagnosticLog);
+        logPropertiesForPostgres(diagnosticLog);
 
         return new DiagnosticsResult(true, diagnosticLog.toString());
     }
 
-    private void logPropertiesFileFor(DiagnosticLog diagnosticLog, String file, Properties properties) {
-        diagnosticLog.add(file + ":\n");
-        TreeSet sortedKeys = new TreeSet(properties.keySet());
+    private void logPropertiesForPostgres(DiagnosticLog diagnosticLog) {
+        diagnosticLog.add("\nActual values for postgres configuration:");
+        diagnosticLog.add("-----------------------------------------");
+
+        diagnosticLog.add("jdbc.driverClassName=" + dataSource.getDriverClass());
+        diagnosticLog.add("jdbc.url=" + dataSource.getJdbcUrl());
+        diagnosticLog.add("jdbc.username=" + dataSource.getUser());
+        diagnosticLog.add("hibernate.c3p0.max_size=" + dataSource.getMaxPoolSize());
+        diagnosticLog.add("hibernate.c3p0.min_size=" + dataSource.getMinPoolSize());
+        diagnosticLog.add("hibernate.c3p0.timeout=" + dataSource.getCheckoutTimeout());
+        diagnosticLog.add("hibernate.c3p0.max_statements=" + dataSource.getMaxStatements());
+        diagnosticLog.add("hibernate.c3p0.idle_test_period=" + dataSource.getIdleConnectionTestPeriod());
+        diagnosticLog.add("hibernate.c3p0.acquire_increment=" + dataSource.getAcquireIncrement());
+
+        diagnosticLog.add("______________________________________________________________");
+    }
+
+    private void logPropertiesForAnanya(DiagnosticLog diagnosticLog) {
+        diagnosticLog.add("\nFrom ananya.properties file:");
+        diagnosticLog.add("----------------------------");
+        TreeSet sortedKeys = new TreeSet(ananyaProperties.keySet());
         for (Object key : sortedKeys)
-            diagnosticLog.add(key + "=" + properties.get(key));
+            diagnosticLog.add(key + "=" + ananyaProperties.get(key));
         diagnosticLog.add("______________________________________________________________");
     }
 
