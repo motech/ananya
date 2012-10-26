@@ -5,10 +5,10 @@ import org.motechproject.ananya.utils.ValidationUtils;
 
 public class WebRequestValidator {
 
-    public static ValidationResponse validate(String flwGuid, String channel) {
+    public static ValidationResponse validate(String flwId, String channel) {
         ValidationResponse validationResponse = new ValidationResponse();
         validateChannel(channel, validationResponse);
-        validateFlwGuid(flwGuid, validationResponse);
+        validateFlwId(flwId, validationResponse);
         return validationResponse;
     }
 
@@ -17,8 +17,8 @@ public class WebRequestValidator {
             validationResponse.addError(String.format("Invalid channel: %s", channel));
     }
 
-    private static void validateFlwGuid(String flwGuid, ValidationResponse validationResponse) {
-        if (!ValidationUtils.isValidUUID(flwGuid))
-            validationResponse.addError(String.format("Invalid flwGuid: %s", flwGuid));
+    private static void validateFlwId(String flwId, ValidationResponse validationResponse) {
+        if (!ValidationUtils.isValidUUID(flwId))
+            validationResponse.addError(String.format("Invalid flwId: %s", flwId));
     }
 }

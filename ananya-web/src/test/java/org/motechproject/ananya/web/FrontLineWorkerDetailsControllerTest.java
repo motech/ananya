@@ -35,11 +35,11 @@ public class FrontLineWorkerDetailsControllerTest {
 
     @Test
     public void shouldGetFLWUsageDetails() {
-        String flwGuid = UUID.randomUUID().toString();
+        String flwId = UUID.randomUUID().toString();
         FrontLineWorkerUsageResponse expectedFLWUsageResponse = new FrontLineWorkerUsageResponse();
-        when(flwDetailsService.getUsageData(flwGuid)).thenReturn(expectedFLWUsageResponse);
+        when(flwDetailsService.getUsageData(flwId)).thenReturn(expectedFLWUsageResponse);
 
-        FrontLineWorkerUsageResponse actualFLWUsageResponse = frontLineWorkerDetailsController.getFLWUsageDetails(flwGuid, "contact_center");
+        FrontLineWorkerUsageResponse actualFLWUsageResponse = frontLineWorkerDetailsController.getFLWUsageDetails(flwId, "contact_center");
 
         assertEquals(expectedFLWUsageResponse, actualFLWUsageResponse);
     }
@@ -50,6 +50,6 @@ public class FrontLineWorkerDetailsControllerTest {
 
         expectedException.expect(ValidationException.class);
         expectedException.expectMessage(String.format("Invalid channel: %s", channel));
-        frontLineWorkerDetailsController.getFLWUsageDetails("flwGuid", channel);
+        frontLineWorkerDetailsController.getFLWUsageDetails("flwId", channel);
     }
 }

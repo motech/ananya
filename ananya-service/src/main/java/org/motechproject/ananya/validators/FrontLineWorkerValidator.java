@@ -14,7 +14,7 @@ public class FrontLineWorkerValidator {
         validateMsisdn(frontLineWorkerRequest, flwValidationResponse);
         validateName(frontLineWorkerRequest, flwValidationResponse);
         validateLocation(locationOfFrontLineWorker, flwValidationResponse);
-        validateFLWGuid(frontLineWorkerRequest, flwValidationResponse);
+        validateFLWId(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
     }
 
@@ -23,9 +23,9 @@ public class FrontLineWorkerValidator {
             flwValidationResponse.forInvalidLocation();
     }
 
-    private static void validateFLWGuid(FrontLineWorkerRequest frontLineWorker, FLWValidationResponse flwValidationResponse) {
-        if (frontLineWorker.getFlwGuid() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwGuid()))
-            flwValidationResponse.forInvalidFlwGuid();
+    private static void validateFLWId(FrontLineWorkerRequest frontLineWorker, FLWValidationResponse flwValidationResponse) {
+        if (frontLineWorker.getFlwId() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwId()))
+            flwValidationResponse.forInvalidFlwId();
     }
 
     private static void validateName(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {

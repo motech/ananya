@@ -15,13 +15,13 @@ import static junit.framework.Assert.*;
 
 public class FrontLineWorkerValidatorTest {
 
-    private String flwGuid = UUID.randomUUID().toString();
+    private String flwId = UUID.randomUUID().toString();
 
     @Test
     public void shouldInvalidateFrontLineWorkerWithInvalidMsisdn() {
         String invalidMSISDN = "9876";
 
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest(invalidMSISDN, "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest(invalidMSISDN, "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid msisdn]", flwValidationResponse.getMessage());
@@ -31,7 +31,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldInvalidateFrontLineWorkerWithMsisdnThatIsNotNumeric() {
         String invalidMSISDN = "9876O11223";
 
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest(invalidMSISDN, "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest(invalidMSISDN, "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid msisdn]", flwValidationResponse.getMessage());
@@ -41,19 +41,19 @@ public class FrontLineWorkerValidatorTest {
     public void shouldInvalidateFrontLineWorkerWithInvalidName() {
         String invalidName = "@ron";
 
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", invalidName, Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", invalidName, Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid name]", flwValidationResponse.getMessage());
 
-        flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "Mr. Valid", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "Mr. Valid", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertTrue(flwValidationResponse.isValid());
     }
 
     @Test
     public void shouldInValidateIfLocationIsInvalid() {
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), null);
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), null);
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid location]", flwValidationResponse.getMessage());
@@ -61,7 +61,7 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldInValidateAndHaveMultipleErrorMessagesConcatenated() {
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("invalidMSISDN", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), null);
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("invalidMSISDN", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), null);
 
         assertFalse(flwValidationResponse.isValid());
         assertEquals("[Invalid msisdn][Invalid location]", flwValidationResponse.getMessage());
@@ -70,7 +70,7 @@ public class FrontLineWorkerValidatorTest {
     @Test
     public void shouldBulkValidateFLWsAndThrowExceptionsIfThereAreDuplicates() {
         String msisdn = "2345678901";
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwId);
         Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
         msisdnOccurrenceMap.put(msisdn, 2);
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), msisdnOccurrenceMap);
@@ -82,7 +82,7 @@ public class FrontLineWorkerValidatorTest {
     @Test
     public void shouldBulkValidateFLWsAndPassValidationIfThereAreNoErrors() {
         String msisdn = "2345678901";
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwId);
         Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
         msisdnOccurrenceMap.put(msisdn, 1);
 
@@ -93,7 +93,7 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldValidateFrontLineWorkerWithAllValidAttributes() {
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", "name", Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertTrue(flwValidationResponse.isValid());
         assertEquals("", flwValidationResponse.getMessage());
@@ -101,17 +101,17 @@ public class FrontLineWorkerValidatorTest {
 
     @Test
     public void shouldValidateFrontLineWorkerBasedOnNameOnlyIfNameIsNotNull() {
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", null, Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwGuid), new Location());
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", null, Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, flwId), new Location());
 
         assertTrue(flwValidationResponse.isValid());
         assertEquals("", flwValidationResponse.getMessage());
     }
 
     @Test
-    public void shouldInValidateFrontLineWorkerWhenFlwGuidIsBlank() {
+    public void shouldInValidateFrontLineWorkerWhenFlwIdIsBlank() {
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9996664422", null, Designation.ANM.name(), new LocationRequest("district", "block", "panchayat"), null, null), new Location());
 
         assertFalse(flwValidationResponse.isValid());
-        assertEquals("[Invalid flwGuid]", flwValidationResponse.getMessage());
+        assertEquals("[Invalid flwId]", flwValidationResponse.getMessage());
     }
 }

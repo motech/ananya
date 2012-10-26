@@ -40,8 +40,8 @@ public class FLWValidationResponse {
         return this;
     }
 
-    public FLWValidationResponse forInvalidFlwGuid() {
-        message += "[Invalid flwGuid]";
+    public FLWValidationResponse forInvalidFlwId() {
+        message += "[Invalid flwId]";
         isValid = false;
         return this;
     }

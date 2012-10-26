@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
@@ -72,7 +71,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private boolean modified;
 
     @JsonProperty
-    private UUID flwGuid;
+    private UUID flwId;
 
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
@@ -84,17 +83,17 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.circle = circle;
         this.operator = operator;
-        this.flwGuid = UUID.randomUUID();
+        this.flwId = UUID.randomUUID();
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, UUID flwGuid) {
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, UUID flwId) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.name = name;
         this.designation = designation;
         this.locationId = location == null ? null : location.getExternalId();
         this.lastModified = lastModified;
-        this.flwGuid = flwGuid;
+        this.flwId = flwId;
     }
 
     @Override
@@ -229,14 +228,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwGuid) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId) {
         this.name = name;
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
         this.designation = designation;
         if (isAlreadyRegistered())
             decideRegistrationStatus(location);
-        updateFlwGuid(flwGuid);
+        updateFlwId(flwId);
     }
 
     public boolean hasPassedTheCourse() {
@@ -282,12 +281,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = msisdn;
     }
 
-    public UUID getFlwGuid() {
-        return flwGuid;
+    public UUID getFlwId() {
+        return flwId;
     }
 
-    public void setFlwGuid(UUID flwGuid) {
-        this.flwGuid = flwGuid;
+    public void setFlwId(UUID flwId) {
+        this.flwId = flwId;
     }
 
     public void merge(FrontLineWorker frontLineWorker) {
@@ -361,11 +360,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
     }
 
-    private void updateFlwGuid(UUID flwGuid) {
-        if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
-            log.warn(String.format("Changing FLW GUID for msisdn[%s]", this.msisdn));
+    private void updateFlwId(UUID flwId) {
+        if(this.flwId != null && !this.flwId.equals(flwId)) {
+            log.warn(String.format("Changing FLW ID for msisdn[%s]", this.msisdn));
         }
 
-        this.flwGuid = flwGuid;
+        this.flwId = flwId;
     }
 }

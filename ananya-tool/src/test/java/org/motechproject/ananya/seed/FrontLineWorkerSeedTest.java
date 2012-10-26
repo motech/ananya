@@ -119,7 +119,7 @@ public class FrontLineWorkerSeedTest {
         String name = "Name";
         Long msisdn = 919986574410l;
         FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), null, UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwGuid()));
+        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId()));
         allFrontLineWorkers.add(frontLineWorkerCreated);
 
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
@@ -142,7 +142,7 @@ public class FrontLineWorkerSeedTest {
         ReflectionTestUtils.setField(frontLineWorker, "msisdn", msisdn.toString());
         allFrontLineWorkers.add(frontLineWorker);
 
-        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwGuid()));
+        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwId()));
 
         frontLineWorkerSeed.updateCorrectCallerIdsCircleOperatorAndDesignation();
 
@@ -161,7 +161,7 @@ public class FrontLineWorkerSeedTest {
     private FrontLineWorkerDimension getFLWDimensionFromFLW(FrontLineWorker frontLineWorker) {
         return new FrontLineWorkerDimension(frontLineWorker.msisdn(),
                 frontLineWorker.getOperator(), frontLineWorker.getCircle(), frontLineWorker.getName(),
-                frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwGuid());
+                frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwId());
     }
 
     private FrontLineWorker getFrontLineWorker(String msisdn, String operator, RegistrationStatus registrationStatus, Location location) {
@@ -288,7 +288,7 @@ public class FrontLineWorkerSeedTest {
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
                 frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getFlwId());
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
 

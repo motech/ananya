@@ -58,14 +58,14 @@ public class FrontLineWorkerDetailsController extends BaseDataAPIController {
         return registrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{flwGuid}/usage", produces = {"application/json", "application/xml"})
+    @RequestMapping(method = RequestMethod.GET, value = "/{flwId}/usage", produces = {"application/json", "application/xml"})
     public
     @ResponseBody
-    FrontLineWorkerUsageResponse getFLWUsageDetails(@PathVariable String flwGuid, @RequestParam String channel){
-        ValidationResponse validationResponse = WebRequestValidator.validate(flwGuid, channel);
+    FrontLineWorkerUsageResponse getFLWUsageDetails(@PathVariable String flwId, @RequestParam String channel){
+        ValidationResponse validationResponse = WebRequestValidator.validate(flwId, channel);
         raiseExceptionIfThereAreErrors(validationResponse);
 
-        return flwDetailsService.getUsageData(flwGuid);
+        return flwDetailsService.getUsageData(flwId);
     }
 
     private void raiseExceptionIfThereAreErrors(ValidationResponse validationResponse) {

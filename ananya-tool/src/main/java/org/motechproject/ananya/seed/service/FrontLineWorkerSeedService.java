@@ -307,7 +307,7 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
                 frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getFlwId());
         log.info("frontlineWorkerDimension created for missing " + frontLineWorker);
 
         String callId = frontLineWorker.msisdn() + String.valueOf(DateUtil.now().getMillis());
@@ -462,7 +462,7 @@ public class FrontLineWorkerSeedService {
         frontLineWorker1.getPromptsHeard().putAll(frontLineWorker2.getPromptsHeard());
     }
 
-    public void copyFlwGuidFromFLWDimension(FrontLineWorker frontLineWorker) {
+    public void copyFlwIdFromFLWDimension(FrontLineWorker frontLineWorker) {
         Long msisdn = frontLineWorker.msisdn();
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
 
@@ -470,9 +470,9 @@ public class FrontLineWorkerSeedService {
             log.error(String.format("FrontLineWorkerDimension for msisdn[%s] does NOT exist.", msisdn));
         }
 
-        frontLineWorker.setFlwGuid(frontLineWorkerDimension.getFlwGuid());
+        frontLineWorker.setFlwId(frontLineWorkerDimension.getFlwId());
         allFrontLineWorkers.update(frontLineWorker);
-        log.info(String.format("FLW with msisdn[%s] updated with GUID[%s]", msisdn, frontLineWorker.getFlwGuid()));
+        log.info(String.format("FLW with msisdn[%s] updated with ID[%s]", msisdn, frontLineWorker.getFlwId()));
     }
 
     private DateTime lessRecentOf(DateTime dateTime1, DateTime dateTime2) {

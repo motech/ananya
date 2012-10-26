@@ -17,7 +17,7 @@ import static junit.framework.Assert.assertTrue;
 public class AllFrontLineWorkersTest extends SpringBaseIT {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
-    private UUID flwGuid = UUID.randomUUID();
+    private UUID flwId = UUID.randomUUID();
 
     @Before
     public void setUp() throws IOException {
@@ -29,7 +29,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 2, 3, 4);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwGuid);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -38,7 +38,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         FrontLineWorker frontLineWorkerFromDb = frontLineWorkers.get(0);
         assertEquals(msisdn, frontLineWorkerFromDb.getMsisdn());
         assertEquals("S01D002B003V004", frontLineWorkerFromDb.getLocationId());
-        assertEquals(flwGuid, frontLineWorkerFromDb.getFlwGuid());
+        assertEquals(flwId, frontLineWorkerFromDb.getFlwId());
         assertTrue(frontLineWorkerFromDb.isAnganwadi());
     }
 
@@ -46,7 +46,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, flwGuid);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -102,13 +102,13 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     }
 
     @Test
-    public void shouldRetrieveFrontLineWorkerByFlwGuid() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("919988776655", "name", Designation.ANM, new Location(), null, flwGuid);
+    public void shouldRetrieveFrontLineWorkerByFlwId() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker("919988776655", "name", Designation.ANM, new Location(), null, flwId);
         allFrontLineWorkers.add(frontLineWorker);
         markForDeletion(frontLineWorker);
 
-        FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByFlwGuid(flwGuid);
+        FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByFlwId(flwId);
 
-        assertEquals(flwGuid, dbFrontLineWorker.getFlwGuid());
+        assertEquals(flwId, dbFrontLineWorker.getFlwId());
     }
 }

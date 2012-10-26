@@ -36,7 +36,7 @@ public class FLWDetailsServiceTest {
     @Mock
     private FrontLineWorkerUsageResponseMapper flwResponseMapper;
 
-    private UUID flwGuid = UUID.randomUUID();
+    private UUID flwId = UUID.randomUUID();
 
     @Before
     public void setup(){
@@ -45,29 +45,29 @@ public class FLWDetailsServiceTest {
     }
 
     @Test
-    public void shouldRaiseExceptionIfGuidIsInvalid() {
+    public void shouldRaiseExceptionIfIdIsInvalid() {
         expectedException.expect(FLWDoesNotExistException.class);
-        expectedException.expectMessage("Unknown flw id: " + flwGuid);
-        when(frontLineWorkerService.findByFlwGuid(flwGuid)).thenReturn(null);
+        expectedException.expectMessage("Unknown flw id: " + flwId);
+        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(null);
 
-        flwDetailsService.getUsageData(flwGuid.toString());
+        flwDetailsService.getUsageData(flwId.toString());
     }
 
     @Test
-    public void shouldReturnUsageDetailsForAValidFlwGuid() {
+    public void shouldReturnUsageDetailsForAValidFlwId() {
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, DateTime.now(), flwGuid);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, DateTime.now(), flwId);
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
         FrontLineWorkerUsageResponse expectedFLWResponse = new FrontLineWorkerUsageResponse();
-        when(frontLineWorkerService.findByFlwGuid(flwGuid)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(defaultLocation);
         when(callDurationMeasureService.getCallDetails(msisdn)).thenReturn(callDetailsResponse);
         when(smsReferenceService.getSMSReferenceNumber(msisdn)).thenReturn(smsReference);
         when(flwResponseMapper.mapFrom(frontLineWorker,defaultLocation,callDetailsResponse,smsReference)).thenReturn(expectedFLWResponse);
 
-        FrontLineWorkerUsageResponse actualResponse = flwDetailsService.getUsageData(flwGuid.toString());
+        FrontLineWorkerUsageResponse actualResponse = flwDetailsService.getUsageData(flwId.toString());
 
         assertEquals(expectedFLWResponse,actualResponse);
     }

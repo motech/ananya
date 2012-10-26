@@ -54,21 +54,21 @@ public class FrontLineWorkerSeedServiceTest {
         Location incompleteLocation = new Location("district", "block", "", 1, 1, 0);
         Location defaultLocation = Location.getDefaultLocation();
 
-        UUID flwGuid = UUID.randomUUID();
+        UUID flwId = UUID.randomUUID();
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, null, flwGuid);
+                "1234", "name", Designation.ANM, completeLocation, null, flwId);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, null, flwGuid);
+                "1234", "", Designation.ANM, completeLocation, null, flwId);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, flwGuid);
+                "1234", "name", null, completeLocation, null, flwId);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, flwGuid);
+                "1234", "name", null, completeLocation, null, flwId);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, null, flwGuid);
+                "1234", "name", Designation.ANM, defaultLocation, null, flwId);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, null, flwGuid);
+                "1234", "name", Designation.ANM, incompleteLocation, null, flwId);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, null, flwGuid);
+                "1234", "", null, defaultLocation, null, flwId);
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));
@@ -292,15 +292,15 @@ public class FrontLineWorkerSeedServiceTest {
     }
 
     @Test
-    public void shouldCopyGUIDsFromFLWDimension() {
+    public void shouldCopyIDsFromFLWDimension() {
         FrontLineWorker frontlineWorker = new FrontLineWorker("911234567890", "Airtel", "Circle");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         when(allFrontLineWorkerDimensions.fetchFor(frontlineWorker.msisdn())).thenReturn(frontLineWorkerDimension);
 
-        seedService.copyFlwGuidFromFLWDimension(frontlineWorker);
+        seedService.copyFlwIdFromFLWDimension(frontlineWorker);
 
         verify(allFrontLineWorkerDimensions).fetchFor(frontlineWorker.msisdn());
-        assertEquals(frontLineWorkerDimension.getFlwGuid(), frontlineWorker.getFlwGuid());
+        assertEquals(frontLineWorkerDimension.getFlwId(), frontlineWorker.getFlwId());
         verify(allFrontLineWorkers).update(frontlineWorker);
     }
 }

@@ -48,10 +48,10 @@ public class FrontLineWorkerDimensionServiceTest {
         String name = "name";
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
-        UUID flwGuid = UUID.randomUUID();
+        UUID flwId = UUID.randomUUID();
 
-        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwGuid);
-        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwGuid);
+        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId);
+        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId);
     }
 
     @Test

@@ -10,7 +10,7 @@ public class FLWDoesNotExistException extends RuntimeException {
         super(message);
     }
 
-    public static FLWDoesNotExistException withUnknownFlwGuid(UUID flwGuid) {
-        return new FLWDoesNotExistException("Unknown flw id: " + flwGuid);
+    public static FLWDoesNotExistException withUnknownFlwId(UUID flwId) {
+        return new FLWDoesNotExistException("Unknown flw id: " + flwId);
     }
 }

@@ -125,10 +125,10 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         FrontLineWorkerUsageResponse expectedResponse = new FrontLineWorkerUsageResponse("my_name", "ANM", "unregistered",
                 new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
-        when(flwDetailsService.getUsageData("flwGuid")).thenReturn(expectedResponse);
+        when(flwDetailsService.getUsageData("flwId")).thenReturn(expectedResponse);
 
         MvcResult result = mockMvc(frontLineWorkerDetailsController)
-                .perform(get("/flw/flwGuid/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
+                .perform(get("/flw/flwId/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/xml"))
                 .andReturn();

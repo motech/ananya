@@ -19,7 +19,7 @@ public class WebRequestValidatorTest {
 
         assertTrue(response.hasErrors());
         assertEquals(2, response.getErrors().size());
-        assertEquals("Invalid channel: invalid_channel,Invalid flwGuid: abcd1234", response.getErrorMessage());
+        assertEquals("Invalid channel: invalid_channel,Invalid flwId: abcd1234", response.getErrorMessage());
     }
 
     @Test

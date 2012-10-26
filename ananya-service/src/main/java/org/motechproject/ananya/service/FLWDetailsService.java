@@ -34,8 +34,8 @@ public class FLWDetailsService {
         this.frontLineWorkerUsageResponseMapper = frontLineWorkerUsageResponseMapper;
     }
 
-    public FrontLineWorkerUsageResponse getUsageData(String flwGuid) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(UUID.fromString(flwGuid));
+    public FrontLineWorkerUsageResponse getUsageData(String flwId) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(UUID.fromString(flwId));
         String msisdn = frontLineWorker.getMsisdn();
         Location location = locationService.findByExternalId(frontLineWorker.getLocationId());
         CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
@@ -46,10 +46,10 @@ public class FLWDetailsService {
         return frontLineWorkerUsageResponse;
     }
 
-    private FrontLineWorker getFrontLineWorker(UUID flwGuid) {
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findByFlwGuid(flwGuid);
+    private FrontLineWorker getFrontLineWorker(UUID flwId) {
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByFlwId(flwId);
         if (frontLineWorker == null) {
-            throw FLWDoesNotExistException.withUnknownFlwGuid(flwGuid);
+            throw FLWDoesNotExistException.withUnknownFlwId(flwId);
         }
         return frontLineWorker;
     }

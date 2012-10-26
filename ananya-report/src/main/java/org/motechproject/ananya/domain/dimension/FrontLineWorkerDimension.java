@@ -44,21 +44,21 @@ public class FrontLineWorkerDimension {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "flw_guid")
+    @Column(name = "flw_id")
     @Type(type = "org.hibernate.type.PostgresUUIDType")
-    private UUID flwGuid;
+    private UUID flwId;
 
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwGuid) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
         this.designation = designation;
         this.status = status;
         this.circle = circle;
-        this.flwGuid = flwGuid;
+        this.flwId = flwId;
     }
 
     public Long getMsisdn() {
@@ -109,13 +109,13 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwGuid) {
+    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId) {
         this.operator = operator;
         this.name = name;
         this.status = status;
         this.designation = designation;
         this.circle = circle;
-        updateFlwGuid(flwGuid);
+        updateFlwId(flwId);
         return this;
     }
 
@@ -127,8 +127,8 @@ public class FrontLineWorkerDimension {
         this.designation = designation;
     }
 
-    public UUID getFlwGuid() {
-        return flwGuid;
+    public UUID getFlwId() {
+        return flwId;
     }
 
     @Override
@@ -182,11 +182,11 @@ public class FrontLineWorkerDimension {
                 '}';
     }
 
-    private void updateFlwGuid(UUID flwGuid) {
-        if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
-            log.warn(String.format("Changing FLWDimension GUID for msisdn[%s]", this.msisdn));
+    private void updateFlwId(UUID flwId) {
+        if(this.flwId != null && !this.flwId.equals(flwId)) {
+            log.warn(String.format("Changing FLWDimension ID for msisdn[%s]", this.msisdn));
         }
 
-        this.flwGuid = flwGuid;
+        this.flwId = flwId;
     }
 }

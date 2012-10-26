@@ -141,7 +141,7 @@ public class FrontLineWorkerService {
         DateTime lastModified = frontLineWorker.getLastModified();
         lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
 
-        existingFrontLineWorker.update(name, designation, location, lastModified, frontLineWorker.getFlwGuid());
+        existingFrontLineWorker.update(name, designation, location, lastModified, frontLineWorker.getFlwId());
 
         allFrontLineWorkers.update(existingFrontLineWorker);
         log.info("Updated:" + existingFrontLineWorker);
@@ -171,7 +171,7 @@ public class FrontLineWorkerService {
         }
     }
 
-    public FrontLineWorker findByFlwGuid(UUID flwGuid) {
-        return allFrontLineWorkers.findByFlwGuid(flwGuid);
+    public FrontLineWorker findByFlwId(UUID flwId) {
+        return allFrontLineWorkers.findByFlwId(flwId);
     }
 }

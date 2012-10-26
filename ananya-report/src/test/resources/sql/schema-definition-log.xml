@@ -354,7 +354,7 @@
                                  referencedTableName="time_dimension" referencedColumnNames="id"
                                  onDelete="CASCADE"/>
     </changeSet>
-    
+
     <changeSet context="setup" author="ThoughtWorks-version1.1" id="22">
         <addColumn tableName="front_line_worker_dimension">
             <column name="circle" type="varchar(30)"/>
@@ -368,7 +368,8 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.2" id="24">
-        <addUniqueConstraint columnNames="msisdn" tableName="front_line_worker_dimension" constraintName="unq_front_line_worker_dimension_msisdn"/>
+        <addUniqueConstraint columnNames="msisdn" tableName="front_line_worker_dimension"
+                             constraintName="unq_front_line_worker_dimension_msisdn"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.3" id="25">
@@ -387,13 +388,20 @@
             <column name="flw_guid" type="varchar(36)"/>
         </addColumn>
 
-        <addUniqueConstraint tableName="front_line_worker_dimension" columnNames="flw_guid" constraintName="flw_guid_unique"/>
+        <addUniqueConstraint tableName="front_line_worker_dimension" columnNames="flw_guid"
+                             constraintName="flw_guid_unique"/>
         <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.3" id="27">
         <sql splitStatements="false">
             ALTER TABLE report.front_line_worker_dimension ALTER COLUMN flw_guid TYPE uuid USING flw_guid::uuid;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="28">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension RENAME COLUMN flw_guid TO flw_id;
         </sql>
     </changeSet>
 

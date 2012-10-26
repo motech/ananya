@@ -56,8 +56,8 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
     }
 
     @GenerateView
-    public FrontLineWorker findByFlwGuid(UUID flwGuid){
-        ViewQuery viewQuery = createQuery("by_flwGuid").key(flwGuid).includeDocs(true);
+    public FrontLineWorker findByFlwId(UUID flwId){
+        ViewQuery viewQuery = createQuery("by_flwId").key(flwId).includeDocs(true);
         List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
         if (workers == null || workers.isEmpty()) return null;
         return workers.get(0);
