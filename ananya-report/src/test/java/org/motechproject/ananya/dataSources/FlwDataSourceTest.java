@@ -14,10 +14,7 @@ import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionServic
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.export.annotation.CSVDataSource;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,6 +31,7 @@ public class FlwDataSourceTest {
     private JobAidContentMeasureService jobAidContentMeasureService;
 
     private FlwDataSource flwDataSource;
+    private UUID flwGuid = UUID.randomUUID();
 
     @Before
     public void setUp() {
@@ -53,7 +51,7 @@ public class FlwDataSourceTest {
         ArrayList<Long> emptyMsisdnList = new ArrayList<Long>();
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(null, null)).thenReturn(emptyMsisdnList);
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, "operator1", "circle1", "name1", "designation1", "status1", "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, "operator1", "circle1", "name1", "designation1", "status1", flwGuid));
         when(frontLineWorkerDimensionService.getFilteredFLW(emptyMsisdnList, null, null, null, null, null, null)).thenReturn(frontLineWorkerDimensions);
 
         HashMap<String, String> criteria = new HashMap<String, String>();
@@ -73,7 +71,7 @@ public class FlwDataSourceTest {
         ArrayList<Long> emptyMsisdnList = new ArrayList<Long>();
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(null, null)).thenReturn(emptyMsisdnList);
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, "operator1", "circle1", "name1", "designation1", "status1", "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, "operator1", "circle1", "name1", "designation1", "status1", flwGuid));
         when(frontLineWorkerDimensionService.getFilteredFLW(emptyMsisdnList, null, null, null, null, null, null)).thenReturn(frontLineWorkerDimensions);
 
         HashMap<String, String> criteria = null;
@@ -105,7 +103,7 @@ public class FlwDataSourceTest {
         criteria.put("circle", circle);
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwGuid));
         when(frontLineWorkerDimensionService.getFilteredFLW(Collections.EMPTY_LIST, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FlwReportData> filteredFLW = flwDataSource.queryReport(criteria);
@@ -138,7 +136,7 @@ public class FlwDataSourceTest {
 
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwGuid));
         ArrayList<Long> certificateCourseMsisdn = new ArrayList<Long>();
         certificateCourseMsisdn.add(msisdn);
         ArrayList<Long> jobAidMsisdns = new ArrayList<Long>();
@@ -180,7 +178,7 @@ public class FlwDataSourceTest {
         criteria.put("activityenddate", activityEndDate.toString());
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwGuid));
         ArrayList<Long> emptyMsisdnList = new ArrayList<Long>();
         when(courseItemMeasureService.getAllFrontLineWorkerMsisdnsBetween(activityStartDate.toDate(), activityEndDate.toDate())).thenReturn(emptyMsisdnList);
 
@@ -210,7 +208,7 @@ public class FlwDataSourceTest {
         criteria.put("activity-end-date", activityEndDate.toString());
 
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwGuid));
         when(frontLineWorkerDimensionService.getFilteredFLW(Collections.EMPTY_LIST, msisdn, name, status, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FlwReportData> filteredFLW = flwDataSource.queryReport(criteria);

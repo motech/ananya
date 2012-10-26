@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -16,6 +17,7 @@ import static junit.framework.Assert.assertTrue;
 public class AllFrontLineWorkersTest extends SpringBaseIT {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
+    private UUID flwGuid = UUID.randomUUID();
 
     @Before
     public void setUp() throws IOException {
@@ -27,7 +29,6 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
         Location location = new Location("district", "block", "village", 2, 3, 4);
-        String flwGuid = "flwGuid";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwGuid);
 
         allFrontLineWorkers.add(frontLineWorker);
@@ -45,7 +46,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, "flwGuid");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, flwGuid);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -102,7 +103,6 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
 
     @Test
     public void shouldRetrieveFrontLineWorkerByFlwGuid() {
-        String flwGuid = "flwGuid";
         FrontLineWorker frontLineWorker = new FrontLineWorker("919988776655", "name", Designation.ANM, new Location(), null, flwGuid);
         allFrontLineWorkers.add(frontLineWorker);
         markForDeletion(frontLineWorker);

@@ -4,6 +4,7 @@ import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
@@ -11,12 +12,12 @@ public class FrontLineWorkerRequest implements Serializable {
     private String designation;
     private LocationRequest location = new LocationRequest();
     private Date lastModified;
-    private String flwGuid;
+    private UUID flwGuid;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwGuid) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, UUID flwGuid) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
@@ -65,11 +66,11 @@ public class FrontLineWorkerRequest implements Serializable {
         this.lastModified = lastModified;
     }
 
-    public String getFlwGuid() {
+    public UUID getFlwGuid() {
         return flwGuid;
     }
 
-    public void setFlwGuid(String flwGuid) {
+    public void setFlwGuid(UUID flwGuid) {
         this.flwGuid = flwGuid;
     }
 

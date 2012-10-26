@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RegistrationService {
@@ -73,7 +74,7 @@ public class RegistrationService {
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
                     StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
                     new DateTime(frontLineWorkerRequest.getLastModified()),
-                    StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwGuid()));
+                    frontLineWorkerRequest.getFlwGuid());
             registrationResponses.add(registrationResponse);
         }
         return registrationResponses;
@@ -87,7 +88,7 @@ public class RegistrationService {
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat()),
                 new DateTime(frontLineWorkerRequest.getLastModified()),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwGuid()));
+                frontLineWorkerRequest.getFlwGuid());
     }
 
     public List<FrontLineWorkerResponse> getFilteredFLW(Long msisdn, String name, String status, String designation, String operator, String circle, Date activityStartDate, Date activityEndDate) {
@@ -110,7 +111,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, DateTime lastModified, String flwGuid) {
+    private RegistrationResponse registerFlw(String callerId, String name, String designation, String district, String block, String panchayat, DateTime lastModified, UUID flwGuid) {
         Location location = locationService.findFor(district, block, panchayat);
         RegistrationResponse registrationResponse = new RegistrationResponse();
         FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @Transactional
@@ -24,7 +25,7 @@ public class AllFrontLineWorkerDimensions {
     public AllFrontLineWorkerDimensions() {
     }
 
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String status, String flwGuid) {
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwGuid) {
         FrontLineWorkerDimension frontLineWorkerDimension;
         frontLineWorkerDimension = fetchFor(msisdn);
         frontLineWorkerDimension = frontLineWorkerDimension == null ?

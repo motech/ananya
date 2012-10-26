@@ -29,10 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.ananya.utils.MVCTestUtils.mockMvc;
@@ -83,7 +82,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         String designation = Designation.ANM.name();
         String name = "name";
 
-        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, "flwGuid"));
+        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID()));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
@@ -97,7 +96,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         String msisdn = "1234";
         String status = "REGISTERED";
         String name = "name";
-        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status, "flwGuid"));
+        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status, UUID.randomUUID()));
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
         when(request.getParameter("status")).thenReturn(status);

@@ -38,6 +38,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -124,7 +125,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
         Location location = new Location("", "", "", 0, 0, 0);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, "flwGuid");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));

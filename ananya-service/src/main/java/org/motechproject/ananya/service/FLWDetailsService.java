@@ -11,6 +11,8 @@ import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class FLWDetailsService {
     private FrontLineWorkerService frontLineWorkerService;
@@ -33,7 +35,7 @@ public class FLWDetailsService {
     }
 
     public FrontLineWorkerUsageResponse getUsageData(String flwGuid) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(flwGuid);
+        FrontLineWorker frontLineWorker = getFrontLineWorker(UUID.fromString(flwGuid));
         String msisdn = frontLineWorker.getMsisdn();
         Location location = locationService.findByExternalId(frontLineWorker.getLocationId());
         CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
@@ -44,7 +46,7 @@ public class FLWDetailsService {
         return frontLineWorkerUsageResponse;
     }
 
-    private FrontLineWorker getFrontLineWorker(String flwGuid) {
+    private FrontLineWorker getFrontLineWorker(UUID flwGuid) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByFlwGuid(flwGuid);
         if (frontLineWorker == null) {
             throw FLWDoesNotExistException.withUnknownFlwGuid(flwGuid);

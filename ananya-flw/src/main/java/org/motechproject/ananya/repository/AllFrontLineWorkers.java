@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
@@ -55,7 +56,7 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
     }
 
     @GenerateView
-    public FrontLineWorker findByFlwGuid(String flwGuid){
+    public FrontLineWorker findByFlwGuid(UUID flwGuid){
         ViewQuery viewQuery = createQuery("by_flwGuid").key(flwGuid).includeDocs(true);
         List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
         if (workers == null || workers.isEmpty()) return null;

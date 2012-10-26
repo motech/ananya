@@ -104,7 +104,7 @@ public class FrontLineWorkerSynchroniserIT {
     }
 
     private void setUpTestFLW(String msisdn, DateTime registeredDate) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), null, UUID.randomUUID().toString());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.AWW, new Location(), null, UUID.randomUUID());
         String callId = msisdn + "-" + DateTime.now().getMillisOfDay();
         frontLineWorker.setRegisteredDate(registeredDate);
         allFrontLineWorkers.add(frontLineWorker);

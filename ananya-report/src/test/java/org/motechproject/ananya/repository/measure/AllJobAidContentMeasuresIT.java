@@ -18,6 +18,7 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -56,8 +57,8 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         TimeDimension timeDimension1 = new TimeDimension(DateTime.now().minusDays(1));
         TimeDimension timeDimension2 = new TimeDimension(DateTime.now().minusDays(2));
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), "flwGuid1");
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), "flwGuid2");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
         LocationDimension locationDimension = new LocationDimension("S02123431243", "D1", "B1", "P1");
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "fileName", "type", 123);
         JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, DateTime.now(), 123, 12);
@@ -83,7 +84,7 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchAllJobAidContentMeasuresForACallerId() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID());
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.add(locationDimension);

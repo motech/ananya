@@ -4,12 +4,14 @@ import org.junit.Test;
 import org.motechproject.ananya.dataSources.reportData.FlwReportData;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 
 public class FrontLineReportDataMapperTest {
     @Test
     public void shouldMapFromFrontLineWorkerDimension() {
-        FlwReportData flwReportData = new FrontLineReportDataMapper().mapFrom(new FrontLineWorkerDimension(1234L, "operator1", "circle1", "name1", "designation1", "status1", "flwGuid"));
+        FlwReportData flwReportData = new FrontLineReportDataMapper().mapFrom(new FrontLineWorkerDimension(1234L, "operator1", "circle1", "name1", "designation1", "status1", UUID.randomUUID()));
         assertEquals("1234", flwReportData.getMsisdn());
         assertEquals("name1", flwReportData.getName());
         assertEquals("designation1", flwReportData.getDesignation());

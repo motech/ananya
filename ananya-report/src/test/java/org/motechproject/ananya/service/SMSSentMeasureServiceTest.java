@@ -22,6 +22,7 @@ import org.motechproject.ananya.service.measure.SMSSentMeasureService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Matchers.any;
@@ -62,7 +63,7 @@ public class SMSSentMeasureServiceTest {
         Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
         String flwId = "77abcd";
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", "flwGuid");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID());
         frontLineWorkerDimension.setId(1);
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
@@ -95,7 +96,7 @@ public class SMSSentMeasureServiceTest {
         String flwId = "77abcd";
         int flwd_id = 1;
 
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", "flwGuid");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwd_id);
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());

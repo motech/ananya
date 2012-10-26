@@ -15,6 +15,7 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -53,20 +54,21 @@ public class FrontLineWorkerSeedServiceTest {
         Location incompleteLocation = new Location("district", "block", "", 1, 1, 0);
         Location defaultLocation = Location.getDefaultLocation();
 
+        UUID flwGuid = UUID.randomUUID();
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, null, "flwGuid");
+                "1234", "name", Designation.ANM, completeLocation, null, flwGuid);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, null, "flwGuid");
+                "1234", "", Designation.ANM, completeLocation, null, flwGuid);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, "flwGuid");
+                "1234", "name", null, completeLocation, null, flwGuid);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, "flwGuid");
+                "1234", "name", null, completeLocation, null, flwGuid);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, null, "flwGuid");
+                "1234", "name", Designation.ANM, defaultLocation, null, flwGuid);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, null, "flwGuid");
+                "1234", "name", Designation.ANM, incompleteLocation, null, flwGuid);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, null, "flwGuid");
+                "1234", "", null, defaultLocation, null, flwGuid);
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));

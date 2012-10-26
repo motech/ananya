@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -39,6 +40,8 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
 
     @Autowired
     AllLocationDimensions allLocationDimensions;
+
+    private UUID flwGuid = UUID.randomUUID();
 
     @Before
     @After
@@ -72,7 +75,6 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
         String callId = "callId";
         CourseItemState event = CourseItemState.END;
         String courseItemDimensionName = "name" + DateTime.now();
-        String flwGuid = "flwGuid";
 
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         CourseItemDimension courseItemDimension = new CourseItemDimension(courseItemDimensionName, "contentId", chapter, null);
@@ -108,13 +110,13 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
 
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         CourseItemDimension courseItemDimension = new CourseItemDimension(courseItemDimensionName, "contentId", chapter, null);
-        FrontLineWorkerDimension frontLineWorkerDimension1 = allFrontLineWorkerDimensions.createOrUpdate(msisdn1, "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid1");
+        FrontLineWorkerDimension frontLineWorkerDimension1 = allFrontLineWorkerDimensions.createOrUpdate(msisdn1, "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
         TimeDimension timeDimensionForYesterday = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allCourseItemDimensions.add(courseItemDimension);
         allLocationDimensions.add(locationDimension);
         CourseItemMeasure courseItemMeasureForYesterday = new CourseItemMeasure(timeDimensionForYesterday, courseItemDimension, frontLineWorkerDimension1, locationDimension, DateTime.now(), 0, event,callId);
 
-        FrontLineWorkerDimension frontLineWorkerDimension2 = allFrontLineWorkerDimensions.createOrUpdate(msisdn2, "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid2");
+        FrontLineWorkerDimension frontLineWorkerDimension2 = allFrontLineWorkerDimensions.createOrUpdate(msisdn2, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID());
         TimeDimension timeDimensionForToday = allTimeDimensions.makeFor(today);
         allLocationDimensions.add(locationDimension);
         CourseItemMeasure courseItemMeasureForToday = new CourseItemMeasure(timeDimensionForToday, courseItemDimension, frontLineWorkerDimension2, locationDimension, DateTime.now(), 0, event,callId);
@@ -135,7 +137,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchAllCourseItemMeasuresForACallerId() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid");
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
         CourseItemDimension courseItemDimension = new CourseItemDimension("name", "contentId", CourseItemType.CHAPTER, null);
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));

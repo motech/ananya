@@ -24,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -88,7 +89,7 @@ public class CallDurationSynchroniserIT {
 
     private void setUpTransactionData(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId),
-                "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), "flwGuid");
+                "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID());
         template.save(frontLineWorkerDimension);
         LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         template.save(locationDimension);

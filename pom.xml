@@ -348,6 +348,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-annotations</artifactId>
                 <version>3.3.1.GA</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate</groupId>
+                        <artifactId>hibernate-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -363,6 +369,11 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-c3p0</artifactId>
                 <version>3.3.2.GA</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>3.6.3.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>

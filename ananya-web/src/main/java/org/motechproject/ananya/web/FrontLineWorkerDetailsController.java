@@ -62,8 +62,7 @@ public class FrontLineWorkerDetailsController extends BaseDataAPIController {
     public
     @ResponseBody
     FrontLineWorkerUsageResponse getFLWUsageDetails(@PathVariable String flwGuid, @RequestParam String channel){
-        WebRequestValidator webRequestValidator = new WebRequestValidator();
-        ValidationResponse validationResponse = webRequestValidator.validateChannel(channel);
+        ValidationResponse validationResponse = WebRequestValidator.validate(flwGuid, channel);
         raiseExceptionIfThereAreErrors(validationResponse);
 
         return flwDetailsService.getUsageData(flwGuid);

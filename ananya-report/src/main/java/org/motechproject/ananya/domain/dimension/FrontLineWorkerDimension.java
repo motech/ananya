@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain.dimension;
 
+import org.hibernate.annotations.Type;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,12 +45,13 @@ public class FrontLineWorkerDimension {
     private String status;
 
     @Column(name = "flw_guid")
-    private String flwGuid;
+    @Type(type = "org.hibernate.type.PostgresUUIDType")
+    private UUID flwGuid;
 
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, String flwGuid) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwGuid) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
@@ -107,7 +109,7 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, String flwGuid) {
+    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwGuid) {
         this.operator = operator;
         this.name = name;
         this.status = status;
@@ -125,7 +127,7 @@ public class FrontLineWorkerDimension {
         this.designation = designation;
     }
 
-    public String getFlwGuid() {
+    public UUID getFlwGuid() {
         return flwGuid;
     }
 
@@ -180,7 +182,7 @@ public class FrontLineWorkerDimension {
                 '}';
     }
 
-    private void updateFlwGuid(String flwGuid) {
+    private void updateFlwGuid(UUID flwGuid) {
         if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
             log.warn(String.format("Changing FLWDimension GUID for msisdn[%s]", this.msisdn));
         }

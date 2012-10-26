@@ -1,5 +1,7 @@
 package org.motechproject.ananya;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,6 @@ public class ValidationResponse {
     }
 
     public String getErrorMessage() {
-        String message = "";
-        for (String error : errors) {
-            message += error + System.lineSeparator();
-        }
-        return message;
+        return StringUtils.join(errors, ",");
     }
 }

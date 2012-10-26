@@ -12,6 +12,8 @@ import org.motechproject.ananya.service.FLWDetailsService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.ananya.web.exception.ValidationException;
 
+import java.util.UUID;
+
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +35,7 @@ public class FrontLineWorkerDetailsControllerTest {
 
     @Test
     public void shouldGetFLWUsageDetails() {
-        String flwGuid = "flwGuid";
+        String flwGuid = UUID.randomUUID().toString();
         FrontLineWorkerUsageResponse expectedFLWUsageResponse = new FrontLineWorkerUsageResponse();
         when(flwDetailsService.getUsageData(flwGuid)).thenReturn(expectedFLWUsageResponse);
 
@@ -47,7 +49,7 @@ public class FrontLineWorkerDetailsControllerTest {
         String channel = "invalid_channel";
 
         expectedException.expect(ValidationException.class);
-        expectedException.expectMessage(String.format("Invalid channel: %s", channel) + System.lineSeparator());
+        expectedException.expectMessage(String.format("Invalid channel: %s", channel));
         frontLineWorkerDetailsController.getFLWUsageDetails("flwGuid", channel);
     }
 }

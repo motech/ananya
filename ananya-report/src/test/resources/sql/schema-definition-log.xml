@@ -390,4 +390,11 @@
         <addUniqueConstraint tableName="front_line_worker_dimension" columnNames="flw_guid" constraintName="flw_guid_unique"/>
         <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="27">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension ALTER COLUMN flw_guid TYPE uuid USING flw_guid::uuid;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

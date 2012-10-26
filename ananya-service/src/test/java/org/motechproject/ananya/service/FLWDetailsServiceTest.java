@@ -15,6 +15,7 @@ import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -35,6 +36,8 @@ public class FLWDetailsServiceTest {
     @Mock
     private FrontLineWorkerUsageResponseMapper flwResponseMapper;
 
+    private UUID flwGuid = UUID.randomUUID();
+
     @Before
     public void setup(){
         initMocks(this);
@@ -43,17 +46,15 @@ public class FLWDetailsServiceTest {
 
     @Test
     public void shouldRaiseExceptionIfGuidIsInvalid() {
-        String flwGuid = "abcd1345";
         expectedException.expect(FLWDoesNotExistException.class);
         expectedException.expectMessage("Unknown flw id: " + flwGuid);
         when(frontLineWorkerService.findByFlwGuid(flwGuid)).thenReturn(null);
 
-        flwDetailsService.getUsageData(flwGuid);
+        flwDetailsService.getUsageData(flwGuid.toString());
     }
 
     @Test
     public void shouldReturnUsageDetailsForAValidFlwGuid() {
-        String flwGuid = "abcd12344";
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, DateTime.now(), flwGuid);
@@ -66,7 +67,7 @@ public class FLWDetailsServiceTest {
         when(smsReferenceService.getSMSReferenceNumber(msisdn)).thenReturn(smsReference);
         when(flwResponseMapper.mapFrom(frontLineWorker,defaultLocation,callDetailsResponse,smsReference)).thenReturn(expectedFLWResponse);
 
-        FrontLineWorkerUsageResponse actualResponse = flwDetailsService.getUsageData(flwGuid);
+        FrontLineWorkerUsageResponse actualResponse = flwDetailsService.getUsageData(flwGuid.toString());
 
         assertEquals(expectedFLWResponse,actualResponse);
     }

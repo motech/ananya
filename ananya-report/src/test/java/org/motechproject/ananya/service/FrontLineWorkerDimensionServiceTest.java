@@ -11,6 +11,7 @@ import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionServic
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -47,7 +48,7 @@ public class FrontLineWorkerDimensionServiceTest {
         String name = "name";
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
-        String flwGuid = "flwGuid";
+        UUID flwGuid = UUID.randomUUID();
 
         frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwGuid);
         verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwGuid);
@@ -76,7 +77,7 @@ public class FrontLineWorkerDimensionServiceTest {
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle, "flwGuid"));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle, UUID.randomUUID()));
         when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle);

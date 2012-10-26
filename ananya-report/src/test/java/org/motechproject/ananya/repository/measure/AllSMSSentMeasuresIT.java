@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -32,7 +33,9 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest{
 
     @Autowired
     AllLocationDimensions allLocationDimensions;
-    
+
+    private UUID flwGuid = UUID.randomUUID();
+
     @Before
     public void setUp(){
         template.deleteAll(template.loadAll(SMSSentMeasure.class));
@@ -56,13 +59,13 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest{
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertSMSSentMeasureWhenTimeDimensionIsNull() {
-        template.save(new SMSSentMeasure(2, "23123123", false, new FrontLineWorkerDimension(9876543210L, "", "", "", "", "", "flwGuid"), null,null));
+        template.save(new SMSSentMeasure(2, "23123123", false, new FrontLineWorkerDimension(9876543210L, "", "", "", "", "", flwGuid), null,null));
     }
     
     @Test
     public void shouldFetchBasedOnFLW(){
         String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid");
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);
@@ -76,7 +79,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest{
     @Test
     public void shouldFetchBasedOnFLWCallerId(){
         String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", "flwGuid");
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
         allLocationDimensions.add(locationDimension);

@@ -71,7 +71,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private boolean modified;
 
     @JsonProperty
-    private String flwGuid;
+    private UUID flwGuid;
 
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
@@ -83,10 +83,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.circle = circle;
         this.operator = operator;
-        this.flwGuid = UUID.randomUUID().toString();
+        this.flwGuid = UUID.randomUUID();
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, String flwGuid) {
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, UUID flwGuid) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.name = name;
@@ -228,7 +228,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, DateTime lastModified, String flwGuid) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwGuid) {
         this.name = name;
         this.lastModified = lastModified;
         this.locationId = location.getExternalId();
@@ -281,11 +281,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = msisdn;
     }
 
-    public String getFlwGuid() {
+    public UUID getFlwGuid() {
         return flwGuid;
     }
 
-    public void setFlwGuid(String flwGuid) {
+    public void setFlwGuid(UUID flwGuid) {
         this.flwGuid = flwGuid;
     }
 
@@ -362,7 +362,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
     }
 
-    private void updateFlwGuid(String flwGuid) {
+    private void updateFlwGuid(UUID flwGuid) {
         if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
             log.warn(String.format("Changing FLW GUID for msisdn[%s]", this.msisdn));
         }

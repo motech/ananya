@@ -26,6 +26,7 @@ import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -59,7 +60,7 @@ public class CallDurationMeasureServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", "flwGuid");
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         callDurationMeasureService = new CallDurationMeasureService(callLoggerService, allCallDurationMeasures, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions, locationDimensionService);
@@ -114,7 +115,7 @@ public class CallDurationMeasureServiceTest {
         String calledNumber = "321";
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", "flwGuid");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
