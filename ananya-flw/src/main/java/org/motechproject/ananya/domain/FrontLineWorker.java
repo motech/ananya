@@ -368,14 +368,4 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
         this.flwGuid = flwGuid;
     }
-
-    @JsonIgnore
-    public boolean isInvalidMsisdn() {
-        return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
-    }
-
-    @JsonIgnore
-    public boolean isInvalidName() {
-        return StringUtils.isNotBlank(name) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", name);
-    }
 }

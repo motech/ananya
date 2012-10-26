@@ -1,10 +1,12 @@
 package org.motechproject.ananya.request;
 
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
@@ -12,12 +14,12 @@ public class FrontLineWorkerRequest implements Serializable {
     private String designation;
     private LocationRequest location = new LocationRequest();
     private Date lastModified;
-    private UUID flwGuid;
+    private String flwGuid;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, UUID flwGuid) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwGuid) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
@@ -66,11 +68,11 @@ public class FrontLineWorkerRequest implements Serializable {
         this.lastModified = lastModified;
     }
 
-    public UUID getFlwGuid() {
+    public String getFlwGuid() {
         return flwGuid;
     }
 
-    public void setFlwGuid(UUID flwGuid) {
+    public void setFlwGuid(String flwGuid) {
         this.flwGuid = flwGuid;
     }
 
@@ -91,5 +93,15 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public String toCSV() {
         return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
+    }
+
+    @JsonIgnore
+    public boolean isInvalidMsisdn() {
+        return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
+    }
+
+    @JsonIgnore
+    public boolean isInvalidName() {
+        return StringUtils.isNotBlank(name) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", name);
     }
 }

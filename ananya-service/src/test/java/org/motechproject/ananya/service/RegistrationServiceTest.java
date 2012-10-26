@@ -70,7 +70,7 @@ public class RegistrationServiceTest {
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwGuid.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwGuid), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
 
@@ -87,7 +87,7 @@ public class RegistrationServiceTest {
         String name = "name";
         Location location = new Location("district", "block", "village", 1, 1, 1);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwGuid.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator", Designation.ANM, location, null, flwGuid);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwGuid), location)).thenReturn(frontLineWorker);
@@ -109,7 +109,7 @@ public class RegistrationServiceTest {
         String name = "name";
         Designation designation = Designation.AWW;
         when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid.toString());
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -125,7 +125,7 @@ public class RegistrationServiceTest {
         Designation designation = Designation.AWW;
         when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
 
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid.toString());
 
         RegistrationResponse registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -134,7 +134,7 @@ public class RegistrationServiceTest {
         verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
 
         callerId = "abcdef";
-        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid);
+        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwGuid.toString());
         registrationResponse = registrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid msisdn"));
@@ -150,7 +150,7 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwGuid);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwGuid.toString());
         when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
 
         registrationService.createOrUpdateFLW(frontLineWorkerRequest);
@@ -174,8 +174,8 @@ public class RegistrationServiceTest {
         Location location = new Location("district", "block", "village", 1, 1, 1);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<>();
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwGuid1));
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("district", "block", "village"), null, flwGuid2));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwGuid1.toString()));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("district", "block", "village"), null, flwGuid2.toString()));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, null, flwGuid1), location)).thenReturn(new FrontLineWorker(callerId.trim(), "airtel", "bihar"));
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, null, flwGuid2), location)).thenReturn(new FrontLineWorker(callerId1, "airtel", "bihar"));
 

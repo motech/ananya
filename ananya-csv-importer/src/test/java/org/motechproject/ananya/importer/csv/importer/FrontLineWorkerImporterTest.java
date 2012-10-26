@@ -32,7 +32,7 @@ public class FrontLineWorkerImporterTest {
     private ArgumentCaptor<List<FrontLineWorkerRequest>> captor;
 
     private FrontLineWorkerImporter frontLineWorkerImporter;
-    private UUID flwGuid = UUID.randomUUID();
+    private String flwGuid = UUID.randomUUID().toString();
 
     @Before
     public void setUp() {

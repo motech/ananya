@@ -1,8 +1,6 @@
 package org.motechproject.ananya.validators;
 
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.utils.ValidationUtils;
@@ -11,39 +9,39 @@ import java.util.Map;
 
 public class FrontLineWorkerValidator {
 
-    public FLWValidationResponse validate(FrontLineWorker frontLineWorker, Location locationOfFrontLineWorker) {
+    public static FLWValidationResponse validate(FrontLineWorkerRequest frontLineWorkerRequest, Location locationOfFrontLineWorker) {
         FLWValidationResponse flwValidationResponse = new FLWValidationResponse();
-        validateMsisdn(frontLineWorker, flwValidationResponse);
-        validateName(frontLineWorker, flwValidationResponse);
+        validateMsisdn(frontLineWorkerRequest, flwValidationResponse);
+        validateName(frontLineWorkerRequest, flwValidationResponse);
         validateLocation(locationOfFrontLineWorker, flwValidationResponse);
-        validateFLWGuid(frontLineWorker, flwValidationResponse);
+        validateFLWGuid(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
     }
 
-    private void validateLocation(Location locationOfFrontLineWorker, FLWValidationResponse flwValidationResponse) {
+    private static void validateLocation(Location locationOfFrontLineWorker, FLWValidationResponse flwValidationResponse) {
         if (locationOfFrontLineWorker == null)
             flwValidationResponse.forInvalidLocation();
     }
 
-    private void validateFLWGuid(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
-        if (frontLineWorker.getFlwGuid() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwGuid().toString()))
+    private static void validateFLWGuid(FrontLineWorkerRequest frontLineWorker, FLWValidationResponse flwValidationResponse) {
+        if (frontLineWorker.getFlwGuid() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwGuid()))
             flwValidationResponse.forInvalidFlwGuid();
     }
 
-    private void validateName(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
-        if (frontLineWorker.isInvalidName())
+    private static void validateName(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
+        if (frontLineWorkerRequest.isInvalidName())
             flwValidationResponse.forInvalidName();
     }
 
-    private void validateMsisdn(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
-        if(frontLineWorker.isInvalidMsisdn())
+    private static void validateMsisdn(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
+        if (frontLineWorkerRequest.isInvalidMsisdn())
             flwValidationResponse.forInvalidMsisdn();
     }
 
-    public FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
+    public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
                                                             Location location,
                                                             Map<String, Integer> msisdnOccurrenceMap) {
-        FLWValidationResponse validationResponse = validate(FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest), location);
+        FLWValidationResponse validationResponse = validate(frontLineWorkerRequest, location);
         if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
             validationResponse.forDuplicates();
         return validationResponse;

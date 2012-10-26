@@ -26,7 +26,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class FrontLineWorkerSeed {
@@ -73,8 +72,7 @@ public class FrontLineWorkerSeed {
     */
     public void loadFromCsv(String inputCSVFile) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
-        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat;
-        UUID flwGuid;
+        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, flwGuid;
         String circle = null;
         String[] currentRow;
         DateTime lastModified = DateUtil.now();
@@ -91,7 +89,7 @@ public class FrontLineWorkerSeed {
             currentDistrict = currentRow[3];
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
-            flwGuid = UUID.fromString(currentRow[6]);
+            flwGuid = currentRow[6];
 
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,

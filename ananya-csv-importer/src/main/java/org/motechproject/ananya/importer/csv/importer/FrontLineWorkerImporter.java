@@ -42,7 +42,6 @@ public class FrontLineWorkerImporter {
         int recordCounter = 0;
         List<Error> errors = new ArrayList<Error>();
 
-        FrontLineWorkerValidator frontLineWorkerValidator = new FrontLineWorkerValidator();
         logger.info("Started validating FLW csv records");
         addHeader(errors);
         Map<String, Integer> msisdnOccurrenceMap = getMsisdnOccurrenceMap(frontLineWorkerRequests);
@@ -51,7 +50,7 @@ public class FrontLineWorkerImporter {
             LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
             Location location = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
 
-            FLWValidationResponse flwValidationResponse = frontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, msisdnOccurrenceMap);
+            FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, msisdnOccurrenceMap);
 
             if (flwValidationResponse.isInValid()) {
                 isValid = false;

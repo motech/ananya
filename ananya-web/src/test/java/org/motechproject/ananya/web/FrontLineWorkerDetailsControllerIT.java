@@ -82,7 +82,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         String designation = Designation.ANM.name();
         String name = "name";
 
-        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID()));
+        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString()));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
