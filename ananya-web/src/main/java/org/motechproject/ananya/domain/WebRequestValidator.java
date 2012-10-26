@@ -1,8 +1,7 @@
 package org.motechproject.ananya.domain;
 
 import org.motechproject.ananya.ValidationResponse;
-
-import java.util.regex.Pattern;
+import org.motechproject.ananya.utils.ValidationUtils;
 
 public class WebRequestValidator {
 
@@ -19,7 +18,7 @@ public class WebRequestValidator {
     }
 
     private static void validateFlwGuid(String flwGuid, ValidationResponse validationResponse) {
-        if (!Pattern.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", flwGuid))
+        if (!ValidationUtils.isValidUUID(flwGuid))
             validationResponse.addError(String.format("Invalid flwGuid: %s", flwGuid));
     }
 }

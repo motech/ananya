@@ -6,9 +6,9 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
+import org.motechproject.ananya.utils.ValidationUtils;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class FrontLineWorkerValidator {
@@ -21,14 +21,10 @@ public class FrontLineWorkerValidator {
             flwValidationResponse.forInvalidName();
         if (locationOfFrontLineWorker == null)
             flwValidationResponse.forInvalidLocation();
-        if (!validFlwGuid(frontLineWorker.getFlwGuid()))
+        if (frontLineWorker.getFlwGuid() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwGuid().toString()))
             flwValidationResponse.forInvalidFlwGuid();
 
         return flwValidationResponse;
-    }
-
-    private boolean validFlwGuid(UUID flwGuid) {
-        return flwGuid != null && Pattern.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", flwGuid.toString());
     }
 
     public FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,

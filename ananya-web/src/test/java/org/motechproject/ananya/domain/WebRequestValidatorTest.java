@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 import org.motechproject.ananya.ValidationResponse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class WebRequestValidatorTest {
@@ -13,7 +14,7 @@ public class WebRequestValidatorTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
-    public void shouldValidateFlwIdAndChannel(){
+    public void shouldInvalidateFlwIdAndChannel(){
         ValidationResponse response = WebRequestValidator.validate("abcd1234", "invalid_channel");
 
         assertTrue(response.hasErrors());
@@ -22,35 +23,9 @@ public class WebRequestValidatorTest {
     }
 
     @Test
-    public void shouldInvalidateTheFlwIdFormat(){
-        String uuidInInvalidFormat = "abcd1234";
+    public void shouldValidateFlwIdAndChannel(){
+        ValidationResponse response = WebRequestValidator.validate("1234dadb-1234-1234-9876-abcdef1234ab", "contact_center");
 
-        ValidationResponse response = WebRequestValidator.validate(uuidInInvalidFormat, "contact_center");
-
-        assertTrue(response.hasErrors());
-        assertEquals(1, response.getErrors().size());
-        assertEquals("Invalid flwGuid: " + uuidInInvalidFormat , response.getErrorMessage());
-    }
-
-    @Test
-    public void shouldInvalidateTheFlwIdWithExtraCharacters(){
-        String uuidWithExtraCharacters = "1234dadb-1234-1234-9876-abcdeef2345689";
-
-        ValidationResponse response = WebRequestValidator.validate(uuidWithExtraCharacters, "contact_center");
-
-        assertTrue(response.hasErrors());
-        assertEquals(1, response.getErrors().size());
-        assertEquals("Invalid flwGuid: " + uuidWithExtraCharacters , response.getErrorMessage());
-    }
-
-    @Test
-    public void shouldInvalidateFlwIdWithInvalidCharacters(){
-        String uuidWithInvalidCharacters = "1234dadb-1234-1234-9876-abcdef1234xy";
-
-        ValidationResponse response = WebRequestValidator.validate(uuidWithInvalidCharacters, "contact_center");
-
-        assertTrue(response.hasErrors());
-        assertEquals(1, response.getErrors().size());
-        assertEquals("Invalid flwGuid: " + uuidWithInvalidCharacters , response.getErrorMessage());
+        assertFalse(response.hasErrors());
     }
 }
