@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
@@ -347,15 +348,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
+        operator = frontLineWorker.getOperator();
+        circle = frontLineWorker.getCircle();
         return this;
     }
 
     public boolean courseInProgress() {
         return bookMark().notAtPlayCourseResult();
-    }
-
-    public boolean hasNoOperator() {
-        return StringUtils.isEmpty(operator);
     }
 
     private String prefixMsisdnWith91(String msisdn) {
@@ -368,5 +367,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
         }
 
         this.flwGuid = flwGuid;
+    }
+
+    @JsonIgnore
+    public boolean isInvalidMsisdn() {
+        return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
+    }
+
+    @JsonIgnore
+    public boolean isInvalidName() {
+        return StringUtils.isNotBlank(name) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", name);
     }
 }

@@ -1,6 +1,5 @@
 package org.motechproject.ananya.validators;
 
-import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
@@ -9,22 +8,36 @@ import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.utils.ValidationUtils;
 
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class FrontLineWorkerValidator {
 
     public FLWValidationResponse validate(FrontLineWorker frontLineWorker, Location locationOfFrontLineWorker) {
         FLWValidationResponse flwValidationResponse = new FLWValidationResponse();
-        if (StringUtils.length(frontLineWorker.getMsisdn()) < 10 || !StringUtils.isNumeric(frontLineWorker.getMsisdn()))
-            flwValidationResponse.forInvalidMsisdn();
-        if (StringUtils.isNotBlank(frontLineWorker.name()) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", frontLineWorker.name()))
-            flwValidationResponse.forInvalidName();
+        validateMsisdn(frontLineWorker, flwValidationResponse);
+        validateName(frontLineWorker, flwValidationResponse);
+        validateLocation(locationOfFrontLineWorker, flwValidationResponse);
+        validateFLWGuid(frontLineWorker, flwValidationResponse);
+        return flwValidationResponse;
+    }
+
+    private void validateLocation(Location locationOfFrontLineWorker, FLWValidationResponse flwValidationResponse) {
         if (locationOfFrontLineWorker == null)
             flwValidationResponse.forInvalidLocation();
+    }
+
+    private void validateFLWGuid(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
         if (frontLineWorker.getFlwGuid() == null || !ValidationUtils.isValidUUID(frontLineWorker.getFlwGuid().toString()))
             flwValidationResponse.forInvalidFlwGuid();
+    }
 
-        return flwValidationResponse;
+    private void validateName(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
+        if (frontLineWorker.isInvalidName())
+            flwValidationResponse.forInvalidName();
+    }
+
+    private void validateMsisdn(FrontLineWorker frontLineWorker, FLWValidationResponse flwValidationResponse) {
+        if(frontLineWorker.isInvalidMsisdn())
+            flwValidationResponse.forInvalidMsisdn();
     }
 
     public FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
