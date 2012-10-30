@@ -51,12 +51,15 @@ public class CallDurationMeasure {
     @Column(name = "called_number")
     private Long calledNumber;
 
+    @Column(name = "duration_in_pulse")
+    private Integer durationInPulse;
+
     public CallDurationMeasure() {
     }
 
     public CallDurationMeasure(FrontLineWorkerDimension flwDimension, LocationDimension locationDimension,
                                TimeDimension timeDimension, String callId, Long calledNumber, Integer duration,
-                               DateTime startTime, DateTime endTime, String type) {
+                               DateTime startTime, DateTime endTime, String type, Integer durationInPulse) {
         this.frontLineWorkerDimension = flwDimension;
         this.locationDimension = locationDimension;
         this.timeDimension = timeDimension;
@@ -64,6 +67,7 @@ public class CallDurationMeasure {
         this.calledNumber = calledNumber;
         this.duration = duration;
         this.type = type;
+        this.durationInPulse = durationInPulse;
         this.startTime = new Timestamp(startTime.getMillis());
         this.endTime = new Timestamp(endTime.getMillis());
     }
@@ -102,6 +106,10 @@ public class CallDurationMeasure {
 
     public TimeDimension getTimeDimension() {
         return timeDimension;
+    }
+
+    public Integer getDurationInPulse() {
+        return durationInPulse;
     }
 
     public void setTimeDimension(TimeDimension timeDimension) {

@@ -2,7 +2,6 @@ package org.motechproject.ananya.service.measure;
 
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
-import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 import org.motechproject.ananya.domain.CallUsageDetails;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -14,7 +13,9 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.CallLogService;
+import org.motechproject.ananya.service.OperatorService;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
+import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class CallDurationMeasureService {
     private AllRegistrationMeasures allRegistrationMeasures;
     private AllTimeDimensions allTimeDimensions;
     private LocationDimensionService locationDimensionService;
+    private OperatorService operatorService;
 
     public CallDurationMeasureService() {
     }
@@ -43,13 +45,15 @@ public class CallDurationMeasureService {
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures,
                                       AllTimeDimensions allTimeDimensions,
-                                      LocationDimensionService locationDimensionService) {
+                                      LocationDimensionService locationDimensionService,
+                                      OperatorService operatorService) {
         this.callLoggerService = callLoggerService;
         this.allCallDurationMeasures = allCallDurationMeasures;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.allTimeDimensions = allTimeDimensions;
         this.locationDimensionService = locationDimensionService;
+        this.operatorService = operatorService;
     }
 
 
@@ -77,11 +81,16 @@ public class CallDurationMeasureService {
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
             if (callLogItem.hasNoTimeLimits()) continue;
 
+            Integer durationInPulse = operatorService.usageInPulse(flwDimension.getOperator(), callLogItem.durationInMilliSec());
+
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension, locationDimension, timeDimension,
                     callId, calledNumber,
-                    callLogItem.duration(), callLogItem.getStartTime(),
-                    callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
+                    callLogItem.duration(),
+                    callLogItem.getStartTime(),
+                    callLogItem.getEndTime(),
+                    callLogItem.getCallFlowType().name(),
+                    durationInPulse);
             allCallDurationMeasures.add(callDurationMeasure);
         }
         log.info(callId + "- callLog callDurationMeasures added");

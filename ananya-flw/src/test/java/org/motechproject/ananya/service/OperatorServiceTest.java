@@ -53,4 +53,15 @@ public class OperatorServiceTest {
 
         assertEquals(expectedUsageByPulseInMilliSec, actualUsageByPulseInMilliSec);
     }
+
+    @Test
+    public void shouldGetTheUsageInPulse(){
+        String operatorName = "airtel";
+        int durationInMilliSec = 121000;
+        Integer expectedUsageInPulse = 3;
+        when(allOperators.findByName(operatorName)).thenReturn(new Operator(operatorName, 5000000, 60000));
+        Integer actualUsageInPulse = operatorService.usageInPulse(operatorName, durationInMilliSec);
+
+        assertEquals(expectedUsageInPulse, actualUsageInPulse);
+    }
 }

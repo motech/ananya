@@ -20,6 +20,7 @@ import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
+import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -79,6 +80,9 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     RegistrationLogService registrationLogService;
 
+    @Autowired
+    private AllOperators allOperators;
+
     @After
     @Before
     public void tearDown() {
@@ -117,6 +121,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         String callerId = "919986574410";
         String contentName = "Chapter 1";
         String contentId = "contentId";
+        String operatorName = "airtel";
 
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
@@ -127,8 +132,10 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         Location location = new Location("", "", "", 0, 0, 0);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
+        frontLineWorker.setOperator(operatorName);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
+        allOperators.add(new Operator(operatorName, 39*60*1000, 60000));
 
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);
@@ -165,8 +172,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         List<CallDurationMeasure> callDurationMeasures = template.loadAll(CallDurationMeasure.class);
 
         assertEquals(2, callDurationMeasures.size());
-        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, callerId, locationDimension.getId(), callStartTimeDimension.getId(), 20, "CALL", new Timestamp(callStartTime.getMillis()), new Timestamp(callEndTime.getMillis()))));
-        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, callerId, locationDimension.getId(), callStartTimeDimension.getId(), 10, "CERTIFICATECOURSE", new Timestamp(certificateCourseStartTime.getMillis()), new Timestamp(certificateCourseEndTime.getMillis()))));
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, callerId, locationDimension.getId(), callStartTimeDimension.getId(), 20, "CALL", new Timestamp(callStartTime.getMillis()), new Timestamp(callEndTime.getMillis()), 1)));
+        assertThat(callDurationMeasures, hasItems(callDurationMeasureMatcher(callId, callerId, locationDimension.getId(), callStartTimeDimension.getId(), 10, "CERTIFICATECOURSE", new Timestamp(certificateCourseStartTime.getMillis()), new Timestamp(certificateCourseEndTime.getMillis()), 1)));
 
         List<CourseItemMeasure> courseItemMeasures = template.loadAll(CourseItemMeasure.class);
 
@@ -208,7 +215,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     private Matcher<CallDurationMeasure> callDurationMeasureMatcher(final String callId,
                                                                     final String callerId, final Integer locationId, final Integer timeId,
-                                                                    final int duration, final String type, final Timestamp startTime, final Timestamp endTime) {
+                                                                    final int duration, final String type, final Timestamp startTime,
+                                                                    final Timestamp endTime, final Integer durationInPulse) {
 
         return new BaseMatcher<CallDurationMeasure>() {
             @Override
@@ -221,7 +229,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
                         o1.getFrontLineWorkerDimension().getMsisdn().equals(Long.valueOf(callerId)) &&
                         o1.getType().equals(type) &&
                         o1.getStartTime().equals(startTime) &&
-                        o1.getEndTime().equals(endTime);
+                        o1.getEndTime().equals(endTime) &&
+                        o1.getDurationInPulse().equals(durationInPulse);
             }
 
             @Override

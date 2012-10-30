@@ -46,9 +46,11 @@ public class CallDurationMeasureServiceTest {
     private AllRegistrationMeasures allRegistrationMeasures;
     @Mock
     private LocationDimensionService locationDimensionService;
+    @Mock
+    private OperatorService operatorService;
+
     @Captor
     private ArgumentCaptor<List<CallDurationMeasure>> captor;
-
     private String callId = "callId";
     private long callerId = 123456789L;
     private int flwId = 1;
@@ -60,10 +62,10 @@ public class CallDurationMeasureServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
-        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, allCallDurationMeasures, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions, locationDimensionService);
+        callDurationMeasureService = new CallDurationMeasureService(callLoggerService, allCallDurationMeasures, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions, locationDimensionService, operatorService);
     }
 
     @Test
@@ -76,6 +78,7 @@ public class CallDurationMeasureServiceTest {
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
+        when(operatorService.usageInPulse(frontLineWorkerDimension.getOperator(), 10000)).thenReturn(1);
 
         callDurationMeasureService.createFor(callId);
 
@@ -87,6 +90,7 @@ public class CallDurationMeasureServiceTest {
         assertEquals(timeDimension, callDurationMeasure.getTimeDimension());
         assertEquals(callId, callDurationMeasure.getCallId());
         assertEquals(10, callDurationMeasure.getDuration());
+        assertEquals(1, (int) callDurationMeasure.getDurationInPulse());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasure.getType());
         verify(callLoggerService).delete(callLog);
     }
@@ -102,6 +106,7 @@ public class CallDurationMeasureServiceTest {
 
         verify(allCallDurationMeasures, never()).add(any(CallDurationMeasure.class));
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
+        verify(operatorService, never()).usageInPulse(anyString(), anyInt());
         verify(callLoggerService).delete(callLog);
     }
 
@@ -115,7 +120,7 @@ public class CallDurationMeasureServiceTest {
         String calledNumber = "321";
         LocationDimension locationDimension = new LocationDimension("", "", "", "");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
@@ -126,7 +131,8 @@ public class CallDurationMeasureServiceTest {
         when(callLoggerService.getCallLogFor(callId)).thenReturn(callLog);
         when(allFrontLineWorkerDimensions.fetchFor(callerId)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
-
+        when(operatorService.usageInPulse(frontLineWorkerDimension.getOperator(), 10000)).thenReturn(1);
+        when(operatorService.usageInPulse(frontLineWorkerDimension.getOperator(), 20000)).thenReturn(1);
 
         callDurationMeasureService.createFor(callId);
 
@@ -137,6 +143,7 @@ public class CallDurationMeasureServiceTest {
 
         CallDurationMeasure callDurationMeasureForCall = callDurationMeasures.get(0);
         assertEquals(20, callDurationMeasureForCall.getDuration());
+        assertEquals(1, (int) callDurationMeasureForCall.getDurationInPulse());
         assertEquals(callId, callDurationMeasureForCall.getCallId());
         assertEquals(Long.valueOf(calledNumber), callDurationMeasureForCall.getCalledNumber());
         assertEquals(CallFlowType.CALL.toString(), callDurationMeasureForCall.getType());
@@ -144,6 +151,7 @@ public class CallDurationMeasureServiceTest {
 
         CallDurationMeasure callDurationMeasureForCourse = callDurationMeasures.get(1);
         assertEquals(10, callDurationMeasureForCourse.getDuration());
+        assertEquals(1, (int) callDurationMeasureForCourse.getDurationInPulse());
         assertEquals(callId, callDurationMeasureForCourse.getCallId());
         assertEquals(CallFlowType.CERTIFICATECOURSE.toString(), callDurationMeasureForCourse.getType());
         assertEquals(frontLineWorkerDimension, callDurationMeasureForCourse.getFrontLineWorkerDimension());

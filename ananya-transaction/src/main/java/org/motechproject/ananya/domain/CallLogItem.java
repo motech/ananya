@@ -51,4 +51,8 @@ public class CallLogItem {
     public boolean hasNoTimeLimits() {
         return startTime == null || endTime == null;
     }
+
+    public Integer durationInMilliSec() {
+        return duration() * 1000;
+    }
 }

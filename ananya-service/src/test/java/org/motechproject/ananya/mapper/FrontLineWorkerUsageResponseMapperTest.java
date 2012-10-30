@@ -29,10 +29,10 @@ public class FrontLineWorkerUsageResponseMapperTest {
             add(new CallUsageDetails(123L, 324L, year, month));
         }};
         ArrayList<CallDurationMeasure> jobAidCallDurationMeasureList = new ArrayList<CallDurationMeasure>() {{
-            add(new CallDurationMeasure(null, null, null, null, null, 123, startTime, endTime, "CALL"));
+            add(new CallDurationMeasure(null, null, null, null, null, 123, startTime, endTime, "CALL", 1));
         }};
         ArrayList<CallDurationMeasure> certificateCourseCallDurationMeasureList = new ArrayList<CallDurationMeasure>() {{
-            add(new CallDurationMeasure(null, null, null, null, null, 1324, startTime, endTime, "CALL"));
+            add(new CallDurationMeasure(null, null, null, null, null, 1324, startTime, endTime, "CALL", 1));
         }};
         CallDetailsResponse callDetails = new CallDetailsResponse(jobAidCallUsageDetails, jobAidCallDurationMeasureList, certificateCourseCallDurationMeasureList);
         Location location = Location.getDefaultLocation();

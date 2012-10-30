@@ -405,4 +405,10 @@
         </sql>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
+        <addColumn tableName="call_duration_measure">
+            <column name="duration_in_pulse" type="integer"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

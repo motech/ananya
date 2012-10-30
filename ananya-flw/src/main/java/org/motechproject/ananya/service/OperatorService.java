@@ -30,8 +30,20 @@ public class OperatorService {
     public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec) {
         Operator operator = allOperators.findByName(operatorName);
         Integer pulseToMilliSec = operator.getPulseToMilliSec();
-        Integer usageInPulse = (int) Math.ceil(durationInMilliSec / (double) pulseToMilliSec);
+        Integer usageInPulse = convertToPulse(durationInMilliSec, pulseToMilliSec);
 
         return usageInPulse * pulseToMilliSec;
+    }
+
+    public Integer usageInPulse(String operatorName, Integer durationInMilliSec) {
+        Operator operator = allOperators.findByName(operatorName);
+        Integer pulseToMilliSec = operator.getPulseToMilliSec();
+        Integer usageInPulse = convertToPulse(durationInMilliSec, pulseToMilliSec);
+
+        return usageInPulse;
+    }
+
+    private int convertToPulse(Integer durationInMilliSec, double pulseToMilliSec) {
+        return (int) Math.ceil(durationInMilliSec / pulseToMilliSec);
     }
 }

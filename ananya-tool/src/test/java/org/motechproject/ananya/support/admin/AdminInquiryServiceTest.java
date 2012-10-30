@@ -128,8 +128,8 @@ public class AdminInquiryServiceTest {
     private void setUpCallDetails(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "bsnl", "bihar", "Raji", "ANGANWADI", "REGISTERED", UUID.randomUUID());
 
-        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionTwoDaysAgo, callerId + "444", 555444L, 30, twoDaysAgo, twoDaysAgo.plusMinutes(30), "JOBAID"));
-        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionNow, callerId + "888", 555444L, 10, now, now.plusMinutes(30), "CC"));
+        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionTwoDaysAgo, callerId + "444", 555444L, 30, twoDaysAgo, twoDaysAgo.plusMinutes(30), "JOBAID", 1));
+        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimensionNow, callerId + "888", 555444L, 10, now, now.plusMinutes(30), "CC", 1));
     }
 
     private void setUpKunjiCalls(String callerId) {
