@@ -26,4 +26,12 @@ public class OperatorService {
     public List<Operator> getAllOperators() {
         return allOperators.getAll();
     }
+
+    public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec) {
+        Operator operator = allOperators.findByName(operatorName);
+        Integer pulseToMilliSec = operator.getPulseToMilliSec();
+        Integer usageInPulse = (int) Math.ceil(durationInMilliSec / (double) pulseToMilliSec);
+
+        return usageInPulse * pulseToMilliSec;
+    }
 }

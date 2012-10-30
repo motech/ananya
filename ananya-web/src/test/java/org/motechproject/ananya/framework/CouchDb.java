@@ -45,7 +45,7 @@ public class CouchDb {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
         Operator operator = allOperators.findByName(worker.getOperator());
         assertEquals(currentUsage, worker.getCurrentJobAidUsage());
-        assertEquals(new Integer(maxUsage * 60 * 1000), operator.getAllowedUsagePerMonth());
+        assertEquals(new Integer(maxUsage), operator.getAllowedUsagePerMonth());
         return this;
     }
 

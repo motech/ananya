@@ -10,10 +10,13 @@ public class Operator extends MotechBaseDataObject {
     private String name;
     @JsonProperty
     private Integer allowedUsagePerMonth;
+    @JsonProperty
+    private Integer pulseToMilliSec;
 
-    public Operator(String name, Integer allowedUsagePerMonth) {
+    public Operator(String name, Integer allowedUsagePerMonth, Integer pulseToMilliSec) {
         this.name = name;
         this.allowedUsagePerMonth = allowedUsagePerMonth;
+        this.pulseToMilliSec = pulseToMilliSec;
     }
 
     public Operator() {
@@ -25,5 +28,13 @@ public class Operator extends MotechBaseDataObject {
 
     public Integer getAllowedUsagePerMonth() {
         return allowedUsagePerMonth;
+    }
+
+    public Integer getPulseToMilliSec() {
+        return pulseToMilliSec;
+    }
+
+    public void setPulseToMilliSec(Integer pulseToMilliSec) {
+        this.pulseToMilliSec = pulseToMilliSec;
     }
 }

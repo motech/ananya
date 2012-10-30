@@ -367,4 +367,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
         this.flwId = flwId;
     }
+
+    public void updateJobAidUsage(Integer durationInMilliSec) {
+        this.currentJobAidUsage += durationInMilliSec;
+    }
 }

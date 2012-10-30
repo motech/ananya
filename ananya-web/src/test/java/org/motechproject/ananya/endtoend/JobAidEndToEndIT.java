@@ -66,6 +66,8 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         String calledNumber = "5771122334455";
         String callDuration = "30";
         String promptList = "['prompt1', 'prompt2']";
+        Integer expectedJobAidUsageByPulse = 60000;
+        int allowedUsagePerMonth = 39 * 60 * 1000;
 
         List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");
         String json = testJsonData.forJobAidDisconnect(nodeNames);
@@ -74,7 +76,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         jobAidWebService.requestForDisconnect(request);
 
         couchDb.confirmPartiallyRegistered(callerId, operator)
-                .confirmJobAidUsage(callerId, Integer.parseInt(callDuration), 39)
+                .confirmJobAidUsage(callerId, expectedJobAidUsageByPulse, allowedUsagePerMonth)
                 .confirmPromptsHeard(callerId, Arrays.asList("prompt1", "prompt2"));
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)

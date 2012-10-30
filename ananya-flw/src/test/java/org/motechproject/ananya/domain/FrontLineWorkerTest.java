@@ -146,4 +146,14 @@ public class FrontLineWorkerTest {
 
         assertNotNull(frontLineWorker.getFlwId());
     }
+
+    @Test
+    public void shouldUpdateJobAidUsageByAddingCurrentDuration(){
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.setCurrentJobAidUsage(10);
+
+        frontLineWorker.updateJobAidUsage(30);
+
+        assertEquals(40, (int) frontLineWorker.getCurrentJobAidUsage());
+    }
 }

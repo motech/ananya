@@ -25,14 +25,16 @@ public class FrontLineWorkerService {
     private LocationService locationService;
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
     private AllFailedRecordsProcessingStates allFailedRecordsProcessingStates;
+    private OperatorService operatorService;
 
     @Autowired
     public FrontLineWorkerService(AllFrontLineWorkers allFrontLineWorkers, LocationService locationService,
-                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys, AllFailedRecordsProcessingStates allFailedRecordsProcessingStates) {
+                                  AllFrontLineWorkerKeys allFrontLineWorkerKeys, AllFailedRecordsProcessingStates allFailedRecordsProcessingStates, OperatorService operatorService) {
         this.allFrontLineWorkers = allFrontLineWorkers;
         this.locationService = locationService;
         this.allFrontLineWorkerKeys = allFrontLineWorkerKeys;
         this.allFailedRecordsProcessingStates = allFailedRecordsProcessingStates;
+        this.operatorService = operatorService;
     }
 
     public FrontLineWorker findByCallerId(String callerId) {
@@ -105,8 +107,8 @@ public class FrontLineWorkerService {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
 
-        Integer currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
-        frontLineWorker.setCurrentJobAidUsage(currentCallDuration + currentJobAidUsage);
+        Integer usageByPulseInMilliSec = operatorService.usageByPulseInMilliSec(frontLineWorker.getOperator(), currentCallDuration);
+        frontLineWorker.updateJobAidUsage(usageByPulseInMilliSec);
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
 
         allFrontLineWorkers.update(frontLineWorker);
