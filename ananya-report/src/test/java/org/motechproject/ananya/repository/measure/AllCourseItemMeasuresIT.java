@@ -154,7 +154,8 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchForAGivenLocation() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId
+        );
         CourseItemDimension courseItemDimension = new CourseItemDimension("name", "contentId", CourseItemType.CHAPTER, null);
         String locationId = "locationId";
         LocationDimension locationDimension = new LocationDimension(locationId, "", "", "", "VALID");

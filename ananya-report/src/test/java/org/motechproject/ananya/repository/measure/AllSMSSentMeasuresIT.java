@@ -94,7 +94,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest{
     public void shouldFetchBasedOnLocationId(){
         String smsReferenceNumber = "refNo";
         String locationId = "locationId";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwGuid);
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension(locationId, "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);

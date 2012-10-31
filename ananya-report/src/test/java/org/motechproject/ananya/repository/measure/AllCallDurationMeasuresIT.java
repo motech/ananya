@@ -120,7 +120,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
 
     private void certificateCourseSetup(Long callerId, long calledNumber, DateTime now) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
-        LocationDimension locationDimension = new LocationDimension("locationId", "D1", "", "", null);
+        LocationDimension locationDimension = new LocationDimension("locationId", "D1", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(now.minusDays(2));
         allLocationDimensions.saveOrUpdate(locationDimension);
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", calledNumber, 10, now.minusDays(1), now.minusDays(1).plusSeconds(10), "CALL", 1));
@@ -130,7 +130,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
 
     private void jobAidSetup(Long callerId, long calledNumber, DateTime now) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
-        LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", null);
+        LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(now.minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", calledNumber, 600, now.minusSeconds(60), now, "CALL", 1));
