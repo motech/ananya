@@ -23,11 +23,14 @@ public class Location extends MotechBaseDataObject {
     private int panchayatCode;
     @JsonProperty
     private String externalId;
+    @JsonProperty
+    private String locationStatus;
 
     public Location() {
     }
 
-    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode) {
+    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus) {
+        this.locationStatus = locationStatus == null ? null : locationStatus.name();
         this.district = StringUtils.trimToEmpty(district);
         this.block = StringUtils.trimToEmpty(block);
         this.panchayat = StringUtils.trimToEmpty(panchayat);
@@ -38,7 +41,11 @@ public class Location extends MotechBaseDataObject {
     }
 
     public static Location getDefaultLocation() {
-        return new Location("C00", "C00", "", 0, 0, 0);
+        return new Location("C00", "C00", "", 0, 0, 0, null);
+    }
+
+    public String getLocationStatus() {
+        return locationStatus;
     }
 
     public int getBlockCode() {
@@ -78,6 +85,10 @@ public class Location extends MotechBaseDataObject {
         return String.format("%03d", code);
     }
 
+    public void setLocationStatus(String locationStatus) {
+        this.locationStatus = locationStatus;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,9 +96,12 @@ public class Location extends MotechBaseDataObject {
 
         Location location = (Location) o;
 
-        if (block != null ? !StringUtils.equalsIgnoreCase(district, location.district) : location.block != null) return false;
-        if (district != null ? !StringUtils.equalsIgnoreCase(block, location.block) : location.district != null) return false;
-        if (panchayat != null ? !StringUtils.equalsIgnoreCase(panchayat, location.panchayat) : location.panchayat != null) return false;
+        if (block != null ? !StringUtils.equalsIgnoreCase(district, location.district) : location.block != null)
+            return false;
+        if (district != null ? !StringUtils.equalsIgnoreCase(block, location.block) : location.district != null)
+            return false;
+        if (panchayat != null ? !StringUtils.equalsIgnoreCase(panchayat, location.panchayat) : location.panchayat != null)
+            return false;
 
         return true;
     }

@@ -46,4 +46,12 @@ public class AllSMSSentMeasures {
     public void updateAll(List<SMSSentMeasure> smsSentMeasureList) {
         template.saveOrUpdateAll(smsSentMeasureList);
     }
+
+    public List<SMSSentMeasure> findByLocationId(String locationId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(SMSSentMeasure.class);
+        criteria.createAlias("locationDimension", "loc");
+        criteria.add(Restrictions.eq("loc.locationId", locationId));
+
+        return template.findByCriteria(criteria);
+    }
 }

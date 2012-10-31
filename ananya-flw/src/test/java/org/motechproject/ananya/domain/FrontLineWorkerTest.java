@@ -10,7 +10,9 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class FrontLineWorkerTest {
@@ -55,7 +57,7 @@ public class FrontLineWorkerTest {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), null, flwId);
         DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
 
-        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1), lastModified, flwId);
+        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1, null), lastModified, flwId);
 
         assertEquals(lastModified, flw.getLastModified());
     }
@@ -79,14 +81,16 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldAssignTheGivenDateTimeAsLastModifiedTime() {
         DateTime lastModified = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3), lastModified, flwId);
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3, null), lastModified, flwId);
+
         assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 
     @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformation() {
-        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1);
-        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0);
+        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, null);
+        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, null);
         Location defaultLocation = Location.getDefaultLocation();
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
@@ -148,7 +152,7 @@ public class FrontLineWorkerTest {
     }
 
     @Test
-    public void shouldUpdateJobAidUsageByAddingCurrentDuration(){
+    public void shouldUpdateJobAidUsageByAddingCurrentDuration() {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setCurrentJobAidUsage(10);
 

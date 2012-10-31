@@ -31,8 +31,8 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
         String district = "Mandwa";
         String block = "Algarh";
         String panchayat = "Gujarat";
-        LocationDimension initialLocationDimension = new LocationDimension("ZZZ999", district, block, panchayat);
-        allLocationDimensions.add(initialLocationDimension);
+        LocationDimension initialLocationDimension = new LocationDimension("ZZZ999", district, block, panchayat, "VALID");
+        allLocationDimensions.saveOrUpdate(initialLocationDimension);
 
         LocationDimension locationDimension = allLocationDimensions.getFor("ZZZ999");
 
@@ -44,14 +44,14 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
 
     @Test
     public void shouldFilterLocationBasedOnDistrictBlockAndPanchayat() {
-        LocationDimension initialLocationDimension = new LocationDimension("ZZZ100", "d1", "B1", "P1");
-        LocationDimension initialLocationDimension1 = new LocationDimension("ZZZ101", "D1", "B2", "P2");
-        LocationDimension initialLocationDimension2 = new LocationDimension("ZZZ102", "D1", "B2", "P3");
-        LocationDimension initialLocationDimension3 = new LocationDimension("ZZZ103", "D2", "B3", "P4");
-        allLocationDimensions.add(initialLocationDimension);
-        allLocationDimensions.add(initialLocationDimension1);
-        allLocationDimensions.add(initialLocationDimension2);
-        allLocationDimensions.add(initialLocationDimension3);
+        LocationDimension initialLocationDimension = new LocationDimension("ZZZ100", "d1", "B1", "P1", "VALID");
+        LocationDimension initialLocationDimension1 = new LocationDimension("ZZZ101", "D1", "B2", "P2", "VALID");
+        LocationDimension initialLocationDimension2 = new LocationDimension("ZZZ102", "D1", "B2", "P3", "VALID");
+        LocationDimension initialLocationDimension3 = new LocationDimension("ZZZ103", "D2", "B3", "P4", "VALID");
+        allLocationDimensions.saveOrUpdate(initialLocationDimension);
+        allLocationDimensions.saveOrUpdate(initialLocationDimension1);
+        allLocationDimensions.saveOrUpdate(initialLocationDimension2);
+        allLocationDimensions.saveOrUpdate(initialLocationDimension3);
 
         List<LocationDimension> locationDimensions = allLocationDimensions.getFilteredLocationFor("D1", null, null);
         assertEquals(3, locationDimensions.size());
@@ -64,6 +64,18 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
 
         locationDimensions = allLocationDimensions.getFilteredLocationFor("D1", "B2", "P2");
         assertEquals(1, locationDimensions.size());
+    }
+
+    @Test
+    public void shouldDeleteLocationGivenALocationId() {
+        String locationId = "ZZZ100";
+        LocationDimension initialLocationDimension = new LocationDimension(locationId, "d1", "B1", "P1", "VALID");
+        template.save(initialLocationDimension);
+
+        allLocationDimensions.delete(locationId);
+
+        List<LocationDimension> locationDimensions = template.loadAll(LocationDimension.class);
+        assertEquals(0, locationDimensions.size());
     }
 
     @After

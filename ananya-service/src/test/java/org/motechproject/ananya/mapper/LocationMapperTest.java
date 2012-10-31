@@ -16,7 +16,7 @@ public class LocationMapperTest {
         String district = "d1";
         String block = "b1";
         String panchayat = "p1";
-        LocationDimension locationDimension = new LocationDimension(locationId, district, block, panchayat);
+        LocationDimension locationDimension = new LocationDimension(locationId, district, block, panchayat, "VALID");
 
         LocationResponse locationResponse = LocationMapper.mapFrom(locationDimension);
 

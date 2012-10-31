@@ -110,4 +110,13 @@ public class JobAidContentMeasureService {
         }
         allJobAidContentMeasures.updateAll(jobAidContentMeasureList);
     }
+
+    public void updateLocation(String oldLocationId, String newLocationId) {
+        LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
+        List<JobAidContentMeasure> jobAidContentMeasures = allJobAidContentMeasures.findByLocationId(oldLocationId);
+        for (JobAidContentMeasure jobAidContentMeasure : jobAidContentMeasures) {
+            jobAidContentMeasure.setLocationDimension(newLocation);
+        }
+        allJobAidContentMeasures.updateAll(jobAidContentMeasures);
+    }
 }

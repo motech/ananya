@@ -349,6 +349,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
         operator = frontLineWorker.getOperator();
         circle = frontLineWorker.getCircle();
+        locationId = frontLineWorker.getLocationId();
         return this;
     }
 

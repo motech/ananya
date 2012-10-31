@@ -9,14 +9,16 @@ import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
-import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class RegistrationMeasureService {
@@ -103,11 +105,19 @@ public class RegistrationMeasureService {
                 frontLineWorker.getFlwId());
 
         RegistrationMeasure registrationMeasure = flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
-                                                                            : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);
+                : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);
         allRegistrationMeasures.createOrUpdate(registrationMeasure);
 
         log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
                 "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");
     }
 
+    public void updateLocation(String oldLocationId, String newLocationId) {
+        LocationDimension newLocation = allLocationDimensions.getFor(newLocationId);
+        List<RegistrationMeasure> registrationMeasureList = allRegistrationMeasures.findByLocationId(oldLocationId);
+        for (RegistrationMeasure registrationMeasure : registrationMeasureList) {
+            registrationMeasure.setLocationDimension(newLocation);
+        }
+        allRegistrationMeasures.updateAll(registrationMeasureList);
+    }
 }

@@ -55,4 +55,12 @@ public class AllCourseItemMeasures {
     public void updateAll(List<CourseItemMeasure> courseItemMeasures) {
         template.saveOrUpdateAll(courseItemMeasures);
     }
+
+    public List<CourseItemMeasure> findByLocationId(String locationId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CourseItemMeasure.class);
+        criteria.createAlias("locationDimension", "loc");
+        criteria.add(Restrictions.eq("loc.locationId", locationId));
+
+        return template.findByCriteria(criteria);
+    }
 }

@@ -81,11 +81,11 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetFilteredLocationsList() {
-        allLocationDimensions.add(new LocationDimension("1", "D1", "B1", "P1"));
-        allLocationDimensions.add(new LocationDimension("2", "D1", "B2", "P2"));
-        allLocationDimensions.add(new LocationDimension("3", "D1", "B2", "P3"));
-        allLocationDimensions.add(new LocationDimension("4", "D2", "B3", "P5"));
-        allLocationDimensions.add(new LocationDimension("5", "D2", "B4", "P4"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("1", "D1", "B1", "P1", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("2", "D1", "B2", "P2", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("3", "D1", "B2", "P3", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("4", "D2", "B3", "P5", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("5", "D2", "B4", "P4", "VALID"));
         when(request.getParameter("district")).thenReturn("D1");
         when(request.getParameter("block")).thenReturn("B2");
         when(request.getParameter("panchayat")).thenReturn(null);

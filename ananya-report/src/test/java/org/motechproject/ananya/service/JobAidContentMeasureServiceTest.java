@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class JobAidContentMeasureServiceTest {
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         frontLineWorkerDimension.setId(flwId);
 
-        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
         timeDimension = new TimeDimension();
         jobAidContentDimension = new JobAidContentDimension();
         jobAidContentDimension.setDuration(100);
@@ -106,7 +107,7 @@ public class JobAidContentMeasureServiceTest {
         assertEquals(jobAidContentDimension, jobAidContentMeasure.getJobAidContentDimension());
         assertEquals(locationDimension, jobAidContentMeasure.getLocationDimension());
         assertEquals(callId, jobAidContentMeasure.getCallId());
-        assertEquals(30, (int)jobAidContentMeasure.getPercentage());
+        assertEquals(30, (int) jobAidContentMeasure.getPercentage());
         assertEquals(duration, jobAidContentMeasure.getDuration());
     }
 
@@ -123,11 +124,11 @@ public class JobAidContentMeasureServiceTest {
     }
 
     @Test
-    public void shouldNotCreateJobAidContentMeasureWhenAudioTrackerLogIsNotPresent(){
+    public void shouldNotCreateJobAidContentMeasureWhenAudioTrackerLogIsNotPresent() {
         String callId = "12345";
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(null);
         jobAidContentMeasureService.createFor(callId);
-        verify(allJobAidContentMeasures,never()).add(any(JobAidContentMeasure.class));
+        verify(allJobAidContentMeasures, never()).add(any(JobAidContentMeasure.class));
     }
 
     @Test
@@ -148,7 +149,8 @@ public class JobAidContentMeasureServiceTest {
         String location_id = "location_id";
         final JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure();
         ArrayList<JobAidContentMeasure> jobAidContentMeasures = new ArrayList<JobAidContentMeasure>() {{
-            add(jobAidContentMeasure); }};
+            add(jobAidContentMeasure);
+        }};
         LocationDimension expectedLocationDimension = new LocationDimension();
         when(locationDimensionService.getFor(location_id)).thenReturn(expectedLocationDimension);
         when(allJobAidContentMeasures.findByCallerId(callerId)).thenReturn(jobAidContentMeasures);
@@ -158,5 +160,22 @@ public class JobAidContentMeasureServiceTest {
         verify(allJobAidContentMeasures).updateAll(captor.capture());
         List<JobAidContentMeasure> actualJobAidContentMeasure = captor.getValue();
         assertEquals(expectedLocationDimension, actualJobAidContentMeasure.get(0).getLocationDimension());
+    }
+
+    @Test
+    public void shouldUpdateLocation() {
+        String newLocationId = "newLocationId";
+        String oldLocationId = "oldLocationId";
+        ArrayList<JobAidContentMeasure> jobAidContentMeasures = new ArrayList<>();
+        jobAidContentMeasures.add(new JobAidContentMeasure(null, null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, DateTime.now(), null, null));
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+        when(allJobAidContentMeasures.findByLocationId(oldLocationId)).thenReturn(jobAidContentMeasures);
+
+        jobAidContentMeasureService.updateLocation(oldLocationId, newLocationId);
+
+        verify(allJobAidContentMeasures).updateAll(captor.capture());
+        List<JobAidContentMeasure> jobAidContentMeasureList = captor.getValue();
+        Assert.assertEquals(1, jobAidContentMeasureList.size());
+        Assert.assertEquals(newLocationId, jobAidContentMeasureList.get(0).getLocationDimension().getLocationId());
     }
 }

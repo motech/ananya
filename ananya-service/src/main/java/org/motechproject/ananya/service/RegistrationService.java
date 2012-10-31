@@ -98,6 +98,15 @@ public class RegistrationService {
     }
 
     @Transactional
+    public void updateAllLocationReferences(String oldLocationId, String newLocationId) {
+        registrationMeasureService.updateLocation(oldLocationId, newLocationId);
+        courseItemMeasureService.updateLocation(oldLocationId, newLocationId);
+        callDurationMeasureService.updateLocation(oldLocationId, newLocationId);
+        jobAidContentMeasureService.updateLocation(oldLocationId, newLocationId);
+        smsSentMeasureService.updateLocation(oldLocationId, newLocationId);
+    }
+
+    @Transactional
     private RegistrationResponse registerFlw(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
         Location location = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());

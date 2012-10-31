@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.RegistrationLog;
@@ -15,15 +16,17 @@ import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RegistrationMeasureServiceTest {
@@ -41,6 +44,10 @@ public class RegistrationMeasureServiceTest {
     private AllTimeDimensions allTimeDimensions;
     @Mock
     private RegistrationLogService registrationLogService;
+    @Mock
+    private LocationDimensionService locationDimensionService;
+    @Captor
+    private ArgumentCaptor<List<RegistrationMeasure>> registrationMeasuresCaptor;
 
     @Before
     public void setUp() {
@@ -59,10 +66,10 @@ public class RegistrationMeasureServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
-        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
+        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat", "VALID");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId());
         TimeDimension timeDimension = new TimeDimension(registeredDate);
-        RegistrationLog registrationLog = new RegistrationLog(callId,callerId, operator, circle);
+        RegistrationLog registrationLog = new RegistrationLog(callId, callerId, operator, circle);
 
         when(registrationLogService.getRegistrationLogFor(callId)).thenReturn(registrationLog);
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
@@ -95,8 +102,8 @@ public class RegistrationMeasureServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
-        LocationDimension oldLocationDimension = new LocationDimension("oldid", "olddistrict", "oldblock", "oldpanchayat");
-        LocationDimension newLocationDimension = new LocationDimension("id", "district", "block", "panchayat");
+        LocationDimension oldLocationDimension = new LocationDimension("oldid", "olddistrict", "oldblock", "oldpanchayat", "VALID");
+        LocationDimension newLocationDimension = new LocationDimension("id", "district", "block", "panchayat", "VALID");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId());
         frontLineWorkerDimension.setId(flwId);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
@@ -124,5 +131,22 @@ public class RegistrationMeasureServiceTest {
         registrationMeasureService.createFor(callId);
 
         verify(frontLineWorkerService, never()).findByCallerId(any(String.class));
+    }
+
+    @Test
+    public void shouldUpdateLocation() {
+        String oldLocationId = "oldLocationId";
+        ArrayList<RegistrationMeasure> registrationMeasures = new ArrayList<>();
+        registrationMeasures.add(new RegistrationMeasure(null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null));
+        when(allRegistrationMeasures.findByLocationId(oldLocationId)).thenReturn(registrationMeasures);
+        String newLocationId = "newLocationId";
+        when(allLocationDimensions.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+
+        registrationMeasureService.updateLocation(oldLocationId, newLocationId);
+
+        verify(allRegistrationMeasures).updateAll(registrationMeasuresCaptor.capture());
+        List<RegistrationMeasure> actualRegistrationMeauresSavedToDb = registrationMeasuresCaptor.getValue();
+        assertEquals(1, actualRegistrationMeauresSavedToDb.size());
+        assertEquals(newLocationId, actualRegistrationMeauresSavedToDb.get(0).getLocationDimension().getLocationId());
     }
 }

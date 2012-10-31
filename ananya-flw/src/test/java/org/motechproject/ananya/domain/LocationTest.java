@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 public class LocationTest {
     @Test
     public void shouldGetTheExternalIdBasedOnTheCodes() {
-        Location location = new Location("Dis", "Blo", "Pan", 10, 9, 1);
+        Location location = new Location("Dis", "Blo", "Pan", 10, 9, 1, null);
 
         String externalId = location.getExternalId();
 
@@ -19,7 +19,7 @@ public class LocationTest {
 
     @Test
     public void shouldTellThatDetailsAreMissingIfDistrictIsEmpty() {
-        Location location = new Location("", "Blo", "Pan", 0, 0, 0);
+        Location location = new Location("", "Blo", "Pan", 0, 0, 0, null);
 
         boolean missingDetails = location.isMissingDetails();
 
@@ -28,7 +28,7 @@ public class LocationTest {
 
     @Test
     public void shouldTellThatDetailsAreMissingIfBlockIsEmpty() {
-        Location location = new Location("Dis", " ", "Pan", 0, 0, 0);
+        Location location = new Location("Dis", " ", "Pan", 0, 0, 0, null);
 
         boolean missingDetails = location.isMissingDetails();
 
@@ -37,7 +37,7 @@ public class LocationTest {
 
     @Test
     public void shouldTellThatDetailsAreMissingIfPanchayatIsEmpty() {
-        Location location = new Location("Dis", "Blo", "", 0, 0, 0);
+        Location location = new Location("Dis", "Blo", "", 0, 0, 0, null);
 
         boolean missingDetails = location.isMissingDetails();
 
@@ -46,7 +46,7 @@ public class LocationTest {
 
     @Test
     public void shouldTellThatNoneOfTheDetailsAreMissingIfAllTheThreeFieldsAreFilled() {
-        Location location = new Location("Dis", "Blo", "Pan", 0, 0, 0);
+        Location location = new Location("Dis", "Blo", "Pan", 0, 0, 0, null);
 
         boolean missingDetails = location.isMissingDetails();
 

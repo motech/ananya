@@ -106,14 +106,14 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         DateTime jobAidStartTime = now.plusSeconds(5);
         DateTime jobAidEndTime = now.plusSeconds(15);
 
-        Location location = new Location("", "", "", 0, 0, 0);
+        Location location = new Location("", "", "", 0, 0, 0, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
 
-        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
-        allLocationDimensions.add(locationDimension);
+        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "VALID");
+        allLocationDimensions.saveOrUpdate(locationDimension);
 
         CallLog callLog = new CallLog(callId, callerId.toString(), calledNumber);
         callLog.addItem(new CallLogItem(CallFlowType.CALL, callStartTime, callEndTime));

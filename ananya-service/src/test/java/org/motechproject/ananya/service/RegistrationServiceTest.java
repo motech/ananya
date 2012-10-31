@@ -26,9 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -68,7 +66,7 @@ public class RegistrationServiceTest {
     public void shouldSaveNewFLWAndPublishForReport() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -85,7 +83,7 @@ public class RegistrationServiceTest {
     public void shouldUpdateAllMeasuresForExistingFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -147,7 +145,7 @@ public class RegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         String designation = "invalid_designation";
-        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId.toString());
@@ -171,7 +169,7 @@ public class RegistrationServiceTest {
         String designation = Designation.AWW.name();
         UUID flwId1 = UUID.randomUUID();
         UUID flwId2 = UUID.randomUUID();
-        Location location = new Location("district", "block", "village", 1, 1, 1);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId1.toString()));
@@ -293,5 +291,19 @@ public class RegistrationServiceTest {
 
         verifyZeroInteractions(courseItemMeasureService);
         assertEquals(1, filteredFLW.size());
+    }
+
+    @Test
+    public void shouldUpdateLocationInAllMeasures() {
+        String newLocationId = "newLocationId";
+        String oldLocationId = "oldLocationId";
+
+        registrationService.updateAllLocationReferences(oldLocationId, newLocationId);
+
+        verify(callDurationMeasureService).updateLocation(oldLocationId, newLocationId);
+        verify(jobAidContentMeasureService).updateLocation(oldLocationId, newLocationId);
+        verify(courseItemMeasureService).updateLocation(oldLocationId, newLocationId);
+        verify(smsSentMeasureService).updateLocation(oldLocationId, newLocationId);
+        verify(registrationMeasureService).updateLocation(oldLocationId, newLocationId);
     }
 }

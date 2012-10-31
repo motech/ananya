@@ -28,7 +28,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldAddAndRetrieveRecord() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "village", 2, 3, 4);
+        Location location = new Location("district", "block", "village", 2, 3, 4, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
@@ -40,6 +40,24 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         assertEquals("S01D002B003V004", frontLineWorkerFromDb.getLocationId());
         assertEquals(flwId, frontLineWorkerFromDb.getFlwId());
         assertTrue(frontLineWorkerFromDb.isAnganwadi());
+    }
+
+    @Test
+    public void shouldFetchFLWsByLocationId() {
+        String msisdn = "919988776655";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "village", 2, 3, 4, null);
+        Location location1 = new Location("distr1ict", "bloc1k", "vi1llage", 2, 3, 5, null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", "name", designation, location1, null, UUID.randomUUID());
+        allFrontLineWorkers.add(frontLineWorker);
+        allFrontLineWorkers.add(frontLineWorker1);
+        markForDeletion(frontLineWorker);
+
+        List<FrontLineWorker> flwFromDb = allFrontLineWorkers.findByLocationId(location.getExternalId());
+
+        assertEquals(1, flwFromDb.size());
+        assertEquals(frontLineWorker.getMsisdn(), flwFromDb.get(0).getMsisdn());
     }
 
     @Test

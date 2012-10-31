@@ -86,4 +86,13 @@ public class SMSSentMeasureService {
         }
         allSMSSentMeasures.updateAll(smsSentMeasureList);
     }
+
+    public void updateLocation(String oldLocationId, String newLocationId) {
+        LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
+        List<SMSSentMeasure> smsSentMeasureList = allSMSSentMeasures.findByLocationId(oldLocationId);
+        for(SMSSentMeasure smsSentMeasure : smsSentMeasureList) {
+            smsSentMeasure.setLocationDimension(newLocation);
+        }
+        allSMSSentMeasures.updateAll(smsSentMeasureList);
+    }
 }

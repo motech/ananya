@@ -24,8 +24,8 @@ public class AllLocationDimensions {
         return (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
     }
 
-    public LocationDimension add(LocationDimension locationDimension) {
-        template.save(locationDimension);
+    public LocationDimension saveOrUpdate(LocationDimension locationDimension) {
+        template.saveOrUpdate(locationDimension);
         return locationDimension;
     }
 
@@ -39,5 +39,10 @@ public class AllLocationDimensions {
             detachedCriteria.add(Restrictions.eq("panchayat", panchayat).ignoreCase());
 
         return template.findByCriteria(detachedCriteria);
+    }
+
+    public void delete(String locationCode) {
+        LocationDimension locationDimension = getFor(locationCode);
+        template.delete(locationDimension);
     }
 }

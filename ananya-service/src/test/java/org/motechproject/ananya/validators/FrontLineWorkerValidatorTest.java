@@ -71,7 +71,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldBulkValidateFLWsAndThrowExceptionsIfThereAreDuplicates() {
         String msisdn = "2345678901";
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwId);
-        Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
+        Map<String, Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
         msisdnOccurrenceMap.put(msisdn, 2);
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), msisdnOccurrenceMap);
 
@@ -83,7 +83,7 @@ public class FrontLineWorkerValidatorTest {
     public void shouldBulkValidateFLWsAndPassValidationIfThereAreNoErrors() {
         String msisdn = "2345678901";
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest(), null, flwId);
-        Map<String,Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
+        Map<String, Integer> msisdnOccurrenceMap = new HashMap<String, Integer>();
         msisdnOccurrenceMap.put(msisdn, 1);
 
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, new Location(), msisdnOccurrenceMap);

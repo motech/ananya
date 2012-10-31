@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.dimension;
 
+import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class LocationDimensionService {
 
     @Transactional
     public void add(LocationDimension locationDimension) {
-        allLocationDimensions.add(locationDimension);
+        allLocationDimensions.saveOrUpdate(locationDimension);
     }
 
     @Cacheable(value = "locationSearchCache")
@@ -34,5 +35,17 @@ public class LocationDimensionService {
 
     public List<LocationDimension> getFilteredLocations(String district, String block, String panchayat) {
         return allLocationDimensions.getFilteredLocationFor(district, block, panchayat);
+    }
+
+    @Transactional
+    public void delete(String locationCode) {
+        allLocationDimensions.delete(locationCode);
+    }
+
+    @Transactional
+    public void updateStatus(String locationCode, LocationStatus status) {
+        LocationDimension locationDimension = allLocationDimensions.getFor(locationCode);
+        locationDimension.setStatus(status.name());
+        allLocationDimensions.saveOrUpdate(locationDimension);
     }
 }

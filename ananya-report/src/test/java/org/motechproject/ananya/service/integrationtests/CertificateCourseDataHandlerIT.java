@@ -129,7 +129,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
-        Location location = new Location("", "", "", 0, 0, 0);
+        Location location = new Location("", "", "", 0, 0, 0, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator(operatorName);
@@ -137,8 +137,8 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
         allOperators.add(new Operator(operatorName, 39*60*1000, 60000));
 
-        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
-        allLocationDimensions.add(locationDimension);
+        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "VALID");
+        allLocationDimensions.saveOrUpdate(locationDimension);
         TimeDimension callStartTimeDimension = allTimeDimensions.addOrUpdate(callStartTime);
 
         CallLog callLog = new CallLog(callId, callerId, calledNumber);

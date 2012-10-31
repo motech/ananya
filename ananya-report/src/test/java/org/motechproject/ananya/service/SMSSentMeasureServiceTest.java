@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -65,7 +67,7 @@ public class SMSSentMeasureServiceTest {
         String flwId = "77abcd";
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID());
         frontLineWorkerDimension.setId(1);
-        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
@@ -98,7 +100,7 @@ public class SMSSentMeasureServiceTest {
 
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwd_id);
-        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         SMSReference smsReference = new SMSReference(callerId, flwId);
 
@@ -139,5 +141,25 @@ public class SMSSentMeasureServiceTest {
         verify(allSMSSentMeasures).updateAll(captor.capture());
         List<SMSSentMeasure> actualSMSSentMeasures = captor.getValue();
         Assert.assertEquals(expectedLocationDimension, actualSMSSentMeasures.get(0).getLocationDimension());
+    }
+
+    @Test
+    public void shouldUpdateLocationForAllSMSSentMeasures() {
+        String newLocationId = "newLocationId";
+        String oldLocationId = "oldLocationId";
+        LocationDimension newLocation = new LocationDimension(newLocationId, "D2", "B2", "P2", "VALID");
+        ArrayList<SMSSentMeasure> smsSentMeasures = new ArrayList<>();
+        SMSSentMeasure smsSentMeasure = new SMSSentMeasure();
+        smsSentMeasure.setLocationDimension(new LocationDimension(oldLocationId, "D1", "B1", "P1", "VALID"));
+        smsSentMeasures.add(smsSentMeasure);
+        when(allSMSSentMeasures.findByLocationId(oldLocationId)).thenReturn(smsSentMeasures);
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(newLocation);
+
+        smsSentMeasureService.updateLocation(oldLocationId, newLocationId);
+
+        verify(allSMSSentMeasures).updateAll(captor.capture());
+        List<SMSSentMeasure> actualSMSSentMeasures = captor.getValue();
+        assertEquals(1, actualSMSSentMeasures.size());
+        assertEquals(newLocation, actualSMSSentMeasures.get(0).getLocationDimension());
     }
 }

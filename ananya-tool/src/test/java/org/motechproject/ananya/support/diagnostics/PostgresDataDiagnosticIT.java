@@ -119,7 +119,7 @@ public class PostgresDataDiagnosticIT {
         long calledNumber = 57711L;
 
         Location defaultLocation = Location.getDefaultLocation();
-        LocationDimension locationDimension = allLocationDimensions.add(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat()));
+        LocationDimension locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat(), "VALID"));
 
         TimeDimension todayTimeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension yesterdayTimeDimension = allTimeDimensions.addOrUpdate(yesterday);

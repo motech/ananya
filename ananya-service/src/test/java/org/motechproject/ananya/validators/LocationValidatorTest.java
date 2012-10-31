@@ -14,22 +14,22 @@ public class LocationValidatorTest {
     public void shouldFailValidationIfOneOfDistrictBlockOrPanchayatIsBlank() {
         LocationValidator locationValidator = new LocationValidator(new LocationList(new ArrayList<Location>()));
 
-        LocationValidationResponse validationResponse = locationValidator.validate(new Location("", "B1", "P1", 0, 0, 0));
+        LocationValidationResponse validationResponse = locationValidator.validate(new Location("", "B1", "P1", 0, 0, 0, null));
 
         assertFalse(validationResponse.isValid());
         assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
-        validationResponse = locationValidator.validate(new Location("D1", null, "P1", 0, 0, 0));
+        validationResponse = locationValidator.validate(new Location("D1", null, "P1", 0, 0, 0, null));
 
         assertFalse(validationResponse.isValid());
         assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
-        validationResponse = locationValidator.validate(new Location("D1", "B1", "", 0, 0, 0));
+        validationResponse = locationValidator.validate(new Location("D1", "B1", "", 0, 0, 0, null));
 
         assertFalse(validationResponse.isValid());
         assertEquals("[One or more of District, Block, Panchayat details are missing]", validationResponse.getMessage());
 
-        validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0));
+        validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0, null));
 
         assertTrue(validationResponse.isValid());
     }
@@ -37,10 +37,10 @@ public class LocationValidatorTest {
     @Test
     public void shouldFailValidationIfLocationIsAlreadyPresent() {
         ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "P1", 0, 0, 0));
+        locations.add(new Location("D1", "B1", "P1", 0, 0, 0, null));
         LocationValidator locationValidator = new LocationValidator(new LocationList(locations));
 
-        LocationValidationResponse validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0));
+        LocationValidationResponse validationResponse = locationValidator.validate(new Location("D1", "B1", "P1", 0, 0, 0, null));
 
         assertFalse(validationResponse.isValid());
         assertEquals("[The location is already present]", validationResponse.getMessage());

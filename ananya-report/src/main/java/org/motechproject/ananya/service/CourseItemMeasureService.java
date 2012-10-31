@@ -40,4 +40,13 @@ public class CourseItemMeasureService {
         }
         allCourseItemMeasures.updateAll(courseItemMeasures);
     }
+
+    public void updateLocation(String oldLocationId, String newLocationId) {
+        LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
+        List<CourseItemMeasure> courseItemMeasureList = allCourseItemMeasures.findByLocationId(oldLocationId);
+        for(CourseItemMeasure courseItemMeasure : courseItemMeasureList) {
+            courseItemMeasure.setLocationDimension(newLocation);
+        }
+        allCourseItemMeasures.updateAll(courseItemMeasureList);
+    }
 }

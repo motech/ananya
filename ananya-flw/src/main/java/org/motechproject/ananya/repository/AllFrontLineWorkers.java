@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +29,13 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
         if (workers == null || workers.isEmpty()) return null;
         return workers.get(0);
+    }
+
+    @GenerateView
+    public List<FrontLineWorker> findByLocationId(String locationId) {
+        ViewQuery viewQuery = createQuery("by_locationId").key(locationId).includeDocs(true);
+        List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
+        return workers == null ? new ArrayList<FrontLineWorker>() : workers;
     }
 
     public List<FrontLineWorker> getAllForMsisdn(String msisdn) {

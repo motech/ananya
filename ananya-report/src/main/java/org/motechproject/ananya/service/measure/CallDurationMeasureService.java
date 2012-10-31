@@ -107,6 +107,15 @@ public class CallDurationMeasureService {
         allCallDurationMeasures.updateAll(callDurationMeasureList);
     }
 
+    public void updateLocation(String oldLocationId, String newLocationId) {
+        LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
+        List<CallDurationMeasure> callDurationMeasureList = allCallDurationMeasures.findByLocationId(oldLocationId);
+        for (CallDurationMeasure callDurationMeasure : callDurationMeasureList) {
+            callDurationMeasure.setLocationDimension(newLocation);
+        }
+        allCallDurationMeasures.updateAll(callDurationMeasureList);
+    }
+
     public CallDetailsResponse getCallDetails(String msisdn) {
         Long msisdnInLong = Long.valueOf(msisdn);
         List<CallUsageDetails> callUsageDetailsList = allCallDurationMeasures.getCallUsageDetailsByMonthAndYear(msisdnInLong);

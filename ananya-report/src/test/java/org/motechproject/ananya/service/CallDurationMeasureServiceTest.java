@@ -118,7 +118,7 @@ public class CallDurationMeasureServiceTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         String calledNumber = "321";
-        LocationDimension locationDimension = new LocationDimension("", "", "", "");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID());
         frontLineWorkerDimension.setId(flwId);
@@ -241,5 +241,22 @@ public class CallDurationMeasureServiceTest {
         CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
 
         assertEquals(callDurationMeasures, callDetails.getRecentCertificateCourseCallDetailsList());
+    }
+
+    @Test
+    public void shouldUpdateCallDurationMeasuresWithNewLocation() {
+        String newLocationId = "newLocationId";
+        String oldLocationId = "oldLocationId";
+        ArrayList<CallDurationMeasure> callDurationMeasures = new ArrayList<>();
+        callDurationMeasures.add(new CallDurationMeasure(null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, null, 10, DateTime.now(), DateTime.now(), null));
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+        when(allCallDurationMeasures.findByLocationId(oldLocationId)).thenReturn(callDurationMeasures);
+
+        callDurationMeasureService.updateLocation(oldLocationId, newLocationId);
+
+        verify(allCallDurationMeasures).updateAll(captor.capture());
+        List<CallDurationMeasure> callDurationMeasureList = captor.getValue();
+        assertEquals(1, callDurationMeasureList.size());
+        assertEquals(newLocationId, callDurationMeasureList.get(0).getLocationDimension().getLocationId());
     }
 }

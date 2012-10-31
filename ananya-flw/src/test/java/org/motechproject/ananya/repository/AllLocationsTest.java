@@ -13,11 +13,11 @@ public class AllLocationsTest extends SpringBaseIT {
 
     @Test
     public void shouldGetLocationByDistrictBlockPanchayat() {
-        Location location1 = new Location("D1", "B1", "P1", 11, 12, 13);
+        Location location1 = new Location("D1", "B1", "P1", 11, 12, 13, null);
         allLocations.add(location1);
         markForDeletion(location1);
 
-        Location location2 = new Location("D2", "B2", "P2", 21, 22, 23);
+        Location location2 = new Location("D2", "B2", "P2", 21, 22, 23, null);
         allLocations.add(location2);
         markForDeletion(location2);
 
@@ -28,7 +28,7 @@ public class AllLocationsTest extends SpringBaseIT {
 
     @Test
     public void shouldGetLocationByDistrictBlockPanchayatAndShouldBeCaseInsensitive() {
-        Location location1 = new Location("D1", "B1", "p1", 11, 12, 13);
+        Location location1 = new Location("D1", "B1", "p1", 11, 12, 13, null);
         allLocations.add(location1);
         markForDeletion(location1);
 

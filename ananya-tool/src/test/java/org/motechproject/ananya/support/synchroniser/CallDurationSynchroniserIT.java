@@ -91,7 +91,7 @@ public class CallDurationSynchroniserIT {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId),
                 "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID());
         template.save(frontLineWorkerDimension);
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         template.save(timeDimension);

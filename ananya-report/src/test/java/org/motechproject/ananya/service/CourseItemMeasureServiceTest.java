@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,14 +30,19 @@ public class CourseItemMeasureServiceTest {
     @Captor
     private ArgumentCaptor<List<CourseItemMeasure>> captor;
 
+    @Before
+    public void setUp() {
+        courseItemMeasureService = new CourseItemMeasureService(allCourseItemMeasures, locationDimensionService);
+    }
+
     @Test
     public void shouldUpdateLocationIdForAGivenCallerID() {
         long callerId = 1234L;
         String location_id = "location_id";
-        courseItemMeasureService = new CourseItemMeasureService(allCourseItemMeasures, locationDimensionService);
         final CourseItemMeasure courseItemMeasure = new CourseItemMeasure();
         ArrayList<CourseItemMeasure> courseItemMeasures = new ArrayList<CourseItemMeasure>() {{
-            add(courseItemMeasure); }};
+            add(courseItemMeasure);
+        }};
         LocationDimension expectedLocationDimension = new LocationDimension();
         when(locationDimensionService.getFor(location_id)).thenReturn(expectedLocationDimension);
         when(allCourseItemMeasures.findByCallerId(callerId)).thenReturn(courseItemMeasures);
@@ -46,5 +52,25 @@ public class CourseItemMeasureServiceTest {
         verify(allCourseItemMeasures).updateAll(captor.capture());
         List<CourseItemMeasure> actualCourseItemMeasure = captor.getValue();
         assertEquals(expectedLocationDimension, actualCourseItemMeasure.get(0).getLocationDimension());
+    }
+
+    @Test
+    public void shouldUpdateLocationForAllCourseItemMeasures() {
+        String newLocationId = "newLocationId";
+        String oldLocationId = "oldLocationId";
+        LocationDimension newLocation = new LocationDimension(newLocationId, "D2", "B2", "P2", "VALID");
+        ArrayList<CourseItemMeasure> courseItemMeasures = new ArrayList<>();
+        CourseItemMeasure courseItemMeasure = new CourseItemMeasure();
+        courseItemMeasure.setLocationDimension(new LocationDimension(oldLocationId, "D1", "B1", "P1", "VALID"));
+        courseItemMeasures.add(courseItemMeasure);
+        when(allCourseItemMeasures.findByLocationId(oldLocationId)).thenReturn(courseItemMeasures);
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(newLocation);
+
+        courseItemMeasureService.updateLocation(oldLocationId, newLocationId);
+
+        verify(allCourseItemMeasures).updateAll(captor.capture());
+        List<CourseItemMeasure> actualCourseItemMeasures = captor.getValue();
+        assertEquals(1, actualCourseItemMeasures.size());
+        assertEquals(newLocation, actualCourseItemMeasures.get(0).getLocationDimension());
     }
 }

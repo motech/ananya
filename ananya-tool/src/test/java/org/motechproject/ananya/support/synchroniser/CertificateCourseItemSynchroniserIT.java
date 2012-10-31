@@ -82,7 +82,7 @@ public class CertificateCourseItemSynchroniserIT {
         String contentName = "Chapter4";
         CourseItemType courseItemType = CourseItemType.CHAPTER;
 
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "circle", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID());
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);

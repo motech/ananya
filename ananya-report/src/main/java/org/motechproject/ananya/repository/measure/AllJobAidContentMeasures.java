@@ -55,4 +55,12 @@ public class AllJobAidContentMeasures {
     public void updateAll(List<JobAidContentMeasure> jobAidContentMeasureList) {
         template.saveOrUpdateAll(jobAidContentMeasureList);
     }
+
+    public List<JobAidContentMeasure> findByLocationId(String locationId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(JobAidContentMeasure.class);
+        criteria.createAlias("locationDimension", "loc");
+        criteria.add(Restrictions.eq("loc.locationId", locationId));
+
+        return template.findByCriteria(criteria);
+    }
 }

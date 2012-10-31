@@ -30,7 +30,7 @@ public class LocationRegistrationService {
 
     public void loadDefaultLocation() {
         Location location = Location.getDefaultLocation();
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID");
         locationService.add(location);
         locationDimensionService.add(locationDimension);
     }
@@ -55,7 +55,7 @@ public class LocationRegistrationService {
 
     public List<LocationResponse> getFilteredLocations(LocationRequest request) {
         List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(request.getDistrict(), request.getBlock(), request.getPanchayat());
-        List<LocationResponse> locationResponses = new ArrayList<LocationResponse>();
+        List<LocationResponse> locationResponses = new ArrayList<>();
         for (LocationDimension locationDimension : filteredLocations) {
             locationResponses.add(LocationMapper.mapFrom(locationDimension));
         }
@@ -74,7 +74,7 @@ public class LocationRegistrationService {
     private void registerDefaultLocationForDistrictBlock(LocationList locationList) {
         List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
         for (Location location : uniqueDistrictBlockLocations) {
-            LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
+            LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID");
             locationService.add(location);
             locationDimensionService.add(locationDimension);
         }
@@ -82,7 +82,7 @@ public class LocationRegistrationService {
 
     private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
         LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
-        Location location = new Location(district, block, panchayat, 0, 0, 0);
+        Location location = new Location(district, block, panchayat, 0, 0, 0, null);
         LocationValidator locationValidator = new LocationValidator(locationList);
         LocationValidationResponse validationResponse = locationValidator.validate(location);
         if(validationResponse.isInValid())
@@ -95,7 +95,7 @@ public class LocationRegistrationService {
 
     private void saveNewLocation(Location currentLocation, LocationList locationList) {
         Location location = createNewLocation(currentLocation, locationList);
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat());
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID");
 
         locationService.add(location);
         locationDimensionService.add(locationDimension);
@@ -106,7 +106,7 @@ public class LocationRegistrationService {
         Integer districtCodeFor = locationList.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locationList.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locationList.getPanchayatCodeFor(currentLocation);
-        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor);
+        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor, null);
         return locationToSave;
     }
 }

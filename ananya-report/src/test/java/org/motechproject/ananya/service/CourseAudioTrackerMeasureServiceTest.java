@@ -59,7 +59,7 @@ public class CourseAudioTrackerMeasureServiceTest {
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         frontLineWorkerDimension.setId(flwId);
 
-        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat");
+        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
         timeDimension = new TimeDimension();
 
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);

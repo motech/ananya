@@ -143,4 +143,12 @@ public class AllCallDurationMeasures {
         }
         return callUsageDetailsList;
     }
+
+    public List<CallDurationMeasure> findByLocationId(String locationId) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CallDurationMeasure.class);
+        criteria.createAlias("locationDimension", "loc");
+        criteria.add(Restrictions.eq("loc.locationId", locationId));
+
+        return template.findByCriteria(criteria);
+    }
 }

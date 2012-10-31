@@ -24,32 +24,24 @@ public class LocationDimension {
     @Column(name = "panchayat")
     private String panchayat;
 
+    @Column(name = "status")
+    private String status;
+
     public static final String FIND_BY_LOCATION_ID = "find.by.location.id";
 
     public LocationDimension() {
     }
 
-    public LocationDimension(String locationId, String district, String block, String panchayat) {
+    public LocationDimension(String locationId, String district, String block, String panchayat, String status) {
         this.locationId = locationId;
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
-    }
-
-    public LocationDimension cloneValues(LocationDimension locationDimension) {
-        this.locationId = locationDimension.locationId;
-        this.district = locationDimension.district;
-        this.block = locationDimension.block;
-        this.panchayat = locationDimension.panchayat;
-        return this;
+        this.status = status;
     }
 
     public Integer getId() {
         return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getLocationId() {
@@ -60,24 +52,20 @@ public class LocationDimension {
         return district;
     }
 
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
     public String getBlock() {
         return block;
-    }
-
-    public void setBlock(String block) {
-        this.block = block;
     }
 
     public String getPanchayat() {
         return panchayat;
     }
 
-    public void setPanchayat(String panchayat) {
-        this.panchayat = panchayat;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

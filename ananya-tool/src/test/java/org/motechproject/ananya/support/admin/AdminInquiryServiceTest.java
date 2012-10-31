@@ -64,7 +64,7 @@ public class AdminInquiryServiceTest {
         twoDaysAgo = now.minusDays(2);
         timeDimensionTwoDaysAgo = allTimeDimensions.addOrUpdate(twoDaysAgo);
         timeDimensionNow = allTimeDimensions.addOrUpdate(now);
-        locationDimension = allLocationDimensions.add(new LocationDimension("S00D00V01", "light", "my", "fire"));
+        locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension("S00D00V01", "light", "my", "fire", "VALID"));
     }
 
     @After

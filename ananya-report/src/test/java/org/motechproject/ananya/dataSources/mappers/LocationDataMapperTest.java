@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class LocationDataMapperTest {
     @Test
     public void shouldMapFromLocationDimension() {
-        LocationReportData locationReportData = new LocationDataMapper().mapFrom(new LocationDimension("l1", "d1", "b1", "p1"));
+        LocationReportData locationReportData = new LocationDataMapper().mapFrom(new LocationDimension("l1", "d1", "b1", "p1", "VALID"));
 
         assertEquals("l1", locationReportData.getLocationId());
         assertEquals("d1", locationReportData.getDistrict());

@@ -86,6 +86,10 @@ public class RegistrationMeasure {
         return this;
     }
 
+    public void setLocationDimension(LocationDimension locationDimension) {
+        this.locationDimension = locationDimension;
+    }
+
     @Override
     public String toString() {
         return "RegistrationMeasure{" +

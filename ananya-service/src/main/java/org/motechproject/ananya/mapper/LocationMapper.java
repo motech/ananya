@@ -17,6 +17,6 @@ public class LocationMapper {
         return new Location(locationRequest.getDistrict(),
                 locationRequest.getBlock(),
                 locationRequest.getPanchayat(),
-                0, 0, 0);
+                0, 0, 0, null);
     }
 }

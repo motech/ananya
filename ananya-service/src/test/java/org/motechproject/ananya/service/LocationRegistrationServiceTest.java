@@ -47,8 +47,8 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldNotRegisterALocationIfItIsAlreadyPresent() {
-        ArrayList<Location> locations = new ArrayList<Location>();
-        locations.add(new Location("D1", "B1", "V1", 1, 1, 1));
+        ArrayList<Location> locations = new ArrayList<>();
+        locations.add(new Location("D1", "B1", "V1", 1, 1, 1, null));
         when(locationService.getAll()).thenReturn(locations);
         locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService);
 
@@ -65,7 +65,7 @@ public class LocationRegistrationServiceTest {
         String block = "B1";
         String panchayat = "V1";
         String externalId = "S01D001B001V001";
-        ArrayList<Location> locations = new ArrayList<Location>();
+        ArrayList<Location> locations = new ArrayList<>();
         when(locationService.getAll()).thenReturn(locations);
 
         LocationRegistrationResponse response = locationRegistrationService.addNewLocation(new LocationRequest(district, block, panchayat));
@@ -112,7 +112,7 @@ public class LocationRegistrationServiceTest {
         String block = "B1";
         String district = "D1";
         String panchayat = "P1";
-        locationDimensions.add(new LocationDimension(externalId, district, block, panchayat));
+        locationDimensions.add(new LocationDimension(externalId, district, block, panchayat, "VALID"));
         when(locationDimensionService.getFilteredLocations(district, null, null)).thenReturn(locationDimensions);
         LocationRequest locationRequest = new LocationRequest(district, null, null);
 
@@ -173,6 +173,6 @@ public class LocationRegistrationServiceTest {
     }
 
     private Location getLocationFrom(LocationRequest locationRequest) {
-        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0);
+        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null);
     }
 }
