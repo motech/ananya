@@ -393,25 +393,25 @@
         <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="27">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="27">
         <sql splitStatements="false">
             ALTER TABLE report.front_line_worker_dimension ALTER COLUMN flw_guid TYPE uuid USING flw_guid::uuid;
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="28">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="28">
         <sql splitStatements="false">
             ALTER TABLE report.front_line_worker_dimension RENAME COLUMN flw_guid TO flw_id;
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="29">
         <addColumn tableName="call_duration_measure">
             <column name="duration_in_pulse" type="integer"/>
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="30">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="30">
         <sql splitStatements="false">
             ALTER TABLE report.location_dimension ADD COLUMN status VARCHAR(36);
             UPDATE report.location_dimension SET status = 'VALID';

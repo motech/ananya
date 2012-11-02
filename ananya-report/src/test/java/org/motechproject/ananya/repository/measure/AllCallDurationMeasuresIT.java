@@ -76,7 +76,8 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     public void shouldGetFlwUsageDetailsByYearAndMonth() {
         Long callerId = 919988776655L;
         Long calledNumber = 5771181L;
-        DateTime now = DateTime.now();
+        DateTime now = new DateTime(2012, 10, 10, 0, 0);
+
         jobAidSetup(callerId, calledNumber, now);
         certificateCourseSetup(callerId, 5771102L, now);
 

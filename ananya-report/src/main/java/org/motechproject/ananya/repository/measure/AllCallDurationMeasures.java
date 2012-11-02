@@ -89,8 +89,8 @@ public class AllCallDurationMeasures {
         Iterator resultSet = template.executeFind(new HibernateCallback<Object>() {
             @Override
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery sqlQuery = session.createSQLQuery("SELECT sum(a.jausage) as ja_usage, \n" +
-                        "       sum(a.ccusage) as cc_usage, \n" +
+                SQLQuery sqlQuery = session.createSQLQuery("SELECT COALESCE(sum(a.jausage),0) as ja_usage, \n" +
+                        "       COALESCE(sum(a.ccusage),0) as cc_usage, \n" +
                         "       year, \n" +
                         "       month \n" +
                         "FROM   ((SELECT cdm.duration AS jaUsage, \n" +

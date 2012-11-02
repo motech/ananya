@@ -248,4 +248,76 @@
         </sql>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="9">
+        <sql>
+            UPDATE
+            report.course_item_dimension AS cid
+            SET
+            duration = 20047
+            WHERE
+            file_name = '0245_ch9_end_op.wav'
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="10">
+        <sql>
+            UPDATE
+            report.call_duration_measure AS cdm
+            SET
+            time_id = td2.id
+            FROM
+            report.time_dimension td1,
+            report.time_dimension td2
+            WHERE
+            cdm.time_id = td1.id
+            AND td1.date != date_trunc('day',cdm.start_time)
+            AND td2.date = date_trunc('day',cdm.start_time)
+        </sql>
+
+        <sql>
+            UPDATE
+            report.course_item_measure AS cim
+            SET
+            time_id = td2.id
+            FROM
+            report.time_dimension td1,
+            report.time_dimension td2
+            WHERE
+            cim.time_id = td1.id
+            AND td1.date != date_trunc('day',cim.timestamp)
+            AND td2.date = date_trunc('day',cim.timestamp)
+        </sql>
+
+        <sql>
+            UPDATE
+            report.job_aid_content_measure AS jacm
+            SET
+            time_id = td2.id
+            FROM
+            report.time_dimension td1,
+            report.time_dimension td2
+            WHERE
+            jacm.time_id = td1.id
+            AND td1.date != date_trunc('day',jacm.timestamp)
+            AND td2.date = date_trunc('day',jacm.timestamp)
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="11">
+        <sql>
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'airtel');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'bsnl');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'reliance');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'vodafone');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'tata');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'idea');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'undefined');
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="12">
+        <sql>
+            update report.call_duration_measure set duration_in_pulse = 1 where duration=0;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
