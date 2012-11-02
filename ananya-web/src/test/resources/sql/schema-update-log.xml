@@ -312,6 +312,7 @@
             update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'tata');
             update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'idea');
             update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'undefined');
+            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'longcode');
         </sql>
     </changeSet>
 
