@@ -70,7 +70,7 @@ public class RegistrationServiceTest {
     public void shouldSaveNewFLWAndPublishForReport() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -87,7 +87,7 @@ public class RegistrationServiceTest {
     public void shouldUpdateAllMeasuresForExistingFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -149,7 +149,7 @@ public class RegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         String designation = "invalid_designation";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
         registrationService = new RegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId.toString());
@@ -173,7 +173,7 @@ public class RegistrationServiceTest {
         String designation = Designation.AWW.name();
         UUID flwId1 = UUID.randomUUID();
         UUID flwId2 = UUID.randomUUID();
-        Location location = new Location("district", "block", "village", 1, 1, 1, null);
+        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId1.toString()));

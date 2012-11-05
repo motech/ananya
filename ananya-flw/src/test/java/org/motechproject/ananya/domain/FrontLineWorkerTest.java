@@ -57,7 +57,7 @@ public class FrontLineWorkerTest {
         FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), null, flwId);
         DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
 
-        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1, null), lastModified, flwId);
+        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1, null, null), lastModified, flwId);
 
         assertEquals(lastModified, flw.getLastModified());
     }
@@ -82,17 +82,17 @@ public class FrontLineWorkerTest {
     public void shouldAssignTheGivenDateTimeAsLastModifiedTime() {
         DateTime lastModified = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3, null), lastModified, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3, null, null), lastModified, flwId);
 
         assertEquals(lastModified, frontLineWorker.getLastModified());
     }
 
     @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformation() {
-        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.VALID);
-        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, LocationStatus.VALID);
+        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.VALID, null);
+        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, LocationStatus.VALID, null);
         Location defaultLocation = Location.getDefaultLocation();
-        Location locationWithStatusNotValid = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.INVALID);
+        Location locationWithStatusNotValid = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.INVALID, null);
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
                 "1234", "name", Designation.ANM, completeLocation, null, flwId);
@@ -172,7 +172,7 @@ public class FrontLineWorkerTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, DateTime.now(), UUID.randomUUID());
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
 
-        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID));
+        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID, null));
 
         assertEquals(RegistrationStatus.REGISTERED, frontLineWorker.getStatus());
     }
@@ -182,7 +182,7 @@ public class FrontLineWorkerTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, DateTime.now(), UUID.randomUUID());
         frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
 
-        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID));
+        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID, null));
 
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }

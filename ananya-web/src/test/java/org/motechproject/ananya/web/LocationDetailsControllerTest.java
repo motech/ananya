@@ -71,6 +71,6 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
 
         locationDetailsController.create(locationSyncRequest);
 
-        verify(locationRegistrationService).addNewLocation(locationSyncRequest);
+        verify(locationRegistrationService).addOrUpdate(locationSyncRequest);
     }
 }

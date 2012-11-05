@@ -142,7 +142,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null);
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), null, flwId);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
@@ -229,7 +229,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null);
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
         FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), DateTime.now(), flwId);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
@@ -243,7 +243,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null);
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
         FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), null, flwId);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
         DateTime lastModified = DateTime.now();
@@ -261,7 +261,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null);
+        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
         DateTime now = DateUtil.now();
         FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), now, flwId);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
@@ -336,8 +336,8 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldUpdateFrontLineWorkerLocation() {
-        Location newLocation = new Location("D1", "B1", "P1", 1, 1, 1, null);
-        Location oldLocation = new Location("D2", "B2", "P2", 1, 2, 1, null);
+        Location newLocation = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
+        Location oldLocation = new Location("D2", "B2", "P2", 1, 2, 1, null, null);
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<>();
         String msisdn = "123";
         frontLineWorkers.add(new FrontLineWorker(msisdn, "airtel", "bihar"));

@@ -24,18 +24,4 @@ public class LocationMapperTest {
         assertEquals(block,locationResponse.getBlock());
         assertEquals(panchayat,locationResponse.getPanchayat());
     }
-
-    @Test
-    public void shouldMapLocationRequestToLocation() {
-        String district = "D1";
-        String block = "B1";
-        String panchayat = "P1";
-        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
-
-        Location location = LocationMapper.mapFrom(locationRequest);
-
-        assertEquals(district, location.getDistrict());
-        assertEquals(block, location.getBlock());
-        assertEquals(panchayat, location.getPanchayat());
-    }
 }

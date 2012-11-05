@@ -177,7 +177,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldActivateNewRegistrationStatusesForAllFLWs() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null);
+        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker notCalledPartialFLW = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
@@ -275,7 +275,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldNotCreateDimensionAndMeasureIfFLWAlreadyExistsInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null);
+        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
@@ -301,7 +301,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldCreateDimensionAndMeasureIfFLWNotInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null);
+        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);

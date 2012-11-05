@@ -35,7 +35,7 @@ public class LocationDetailsController extends BaseDataAPIController {
     void create(@RequestBody LocationSyncRequest locationSyncRequest) {
         Errors errors = LocationSyncRequestValidator.validate(locationSyncRequest);
         raiseExceptionOnError(errors);
-        locationRegistrationService.addNewLocation(locationSyncRequest);
+        locationRegistrationService.addOrUpdate(locationSyncRequest);
     }
 
     private void raiseExceptionOnError(Errors errors) {

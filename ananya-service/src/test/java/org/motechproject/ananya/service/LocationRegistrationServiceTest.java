@@ -39,7 +39,7 @@ public class LocationRegistrationServiceTest {
     @Before
     public void setUp() {
         initMocks(this);
-        locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService, frontLineWorkerService, registrationService);
+        locationRegistrationService = new LocationRegistrationService(locationDimensionService, locationService, registrationService);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class LocationRegistrationServiceTest {
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
         String status = LocationStatus.NOT_VERIFIED.name();
 
-        locationRegistrationService.addNewLocation(new LocationSyncRequest(locationRequest, locationRequest, status, DateTime.now()));
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, status, DateTime.now()));
 
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
         verify(locationService).add(locationArgumentCaptor.capture());
@@ -127,14 +127,30 @@ public class LocationRegistrationServiceTest {
         String panchayat = "panchayat";
         LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED);
+        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, null);
         locationList.add(expectedLocation);
         when(locationService.getAll()).thenReturn(locationList);
 
-        locationRegistrationService.addNewLocation(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now()));
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), null));
 
         verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.VALID);
         verify(registrationService).updateLocationOnFLW(expectedLocation, expectedLocation);
+    }
+
+    @Test
+    public void shouldNotUpdateLocationIfLastModifiedTimeIsGreaterThanRequestLastModifiedTime() {
+        String district = "district";
+        String block = "block";
+        String panchayat = "panchayat";
+        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
+        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, DateTime.now());
+        when(locationService.findFor(district, block, panchayat)).thenReturn(expectedLocation);
+
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now().minusDays(1)));
+
+        verify(locationService, never()).updateStatus(any(Location.class), any(LocationStatus.class));
+        verify(locationDimensionService, never()).updateStatus(anyString(), any(LocationStatus.class));
+        verify(registrationService, never()).updateLocationOnFLW(expectedLocation, expectedLocation);
     }
 
     @Test
@@ -145,12 +161,12 @@ public class LocationRegistrationServiceTest {
         LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
         LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED);
+        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, null);
         locationList.add(expectedLocation);
         String expectedStatus = LocationStatus.VALID.name();
         when(locationService.getAll()).thenReturn(locationList);
 
-        locationRegistrationService.addNewLocation(new LocationSyncRequest(oldLocationRequest, newLocationRequest, LocationStatus.INVALID.name(), DateTime.now()));
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(oldLocationRequest, newLocationRequest, LocationStatus.INVALID.name(), DateTime.now()));
 
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
         verify(locationService).add(locationArgumentCaptor.capture());
@@ -188,6 +204,6 @@ public class LocationRegistrationServiceTest {
     }
 
     private Location getLocationFrom(LocationRequest locationRequest) {
-        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null);
+        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null, null);
     }
 }

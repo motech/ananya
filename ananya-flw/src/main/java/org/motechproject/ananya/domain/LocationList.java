@@ -57,7 +57,7 @@ public class LocationList {
         String emptyPanchayat = "";
 
         for (Location location : locations) {
-            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID);
+            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID, null);
             if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
                 uniqueDistrictBlockList.add(defaultLocation);
             }
@@ -66,7 +66,7 @@ public class LocationList {
     }
 
     public Location getFor(String district, String block, String panchayat) {
-        Location locationToBeMatched = new Location(district, block, panchayat, 0, 0, 0, null);
+        Location locationToBeMatched = new Location(district, block, panchayat, 0, 0, 0, null, null);
         for (Location location : locations) {
             if (locationToBeMatched.equals(location)) {
                 return location;

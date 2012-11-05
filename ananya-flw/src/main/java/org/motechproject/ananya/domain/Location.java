@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
+import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type === 'Location'")
@@ -25,11 +26,13 @@ public class Location extends MotechBaseDataObject {
     private String externalId;
     @JsonProperty
     private String locationStatus;
+    @JsonProperty
+    private DateTime lastModifiedTime;
 
     public Location() {
     }
 
-    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus) {
+    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus, DateTime lastModifiedTime) {
         this.locationStatus = locationStatus == null ? null : locationStatus.name();
         this.district = StringUtils.trimToEmpty(district);
         this.block = StringUtils.trimToEmpty(block);
@@ -37,6 +40,7 @@ public class Location extends MotechBaseDataObject {
         this.districtCode = districtCode;
         this.blockCode = blockCode;
         this.panchayatCode = panchayatCode;
+        this.lastModifiedTime = lastModifiedTime;
         this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
     }
 
@@ -47,7 +51,7 @@ public class Location extends MotechBaseDataObject {
     }
 
     public static Location getDefaultLocation() {
-        return new Location("C00", "C00", "", 0, 0, 0, LocationStatus.VALID);
+        return new Location("C00", "C00", "", 0, 0, 0, LocationStatus.VALID, null);
     }
 
     public String getLocationStatus() {
@@ -98,6 +102,10 @@ public class Location extends MotechBaseDataObject {
 
     public void setLocationStatus(String locationStatus) {
         this.locationStatus = locationStatus;
+    }
+
+    public DateTime getLastModifiedTime() {
+        return lastModifiedTime;
     }
 
     @Override
