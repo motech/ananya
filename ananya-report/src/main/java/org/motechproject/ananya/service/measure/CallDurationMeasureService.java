@@ -12,6 +12,7 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCallDurationMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.CallLogService;
+import org.motechproject.ananya.service.OperatorService;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class CallDurationMeasureService {
     private AllRegistrationMeasures allRegistrationMeasures;
     private AllTimeDimensions allTimeDimensions;
     private LocationDimensionService locationDimensionService;
+    private OperatorService operatorService;
 
     public CallDurationMeasureService() {
     }
@@ -41,13 +43,15 @@ public class CallDurationMeasureService {
                                       AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                       AllRegistrationMeasures allRegistrationMeasures,
                                       AllTimeDimensions allTimeDimensions,
-                                      LocationDimensionService locationDimensionService) {
+                                      LocationDimensionService locationDimensionService,
+                                      OperatorService operatorService) {
         this.callLoggerService = callLoggerService;
         this.allCallDurationMeasures = allCallDurationMeasures;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.allTimeDimensions = allTimeDimensions;
         this.locationDimensionService = locationDimensionService;
+        this.operatorService = operatorService;
     }
 
 
@@ -75,11 +79,13 @@ public class CallDurationMeasureService {
         for (CallLogItem callLogItem : callLog.getCallLogItems()) {
             if (callLogItem.hasNoTimeLimits()) continue;
 
+            Integer durationInPulse = operatorService.usageInPulse(flwDimension.getOperator(), callLogItem.durationInMilliSec());
+
             CallDurationMeasure callDurationMeasure = new CallDurationMeasure(
                     flwDimension, locationDimension, timeDimension,
                     callId, calledNumber,
                     callLogItem.duration(), callLogItem.getStartTime(),
-                    callLogItem.getEndTime(), callLogItem.getCallFlowType().name());
+                    callLogItem.getEndTime(), callLogItem.getCallFlowType().name(), durationInPulse);
             allCallDurationMeasures.add(callDurationMeasure);
         }
         log.info(callId + "- callLog callDurationMeasures added");

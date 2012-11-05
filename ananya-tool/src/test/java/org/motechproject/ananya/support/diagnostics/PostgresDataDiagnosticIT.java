@@ -128,14 +128,14 @@ public class PostgresDataDiagnosticIT {
         FrontLineWorkerDimension flw3 = allFrontLineWorkerDimensions.createOrUpdate(99986574412L, operator, circle, "", "", "UNREGISTERED", "flwGuid3");
         FrontLineWorkerDimension flw4 = allFrontLineWorkerDimensions.createOrUpdate(99986574413L, operator, circle, "", "", "PARTIALLY_REGISTERED", "flwGuid4");
 
-        CallDurationMeasure call1 = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "JOBAID");
-        CallDurationMeasure call1Peer = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "CALL");
-        CallDurationMeasure call2 = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CERTIFICATECOURSE");
-        CallDurationMeasure call2Peer = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CALL");
-        CallDurationMeasure call3 = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "JOBAID");
-        CallDurationMeasure call3Peer = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL");
-        CallDurationMeasure call4 = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CERTIFICATECOURSE");
-        CallDurationMeasure call4Peer = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL");
+        CallDurationMeasure call1 = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "JOBAID", 1);
+        CallDurationMeasure call1Peer = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "CALL", 1);
+        CallDurationMeasure call2 = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CERTIFICATECOURSE", 1);
+        CallDurationMeasure call2Peer = new CallDurationMeasure(flw2, locationDimension, todayTimeDimension, "99986574411-2222", calledNumber, 30, today, today.plusSeconds(30), "CALL", 1);
+        CallDurationMeasure call3 = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "JOBAID", 1);
+        CallDurationMeasure call3Peer = new CallDurationMeasure(flw3, locationDimension, yesterdayTimeDimension, "99986574410-3333", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL", 1);
+        CallDurationMeasure call4 = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CERTIFICATECOURSE", 1);
+        CallDurationMeasure call4Peer = new CallDurationMeasure(flw4, locationDimension, yesterdayTimeDimension, "99986574411-4444", calledNumber, 30, yesterday, yesterday.plusSeconds(30), "CALL", 1);
 
         allCallDurationMeasures.add(call1);
         allCallDurationMeasures.add(call1Peer);

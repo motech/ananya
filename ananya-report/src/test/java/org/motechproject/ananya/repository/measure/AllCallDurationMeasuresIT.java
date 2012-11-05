@@ -44,7 +44,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.add(locationDimension);
-        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", callerId, 20, DateTime.now().minusSeconds(10), DateTime.now(), "some"));
+        allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", callerId, 20, DateTime.now().minusSeconds(10), DateTime.now(), "some",1));
 
         List<CallDurationMeasure> callDurationMeasureList = allCallDurationMeasures.findByCallerId(callerId);
 

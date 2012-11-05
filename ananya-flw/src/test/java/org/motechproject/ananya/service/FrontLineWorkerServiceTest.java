@@ -179,14 +179,15 @@ public class FrontLineWorkerServiceTest {
 
         int currentUsage = 20;
         int callDuration = 15;
-        int newUsage = currentUsage + callDuration;
+        int pulse = 60;
+        int newUsage = currentUsage + pulse;
 
         List<String> promptIds = Arrays.asList("prompt1", "prompt2");
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, "circle");
         frontLineWorker.setCurrentJobAidUsage(currentUsage);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
-        when(operatorService.usageByPulseInMilliSec(operator, callDuration)).thenReturn(60);
+        when(operatorService.usageByPulseInMilliSec(operator, callDuration)).thenReturn(pulse);
 
         frontLineWorkerService.updateJobAidState(frontLineWorker, promptIds, callDuration);
 
