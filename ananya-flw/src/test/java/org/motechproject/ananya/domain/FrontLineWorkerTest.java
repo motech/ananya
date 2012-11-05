@@ -89,9 +89,10 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformation() {
-        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, null);
-        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, null);
+        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.VALID);
+        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, LocationStatus.VALID);
         Location defaultLocation = Location.getDefaultLocation();
+        Location locationWithStatusNotValid = new Location("district", "block", "panchayat", 1, 1, 1, LocationStatus.INVALID);
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
                 "1234", "name", Designation.ANM, completeLocation, null, flwId);
@@ -128,6 +129,11 @@ public class FrontLineWorkerTest {
         flwWithNoDetails.decideRegistrationStatus(defaultLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.getStatus());
 
+        FrontLineWorker flwWithLocationStatusNotAsValid = new FrontLineWorker(
+                "1234", "", null, locationWithStatusNotValid, null, flwId);
+        flwWithLocationStatusNotAsValid.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
+        flwWithNoDetails.decideRegistrationStatus(locationWithStatusNotValid);
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.getStatus());
     }
 
     @Test
@@ -159,5 +165,25 @@ public class FrontLineWorkerTest {
         frontLineWorker.updateJobAidUsage(30);
 
         assertEquals(40, (int) frontLineWorker.getCurrentJobAidUsage());
+    }
+
+    @Test
+    public void shouldUpdateLocationAndUpdateRegistrationStatusAccordingly() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, DateTime.now(), UUID.randomUUID());
+        frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
+
+        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID));
+
+        assertEquals(RegistrationStatus.REGISTERED, frontLineWorker.getStatus());
+    }
+
+    @Test
+    public void shouldUpdateLocationAndNotUpdateRegistrationStatusIfRegStatusIsUnregistered() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, DateTime.now(), UUID.randomUUID());
+        frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
+
+        frontLineWorker.updateLocation(new Location("D1", "B1", "P1", 1, 1, 1, LocationStatus.VALID));
+
+        assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }
 }

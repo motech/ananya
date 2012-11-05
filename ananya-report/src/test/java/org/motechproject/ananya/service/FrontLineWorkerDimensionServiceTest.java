@@ -2,11 +2,14 @@ package org.motechproject.ananya.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.requests.FLWStatusChangeRequest;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ public class FrontLineWorkerDimensionServiceTest {
 
     @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Captor
+    private ArgumentCaptor<List<FrontLineWorkerDimension>> frontLineWorkerDimensionsCaptor;
 
     @Before
     public void setUp() {
@@ -84,5 +89,23 @@ public class FrontLineWorkerDimensionServiceTest {
 
         assertEquals(filteredFLWs.size(), 1);
         assertTrue(filteredFLWs.contains(frontLineWorkerDimensions.get(0)));
+    }
+
+    @Test
+    public void shouldUpdateRegistrationStatus() {
+        ArrayList<FLWStatusChangeRequest> flwStatusChangeRequests = new ArrayList<>();
+        long msisdn = 1234567890L;
+        String status = RegistrationStatus.PARTIALLY_REGISTERED.name();
+        flwStatusChangeRequests.add(new FLWStatusChangeRequest(msisdn, status));
+        FrontLineWorkerDimension expectedFLW = new FrontLineWorkerDimension();
+        when(allFrontLineWorkerDimensions.fetchFor(msisdn)).thenReturn(expectedFLW);
+
+        frontLineWorkerDimensionService.updateStatus(flwStatusChangeRequests);
+
+        verify(allFrontLineWorkerDimensions).createOrUpdateAll(frontLineWorkerDimensionsCaptor.capture());
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = frontLineWorkerDimensionsCaptor.getValue();
+        assertEquals(1, frontLineWorkerDimensions.size());
+        assertEquals(expectedFLW, frontLineWorkerDimensions.get(0));
+        assertEquals(status, frontLineWorkerDimensions.get(0).getStatus());
     }
 }

@@ -52,6 +52,13 @@ public class LocationRegistrationService {
             reMapOldLocationReferences(oldLocation, newLocation);
         }
         createOrUpdateLocation(locationSyncRequest.getActualLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList);
+        updateLocationDetailsOnFLW(actualLocationRequest, newLocationRequest, locationList);
+    }
+
+    private void updateLocationDetailsOnFLW(LocationRequest actualLocationRequest, LocationRequest newLocationRequest, LocationList locationList) {
+        Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
+        Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
+        registrationService.updateLocationOnFLW(oldLocation, newLocation);
     }
 
     private void createOrUpdateLocation(LocationRequest actualLocation, LocationStatus locationStatus, LocationList locationList) {
@@ -68,7 +75,6 @@ public class LocationRegistrationService {
     }
 
     private void reMapOldLocationReferences(Location actualLocation, Location newLocation) {
-        frontLineWorkerService.updateLocation(actualLocation, newLocation);
         registrationService.updateAllLocationReferences(actualLocation.getExternalId(), newLocation.getExternalId());
     }
 

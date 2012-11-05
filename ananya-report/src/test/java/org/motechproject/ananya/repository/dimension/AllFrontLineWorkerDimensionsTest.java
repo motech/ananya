@@ -1,6 +1,7 @@
 package org.motechproject.ananya.repository.dimension;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Designation;
@@ -26,6 +27,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
     private UUID flwId = UUID.randomUUID();
 
+    @Before
     @After
     public void After() {
         template.deleteAll(template.loadAll(FrontLineWorkerDimension.class));
@@ -289,5 +291,20 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         assertThat(filteredFlws, hasItem(flw1));
         assertThat(filteredFlws, hasItem(flw2));
         assertThat(filteredFlws, not(hasItem(flw3)));
+    }
+
+    @Test
+    public void shouldSaveAllFLW() {
+        Long msisdn1 = 90909009L;
+        FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
+                "Ramakrishna", null, RegistrationStatus.REGISTERED.name(), flwId);
+        ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<>();
+        frontLineWorkerDimensions.add(flw1);
+
+        allFrontLineWorkerDimensions.createOrUpdateAll(frontLineWorkerDimensions);
+
+        List<FrontLineWorkerDimension> actualFLWs = template.loadAll(FrontLineWorkerDimension.class);
+        assertEquals(1, actualFLWs.size());
+        assertEquals(msisdn1, actualFLWs.get(0).getMsisdn());
     }
 }

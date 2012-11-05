@@ -117,6 +117,7 @@ public class LocationRegistrationServiceTest {
         Location location = locationArgumentCaptor.getValue();
         verifyCouchdbLocation(locationRequest, location, status);
         verifyPostgresLocation(locationRequest, status);
+        verify(registrationService).updateLocationOnFLW(location, location);
     }
 
     @Test
@@ -133,6 +134,7 @@ public class LocationRegistrationServiceTest {
         locationRegistrationService.addNewLocation(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now()));
 
         verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.VALID);
+        verify(registrationService).updateLocationOnFLW(expectedLocation, expectedLocation);
     }
 
     @Test
@@ -155,7 +157,7 @@ public class LocationRegistrationServiceTest {
         Location location = locationArgumentCaptor.getValue();
         verifyCouchdbLocation(newLocationRequest, location, expectedStatus);
         verifyPostgresLocation(newLocationRequest, expectedStatus);
-        verify(frontLineWorkerService).updateLocation(expectedLocation, location);
+        verify(registrationService).updateLocationOnFLW(expectedLocation, location);
         verify(registrationService).updateAllLocationReferences(expectedLocation.getExternalId(), location.getExternalId());
         verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.INVALID);
     }

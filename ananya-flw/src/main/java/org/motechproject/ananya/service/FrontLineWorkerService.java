@@ -159,12 +159,13 @@ public class FrontLineWorkerService {
         return failedRecordsProcessingState.getLastProcessedDate();
     }
 
-    public void updateLocation(Location oldLocation, Location newLocation) {
+    public List<FrontLineWorker> updateLocation(Location oldLocation, Location newLocation) {
         List<FrontLineWorker> frontLineWorkerList = allFrontLineWorkers.findByLocationId(oldLocation.getExternalId());
         for(FrontLineWorker frontLineWorker : frontLineWorkerList) {
-            frontLineWorker.setLocation(newLocation);
+            frontLineWorker.updateLocation(newLocation);
             allFrontLineWorkers.updateFlw(frontLineWorker);
         }
+        return frontLineWorkerList;
     }
 
     public void updateLastFailedRecordsProcessedDate(DateTime recordDate) {

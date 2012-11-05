@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
@@ -10,6 +12,7 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.requests.FLWStatusChangeRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
@@ -25,10 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class RegistrationService {
@@ -143,5 +143,17 @@ public class RegistrationService {
         callDurationMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         jobAidContentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         smsSentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
+    }
+
+    public void updateLocationOnFLW(Location oldLocation, Location newLocation) {
+        List<FrontLineWorker> frontLineWorkers = frontLineWorkerService.updateLocation(oldLocation, newLocation);
+        List<FLWStatusChangeRequest> flwStatusChangeRequests = (List<FLWStatusChangeRequest>) CollectionUtils.collect(frontLineWorkers, new Transformer() {
+            @Override
+            public Object transform(Object input) {
+                FrontLineWorker frontLineWorker = (FrontLineWorker) input;
+                return new FLWStatusChangeRequest(frontLineWorker.msisdn(), frontLineWorker.getStatus().name());
+            }
+        });
+        frontLineWorkerDimensionService.updateStatus(flwStatusChangeRequests);
     }
 }

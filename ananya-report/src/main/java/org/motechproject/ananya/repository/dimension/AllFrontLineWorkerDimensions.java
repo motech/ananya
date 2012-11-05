@@ -109,4 +109,8 @@ public class AllFrontLineWorkerDimensions {
             criteria.add(Restrictions.eq("circle", circle).ignoreCase());
         return template.findByCriteria(criteria);
     }
+
+    public void createOrUpdateAll(List<FrontLineWorkerDimension> frontLineWorkerDimensions) {
+        template.saveOrUpdateAll(frontLineWorkerDimensions);
+    }
 }

@@ -338,8 +338,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
         boolean locationIncomplete = location.isMissingDetails();
         boolean designationInvalid = Designation.isInValid(designationName());
         boolean nameInvalid = StringUtils.isBlank(name);
+        boolean isLocationStatusNotValid = location.getLocationStatusAsEnum() != LocationStatus.VALID;
 
-        if (locationAbsent || locationIncomplete || designationInvalid || nameInvalid) {
+        if (locationAbsent || locationIncomplete || isLocationStatusNotValid || designationInvalid || nameInvalid) {
             status = RegistrationStatus.PARTIALLY_REGISTERED;
             return;
         }
@@ -371,5 +372,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void updateJobAidUsage(Integer durationInMilliSec) {
         this.currentJobAidUsage += durationInMilliSec;
+    }
+
+    public void updateLocation(Location location) {
+        locationId = location.getExternalId();
+        if (isAlreadyRegistered())
+            decideRegistrationStatus(location);
     }
 }
