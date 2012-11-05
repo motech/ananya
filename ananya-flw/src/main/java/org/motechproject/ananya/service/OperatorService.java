@@ -44,6 +44,7 @@ public class OperatorService {
     }
 
     private int convertToPulse(Integer durationInMilliSec, double pulseToMilliSec) {
+        if(durationInMilliSec == 0) durationInMilliSec ++;
         return (int) Math.ceil(durationInMilliSec / pulseToMilliSec);
     }
 }

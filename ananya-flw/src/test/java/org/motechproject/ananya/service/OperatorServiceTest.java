@@ -64,4 +64,26 @@ public class OperatorServiceTest {
 
         assertEquals(expectedUsageInPulse, actualUsageInPulse);
     }
+
+    @Test
+    public void shouldHandleZeroDurationForPulseInMilliSec() {
+        String operatorName = "airtel";
+        Integer expectedDurationInPulse = 60000;
+        when(allOperators.findByName(operatorName)).thenReturn(new Operator(operatorName, 5000000, 60000));
+
+        Integer durationInPulse = operatorService.usageByPulseInMilliSec(operatorName, 0);
+
+        assertEquals(expectedDurationInPulse, durationInPulse);
+    }
+
+    @Test
+    public void shouldHandleZeroDurationForUsageInPulse() {
+        String operatorName = "airtel";
+        Integer expectedDurationInPulse = 1;
+        when(allOperators.findByName(operatorName)).thenReturn(new Operator(operatorName, 5000000, 60000));
+
+        Integer durationInPulse = operatorService.usageInPulse(operatorName, 0);
+
+        assertEquals(expectedDurationInPulse, durationInPulse);
+    }
 }
