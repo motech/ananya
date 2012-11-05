@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.ananya.utils.MVCTestUtils.mockMvc;
@@ -112,6 +114,8 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
     
     @Test
     public void shouldGetFlwUsageXmlResponse() throws Exception {
+        String flwId = "48996698-5a2e-4f7e-99bb-266b51240af0";
+
         ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>(){{
             add(new FLWUsageDetail(2012, 12, 1234L, 1234L));
         }};
@@ -125,10 +129,10 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         FrontLineWorkerUsageResponse expectedResponse = new FrontLineWorkerUsageResponse("my_name", "ANM", "unregistered",
                 new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
-        when(flwDetailsService.getUsageData("flwId")).thenReturn(expectedResponse);
+        when(flwDetailsService.getUsageData(flwId)).thenReturn(expectedResponse);
 
         MvcResult result = mockMvc(frontLineWorkerDetailsController)
-                .perform(get("/flw/flwId/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
+                .perform(get("/flw/"+flwId+"/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/xml"))
                 .andReturn();
