@@ -47,11 +47,16 @@ public class Location extends MotechBaseDataObject {
     }
 
     public static Location getDefaultLocation() {
-        return new Location("C00", "C00", "", 0, 0, 0, null);
+        return new Location("C00", "C00", "", 0, 0, 0, LocationStatus.VALID);
     }
 
     public String getLocationStatus() {
         return locationStatus;
+    }
+
+    @JsonIgnore
+    public LocationStatus getLocationStatusAsEnum() {
+        return LocationStatus.getFor(locationStatus);
     }
 
     public int getBlockCode() {

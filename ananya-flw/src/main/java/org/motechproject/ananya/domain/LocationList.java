@@ -57,7 +57,7 @@ public class LocationList {
         String emptyPanchayat = "";
 
         for (Location location : locations) {
-            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, null);
+            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID);
             if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
                 uniqueDistrictBlockList.add(defaultLocation);
             }

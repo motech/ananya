@@ -1,5 +1,6 @@
 package org.motechproject.ananya.web;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,6 +8,7 @@ import org.mockito.Mock;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -15,6 +17,7 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.request.LocationSyncRequest;
 import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.FLWDetailsService;
@@ -79,7 +82,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
     @Test
     public void shouldCreateFrontLineWorker() {
         LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
-        locationRegistrationService.addNewLocation(locationRequest);
+        locationRegistrationService.addNewLocation(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now()));
         String msisdn = "91234545354";
         String designation = Designation.ANM.name();
         String name = "name";

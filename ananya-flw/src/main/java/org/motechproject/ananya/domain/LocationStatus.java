@@ -1,5 +1,7 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 public enum LocationStatus {
     VALID,
     INVALID,
@@ -11,5 +13,9 @@ public enum LocationStatus {
                 return locationStatus;
         }
         return null;
+    }
+
+    public static boolean isValid(String status) {
+        return StringUtils.isNotBlank(status) && getFor(status) != null;
     }
 }

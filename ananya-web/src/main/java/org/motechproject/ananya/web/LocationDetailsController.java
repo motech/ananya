@@ -1,10 +1,13 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.request.LocationRequest;
-import org.motechproject.ananya.response.LocationRegistrationResponse;
+import org.motechproject.ananya.request.LocationSyncRequest;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.web.annotations.Authenticated;
+import org.motechproject.ananya.web.exception.ValidationException;
+import org.motechproject.ananya.web.validator.Errors;
+import org.motechproject.ananya.web.validator.LocationSyncRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,7 @@ import java.util.List;
 @Authenticated
 @Controller
 @RequestMapping(value = "/location")
-public class LocationDetailsController extends BaseDataAPIController{
+public class LocationDetailsController extends BaseDataAPIController {
     private LocationRegistrationService locationRegistrationService;
 
     @Autowired
@@ -29,8 +32,15 @@ public class LocationDetailsController extends BaseDataAPIController{
     @RequestMapping(method = RequestMethod.POST)
     public
     @ResponseBody
-    LocationRegistrationResponse create(@RequestBody LocationRequest request) {
-        return locationRegistrationService.addNewLocation(request);
+    void create(@RequestBody LocationSyncRequest locationSyncRequest) {
+        Errors errors = LocationSyncRequestValidator.validate(locationSyncRequest);
+        raiseExceptionOnError(errors);
+        locationRegistrationService.addNewLocation(locationSyncRequest);
+    }
+
+    private void raiseExceptionOnError(Errors errors) {
+        if (errors.hasErrors())
+            throw new ValidationException(errors.allMessages());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
