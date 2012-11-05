@@ -72,15 +72,6 @@ public class LocationServiceTest {
     }
 
     @Test
-    public void shouldDeleteLocation() {
-        Location location = new Location();
-
-        locationService.delete(location);
-
-        verify(allLocations).remove(location);
-    }
-
-    @Test
     public void shouldUpdateLocationStatus() {
         Location location = new Location();
 

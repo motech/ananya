@@ -40,6 +40,12 @@ public class Location extends MotechBaseDataObject {
         this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
     }
 
+    public Location(String district, String block, String panchayat) {
+        this.district = district;
+        this.block = block;
+        this.panchayat = panchayat;
+    }
+
     public static Location getDefaultLocation() {
         return new Location("C00", "C00", "", 0, 0, 0, null);
     }

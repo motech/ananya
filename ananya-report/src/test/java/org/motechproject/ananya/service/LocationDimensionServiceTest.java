@@ -65,15 +65,6 @@ public class LocationDimensionServiceTest {
     }
 
     @Test
-    public void shouldDeleteLocationDimension() {
-        String locationId = "locationId";
-
-        locationDimensionService.delete(locationId);
-
-        verify(allLocationDimensions).delete(locationId);
-    }
-
-    @Test
     public void shouldUpdateLocationStatus() {
         String locationCode = "locationCode";
         LocationDimension locationDimension = new LocationDimension(locationCode, null, null, null, "VALID");

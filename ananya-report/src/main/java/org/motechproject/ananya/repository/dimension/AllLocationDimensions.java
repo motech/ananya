@@ -40,9 +40,4 @@ public class AllLocationDimensions {
 
         return template.findByCriteria(detachedCriteria);
     }
-
-    public void delete(String locationCode) {
-        LocationDimension locationDimension = getFor(locationCode);
-        template.delete(locationDimension);
-    }
 }

@@ -33,19 +33,14 @@ public class LocationDimensionService {
         return allLocationDimensions.getFor(externalId);
     }
 
-    public List<LocationDimension> getFilteredLocations(String district, String block, String panchayat) {
-        return allLocationDimensions.getFilteredLocationFor(district, block, panchayat);
-    }
-
-    @Transactional
-    public void delete(String locationCode) {
-        allLocationDimensions.delete(locationCode);
-    }
-
     @Transactional
     public void updateStatus(String locationCode, LocationStatus status) {
         LocationDimension locationDimension = allLocationDimensions.getFor(locationCode);
         locationDimension.setStatus(status.name());
         allLocationDimensions.saveOrUpdate(locationDimension);
+    }
+
+    public List<LocationDimension> getFilteredLocations(String district, String block, String panchayat) {
+        return allLocationDimensions.getFilteredLocationFor(district, block, panchayat);
     }
 }

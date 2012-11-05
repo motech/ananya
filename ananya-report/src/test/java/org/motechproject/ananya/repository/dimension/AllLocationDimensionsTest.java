@@ -66,18 +66,6 @@ public class AllLocationDimensionsTest extends SpringIntegrationTest {
         assertEquals(1, locationDimensions.size());
     }
 
-    @Test
-    public void shouldDeleteLocationGivenALocationId() {
-        String locationId = "ZZZ100";
-        LocationDimension initialLocationDimension = new LocationDimension(locationId, "d1", "B1", "P1", "VALID");
-        template.save(initialLocationDimension);
-
-        allLocationDimensions.delete(locationId);
-
-        List<LocationDimension> locationDimensions = template.loadAll(LocationDimension.class);
-        assertEquals(0, locationDimensions.size());
-    }
-
     @After
     public void clearAllLocations() {
         deleteAllLocations();

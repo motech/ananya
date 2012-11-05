@@ -34,10 +34,6 @@ public class LocationService {
         return allLocations.findByDistrictBlockPanchayat(district, block, panchayat);
     }
 
-    public void delete(Location location) {
-        allLocations.remove(location);
-    }
-
     public void updateStatus(Location location, LocationStatus status) {
         location.setLocationStatus(status.name());
         allLocations.update(location);

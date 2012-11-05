@@ -98,12 +98,12 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void updateAllLocationReferences(String oldLocationId, String newLocationId) {
-        registrationMeasureService.updateLocation(oldLocationId, newLocationId);
-        courseItemMeasureService.updateLocation(oldLocationId, newLocationId);
-        callDurationMeasureService.updateLocation(oldLocationId, newLocationId);
-        jobAidContentMeasureService.updateLocation(oldLocationId, newLocationId);
-        smsSentMeasureService.updateLocation(oldLocationId, newLocationId);
+    public void updateAllLocationReferences(String oldLocationCode, String newLocationCode) {
+        registrationMeasureService.updateLocation(oldLocationCode, newLocationCode);
+        courseItemMeasureService.updateLocation(oldLocationCode, newLocationCode);
+        callDurationMeasureService.updateLocation(oldLocationCode, newLocationCode);
+        jobAidContentMeasureService.updateLocation(oldLocationCode, newLocationCode);
+        smsSentMeasureService.updateLocation(oldLocationCode, newLocationCode);
     }
 
     @Transactional
