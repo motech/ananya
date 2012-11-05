@@ -251,11 +251,11 @@
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="9">
         <sql>
             UPDATE
-            report.course_item_dimension AS cid
+                report.course_item_dimension AS cid
             SET
-            duration = 20047
+                duration = 20047
             WHERE
-            file_name = '0245_ch9_end_op.wav'
+                file_name = '0245_ch9_end_op.wav'
         </sql>
     </changeSet>
 
@@ -319,6 +319,36 @@
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="12">
         <sql>
             update report.call_duration_measure set duration_in_pulse = 1 where duration=0;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="13">
+        <!--sql to delete duplicate rows in measures created due to multiple disconnects issue-->
+        <sql>
+            DELETE FROM report.call_duration_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id, type ORDER BY id) AS rnum
+            FROM report.call_duration_measure) t
+            WHERE t.rnum > 1);
+        </sql>
+
+        <sql>
+            DELETE FROM report.course_item_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id,flw_id,course_item_id,timestamp ORDER BY id) AS rnum
+            FROM report.course_item_measure) t
+            WHERE t.rnum > 1);
+        </sql>
+
+        <sql>
+            DELETE FROM report.job_aid_content_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id,flw_id,job_aid_content_id,timestamp ORDER BY id) AS rnum
+            FROM report.job_aid_content_measure) t
+            WHERE t.rnum > 1);
         </sql>
     </changeSet>
 </databaseChangeLog>
