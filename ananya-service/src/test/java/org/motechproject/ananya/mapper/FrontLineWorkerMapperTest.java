@@ -22,7 +22,7 @@ public class FrontLineWorkerMapperTest {
         String block = "B1";
         String panchayat = "P1";
         DateTime lastModified = new DateTime(2000,11,23,20,25);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, new LocationRequest(district, block, panchayat), lastModified.toDate(), "flwGuid");
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(msisdn, name, designation, new LocationRequest(district, block, panchayat), lastModified.toDate());
 
         FrontLineWorker frontLineWorker = FrontLineWorkerMapper.mapFrom(frontLineWorkerRequest);
 
@@ -41,7 +41,7 @@ public class FrontLineWorkerMapperTest {
         String designation = Designation.ANM.name();
         String status = RegistrationStatus.REGISTERED.name();
 
-        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, "flwGuid"));
+        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status));
 
         assertEquals(msisdn.toString(), frontLineWorkerResponse.getMsisdn());
         assertEquals(name, frontLineWorkerResponse.getName());

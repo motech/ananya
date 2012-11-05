@@ -1,13 +1,13 @@
 "MSISDN","Name","Designation","District","Block","Village"
-9988776655,"S1","ANM","D1","B1","V1","7485c3bd-ef3d-47fa-811a-e958932d466a"
-9988776656,"S2","ASHA",Patna,Maner,Rampur Diara,"768051e4-d7b5-4e8e-90e4-152dc6e4c994"
-9988776657,"S3","ANM",Patna,Maner,Kita  Chauhattar,"1f413a4a-59f5-437f-b46c-072d2081a746"
-9988776658,"S4","ANM",Patna,Maner,Rampur Diara1,"ce69358f-9c1e-4fa2-af2f-645dbcee47fd"
-9988776659,"S5","ANGANWADI",Khagaria,Alauli,Badhchatar,"ee8caf78-ea99-4164-97f9-c3fa4d6c16f1"
-9988776660,"S6","ANM",Khagaria,Alauli,Dahwa Khairi Khutaha,"95de7b47-1d07-4f18-8a0f-c1ae5f07f2d5"
-9988776661,"S7","ANGANWADI",Patna,Maner,Rampur Diara,"a2c7ba54-0ae3-4ea5-88dc-97c71beca55e"
-9988776662,"S8","ANM","D3","B3","V6","b2ec0b71-dfd5-4ab4-81de-1496cf02c7aa"
-9000000001,"S8"," ANM","D3","B3","V6","b2ec0b71-dfd5-4ab4-81de-1496cf02c7ba"
-9000000002,"S8"," aww ","D3","B3","V6","b2ec0b71-dfd5-4ab4-81de-1496cf02c7ca"
-9000000003,"S8",,"D3","B3","V6","b2ec0b71-dfd5-4ab4-81de-1496cf02c7da"
-9000000004,"S8","","D3","B3","V6","b2ec0b71-dfd5-4ab4-81de-1496cf02c7ea"
+9988776655,"S1","ANM","D1","B1","V1"
+9988776656,"S2","ASHA",Patna,Maner,Rampur Diara
+9988776657,"S3","ANM",Patna,Maner,Kita  Chauhattar
+9988776658,"S4","ANM",Patna,Maner,Rampur Diara1
+9988776659,"S5","ANGANWADI",Khagaria,Alauli,Badhchatar
+9988776660,"S6","ANM",Khagaria,Alauli,Dahwa Khairi Khutaha
+9988776661,"S7","ANGANWADI",Patna,Maner,Rampur Diara
+9988776662,"S8","ANM","D3","B3","V6"
+9000000001,"S8"," ANM","D3","B3","V6"
+9000000002,"S8"," aww ","D3","B3","V6"
+9000000003,"S8",,"D3","B3","V6"
+9000000004,"S8","","D3","B3","V6"

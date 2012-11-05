@@ -129,7 +129,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
         Location location = new Location("", "", "", 0, 0, 0);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, "flwGuid");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, RegistrationStatus.UNREGISTERED);
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator(operatorName);
         allFrontLineWorkers.add(frontLineWorker);

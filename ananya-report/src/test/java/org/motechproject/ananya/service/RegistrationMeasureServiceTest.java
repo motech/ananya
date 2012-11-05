@@ -60,7 +60,7 @@ public class RegistrationMeasureServiceTest {
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat");
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwGuid());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationLog registrationLog = new RegistrationLog(callId,callerId, operator, circle);
 
@@ -68,12 +68,11 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
-        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwGuid())).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
         registrationMeasureService.createFor(callId);
 
-        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwGuid());
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
         verify(allRegistrationMeasures).createOrUpdate(captor.capture());
         verify(registrationLogService).delete(registrationLog);
@@ -97,20 +96,19 @@ public class RegistrationMeasureServiceTest {
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension oldLocationDimension = new LocationDimension("oldid", "olddistrict", "oldblock", "oldpanchayat");
         LocationDimension newLocationDimension = new LocationDimension("id", "district", "block", "panchayat");
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwGuid());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "");
         frontLineWorkerDimension.setId(flwId);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, oldLocationDimension, timeDimension, null);
 
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(true);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
-        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwGuid())).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED")).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allLocationDimensions.getFor(any(String.class))).thenReturn(newLocationDimension);
 
         registrationMeasureService.createOrUpdateFor(callerId);
 
-        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwGuid());
         verify(allRegistrationMeasures).createOrUpdate(registrationMeasure);
         assertEquals(newLocationDimension, registrationMeasure.getLocationDimension());
     }

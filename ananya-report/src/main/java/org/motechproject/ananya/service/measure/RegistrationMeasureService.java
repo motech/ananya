@@ -68,8 +68,7 @@ public class RegistrationMeasureService {
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
-                frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getStatus().toString());
         log.info(callId + "- flwDimension created or updated for " + frontLineWorker);
 
         if (dimensionAlreadyExists) {
@@ -99,8 +98,7 @@ public class RegistrationMeasureService {
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
-                frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getStatus().toString());
 
         RegistrationMeasure registrationMeasure = flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
                                                                             : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);

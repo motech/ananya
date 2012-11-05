@@ -123,10 +123,10 @@ public class PostgresDataDiagnosticIT {
         TimeDimension todayTimeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension yesterdayTimeDimension = allTimeDimensions.addOrUpdate(yesterday);
 
-        FrontLineWorkerDimension flw1 = allFrontLineWorkerDimensions.createOrUpdate(99986574410L, operator, circle, "name", "AWW", "REGISTERED", "flwGuid1");
-        FrontLineWorkerDimension flw2 = allFrontLineWorkerDimensions.createOrUpdate(99986574411L, operator, circle, "", "", "UNREGISTERED", "flwGuid2");
-        FrontLineWorkerDimension flw3 = allFrontLineWorkerDimensions.createOrUpdate(99986574412L, operator, circle, "", "", "UNREGISTERED", "flwGuid3");
-        FrontLineWorkerDimension flw4 = allFrontLineWorkerDimensions.createOrUpdate(99986574413L, operator, circle, "", "", "PARTIALLY_REGISTERED", "flwGuid4");
+        FrontLineWorkerDimension flw1 = allFrontLineWorkerDimensions.createOrUpdate(99986574410L, operator, circle, "name", "AWW", "REGISTERED");
+        FrontLineWorkerDimension flw2 = allFrontLineWorkerDimensions.createOrUpdate(99986574411L, operator, circle, "", "", "UNREGISTERED");
+        FrontLineWorkerDimension flw3 = allFrontLineWorkerDimensions.createOrUpdate(99986574412L, operator, circle, "", "", "UNREGISTERED");
+        FrontLineWorkerDimension flw4 = allFrontLineWorkerDimensions.createOrUpdate(99986574413L, operator, circle, "", "", "PARTIALLY_REGISTERED");
 
         CallDurationMeasure call1 = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "JOBAID", 1);
         CallDurationMeasure call1Peer = new CallDurationMeasure(flw1, locationDimension, todayTimeDimension, "99986574410-1111", calledNumber, 30, today, today.plusSeconds(30), "CALL", 1);

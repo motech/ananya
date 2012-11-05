@@ -2,7 +2,6 @@ package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -10,7 +9,6 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.*;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -50,8 +48,6 @@ public class ReportDb {
     private AllTimeDimensions allTimeDimensions;
     @Autowired
     private AllCallDurationMeasures allCallDurationMeasures;
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
@@ -155,9 +151,8 @@ public class ReportDb {
     }
 
     public ReportDb createMeasuresAndDimensionsForFlw(String callerId, String callId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
-                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED", frontLineWorker.getFlwGuid());
+                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED");
         LocationDimension locationDimension = allLocationDimensions.getFor(Location.getDefaultLocation().getExternalId());
         TimeDimension timeDimension = allTimeDimensions.getFor(DateTime.now());
         allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));

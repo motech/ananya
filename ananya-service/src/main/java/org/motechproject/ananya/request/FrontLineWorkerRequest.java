@@ -11,18 +11,16 @@ public class FrontLineWorkerRequest implements Serializable {
     private String designation;
     private LocationRequest location = new LocationRequest();
     private Date lastModified;
-    private String flwGuid;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwGuid) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
         this.location = location;
         this.lastModified = lastModified;
-        this.flwGuid = flwGuid;
     }
 
     public String getName() {
@@ -63,14 +61,6 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
-    }
-
-    public String getFlwGuid() {
-        return flwGuid;
-    }
-
-    public void setFlwGuid(String flwGuid) {
-        this.flwGuid = flwGuid;
     }
 
     @ColumnName(name = "district")

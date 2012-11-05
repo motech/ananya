@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.ektorp.CouchDbConnector;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -306,8 +308,7 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
-                frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getStatus().toString());
         log.info("frontlineWorkerDimension created for missing " + frontLineWorker);
 
         String callId = frontLineWorker.msisdn() + String.valueOf(DateUtil.now().getMillis());
@@ -460,19 +461,6 @@ public class FrontLineWorkerSeedService {
         }
 
         frontLineWorker1.getPromptsHeard().putAll(frontLineWorker2.getPromptsHeard());
-    }
-
-    public void copyFlwGuidFromFLWDimension(FrontLineWorker frontLineWorker) {
-        Long msisdn = frontLineWorker.msisdn();
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
-
-        if (frontLineWorkerDimension == null) {
-            log.error(String.format("FrontLineWorkerDimension for msisdn[%s] does NOT exist.", msisdn));
-        }
-
-        frontLineWorker.setFlwGuid(frontLineWorkerDimension.getFlwGuid());
-        allFrontLineWorkers.update(frontLineWorker);
-        log.info(String.format("FLW with msisdn[%s] updated with GUID[%s]", msisdn, frontLineWorker.getFlwGuid()));
     }
 
     private DateTime lessRecentOf(DateTime dateTime1, DateTime dateTime2) {

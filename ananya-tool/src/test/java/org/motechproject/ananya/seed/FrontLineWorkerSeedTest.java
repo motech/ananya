@@ -23,6 +23,7 @@ import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.interceptor.CacheAspectSupport;
@@ -32,7 +33,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import static junit.framework.Assert.*;
 
@@ -118,9 +118,8 @@ public class FrontLineWorkerSeedTest {
         Designation designation = Designation.ASHA;
         String name = "Name";
         Long msisdn = 919986574410l;
-        FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), null, UUID.randomUUID().toString());
-        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwGuid()));
-        allFrontLineWorkers.add(frontLineWorkerCreated);
+        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name()));
+        allFrontLineWorkers.add(new FrontLineWorker(msisdn.toString(), name, designation, new Location(), RegistrationStatus.PARTIALLY_REGISTERED));
 
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
 
@@ -136,13 +135,13 @@ public class FrontLineWorkerSeedTest {
         String name = "Name";
         Long msisdn = 1234567890L;
         Long correctMsisdn = 911234567890L;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), registrationStatus);
         String operator = "Airtel";
         frontLineWorker.setOperator(operator);
         ReflectionTestUtils.setField(frontLineWorker, "msisdn", msisdn.toString());
         allFrontLineWorkers.add(frontLineWorker);
 
-        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwGuid()));
+        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name()));
 
         frontLineWorkerSeed.updateCorrectCallerIdsCircleOperatorAndDesignation();
 
@@ -161,7 +160,7 @@ public class FrontLineWorkerSeedTest {
     private FrontLineWorkerDimension getFLWDimensionFromFLW(FrontLineWorker frontLineWorker) {
         return new FrontLineWorkerDimension(frontLineWorker.msisdn(),
                 frontLineWorker.getOperator(), frontLineWorker.getCircle(), frontLineWorker.getName(),
-                frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwGuid());
+                frontLineWorker.designationName(), frontLineWorker.getStatus().toString());
     }
 
     private FrontLineWorker getFrontLineWorker(String msisdn, String operator, RegistrationStatus registrationStatus, Location location) {
@@ -230,15 +229,15 @@ public class FrontLineWorkerSeedTest {
     @Test
     public void shouldCorrectInvalidDesignationsInCouchAndPostgresDB() throws IOException {
         FrontLineWorker flwInCSVWithInvalidDesignation1 = new FrontLineWorker("9000000001", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), RegistrationStatus.UNREGISTERED);
         FrontLineWorker flwInCSVWithInvalidDesignation2 = new FrontLineWorker("9000000002", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), RegistrationStatus.UNREGISTERED);
         FrontLineWorker flwInCSVWithInvalidDesignation3 = new FrontLineWorker("9000000003", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), RegistrationStatus.UNREGISTERED);
         FrontLineWorker flwInCSVWithInvalidDesignation4 = new FrontLineWorker("9000000004", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), RegistrationStatus.UNREGISTERED);
         FrontLineWorker invalidFLW = new FrontLineWorker("9000000005", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID().toString());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), RegistrationStatus.UNREGISTERED);
 
         FrontLineWorkerDimension frontLineWorkerDimension1 = getFLWDimensionFromFLW(flwInCSVWithInvalidDesignation1);
         FrontLineWorkerDimension frontLineWorkerDimension2 = getFLWDimensionFromFLW(flwInCSVWithInvalidDesignation2);
@@ -287,8 +286,7 @@ public class FrontLineWorkerSeedTest {
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
-                frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwGuid());
+                frontLineWorker.getStatus().toString());
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
 
