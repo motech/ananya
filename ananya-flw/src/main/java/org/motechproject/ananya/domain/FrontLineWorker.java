@@ -363,10 +363,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     private void updateFlwGuid(String flwGuid) {
-        if(this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
+        if (this.flwGuid != null && !this.flwGuid.equals(flwGuid)) {
             log.warn(String.format("Changing FLW GUID for msisdn[%s]", this.msisdn));
         }
 
         this.flwGuid = flwGuid;
+    }
+
+    public void updateJobAidUsage(Integer durationInMilliSec) {
+        this.currentJobAidUsage += durationInMilliSec;
     }
 }

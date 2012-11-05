@@ -14,7 +14,7 @@ public class AllOperatorsTest extends SpringBaseIT {
     public void shouldAddAnOperator() {
         String operatorName = "operator";
         int allowedUsagePerMonth = 25;
-        Operator operator = new Operator(operatorName, allowedUsagePerMonth);
+        Operator operator = new Operator(operatorName, allowedUsagePerMonth, 60);
 
         allOperators.add(operator);
         markForDeletion(operator);

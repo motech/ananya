@@ -34,11 +34,14 @@ public class FrontLineWorkerServiceTest {
     private AllFrontLineWorkerKeys allFrontLineWorkerKeys;
     @Mock
     private AllFailedRecordsProcessingStates allFailedRecordsProcessingStates;
+    @Mock
+    private OperatorService operatorService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys, allFailedRecordsProcessingStates);
+        frontLineWorkerService = new FrontLineWorkerService(allFrontLineWorkers, locationService, allFrontLineWorkerKeys,
+                allFailedRecordsProcessingStates, operatorService);
     }
 
     @Test
@@ -183,6 +186,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, "circle");
         frontLineWorker.setCurrentJobAidUsage(currentUsage);
         when(allFrontLineWorkers.findByMsisdn(callerId)).thenReturn(frontLineWorker);
+        when(operatorService.usageByPulseInMilliSec(operator, callDuration)).thenReturn(60);
 
         frontLineWorkerService.updateJobAidState(frontLineWorker, promptIds, callDuration);
 

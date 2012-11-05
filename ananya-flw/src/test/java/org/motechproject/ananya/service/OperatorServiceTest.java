@@ -28,7 +28,7 @@ public class OperatorServiceTest {
     @Test
     public void shouldCallAllOperatorsToFetchOperator() {
         String operator = "airtel";
-        when(allOperators.findByName(operator)).thenReturn(new Operator(operator, 10));
+        when(allOperators.findByName(operator)).thenReturn(new Operator(operator, 10, 60));
 
         Integer usage = operatorService.findMaximumUsageFor(operator);
         assertEquals(new Integer(10), usage);
@@ -41,5 +41,16 @@ public class OperatorServiceTest {
 
         List<Operator> operators = operatorService.getAllOperators();
         assertEquals(expectedOperators, operators);
+    }
+
+    @Test
+    public void shouldGetTheUsageByPulseInMilliSecGivenDurationInMilliSec() {
+        String operatorName = "airtel";
+        int durationInMilliSec = 121000;
+        Integer expectedUsageByPulseInMilliSec = 180000;
+        when(allOperators.findByName(operatorName)).thenReturn(new Operator(operatorName, 5000000, 60000));
+        Integer actualUsageByPulseInMilliSec = operatorService.usageByPulseInMilliSec(operatorName, durationInMilliSec);
+
+        assertEquals(expectedUsageByPulseInMilliSec, actualUsageByPulseInMilliSec);
     }
 }
