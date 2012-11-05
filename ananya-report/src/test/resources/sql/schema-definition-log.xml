@@ -378,21 +378,6 @@
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="26">
-        <!-- Following extension required to generate UUIDs. Assuming Postgres9.1 -->
-        <sql splitStatements="false">
-            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-        </sql>
-
-        <addColumn tableName="front_line_worker_dimension">
-            <column name="flw_guid" type="varchar(36)"/>
-        </addColumn>
-
-        <addUniqueConstraint tableName="front_line_worker_dimension" columnNames="flw_guid"
-                             constraintName="flw_guid_unique"/>
-        <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
-    </changeSet>
-
     <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
         <addColumn tableName="call_duration_measure">
             <column name="duration_in_pulse" type="integer"/>

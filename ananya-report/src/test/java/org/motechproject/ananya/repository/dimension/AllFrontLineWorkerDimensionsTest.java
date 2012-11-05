@@ -16,7 +16,6 @@ import static junit.framework.Assert.*;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
@@ -43,7 +42,6 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         assertEquals(operator, frontLineWorkerDimension.getOperator());
         assertEquals(status, frontLineWorkerDimension.getStatus());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
-        assertNotNull(frontLineWorkerDimension.getFlwGuid());
     }
 
     @Test
@@ -60,7 +58,6 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         assertEquals(operator, frontLineWorkerDimension.getOperator());
         assertEquals(status, frontLineWorkerDimension.getStatus());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
-        assertNotNull(frontLineWorkerDimension.getFlwGuid());
     }
 
 
