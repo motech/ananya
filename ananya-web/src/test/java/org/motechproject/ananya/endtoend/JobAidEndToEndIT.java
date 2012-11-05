@@ -32,8 +32,14 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     private String callId = "919686577090-1234567890";
     private String circle = "bihar";
     private String operator = "airtel";
+    private int allowedUsagePerMonth=39;
 
     @Before
+    public void setUp(){
+        clearFLWData();
+        couchDb.createOperator(operator, 39 * 60 * 1000, 60000);
+    }
+
     @After
     public void after() {
         clearFLWData();
@@ -43,7 +49,6 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     public void shouldReturnADefaultResponseForANewCaller() throws IOException {
         JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
         JobAidResponse jobAidResponse = jobAidWebService.requestForCallerData(request);
-
         jobAidResponse.confirmCurrentUsage(0).confirmNoPromptsHeard().confirmPartiallyRegistered().confirmMaxUsage(39);
         couchDb.confirmFlwDoesNotExist(callerId);
         reportDb.confirmFlwDoesNotExist(callerId);
@@ -58,7 +63,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
 
         JobAidRequest request = new JobAidRequest(callerId, operator, circle, callId);
         JobAidResponse jobAidResponse = jobAidWebService.requestForCallerData(request);
-        jobAidResponse.confirmPartiallyRegistered().confirmMaxUsage(39).confirmPromptHeard("welcome.wav", 1).confirmCurrentUsage(23);
+        jobAidResponse.confirmPartiallyRegistered().confirmMaxUsage(allowedUsagePerMonth).confirmPromptHeard("welcome.wav", 1).confirmCurrentUsage(23);
     }
 
     @Test

@@ -5,11 +5,11 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.cmslite.api.model.StringContent;
+import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TestJsonData {
@@ -36,6 +36,9 @@ public class TestJsonData {
     @Autowired
     private AllNodes allNodes;
 
+    @Autowired
+    private AllStringContents allStringContents;
+
     public String forJobAidDisconnect(List<String> nodeNames) {
         Integer tokenNo = 0;
         DateTime callTimer = DateTime.now();
@@ -60,6 +63,7 @@ public class TestJsonData {
 
 
     public String forCourseDisconnect() {
+
         DateTime callTimer = DateTime.now();
         List<String> tokens = new ArrayList<String>();
 

@@ -41,6 +41,7 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
     @Before
     @After
     public void setUp() {
+
         reportDb.clearFLWDimensionAndMeasures(callerId);
         couchDb.clearFLWData(callerId);
         couchDb.clearAllLogs();
@@ -76,7 +77,9 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateLogsDimensionsMeasuresForDisconnectOfACallerFinishingCourse() throws IOException, InterruptedException {
+        couchDb.createOperator(operator, 39 * 60 * 1000, 60000);
         couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 8, 3).updateScores(callerId, presetScores());
+        couchDb.addANode("Chapter 9");
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
         CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);

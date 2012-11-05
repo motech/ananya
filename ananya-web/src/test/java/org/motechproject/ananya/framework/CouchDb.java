@@ -2,10 +2,12 @@ package org.motechproject.ananya.framework;
 
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.repository.*;
+import org.motechproject.cmslite.api.model.StringContent;
+import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.Assert.*;
 
@@ -32,6 +34,12 @@ public class CouchDb {
     private AllSMSLogs allSMSLogs;
     @Autowired
     private AllCallLogs allCallLogs;
+
+    @Autowired
+    private AllNodes allNodes;
+
+    @Autowired
+    private AllStringContents allStringContents;
 
 
     public CouchDb confirmPartiallyRegistered(String callerId, String operator) {
@@ -94,14 +102,21 @@ public class CouchDb {
         allCallLogs.removeAll();
         allSMSLogs.removeAll();
         allCertificateCourseLogs.removeAll();
+        allOperators.removeAll();
         return this;
     }
 
-    public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+    public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operatorName, String circle) {
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operatorName, circle);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
         return this;
+    }
+
+    public void createOperator(String operatorName, int allowedUsagePerMonth, int pulseToMilliSec) {
+        Operator operator = allOperators.findByName(operatorName);
+        if(operator==null)
+            allOperators.add(new Operator(operatorName, allowedUsagePerMonth, pulseToMilliSec));
     }
 
     public CouchDb updatePromptsHeard(String callerId, String prompt) {
@@ -115,6 +130,20 @@ public class CouchDb {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         frontLineWorker.setCurrentJobAidUsage(convertToMilliSec(currentUsage));
         allFrontLineWorkers.update(frontLineWorker);
+        return this;
+    }
+
+    public CouchDb addANode(String name){
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("type", "Level");
+        HashMap<String, String> metadata = new HashMap<String, String>();
+        metadata.put("duration", "42787");
+        StringContent stringContent = new StringContent("hindi", "menu", "0002_select_level.wav", metadata);
+        List<StringContent> content = Arrays.asList(stringContent);
+        Node node = new Node(name, data, content, new ArrayList<Node>());
+        allStringContents.add(stringContent);
+        node.addContentId(stringContent.getId());
+        allNodes.add(node);
         return this;
     }
 
