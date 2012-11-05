@@ -47,12 +47,6 @@ public class LocationRegistrationService {
         return responses;
     }
 
-    public List<LocationRegistrationResponse> registerAllLocations(List<LocationRequest> locationsToSave) {
-        LocationList locationList = new LocationList(locationService.getAll());
-        List<LocationRegistrationResponse> responses = saveLocations(locationsToSave, locationList);
-        return responses;
-    }
-
     public List<LocationResponse> getFilteredLocations(LocationRequest request) {
         List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(request.getDistrict(), request.getBlock(), request.getPanchayat());
         List<LocationResponse> locationResponses = new ArrayList<>();
@@ -62,8 +56,21 @@ public class LocationRegistrationService {
         return locationResponses;
     }
 
+    private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
+        LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
+        Location location = new Location(district, block, panchayat, 0, 0, 0, null);
+        LocationValidator locationValidator = new LocationValidator(locationList);
+        LocationValidationResponse validationResponse = locationValidator.validate(location);
+        if (validationResponse.isInValid())
+            return response.withValidationResponse(validationResponse);
+
+        saveNewLocation(location, locationList);
+
+        return response.withSuccessfulRegistration();
+    }
+
     private List<LocationRegistrationResponse> saveLocations(List<LocationRequest> locationsToSave, LocationList locationList) {
-        List<LocationRegistrationResponse> responses = new ArrayList<LocationRegistrationResponse>();
+        List<LocationRegistrationResponse> responses = new ArrayList<>();
         for (LocationRequest location : locationsToSave) {
             LocationRegistrationResponse locationRegistrationResponse = registerLocation(location.getDistrict(), location.getBlock(), location.getPanchayat(), locationList);
             responses.add(locationRegistrationResponse);
@@ -78,19 +85,6 @@ public class LocationRegistrationService {
             locationService.add(location);
             locationDimensionService.add(locationDimension);
         }
-    }
-
-    private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList) {
-        LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
-        Location location = new Location(district, block, panchayat, 0, 0, 0, null);
-        LocationValidator locationValidator = new LocationValidator(locationList);
-        LocationValidationResponse validationResponse = locationValidator.validate(location);
-        if(validationResponse.isInValid())
-            return response.withValidationResponse(validationResponse);
-
-        saveNewLocation(location, locationList);
-
-        return response.withSuccessfulRegistration();
     }
 
     private void saveNewLocation(Location currentLocation, LocationList locationList) {

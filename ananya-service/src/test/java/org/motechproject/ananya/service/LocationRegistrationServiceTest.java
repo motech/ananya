@@ -151,27 +151,6 @@ public class LocationRegistrationServiceTest {
         assertEquals(getLocationFrom(defaultLocation3), allValues.get(5));
     }
 
-    @Test
-    public void shouldSaveAllLocationsWithoutCreatingDefaultLocationsForTheSame() {
-        List<LocationRequest> locations = new ArrayList<LocationRequest>();
-        LocationRequest location1 = new LocationRequest("D1", "B1", "P1");
-        locations.add(location1);
-        LocationRequest location2 = new LocationRequest("D2", "B2", "P5");
-        locations.add(location2);
-        LocationRequest location3 = new LocationRequest("D1", "B3", "P2");
-        locations.add(location3);
-        when(locationService.getAll()).thenReturn(new ArrayList<Location>());
-
-        locationRegistrationService.registerAllLocations(locations);
-
-        ArgumentCaptor<Location> captor = ArgumentCaptor.forClass(Location.class);
-        verify(locationService, times(3)).add(captor.capture());
-        List<Location> allValues = captor.getAllValues();
-        assertEquals(getLocationFrom(location1), allValues.get(0));
-        assertEquals(getLocationFrom(location2), allValues.get(1));
-        assertEquals(getLocationFrom(location3), allValues.get(2));
-    }
-
     private Location getLocationFrom(LocationRequest locationRequest) {
         return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null);
     }
