@@ -26,6 +26,7 @@ public class Location extends MotechBaseDataObject {
     private String externalId;
     @JsonProperty
     private String locationStatus;
+
     @JsonProperty
     private DateTime lastModifiedTime;
 
@@ -106,6 +107,10 @@ public class Location extends MotechBaseDataObject {
 
     public DateTime getLastModifiedTime() {
         return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(DateTime lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
     }
 
     @Override

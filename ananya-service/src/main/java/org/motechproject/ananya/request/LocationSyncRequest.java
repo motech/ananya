@@ -10,6 +10,9 @@ public class LocationSyncRequest {
     private String locationStatus;
     private DateTime lastModifiedTime;
 
+    public LocationSyncRequest() {
+    }
+
     public LocationSyncRequest(LocationRequest actualLocation, LocationRequest newLocation, String locationStatus, DateTime lastModifiedTime) {
         this.actualLocation = actualLocation;
         this.newLocation = newLocation;

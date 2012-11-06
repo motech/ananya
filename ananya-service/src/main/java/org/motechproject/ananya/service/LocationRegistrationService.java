@@ -74,12 +74,13 @@ public class LocationRegistrationService {
     private void createOrUpdateLocation(LocationRequest actualLocation, LocationStatus locationStatus, LocationList locationList, DateTime lastModifiedTime) {
         Location location = locationList.getFor(actualLocation.getDistrict(), actualLocation.getBlock(), actualLocation.getPanchayat());
         if (location != null)
-            updateLocationStatus(location, locationStatus);
+            updateLocationStatus(location, locationStatus, lastModifiedTime);
         else
             registerLocationForSync(actualLocation.getDistrict(), actualLocation.getBlock(), actualLocation.getPanchayat(), locationList, locationStatus, lastModifiedTime);
     }
 
-    private void updateLocationStatus(Location location, LocationStatus status) {
+    private void updateLocationStatus(Location location, LocationStatus status, DateTime lastModifiedTime) {
+        location.setLastModifiedTime(lastModifiedTime);
         locationService.updateStatus(location, status);
         locationDimensionService.updateStatus(location.getExternalId(), status);
     }
@@ -152,7 +153,7 @@ public class LocationRegistrationService {
         Integer districtCodeFor = locationList.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locationList.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locationList.getPanchayatCodeFor(currentLocation);
-        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor, currentLocation.getLocationStatusAsEnum(), null);
+        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor, currentLocation.getLocationStatusAsEnum(), currentLocation.getLastModifiedTime());
         return locationToSave;
     }
 }
