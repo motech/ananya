@@ -178,6 +178,29 @@ public class LocationRegistrationServiceTest {
         verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.INVALID);
     }
 
+    @Test
+    public void shouldNotCreateANewLocationIfTheNewLocationAlreadyExists() {
+        String oldDistrict = "oldDistrict";
+        String oldBlock = "oldBlock";
+        String oldPanchayat = "oldPanchayat";
+        LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
+        LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
+        ArrayList<Location> locationList = new ArrayList<>();
+        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, null);
+        Location newLocation = new Location("D1", "B1", "P1", 1, 2, 3, LocationStatus.VALID, null);
+        locationList.add(expectedLocation);
+        locationList.add(newLocation);
+        when(locationService.getAll()).thenReturn(locationList);
+
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(oldLocationRequest, newLocationRequest, LocationStatus.INVALID.name(), DateTime.now()));
+
+        verify(locationService, never()).add(any(Location.class));
+        verify(locationDimensionService, never()).add(any(LocationDimension.class));
+        verify(registrationService).updateLocationOnFLW(expectedLocation, newLocation);
+        verify(registrationService).updateAllLocationReferences(expectedLocation.getExternalId(), newLocation.getExternalId());
+        verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.INVALID);
+    }
+
     private void verifyCouchAndPostgresLocationStatusUpdate(Location expectedLocation, LocationStatus locationStatus) {
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
         verify(locationService).updateStatus(locationArgumentCaptor.capture(), eq(locationStatus));
