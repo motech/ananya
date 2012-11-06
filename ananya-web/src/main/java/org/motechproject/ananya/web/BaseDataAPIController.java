@@ -9,10 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public abstract class BaseDataAPIController {
     @ExceptionHandler(Exception.class)
-    public
     @ResponseBody
-    BaseResponse handleException(final Exception exception, HttpServletResponse response) {
-        response.setHeader("Content-Type", "text/plain");
+    public BaseResponse handleException(final Exception exception, HttpServletResponse response) {
         response.setStatus(exception instanceof  ValidationException ? HttpServletResponse.SC_BAD_REQUEST : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return BaseResponse.failure(exception.getMessage());
     }
