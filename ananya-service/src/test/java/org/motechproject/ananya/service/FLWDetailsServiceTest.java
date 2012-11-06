@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -8,16 +10,22 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
-import org.motechproject.ananya.exceptions.FLWDoesNotExistException;
-import org.motechproject.ananya.mapper.FrontLineWorkerUsageResponseMapper;
-import org.motechproject.ananya.response.FrontLineWorkerUsageResponse;
+import org.motechproject.ananya.exception.ValidationException;
+import org.motechproject.ananya.mapper.FLWUsageResponseMapper;
+import org.motechproject.ananya.request.FLWNighttimeCallsRequest;
+import org.motechproject.ananya.response.FLWNighttimeCallsResponse;
+import org.motechproject.ananya.response.FLWUsageResponse;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
+import org.motechproject.ananya.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -34,41 +42,87 @@ public class FLWDetailsServiceTest {
     @Mock
     private SMSReferenceService smsReferenceService;
     @Mock
-    private FrontLineWorkerUsageResponseMapper flwResponseMapper;
+    private FLWUsageResponseMapper flwResponseMapper;
+    @Mock
+    private Properties ananyaProperties;
 
-    private UUID flwId = UUID.randomUUID();
+    private String nightStartTime = "19:00:00";
+    private String nightEndTime = "06:59:59";
+
 
     @Before
     public void setup(){
         initMocks(this);
+        when(ananyaProperties.getProperty("nighttime.calls.start.time")).thenReturn(nightStartTime);
+        when(ananyaProperties.getProperty("nighttime.calls.end.time")).thenReturn(nightEndTime);
         flwDetailsService = new FLWDetailsService(frontLineWorkerService, callDurationMeasureService, locationService, smsReferenceService, flwResponseMapper);
     }
 
     @Test
     public void shouldRaiseExceptionIfIdIsInvalid() {
-        expectedException.expect(FLWDoesNotExistException.class);
-        expectedException.expectMessage("Unknown flw id: " + flwId);
+        UUID flwId = UUID.randomUUID();
+        expectedException.expect(ValidationException.class);
+        expectedException.expectMessage("unknown flw id: " + flwId);
         when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(null);
 
-        flwDetailsService.getUsageData(flwId.toString());
+        flwDetailsService.getUsage(flwId.toString());
     }
 
     @Test
     public void shouldReturnUsageDetailsForAValidFlwId() {
+        UUID flwId = UUID.randomUUID();
+
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, DateTime.now(), flwId);
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
-        FrontLineWorkerUsageResponse expectedFLWResponse = new FrontLineWorkerUsageResponse();
+        FLWUsageResponse expectedFLWResponse = new FLWUsageResponse();
         when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(defaultLocation);
         when(callDurationMeasureService.getCallDetails(msisdn)).thenReturn(callDetailsResponse);
         when(smsReferenceService.getSMSReferenceNumber(msisdn)).thenReturn(smsReference);
-        when(flwResponseMapper.mapFrom(frontLineWorker,defaultLocation,callDetailsResponse,smsReference)).thenReturn(expectedFLWResponse);
+        when(flwResponseMapper.mapUsageResponse(frontLineWorker, defaultLocation, callDetailsResponse, smsReference)).thenReturn(expectedFLWResponse);
 
-        FrontLineWorkerUsageResponse actualResponse = flwDetailsService.getUsageData(flwId.toString());
+        FLWUsageResponse actualResponse = flwDetailsService.getUsage(flwId.toString());
 
         assertEquals(expectedFLWResponse,actualResponse);
+    }
+
+
+    @Test
+    public void shouldRaiseExceptionIfIdIsInvalidForNighttimeCalls() {
+        UUID flwId = UUID.randomUUID();
+
+        expectedException.expect(ValidationException.class);
+        expectedException.expectMessage("unknown flw id: " + flwId);
+        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(null);
+
+        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(flwId, Channel.CONTACT_CENTER, DateUtils.parseLocalDate("14-12-2009"), DateUtils.parseLocalDate("15-12-2009"));
+        flwDetailsService.getNighttimeCalls(nighttimeCallsRequest);
+    }
+
+    @Test
+    public void shouldFetchNighttimeCalls() {
+        UUID flwId = UUID.randomUUID();
+        String msisdn = "919900501221";
+        String startDate = "14-12-2009";
+        String endDate = "15-12-2009";
+        final LocalDate startLocalDate = DateUtils.parseLocalDate(startDate);
+        final LocalDate endLocalDate = DateUtils.parseLocalDate(endDate);
+        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(flwId, Channel.CONTACT_CENTER, DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
+
+        List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>() {{
+           add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
+           add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
+        }};
+        FLWNighttimeCallsResponse nighttimeCallsResponse = mock(FLWNighttimeCallsResponse.class);
+
+        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        when(callDurationMeasureService.getJobAidCallDurations(msisdn, startLocalDate, endLocalDate)).thenReturn(jobAidCallDetailsList);
+        when(flwResponseMapper.mapNighttimeCallsResponse(jobAidCallDetailsList)).thenReturn(nighttimeCallsResponse);
+
+        assertEquals(nighttimeCallsResponse, flwDetailsService.getNighttimeCalls(nighttimeCallsRequest));
     }
 }

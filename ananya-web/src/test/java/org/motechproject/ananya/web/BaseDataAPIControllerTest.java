@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.ananya.web.exception.ValidationException;
+import org.motechproject.ananya.exception.ValidationException;
 
 import javax.servlet.http.HttpServletResponse;
 

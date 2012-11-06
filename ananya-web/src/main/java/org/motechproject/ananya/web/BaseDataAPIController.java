@@ -1,6 +1,6 @@
 package org.motechproject.ananya.web;
 
-import org.motechproject.ananya.web.exception.ValidationException;
+import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.web.response.BaseResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

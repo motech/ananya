@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "flw")
-public class FrontLineWorkerUsageResponse {
+public class FLWUsageResponse {
 
     @XmlElement
     private String name;
@@ -32,14 +32,14 @@ public class FrontLineWorkerUsageResponse {
     @XmlElement(name = "smsReferenceNumber")
     private List<String> smsReferenceNumbers;
 
-    public FrontLineWorkerUsageResponse() {
+    public FLWUsageResponse() {
     }
 
-    public FrontLineWorkerUsageResponse(String name, String designation, String registrationStatus, LocationResponse location,
-                                        List<FLWUsageDetail> usageDetails,
-                                        List<FLWCallDetail> callDetails,
-                                        FLWBookmark bookmark,
-                                        List<String> smsReferenceNumbers) {
+    public FLWUsageResponse(String name, String designation, String registrationStatus, LocationResponse location,
+                            List<FLWUsageDetail> usageDetails,
+                            List<FLWCallDetail> callDetails,
+                            FLWBookmark bookmark,
+                            List<String> smsReferenceNumbers) {
         this.name = name;
         this.designation = designation;
         this.registrationStatus = registrationStatus;
@@ -48,10 +48,6 @@ public class FrontLineWorkerUsageResponse {
         this.callDetails = callDetails;
         this.bookmark = bookmark;
         this.smsReferenceNumbers = smsReferenceNumbers;
-    }
-
-    public void withError(List<String> errors) {
-        //To change body of created methods use File | Settings | File Templates.
     }
 
     public String getName() {

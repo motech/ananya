@@ -1,4 +1,4 @@
-package org.motechproject.ananya.web.exception;
+package org.motechproject.ananya.exception;
 
 public class ValidationException extends RuntimeException {
     public ValidationException(String message) {

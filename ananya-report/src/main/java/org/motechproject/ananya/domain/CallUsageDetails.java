@@ -1,20 +1,20 @@
 package org.motechproject.ananya.domain;
 
 public class CallUsageDetails {
-    private final Long jobAidDurationInSec;
-    private final Long certificateCourseDurationInSec;
+    private final Long jobAidDurationInPulse;
+    private final Long certificateCourseDurationInPulse;
     private final Integer year;
     private final Integer month;
 
-    public CallUsageDetails(Long jobAidDurationInSec, Long certificateCourseDurationInSec, Integer year, Integer month) {
-        this.jobAidDurationInSec = jobAidDurationInSec;
-        this.certificateCourseDurationInSec = certificateCourseDurationInSec;
+    public CallUsageDetails(Long jobAidDurationInPulse, Long certificateCourseDurationInPulse, Integer year, Integer month) {
+        this.jobAidDurationInPulse = jobAidDurationInPulse;
+        this.certificateCourseDurationInPulse = certificateCourseDurationInPulse;
         this.year = year;
         this.month = month;
     }
 
-    public Long getJobAidDurationInSec() {
-        return jobAidDurationInSec;
+    public Long getJobAidDurationInPulse() {
+        return jobAidDurationInPulse;
     }
 
     public Integer getYear() {
@@ -25,7 +25,7 @@ public class CallUsageDetails {
         return month;
     }
 
-    public Long getCertificateCourseDurationInSec() {
-        return certificateCourseDurationInSec;
+    public Long getCertificateCourseDurationInPulse() {
+        return certificateCourseDurationInPulse;
     }
 }

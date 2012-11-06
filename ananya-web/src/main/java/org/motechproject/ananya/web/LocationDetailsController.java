@@ -1,11 +1,11 @@
 package org.motechproject.ananya.web;
 
+import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.request.LocationSyncRequest;
 import org.motechproject.ananya.response.LocationResponse;
 import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.web.annotations.Authenticated;
-import org.motechproject.ananya.web.exception.ValidationException;
 import org.motechproject.ananya.web.validator.Errors;
 import org.motechproject.ananya.web.validator.LocationSyncRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;

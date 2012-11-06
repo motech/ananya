@@ -2,6 +2,7 @@ package org.motechproject.ananya.web;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,6 +16,7 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.request.FLWNighttimeCallsRequest;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.request.LocationSyncRequest;
@@ -36,7 +38,7 @@ import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.ananya.utils.MVCTestUtils.mockMvc;
@@ -44,7 +46,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 
-public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
+public class FLWDetailsControllerIT extends SpringIntegrationTest {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
@@ -52,7 +54,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
     @Autowired
     private TestDataAccessTemplate template;
     @Autowired
-    private FrontLineWorkerDetailsController frontLineWorkerDetailsController;
+    private FLWDetailsController flwDetailsController;
     @Autowired
     private LocationRegistrationService locationRegistrationService;
     @Autowired
@@ -87,7 +89,7 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         String designation = Designation.ANM.name();
         String name = "name";
 
-        RegistrationResponse registrationResponse = frontLineWorkerDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString()));
+        RegistrationResponse registrationResponse = flwDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString()));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
@@ -109,40 +111,65 @@ public class FrontLineWorkerDetailsControllerIT extends SpringIntegrationTest {
         when(request.getParameter("operator")).thenReturn(null);
         when(request.getParameter("circle")).thenReturn(null);
 
-        List<FrontLineWorkerResponse> filteredFLWs = frontLineWorkerDetailsController.search(request);
+        List<FrontLineWorkerResponse> filteredFLWs = flwDetailsController.search(request);
 
         assertEquals(1, filteredFLWs.size());
         assertEquals(msisdn, filteredFLWs.get(0).getMsisdn());
     }
-    
+
     @Test
     public void shouldGetFlwUsageXmlResponse() throws Exception {
         String flwId = "48996698-5a2e-4f7e-99bb-266b51240af0";
 
-        ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>(){{
+        ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>() {{
             add(new FLWUsageDetail(2012, 12, 1234L, 1234L));
         }};
-        ArrayList<FLWCallDetail> flwCallDetails = new ArrayList<FLWCallDetail>(){{
+        ArrayList<FLWCallDetail> flwCallDetails = new ArrayList<FLWCallDetail>() {{
             add(new FLWCallDetail(CallType.MOBILE_ACADEMY, "12-12-2012 12:12:12", "12-12-2012 12:12:12", 2));
         }};
-        ArrayList<String> smsReferenceNumbers = new ArrayList<String>(){{
+        ArrayList<String> smsReferenceNumbers = new ArrayList<String>() {{
             add("1234");
         }};
-        frontLineWorkerDetailsController = new FrontLineWorkerDetailsController(registrationService, flwDetailsService);
-        FrontLineWorkerUsageResponse expectedResponse = new FrontLineWorkerUsageResponse("my_name", "ANM", "unregistered",
+        flwDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
+        FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "unregistered",
                 new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
-        when(flwDetailsService.getUsageData(flwId)).thenReturn(expectedResponse);
+        when(flwDetailsService.getUsage(flwId)).thenReturn(expectedResponse);
 
-        MvcResult result = mockMvc(frontLineWorkerDetailsController)
-                .perform(get("/flw/"+flwId+"/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
+        MvcResult result = mockMvc(flwDetailsController)
+                .perform(get("/flw/" + flwId + "/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/xml"))
                 .andReturn();
 
         String responseString = result.getResponse().getContentAsString();
-        FrontLineWorkerUsageResponse actualResponse = TestUtils.fromXml(FrontLineWorkerUsageResponse.class, responseString);
-        assertTrue(expectedResponse.equals(actualResponse));
+        FLWUsageResponse actualResponse = TestUtils.fromXml(FLWUsageResponse.class, responseString);
+        Assert.assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void shouldGetNighttimeCallsXmlResponse() throws Exception {
+        String flwId = "48996698-5a2e-4f7e-99bb-266b51240af0";
+        ArrayList<FLWCallDuration> flwCallDurations = new ArrayList<>();
+        flwCallDurations.add(new FLWCallDuration(DateTime.now().toString(), DateTime.now().plusMinutes(2).toString(), 2));
+        FLWNighttimeCallsResponse expectedResponse = new FLWNighttimeCallsResponse(flwCallDurations);
+        when(flwDetailsService.getNighttimeCalls(any(FLWNighttimeCallsRequest.class))).thenReturn(expectedResponse);
+
+        flwDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
+
+        MvcResult result = mockMvc(flwDetailsController)
+                .perform(get("/flw/" + flwId + "/nighttimecalls")
+                        .param("channel", "contact_center")
+                        .param("startDate", "12-10-2012")
+                        .param("endDate", "15-10-2012")
+                        .accept(MediaType.APPLICATION_XML))
+                .andExpect(status().isOk())
+                .andExpect(content().type("application/xml"))
+                .andReturn();
+
+        String responseString = result.getResponse().getContentAsString();
+        FLWNighttimeCallsResponse actualResponse = TestUtils.fromXml(FLWNighttimeCallsResponse.class, responseString);
+        assertEquals(expectedResponse, actualResponse);
     }
 
     private void clearAllData() {

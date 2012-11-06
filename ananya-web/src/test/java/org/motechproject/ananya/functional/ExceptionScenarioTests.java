@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.framework.JsonHttpClient;
-import org.motechproject.ananya.web.FrontLineWorkerDetailsController;
+import org.motechproject.ananya.web.FLWDetailsController;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,7 @@ import static junit.framework.Assert.assertTrue;
 
 public class ExceptionScenarioTests extends SpringIntegrationTest {
     @Autowired
-    private FrontLineWorkerDetailsController frontLineWorkerDetailsController;
+    private FLWDetailsController frontLineWorkerDetailsController;
     
     @Test
     public void shouldReturnStackTraceAnd500ErrorCodeInCaseOfExceptionFromDataApi() throws IOException {

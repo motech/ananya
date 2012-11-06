@@ -1,8 +1,10 @@
 package org.motechproject.ananya.service.measure;
 
+import org.joda.time.LocalDate;
 import org.motechproject.ananya.domain.CallLog;
 import org.motechproject.ananya.domain.CallLogItem;
 import org.motechproject.ananya.domain.CallUsageDetails;
+import org.motechproject.ananya.domain.JobAidCallDetails;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -128,5 +130,10 @@ public class CallDurationMeasureService {
     private void removeLog(String callId, CallLog callLog) {
         callLoggerService.delete(callLog);
         log.info(callId + "- callLog removed");
+    }
+
+    public List<JobAidCallDetails> getJobAidCallDurations(String msisdn, LocalDate startDate, LocalDate endDate) {
+        List<JobAidCallDetails> jobAidCallDetails = allCallDurationMeasures.getJobAidNighttimeCallDetails(Long.valueOf(msisdn), startDate, endDate);
+        return jobAidCallDetails;
     }
 }

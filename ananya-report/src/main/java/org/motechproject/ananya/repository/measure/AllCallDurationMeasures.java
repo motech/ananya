@@ -6,9 +6,15 @@ import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ananya.domain.CallUsageDetails;
+import org.motechproject.ananya.domain.JobAidCallDetails;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate3.HibernateCallback;
@@ -24,9 +30,11 @@ import java.util.List;
 @Transactional
 public class AllCallDurationMeasures {
     private DataAccessTemplate template;
-    private Integer numberOfRecentCallDetails;
     private Long certificateCourseShortCode;
     private Long certificateCourseLongCode;
+    private Integer numberOfRecentCallDetails;
+    private LocalTime nightStartTime;
+    private LocalTime nightEndTime;
 
     public AllCallDurationMeasures() {
     }
@@ -35,11 +43,15 @@ public class AllCallDurationMeasures {
     public AllCallDurationMeasures(DataAccessTemplate template,
                                    @Value("#{ananyaProperties['course.shortcode']}") String certificateCourseShortCode,
                                    @Value("#{ananyaProperties['course.longcode']}") String certificateCourseLongCode,
-                                   @Value("#{ananyaProperties['course.longcode']}") String numberOfRecentCallDetails) {
+                                   @Value("#{ananyaProperties['number.of.recent.call.details']}") String numberOfRecentCallDetails,
+                                   @Value("#{ananyaProperties['nighttime.calls.start.time']}") String nightStartTime,
+                                   @Value("#{ananyaProperties['nighttime.calls.end.time']}") String nightEndTime) {
         this.template = template;
         this.numberOfRecentCallDetails = Integer.parseInt(numberOfRecentCallDetails);
         this.certificateCourseShortCode = Long.valueOf(certificateCourseShortCode);
         this.certificateCourseLongCode = Long.valueOf(certificateCourseLongCode);
+        this.nightStartTime = DateUtils.parseLocalTime(nightStartTime);
+        this.nightEndTime = DateUtils.parseLocalTime(nightEndTime);
     }
 
     public void add(CallDurationMeasure callDurationMeasure) {
@@ -89,11 +101,11 @@ public class AllCallDurationMeasures {
         Iterator resultSet = template.executeFind(new HibernateCallback<Object>() {
             @Override
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                SQLQuery sqlQuery = session.createSQLQuery("SELECT COALESCE(sum(a.jausage),0) as ja_usage, \n" +
-                        "       COALESCE(sum(a.ccusage),0) as cc_usage, \n" +
+                SQLQuery sqlQuery = session.createSQLQuery("SELECT COALESCE(sum(a.jaUsage),0) as ja_usage, \n" +
+                        "       COALESCE(sum(a.ccUsage),0) as cc_usage, \n" +
                         "       year, \n" +
                         "       month \n" +
-                        "FROM   ((SELECT cdm.duration AS jaUsage, \n" +
+                        "FROM   ((SELECT cdm.duration_in_pulse AS jaUsage, \n" +
                         "                NULL         AS ccUsage, \n" +
                         "                td.year      AS year, \n" +
                         "                td.month     AS month \n" +
@@ -108,7 +120,7 @@ public class AllCallDurationMeasures {
                         "                AND cdm.flw_id = flwd.id) \n" +
                         "        UNION ALL \n" +
                         "        (SELECT NULL         AS jaUsage, \n" +
-                        "                cdm.duration AS ccUsage, \n" +
+                        "                cdm.duration_in_pulse AS ccUsage, \n" +
                         "                td.year      AS year, \n" +
                         "                td.month     AS month \n" +
                         "         FROM   report.call_duration_measure cdm, \n" +
@@ -136,10 +148,10 @@ public class AllCallDurationMeasures {
         while (resultSet.hasNext()) {
             Object[] row = (Object[]) resultSet.next();
             Long jobAidDurationInSec = Long.valueOf(row[0].toString());
-            Long certificateCourseDurationInSec = Long.valueOf(row[1].toString());
+            Long durationInPulse = Long.valueOf(row[1].toString());
             Integer year = Integer.valueOf(row[2].toString());
             Integer month = Integer.valueOf(row[3].toString());
-            callUsageDetailsList.add(new CallUsageDetails(jobAidDurationInSec, certificateCourseDurationInSec, year, month));
+            callUsageDetailsList.add(new CallUsageDetails(jobAidDurationInSec, durationInPulse, year, month));
         }
         return callUsageDetailsList;
     }
@@ -150,5 +162,55 @@ public class AllCallDurationMeasures {
         criteria.add(Restrictions.eq("loc.locationId", locationId));
 
         return template.findByCriteria(criteria);
+    }
+
+    public List<JobAidCallDetails> getJobAidNighttimeCallDetails(final Long msisdn, LocalDate startDate, LocalDate endDate) {
+        final DateTime startDateTime = startDate.toDateTime(nightStartTime);
+        final DateTime endDateTime = endDate.toDateTime(nightEndTime);
+
+        Iterator resultSet = template.executeFind(new HibernateCallback<Object>() {
+            @Override
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                SQLQuery sqlQuery = session.createSQLQuery(
+                        "SELECT " +
+                            "call.start_time, " +
+                            "call.end_time, " +
+                            "call.duration_in_pulse " +
+                        "FROM " +
+                            "report.call_duration_measure call RIGHT JOIN report.front_line_worker_dimension flw on call.flw_id = flw.id " +
+                        "WHERE\n" +
+                            "flw.msisdn = " + msisdn + " AND\n" +
+                            "call.type = 'CALL' AND\n" +
+                            "call.called_number <> '" + certificateCourseLongCode + "' AND\n" +
+                            "call.called_number <> '" + certificateCourseShortCode + "' AND\n" +
+                            "call.end_time >= TIMESTAMP '" + startDateTime.toString("yyyy-MM-dd HH:mm:ss") + "' AND \n" +
+                            "call.start_time <= TIMESTAMP '" + endDateTime.toString("yyyy-MM-dd HH:mm:ss") + "' AND \n" +
+                            "(" +
+                                "\"time\"(call.start_time) >= TIME '" + nightStartTime.toString("HH:mm:ss") + "' OR \n" +
+                                "\"time\"(call.start_time) <= TIME '" + nightEndTime.toString("HH:mm:ss") + "' OR \n" +
+                                "\"time\"(call.end_time) >= TIME '" + nightStartTime.toString("HH:mm:ss") + "' OR \n" +
+                                "\"time\"(call.end_time) <= TIME '" + nightEndTime.toString("HH:mm:ss") + "' \n" +
+                            ")" +
+                         "ORDER BY call.start_time;");
+                return sqlQuery.list();
+            }
+        }).iterator();
+
+        return mapToJobAidCallDetails(resultSet);
+    }
+
+    private List<JobAidCallDetails> mapToJobAidCallDetails(Iterator resultSet) {
+        List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<>();
+
+        while (resultSet.hasNext()) {
+            Object[] row = (Object[]) resultSet.next();
+
+            DateTime startTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S").parseDateTime(row[0].toString());
+            DateTime endTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S").parseDateTime(row[1].toString());
+            Integer jobAidDurationInPulse = Integer.valueOf(row[2].toString());
+            jobAidCallDetailsList.add(new JobAidCallDetails(startTime, endTime, jobAidDurationInPulse));
+        }
+
+        return jobAidCallDetailsList;
     }
 }

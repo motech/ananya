@@ -1,15 +1,14 @@
 package org.motechproject.ananya.service;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.motechproject.ananya.domain.CallFlowType;
-import org.motechproject.ananya.domain.CallLog;
-import org.motechproject.ananya.domain.CallLogItem;
-import org.motechproject.ananya.domain.CallUsageDetails;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -258,5 +257,26 @@ public class CallDurationMeasureServiceTest {
         List<CallDurationMeasure> callDurationMeasureList = captor.getValue();
         assertEquals(1, callDurationMeasureList.size());
         assertEquals(newLocationId, callDurationMeasureList.get(0).getLocationDimension().getLocationId());
+    }
+
+    @Test
+    public void shouldReturnCallDurationsForAllJobAidUsagesBetweenGivenTimeRange() {
+        String msisdn = "9988776655";
+        final DateTime now = DateTime.now();
+        LocalDate startDate = now.toLocalDate();
+        LocalDate endDate = startDate.plusDays(4);
+        final LocalTime startTime = new LocalTime(19, 0, 0);
+        LocalTime endTime = new LocalTime(6, 59, 59);
+
+        List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>(){{
+            add(new JobAidCallDetails(now, now.plusMinutes(2), 2));
+            add(new JobAidCallDetails(now.plusDays(1), now.plusDays(1).plusMinutes(2), 2));
+            add(new JobAidCallDetails(now.plusDays(2), now.plusDays(2).plusMinutes(2), 2));
+        }};
+        when(allCallDurationMeasures.getJobAidNighttimeCallDetails(Long.valueOf(msisdn), startDate, endDate)).thenReturn(jobAidCallDetailsList);
+
+        List<JobAidCallDetails> jobAidCallDurations = callDurationMeasureService.getJobAidCallDurations(msisdn, startDate, endDate);
+
+        assertEquals(3, jobAidCallDurations.size());
     }
 }

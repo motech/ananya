@@ -1,4 +1,4 @@
-package org.motechproject.ananya;
+package org.motechproject.ananya.response;
 
 import org.apache.commons.lang.StringUtils;
 
