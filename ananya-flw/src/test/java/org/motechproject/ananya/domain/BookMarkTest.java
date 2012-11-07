@@ -62,4 +62,10 @@ public class BookMarkTest {
 
         assertFalse(isNotAtPlayCourseResult);
     }
+
+    @Test
+    public void shouldReturnIfBookmarkIsEmpty() {
+        assertFalse(new BookMark("some", null, null).isEmptyBookmark());
+        assertTrue(new EmptyBookmark().isEmptyBookmark());
+    }
 }

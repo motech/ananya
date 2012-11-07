@@ -1,6 +1,7 @@
 package org.motechproject.ananya.domain;
 
 import com.google.gson.Gson;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class BookMark {
@@ -67,5 +68,10 @@ public class BookMark {
 
     public boolean notAtPlayCourseResult() {
         return !Interaction.PlayCourseResult.equals(type);
+    }
+
+    @JsonIgnore
+    public boolean isEmptyBookmark() {
+        return type == null && chapterIndex == null && lessonIndex == null;
     }
 }

@@ -23,11 +23,11 @@ public class FLWUsageResponseMapper {
     }
 
     public FLWUsageResponse mapUsageResponse(FrontLineWorker frontLineWorker, Location location, CallDetailsResponse callDetails, SMSReference smsReference) {
-        LocationResponse locationResponse = new LocationResponse(location.getDistrict(), location.getBlock(), location.getPanchayat());
+        LocationResponse locationResponse = location == null ? null : new LocationResponse(location.getDistrict(), location.getBlock(), location.getPanchayat());
         List<FLWUsageDetail> flwUsageDetailList = mapUsageDetails(callDetails.getCallUsageDetailsList());
         List<FLWCallDetail> flwCallDetails = mapFrom(callDetails);
-        BookMark bookMark = frontLineWorker.bookMark();
-
+        BookMark bookmark = frontLineWorker.bookMark();
+        FLWBookmark flwBookmark = bookmark.isEmptyBookmark() ? null : new FLWBookmark(bookmark.getChapterIndex(), bookmark.getLessonIndex());
         return new FLWUsageResponse(
                 frontLineWorker.getName(),
                 frontLineWorker.designationName(),
@@ -35,7 +35,7 @@ public class FLWUsageResponseMapper {
                 locationResponse,
                 flwUsageDetailList,
                 flwCallDetails,
-                new FLWBookmark(bookMark.getChapterIndex(), bookMark.getLessonIndex()),
+                flwBookmark,
                 mapFrom(smsReference)
         );
     }
@@ -48,6 +48,8 @@ public class FLWUsageResponseMapper {
     }
 
     private List<String> mapFrom(SMSReference smsReference) {
+        if (smsReference == null)
+            return null;
         Map<Integer, String> referenceNumbers = smsReference.getReferenceNumbers();
         List<String> smsReferenceNumbers = new ArrayList<>();
         for (String referenceNumber : referenceNumbers.values()) {

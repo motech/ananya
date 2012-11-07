@@ -1,17 +1,24 @@
 package org.motechproject.ananya.web;
 
+import org.hibernate.exception.ExceptionUtils;
 import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.web.response.BaseResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 
 public abstract class BaseDataAPIController {
+    private Logger logger = LoggerFactory.getLogger(BaseDataAPIController.class);
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public BaseResponse handleException(final Exception exception, HttpServletResponse response) {
-        response.setStatus(exception instanceof  ValidationException ? HttpServletResponse.SC_BAD_REQUEST : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        logger.error(ExceptionUtils.getFullStackTrace(exception));
+
+        response.setStatus(exception instanceof ValidationException ? HttpServletResponse.SC_BAD_REQUEST : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return BaseResponse.failure(exception.getMessage());
     }
 }

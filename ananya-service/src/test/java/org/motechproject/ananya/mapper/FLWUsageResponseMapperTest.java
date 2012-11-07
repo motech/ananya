@@ -1,5 +1,6 @@
 package org.motechproject.ananya.mapper;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.domain.*;
@@ -8,10 +9,13 @@ import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
 import org.motechproject.ananya.utils.DateUtils;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FLWUsageResponseMapperTest {
     @Test
@@ -89,5 +93,37 @@ public class FLWUsageResponseMapperTest {
         FLWCallDuration expectedDuration2 = new FLWCallDuration(DateUtils.formatDateTime(startDate.plusMinutes(4)), DateUtils.formatDateTime(startDate.plusMinutes(5)), 15);
         assertEquals(exptectdDuration1, callDetails.get(0));
         assertEquals(expectedDuration2, callDetails.get(1));
+    }
+
+    @Test
+    public void shouldHandleNullLocation() {
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
+
+        assertNull(flwUsageResponse.getLocation());
+    }
+
+    @Test
+    public void shouldHandleNullSMSReferenceNumber() {
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), null);
+
+        assertNull(flwUsageResponse.getLocation());
+    }
+
+    @Test
+    public void shouldNotHaveEmptyBookmark() {
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), null);
+
+        assertNull(flwUsageResponse.getBookmark());
+    }
+
+    public static String toJson(Object objectToSerialize) {
+        ObjectMapper mapper = new ObjectMapper();
+        StringWriter stringWriter = new StringWriter();
+        try {
+            mapper.writeValue(stringWriter, objectToSerialize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return stringWriter.toString();
     }
 }
