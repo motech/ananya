@@ -17,8 +17,12 @@ public abstract class BaseDataAPIController {
     @ResponseBody
     public BaseResponse handleException(final Exception exception, HttpServletResponse response) {
         logger.error(ExceptionUtils.getFullStackTrace(exception));
-
-        response.setStatus(exception instanceof ValidationException ? HttpServletResponse.SC_BAD_REQUEST : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        return BaseResponse.failure(exception.getMessage());
+        String errorMessage="AN ERROR OCCURRED.";
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        if (exception instanceof ValidationException) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            errorMessage = exception.getMessage();
+        }
+        return BaseResponse.failure(errorMessage);
     }
 }

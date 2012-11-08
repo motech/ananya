@@ -38,6 +38,14 @@ public class BaseResponse {
         return new BaseResponse(ERROR, description);
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
