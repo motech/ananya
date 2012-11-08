@@ -80,7 +80,7 @@ public class AllCallDurationMeasures {
         criteria.add(Restrictions.eq("flw.msisdn", msisdn));
         criteria.add(Restrictions.eq("type", "CALL").ignoreCase());
         criteria.add(Restrictions.or(Restrictions.eq("calledNumber", certificateCourseLongCode), Restrictions.eq("calledNumber", certificateCourseShortCode)));
-        criteria.addOrder(Order.desc("timeDimension"));
+        criteria.addOrder(Order.desc("startTime"));
 
         return template.findByCriteria(criteria, -1, numberOfRecentCallDetails);
     }
@@ -92,7 +92,7 @@ public class AllCallDurationMeasures {
         criteria.add(Restrictions.eq("type", "CALL").ignoreCase());
         criteria.add(Restrictions.ne("calledNumber", certificateCourseShortCode));
         criteria.add(Restrictions.ne("calledNumber", certificateCourseLongCode));
-        criteria.addOrder(Order.desc("timeDimension"));
+        criteria.addOrder(Order.desc("startTime"));
 
         return template.findByCriteria(criteria, -1, numberOfRecentCallDetails);
     }
