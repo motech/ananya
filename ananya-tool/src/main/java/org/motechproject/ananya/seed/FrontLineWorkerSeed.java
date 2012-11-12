@@ -26,6 +26,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class FrontLineWorkerSeed {
@@ -89,7 +90,7 @@ public class FrontLineWorkerSeed {
             currentDistrict = currentRow[3];
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
-            flwId = currentRow[6];
+            flwId = UUID.randomUUID().toString();
 
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
