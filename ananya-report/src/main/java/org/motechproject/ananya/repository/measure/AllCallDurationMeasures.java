@@ -9,7 +9,6 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ananya.domain.CallUsageDetails;
 import org.motechproject.ananya.domain.JobAidCallDetails;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -201,16 +201,17 @@ public class AllCallDurationMeasures {
 
     private List<JobAidCallDetails> mapToJobAidCallDetails(Iterator resultSet) {
         List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<>();
-
         while (resultSet.hasNext()) {
             Object[] row = (Object[]) resultSet.next();
-
-            DateTime startTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S").parseDateTime(row[0].toString());
-            DateTime endTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S").parseDateTime(row[1].toString());
+            DateTime startTime = toJodaDateTime((Timestamp) row[0]);
+            DateTime endTime = toJodaDateTime((Timestamp) row[1]);
             Integer jobAidDurationInPulse = Integer.valueOf(row[2].toString());
             jobAidCallDetailsList.add(new JobAidCallDetails(startTime, endTime, jobAidDurationInPulse));
         }
-
         return jobAidCallDetailsList;
+    }
+
+    private DateTime toJodaDateTime(Timestamp timestamp) {
+        return new DateTime(timestamp);
     }
 }
