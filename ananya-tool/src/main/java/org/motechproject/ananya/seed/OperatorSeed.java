@@ -66,9 +66,11 @@ public class OperatorSeed {
     @Seed(priority = 0, version = "1.10", comment = "adding pulse to second mapping for operators")
     public void addPulseToSec() throws IOException {
         for (String operatorName : pulse_to_second.keySet()) {
+            System.out.println("Adding operator: " + operatorName);
             Operator operator = allOperators.findByName(operatorName);
             operator.setPulseToMilliSec(pulse_to_second.get(operatorName));
             allOperators.update(operator);
+            System.out.println("Added operator: " + operatorName);
         }
     }
 
