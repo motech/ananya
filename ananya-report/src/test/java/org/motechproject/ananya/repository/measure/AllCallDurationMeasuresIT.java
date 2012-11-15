@@ -45,7 +45,8 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFindCallDurationMeasuresByCallerId() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
+        String operator = "operator";
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, operator, "circle", "name", "ASHA", "REGISTERED", flwId);
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -55,6 +56,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
 
         assertEquals(1, callDurationMeasureList.size());
         assertEquals(callerId, callDurationMeasureList.get(0).getCalledNumber());
+        assertEquals(operator, callDurationMeasureList.get(0).getOperator());
     }
 
     @Test

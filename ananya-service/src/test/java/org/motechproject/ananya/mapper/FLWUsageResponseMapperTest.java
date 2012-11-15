@@ -4,6 +4,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.service.measure.response.CallDetailsResponse;
@@ -33,10 +34,10 @@ public class FLWUsageResponseMapperTest {
             add(new CallUsageDetails(123L, 324L, year, month));
         }};
         ArrayList<CallDurationMeasure> jobAidCallDurationMeasureList = new ArrayList<CallDurationMeasure>() {{
-            add(new CallDurationMeasure(null, null, null, null, null, 123, startTime, endTime, "CALL", 12));
+            add(new CallDurationMeasure(new FrontLineWorkerDimension(), null, null, null, null, 123, startTime, endTime, "CALL", 12));
         }};
         ArrayList<CallDurationMeasure> certificateCourseCallDurationMeasureList = new ArrayList<CallDurationMeasure>() {{
-            add(new CallDurationMeasure(null, null, null, null, null, 1324, startTime, endTime, "CALL", 13));
+            add(new CallDurationMeasure(new FrontLineWorkerDimension(), null, null, null, null, 1324, startTime, endTime, "CALL", 13));
         }};
         CallDetailsResponse callDetails = new CallDetailsResponse(jobAidCallUsageDetails, jobAidCallDurationMeasureList, certificateCourseCallDurationMeasureList);
         Location location = Location.getDefaultLocation();

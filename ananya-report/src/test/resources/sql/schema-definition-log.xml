@@ -418,4 +418,18 @@
             ALTER TABLE report.location_dimension ALTER status SET NOT NULL;
         </sql>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="31">
+        <sql splitStatements="false">
+            ALTER TABLE report.call_duration_measure ADD COLUMN operator VARCHAR(30);
+
+            UPDATE report.front_line_worker_dimension SET operator = 'unknown' WHERE operator IS NULL;
+
+            UPDATE report.call_duration_measure AS cdm
+                SET operator=flwd.operator
+            FROM report.front_line_worker_dimension AS flwd WHERE cdm.flw_id = flwd.id;
+
+            ALTER TABLE report.call_duration_measure ALTER operator SET NOT NULL;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

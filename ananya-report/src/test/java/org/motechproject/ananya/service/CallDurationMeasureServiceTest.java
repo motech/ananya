@@ -247,7 +247,7 @@ public class CallDurationMeasureServiceTest {
         String newLocationId = "newLocationId";
         String oldLocationId = "oldLocationId";
         ArrayList<CallDurationMeasure> callDurationMeasures = new ArrayList<>();
-        callDurationMeasures.add(new CallDurationMeasure(null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, null, 10, DateTime.now(), DateTime.now(), null, 0));
+        callDurationMeasures.add(new CallDurationMeasure(new FrontLineWorkerDimension(), new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, null, 10, DateTime.now(), DateTime.now(), null, 0));
         when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
         when(allCallDurationMeasures.findByLocationId(oldLocationId)).thenReturn(callDurationMeasures);
 
