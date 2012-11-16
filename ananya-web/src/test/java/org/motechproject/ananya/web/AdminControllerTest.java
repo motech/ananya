@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,12 @@ public class AdminControllerTest {
     public void setUp() {
         initMocks(this);
         controller = new AdminController(monitorPage, loginPage, inquiryPage, logsPage, peerServer);
+    }
+
+    @Test
+    public void should() {
+        String url = "msisdn=[{\"subscriptionId\":\"cd3fad51-3b36-4c86-9bec-74b83a50872e\",\"description\":\"Invalid status code init_Dropped cpg Forwarded Call\",\"mdn\":\"9955559200\"}]";
+        System.out.println(URLEncoder.encode(url));
     }
 
     @Test

@@ -3,23 +3,21 @@ package org.motechproject.ananya.request;
 import org.joda.time.LocalDate;
 import org.motechproject.ananya.domain.Channel;
 
-import java.util.UUID;
-
 public class FLWNighttimeCallsRequest {
-    private UUID flwId;
+    private String msisdn;
     private Channel channel;
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public FLWNighttimeCallsRequest(UUID flwId, Channel channel, LocalDate startDate, LocalDate endDate) {
-        this.flwId = flwId;
+    public FLWNighttimeCallsRequest(String msisdn, Channel channel, LocalDate startDate, LocalDate endDate) {
+        this.msisdn = msisdn;
         this.channel = channel;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public UUID getFlwId() {
-        return flwId;
+    public String getMsisdn() {
+        return msisdn;
     }
 
     public Channel getChannel() {

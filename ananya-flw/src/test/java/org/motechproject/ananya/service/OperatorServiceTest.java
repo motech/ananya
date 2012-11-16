@@ -35,15 +35,6 @@ public class OperatorServiceTest {
     }
 
     @Test
-    public void shouldDelegateToAllOperatorsRepositoryToFetchAllOperators() {
-        List<Operator> expectedOperators = Arrays.asList(new Operator());
-        when(allOperators.getAll()).thenReturn(expectedOperators);
-
-        List<Operator> operators = operatorService.getAllOperators();
-        assertEquals(expectedOperators, operators);
-    }
-
-    @Test
     public void shouldGetTheUsageByPulseInMilliSecGivenDurationInMilliSec() {
         String operatorName = "airtel";
         int durationInMilliSec = 121000;

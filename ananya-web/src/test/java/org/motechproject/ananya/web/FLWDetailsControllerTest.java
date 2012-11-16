@@ -17,13 +17,9 @@ import org.motechproject.ananya.service.FLWDetailsService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.ananya.utils.DateUtils;
 
-import java.util.UUID;
-
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FLWDetailsControllerTest {
@@ -43,11 +39,11 @@ public class FLWDetailsControllerTest {
 
     @Test
     public void shouldGetFLWUsageDetails() {
-        String flwId = UUID.randomUUID().toString();
+        String msisdn = "1234567980";
         FLWUsageResponse expectedFLWUsageResponse = new FLWUsageResponse();
-        when(flwDetailsService.getUsage(flwId)).thenReturn(expectedFLWUsageResponse);
+        when(flwDetailsService.getUsage(msisdn)).thenReturn(expectedFLWUsageResponse);
 
-        FLWUsageResponse actualFLWUsageResponse = frontLineWorkerDetailsController.getUsage(flwId, "contact_center");
+        FLWUsageResponse actualFLWUsageResponse = frontLineWorkerDetailsController.getUsage(msisdn, "contact_center");
 
         assertEquals(expectedFLWUsageResponse, actualFLWUsageResponse);
     }
@@ -55,40 +51,40 @@ public class FLWDetailsControllerTest {
     @Test
     public void shouldThrowExceptionIfChannelIsNotValid() {
         String channel = "invalid_channel";
-        String flwId = UUID.randomUUID().toString();
+        String msisdn = "1234567890";
 
         expectedException.expect(ValidationException.class);
         expectedException.expectMessage(String.format("invalid channel: %s", channel));
-        frontLineWorkerDetailsController.getUsage(flwId, channel);
+        frontLineWorkerDetailsController.getUsage(msisdn, channel);
     }
 
     @Test
-    public void shouldThrowExceptionIfFLWIdIsNotValid() {
+    public void shouldThrowExceptionIfMsisdnNotValid() {
         String channel = "contact_center";
-        String flwId = "invalid_flwId";
+        String msisdn = "invalid_msisdn";
 
         expectedException.expect(ValidationException.class);
-        expectedException.expectMessage(String.format("invalid flw id: %s", flwId));
-        frontLineWorkerDetailsController.getUsage(flwId, channel);
+        expectedException.expectMessage(String.format("invalid msisdn: %s", msisdn));
+        frontLineWorkerDetailsController.getUsage(msisdn, channel);
     }
 
     @Test
     public void shouldGetFLWNighttimeCallsDetails() {
-        UUID flwId = UUID.randomUUID();
+        String msisdn = "1234567890";
         String startDate = "14-12-2009";
         String endDate = "15-12-2009";
 
         FLWNighttimeCallsResponse expectedNighttimeCallsResponse = mock(FLWNighttimeCallsResponse.class);
         when(flwDetailsService.getNighttimeCalls(any(FLWNighttimeCallsRequest.class))).thenReturn(expectedNighttimeCallsResponse);
 
-        FLWNighttimeCallsResponse actualNighttimeCallsResponse = frontLineWorkerDetailsController.getNighttimeCalls(flwId.toString(), "contact_center", startDate, endDate);
+        FLWNighttimeCallsResponse actualNighttimeCallsResponse = frontLineWorkerDetailsController.getNighttimeCalls(msisdn, "contact_center", startDate, endDate);
 
         assertEquals(expectedNighttimeCallsResponse, actualNighttimeCallsResponse);
 
         ArgumentCaptor<FLWNighttimeCallsRequest> captor = ArgumentCaptor.forClass(FLWNighttimeCallsRequest.class);
         verify(flwDetailsService).getNighttimeCalls(captor.capture());
         FLWNighttimeCallsRequest actualRequest = captor.getValue();
-        assertEquals(flwId, actualRequest.getFlwId());
+        assertEquals(msisdn, actualRequest.getMsisdn());
         assertEquals(Channel.CONTACT_CENTER, actualRequest.getChannel());
         assertEquals(DateUtils.parseLocalDate(startDate), actualRequest.getStartDate());
         assertEquals(DateUtils.parseLocalDate(endDate), actualRequest.getEndDate());
@@ -100,16 +96,16 @@ public class FLWDetailsControllerTest {
 
         expectedException.expect(ValidationException.class);
         expectedException.expectMessage(String.format("invalid channel: %s", channel));
-        frontLineWorkerDetailsController.getNighttimeCalls("flwId", channel, "", "");
+        frontLineWorkerDetailsController.getNighttimeCalls("msisdn", channel, "", "");
     }
 
     @Test
-    public void shouldThrowExceptionIfFLWIdIsNotValidWhileFetchingNighttimeCalls() {
+    public void shouldThrowExceptionIfMsisdnIsNotValidWhileFetchingNighttimeCalls() {
         String channel = "contact_center";
-        String flwId = "invalid_flwId";
+        String msisdn = "invalid_msisdn";
 
         expectedException.expect(ValidationException.class);
-        expectedException.expectMessage(String.format("invalid flw id: %s", flwId));
-        frontLineWorkerDetailsController.getNighttimeCalls(flwId, channel, "", "");
+        expectedException.expectMessage(String.format("invalid msisdn: %s", msisdn));
+        frontLineWorkerDetailsController.getNighttimeCalls(msisdn, channel, "", "");
     }
 }

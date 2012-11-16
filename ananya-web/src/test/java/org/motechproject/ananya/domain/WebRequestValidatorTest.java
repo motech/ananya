@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.motechproject.ananya.response.ValidationResponse;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -17,28 +15,22 @@ public class WebRequestValidatorTest {
     private WebRequestValidator validator = new WebRequestValidator();
 
     @Test
-    public void shouldValidateFlwId() {
+    public void shouldValidateMsisdn() {
         ValidationResponse validationResponse = new ValidationResponse();
-        validator.validateFlwId("invalid_flwid", validationResponse);
-        assertEquals("invalid flw id: invalid_flwid", validationResponse.getErrorMessage());
-
-
-        validationResponse = new ValidationResponse();
-        validator.validateFlwId(null, validationResponse);
-        assertEquals("missing flw id", validationResponse.getErrorMessage());
+        validator.validateMsisdn("invalid_msisdn", validationResponse);
+        assertEquals("invalid msisdn: invalid_msisdn", validationResponse.getErrorMessage());
 
         validationResponse = new ValidationResponse();
-        validator.validateFlwId("", validationResponse);
-        assertEquals("missing flw id", validationResponse.getErrorMessage());
-
-
-        validationResponse = new ValidationResponse();
-        validator.validateFlwId("  ", validationResponse);
-        assertEquals("invalid flw id:   ", validationResponse.getErrorMessage());
+        validator.validateMsisdn(null, validationResponse);
+        assertEquals("invalid msisdn: null", validationResponse.getErrorMessage());
 
         validationResponse = new ValidationResponse();
-        validator.validateFlwId(UUID.randomUUID().toString(), validationResponse);
-        assertFalse(validationResponse.hasErrors());
+        validator.validateMsisdn("", validationResponse);
+        assertEquals("invalid msisdn: ", validationResponse.getErrorMessage());
+
+        validationResponse = new ValidationResponse();
+        validator.validateMsisdn(" ", validationResponse);
+        assertEquals("invalid msisdn:  ", validationResponse.getErrorMessage());
     }
 
     @Test

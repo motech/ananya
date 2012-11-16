@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FLWDetailsService {
@@ -38,9 +37,8 @@ public class FLWDetailsService {
         this.frontLineWorkerUsageResponseMapper = frontLineWorkerUsageResponseMapper;
     }
 
-    public FLWUsageResponse getUsage(String flwId) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(UUID.fromString(flwId));
-        String msisdn = frontLineWorker.getMsisdn();
+    public FLWUsageResponse getUsage(String msisdn) {
+        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
         Location location = locationService.findByExternalId(frontLineWorker.getLocationId());
         CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
         SMSReference smsReferenceNumber = smsReferenceService.getSMSReferenceNumber(msisdn);
@@ -48,16 +46,16 @@ public class FLWDetailsService {
         return frontLineWorkerUsageResponseMapper.mapUsageResponse(frontLineWorker, location, callDetails, smsReferenceNumber);
     }
 
-    private FrontLineWorker getFrontLineWorker(UUID flwId) {
-        FrontLineWorker frontLineWorker = frontLineWorkerService.findByFlwId(flwId);
+    private FrontLineWorker getFrontLineWorker(String msisdn) {
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);
         if (frontLineWorker == null) {
-            throw new ValidationException(String.format("unknown flw id: %s", flwId));
+            throw new ValidationException(String.format("unknown msisdn : %s", msisdn));
         }
         return frontLineWorker;
     }
 
     public FLWNighttimeCallsResponse getNighttimeCalls(FLWNighttimeCallsRequest nighttimeCallsRequest) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(nighttimeCallsRequest.getFlwId());
+        FrontLineWorker frontLineWorker = getFrontLineWorker(nighttimeCallsRequest.getMsisdn());
 
         List<JobAidCallDetails> nighttimeCalls = callDurationMeasureService.getJobAidCallDurations(frontLineWorker.getMsisdn(), nighttimeCallsRequest.getStartDate(), nighttimeCallsRequest.getEndDate());
 

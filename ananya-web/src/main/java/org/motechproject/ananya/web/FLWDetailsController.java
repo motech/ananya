@@ -1,15 +1,14 @@
 package org.motechproject.ananya.web;
 
 import org.joda.time.DateTime;
-import org.motechproject.ananya.domain.WebRequestValidator;
-import org.motechproject.ananya.response.*;
-import org.motechproject.ananya.web.request.FLWNighttimeCallsWebRequest;
+import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
-import org.motechproject.ananya.response.FLWUsageResponse;
+import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.service.FLWDetailsService;
 import org.motechproject.ananya.service.RegistrationService;
 import org.motechproject.ananya.web.annotations.Authenticated;
-import org.motechproject.ananya.exception.ValidationException;
+import org.motechproject.ananya.web.request.FLWNighttimeCallsWebRequest;
+import org.motechproject.ananya.web.request.FLWUsageWebRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -57,22 +56,20 @@ public class FLWDetailsController extends BaseDataAPIController {
         return registrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{flwId}/usage", produces = {"application/json", "application/xml"})
+    @RequestMapping(method = RequestMethod.GET, value = "/{msisdn}/usage", produces = {"application/json", "application/xml"})
     @ResponseBody
-    public FLWUsageResponse getUsage(@PathVariable String flwId, @RequestParam String channel){
-        ValidationResponse validationResponse = new ValidationResponse();
-        WebRequestValidator webRequestValidator = new WebRequestValidator();
-        webRequestValidator.validateChannel(channel, validationResponse);
-        webRequestValidator.validateFlwId(flwId, validationResponse);
+    public FLWUsageResponse getUsage(@PathVariable String msisdn, @RequestParam String channel){
+        FLWUsageWebRequest flwUsageWebRequest = new FLWUsageWebRequest(msisdn, channel);
+        ValidationResponse validationResponse = flwUsageWebRequest.validate();
         raiseExceptionIfThereAreErrors(validationResponse);
 
-        return flwDetailsService.getUsage(flwId);
+        return flwDetailsService.getUsage(msisdn);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{flwId}/nighttimecalls", produces = {"application/json", "application/xml"})
+    @RequestMapping(method = RequestMethod.GET, value = "/{msisdn}/nighttimecalls", produces = {"application/json", "application/xml"})
     @ResponseBody
-    public FLWNighttimeCallsResponse getNighttimeCalls(@PathVariable String flwId, @RequestParam String channel, @RequestParam String startDate, @RequestParam String endDate){
-        FLWNighttimeCallsWebRequest flwNighttimeCallsRequest = new FLWNighttimeCallsWebRequest(flwId, channel, startDate, endDate);
+    public FLWNighttimeCallsResponse getNighttimeCalls(@PathVariable String msisdn, @RequestParam String channel, @RequestParam String startDate, @RequestParam String endDate){
+        FLWNighttimeCallsWebRequest flwNighttimeCallsRequest = new FLWNighttimeCallsWebRequest(msisdn, channel, startDate, endDate);
         ValidationResponse validationResponse = flwNighttimeCallsRequest.validate();
         raiseExceptionIfThereAreErrors(validationResponse);
 

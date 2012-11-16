@@ -4,14 +4,13 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.motechproject.ananya.response.ValidationResponse;
 import org.motechproject.ananya.utils.DateUtils;
-import org.motechproject.ananya.utils.ValidationUtils;
 
 import java.util.regex.Pattern;
 
 public class WebRequestValidator {
 
     public void validateChannel(String channel, ValidationResponse validationResponse) {
-        if(StringUtils.isEmpty(channel)) {
+        if (StringUtils.isEmpty(channel)) {
             validationResponse.addError("missing channel");
             return;
         }
@@ -20,32 +19,27 @@ public class WebRequestValidator {
         }
     }
 
-    public void validateFlwId(String flwId, ValidationResponse validationResponse) {
-        if(StringUtils.isEmpty(flwId)) {
-            validationResponse.addError("missing flw id");
-            return;
-        }
-        if (!ValidationUtils.isValidUUID(flwId)) {
-            validationResponse.addError(String.format("invalid flw id: %s", flwId));
-        }
+    public void validateMsisdn(String msisdn, ValidationResponse validationResponse) {
+        if (!(StringUtils.isNotBlank(msisdn) && StringUtils.isNumeric(msisdn) && (msisdn.length() == 10 || (msisdn.length() == 12 && (msisdn.startsWith("91") || msisdn.startsWith("00"))))))
+            validationResponse.addError("invalid msisdn: " + msisdn);
     }
 
     public void validateDateRange(String startDate, String endDate, ValidationResponse validationResponse) {
         LocalDate startLocalDate = getLocalDate(startDate);
         LocalDate endLocalDate = getLocalDate(endDate);
 
-        if(startLocalDate != null && endLocalDate != null) {
-            if(!startLocalDate.isBefore(endLocalDate)) {
+        if (startLocalDate != null && endLocalDate != null) {
+            if (!startLocalDate.isBefore(endLocalDate)) {
                 validationResponse.addError(String.format("start date should be before end date"));
             }
             return;
         }
 
-        if(startLocalDate == null){
+        if (startLocalDate == null) {
             validationResponse.addError(String.format("invalid start date: %s", startDate));
         }
 
-        if(endLocalDate == null){
+        if (endLocalDate == null) {
             validationResponse.addError(String.format("invalid end date: %s", endDate));
         }
     }

@@ -59,17 +59,17 @@ public class FLWDetailsServiceTest {
     }
 
     @Test
-    public void shouldRaiseExceptionIfIdIsInvalid() {
-        UUID flwId = UUID.randomUUID();
+    public void shouldRaiseExceptionIfMsisdnIsInvalid() {
+        String msisdn = "msisdn";
         expectedException.expect(ValidationException.class);
-        expectedException.expectMessage("unknown flw id: " + flwId);
-        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(null);
+        expectedException.expectMessage("unknown msisdn : " + msisdn);
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(null);
 
-        flwDetailsService.getUsage(flwId.toString());
+        flwDetailsService.getUsage(msisdn);
     }
 
     @Test
-    public void shouldReturnUsageDetailsForAValidFlwId() {
+    public void shouldReturnUsageDetailsForAValidMsisdn() {
         UUID flwId = UUID.randomUUID();
 
         Location defaultLocation = Location.getDefaultLocation();
@@ -78,40 +78,38 @@ public class FLWDetailsServiceTest {
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
         FLWUsageResponse expectedFLWResponse = new FLWUsageResponse();
-        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(frontLineWorker);
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(defaultLocation);
         when(callDurationMeasureService.getCallDetails(msisdn)).thenReturn(callDetailsResponse);
         when(smsReferenceService.getSMSReferenceNumber(msisdn)).thenReturn(smsReference);
         when(flwResponseMapper.mapUsageResponse(frontLineWorker, defaultLocation, callDetailsResponse, smsReference)).thenReturn(expectedFLWResponse);
 
-        FLWUsageResponse actualResponse = flwDetailsService.getUsage(flwId.toString());
+        FLWUsageResponse actualResponse = flwDetailsService.getUsage(msisdn);
 
         assertEquals(expectedFLWResponse,actualResponse);
     }
 
-
     @Test
-    public void shouldRaiseExceptionIfIdIsInvalidForNighttimeCalls() {
-        UUID flwId = UUID.randomUUID();
+    public void shouldRaiseExceptionIfMsisdnIsInvalidForNighttimeCalls() {
+        String msisdn = "msisdn";
 
         expectedException.expect(ValidationException.class);
-        expectedException.expectMessage("unknown flw id: " + flwId);
-        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(null);
+        expectedException.expectMessage("unknown msisdn : " + msisdn);
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(null);
 
-        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(flwId, Channel.CONTACT_CENTER, DateUtils.parseLocalDate("14-12-2009"), DateUtils.parseLocalDate("15-12-2009"));
+        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(msisdn, Channel.CONTACT_CENTER, DateUtils.parseLocalDate("14-12-2009"), DateUtils.parseLocalDate("15-12-2009"));
         flwDetailsService.getNighttimeCalls(nighttimeCallsRequest);
     }
 
     @Test
     public void shouldFetchNighttimeCalls() {
-        UUID flwId = UUID.randomUUID();
         String msisdn = "919900501221";
         String startDate = "14-12-2009";
         String endDate = "15-12-2009";
         final LocalDate startLocalDate = DateUtils.parseLocalDate(startDate);
         final LocalDate endLocalDate = DateUtils.parseLocalDate(endDate);
-        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
-        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(flwId, Channel.CONTACT_CENTER, DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(msisdn, Channel.CONTACT_CENTER, DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
 
         List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>() {{
            add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
@@ -119,7 +117,7 @@ public class FLWDetailsServiceTest {
         }};
         FLWNighttimeCallsResponse nighttimeCallsResponse = mock(FLWNighttimeCallsResponse.class);
 
-        when(frontLineWorkerService.findByFlwId(flwId)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
         when(callDurationMeasureService.getJobAidCallDurations(msisdn, startLocalDate, endLocalDate)).thenReturn(jobAidCallDetailsList);
         when(flwResponseMapper.mapNighttimeCallsResponse(jobAidCallDetailsList)).thenReturn(nighttimeCallsResponse);
 

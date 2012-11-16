@@ -119,7 +119,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetFlwUsageXmlResponse() throws Exception {
-        String flwId = "48996698-5a2e-4f7e-99bb-266b51240af0";
+        String msisdn = "1234567890";
 
         ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>() {{
             add(new FLWUsageDetail(2012, 12, 1234L, 1234L));
@@ -134,10 +134,10 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "unregistered",
                 new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
-        when(flwDetailsService.getUsage(flwId)).thenReturn(expectedResponse);
+        when(flwDetailsService.getUsage(msisdn)).thenReturn(expectedResponse);
 
         MvcResult result = mockMvc(flwDetailsController)
-                .perform(get("/flw/" + flwId + "/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
+                .perform(get("/flw/" + msisdn + "/usage").param("channel", "contact_center").accept(MediaType.APPLICATION_XML))
                 .andExpect(status().isOk())
                 .andExpect(content().type("application/xml"))
                 .andReturn();
@@ -149,7 +149,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetNighttimeCallsXmlResponse() throws Exception {
-        String flwId = "48996698-5a2e-4f7e-99bb-266b51240af0";
+        String msisdn = "1234567890";
         ArrayList<FLWCallDuration> flwCallDurations = new ArrayList<>();
         flwCallDurations.add(new FLWCallDuration(DateTime.now().toString(), DateTime.now().plusMinutes(2).toString(), 2));
         FLWNighttimeCallsResponse expectedResponse = new FLWNighttimeCallsResponse(flwCallDurations);
@@ -158,7 +158,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         flwDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
 
         MvcResult result = mockMvc(flwDetailsController)
-                .perform(get("/flw/" + flwId + "/nighttimecalls")
+                .perform(get("/flw/" + msisdn + "/nighttimecalls")
                         .param("channel", "contact_center")
                         .param("startDate", "12-10-2012")
                         .param("endDate", "15-10-2012")
