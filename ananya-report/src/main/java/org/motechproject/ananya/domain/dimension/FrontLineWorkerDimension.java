@@ -2,6 +2,7 @@ package org.motechproject.ananya.domain.dimension;
 
 import org.hibernate.annotations.Type;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,10 +49,14 @@ public class FrontLineWorkerDimension {
     @Type(type = "org.hibernate.type.PostgresUUIDType")
     private UUID flwId;
 
+    @Column(name = "verification_status")
+    @Enumerated(EnumType.STRING)
+    private VerificationStatus verificationStatus;
+
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId) {
+    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
         this.msisdn = msisdn;
         this.operator = operator;
         this.name = name;
@@ -59,6 +64,7 @@ public class FrontLineWorkerDimension {
         this.status = status;
         this.circle = circle;
         this.flwId = flwId;
+        this.verificationStatus = verificationStatus;
     }
 
     public Long getMsisdn() {
@@ -109,12 +115,13 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId) {
+    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId, VerificationStatus verificationStatus) {
         this.operator = operator;
         this.name = name;
         this.status = status;
         this.designation = designation;
         this.circle = circle;
+        this.verificationStatus = verificationStatus;
         updateFlwId(flwId);
         return this;
     }
@@ -167,6 +174,10 @@ public class FrontLineWorkerDimension {
 
     public boolean statusIs(RegistrationStatus status) {
         return this.status.equalsIgnoreCase(status.toString());
+    }
+
+    public VerificationStatus getVerificationStatus() {
+        return verificationStatus;
     }
 
     @Override

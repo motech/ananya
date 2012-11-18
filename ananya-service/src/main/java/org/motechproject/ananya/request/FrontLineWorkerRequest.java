@@ -2,6 +2,7 @@ package org.motechproject.ananya.request;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
@@ -15,17 +16,19 @@ public class FrontLineWorkerRequest implements Serializable {
     private LocationRequest location = new LocationRequest();
     private Date lastModified;
     private String flwId;
+    private String verificationStatus;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwId) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwId, String verificationStatus) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
         this.location = location;
         this.lastModified = lastModified;
         this.flwId = flwId;
+        this.verificationStatus = verificationStatus;
     }
 
     public String getName() {
@@ -74,6 +77,18 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setFlwId(String flwId) {
         this.flwId = flwId;
+    }
+
+    public String getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public VerificationStatus getVerificationStatusAsEnum() {
+        return VerificationStatus.findFor(verificationStatus);
+    }
+
+    public void setVerificationStatus(String verificationStatus) {
+        this.verificationStatus = verificationStatus;
     }
 
     @ColumnName(name = "district")

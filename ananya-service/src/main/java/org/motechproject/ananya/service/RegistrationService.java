@@ -119,6 +119,7 @@ public class RegistrationService {
         String callerId = frontLineWorkerRequest.getMsisdn();
         UUID flwId = UUID.fromString(frontLineWorkerRequest.getFlwId());
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, frontLineWorkerRequest.getName(), Designation.getFor(frontLineWorkerRequest.getDesignation()), location, new DateTime(frontLineWorkerRequest.getLastModified()), flwId);
+        frontLineWorker.setVerificationStatus(frontLineWorkerRequest.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         updateAllMeasures(frontLineWorker);
 
@@ -134,7 +135,8 @@ public class RegistrationService {
                         StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
                         StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat())),
                 frontLineWorkerRequest.getLastModified(),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwId()));
+                StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwId()),
+                frontLineWorkerRequest.getVerificationStatus());
     }
 
     private void updateAllMeasures(FrontLineWorker frontLineWorker) {

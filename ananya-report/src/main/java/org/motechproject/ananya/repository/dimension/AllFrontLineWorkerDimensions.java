@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,12 @@ public class AllFrontLineWorkerDimensions {
     public AllFrontLineWorkerDimensions() {
     }
 
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId) {
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
         FrontLineWorkerDimension frontLineWorkerDimension;
         frontLineWorkerDimension = fetchFor(msisdn);
         frontLineWorkerDimension = frontLineWorkerDimension == null ?
-                new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId) :
-                frontLineWorkerDimension.update(circle, operator, name, status, designation, flwId);
+                new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId, verificationStatus) :
+                frontLineWorkerDimension.update(circle, operator, name, status, designation, flwId, verificationStatus);
 
         template.saveOrUpdate(frontLineWorkerDimension);
         return frontLineWorkerDimension;

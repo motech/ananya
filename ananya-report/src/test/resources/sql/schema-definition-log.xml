@@ -432,4 +432,11 @@
             ALTER TABLE report.call_duration_measure ALTER operator SET NOT NULL;
         </sql>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="32">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="verification_status" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

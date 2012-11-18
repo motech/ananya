@@ -10,6 +10,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.LocationStatus;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -88,12 +89,14 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         String msisdn = "91234545354";
         String designation = Designation.ANM.name();
         String name = "name";
+        VerificationStatus verificationStatus = VerificationStatus.SUCCESS;
 
-        RegistrationResponse registrationResponse = flwDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString()));
+        RegistrationResponse registrationResponse = flwDetailsController.create(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString(), verificationStatus.name()));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
         assertEquals(name, frontLineWorkerDimension.getName());
+        assertEquals(verificationStatus, frontLineWorkerDimension.getVerificationStatus());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
         assertEquals(registrationResponse.getMessage(), "Created/Updated FLW record");
     }
@@ -103,7 +106,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         String msisdn = "1234";
         String status = "REGISTERED";
         String name = "name";
-        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status, UUID.randomUUID()));
+        template.save(new FrontLineWorkerDimension(Long.parseLong(msisdn), "airtel", "bihar", name, Designation.ANM.name(), status, UUID.randomUUID(), null));
         when(request.getParameter("msisdn")).thenReturn(msisdn);
         when(request.getParameter("name")).thenReturn(name);
         when(request.getParameter("status")).thenReturn(status);

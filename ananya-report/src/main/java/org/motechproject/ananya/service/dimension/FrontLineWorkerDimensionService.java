@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service.dimension;
 
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.requests.FLWStatusChangeRequest;
@@ -30,8 +31,8 @@ public class FrontLineWorkerDimensionService {
     }
 
     @Transactional
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId) {
-        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId);
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId, VerificationStatus verificationStatus) {
+        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, verificationStatus);
     }
 
     public boolean exists(Long msisdn) {
@@ -45,7 +46,7 @@ public class FrontLineWorkerDimensionService {
     @Transactional
     public void updateStatus(List<FLWStatusChangeRequest> flwStatusChangeRequests) {
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<>();
-        for(FLWStatusChangeRequest request : flwStatusChangeRequests){
+        for (FLWStatusChangeRequest request : flwStatusChangeRequests) {
             FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(request.getMsisdn());
             frontLineWorkerDimension.setStatus(request.getRegistrationStatus());
             frontLineWorkerDimensions.add(frontLineWorkerDimension);

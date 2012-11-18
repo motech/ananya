@@ -45,4 +45,10 @@ public class FLWValidationResponse {
         isValid = false;
         return this;
     }
+
+    public FLWValidationResponse forInvalidVerificationStatus() {
+        message += "[Invalid verification status]";
+        isValid = false;
+        return this;
+    }
 }

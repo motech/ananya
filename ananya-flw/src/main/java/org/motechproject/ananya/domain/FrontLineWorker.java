@@ -73,6 +73,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private UUID flwId;
 
+    @JsonProperty
+    private VerificationStatus verificationStatus;
+
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
         this.currentJobAidUsage = 0;
@@ -378,5 +381,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
         locationId = location.getExternalId();
         if (isAlreadyRegistered())
             decideRegistrationStatus(location);
+    }
+
+    public VerificationStatus getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public void setVerificationStatus(VerificationStatus verificationStatus) {
+        this.verificationStatus = verificationStatus;
     }
 }

@@ -307,7 +307,8 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
                 frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwId());
+                frontLineWorker.getFlwId(),
+                frontLineWorker.getVerificationStatus());
         log.info("frontlineWorkerDimension created for missing " + frontLineWorker);
 
         String callId = frontLineWorker.msisdn() + String.valueOf(DateUtil.now().getMillis());

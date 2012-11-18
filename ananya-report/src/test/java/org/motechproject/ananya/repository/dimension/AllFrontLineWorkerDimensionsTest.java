@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,7 +41,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String operator = "operator";
         String status = "status";
         String designation = Designation.AWW.name();
-        template.save(new FrontLineWorkerDimension(msisdn, operator, "circle", name, designation, status, flwId));
+        template.save(new FrontLineWorkerDimension(msisdn, operator, "circle", name, designation, status, flwId, null));
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
 
         assertEquals(name, frontLineWorkerDimension.getName());
@@ -58,15 +59,16 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String status = "status";
         String circle = "circle";
         String designation = Designation.AWW.name();
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, status, flwId);
+
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, status, flwId, VerificationStatus.OTHER);
 
         assertEquals(name, frontLineWorkerDimension.getName());
         assertEquals(operator, frontLineWorkerDimension.getOperator());
         assertEquals(status, frontLineWorkerDimension.getStatus());
         assertEquals(designation, frontLineWorkerDimension.getDesignation());
+        assertEquals(VerificationStatus.OTHER, frontLineWorkerDimension.getVerificationStatus());
         assertEquals(flwId, frontLineWorkerDimension.getFlwId());
     }
-
 
     @Test
     public void shouldUpdateFrontLineWorkerDimensionIfIncomingParametersDifferFromDB() {
@@ -76,9 +78,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String status = "status";
         String designation = "designation";
         String circle = "circle";
-        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId));
+        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId, null));
 
-        allFrontLineWorkerDimensions.createOrUpdate(msisdn, "operator1", "newCircle", "name1", "designation1", "status1", flwId);
+        allFrontLineWorkerDimensions.createOrUpdate(msisdn, "operator1", "newCircle", "name1", "designation1", "status1", flwId, VerificationStatus.OTHER);
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
         assertEquals("name1", frontLineWorkerDimension.getName());
@@ -86,6 +88,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         assertEquals("status1", frontLineWorkerDimension.getStatus());
         assertEquals("designation1", frontLineWorkerDimension.getDesignation());
         assertEquals("newCircle", frontLineWorkerDimension.getCircle());
+        assertEquals(VerificationStatus.OTHER, frontLineWorkerDimension.getVerificationStatus());
         assertEquals(flwId, frontLineWorkerDimension.getFlwId());
     }
 
@@ -105,8 +108,8 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String status = RegistrationStatus.UNREGISTERED.name();
         String designation = "designation";
         String circle = "Bihar";
-        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId));
-        template.save(new FrontLineWorkerDimension(msisdn1, operator, circle, name, designation, status, UUID.randomUUID()));
+        template.save(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId, null));
+        template.save(new FrontLineWorkerDimension(msisdn1, operator, circle, name, designation, status, UUID.randomUUID(), null));
 
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = allFrontLineWorkerDimensions.getAllUnregistered();
 
@@ -124,8 +127,8 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         String bihar = "Bihar";
         String up = "UP";
         String name2 = "Name2";
-        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), flwId));
-        template.save(new FrontLineWorkerDimension(msisdn1, bsnl, up, name2, aww.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID()));
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), flwId, null));
+        template.save(new FrontLineWorkerDimension(msisdn1, bsnl, up, name2, aww.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null));
 
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
         allFilteredMsisdns.add(msisdn);
@@ -176,9 +179,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId);
-        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID()));
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId, null);
+        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID(), null));
         template.save(frontLineWorkerDimension1);
         template.save(frontLineWorkerDimension2);
 
@@ -200,9 +203,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId);
-        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID()));
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId, null);
+        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID(), null));
         template.save(frontLineWorkerDimension1);
         template.save(frontLineWorkerDimension2);
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
@@ -226,9 +229,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId);
-        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID()));
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId, null);
+        FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID(), null));
         template.save(frontLineWorkerDimension1);
         template.save(frontLineWorkerDimension2);
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();
@@ -246,13 +249,13 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
         long msisdn1 = 90909009L;
         FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
-                "Ramakrishna", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), flwId);
+                "Ramakrishna", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), flwId, null);
         long msisdn2 = 90909002L;
         FrontLineWorkerDimension flw2 = new FrontLineWorkerDimension(msisdn2, "Airtel", "UO",
-                "Krishnan", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
+                "Krishnan", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
         long msisdn3 = 90909003L;
         FrontLineWorkerDimension flw3 = new FrontLineWorkerDimension(msisdn3, "Airtel", "UO",
-                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
+                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
 
         template.save(flw1);
         template.save(flw2);
@@ -272,13 +275,13 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
 
         long msisdn1 = 90909009L;
         FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
-                "Ramakrishna", null, RegistrationStatus.REGISTERED.name(), flwId);
+                "Ramakrishna", null, RegistrationStatus.REGISTERED.name(), flwId, null);
         long msisdn2 = 90909002L;
         FrontLineWorkerDimension flw2 = new FrontLineWorkerDimension(msisdn2, "Airtel", "UO",
-                "Krishnan", null, RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
+                "Krishnan", null, RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
         long msisdn3 = 90909003L;
         FrontLineWorkerDimension flw3 = new FrontLineWorkerDimension(msisdn3, "Airtel", "UO",
-                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID());
+                "Ramana", Designation.ANM.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
 
         template.save(flw1);
         template.save(flw2);
@@ -297,7 +300,7 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
     public void shouldSaveAllFLW() {
         Long msisdn1 = 90909009L;
         FrontLineWorkerDimension flw1 = new FrontLineWorkerDimension(msisdn1, "Airtel", "UO",
-                "Ramakrishna", null, RegistrationStatus.REGISTERED.name(), flwId);
+                "Ramakrishna", null, RegistrationStatus.REGISTERED.name(), flwId, null);
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<>();
         frontLineWorkerDimensions.add(flw1);
 

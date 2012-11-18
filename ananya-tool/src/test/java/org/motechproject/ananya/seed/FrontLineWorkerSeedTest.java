@@ -8,10 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -119,7 +116,7 @@ public class FrontLineWorkerSeedTest {
         String name = "Name";
         Long msisdn = 919986574410l;
         FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), null, UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId()));
+        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId(), null));
         allFrontLineWorkers.add(frontLineWorkerCreated);
 
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
@@ -142,7 +139,7 @@ public class FrontLineWorkerSeedTest {
         ReflectionTestUtils.setField(frontLineWorker, "msisdn", msisdn.toString());
         allFrontLineWorkers.add(frontLineWorker);
 
-        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwId()));
+        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwId(), null));
 
         frontLineWorkerSeed.updateCorrectCallerIdsCircleOperatorAndDesignation();
 
@@ -161,7 +158,7 @@ public class FrontLineWorkerSeedTest {
     private FrontLineWorkerDimension getFLWDimensionFromFLW(FrontLineWorker frontLineWorker) {
         return new FrontLineWorkerDimension(frontLineWorker.msisdn(),
                 frontLineWorker.getOperator(), frontLineWorker.getCircle(), frontLineWorker.getName(),
-                frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwId());
+                frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwId(), null);
     }
 
     private FrontLineWorker getFrontLineWorker(String msisdn, String operator, RegistrationStatus registrationStatus, Location location) {
@@ -279,6 +276,7 @@ public class FrontLineWorkerSeedTest {
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
+        frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
         allFrontLineWorkers.add(frontLineWorker);
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
@@ -288,7 +286,7 @@ public class FrontLineWorkerSeedTest {
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
                 frontLineWorker.getStatus().toString(),
-                frontLineWorker.getFlwId());
+                frontLineWorker.getFlwId(), VerificationStatus.OTHER);
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
 
@@ -305,12 +303,14 @@ public class FrontLineWorkerSeedTest {
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
+        frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
         allFrontLineWorkers.add(frontLineWorker);
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
 
         FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         assertNotNull(frontLineWorkerDimensionFromDb);
+        assertEquals(VerificationStatus.OTHER, frontLineWorkerDimensionFromDb.getVerificationStatus());
 
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimensionFromDb.getId());
         assertNotNull(registrationMeasure);

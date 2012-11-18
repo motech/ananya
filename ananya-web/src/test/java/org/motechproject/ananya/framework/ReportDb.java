@@ -152,7 +152,7 @@ public class ReportDb {
     public ReportDb createMeasuresAndDimensionsForFlw(String callerId, String callId, String operator, String circle) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
-                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED", frontLineWorker.getFlwId());
+                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED", frontLineWorker.getFlwId(), null);
         Location defaultLocation = Location.getDefaultLocation();
         LocationDimension locationDimension = allLocationDimensions.getFor(defaultLocation.getExternalId());
         if (locationDimension == null)

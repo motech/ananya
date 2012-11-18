@@ -7,6 +7,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.requests.FLWStatusChangeRequest;
@@ -38,7 +39,7 @@ public class FrontLineWorkerDimensionServiceTest {
 
     @Test
     public void shouldReturnAllUnregisteredFrontLineWorkerDimensions() {
-        List<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
+        List<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<>();
         when(allFrontLineWorkerDimensions.getAllUnregistered()).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerDimension> allUnregistered = frontLineWorkerDimensionService.getAllUnregistered();
@@ -55,8 +56,9 @@ public class FrontLineWorkerDimensionServiceTest {
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         UUID flwId = UUID.randomUUID();
 
-        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId);
-        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId);
+        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
+
+        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class FrontLineWorkerDimensionServiceTest {
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle, UUID.randomUUID()));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle, UUID.randomUUID(), null));
         when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle);

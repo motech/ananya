@@ -1,6 +1,8 @@
 package org.motechproject.ananya.validators;
 
+import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.utils.ValidationUtils;
@@ -15,7 +17,14 @@ public class FrontLineWorkerValidator {
         validateName(frontLineWorkerRequest, flwValidationResponse);
         validateLocation(locationOfFrontLineWorker, flwValidationResponse);
         validateFLWId(frontLineWorkerRequest, flwValidationResponse);
+        validateVerificationStatus(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
+    }
+
+    private static void validateVerificationStatus(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
+        String verificationStatus = frontLineWorkerRequest.getVerificationStatus();
+        if(StringUtils.isNotBlank(verificationStatus) && !VerificationStatus.isValid(verificationStatus))
+            flwValidationResponse.forInvalidVerificationStatus();
     }
 
     private static void validateLocation(Location locationOfFrontLineWorker, FLWValidationResponse flwValidationResponse) {

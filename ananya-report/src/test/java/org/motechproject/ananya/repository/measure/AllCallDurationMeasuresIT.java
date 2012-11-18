@@ -1,6 +1,9 @@
 package org.motechproject.ananya.repository.measure;
 
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Minutes;
+import org.joda.time.Seconds;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +49,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     public void shouldFindCallDurationMeasuresByCallerId() {
         Long callerId = 1234L;
         String operator = "operator";
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, operator, "circle", "name", "ASHA", "REGISTERED", flwId);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, operator, "circle", "name", "ASHA", "REGISTERED", flwId, null);
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -63,7 +66,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     public void shouldFindCallDurationMeasuresByLocationId() {
         Long callerId = 1234L;
         String locationId = "locationId";
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         LocationDimension locationDimension = new LocationDimension(locationId, "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -188,7 +191,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     }
 
     private void certificateCourseSetup(Long callerId, long calledNumber, DateTime now) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         LocationDimension locationDimension = new LocationDimension("locationId", "D1", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.getFor(now);
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -197,7 +200,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     }
 
     private void jobAidSetup(Long callerId, long calledNumber, DateTime now) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.makeFor(now.minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -206,7 +209,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
     }
 
     private void jobAidSetup(Long callerId, long calledNumber, DateTime startTime, DateTime endTime) {
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "VALID");
         TimeDimension timeDimension = allTimeDimensions.getFor(startTime);
 
