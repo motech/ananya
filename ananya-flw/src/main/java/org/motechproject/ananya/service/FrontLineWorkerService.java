@@ -50,8 +50,8 @@ public class FrontLineWorkerService {
         }
         if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
             updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
+            log.info("Updated:" + existingFrontLineWorker);
         }
-
         return existingFrontLineWorker;
     }
 
@@ -138,12 +138,7 @@ public class FrontLineWorkerService {
     }
 
     private void updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
-        String name = frontLineWorker.getName();
-        Designation designation = Designation.getFor(frontLineWorker.designationName());
-        DateTime lastModified = frontLineWorker.getLastModified();
-        lastModified = lastModified != null ? lastModified : existingFrontLineWorker.getLastModified();
-
-        existingFrontLineWorker.update(name, designation, location, lastModified, frontLineWorker.getFlwId());
+        existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location, frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus());
 
         allFrontLineWorkers.update(existingFrontLineWorker);
         log.info("Updated:" + existingFrontLineWorker);

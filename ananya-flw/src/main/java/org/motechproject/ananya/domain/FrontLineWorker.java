@@ -95,7 +95,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.name = name;
         this.designation = designation;
-        this.locationId = location == null ? null : location.getExternalId();
+        this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
         this.lastModified = lastModified;
         this.flwId = flwId;
     }
@@ -232,14 +232,21 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId) {
+    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus) {
         this.name = name;
-        this.lastModified = lastModified;
-        this.locationId = location.getExternalId();
         this.designation = designation;
-        if (isAlreadyRegistered())
-            decideRegistrationStatus(location);
+        this.lastModified = lastModified == null ? this.lastModified : lastModified;
+        this.verificationStatus = verificationStatus;
         updateFlwId(flwId);
+
+        if(location ==  null) {
+            location = Location.getDefaultLocation();
+        }
+        this.locationId = location.getExternalId();
+
+        if (isAlreadyRegistered()) {
+            decideRegistrationStatus(location);
+        }
     }
 
     public boolean hasPassedTheCourse() {

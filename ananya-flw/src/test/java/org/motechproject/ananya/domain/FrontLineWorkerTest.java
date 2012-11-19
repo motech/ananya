@@ -53,23 +53,89 @@ public class FrontLineWorkerTest {
     }
 
     @Test
-    public void shouldUpdateLastModifiedTimeToGivenTime() {
-        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), null, flwId);
-        DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
+    public void shouldUpdateFrontLineWorkerDetails() {
+        Location existingLocation = mock(Location.class);
+        String existingMsisdn = "9986554790";
+        when(existingLocation.getExternalId()).thenReturn("existingLocationId");
+        FrontLineWorker existingFlw = new FrontLineWorker(existingMsisdn, "existingFLWName", Designation.AWW, existingLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
+        existingFlw.setVerificationStatus(VerificationStatus.SUCCESS);
 
-        flw.update("newName", Designation.AWW, new Location("D1", "B1", "P1", 1, 1, 1, null, null), lastModified, flwId);
+        String newLocationId = "newLocationId";
+        String newFlwName = "newFlwName";
+        Location newLocation = mock(Location.class);
+        when(newLocation.getExternalId()).thenReturn(newLocationId);
+        DateTime newLastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
 
-        assertEquals(lastModified, flw.getLastModified());
+        existingFlw.update(newFlwName, Designation.ANM, newLocation, newLastModified, flwId, VerificationStatus.INVALID);
+
+        assertEquals(Designation.ANM, existingFlw.getDesignation());
+        assertEquals(newLocationId, existingFlw.getLocationId());
+        assertEquals(newFlwName, existingFlw.getName());
+        assertEquals(newLastModified, existingFlw.getLastModified());
+        assertEquals(VerificationStatus.INVALID, existingFlw.getVerificationStatus());
     }
 
     @Test
-    public void shouldNotUpdateRegistrationStatusIfRegistrationStatusIsPartiallyRegistered() {
-        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), null, flwId);
-        DateTime lastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
+    public void shouldUpdateRegistrationStatusIfNotUnregistered() {
+        Location existingLocation = mock(Location.class);
+        when(existingLocation.isMissingDetails()).thenReturn(true);
+        when(existingLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.NOT_VERIFIED);
+        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", "existingFLWName", Designation.AWW, null, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
 
-        flw.update("newName", Designation.AWW, new Location(), lastModified, flwId);
+        existingFlw.decideRegistrationStatus(existingLocation);
 
-        assertEquals(RegistrationStatus.UNREGISTERED, flw.getStatus());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, existingFlw.getStatus());
+
+        Location newLocation = mock(Location.class);
+        when(newLocation.isMissingDetails()).thenReturn(false);
+        when(newLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
+
+        existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.INVALID );
+
+        assertEquals(RegistrationStatus.REGISTERED, existingFlw.getStatus());
+    }
+
+    @Test
+    public void shouldNotUpdateRegistrationStatusIfUnregistered() {
+        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", "existingFLWName", Designation.AWW, null, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
+
+        assertEquals(RegistrationStatus.UNREGISTERED, existingFlw.getStatus());
+
+        Location newLocation = mock(Location.class);
+        when(newLocation.isMissingDetails()).thenReturn(false);
+        when(newLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
+
+        existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.SUCCESS);
+
+        assertEquals(RegistrationStatus.UNREGISTERED, existingFlw.getStatus());
+    }
+
+
+    @Test
+    public void shouldNotUpdateLastModifiedIfNull() {
+        DateTime existingLastModifiedTime = new DateTime(2011, 3, 16, 8, 18, 0, 0);
+        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", "existingFLWName", Designation.AWW, new Location(), existingLastModifiedTime, UUID.randomUUID());
+
+        existingFlw.update("newFlwName", Designation.ANM, new Location(), null, flwId, VerificationStatus.SUCCESS);
+
+        assertEquals(existingLastModifiedTime, existingFlw.getLastModified());
+    }
+
+    @Test
+    public void shouldSetLocationIdAsDefaultIfLocationIsNullAndRegistrationStatusAsPartiallyRegistered() {
+        Location existingLocation = mock(Location.class);
+        when(existingLocation.getExternalId()).thenReturn("existingLocaitonId");
+        when(existingLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
+        when(existingLocation.isMissingDetails()).thenReturn(false);
+        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", "existingFLWName", Designation.AWW, existingLocation, DateTime.now(), UUID.randomUUID());
+        existingFlw.decideRegistrationStatus(existingLocation);
+
+        assertEquals(RegistrationStatus.REGISTERED, existingFlw.getStatus());
+
+        existingFlw.update("newFlwName", Designation.ANM, null, null, flwId, VerificationStatus.SUCCESS);
+
+        assertEquals(Location.getDefaultLocation().getExternalId(), existingFlw.getLocationId());
+        assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, existingFlw.getStatus());
     }
 
     @Test
@@ -192,5 +258,10 @@ public class FrontLineWorkerTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
 
         assertEquals(UUID.fromString("11111111-1111-1111-1111-111111111111"),frontLineWorker.getFlwId());
+    }
+
+    public void shouldSetLocationToDefaultIfNull() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker("9900495678", "name", Designation.ANM, null, null, UUID.randomUUID());
+        assertEquals(Location.getDefaultLocation().getExternalId(), frontLineWorker.getLocationId());
     }
 }
