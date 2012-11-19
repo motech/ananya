@@ -1,6 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.joda.time.DateTime;
+import org.motechproject.ananya.domain.PhoneNumber;
 import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.*;
@@ -62,8 +63,9 @@ public class FLWDetailsController extends BaseDataAPIController {
         FLWUsageWebRequest flwUsageWebRequest = new FLWUsageWebRequest(msisdn, channel);
         ValidationResponse validationResponse = flwUsageWebRequest.validate();
         raiseExceptionIfThereAreErrors(validationResponse);
+        String formattedMsisdn = new PhoneNumber(msisdn).getFormattedMsisdn();
 
-        return flwDetailsService.getUsage(msisdn);
+        return flwDetailsService.getUsage(formattedMsisdn);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{msisdn}/nighttimecalls", produces = {"application/json", "application/xml"})

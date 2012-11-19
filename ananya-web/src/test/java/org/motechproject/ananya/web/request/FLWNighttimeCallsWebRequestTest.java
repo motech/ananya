@@ -26,7 +26,7 @@ public class FLWNighttimeCallsWebRequestTest {
 
         FLWNighttimeCallsRequest request = webRequest.getRequest();
 
-        assertEquals(msisdn, request.getMsisdn());
+        assertEquals("91" + msisdn, request.getMsisdn());
         assertEquals(Channel.CONTACT_CENTER, request.getChannel());
         assertEquals(DateUtils.parseLocalDate("14-12-2009"), request.getStartDate());
         assertEquals(DateUtils.parseLocalDate("15-12-2009"), request.getEndDate());

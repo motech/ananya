@@ -2,6 +2,7 @@ package org.motechproject.ananya.web.request;
 
 
 import org.motechproject.ananya.domain.Channel;
+import org.motechproject.ananya.domain.PhoneNumber;
 import org.motechproject.ananya.domain.WebRequestValidator;
 import org.motechproject.ananya.request.FLWNighttimeCallsRequest;
 import org.motechproject.ananya.response.ValidationResponse;
@@ -30,6 +31,7 @@ public class FLWNighttimeCallsWebRequest {
     }
 
     public FLWNighttimeCallsRequest getRequest() {
-        return new FLWNighttimeCallsRequest(msisdn, Channel.from(channel), DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
+        String formattedMsisdn = new PhoneNumber(msisdn).getFormattedMsisdn();
+        return new FLWNighttimeCallsRequest(formattedMsisdn, Channel.from(channel), DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
     }
 }

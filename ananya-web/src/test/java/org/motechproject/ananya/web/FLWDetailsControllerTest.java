@@ -41,7 +41,7 @@ public class FLWDetailsControllerTest {
     public void shouldGetFLWUsageDetails() {
         String msisdn = "1234567980";
         FLWUsageResponse expectedFLWUsageResponse = new FLWUsageResponse();
-        when(flwDetailsService.getUsage(msisdn)).thenReturn(expectedFLWUsageResponse);
+        when(flwDetailsService.getUsage("91" + msisdn)).thenReturn(expectedFLWUsageResponse);
 
         FLWUsageResponse actualFLWUsageResponse = frontLineWorkerDetailsController.getUsage(msisdn, "contact_center");
 
@@ -84,7 +84,7 @@ public class FLWDetailsControllerTest {
         ArgumentCaptor<FLWNighttimeCallsRequest> captor = ArgumentCaptor.forClass(FLWNighttimeCallsRequest.class);
         verify(flwDetailsService).getNighttimeCalls(captor.capture());
         FLWNighttimeCallsRequest actualRequest = captor.getValue();
-        assertEquals(msisdn, actualRequest.getMsisdn());
+        assertEquals("91" + msisdn, actualRequest.getMsisdn());
         assertEquals(Channel.CONTACT_CENTER, actualRequest.getChannel());
         assertEquals(DateUtils.parseLocalDate(startDate), actualRequest.getStartDate());
         assertEquals(DateUtils.parseLocalDate(endDate), actualRequest.getEndDate());

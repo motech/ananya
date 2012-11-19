@@ -20,7 +20,7 @@ public class WebRequestValidator {
     }
 
     public void validateMsisdn(String msisdn, ValidationResponse validationResponse) {
-        if (!(StringUtils.isNotBlank(msisdn) && StringUtils.isNumeric(msisdn) && (msisdn.length() == 10 || (msisdn.length() == 12 && (msisdn.startsWith("91") || msisdn.startsWith("00"))))))
+        if (!new PhoneNumber(msisdn).isValid())
             validationResponse.addError("invalid msisdn: " + msisdn);
     }
 

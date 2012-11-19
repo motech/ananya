@@ -122,7 +122,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetFlwUsageXmlResponse() throws Exception {
-        String msisdn = "1234567890";
+        String msisdn = "911234567890";
 
         ArrayList<FLWUsageDetail> flwUsageDetails = new ArrayList<FLWUsageDetail>() {{
             add(new FLWUsageDetail(2012, 12, 1234L, 1234L));
