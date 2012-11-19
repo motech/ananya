@@ -86,7 +86,13 @@ public class LocationRegistrationService {
     }
 
     private void reMapOldLocationReferences(Location actualLocation, Location newLocation) {
+        if(oldLocationHasNotSyncedYet(actualLocation))
+            return;
         registrationService.updateAllLocationReferences(actualLocation.getExternalId(), newLocation.getExternalId());
+    }
+
+    private boolean oldLocationHasNotSyncedYet(Location actualLocation) {
+        return actualLocation == null;
     }
 
     public List<LocationRegistrationResponse> registerAllLocationsWithDefaultLocations(List<LocationRequest> locationsToSave) {

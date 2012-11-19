@@ -182,6 +182,37 @@ public class LocationRegistrationServiceTest {
     }
 
     @Test
+    public void shouldCreateNewLocationAndSkipUpdateingExistingLocationReferencesToTheNewLocationIfTheOldLocationIsNotPresent() {
+        String oldDistrict = "oldDistrict";
+        String oldBlock = "oldBlock";
+        String oldPanchayat = "oldPanchayat";
+        DateTime lastModifiedTime = DateTime.now();
+        LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
+        LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
+        ArrayList<Location> locationList = new ArrayList<>();
+        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        String expectedStatus = LocationStatus.VALID.name();
+        when(locationService.getAll()).thenReturn(locationList);
+
+        locationRegistrationService.addOrUpdate(new LocationSyncRequest(oldLocationRequest, newLocationRequest, LocationStatus.INVALID.name(), lastModifiedTime));
+
+        ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
+        verify(locationService, times(2)).add(locationArgumentCaptor.capture());
+        List<Location> locations = locationArgumentCaptor.getAllValues();
+        verifyCouchdbLocation(newLocationRequest, locations.get(0), expectedStatus, lastModifiedTime);
+        verifyCouchdbLocation(oldLocationRequest, locations.get(1), LocationStatus.INVALID.name(), lastModifiedTime);
+
+        ArgumentCaptor<LocationDimension> locationDimensionArgumentCaptor = ArgumentCaptor.forClass(LocationDimension.class);
+        verify(locationDimensionService, times(2)).add(locationDimensionArgumentCaptor.capture());
+        List<LocationDimension> locationDimensions = locationDimensionArgumentCaptor.getAllValues();
+        assertLocationEquals(newLocationRequest, expectedStatus, locationDimensions.get(0));
+        assertLocationEquals(oldLocationRequest, LocationStatus.INVALID.name(), locationDimensions.get(1));
+
+        verify(registrationService).updateLocationOnFLW(expectedLocation, locations.get(0));
+        verify(registrationService, never()).updateAllLocationReferences(expectedLocation.getExternalId(), locations.get(0).getExternalId());
+    }
+
+    @Test
     public void shouldNotCreateANewLocationIfTheNewLocationAlreadyExists() {
         String oldDistrict = "oldDistrict";
         String oldBlock = "oldBlock";
@@ -218,6 +249,10 @@ public class LocationRegistrationServiceTest {
         ArgumentCaptor<LocationDimension> locationDimensionArgumentCaptor = ArgumentCaptor.forClass(LocationDimension.class);
         verify(locationDimensionService).add(locationDimensionArgumentCaptor.capture());
         LocationDimension locationDimension = locationDimensionArgumentCaptor.getValue();
+        assertLocationEquals(newLocationRequest, status, locationDimension);
+    }
+
+    private void assertLocationEquals(LocationRequest newLocationRequest, String status, LocationDimension locationDimension) {
         assertEquals(newLocationRequest.getDistrict(), locationDimension.getDistrict());
         assertEquals(newLocationRequest.getBlock(), locationDimension.getBlock());
         assertEquals(newLocationRequest.getPanchayat(), locationDimension.getPanchayat());
