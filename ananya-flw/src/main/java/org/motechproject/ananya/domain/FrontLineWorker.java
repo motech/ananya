@@ -232,7 +232,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public void update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus) {
+    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus) {
+        if(!canBeUpdated(lastModified)) {
+            return false;
+        }
+
         this.name = name;
         this.designation = designation;
         this.lastModified = lastModified == null ? this.lastModified : lastModified;
@@ -247,6 +251,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         if (isAlreadyRegistered()) {
             decideRegistrationStatus(location);
         }
+
+        return true;
     }
 
     public boolean hasPassedTheCourse() {
@@ -397,5 +403,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setVerificationStatus(VerificationStatus verificationStatus) {
         this.verificationStatus = verificationStatus;
+    }
+
+    private boolean canBeUpdated(DateTime updatedOn) {
+         if (lastModified == null || updatedOn == null) {
+            return true;
+         }
+         return (DateUtil.isOnOrBefore(lastModified, updatedOn));
     }
 }

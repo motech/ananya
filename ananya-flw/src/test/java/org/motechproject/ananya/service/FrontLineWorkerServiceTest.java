@@ -11,7 +11,6 @@ import org.motechproject.ananya.repository.AllFailedRecordsProcessingStates;
 import org.motechproject.ananya.repository.AllFrontLineWorkerKeys;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllSMSReferences;
-import org.motechproject.util.DateUtil;
 
 import java.util.*;
 
@@ -225,53 +224,22 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateExistingFLWWhenGivenModificationTimeIsOlderThanExistingOne() {
+    public void shouldNotUpdateExistingFLWInDBWhenUpdateIsNotSuccessful() {
+        FrontLineWorker existingFrontLineWorker = mock(FrontLineWorker.class);
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
+        DateTime lastModified = DateTime.now();
+        VerificationStatus verificationStatus = VerificationStatus.SUCCESS;
+        UUID flwId = UUID.randomUUID();
         Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), DateTime.now(), flwId);
+
+        when(existingFrontLineWorker.update(name, designation, location, lastModified, flwId, verificationStatus)).thenReturn(false);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, DateTime.now().minusDays(1), flwId), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, lastModified.minusDays(1), flwId), location);
 
         verify(allFrontLineWorkers, never()).update(any(FrontLineWorker.class));
-    }
-
-    @Test
-    public void shouldUpdateExistingFLWWhenLastModifiedTimeIsGiven() {
-        String msisdn = "123";
-        String name = "name";
-        Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), null, flwId);
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
-        DateTime lastModified = DateTime.now();
-
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, lastModified, flwId), location);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-        FrontLineWorker frontLineWorker = captor.getValue();
-        assertEquals(lastModified, frontLineWorker.getLastModified());
-    }
-
-    @Test
-    public void shouldUpdateExistingFLWWithExistingLastModificationDateIfNewLastModifiedTimeIsNull() {
-        String msisdn = "123";
-        String name = "name";
-        Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
-        DateTime now = DateUtil.now();
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), now, flwId);
-        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
-
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, null, flwId), location);
-
-        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
-        verify(allFrontLineWorkers).update(captor.capture());
-        FrontLineWorker frontLineWorker = captor.getValue();
-        assertEquals(now, frontLineWorker.getLastModified());
     }
 
     @Test

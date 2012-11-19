@@ -48,11 +48,8 @@ public class FrontLineWorkerService {
         if (existingFrontLineWorker == null) {
             return createNewFrontLineWorker(frontLineWorker);
         }
-        if (isFLWFromDbOlder(frontLineWorker, existingFrontLineWorker)) {
-            updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
-            log.info("Updated:" + existingFrontLineWorker);
-        }
-        return existingFrontLineWorker;
+
+        return updateExistingFrontLineWorker(existingFrontLineWorker, frontLineWorker, location);
     }
 
     public FrontLineWorker findForJobAidCallerData(String callerId) {
@@ -137,11 +134,14 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    private void updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
-        existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location, frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus());
-
+    private FrontLineWorker updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
+        boolean updated = existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location, frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus());
+        if(!updated) {
+            return existingFrontLineWorker;
+        }
         allFrontLineWorkers.update(existingFrontLineWorker);
         log.info("Updated:" + existingFrontLineWorker);
+        return existingFrontLineWorker;
     }
 
 
