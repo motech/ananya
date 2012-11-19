@@ -5,7 +5,7 @@ import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.service.LocationService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.ananya.validators.FrontLineWorkerValidator;
 import org.motechproject.importer.annotation.CSVImporter;
 import org.motechproject.importer.annotation.Post;
@@ -26,13 +26,13 @@ import java.util.Map;
 @Component
 public class FrontLineWorkerImporter {
 
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     private LocationService locationService;
     private Logger logger = LoggerFactory.getLogger(FrontLineWorkerImporter.class);
 
     @Autowired
-    public FrontLineWorkerImporter(RegistrationService registrationService, LocationService locationService) {
-        this.registrationService = registrationService;
+    public FrontLineWorkerImporter(FLWRegistrationService flwRegistrationService, LocationService locationService) {
+        this.flwRegistrationService = flwRegistrationService;
         this.locationService = locationService;
     }
 
@@ -75,7 +75,7 @@ public class FrontLineWorkerImporter {
     @Post
     public void postData(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
         logger.info("Started posting FLW data");
-        registrationService.registerAllFLWs(frontLineWorkerRequests);
+        flwRegistrationService.registerAllFLWs(frontLineWorkerRequests);
         logger.info("Finished posting FLW data");
     }
 

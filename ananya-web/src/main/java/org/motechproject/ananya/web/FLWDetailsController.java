@@ -6,7 +6,7 @@ import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.service.FLWDetailsService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.ananya.web.annotations.Authenticated;
 import org.motechproject.ananya.web.request.FLWNighttimeCallsWebRequest;
 import org.motechproject.ananya.web.request.FLWUsageWebRequest;
@@ -22,12 +22,12 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/flw")
 public class FLWDetailsController extends BaseDataAPIController {
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     private FLWDetailsService flwDetailsService;
 
     @Autowired
-    public FLWDetailsController(RegistrationService registrationService, FLWDetailsService flwDetailsService) {
-        this.registrationService = registrationService;
+    public FLWDetailsController(FLWRegistrationService flwRegistrationService, FLWDetailsService flwDetailsService) {
+        this.flwRegistrationService = flwRegistrationService;
         this.flwDetailsService = flwDetailsService;
     }
 
@@ -35,7 +35,7 @@ public class FLWDetailsController extends BaseDataAPIController {
     public
     @ResponseBody
     RegistrationResponse createOrUpdate(@RequestBody FrontLineWorkerRequest request) {
-        return registrationService.createOrUpdateFLW(request);
+        return flwRegistrationService.createOrUpdateFLW(request);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
@@ -54,7 +54,7 @@ public class FLWDetailsController extends BaseDataAPIController {
         Date startDate = activityStartDate != null ? DateTime.parse(activityStartDate).toDate() : null;
         Date endDate = activityEndDate != null ? DateTime.parse(activityEndDate).toDate() : null;
 
-        return registrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
+        return flwRegistrationService.getFilteredFLW(msisdnAsLong, name, status, designation, operator, circle, startDate, endDate);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{msisdn}/usage", produces = {"application/json", "application/xml"})

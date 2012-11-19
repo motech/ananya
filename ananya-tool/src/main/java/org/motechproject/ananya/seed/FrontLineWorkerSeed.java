@@ -12,7 +12,7 @@ import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.service.FrontLineWorkerExecutable;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
 import org.motechproject.ananya.service.FrontLineWorkerService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
@@ -33,7 +33,7 @@ public class FrontLineWorkerSeed {
 
     private static final Logger log = LoggerFactory.getLogger(FrontLineWorkerSeed.class);
     @Autowired
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     @Autowired
     private FrontLineWorkerService frontLineWorkerService;
     @Autowired
@@ -96,11 +96,11 @@ public class FrontLineWorkerSeed {
                     name,
                     designation,
                     new LocationRequest(currentDistrict, currentBlock, currentPanchayat),
-                    lastModified.toDate(), flwId, null));
+                    lastModified, flwId, null));
 
             currentRow = csvReader.readNext();
         }
-        List<RegistrationResponse> registrationResponses = registrationService.registerAllFLWs(frontLineWorkerRequests);
+        List<RegistrationResponse> registrationResponses = flwRegistrationService.registerAllFLWs(frontLineWorkerRequests);
         logResponses(registrationResponses);
     }
 

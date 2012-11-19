@@ -14,7 +14,7 @@ import org.motechproject.ananya.request.FLWNighttimeCallsRequest;
 import org.motechproject.ananya.response.FLWNighttimeCallsResponse;
 import org.motechproject.ananya.response.FLWUsageResponse;
 import org.motechproject.ananya.service.FLWDetailsService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.ananya.utils.DateUtils;
 
 import static junit.framework.Assert.assertEquals;
@@ -26,7 +26,7 @@ public class FLWDetailsControllerTest {
 
     private FLWDetailsController frontLineWorkerDetailsController;
     @Mock
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     @Mock
     private FLWDetailsService flwDetailsService;
     @Rule
@@ -34,7 +34,7 @@ public class FLWDetailsControllerTest {
 
     @Before
     public void setup() {
-        frontLineWorkerDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
+        frontLineWorkerDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
     }
 
     @Test

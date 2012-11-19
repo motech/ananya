@@ -25,7 +25,7 @@ import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.FLWDetailsService;
 import org.motechproject.ananya.service.LocationRegistrationService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.ananya.utils.TestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -65,7 +65,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
     @Mock
     private HttpServletRequest request;
     @Mock
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     @Mock
     private FLWDetailsService flwDetailsService;
 
@@ -133,7 +133,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         ArrayList<String> smsReferenceNumbers = new ArrayList<String>() {{
             add("1234");
         }};
-        flwDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
+        flwDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
         FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "unregistered",
                 new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
@@ -158,7 +158,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         FLWNighttimeCallsResponse expectedResponse = new FLWNighttimeCallsResponse(flwCallDurations);
         when(flwDetailsService.getNighttimeCalls(any(FLWNighttimeCallsRequest.class))).thenReturn(expectedResponse);
 
-        flwDetailsController = new FLWDetailsController(registrationService, flwDetailsService);
+        flwDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
 
         MvcResult result = mockMvc(flwDetailsController)
                 .perform(get("/flw/" + msisdn + "/nighttimecalls")

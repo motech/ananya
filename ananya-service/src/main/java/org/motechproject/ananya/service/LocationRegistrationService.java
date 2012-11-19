@@ -25,6 +25,7 @@ public class LocationRegistrationService {
     private LocationService locationService;
     private LocationDimensionService locationDimensionService;
     private RegistrationService registrationService;
+    private static final Object SYNC_LOCK = new Object();
 
     @Autowired
     public LocationRegistrationService(LocationDimensionService locationDimensionService, LocationService locationService, RegistrationService registrationService) {
@@ -41,22 +42,24 @@ public class LocationRegistrationService {
     }
 
     public void addOrUpdate(LocationSyncRequest locationSyncRequest) {
-        if (isNotLatestRequest(locationSyncRequest)) {
-            return;
-        }
+        synchronized (SYNC_LOCK) {
+            if (isNotLatestRequest(locationSyncRequest)) {
+                return;
+            }
 
-        LocationList locationList = new LocationList(locationService.getAll());
-        LocationRequest actualLocationRequest = locationSyncRequest.getActualLocation();
-        LocationRequest newLocationRequest = locationSyncRequest.getNewLocation();
-        DateTime lastModifiedTime = locationSyncRequest.getLastModifiedTime();
-        if (locationSyncRequest.getLocationStatusAsEnum().equals(LocationStatus.INVALID)) {
-            registerLocationForSync(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
-            Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
-            Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
-            reMapOldLocationReferences(oldLocation, newLocation);
+            LocationList locationList = new LocationList(locationService.getAll());
+            LocationRequest actualLocationRequest = locationSyncRequest.getActualLocation();
+            LocationRequest newLocationRequest = locationSyncRequest.getNewLocation();
+            DateTime lastModifiedTime = locationSyncRequest.getLastModifiedTime();
+            if (locationSyncRequest.getLocationStatusAsEnum().equals(LocationStatus.INVALID)) {
+                registerLocationForSync(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
+                Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
+                Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
+                reMapOldLocationReferences(oldLocation, newLocation);
+            }
+            createOrUpdateLocation(locationSyncRequest.getActualLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList, lastModifiedTime);
+            updateLocationDetailsOnFLW(actualLocationRequest, newLocationRequest, locationList);
         }
-        createOrUpdateLocation(locationSyncRequest.getActualLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList, lastModifiedTime);
-        updateLocationDetailsOnFLW(actualLocationRequest, newLocationRequest, locationList);
     }
 
     private boolean isNotLatestRequest(LocationSyncRequest locationSyncRequest) {

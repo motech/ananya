@@ -10,7 +10,7 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.service.LocationService;
-import org.motechproject.ananya.service.RegistrationService;
+import org.motechproject.ananya.service.FLWRegistrationService;
 import org.motechproject.importer.domain.ValidationResponse;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class FrontLineWorkerImporterTest {
     @Mock
     private LocationService locationService;
     @Mock
-    private RegistrationService registrationService;
+    private FLWRegistrationService flwRegistrationService;
     @Captor
     private ArgumentCaptor<List<FrontLineWorkerRequest>> captor;
 
@@ -37,7 +37,7 @@ public class FrontLineWorkerImporterTest {
     @Before
     public void setUp() {
         initMocks(this);
-        frontLineWorkerImporter = new FrontLineWorkerImporter(registrationService, locationService);
+        frontLineWorkerImporter = new FrontLineWorkerImporter(flwRegistrationService, locationService);
     }
 
     @Test
@@ -95,7 +95,7 @@ public class FrontLineWorkerImporterTest {
 
         frontLineWorkerImporter.postData(frontLineWorkerRequests);
 
-        verify(registrationService).registerAllFLWs(captor.capture());
+        verify(flwRegistrationService).registerAllFLWs(captor.capture());
         List<FrontLineWorkerRequest> flwRequests = captor.getValue();
         assertEquals(1, flwRequests.size());
         assertEquals(msisdn, flwRequests.get(0).getMsisdn());
