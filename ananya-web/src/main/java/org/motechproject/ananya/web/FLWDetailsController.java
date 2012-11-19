@@ -34,7 +34,7 @@ public class FLWDetailsController extends BaseDataAPIController {
     @RequestMapping(method = RequestMethod.POST)
     public
     @ResponseBody
-    RegistrationResponse create(@RequestBody FrontLineWorkerRequest request) {
+    RegistrationResponse createOrUpdate(@RequestBody FrontLineWorkerRequest request) {
         return registrationService.createOrUpdateFLW(request);
     }
 
