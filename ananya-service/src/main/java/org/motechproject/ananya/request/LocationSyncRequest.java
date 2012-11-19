@@ -1,6 +1,7 @@
 package org.motechproject.ananya.request;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.LocationStatus;
 
@@ -36,6 +37,7 @@ public class LocationSyncRequest {
         return lastModifiedTime;
     }
 
+    @JsonIgnore
     public LocationStatus getLocationStatusAsEnum() {
         return LocationStatus.getFor(locationStatus);
     }

@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
+import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.utils.ValidationUtils;
 
@@ -11,11 +12,11 @@ import java.util.Map;
 
 public class FrontLineWorkerValidator {
 
-    public static FLWValidationResponse validate(FrontLineWorkerRequest frontLineWorkerRequest, Location locationOfFrontLineWorker) {
+    public static FLWValidationResponse validate(FrontLineWorkerRequest frontLineWorkerRequest) {
         FLWValidationResponse flwValidationResponse = new FLWValidationResponse();
         validateMsisdn(frontLineWorkerRequest, flwValidationResponse);
         validateName(frontLineWorkerRequest, flwValidationResponse);
-        validateLocation(locationOfFrontLineWorker, flwValidationResponse);
+        validateLocation(frontLineWorkerRequest, flwValidationResponse);
         validateFLWId(frontLineWorkerRequest, flwValidationResponse);
         validateVerificationStatus(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
@@ -27,8 +28,9 @@ public class FrontLineWorkerValidator {
             flwValidationResponse.forInvalidVerificationStatus();
     }
 
-    private static void validateLocation(Location locationOfFrontLineWorker, FLWValidationResponse flwValidationResponse) {
-        if (locationOfFrontLineWorker == null)
+    private static void validateLocation(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
+        LocationRequest location = frontLineWorkerRequest.getLocation();
+        if (location == null || StringUtils.isBlank(location.getBlock()) || StringUtils.isBlank(location.getDistrict()) || StringUtils.isBlank(location.getPanchayat()))
             flwValidationResponse.forInvalidLocation();
     }
 
@@ -50,7 +52,7 @@ public class FrontLineWorkerValidator {
     public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
                                                             Location location,
                                                             Map<String, Integer> msisdnOccurrenceMap) {
-        FLWValidationResponse validationResponse = validate(frontLineWorkerRequest, location);
+        FLWValidationResponse validationResponse = validate(frontLineWorkerRequest);
         if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
             validationResponse.forDuplicates();
         return validationResponse;

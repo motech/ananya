@@ -8,10 +8,12 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
+import org.motechproject.ananya.request.LocationSyncRequest;
 import org.motechproject.ananya.requests.FLWStatusChangeRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
@@ -28,7 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RegistrationService {
@@ -42,6 +47,7 @@ public class RegistrationService {
     private JobAidContentMeasureService jobAidContentMeasureService;
     private CallDurationMeasureService callDurationMeasureService;
     private SMSSentMeasureService smsSentMeasureService;
+    private LocationRegistrationService locationRegistrationService;
 
     public RegistrationService() {
     }
@@ -54,7 +60,8 @@ public class RegistrationService {
                                LocationService locationService,
                                JobAidContentMeasureService jobAidContentMeasureService,
                                CallDurationMeasureService callDurationMeasureService,
-                               SMSSentMeasureService smsSentMeasureService) {
+                               SMSSentMeasureService smsSentMeasureService,
+                               LocationRegistrationService locationRegistrationService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
@@ -63,6 +70,7 @@ public class RegistrationService {
         this.jobAidContentMeasureService = jobAidContentMeasureService;
         this.callDurationMeasureService = callDurationMeasureService;
         this.smsSentMeasureService = smsSentMeasureService;
+        this.locationRegistrationService = locationRegistrationService;
     }
 
     public List<RegistrationResponse> registerAllFLWs(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
@@ -108,13 +116,14 @@ public class RegistrationService {
 
     @Transactional
     private RegistrationResponse registerFlw(FrontLineWorkerRequest frontLineWorkerRequest) {
-        LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
-        Location location = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
         RegistrationResponse registrationResponse = new RegistrationResponse();
 
-        FLWValidationResponse FLWValidationResponse = FrontLineWorkerValidator.validate(frontLineWorkerRequest, location);
-        if (FLWValidationResponse.isInValid())
+        FLWValidationResponse FLWValidationResponse = FrontLineWorkerValidator.validate(frontLineWorkerRequest);
+        if (FLWValidationResponse.isInValid()) {
             return registrationResponse.withValidationResponse(FLWValidationResponse);
+        }
+
+        Location location = getOrCreateLocation(frontLineWorkerRequest);
 
         String callerId = frontLineWorkerRequest.getMsisdn();
         UUID flwId = UUID.fromString(frontLineWorkerRequest.getFlwId());
@@ -125,6 +134,16 @@ public class RegistrationService {
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
+    }
+
+    private Location getOrCreateLocation(FrontLineWorkerRequest frontLineWorkerRequest) {
+        LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
+        Location locationFromDb = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+        if (locationFromDb == null) {
+            LocationRequest request = new LocationRequest(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+            locationRegistrationService.addOrUpdate(new LocationSyncRequest(request, request, LocationStatus.NOT_VERIFIED.name(), frontLineWorkerRequest.getLastModified()));
+        }
+        return locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
     }
 
     private FrontLineWorkerRequest trim(FrontLineWorkerRequest frontLineWorkerRequest) {

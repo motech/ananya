@@ -2,11 +2,11 @@ package org.motechproject.ananya.request;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 public class FrontLineWorkerRequest implements Serializable {
@@ -14,14 +14,14 @@ public class FrontLineWorkerRequest implements Serializable {
     private String msisdn;
     private String designation;
     private LocationRequest location = new LocationRequest();
-    private Date lastModified;
+    private DateTime lastModified;
     private String flwId;
     private String verificationStatus;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, Date lastModified, String flwId, String verificationStatus) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
@@ -63,11 +63,11 @@ public class FrontLineWorkerRequest implements Serializable {
         this.location = location;
     }
 
-    public Date getLastModified() {
+    public DateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(DateTime lastModified) {
         this.lastModified = lastModified;
     }
 

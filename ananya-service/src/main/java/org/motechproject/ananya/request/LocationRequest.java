@@ -1,5 +1,7 @@
 package org.motechproject.ananya.request;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 import java.io.Serializable;
 
 public class LocationRequest implements Serializable {
@@ -41,5 +43,10 @@ public class LocationRequest implements Serializable {
 
     public String toCSV() {
         return "\"" + district + "\"" + "," + "\"" + block + "\"" + "," + "\"" + panchayat + "\"";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return EqualsBuilder.reflectionEquals(this, other);
     }
 }
