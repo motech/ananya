@@ -186,4 +186,11 @@ public class FrontLineWorkerTest {
 
         assertEquals(RegistrationStatus.UNREGISTERED, frontLineWorker.getStatus());
     }
+
+    @Test
+    public void shouldSetDummyFlwIdWhenFlwIsCreated() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+
+        assertEquals(UUID.fromString("11111111-1111-1111-1111-111111111111"),frontLineWorker.getFlwId());
+    }
 }

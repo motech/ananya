@@ -18,6 +18,8 @@ import java.util.UUID;
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
 
+    private final static UUID DUMMY_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+
     private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
@@ -71,7 +73,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private boolean modified;
 
     @JsonProperty
-    private UUID flwId;
+    private UUID flwId = DUMMY_UUID;
 
     @JsonProperty
     private VerificationStatus verificationStatus;
@@ -86,7 +88,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.circle = circle;
         this.operator = operator;
-        this.flwId = UUID.randomUUID();
     }
 
     public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, UUID flwId) {

@@ -86,7 +86,7 @@ public class LocationRegistrationService {
     }
 
     private void reMapOldLocationReferences(Location actualLocation, Location newLocation) {
-        if(oldLocationHasNotSyncedYet(actualLocation))
+        if (oldLocationHasNotSyncedYet(actualLocation))
             return;
         registrationService.updateAllLocationReferences(actualLocation.getExternalId(), newLocation.getExternalId());
     }
@@ -103,7 +103,7 @@ public class LocationRegistrationService {
     }
 
     private void registerLocationForSync(String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus, DateTime lastModifiedTime) {
-        if(locationList.getFor(district, block, panchayat) != null) return;
+        if (locationList.getFor(district, block, panchayat) != null) return;
         saveNewLocation(new Location(district, block, panchayat, 0, 0, 0, locationStatus, lastModifiedTime), locationList);
     }
 
