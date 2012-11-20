@@ -71,7 +71,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         String calledNumber = "5771122334455";
         String callDuration = "30";
         String promptList = "['prompt1', 'prompt2']";
-        Integer expectedJobAidUsageByPulse = 60000;
+        Integer expectedJobAidUsageByPulse = 59000;
         int allowedUsagePerMonth = 39 * 60 * 1000;
 
         List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");

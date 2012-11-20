@@ -22,6 +22,6 @@ public class AllOperatorsTest extends SpringBaseIT {
         Operator byOperatorName = allOperators.findByName(operatorName);
         assertEquals(allowedUsagePerMonth, (int )byOperatorName.getAllowedUsagePerMonth());
         assertEquals(0, (int )byOperatorName.getStartOfPulseInMilliSec());
-        assertEquals(60, (int )byOperatorName.getEndOfPulseInMilliSec());
+        assertEquals(60000, (int )byOperatorName.getEndOfPulseInMilliSec());
     }
 }
