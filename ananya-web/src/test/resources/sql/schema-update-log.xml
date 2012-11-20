@@ -344,7 +344,7 @@
                                         (od.end_of_pulse_in_milli_sec - od.start_of_pulse_in_milli_sec)::FLOAT
                                     )
             FROM
-                operator_dimension od WHERE cdm.operator = od.name;
+                report.operator_dimension od WHERE cdm.operator = od.name;
         </sql>
     </changeSet>
 </databaseChangeLog>
