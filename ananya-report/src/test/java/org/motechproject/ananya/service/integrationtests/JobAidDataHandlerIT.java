@@ -108,8 +108,9 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         Location location = new Location("", "", "", 0, 0, 0);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, RegistrationStatus.UNREGISTERED);
         frontLineWorker.setRegisteredDate(now);
+        frontLineWorker.setOperator("airtel");
         allFrontLineWorkers.add(frontLineWorker);
-        registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
+        registrationLogService.add(new RegistrationLog(callId, callerId, "airtel", ""));
 
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);

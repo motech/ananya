@@ -54,6 +54,9 @@ public class CallDurationMeasure {
     @Column(name = "duration_in_pulse")
     private Integer durationInPulse;
 
+    @Column(name = "operator")
+    private String operator;
+
     public CallDurationMeasure() {
     }
 
@@ -70,6 +73,7 @@ public class CallDurationMeasure {
         this.durationInPulse = durationInPulse;
         this.startTime = new Timestamp(startTime.getMillis());
         this.endTime = new Timestamp(endTime.getMillis());
+        this.operator = frontLineWorkerDimension.getOperator();
     }
 
     public FrontLineWorkerDimension getFrontLineWorkerDimension() {
@@ -114,5 +118,9 @@ public class CallDurationMeasure {
 
     public void setLocationDimension(LocationDimension locationDimension) {
         this.locationDimension = locationDimension;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 }
