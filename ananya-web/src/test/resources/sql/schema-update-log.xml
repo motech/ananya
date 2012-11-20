@@ -304,25 +304,6 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="11">
-        <sql>
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'airtel');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'bsnl');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'reliance');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'vodafone');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'tata');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'idea');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'undefined');
-            update report.call_duration_measure set duration_in_pulse = ceil(duration / 60.0) where flw_id in (select id from report.front_line_worker_dimension where operator = 'longcode');
-        </sql>
-    </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="12">
-        <sql>
-            update report.call_duration_measure set duration_in_pulse = 1 where duration=0;
-        </sql>
-    </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="13">
         <!--sql to delete duplicate rows in measures created due to multiple disconnects issue-->
         <sql>
             DELETE FROM report.call_duration_measure
@@ -349,6 +330,21 @@
             (SELECT id,	row_number() over (partition BY call_id,flw_id,job_aid_content_id,timestamp ORDER BY id) AS rnum
             FROM report.job_aid_content_measure) t
             WHERE t.rnum > 1);
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="12">
+        <sql>
+            UPDATE
+                report.call_duration_measure as cdm
+            SET
+                duration_in_pulse = CEIL (
+                                        GREATEST((cdm.duration*1000 - od.start_of_pulse_in_milli_sec),0)
+                                            /
+                                        (od.end_of_pulse_in_milli_sec - od.start_of_pulse_in_milli_sec)::FLOAT
+                                    )
+            FROM
+                operator_dimension od WHERE cdm.operator = od.name;
         </sql>
     </changeSet>
 </databaseChangeLog>

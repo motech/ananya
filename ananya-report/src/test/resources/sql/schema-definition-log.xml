@@ -378,9 +378,21 @@
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="26">
         <addColumn tableName="call_duration_measure">
             <column name="duration_in_pulse" type="integer"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="27">
+        <createTable tableName="operator_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="allowed_usage_per_month" type="integer"/>
+            <column name="start_of_pulse_in_milli_sec" type="integer"/>
+            <column name="end_of_pulse_in_milli_sec" type="integer"/>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

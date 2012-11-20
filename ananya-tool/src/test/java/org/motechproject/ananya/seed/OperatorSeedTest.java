@@ -5,8 +5,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Operator;
+import org.motechproject.ananya.domain.dimension.OperatorDimension;
 import org.motechproject.ananya.repository.AllOperators;
+import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.repository.dimension.AllOperatorDimensions;
+import org.motechproject.ananya.support.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,14 +32,17 @@ public class OperatorSeedTest {
     @Autowired
     private AllOperators allOperators;
 
-    @Before
-    public void setUp() {
-        allOperators.removeAll();
-    }
+    @Autowired
+    private AllOperatorDimensions allOperatorDimensions;
+
+    @Autowired
+    private TestDataAccessTemplate template;
 
     @After
+    @Before
     public void tearDown() {
         allOperators.removeAll();
+        template.deleteAll(template.loadAll(OperatorDimension.class));
     }
 
     @Test
@@ -54,15 +62,26 @@ public class OperatorSeedTest {
     }
 
     @Test
-    public void shouldAddPulseToSecMapping() throws IOException {
+    public void shouldAddStartAndEndOFPulseInMilliSec_and_populateAllOperatorDimensions() throws IOException {
         seed.load();
         seed.loadLongCode();
 
         seed.addPulseToSec(); // our test
 
-        List < Operator > operators = allOperators.getAll();
+        List<Operator> operators = allOperators.getAll();
         for (Operator operator : operators) {
-            assertEquals(60000, (int) operator.getPulseToMilliSec());
+            assertEquals(OperatorSeed.start_of_pulse_map.get(operator.getName()), operator.getStartOfPulseInMilliSec());
+            assertEquals(OperatorSeed.end_of_pulse_map.get(operator.getName()), operator.getEndOfPulseInMilliSec());
+        }
+
+        List<OperatorDimension> operatorDimensions = template.loadAll(OperatorDimension.class);
+        for (OperatorDimension operatorDimension : operatorDimensions) {
+            assertEquals(OperatorSeed.operator_usage.get(operatorDimension.getName()),
+                    operatorDimension.getAllowedUsagePerMonth());
+            assertEquals(OperatorSeed.start_of_pulse_map.get(operatorDimension.getName()),
+                    operatorDimension.getStartOfPulseInMilliSec());
+            assertEquals(OperatorSeed.end_of_pulse_map.get(operatorDimension.getName()),
+                    operatorDimension.getEndOfPulseInMilliSec());
         }
     }
 }

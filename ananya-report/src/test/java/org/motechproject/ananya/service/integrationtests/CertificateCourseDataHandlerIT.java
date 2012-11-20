@@ -134,7 +134,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         frontLineWorker.setOperator(operatorName);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
-        allOperators.add(new Operator(operatorName, 39 * 60 * 1000, 60000));
+        allOperators.add(new Operator(operatorName, 39 * 60 * 1000, 0, 60000));
 
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "");
         allLocationDimensions.add(locationDimension);

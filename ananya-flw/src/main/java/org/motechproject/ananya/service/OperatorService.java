@@ -29,22 +29,29 @@ public class OperatorService {
 
     public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec) {
         Operator operator = allOperators.findByName(operatorName);
-        Integer pulseToMilliSec = operator.getPulseToMilliSec();
-        Integer usageInPulse = convertToPulse(durationInMilliSec, pulseToMilliSec);
+        Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
+        Integer startOfPulseInMilliSec = operator.getStartOfPulseInMilliSec();
 
-        return usageInPulse * pulseToMilliSec;
+        double durationConsideringStartOfPulse = findDurationConsideringStartOfPulse(durationInMilliSec, startOfPulseInMilliSec);
+        return calculatePulse(pulseToMilliSecForOperator, durationConsideringStartOfPulse) * pulseToMilliSecForOperator;
     }
 
     public Integer usageInPulse(String operatorName, Integer durationInMilliSec) {
         Operator operator = allOperators.findByName(operatorName);
-        Integer pulseToMilliSec = operator.getPulseToMilliSec();
-        Integer usageInPulse = convertToPulse(durationInMilliSec, pulseToMilliSec);
+        Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
+        Integer startOfPulseInMilliSec = operator.getStartOfPulseInMilliSec();
 
-        return usageInPulse;
+        double durationConsideringStartOfPulse = findDurationConsideringStartOfPulse(durationInMilliSec, startOfPulseInMilliSec);
+        return calculatePulse(pulseToMilliSecForOperator, durationConsideringStartOfPulse);
     }
 
-    private int convertToPulse(Integer durationInMilliSec, double pulseToMilliSec) {
-        if(durationInMilliSec == 0) durationInMilliSec ++;
-        return (int) Math.ceil(durationInMilliSec / pulseToMilliSec);
+    private double findDurationConsideringStartOfPulse(Integer durationInMilliSec, Integer startOfPulseInMilliSec) {
+        double durationConsideringStartOfPulse = durationInMilliSec - startOfPulseInMilliSec;
+        durationConsideringStartOfPulse = durationConsideringStartOfPulse < 0 ? 0 : durationConsideringStartOfPulse;
+        return durationConsideringStartOfPulse;
+    }
+
+    private int calculatePulse(Integer pulseToMilliSecForOperator, double durationConsideringStartOfPulse) {
+        return (int) Math.ceil(durationConsideringStartOfPulse / pulseToMilliSecForOperator);
     }
 }
