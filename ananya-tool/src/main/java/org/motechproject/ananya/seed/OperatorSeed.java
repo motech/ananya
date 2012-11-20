@@ -1,7 +1,9 @@
 package org.motechproject.ananya.seed;
 
 import org.motechproject.ananya.domain.Operator;
+import org.motechproject.ananya.domain.dimension.OperatorDimension;
 import org.motechproject.ananya.repository.AllOperators;
+import org.motechproject.ananya.repository.dimension.AllOperatorDimensions;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +18,15 @@ public class OperatorSeed {
     @Autowired
     AllOperators allOperators;
 
-    public final static HashMap<String, Integer> operator_usage = new HashMap<String, Integer>();
+    @Autowired
+    private AllOperatorDimensions allOperatorDimensions;
 
-    public final static HashMap<String, Integer> pulse_to_second = new HashMap<String, Integer>();
+    protected final static HashMap<String, Integer> operator_usage = new HashMap<>();
+    protected final static HashMap<String, Integer> start_of_pulse_map = new HashMap<>();
 
-    public static final int DEFAULT_PULSE_TO_MILLI_SEC = 60000;
+    protected final static HashMap<String, Integer> end_of_pulse_map = new HashMap<>();
+    public static final int DEFAULT_START_OF_PULSE_IN_MILLI_SEC = 0;
+    public static final int DEFAULT_END_OF_PULSE_IN_MILLI_SEC = 60000;
 
     {
         operator_usage.put("airtel", convertMinutesToMilliSeconds(39));
@@ -30,15 +36,25 @@ public class OperatorSeed {
         operator_usage.put("reliance", convertMinutesToMilliSeconds(34));
         operator_usage.put("bsnl", convertMinutesToMilliSeconds(28));
         operator_usage.put("undefined", convertMinutesToMilliSeconds(28));
+        operator_usage.put("longcode", convertMinutesToMilliSeconds(50));
 
-        pulse_to_second.put("airtel", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("tata", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("vodafone", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("idea", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("reliance", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("bsnl", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("undefined", DEFAULT_PULSE_TO_MILLI_SEC);
-        pulse_to_second.put("longcode", DEFAULT_PULSE_TO_MILLI_SEC);
+        start_of_pulse_map.put("tata", 500);
+        start_of_pulse_map.put("idea", 500);
+        start_of_pulse_map.put("reliance", 500);
+        start_of_pulse_map.put("airtel", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
+        start_of_pulse_map.put("vodafone", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
+        start_of_pulse_map.put("bsnl", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
+        start_of_pulse_map.put("undefined", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
+        start_of_pulse_map.put("longcode", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
+
+        end_of_pulse_map.put("tata", 1500);
+        end_of_pulse_map.put("idea", 60500);
+        end_of_pulse_map.put("reliance", 60500);
+        end_of_pulse_map.put("airtel", 59000);
+        end_of_pulse_map.put("vodafone", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
+        end_of_pulse_map.put("bsnl", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
+        end_of_pulse_map.put("undefined", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
+        end_of_pulse_map.put("longcode", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
     }
 
     public static Integer convertMinutesToMilliSeconds(int minutes) {
@@ -51,24 +67,28 @@ public class OperatorSeed {
 
         while (operatorNameIterator.hasNext()) {
             String nextName = operatorNameIterator.next();
-            Operator operator = new Operator(nextName, operator_usage.get(nextName), 0);
+            Operator operator = new Operator(nextName, operator_usage.get(nextName), DEFAULT_START_OF_PULSE_IN_MILLI_SEC, DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
             allOperators.add(operator);
         }
     }
 
     @Seed(priority = 0, version = "1.2", comment = "load long code")
     public void loadLongCode() throws IOException {
-        Operator operator = new Operator("longcode", convertMinutesToMilliSeconds(50), 0);
+        Operator operator = new Operator("longcode", operator_usage.get("longcode"), DEFAULT_START_OF_PULSE_IN_MILLI_SEC, DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
         allOperators.add(operator);
 
     }
 
     @Seed(priority = 0, version = "1.10", comment = "adding pulse to second mapping for operators")
     public void addPulseToSec() throws IOException {
-        for (String operatorName : pulse_to_second.keySet()) {
+        for (String operatorName : end_of_pulse_map.keySet()) {
             Operator operator = allOperators.findByName(operatorName);
-            operator.setPulseToMilliSec(pulse_to_second.get(operatorName));
+            operator.setStartOfPulseInMilliSec(start_of_pulse_map.get(operatorName));
+            operator.setEndOfPulseInMilliSec(end_of_pulse_map.get(operatorName));
             allOperators.update(operator);
+
+            allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
+                    operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec() ));
         }
     }
 

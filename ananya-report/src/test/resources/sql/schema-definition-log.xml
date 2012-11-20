@@ -378,7 +378,39 @@
         </addColumn>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="26">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="26">
+        <addColumn tableName="call_duration_measure">
+            <column name="duration_in_pulse" type="integer"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="27">
+        <sql splitStatements="false">
+            ALTER TABLE report.call_duration_measure ADD COLUMN operator VARCHAR(30);
+
+            UPDATE report.front_line_worker_dimension SET operator = 'unknown' WHERE operator IS NULL;
+
+            UPDATE report.call_duration_measure AS cdm
+            SET operator=flwd.operator
+            FROM report.front_line_worker_dimension AS flwd WHERE cdm.flw_id = flwd.id;
+
+            ALTER TABLE report.call_duration_measure ALTER operator SET NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="28">
+        <createTable tableName="operator_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="allowed_usage_per_month" type="integer"/>
+            <column name="start_of_pulse_in_milli_sec" type="integer"/>
+            <column name="end_of_pulse_in_milli_sec" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
         <!-- Following extension required to generate UUIDs. Assuming Postgres9.1 -->
         <sql splitStatements="false">
             CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -391,25 +423,20 @@
         <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="27">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="30">
         <sql splitStatements="false">
             ALTER TABLE report.front_line_worker_dimension ALTER COLUMN flw_guid TYPE uuid USING flw_guid::uuid;
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="28">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="31">
         <sql splitStatements="false">
             ALTER TABLE report.front_line_worker_dimension RENAME COLUMN flw_guid TO flw_id;
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="29">
-        <addColumn tableName="call_duration_measure">
-            <column name="duration_in_pulse" type="integer"/>
-        </addColumn>
-    </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="30">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="32">
         <sql splitStatements="false">
             ALTER TABLE report.location_dimension ADD COLUMN status VARCHAR(36);
             UPDATE report.location_dimension SET status = 'VALID';
@@ -417,21 +444,8 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="31">
-        <sql splitStatements="false">
-            ALTER TABLE report.call_duration_measure ADD COLUMN operator VARCHAR(30);
 
-            UPDATE report.front_line_worker_dimension SET operator = 'unknown' WHERE operator IS NULL;
-
-            UPDATE report.call_duration_measure AS cdm
-                SET operator=flwd.operator
-            FROM report.front_line_worker_dimension AS flwd WHERE cdm.flw_id = flwd.id;
-
-            ALTER TABLE report.call_duration_measure ALTER operator SET NOT NULL;
-        </sql>
-    </changeSet>
-
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="32">
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="33">
         <addColumn tableName="front_line_worker_dimension">
             <column name="verification_status" type="varchar(20)"/>
         </addColumn>

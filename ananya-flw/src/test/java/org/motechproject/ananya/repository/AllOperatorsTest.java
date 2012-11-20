@@ -14,12 +14,14 @@ public class AllOperatorsTest extends SpringBaseIT {
     public void shouldAddAnOperator() {
         String operatorName = "operator";
         int allowedUsagePerMonth = 25;
-        Operator operator = new Operator(operatorName, allowedUsagePerMonth, 60);
+        Operator operator = new Operator(operatorName, allowedUsagePerMonth, 0, 60000);
 
         allOperators.add(operator);
         markForDeletion(operator);
 
         Operator byOperatorName = allOperators.findByName(operatorName);
         assertEquals(allowedUsagePerMonth, (int )byOperatorName.getAllowedUsagePerMonth());
+        assertEquals(0, (int )byOperatorName.getStartOfPulseInMilliSec());
+        assertEquals(60, (int )byOperatorName.getEndOfPulseInMilliSec());
     }
 }
