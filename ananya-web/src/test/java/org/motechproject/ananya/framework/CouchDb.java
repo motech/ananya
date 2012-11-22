@@ -113,10 +113,10 @@ public class CouchDb {
         return this;
     }
 
-    public void createOperator(String operatorName, int allowedUsagePerMonth, int pulseToMilliSec) {
+    public void createOperator(String operatorName, int allowedUsagePerMonth, int startOfPulseInMilliSec, int endOfPulseInMilliSec) {
         Operator operator = allOperators.findByName(operatorName);
         if(operator==null)
-            allOperators.add(new Operator(operatorName, allowedUsagePerMonth, pulseToMilliSec));
+            allOperators.add(new Operator(operatorName, allowedUsagePerMonth, startOfPulseInMilliSec, endOfPulseInMilliSec ));
     }
 
     public CouchDb updatePromptsHeard(String callerId, String prompt) {

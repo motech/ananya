@@ -37,7 +37,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     @Before
     public void setUp(){
         clearFLWData();
-        couchDb.createOperator(operator, 39 * 60 * 1000, 60000);
+        couchDb.createOperator(operator, 39 * 60 * 1000, 0, 60000);
     }
 
     @After
