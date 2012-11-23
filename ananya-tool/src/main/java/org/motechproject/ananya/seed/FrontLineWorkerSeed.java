@@ -11,8 +11,8 @@ import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.seed.service.FrontLineWorkerExecutable;
 import org.motechproject.ananya.seed.service.FrontLineWorkerSeedService;
-import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.FLWRegistrationService;
+import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
@@ -26,7 +26,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class FrontLineWorkerSeed {
@@ -50,6 +49,7 @@ public class FrontLineWorkerSeed {
     @Value("#{ananyaProperties['environment']}")
     private String environment;
     private BufferedWriter writer;
+    private String DUMMY_UUID = "11111111-1111-1111-1111-111111111111";
 
     @Seed(priority = 0, version = "1.0", comment = "FLWs pre-registration via CSV, 20988 nos [P+C]")
     public void createFrontlineWorkersFromCSVFile() throws IOException {
@@ -90,7 +90,7 @@ public class FrontLineWorkerSeed {
             currentDistrict = currentRow[3];
             currentBlock = currentRow[4];
             currentPanchayat = currentRow[5];
-            flwId = UUID.randomUUID().toString();
+            flwId = getFlwId(currentRow);
 
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
@@ -102,6 +102,10 @@ public class FrontLineWorkerSeed {
         }
         List<RegistrationResponse> registrationResponses = flwRegistrationService.registerAllFLWs(frontLineWorkerRequests);
         logResponses(registrationResponses);
+    }
+
+    private String getFlwId(String[] currentRow) {
+        return currentRow.length > 6 && StringUtils.isNotEmpty(currentRow[6]) ? currentRow[6] : DUMMY_UUID;
     }
 
     private void logResponses(List<RegistrationResponse> responses) throws IOException {

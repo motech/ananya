@@ -96,17 +96,21 @@ public class FrontLineWorkerSeedTest {
     }
 
     @Test
-    @Ignore
     public void shouldRegisterFrontLineWorkersThroughTheFrontLineWorkerSeed() throws IOException {
         frontLineWorkerSeed.createFrontlineWorkersFromCSVFile();
 
         List<FrontLineWorker> frontLineWorkers = allFrontLineWorkers.getAll();
-        assertEquals(6, frontLineWorkers.size());
+        int numberOfCsvEntries = 13;
+        assertEquals(numberOfCsvEntries, frontLineWorkers.size());
         FrontLineWorker frontLineWorker = frontLineWorkers.get(1);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         Assert.assertEquals(frontLineWorkerDimension.getName(), frontLineWorker.name());
         Assert.assertEquals(frontLineWorkerDimension.getMsisdn(), frontLineWorker.msisdn());
         Assert.assertEquals(frontLineWorkerDimension.getOperator(), frontLineWorker.getOperator());
+        assertNotNull(frontLineWorker.getFlwId());
+        Assert.assertEquals(frontLineWorkerDimension.getFlwId(), frontLineWorker.getFlwId());
+        FrontLineWorker flwWithDummyFlwId = allFrontLineWorkers.findByMsisdn("916756453423");
+        assertEquals("11111111-1111-1111-1111-111111111111", flwWithDummyFlwId.getFlwId().toString());
     }
 
     @Test
