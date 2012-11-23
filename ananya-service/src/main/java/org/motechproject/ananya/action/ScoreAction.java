@@ -19,6 +19,6 @@ public class ScoreAction implements CourseAction {
             ScoreActionInteraction scoreActionInteraction = ScoreActionInteraction.findFor(stateRequest.getInteractionKey());
             scoreActionInteraction.process(frontLineWorker, stateRequest);
         }
-        log.info(callId + "- updated scores for " + frontLineWorker);
+        log.info(callId + "- updated scores for " + frontLineWorker.getMsisdn());
     }
 }

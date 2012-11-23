@@ -57,7 +57,7 @@ public class FrontLineWorkerService {
         if (frontLineWorker != null && frontLineWorker.jobAidLastAccessedPreviousMonth()) {
             frontLineWorker.resetJobAidUsageAndPrompts();
             allFrontLineWorkers.update(frontLineWorker);
-            log.info("reset last jobaid usage for " + frontLineWorker);
+            log.info("reset last jobaid usage for " + frontLineWorker.getMsisdn());
         }
         return frontLineWorker;
     }
@@ -90,14 +90,15 @@ public class FrontLineWorkerService {
         frontLineWorker.setCircle(circle);
         frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         allFrontLineWorkers.updateFlw(frontLineWorker);
-        log.info("updated:" + frontLineWorker);
+        log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
+                "] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator());
 
         return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }
 
     public void updateCertificateCourseState(FrontLineWorker frontLineWorker) {
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated certificate course state for " + frontLineWorker);
+        log.info("updated certificate course state for " + frontLineWorker.getMsisdn());
     }
 
     public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
@@ -109,7 +110,7 @@ public class FrontLineWorkerService {
         frontLineWorker.setLastJobAidAccessTime(DateTime.now());
 
         allFrontLineWorkers.update(frontLineWorker);
-        log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker);
+        log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker.getMsisdn());
     }
 
     public int getCurrentCourseAttempt(String callerId) {
@@ -136,7 +137,7 @@ public class FrontLineWorkerService {
 
     private FrontLineWorker updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
         boolean updated = existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location, frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus());
-        if(!updated) {
+        if (!updated) {
             return existingFrontLineWorker;
         }
         allFrontLineWorkers.update(existingFrontLineWorker);
@@ -156,7 +157,7 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> updateLocation(Location oldLocation, Location newLocation) {
         List<FrontLineWorker> frontLineWorkerList = allFrontLineWorkers.findByLocationId(oldLocation.getExternalId());
-        for(FrontLineWorker frontLineWorker : frontLineWorkerList) {
+        for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
             frontLineWorker.updateLocation(newLocation);
             allFrontLineWorkers.updateFlw(frontLineWorker);
         }

@@ -40,7 +40,6 @@ public class JobAidCallDataController {
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 
-        log.info(callId + "- jobaid disconnect completed");
         log.info(callId + "- jobaid call ended");
         return getReturnVxml();
     }

@@ -24,6 +24,6 @@ public class BookmarkAction implements CourseAction {
                 lastRequest.getLessonOrQuestionIndex());
 
         frontLineWorker.addBookMark(bookMark);
-        log.info(callId + "- updated bookmark for " + frontLineWorker);
+        log.info(callId + "- updated bookmark for " + frontLineWorker.getMsisdn());
     }
 }

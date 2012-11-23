@@ -43,7 +43,6 @@ public class CallerDataController extends BaseAnanyaController {
                 withCircle(circle).withOperator(operator);
 
         JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
-        log.info(callId + "- fetched caller data for jobaid");
 
         setContentType(response);
         return new ModelAndView("job_aid_caller_data")
