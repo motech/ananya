@@ -32,7 +32,7 @@ public class SendSMSAction implements CourseAction {
                     frontLineWorker.getLocationId(),
                     frontLineWorker.currentCourseAttempt());
             smsLogService.add(smsLog);
-            log.info(callId + "- course completion sms sent for " + frontLineWorker);
+            log.info(callId + "- course completion sms sent for " + frontLineWorker.getMsisdn());
         }
     }
 }

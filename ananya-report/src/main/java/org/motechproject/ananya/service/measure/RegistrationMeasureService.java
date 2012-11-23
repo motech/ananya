@@ -77,7 +77,7 @@ public class RegistrationMeasureService {
         log.info(callId + "- flwDimension created or updated for " + frontLineWorker);
 
         if (dimensionAlreadyExists) {
-            log.info(callId + "- registrationMeasure already exists for " + frontLineWorker);
+            log.info(callId + "- registrationMeasure already exists for " + frontLineWorker.getMsisdn());
             return;
         }
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());
@@ -87,7 +87,7 @@ public class RegistrationMeasureService {
                 timeDimension,
                 callId);
         allRegistrationMeasures.createOrUpdate(registrationMeasure);
-        log.info(callId + "- registrationMeasure created for " + frontLineWorker);
+        log.info(callId + "- registrationMeasure created for " + frontLineWorker.getMsisdn());
     }
 
     @Transactional
