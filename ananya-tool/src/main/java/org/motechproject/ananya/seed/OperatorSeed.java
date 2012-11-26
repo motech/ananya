@@ -79,7 +79,7 @@ public class OperatorSeed {
 
     }
 
-    @Seed(priority = 0, version = "1.10", comment = "adding pulse to second mapping for operators")
+    @Seed(priority = 0, version = "1.9", comment = "adding pulse to second mapping for operators")
     public void addPulseToSec() throws IOException {
         for (String operatorName : end_of_pulse_map.keySet()) {
             Operator operator = allOperators.findByName(operatorName);

@@ -247,7 +247,7 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
-    @Seed(priority = 0, version = "1.9", comment = "Fill flw ids from FLWDimensions")
+    @Seed(priority = 0, version = "1.10", comment = "Fill flw ids from FLWDimensions")
     public void copyFlwIdFromFLWDimensionToAllFlwsInCouch() {
         int batchSize = 100;
         seedService.doWithBatch(new FrontLineWorkerExecutable() {
