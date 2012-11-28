@@ -71,7 +71,7 @@ public class FLWRegistrationService {
     }
 
     public List<RegistrationResponse> registerAllFLWs(List<FrontLineWorkerRequest> frontLineWorkerRequests) {
-        List<RegistrationResponse> registrationResponses = new ArrayList<RegistrationResponse>();
+        List<RegistrationResponse> registrationResponses = new ArrayList<>();
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
             RegistrationResponse registrationResponse = registerFlw(trim(frontLineWorkerRequest));
             registrationResponses.add(registrationResponse);
@@ -102,7 +102,6 @@ public class FLWRegistrationService {
         return filteredFlws;
     }
 
-
     @Transactional
     private RegistrationResponse registerFlw(FrontLineWorkerRequest frontLineWorkerRequest) {
         RegistrationResponse registrationResponse = new RegistrationResponse();
@@ -127,6 +126,7 @@ public class FLWRegistrationService {
 
     private Location getOrCreateLocation(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
+        if (locationRequest == null) return null;
         Location locationFromDb = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
         if (locationFromDb == null) {
             LocationRequest request = new LocationRequest(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
@@ -136,12 +136,16 @@ public class FLWRegistrationService {
     }
 
     private FrontLineWorkerRequest trim(FrontLineWorkerRequest frontLineWorkerRequest) {
+        LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
+        LocationRequest location = locationRequest != null ?
+                new LocationRequest(StringUtils.trimToEmpty(locationRequest.getDistrict()),
+                        StringUtils.trimToEmpty(locationRequest.getBlock()),
+                        StringUtils.trimToEmpty(locationRequest.getPanchayat()))
+                : null;
         return new FrontLineWorkerRequest(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
-                new LocationRequest(StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getDistrict()),
-                        StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getBlock()),
-                        StringUtils.trimToEmpty(frontLineWorkerRequest.getLocation().getPanchayat())),
+                location,
                 frontLineWorkerRequest.getLastModified(),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwId()),
                 frontLineWorkerRequest.getVerificationStatus());

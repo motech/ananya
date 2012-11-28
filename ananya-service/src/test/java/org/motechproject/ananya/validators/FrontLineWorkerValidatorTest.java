@@ -72,7 +72,15 @@ public class FrontLineWorkerValidatorTest {
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("invalidMSISDN", "name", Designation.ANM.name(), null, null, flwId, null));
 
         assertFalse(flwValidationResponse.isValid());
-        assertEquals("[Invalid msisdn][Invalid location]", flwValidationResponse.getMessage());
+        assertEquals("[Invalid msisdn]", flwValidationResponse.getMessage());
+    }
+
+    @Test
+    public void shouldNotInValidateIfJustLocationIsBlank() {
+        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9876543210", "name", Designation.ANM.name(), null, null, flwId, null));
+
+        assertTrue(flwValidationResponse.isValid());
+        assertEquals("", flwValidationResponse.getMessage());
     }
 
     @Test

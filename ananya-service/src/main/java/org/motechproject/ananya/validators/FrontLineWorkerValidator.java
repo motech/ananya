@@ -30,7 +30,7 @@ public class FrontLineWorkerValidator {
 
     private static void validateLocation(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         LocationRequest location = frontLineWorkerRequest.getLocation();
-        if (location == null || StringUtils.isBlank(location.getBlock()) || StringUtils.isBlank(location.getDistrict()) || StringUtils.isBlank(location.getPanchayat()))
+        if (location != null && (StringUtils.isBlank(location.getBlock()) || StringUtils.isBlank(location.getDistrict()) || StringUtils.isBlank(location.getPanchayat())))
             flwValidationResponse.forInvalidLocation();
     }
 

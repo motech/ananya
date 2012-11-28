@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static junit.framework.Assert.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -86,6 +87,28 @@ public class FLWRegistrationServiceTest {
         assertEquals(name, frontLineWorker.getName());
         assertEquals(designation, frontLineWorker.getDesignation());
         assertEquals(location.getExternalId(), frontLineWorker.getLocationId());
+        assertEquals(VerificationStatus.OTHER, frontLineWorker.getVerificationStatus());
+        verify(registrationMeasureService).createOrUpdateFor(callerId);
+    }
+
+    @Test
+    public void shouldSaveNewFLWWithoutLocationAndPublishForReport() {
+        String callerId = "919986574410";
+        String name = "name";
+        Designation designation = Designation.AWW;
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, null, flwId.toString(), VerificationStatus.OTHER.name());
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, null, null, flwId), null)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
+
+        RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
+
+        assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));
+        ArgumentCaptor<FrontLineWorker> captor = ArgumentCaptor.forClass(FrontLineWorker.class);
+        Location expectedLocation = null;
+        verify(frontLineWorkerService).createOrUpdate(captor.capture(), eq(expectedLocation));
+        FrontLineWorker frontLineWorker = captor.getValue();
+        assertEquals(callerId, frontLineWorker.getMsisdn());
+        assertEquals(name, frontLineWorker.getName());
+        assertEquals(designation, frontLineWorker.getDesignation());
         assertEquals(VerificationStatus.OTHER, frontLineWorker.getVerificationStatus());
         verify(registrationMeasureService).createOrUpdateFor(callerId);
     }
