@@ -38,4 +38,13 @@ public class LocationService {
         location.setLocationStatus(status.name());
         allLocations.update(location);
     }
+
+    public void updateAllLocationStatusToValid() {
+        List<Location> locationList = allLocations.getAll();
+        for (Location location : locationList) {
+            location.setLocationStatus(LocationStatus.VALID.name());
+            allLocations.update(location);
+        }
+        allLocations.getAll();
+    }
 }

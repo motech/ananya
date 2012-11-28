@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
@@ -12,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LocationServiceTest {
@@ -28,7 +28,6 @@ public class LocationServiceTest {
         initMocks(this);
         locationService = new LocationService(allLocations);
     }
-
 
     @Test
     public void shouldGetAllLocations() {
@@ -81,5 +80,25 @@ public class LocationServiceTest {
         verify(allLocations).update(locationArgumentCaptor.capture());
         Location value = locationArgumentCaptor.getValue();
         assertEquals(LocationStatus.NOT_VERIFIED.name(), value.getLocationStatus());
+    }
+
+    @Test
+    public void shouldUpdateAllLocationStatusToValidAndCallGetAllAtTheEndForViewIndexing() {
+        ArrayList<Location> locations = new ArrayList<>();
+        InOrder inOrder = inOrder(allLocations);
+        ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
+        Location expectedLocation = new Location("D1", "B1", "P1");
+        locations.add(expectedLocation);
+        when(allLocations.getAll()).thenReturn(locations);
+
+        locationService.updateAllLocationStatusToValid();
+
+        inOrder.verify(allLocations).getAll();
+        inOrder.verify(allLocations).update(locationArgumentCaptor.capture());
+        inOrder.verify(allLocations).getAll();
+
+        Location actualLocation = locationArgumentCaptor.getValue();
+        assertEquals(expectedLocation, actualLocation);
+        assertEquals(LocationStatus.VALID, actualLocation.getLocationStatusAsEnum());
     }
 }

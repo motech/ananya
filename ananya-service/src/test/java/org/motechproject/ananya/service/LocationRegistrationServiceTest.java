@@ -236,6 +236,13 @@ public class LocationRegistrationServiceTest {
         verifyCouchAndPostgresLocationStatusUpdate(expectedLocation, LocationStatus.INVALID);
     }
 
+    @Test
+    public void shouldUpdateAllLocationsStatusToValid() {
+        locationRegistrationService.updateAllExistingLocationStatusToValid();
+
+        verify(locationService).updateAllLocationStatusToValid();
+    }
+
     private void verifyCouchAndPostgresLocationStatusUpdate(Location expectedLocation, LocationStatus locationStatus) {
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
         verify(locationService).updateStatus(locationArgumentCaptor.capture(), eq(locationStatus));

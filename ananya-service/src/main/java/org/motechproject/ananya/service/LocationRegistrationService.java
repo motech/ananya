@@ -132,6 +132,10 @@ public class LocationRegistrationService {
         return locationResponses;
     }
 
+    public void updateAllExistingLocationStatusToValid() {
+        locationService.updateAllLocationStatusToValid();
+    }
+
     private List<LocationRegistrationResponse> saveLocations(List<LocationRequest> locationsToSave, LocationList locationList) {
         List<LocationRegistrationResponse> responses = new ArrayList<>();
         for (LocationRequest location : locationsToSave) {

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.repository.AllLocations;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
@@ -62,5 +63,18 @@ public class LocationSeedTest {
         Assert.assertEquals(location.getDistrict(), locationDimension.getDistrict());
         Assert.assertEquals(location.getBlock(), locationDimension.getBlock());
         Assert.assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
+    }
+    
+    @Test
+    public void shouldUpdateAllLocationRegistrationService() {
+        Location expectedLocation = new Location("d1", "b1", "p1");
+        allLocations.add(expectedLocation);
+
+        locationSeed.locationStatusUpdateToValid();
+
+        List<Location> locationList = allLocations.getAll();
+        assertEquals(1, locationList.size());
+        assertEquals(expectedLocation, locationList.get(0));
+        assertEquals(LocationStatus.VALID, locationList.get(0).getLocationStatusAsEnum());
     }
 }

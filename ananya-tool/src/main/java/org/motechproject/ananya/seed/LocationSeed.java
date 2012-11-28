@@ -30,7 +30,7 @@ public class LocationSeed {
 
     private BufferedWriter writer;
 
-    @Seed(priority = 1, version = "1.0",comment = "load all locations from csv file")
+    @Seed(priority = 1, version = "1.0", comment = "load all locations from csv file")
     public void loadLocationsFromCSVFile() throws IOException {
         String inputCSVFile = environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
         String outputFilePath = new File(inputCSVFile).getParent();
@@ -42,6 +42,11 @@ public class LocationSeed {
 
         loadDefaultLocation();
         loadFromCsv(inputCSVFile);
+    }
+
+    @Seed(priority = 1, version = "1.12", comment = "update all existing location status to VALID")
+    public void locationStatusUpdateToValid() {
+        locationRegistrationService.updateAllExistingLocationStatusToValid();
     }
 
     private void loadDefaultLocation() {
