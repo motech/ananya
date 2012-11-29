@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationList;
@@ -26,6 +27,7 @@ public class LocationRegistrationService {
     private LocationDimensionService locationDimensionService;
     private RegistrationService registrationService;
     private static final Object SYNC_LOCK = new Object();
+    Logger logger = Logger.getLogger(LocationRegistrationService.class);
 
     @Autowired
     public LocationRegistrationService(LocationDimensionService locationDimensionService, LocationService locationService, RegistrationService registrationService) {
@@ -44,6 +46,7 @@ public class LocationRegistrationService {
     public void addOrUpdate(LocationSyncRequest locationSyncRequest) {
         synchronized (SYNC_LOCK) {
             if (isNotLatestRequest(locationSyncRequest)) {
+                logger.info("Not syncing " + locationSyncRequest + " since it is not the latest request.");
                 return;
             }
 
@@ -55,6 +58,7 @@ public class LocationRegistrationService {
                 registerLocationForSync(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
                 Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
                 Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
+                logger.info(String.format("Remapping location references from : %s to: %s", oldLocation, newLocation));
                 reMapOldLocationReferences(oldLocation, newLocation);
             }
             createOrUpdateLocation(locationSyncRequest.getActualLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList, lastModifiedTime);
@@ -83,14 +87,17 @@ public class LocationRegistrationService {
     }
 
     private void updateLocationStatus(Location location, LocationStatus status, DateTime lastModifiedTime) {
+        logger.info(String.format("updating location: %s with status : %s", location.getId(), status));
         location.setLastModifiedTime(lastModifiedTime);
         locationService.updateStatus(location, status);
         locationDimensionService.updateStatus(location.getExternalId(), status);
     }
 
     private void reMapOldLocationReferences(Location actualLocation, Location newLocation) {
-        if (oldLocationHasNotSyncedYet(actualLocation))
+        if (oldLocationHasNotSyncedYet(actualLocation)) {
+            logger.info(String.format("Location %s did not exist previously. No remapping to be done", newLocation));
             return;
+        }
         registrationService.updateAllLocationReferences(actualLocation.getExternalId(), newLocation.getExternalId());
     }
 
@@ -106,7 +113,10 @@ public class LocationRegistrationService {
     }
 
     private void registerLocationForSync(String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus, DateTime lastModifiedTime) {
-        if (locationList.getFor(district, block, panchayat) != null) return;
+        if (locationList.getFor(district, block, panchayat) != null) {
+            logger.info(String.format("Not saving new location since district : %s, block : %s, panchayat: %s already exists.", district, block, panchayat));
+            return;
+        }
         saveNewLocation(new Location(district, block, panchayat, 0, 0, 0, locationStatus, lastModifiedTime), locationList);
     }
 
@@ -158,7 +168,9 @@ public class LocationRegistrationService {
         Location location = createNewLocation(currentLocation, locationList);
         LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), currentLocation.getLocationStatus());
         locationService.add(location);
+        logger.info("Saved location to couchDB : " + location);
         locationDimensionService.add(locationDimension);
+        logger.info("Saved location to postgresDB : " + locationDimension);
         locationList.add(location);
     }
 

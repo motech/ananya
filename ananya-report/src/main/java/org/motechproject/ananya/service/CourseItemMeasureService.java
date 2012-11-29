@@ -42,6 +42,7 @@ public class CourseItemMeasureService {
     }
 
     public void updateLocation(String oldLocationId, String newLocationId) {
+        log.info(String.format("Updated course item measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
         List<CourseItemMeasure> courseItemMeasureList = allCourseItemMeasures.findByLocationId(oldLocationId);
         for(CourseItemMeasure courseItemMeasure : courseItemMeasureList) {

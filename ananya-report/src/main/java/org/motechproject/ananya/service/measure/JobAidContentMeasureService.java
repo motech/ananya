@@ -112,6 +112,7 @@ public class JobAidContentMeasureService {
     }
 
     public void updateLocation(String oldLocationId, String newLocationId) {
+        log.info(String.format("Updated job aid content measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
         List<JobAidContentMeasure> jobAidContentMeasures = allJobAidContentMeasures.findByLocationId(oldLocationId);
         for (JobAidContentMeasure jobAidContentMeasure : jobAidContentMeasures) {

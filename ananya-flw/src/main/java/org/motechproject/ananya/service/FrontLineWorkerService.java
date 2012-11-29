@@ -157,6 +157,8 @@ public class FrontLineWorkerService {
 
     public List<FrontLineWorker> updateLocation(Location oldLocation, Location newLocation) {
         List<FrontLineWorker> frontLineWorkerList = allFrontLineWorkers.findByLocationId(oldLocation.getExternalId());
+        log.info(String.format("Updating location for %s frontLineWorkers from : %s to : %s",
+                frontLineWorkerList.size(), oldLocation.getId(), newLocation.getId()));
         for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
             frontLineWorker.updateLocation(newLocation);
             allFrontLineWorkers.updateFlw(frontLineWorker);

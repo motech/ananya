@@ -140,4 +140,15 @@ public class Location extends MotechBaseDataObject {
         result = 31 * result + panchayatCode;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "district='" + district +
+                ", block='" + block +
+                ", panchayat='" + panchayat +
+                ", locationStatus='" + locationStatus +
+                ", externalId='" + externalId +
+                '}';
+    }
 }

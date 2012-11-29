@@ -4,6 +4,8 @@ import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.requests.FLWStatusChangeRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.UUID;
 @Service
 public class FrontLineWorkerDimensionService {
 
+    private static Logger log = LoggerFactory.getLogger(FrontLineWorkerDimensionService.class);
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
 
     public FrontLineWorkerDimensionService() {
@@ -47,8 +50,11 @@ public class FrontLineWorkerDimensionService {
     public void updateStatus(List<FLWStatusChangeRequest> flwStatusChangeRequests) {
         List<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<>();
         for (FLWStatusChangeRequest request : flwStatusChangeRequests) {
-            FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(request.getMsisdn());
-            frontLineWorkerDimension.setStatus(request.getRegistrationStatus());
+            Long msisdn = request.getMsisdn();
+            String registrationStatus = request.getRegistrationStatus();
+            FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
+            frontLineWorkerDimension.setStatus(registrationStatus);
+            log.info(String.format("Updating frontLineWorkerDimensions for : %s with status : %s", msisdn, registrationStatus));
             frontLineWorkerDimensions.add(frontLineWorkerDimension);
         }
         allFrontLineWorkerDimensions.createOrUpdateAll(frontLineWorkerDimensions);

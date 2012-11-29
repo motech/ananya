@@ -91,4 +91,15 @@ public class LocationDimension {
         result = 31 * result + (panchayat != null ? panchayat.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "LocationDimension{" +
+                "locationId='" + locationId +
+                ", district='" + district +
+                ", block='" + block +
+                ", panchayat='" + panchayat +
+                ", status='" + status +
+                '}';
+    }
 }

@@ -120,6 +120,7 @@ public class RegistrationMeasureService {
         for (RegistrationMeasure registrationMeasure : registrationMeasureList) {
             registrationMeasure.setLocationDimension(newLocation);
         }
+        log.info(String.format("Updated registration measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         allRegistrationMeasures.updateAll(registrationMeasureList);
     }
 }

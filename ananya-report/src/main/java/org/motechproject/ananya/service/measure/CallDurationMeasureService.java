@@ -110,6 +110,7 @@ public class CallDurationMeasureService {
     }
 
     public void updateLocation(String oldLocationId, String newLocationId) {
+        log.info(String.format("Updated call duration measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
         List<CallDurationMeasure> callDurationMeasureList = allCallDurationMeasures.findByLocationId(oldLocationId);
         for (CallDurationMeasure callDurationMeasure : callDurationMeasureList) {

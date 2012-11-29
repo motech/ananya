@@ -88,6 +88,7 @@ public class SMSSentMeasureService {
     }
 
     public void updateLocation(String oldLocationId, String newLocationId) {
+        log.info(String.format("Updated sms sent measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
         List<SMSSentMeasure> smsSentMeasureList = allSMSSentMeasures.findByLocationId(oldLocationId);
         for(SMSSentMeasure smsSentMeasure : smsSentMeasureList) {
