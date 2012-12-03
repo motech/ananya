@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.LocationStatus;
 
 public class LocationSyncRequest {
-    private LocationRequest actualLocation;
+    private LocationRequest existingLocation;
     private LocationRequest newLocation;
     private String locationStatus;
     private DateTime lastModifiedTime;
@@ -14,15 +14,15 @@ public class LocationSyncRequest {
     public LocationSyncRequest() {
     }
 
-    public LocationSyncRequest(LocationRequest actualLocation, LocationRequest newLocation, String locationStatus, DateTime lastModifiedTime) {
-        this.actualLocation = actualLocation;
+    public LocationSyncRequest(LocationRequest existingLocation, LocationRequest newLocation, String locationStatus, DateTime lastModifiedTime) {
+        this.existingLocation = existingLocation;
         this.newLocation = newLocation;
         this.locationStatus = locationStatus;
         this.lastModifiedTime = lastModifiedTime;
     }
 
-    public LocationRequest getActualLocation() {
-        return actualLocation;
+    public LocationRequest getExistingLocation() {
+        return existingLocation;
     }
 
     public LocationRequest getNewLocation() {

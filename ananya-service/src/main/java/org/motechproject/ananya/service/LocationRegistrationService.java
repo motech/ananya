@@ -51,39 +51,39 @@ public class LocationRegistrationService {
             }
 
             LocationList locationList = new LocationList(locationService.getAll());
-            LocationRequest actualLocationRequest = locationSyncRequest.getActualLocation();
+            LocationRequest existingLocationRequest = locationSyncRequest.getExistingLocation();
             LocationRequest newLocationRequest = locationSyncRequest.getNewLocation();
             DateTime lastModifiedTime = locationSyncRequest.getLastModifiedTime();
             if (locationSyncRequest.getLocationStatusAsEnum().equals(LocationStatus.INVALID)) {
                 registerLocationForSync(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
-                Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
+                Location oldLocation = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
                 Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
                 logger.info(String.format("Remapping location references from : %s to: %s", oldLocation, newLocation));
                 reMapOldLocationReferences(oldLocation, newLocation);
             }
-            createOrUpdateLocation(locationSyncRequest.getActualLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList, lastModifiedTime);
-            updateLocationDetailsOnFLW(actualLocationRequest, newLocationRequest, locationList);
+            createOrUpdateLocation(locationSyncRequest.getExistingLocation(), locationSyncRequest.getLocationStatusAsEnum(), locationList, lastModifiedTime);
+            updateLocationDetailsOnFLW(existingLocationRequest, newLocationRequest, locationList);
         }
     }
 
     private boolean isNotLatestRequest(LocationSyncRequest locationSyncRequest) {
-        LocationRequest actualLocation = locationSyncRequest.getActualLocation();
-        Location existingLocation = locationService.findFor(actualLocation.getDistrict(), actualLocation.getBlock(), actualLocation.getPanchayat());
+        LocationRequest existingLocationRequest = locationSyncRequest.getExistingLocation();
+        Location existingLocation = locationService.findFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
         return existingLocation != null && existingLocation.getLastModifiedTime() != null && existingLocation.getLastModifiedTime().isAfter(locationSyncRequest.getLastModifiedTime());
     }
 
-    private void updateLocationDetailsOnFLW(LocationRequest actualLocationRequest, LocationRequest newLocationRequest, LocationList locationList) {
-        Location oldLocation = locationList.getFor(actualLocationRequest.getDistrict(), actualLocationRequest.getBlock(), actualLocationRequest.getPanchayat());
+    private void updateLocationDetailsOnFLW(LocationRequest existingLocationRequest, LocationRequest newLocationRequest, LocationList locationList) {
+        Location oldLocation = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
         Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
         registrationService.updateLocationOnFLW(oldLocation, newLocation);
     }
 
-    private void createOrUpdateLocation(LocationRequest actualLocation, LocationStatus locationStatus, LocationList locationList, DateTime lastModifiedTime) {
-        Location location = locationList.getFor(actualLocation.getDistrict(), actualLocation.getBlock(), actualLocation.getPanchayat());
+    private void createOrUpdateLocation(LocationRequest existingLocationRequest, LocationStatus locationStatus, LocationList locationList, DateTime lastModifiedTime) {
+        Location location = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
         if (location != null)
             updateLocationStatus(location, locationStatus, lastModifiedTime);
         else
-            registerLocationForSync(actualLocation.getDistrict(), actualLocation.getBlock(), actualLocation.getPanchayat(), locationList, locationStatus, lastModifiedTime);
+            registerLocationForSync(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat(), locationList, locationStatus, lastModifiedTime);
     }
 
     private void updateLocationStatus(Location location, LocationStatus status, DateTime lastModifiedTime) {
@@ -93,16 +93,16 @@ public class LocationRegistrationService {
         locationDimensionService.updateStatus(location.getExternalId(), status);
     }
 
-    private void reMapOldLocationReferences(Location actualLocation, Location newLocation) {
-        if (oldLocationHasNotSyncedYet(actualLocation)) {
+    private void reMapOldLocationReferences(Location existingLocation, Location newLocation) {
+        if (oldLocationHasNotSyncedYet(existingLocation)) {
             logger.info(String.format("Location %s did not exist previously. No remapping to be done", newLocation));
             return;
         }
-        registrationService.updateAllLocationReferences(actualLocation.getExternalId(), newLocation.getExternalId());
+        registrationService.updateAllLocationReferences(existingLocation.getExternalId(), newLocation.getExternalId());
     }
 
-    private boolean oldLocationHasNotSyncedYet(Location actualLocation) {
-        return actualLocation == null;
+    private boolean oldLocationHasNotSyncedYet(Location existingLocation) {
+        return existingLocation == null;
     }
 
     public List<LocationRegistrationResponse> registerAllLocationsWithDefaultLocations(List<LocationRequest> locationsToSave) {

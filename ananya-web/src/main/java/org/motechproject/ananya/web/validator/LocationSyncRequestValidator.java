@@ -8,7 +8,7 @@ import org.motechproject.ananya.request.LocationSyncRequest;
 public class LocationSyncRequestValidator {
     public static Errors validate(LocationSyncRequest locationSyncRequest) {
         Errors errors = new Errors();
-        checkForBlankFields(locationSyncRequest.getActualLocation(), errors);
+        checkForBlankFields(locationSyncRequest.getExistingLocation(), errors);
         checkForBlankFields(locationSyncRequest.getNewLocation(), errors);
         if(!LocationStatus.isValid(locationSyncRequest.getLocationStatus()))
             errors.add("Location Status is invalid");
