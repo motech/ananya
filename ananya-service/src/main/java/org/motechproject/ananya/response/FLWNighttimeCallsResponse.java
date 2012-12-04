@@ -2,6 +2,7 @@ package org.motechproject.ananya.response;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -17,6 +18,7 @@ public class FLWNighttimeCallsResponse {
 
     @XmlElementWrapper(name = "callDetails")
     @XmlElement(name = "callDetail")
+    @JsonProperty(value = "callDetails")
     private List<FLWCallDuration> callDurations;
 
     public FLWNighttimeCallsResponse(List<FLWCallDuration> callDurations) {

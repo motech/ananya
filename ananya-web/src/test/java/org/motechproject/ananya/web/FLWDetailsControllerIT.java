@@ -24,8 +24,8 @@ import org.motechproject.ananya.request.LocationSyncRequest;
 import org.motechproject.ananya.response.*;
 import org.motechproject.ananya.seed.TimeSeed;
 import org.motechproject.ananya.service.FLWDetailsService;
-import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.service.FLWRegistrationService;
+import org.motechproject.ananya.service.LocationRegistrationService;
 import org.motechproject.ananya.utils.TestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -172,6 +172,31 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
         String responseString = result.getResponse().getContentAsString();
         FLWNighttimeCallsResponse actualResponse = TestUtils.fromXml(FLWNighttimeCallsResponse.class, responseString);
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    public void shouldGetNighttimeCallsJsonResponse() throws Exception {
+        String msisdn = "1234567890";
+        ArrayList<FLWCallDuration> flwCallDurations = new ArrayList<>();
+        flwCallDurations.add(new FLWCallDuration(DateTime.now().toString(), DateTime.now().plusMinutes(2).toString(), 2));
+        FLWNighttimeCallsResponse expectedResponse = new FLWNighttimeCallsResponse(flwCallDurations);
+        when(flwDetailsService.getNighttimeCalls(any(FLWNighttimeCallsRequest.class))).thenReturn(expectedResponse);
+
+        flwDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
+
+        MvcResult result = mockMvc(flwDetailsController)
+                .perform(get("/flw/" + msisdn + "/nighttimecalls")
+                        .param("channel", "contact_center")
+                        .param("startDate", "12-10-2012")
+                        .param("endDate", "15-10-2012")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().type("application/json"))
+                .andReturn();
+
+        String responseString = result.getResponse().getContentAsString();
+        FLWNighttimeCallsResponse actualResponse = TestUtils.fromJson(responseString, FLWNighttimeCallsResponse.class);
         assertEquals(expectedResponse, actualResponse);
     }
 
