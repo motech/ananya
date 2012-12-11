@@ -18,9 +18,9 @@
 
     <context:component-scan base-package="org.motechproject.ananya"/>
 
+    <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
     <import resource="classpath:applicationContext-services.xml"/>
     <import resource="classpath:applicationContext-flw.xml"/>
-    <import resource="classpath:applicationContext-report.xml"/>
 
 </beans>

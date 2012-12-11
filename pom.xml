@@ -380,7 +380,7 @@
                 <version>${motech.contrib.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.motechproject.contrib-ananya-kilkari</groupId>
+                <groupId>org.motechproject.contrib-ananya</groupId>
                 <artifactId>motech-web-utils</artifactId>
                 <version>${motech.contrib.version}</version>
             </dependency>

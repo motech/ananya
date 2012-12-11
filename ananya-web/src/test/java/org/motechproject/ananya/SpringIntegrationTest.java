@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testApplicationContext.xml")
+@ContextConfiguration("classpath:applicationContext.xml")
 public abstract class SpringIntegrationTest {
 
     @Qualifier("ananyaDbConnector")
