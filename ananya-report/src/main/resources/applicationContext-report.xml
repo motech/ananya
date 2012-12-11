@@ -13,19 +13,15 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
-    <import resource="classpath:applicationContext-hibernate.xml"/>
-    <import resource="classpath:applicationContext-flw.xml"/>
-    <import resource="classpath:applicationContext-transaction.xml"/>
 
     <context:component-scan base-package="org.motechproject.ananya"/>
 
 
     <bean id="smsService"
-          class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+    class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
         <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
         <property name="wsdlDocumentUrl"
-                  value="${sms.service.wsdl.url}"/>
+        value="${sms.service.wsdl.url}"/>
         <property name="namespaceUri" value="${sms.service.namespace.uri}"/>
         <property name="serviceName" value="${sms.service.service.name}"/>
         <property name="portName" value="${sms.service.port.name}"/>
@@ -33,13 +29,16 @@
     </bean>
 
 
-    <cache:annotation-driven cache-manager="cacheManager"/>
-    <bean id="defaultEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <cache:annotation-driven cache-manager="ananyaCacheManager"/>
+    <bean id="defaultAnanyaEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:ehcache.xml"/>
     </bean>
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="defaultEhCacheManager"/>
+    <bean id="ananyaCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="defaultAnanyaEhCacheManager"/>
     </bean>
 
+    <import resource="classpath:applicationContext-hibernate.xml"/>
+    <import resource="classpath:applicationContext-flw.xml"/>
+    <import resource="classpath:applicationContext-transaction.xml"/>
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 </beans>
