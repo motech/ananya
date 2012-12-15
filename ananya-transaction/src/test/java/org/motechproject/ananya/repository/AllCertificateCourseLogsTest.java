@@ -3,12 +3,15 @@ package org.motechproject.ananya.repository;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
@@ -17,10 +20,11 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-transaction.xml")
-public class AllCertificateCourseLogsTest{
+public class AllCertificateCourseLogsTest {
     @Autowired
     private AllCertificateCourseLogs allCertificateCourseLogs;
 
+    @Before
     @After
     public void tearDown() {
         allCertificateCourseLogs.removeAll();
@@ -37,9 +41,28 @@ public class AllCertificateCourseLogsTest{
     }
 
     @Test
-    public void shouldDeleteCertificateCourseLogForAGivenCallId(){
+    public void shouldDeleteAllCCLogsForInvalidMsisdn() {
+        String invalidCallerId1 = "123E+12";
+        String invalidCallerId2 = "123E12";
+        String validCallerId = "12312";
+        CertificationCourseLog log1 = new CertificationCourseLog(invalidCallerId1, null, null, null, null);
+        CertificationCourseLog log2 = new CertificationCourseLog(invalidCallerId2, null, null, null, null);
+        CertificationCourseLog log3 = new CertificationCourseLog(validCallerId, null, null, null, null);
+        allCertificateCourseLogs.add(log1);
+        allCertificateCourseLogs.add(log2);
+        allCertificateCourseLogs.add(log3);
+
+        allCertificateCourseLogs.deleteCCLogsForInvalidMsisdns();
+
+        List<CertificationCourseLog> actualCCLogs = allCertificateCourseLogs.getAll();
+        assertEquals(1, actualCCLogs.size());
+        assertEquals(validCallerId, actualCCLogs.get(0).getCallerId());
+    }
+
+    @Test
+    public void shouldDeleteCertificateCourseLogForAGivenCallId() {
         String callId = "callId";
-        CertificationCourseLog entity = new CertificationCourseLog("callerId","number", "", callId, "" );
+        CertificationCourseLog entity = new CertificationCourseLog("callerId", "number", "", callId, "");
         allCertificateCourseLogs.add(entity);
         assertNotNull(allCertificateCourseLogs.findByCallId(callId));
 
@@ -48,7 +71,7 @@ public class AllCertificateCourseLogsTest{
     }
 
     @Test
-    public void shouldGracefullyHandleDeleteCertificateCourseLogForAGivenCallIdWhenDoesNotExist(){
+    public void shouldGracefullyHandleDeleteCertificateCourseLogForAGivenCallIdWhenDoesNotExist() {
         String callId = "callId";
         assertNull(allCertificateCourseLogs.findByCallId(callId));
 
@@ -70,7 +93,7 @@ public class AllCertificateCourseLogsTest{
 
         @Override
         public boolean matches(Object o) {
-            CertificationCourseLog actualLog = (CertificationCourseLog)o;
+            CertificationCourseLog actualLog = (CertificationCourseLog) o;
             return log.getCallId().equals(actualLog.getCallId());
         }
     }
