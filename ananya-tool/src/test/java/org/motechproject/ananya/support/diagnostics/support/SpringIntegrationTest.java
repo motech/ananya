@@ -1,4 +1,4 @@
-package org.motechproject.ananya;
+package org.motechproject.ananya.support.diagnostics.support;
 
 import org.ektorp.BulkDeleteDocument;
 import org.ektorp.CouchDbConnector;
@@ -11,41 +11,28 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-tool.xml")
 public abstract class SpringIntegrationTest {
 
     @Qualifier("ananyaDbConnector")
     @Autowired
 	protected CouchDbConnector ananyaDbConnector;
 
-    @Qualifier("ananyaProperties")
-    @Autowired
-    protected Properties ananyaProperties;
-
 	protected ArrayList<BulkDeleteDocument> toDelete;
 
 	@Before
 	public void before() {
-		toDelete = new ArrayList<>();
+		toDelete = new ArrayList<BulkDeleteDocument>();
 	}
 
 	@After
 	public void after() {
 		ananyaDbConnector.executeBulk(toDelete);
 	}
-	
+
 	protected void markForDeletion(Object document) {
 		toDelete.add(BulkDeleteDocument.of(document));
 	}
-    
-    protected String getAppServerPort() {
-        return ananyaProperties.getProperty("app.server.port");
-    }
-    
-    protected String getAppServerHostUrl() {
-        return "http://localhost:" + getAppServerPort();
-    }
 }

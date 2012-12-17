@@ -16,6 +16,7 @@
         <module>ananya-csv-exporter</module>
         <module>ananya-csv-importer</module>
         <module>ananya-performance</module>
+        <module>ananya-admin</module>
     </modules>
     <name>Ananya</name>
 
