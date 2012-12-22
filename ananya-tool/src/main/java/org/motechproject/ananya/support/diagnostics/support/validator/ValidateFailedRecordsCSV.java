@@ -69,33 +69,35 @@ public class ValidateFailedRecordsCSV {
             try {
                 Map<String, String> fieldsToPostMap = request.getFieldsToPostMap();
                 if (applicationName.equalsIgnoreCase("CERTIFICATECOURSE")) {
-                    CertificateCourseServiceRequest certificateCourseServiceRequest = CertificateCourseServiceRequestMapper.map(request);
-
-                    if (callIdsSet.contains(certificateCourseServiceRequest.getCallId()))
-                        throw new RuntimeException("CallId " + certificateCourseServiceRequest.getCallId() + " present more than once");
-
-                    callIdsSet.add(certificateCourseServiceRequest.getCallId());
-
                     if (containsInvalidCCFieldsToPost(fieldsToPostMap))
                         throw new RuntimeException("Contains invalid CC fieldsToPost");
 
                     if (missingRequiredCCFieldsToPost(fieldsToPostMap))
                         throw new RuntimeException("Missing required CC fieldsToPost");
 
+                    CertificateCourseServiceRequest certificateCourseServiceRequest = CertificateCourseServiceRequestMapper.map(request);
+
+                    if (callIdsSet.contains(certificateCourseServiceRequest.getCallId())) {
+                        throw new RuntimeException("CallId " + certificateCourseServiceRequest.getCallId() + " present more than once");
+                    }
+
+                    callIdsSet.add(certificateCourseServiceRequest.getCallId());
+
                     validateCC(certificateCourseServiceRequest);
                 } else if (applicationName.equalsIgnoreCase("JOBAID")) {
-                    JobAidServiceRequest jobAidServiceRequest = JobAidServiceRequestMapper.map(request);
-
-                    if (callIdsSet.contains(jobAidServiceRequest.getCallId()))
-                        throw new RuntimeException("CallId " + jobAidServiceRequest.getCallId() + " present more than once");
-
-                    callIdsSet.add(jobAidServiceRequest.getCallId());
-
                     if (containsInvalidJAFieldsToPost(fieldsToPostMap))
                         throw new RuntimeException("Contains invalid JA fieldsToPost");
 
                     if (missingRequiredJAFieldsToPost(fieldsToPostMap))
                         throw new RuntimeException("Missing required JA fieldsToPost");
+
+                    JobAidServiceRequest jobAidServiceRequest = JobAidServiceRequestMapper.map(request);
+
+                    if (callIdsSet.contains(jobAidServiceRequest.getCallId())) {
+                        throw new RuntimeException("CallId " + jobAidServiceRequest.getCallId() + " present more than once");
+                    }
+
+                    callIdsSet.add(jobAidServiceRequest.getCallId());
 
                     validateJA(jobAidServiceRequest);
                 } else {
@@ -169,7 +171,7 @@ public class ValidateFailedRecordsCSV {
         validateJACalledNumber(calledNumber);
 
         List<String> prompts = jobAidServiceRequest.getPrompts();
-        log.info("JA prompts " + prompts);
+//        log.info("JA prompts " + prompts);
 
         AudioTrackerRequestList audioTrackerRequestList = jobAidServiceRequest.getAudioTrackerRequestList();
         validateAudioTrackerList(callId, callerId, audioTrackerRequestList, ServiceType.JOB_AID);
@@ -204,7 +206,10 @@ public class ValidateFailedRecordsCSV {
                 if (courseItemDimension == null)
                     throw new RuntimeException("Invalid CC audio tracker content Id");
 
-                if (audioTrackerRequest.getDuration() > courseItemDimension.getDuration())
+                if (audioTrackerRequest.getDuration() > courseItemDimension.getDuration() && 232450 != courseItemDimension.getDuration())
+                    // commenting out check for courseItem with duration 232450, because,
+                    // already there are many measures in db whose duration is greater than
+                    // the corresponding course item dimension, this needs to be analysed separately
                     throw new RuntimeException("CC audio tracker duration greater than actual course item duration - " + audioTrackerRequest.getCallId() + " " + audioTrackerRequest.getDuration() + " " + courseItemDimension.getDuration());
 
                 if (audioTrackerRequest.getTimeAsDateTime() != null
@@ -316,6 +321,17 @@ public class ValidateFailedRecordsCSV {
     private void validateCallerId(String callerId) {
         if (StringUtils.isEmpty(callerId) || !StringUtils.isNumeric(callerId) || callerId.length() < 10)
             throw new RuntimeException("Invalid caller id");
+
+        long num = Long.valueOf(callerId);
+        int nTrailingZeros = 0;
+        long div = 10;
+        while(num % div == 0){
+            div *= 10;
+            nTrailingZeros++;
+        }
+
+        if(nTrailingZeros > 2)
+            throw new RuntimeException(nTrailingZeros + " trailing zeros for callerId - " + callerId);
     }
 
     private void validateCallId(String callId) {
