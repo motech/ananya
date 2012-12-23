@@ -14,8 +14,8 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
-    <import resource="classpath:applicationContext-seed.xml"/>
-    <import resource="classpath:applicationPlatformCommonAPI.xml"/>
-    <import resource="classpath:applicationContext-csv-importer.xml"/>
-    <import resource="classpath:applicationContext-csv-exporter.xml"/>
+    <context:component-scan base-package="org.motechproject.ananya"/>
+
+    <bean id="metricsAgent" class="org.motechproject.metrics.impl.MultipleMetricsAgentImpl" autowire="byType"/>
+    <import resource="classpath:applicationContext-admin.xml"/>
 </beans>
