@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:testApplicationContext.xml")
+@ContextConfiguration("classpath:applicationContext.xml")
 public abstract class SpringIntegrationTest {
 
     @Qualifier("ananyaDbConnector")
@@ -29,7 +29,7 @@ public abstract class SpringIntegrationTest {
 
 	@Before
 	public void before() {
-		toDelete = new ArrayList<BulkDeleteDocument>();
+		toDelete = new ArrayList<>();
 	}
 
 	@After

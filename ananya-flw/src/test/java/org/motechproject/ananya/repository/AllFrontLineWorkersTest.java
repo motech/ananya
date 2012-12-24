@@ -41,6 +41,29 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     }
 
     @Test
+    public void shouldDeleteAllFLWsWithInvalidMsisdn() {
+        String invalidMsisdn1 = "91.99887E+11";
+        String invalidMsisdn2 = "9198887E11";
+        String validMsisdn = "911234567890";
+        Designation designation = Designation.AWW;
+        Location location = new Location("district", "block", "village", 2, 3, 4);
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker(invalidMsisdn1, "name", designation, location, RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker(invalidMsisdn2, "name", designation, location, RegistrationStatus.REGISTERED);
+        FrontLineWorker frontLineWorker3 = new FrontLineWorker(validMsisdn, "name", designation, location, RegistrationStatus.REGISTERED);
+
+        allFrontLineWorkers.add(frontLineWorker1);
+        allFrontLineWorkers.add(frontLineWorker2);
+        allFrontLineWorkers.add(frontLineWorker3);
+        markForDeletion(frontLineWorker3);
+
+        allFrontLineWorkers.deleteFLWsWithInvalidMsisdn();
+
+        List<FrontLineWorker> actualFLWs = allFrontLineWorkers.getAll();
+        assertEquals(1, actualFLWs.size());
+        assertEquals(validMsisdn, actualFLWs.get(0).getMsisdn());
+    }
+
+    @Test
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;

@@ -20,5 +20,4 @@
 
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
     <import resource="classpath:applicationBulkImportContext.xml"/>
-
 </beans>

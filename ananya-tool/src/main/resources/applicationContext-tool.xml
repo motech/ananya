@@ -14,16 +14,8 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
-    <import resource="classpath:applicationPlatformServerAPI.xml"/>
-
-    <context:component-scan base-package="org.motechproject.ananya"/>
-
+    <import resource="classpath:applicationContext-seed.xml"/>
+    <import resource="classpath:applicationPlatformCommonAPI.xml"/>
     <import resource="classpath:applicationContext-csv-importer.xml"/>
     <import resource="classpath:applicationContext-csv-exporter.xml"/>
-    <import resource="classpath:applicationContext-transaction.xml"/>
-    <import resource="classpath:applicationContext-report.xml"/>
-    <import resource="classpath:applicationCmsLiteApi.xml"/>
-    <import resource="classpath:applicationContext-flw.xml"/>
-    <import resource="classpath:applicationContext-services.xml"/>
-
-</beans>    
+</beans>

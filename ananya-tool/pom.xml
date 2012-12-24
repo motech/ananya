@@ -13,7 +13,7 @@
     <artifactId>ananya-tool</artifactId>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-csv-exporter</artifactId>
             <version>${project.version}</version>
@@ -40,6 +40,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-admin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-service</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -52,16 +57,12 @@
             <artifactId>motech-platform-server-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.delivery-ananya</groupId>
             <artifactId>motech-seed</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject.contrib-ananya</groupId>
-            <artifactId>motech-diagnostics</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
@@ -79,6 +80,23 @@
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/resources/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
