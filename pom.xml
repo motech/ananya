@@ -5,7 +5,7 @@
     <groupId>org.motechproject.ananya</groupId>
     <artifactId>ananya</artifactId>
     <packaging>pom</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <modules>
         <module>ananya-flw</module>
         <module>ananya-report</module>
