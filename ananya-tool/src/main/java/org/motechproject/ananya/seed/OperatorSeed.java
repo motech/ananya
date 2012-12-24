@@ -41,7 +41,7 @@ public class OperatorSeed {
         start_of_pulse_map.put("tata", 500);
         start_of_pulse_map.put("idea", 500);
         start_of_pulse_map.put("reliance", 500);
-        start_of_pulse_map.put("airtel", 500);
+        start_of_pulse_map.put("airtel", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
         start_of_pulse_map.put("bsnl", 500);
         start_of_pulse_map.put("vodafone", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
         start_of_pulse_map.put("undefined", DEFAULT_START_OF_PULSE_IN_MILLI_SEC);
@@ -50,7 +50,7 @@ public class OperatorSeed {
         end_of_pulse_map.put("tata", 60500);
         end_of_pulse_map.put("idea", 60500);
         end_of_pulse_map.put("reliance", 60500);
-        end_of_pulse_map.put("airtel", 60500);
+        end_of_pulse_map.put("airtel", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
         end_of_pulse_map.put("bsnl", 60500);
         end_of_pulse_map.put("vodafone", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
         end_of_pulse_map.put("undefined", DEFAULT_END_OF_PULSE_IN_MILLI_SEC);
