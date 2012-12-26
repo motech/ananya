@@ -7,7 +7,7 @@ public class Launcher {
     public static void main(String[] args) throws Exception {
         System.out.println("Synchronising data: START:");
 
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-tool.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-admin.xml");
         AllSynchronisers allSynchronisers = (AllSynchronisers) context.getBean("allSynchronisers");
         allSynchronisers.run();
 
