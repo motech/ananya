@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -15,7 +14,8 @@ import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.Priority;
+import org.motechproject.ananya.support.TestDataAccessTemplate;
+import org.motechproject.ananya.support.synchroniser.base.Priority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -89,7 +89,7 @@ public class AudioTrackerSynchronizerIT {
         String timeStamp = "1336045431373";
         setUpTransactionData(callerId, newContentId, timeStamp);
         setUpReportDataForCertificateCourse(callId, callerId, oldContentId, timeStamp);
-        
+
         audioTrackerSynchronizer.replicate();
 
         verifyPostgresDataForCertificateCourse(callerId, newContentId);

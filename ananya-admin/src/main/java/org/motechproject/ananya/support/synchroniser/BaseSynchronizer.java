@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

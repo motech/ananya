@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser.base;
+package org.motechproject.ananya.support.synchroniser.base;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

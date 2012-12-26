@@ -1,10 +1,11 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.AllSynchronisers;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.Synchroniser;
+import org.motechproject.ananya.support.synchroniser.*;
+import org.motechproject.ananya.support.synchroniser.base.AllSynchronisers;
+import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

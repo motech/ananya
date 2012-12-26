@@ -2,7 +2,7 @@ package org.motechproject.ananya.seed;
 
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.seed.service.SMSSeedService;
+import org.motechproject.ananya.support.synchroniser.service.SMSService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ public class SMSSeed {
     private static final Logger log = LoggerFactory.getLogger(SMSSeed.class);
 
     @Autowired
-    private SMSSeedService smsSeedService;
+    private SMSService smsService;
 
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
@@ -28,7 +28,7 @@ public class SMSSeed {
             log.info("FLW not present to send SMS:" + callerId);
             return;
         }
-        smsSeedService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), 0);
+        smsService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), 0);
         log.info("Sent SMS for:" + callerId);
     }
 }

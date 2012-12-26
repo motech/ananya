@@ -1,4 +1,4 @@
-package org.motechproject.ananya.seed.service;
+package org.motechproject.ananya.support.synchroniser.service;
 
 import org.apache.log4j.Logger;
 import org.motechproject.ananya.webservice.SendSMSClient;
@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 import java.util.Properties;
 
 @Service
-public class SMSSeedService {
+public class SMSService {
 
-    private static final Logger log = Logger.getLogger(SMSSeedService.class);
+    private static final Logger log = Logger.getLogger(SMSService.class);
     private static final String COURSE_COMPLETION_SMS_MESSAGE_KEY = "course.completion.sms.message";
 
     private SendSMSClient sendSMSClient;
     private Properties ananyaProperties;
 
     @Autowired
-    public SMSSeedService(Properties ananyaProperties, SendSMSClient sendSMSClient) {
+    public SMSService(Properties ananyaProperties, SendSMSClient sendSMSClient) {
         this.ananyaProperties = ananyaProperties;
         this.sendSMSClient = sendSMSClient;
     }

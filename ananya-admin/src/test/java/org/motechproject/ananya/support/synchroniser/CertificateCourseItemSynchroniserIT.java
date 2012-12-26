@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 
 import org.joda.time.DateTime;
@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -19,8 +18,9 @@ import org.motechproject.ananya.repository.AllCertificateCourseLogs;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLog;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLogItem;
+import org.motechproject.ananya.support.TestDataAccessTemplate;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

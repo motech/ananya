@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 
 import org.joda.time.DateTime;
@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.ananya.TestDataAccessTemplate;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
@@ -15,8 +14,9 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.AllCallLogs;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLog;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLogItem;
+import org.motechproject.ananya.support.TestDataAccessTemplate;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLogItem;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -81,7 +81,7 @@ public class CallDurationSynchroniserIT {
     }
 
     private void setUpReportData(String callerId, String callId) {
-        CallLog callLog = new CallLog(callId, callerId,"321");
+        CallLog callLog = new CallLog(callId, callerId, "321");
         callLog.addItem(new CallLogItem(CallFlowType.CALL, DateUtil.now(), DateUtil.now().plusSeconds(20)));
         allCallLogs.add(callLog);
     }
@@ -94,7 +94,7 @@ public class CallDurationSynchroniserIT {
         template.save(locationDimension);
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         template.save(timeDimension);
-        template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension, ""));
+        template.save(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, ""));
 
     }
 

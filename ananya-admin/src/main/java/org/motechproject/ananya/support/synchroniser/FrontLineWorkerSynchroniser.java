@@ -1,13 +1,13 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.Priority;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.Synchroniser;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.Priority;
+import org.motechproject.ananya.support.synchroniser.base.Synchroniser;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

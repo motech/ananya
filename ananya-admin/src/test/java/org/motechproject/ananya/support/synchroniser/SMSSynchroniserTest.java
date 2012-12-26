@@ -1,4 +1,4 @@
-package org.motechproject.ananya.support.diagnostics.support.synchroniser;
+package org.motechproject.ananya.support.synchroniser;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.BaseLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.repository.AllSMSLogs;
-import org.motechproject.ananya.seed.service.SMSSeedService;
-import org.motechproject.ananya.support.diagnostics.support.synchroniser.base.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.base.SynchroniserLog;
+import org.motechproject.ananya.support.synchroniser.service.SMSService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +27,7 @@ public class SMSSynchroniserTest {
     @Mock
     private AllSMSLogs allSMSLogs;
     @Mock
-    private SMSSeedService smsSeedService;
+    private SMSService smsSeedService;
     @Mock
     private Properties properties;
 
