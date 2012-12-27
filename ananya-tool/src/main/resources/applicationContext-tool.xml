@@ -16,6 +16,4 @@
 
     <import resource="classpath:applicationContext-seed.xml"/>
     <import resource="classpath:applicationPlatformCommonAPI.xml"/>
-    <import resource="classpath:applicationContext-csv-importer.xml"/>
-    <import resource="classpath:applicationContext-csv-exporter.xml"/>
 </beans>

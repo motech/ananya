@@ -20,6 +20,16 @@
     <dependencies>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-exporter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-csv-importer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-flw</artifactId>
             <version>${project.version}</version>
         </dependency>
