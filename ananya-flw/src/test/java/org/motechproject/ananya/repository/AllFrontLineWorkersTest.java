@@ -118,15 +118,4 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         assertEquals(1, fetchedFrontLineWorkers.size());
         assertEquals(frontLineWorker6.getMsisdn(), fetchedFrontLineWorkers.get(0).getMsisdn());
     }
-
-    @Test
-    public void shouldRetrieveFrontLineWorkerByFlwId() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("919988776655", "name", Designation.ANM, new Location(), null, flwId);
-        allFrontLineWorkers.add(frontLineWorker);
-        markForDeletion(frontLineWorker);
-
-        FrontLineWorker dbFrontLineWorker = allFrontLineWorkers.findByFlwId(flwId);
-
-        assertEquals(flwId, dbFrontLineWorker.getFlwId());
-    }
 }

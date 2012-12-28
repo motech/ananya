@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Repository
 public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
@@ -61,13 +60,5 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
             log.error(e.getMessage());
         }
         return frontLineWorker;
-    }
-
-    @GenerateView
-    public FrontLineWorker findByFlwId(UUID flwId){
-        ViewQuery viewQuery = createQuery("by_flwId").key(flwId).includeDocs(true);
-        List<FrontLineWorker> workers = db.queryView(viewQuery, FrontLineWorker.class);
-        if (workers == null || workers.isEmpty()) return null;
-        return workers.get(0);
     }
 }

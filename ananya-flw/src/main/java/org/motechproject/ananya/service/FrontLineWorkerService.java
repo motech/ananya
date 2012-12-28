@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FrontLineWorkerService {
@@ -178,9 +177,5 @@ public class FrontLineWorkerService {
             allFailedRecordsProcessingStates.update(failedRecordsProcessingState);
             log.info("Updated last processed date:" + recordDate);
         }
-    }
-
-    public FrontLineWorker findByFlwId(UUID flwId) {
-        return allFrontLineWorkers.findByFlwId(flwId);
     }
 }

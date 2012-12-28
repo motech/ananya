@@ -293,16 +293,6 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldFetchFLWByFlwId() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        when(allFrontLineWorkers.findByFlwId(flwId)).thenReturn(frontLineWorker);
-
-        FrontLineWorker actualFrontLineWorker = frontLineWorkerService.findByFlwId(flwId);
-
-        assertEquals(frontLineWorker, actualFrontLineWorker);
-    }
-
-    @Test
     public void shouldUpdateFrontLineWorkerLocation() {
         Location newLocation = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
         Location oldLocation = new Location("D2", "B2", "P2", 1, 2, 1, null, null);
