@@ -6,6 +6,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
+import org.motechproject.ananya.contract.FailedRecordCSVRequestBuilder;
 import org.motechproject.ananya.service.FailedRecordsService;
 import org.motechproject.event.MotechEvent;
 
@@ -35,7 +36,7 @@ public class FailedRecordsHandlerTest {
     @Test
     public void shouldHandleFailedRecords() {
         List<FailedRecordCSVRequest> expectedFailedRecords = new ArrayList<>();
-        FailedRecordCSVRequest failedRecordCSVRequest = new FailedRecordCSVRequest();
+        FailedRecordCSVRequest failedRecordCSVRequest = new FailedRecordCSVRequestBuilder().build();
         String msisdn = "1234567890";
         failedRecordCSVRequest.setMsisdn(msisdn);
         expectedFailedRecords.add(failedRecordCSVRequest);

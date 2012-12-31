@@ -6,7 +6,6 @@ import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;
-import org.motechproject.ananya.utils.ValidationUtils;
 
 import java.util.Map;
 

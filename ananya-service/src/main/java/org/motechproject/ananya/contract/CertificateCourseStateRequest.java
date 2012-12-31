@@ -77,6 +77,10 @@ public class CertificateCourseStateRequest extends BaseRequest {
         return contentName;
     }
 
+    public String getTime() {
+        return time;
+    }
+
     public DateTime getTimeAsDateTime() {
         return StringUtils.isBlank(time) ? null : new DateTime(Long.valueOf(time));
     }

@@ -2,6 +2,7 @@ package org.motechproject.ananya.mapper;
 
 import org.junit.Test;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
+import org.motechproject.ananya.contract.FailedRecordCSVRequestBuilder;
 import org.motechproject.ananya.contract.JobAidServiceRequest;
 
 import java.util.ArrayList;
@@ -26,10 +27,7 @@ public class JobAidServiceRequestMapperTest {
         }
         };
         String fieldsToPost = "callId:" + callId + ";operator:" + operator + ";circle:" + circle + ";callDuration:" + callDuration + ";promptList:" + promptList;
-        FailedRecordCSVRequest failedrecordCsvRequest = new FailedRecordCSVRequest(msisdn, "appName",
-                calledNumber, "callStartTimestamp", dataToPost,
-                fieldsToPost,
-                "lastUpdatedTimeStamp", "retryTimeStamp", "dataPostResponse");
+        FailedRecordCSVRequest failedrecordCsvRequest = new FailedRecordCSVRequestBuilder().withMsisdn(msisdn).withApplicationName("appName").withCalledNumber(calledNumber).withCallStartTimestamp("callStartTimestamp").withDataToPost(dataToPost).withFieldsToPost(fieldsToPost).withLastUpdatedTimestamp("lastUpdatedTimeStamp").withPostLastRetryTimestamp("retryTimeStamp").withDataPostResponse("dataPostResponse").build();
 
         JobAidServiceRequest jobAidServiceRequest = JobAidServiceRequestMapper.map(failedrecordCsvRequest);
 
