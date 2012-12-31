@@ -24,6 +24,10 @@ public class JobAidServiceRequest extends BaseServiceRequest {
         return callDuration;
     }
 
+    public String getPromptList() {
+        return promptList;
+    }
+
     public List<String> getPrompts() {
         return new Gson().fromJson(promptList, new TypeToken<List<String>>() {
         }.getType());

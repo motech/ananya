@@ -14,7 +14,7 @@ public class AudioTrackerRequestList {
     public AudioTrackerRequestList(String callId, String callerId) {
         this.callId = callId;
         this.callerId = callerId;
-        audioTrackerRequestList = new ArrayList<AudioTrackerRequest>();
+        audioTrackerRequestList = new ArrayList<>();
     }
 
     public void add(String json, String token) {

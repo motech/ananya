@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
+import org.motechproject.ananya.contract.FailedRecordCSVRequestBuilder;
 import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.service.publish.FailedRecordsPublishService;
 import org.motechproject.ananya.utils.OMFtpSource;
@@ -66,14 +67,8 @@ public class FailedRecordsServiceTest {
         String circle = "bihar";
         Integer callDuration = 4;
         String fieldsToPost = "callId:" + callId + ";operator:" + operator + ";circle:" + circle + ";callDuration:" + callDuration;
-        final FailedRecordCSVRequest failedrecordCsvRequest1 = new FailedRecordCSVRequest(msisdn, "certificateCourse",
-                calledNumber, "callStartTimestamp", dataToPost,
-                fieldsToPost,
-                "lastUpdatedTimeStamp", "retryTimeStamp", "dataPostResponse");
-        final FailedRecordCSVRequest failedrecordCsvRequest2 = new FailedRecordCSVRequest(msisdn, "certificateCourse",
-                calledNumber, "callStartTimestamp", dataToPost,
-                fieldsToPost,
-                "lastUpdatedTimeStamp", "retryTimeStamp", "dataPostResponse");
+        final FailedRecordCSVRequest failedrecordCsvRequest1 = new FailedRecordCSVRequestBuilder().withMsisdn(msisdn).withApplicationName("certificateCourse").withCalledNumber(calledNumber).withCallStartTimestamp("callStartTimestamp").withDataToPost(dataToPost).withFieldsToPost(fieldsToPost).withLastUpdatedTimestamp("lastUpdatedTimeStamp").withPostLastRetryTimestamp("retryTimeStamp").withDataPostResponse("dataPostResponse").build();
+        final FailedRecordCSVRequest failedrecordCsvRequest2 = new FailedRecordCSVRequestBuilder().withMsisdn(msisdn).withApplicationName("certificateCourse").withCalledNumber(calledNumber).withCallStartTimestamp("callStartTimestamp").withDataToPost(dataToPost).withFieldsToPost(fieldsToPost).withLastUpdatedTimestamp("lastUpdatedTimeStamp").withPostLastRetryTimestamp("retryTimeStamp").withDataPostResponse("dataPostResponse").build();
 
         final ArrayList<FailedRecordCSVRequest> failedRecordCSVRequests = new ArrayList<FailedRecordCSVRequest>() {{
             add(failedrecordCsvRequest1);
@@ -105,14 +100,8 @@ public class FailedRecordsServiceTest {
             }
         };
         String fieldsToPost = "callId:" + callId + ";operator:" + operator + ";circle:" + circle + ";callDuration:" + callDuration + ";promptList:" + promptList;
-        final FailedRecordCSVRequest failedrecordCsvRequest1 = new FailedRecordCSVRequest(msisdn, "jobAid",
-                calledNumber, "callStartTimestamp", dataToPost,
-                fieldsToPost,
-                "lastUpdatedTimeStamp", "retryTimeStamp", "dataPostResponse");
-        final FailedRecordCSVRequest failedrecordCsvRequest2 = new FailedRecordCSVRequest(msisdn, "jobAid",
-                calledNumber, "callStartTimestamp", dataToPost,
-                fieldsToPost,
-                "lastUpdatedTimeStamp", "retryTimeStamp", "dataPostResponse");
+        final FailedRecordCSVRequest failedrecordCsvRequest1 = new FailedRecordCSVRequestBuilder().withMsisdn(msisdn).withApplicationName("jobAid").withCalledNumber(calledNumber).withCallStartTimestamp("callStartTimestamp").withDataToPost(dataToPost).withFieldsToPost(fieldsToPost).withLastUpdatedTimestamp("lastUpdatedTimeStamp").withPostLastRetryTimestamp("retryTimeStamp").withDataPostResponse("dataPostResponse").build();
+        final FailedRecordCSVRequest failedrecordCsvRequest2 = new FailedRecordCSVRequestBuilder().withMsisdn(msisdn).withApplicationName("jobAid").withCalledNumber(calledNumber).withCallStartTimestamp("callStartTimestamp").withDataToPost(dataToPost).withFieldsToPost(fieldsToPost).withLastUpdatedTimestamp("lastUpdatedTimeStamp").withPostLastRetryTimestamp("retryTimeStamp").withDataPostResponse("dataPostResponse").build();
 
         final ArrayList<FailedRecordCSVRequest> failedRecordCSVRequests = new ArrayList<FailedRecordCSVRequest>() {{
             add(failedrecordCsvRequest1);
@@ -133,7 +122,7 @@ public class FailedRecordsServiceTest {
         final String callerId = "1234567890";
         String expectedErrorMessage = "CertificateCourseHandleDisconnectError";
 
-        final FailedRecordCSVRequest failedRecordCSVRequest = new FailedRecordCSVRequest(callerId, "certificateCourse", "", "", "", "key1:val1;key2:val2", "", "", "");
+        final FailedRecordCSVRequest failedRecordCSVRequest = new FailedRecordCSVRequestBuilder().withMsisdn(callerId).withApplicationName("certificateCourse").withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("key1:val1;key2:val2").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build();
         List<FailedRecordCSVRequest> failedRecordsCSVRequests = new ArrayList() {{
             add(failedRecordCSVRequest);
         }};
@@ -158,11 +147,11 @@ public class FailedRecordsServiceTest {
         final String typeCC = "certificateCourse";
         final String typeJA = "jobAid";
         List<FailedRecordCSVRequest> failedRecordsCSVRequests = new ArrayList() {{
-            add(new FailedRecordCSVRequest(msisdn1, typeCC, "", "", "", "", "", "", ""));
-            add(new FailedRecordCSVRequest(msisdn2, typeCC, "", "", "", "", "", "", ""));
-            add(new FailedRecordCSVRequest(msisdn1, typeCC, "", "", "", "", "", "", ""));
-            add(new FailedRecordCSVRequest(msisdn2, typeCC, "", "", "", "", "", "", ""));
-            add(new FailedRecordCSVRequest(msisdn2, typeJA, "", "", "", "", "", "", ""));
+            add(new FailedRecordCSVRequestBuilder().withMsisdn(msisdn1).withApplicationName(typeCC).withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build());
+            add(new FailedRecordCSVRequestBuilder().withMsisdn(msisdn2).withApplicationName(typeCC).withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build());
+            add(new FailedRecordCSVRequestBuilder().withMsisdn(msisdn1).withApplicationName(typeCC).withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build());
+            add(new FailedRecordCSVRequestBuilder().withMsisdn(msisdn2).withApplicationName(typeCC).withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build());
+            add(new FailedRecordCSVRequestBuilder().withMsisdn(msisdn2).withApplicationName(typeJA).withCalledNumber("").withCallStartTimestamp("").withDataToPost("").withFieldsToPost("").withLastUpdatedTimestamp("").withPostLastRetryTimestamp("").withDataPostResponse("").build());
         }};
 
         failedRecordsService.publishFailedRecordsForProcessing(failedRecordsCSVRequests);

@@ -1,6 +1,8 @@
 package org.motechproject.ananya.contract;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.ananya.utils.CSVRecord;
+import org.motechproject.ananya.validators.FailedRecordValidationException;
 import org.motechproject.importer.annotation.ColumnName;
 
 import java.io.Serializable;
@@ -36,6 +38,8 @@ public class FailedRecordCSVRequest implements Serializable {
     @ColumnName(name = "DATA_POST_RESPONSE")
     private String dataPostResponse;
 
+    private Map<String, String> fieldsToPostMap;
+
     public FailedRecordCSVRequest() {
     }
 
@@ -54,15 +58,27 @@ public class FailedRecordCSVRequest implements Serializable {
     }
 
     public Map<String, String> getFieldsToPostMap() {
-        Map<String, String> fieldsToPostMap = new HashMap<>();
+        if(fieldsToPostMap != null) {
+            return fieldsToPostMap;
+        }
+
+        fieldsToPostMap = new HashMap<>();
 
         String[] keyValuePairs = fieldsToPost.split(";");
         for(String keyValuePair : keyValuePairs) {
+            keyValuePair = keyValuePair.trim();
             String[] keyAndValue = keyValuePair.split(":");
+            validateFieldToPost(keyAndValue);
             fieldsToPostMap.put(StringUtils.trim(keyAndValue[0]), StringUtils.trim(keyAndValue[1]));
         }
 
         return fieldsToPostMap;
+    }
+
+    private void validateFieldToPost(String[] keyAndValue) {
+        if(keyAndValue.length != 2) {
+            throw new FailedRecordValidationException(String.format("Invalid fields to post: %s", fieldsToPost));
+        }
     }
 
     public String getMsisdn() {
@@ -135,5 +151,20 @@ public class FailedRecordCSVRequest implements Serializable {
 
     public void setDataPostResponse(String dataPostResponse) {
         this.dataPostResponse = dataPostResponse;
+    }
+
+    public CSVRecord toCSVRecord() {
+        return new CSVRecord(true)
+                .append(msisdn).append(applicationName).append(calledNumber)
+                .append(callStartTimestamp).append(dataToPost).append(fieldsToPost)
+                .append(lastUpdatedTimestamp).append(postLastRetryTimestamp).append(dataPostResponse);
+    }
+
+    public static String csvHeader() {
+        return new CSVRecord(true)
+                .append("MSISDN").append("APPLICATION_NAME").append("CALLED_NUMBER")
+                .append("CALL_START_TS").append("DATA_TO_POST").append("FIELDS_TO_POST")
+                .append("LAST_UPDATED_TS").append("POST_LAST_RETRY_TS").append("DATA_POST_RESPONSE")
+                .toString();
     }
 }
