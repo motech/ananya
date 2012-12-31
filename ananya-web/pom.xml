@@ -87,6 +87,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.7.2</version>
                 <configuration>
+                    <!-- The following has been included because, i'm using PowerMock with java7: http://tinyurl.com/beptkck -->
+                    <argLine>-XX:-UseSplitVerifier</argLine>
                     <printSummary>true</printSummary>
                     <excludes>
                         <exclude>**/functional/**/*.java</exclude>
