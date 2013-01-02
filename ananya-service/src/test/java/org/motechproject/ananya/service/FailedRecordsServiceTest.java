@@ -222,7 +222,7 @@ public class FailedRecordsServiceTest {
         when(mockFile2.getAbsolutePath()).thenReturn("datapostmaxretry.12-12-2012.csv");
         failedRecordsCSVs.add(mockFile2);
         when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
-        when(csvDataImporter.importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")))).thenReturn(new CSVImportResponse("datapostmaxretry.11-12-2012.csv", false));
+        when(csvDataImporter.importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")))).thenReturn(new CSVImportResponse("datapostmaxretry.11-12-2012.csv1234567890.csv", false));
 
         failedRecordsService.processFailedRecords(recordDate);
 

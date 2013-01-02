@@ -41,6 +41,7 @@ public class FailedRecordsImporter {
             logger.info("Finished validating Failed Records");
             return validationResponse;
         }
+        logger.info("Skipping validation.");
         return new ValidationResponse(true);
     }
 

@@ -75,7 +75,7 @@ public class FailedRecordsService {
 
     private DateTime getDate(DateTime lastFailedRecordsProcessedDate, String lastProcessedFileName) {
         return StringUtils.isEmpty(lastProcessedFileName) ? lastFailedRecordsProcessedDate :
-                DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime(lastProcessedFileName.replace("datapostmaxretry.", "").replace(".csv", ""));
+                DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime(lastProcessedFileName.replace("datapostmaxretry.", "").replaceAll(".csv.*", ""));
     }
 
     private String[] getAbsolutePaths(List<File> csvFiles) {
