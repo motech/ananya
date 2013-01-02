@@ -46,12 +46,6 @@ public class AdminControllerTest {
     }
 
     @Test
-    public void should() {
-        String url = "msisdn=[{\"subscriptionId\":\"cd3fad51-3b36-4c86-9bec-74b83a50872e\",\"description\":\"Invalid status code init_Dropped cpg Forwarded Call\",\"mdn\":\"9955559200\"}]";
-        System.out.println(URLEncoder.encode(url));
-    }
-
-    @Test
     public void shouldCallMonitorPageToDisplayResults() throws Exception {
         ModelAndView modelAndView = mock(ModelAndView.class);
         when(monitorPage.display()).thenReturn(modelAndView);

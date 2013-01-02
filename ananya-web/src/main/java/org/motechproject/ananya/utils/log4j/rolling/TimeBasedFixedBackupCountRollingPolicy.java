@@ -17,7 +17,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 public class TimeBasedFixedBackupCountRollingPolicy extends RollingPolicyBase implements TriggeringPolicy {
-    public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     private TimeBasedRollingPolicy timeBasedRollingPolicy;
     private int maxBackupCount;
     private List<File> allLogFiles = new ArrayList<>();
@@ -25,6 +24,7 @@ public class TimeBasedFixedBackupCountRollingPolicy extends RollingPolicyBase im
     private static final String START_PATTERN_DELIMITER = "%d{";
     private static final String END_PATTERN_DELIMITER = "}";
     private static final String DEFAULT_PATTERN = "%d";
+    private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
 
     public TimeBasedFixedBackupCountRollingPolicy() {
         timeBasedRollingPolicy = new TimeBasedRollingPolicy();
