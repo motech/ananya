@@ -13,8 +13,6 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
-    <context:component-scan base-package="org.motechproject.ananya"/>
-
     <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
     <import resource="classpath:applicationContext-Diagnostics.xml"/>
@@ -23,4 +21,6 @@
     <import resource="classpath:applicationContext-services.xml"/>
     <import resource="classpath:applicationContext-csv-importer.xml"/>
     <import resource="classpath:applicationContext-csv-exporter.xml"/>
+
+    <context:component-scan base-package="org.motechproject.ananya"/>
 </beans>
