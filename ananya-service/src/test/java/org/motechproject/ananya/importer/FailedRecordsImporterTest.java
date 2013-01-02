@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -36,7 +39,7 @@ public class FailedRecordsImporterTest {
     @Before
     public void setUp() {
         initMocks(this);
-        failedRecordsImporter = new FailedRecordsImporter(failedRecordsService, failedRecordsValidator);
+        failedRecordsImporter = new FailedRecordsImporter(failedRecordsService, failedRecordsValidator, "1");
     }
 
     @Test
@@ -60,9 +63,21 @@ public class FailedRecordsImporterTest {
         ValidationResponse validationResponse = new ValidationResponse(false);
         validationResponse.addError(new Error("some error"));
         List<FailedRecordCSVRequest> failedRecordCSVRequests = Arrays.asList(new FailedRecordCSVRequestBuilder().build(), new FailedRecordCSVRequestBuilder().build());
-
         when(failedRecordsValidator.validate(failedRecordCSVRequests)).thenReturn(validationResponse);
 
-        assertEquals(validationResponse, failedRecordsImporter.validate(failedRecordCSVRequests));
+        ValidationResponse actualValidationResponse = failedRecordsImporter.validate(failedRecordCSVRequests);
+
+        assertEquals(validationResponse, actualValidationResponse);
+    }
+
+    @Test
+    public void shouldNotValidateIfTheFlagIsOffWhenUsingFailedRecordsValidator() {
+        failedRecordsImporter = new FailedRecordsImporter(failedRecordsService, failedRecordsValidator, "0");
+        List<FailedRecordCSVRequest> failedRecordCSVRequests = Arrays.asList(new FailedRecordCSVRequestBuilder().build(), new FailedRecordCSVRequestBuilder().build());
+
+        ValidationResponse actualValidationResponse = failedRecordsImporter.validate(failedRecordCSVRequests);
+
+        verify(failedRecordsValidator, never()).validate(any(failedRecordCSVRequests.getClass()));
+        assertTrue(actualValidationResponse.isValid());
     }
 }
