@@ -41,7 +41,7 @@ public class FailedRecordsValidator {
 
             String errorMessage = validateRecord(validatedCallIds, failedRecordRequest, index);
 
-            isValid = isValid && errorMessage != null;
+            isValid = isValid && errorMessage == null;
             logger.info(String.format("Validated record number %s with result: Valid: %s", index, errorMessage == null));
             errors.add(new Error(csvRecord.append(errorMessage).toString()));
         }
