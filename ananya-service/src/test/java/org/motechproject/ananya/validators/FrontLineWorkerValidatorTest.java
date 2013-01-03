@@ -3,6 +3,7 @@ package org.motechproject.ananya.validators;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.response.FLWValidationResponse;

@@ -19,13 +19,8 @@
 
     <context:component-scan base-package="org.motechproject.ananya"/>
 
-    <import resource="classpath:applicationContext-report.xml"/>
+    <import resource="classpath:applicationContext-admin.xml"/>
     <import resource="classpath:applicationContext-Diagnostics.xml"/>
-    <import resource="classpath:applicationContext-transaction.xml"/>
-    <import resource="classpath:applicationCmsLiteApi.xml"/>
-    <import resource="classpath:applicationContext-flw.xml"/>
-    <import resource="classpath:applicationContext-services.xml"/>
-    <import resource="classpath:applicationContext-tool.xml"/>
     <import resource="classpath:applicationSecurityContext.xml"/>
     <import resource="classpath:applicationContext-csv-exporter.xml"/>
 
@@ -41,6 +36,4 @@
         <constructor-arg value="ananya"/>
         <constructor-arg ref="ananyaDbInstance"/>
     </bean>
-
-
 </beans>

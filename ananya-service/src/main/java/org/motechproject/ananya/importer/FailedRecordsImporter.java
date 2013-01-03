@@ -10,6 +10,7 @@ import org.motechproject.importer.domain.ValidationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,20 +23,26 @@ public class FailedRecordsImporter {
 
     private FailedRecordsService failedRecordsService;
     private FailedRecordsValidator failedRecordsValidator;
+    private Integer shouldRunValidator;
 
 
     @Autowired
-    public FailedRecordsImporter(FailedRecordsService failedRecordsService, FailedRecordsValidator failedRecordsValidator) {
+    public FailedRecordsImporter(FailedRecordsService failedRecordsService, FailedRecordsValidator failedRecordsValidator, @Value("${should.run.ftp.file.validator}") String shouldRunValidator) {
         this.failedRecordsService = failedRecordsService;
         this.failedRecordsValidator = failedRecordsValidator;
+        this.shouldRunValidator = Integer.parseInt(shouldRunValidator);
     }
 
     @Validate
     public ValidationResponse validate(List<FailedRecordCSVRequest> failedRecordCSVRequests) {
-        logger.info("Started validating Failed Records");
-        ValidationResponse validationResponse = failedRecordsValidator.validate(failedRecordCSVRequests);
-        logger.info("Finished validating Failed Records");
-        return validationResponse;
+        if (shouldRunValidator == 1) {
+            logger.info("Started validating Failed Records");
+            ValidationResponse validationResponse = failedRecordsValidator.validate(failedRecordCSVRequests);
+            logger.info("Finished validating Failed Records");
+            return validationResponse;
+        }
+        logger.info("Skipping validation.");
+        return new ValidationResponse(true);
     }
 
     @Post

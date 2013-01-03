@@ -7,7 +7,7 @@ import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.AllSMSLogs;
-import org.motechproject.ananya.seed.service.SMSSeedService;
+import org.motechproject.ananya.support.synchroniser.service.SMSService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,14 +24,14 @@ public class VodafoneDataCorrectionSeedTest {
     @Mock
     private AllSMSLogs allSMSLogs;
     @Mock
-    private SMSSeedService smsSeedService;
+    private SMSService smsService;
 
     private VodafoneDataCorrectionSeed seed;
 
     @Before
     public void setUp() {
         initMocks(this);
-        seed = new VodafoneDataCorrectionSeed(allRegistrationLogs, allSMSLogs, smsSeedService);
+        seed = new VodafoneDataCorrectionSeed(allRegistrationLogs, allSMSLogs, smsService);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class VodafoneDataCorrectionSeedTest {
 
         seed.correctSMSLogs();
 
-        verify(smsSeedService).buildAndSendSMS("callerId1", "locationId1", 1);
-        verify(smsSeedService).buildAndSendSMS("callerId2", "locationId2", 2);
+        verify(smsService).buildAndSendSMS("callerId1", "locationId1", 1);
+        verify(smsService).buildAndSendSMS("callerId2", "locationId2", 2);
     }
 }

@@ -41,7 +41,7 @@ public class FailedRecordsValidator {
 
             String errorMessage = validateRecord(validatedCallIds, failedRecordRequest, index);
 
-            isValid = isValid && errorMessage != null;
+            isValid = isValid && errorMessage == null;
             logger.info(String.format("Validated record number %s with result: Valid: %s", index, errorMessage == null));
             errors.add(new Error(csvRecord.append(errorMessage).toString()));
         }
@@ -78,14 +78,14 @@ public class FailedRecordsValidator {
             return;
         }
 
-        throw new RuntimeException("Invalid application name " + applicationName);
+        throw new FailedRecordValidationException("Invalid application name " + applicationName);
     }
 
     private void validateDuplicateCallId(FailedRecordCSVRequest failedRecordRequest, HashSet<String> validatedCallIds) {
         Map<String, String> fieldsToPostMap = failedRecordRequest.getFieldsToPostMap();
         String callId = fieldsToPostMap.get("callId");
         if (validatedCallIds.contains(callId)) {
-            throw new RuntimeException("CallId " + callId + " present more than once");
+            throw new FailedRecordValidationException("CallId " + callId + " present more than once");
         }
         validatedCallIds.add(callId);
     }

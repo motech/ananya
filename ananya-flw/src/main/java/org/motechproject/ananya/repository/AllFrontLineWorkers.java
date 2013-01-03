@@ -1,9 +1,11 @@
 package org.motechproject.ananya.repository;
 
+import org.ektorp.BulkDeleteDocument;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.UpdateConflictException;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
+import org.ektorp.support.View;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,17 @@ public class AllFrontLineWorkers extends MotechBaseRepository<FrontLineWorker> {
         return db.queryView(
                 createQuery("by_msisdn").startKey(startKey).limit(count).includeDocs(true),
                 FrontLineWorker.class);
+    }
+
+    @View(name = "by_invalid_msisdn", map="function(doc) { if(doc.type === 'FrontLineWorker' && doc.msisdn && doc.msisdn.indexOf('E') !== -1) {emit(doc.msisdn, doc._id)} }")
+    public void deleteFLWsWithInvalidMsisdn() {
+        List<BulkDeleteDocument> bulkDeleteDocuments = new ArrayList<>();
+
+        List<FrontLineWorker> invalidFlws = queryView("by_invalid_msisdn");
+        for (FrontLineWorker invalidFlw : invalidFlws) {
+            bulkDeleteDocuments.add(BulkDeleteDocument.of(invalidFlw));
+        }
+        db.executeBulk(bulkDeleteDocuments);
     }
 
     public FrontLineWorker updateFlw(FrontLineWorker frontLineWorker) {

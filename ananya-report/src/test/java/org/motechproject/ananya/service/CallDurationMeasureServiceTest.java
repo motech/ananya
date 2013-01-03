@@ -186,6 +186,7 @@ public class CallDurationMeasureServiceTest {
 
         verify(allCallDurationMeasures, never()).add(any(CallDurationMeasure.class));
         verify(allFrontLineWorkerDimensions, never()).fetchFor(anyLong());
+        verify(operatorService, never()).usageInPulse(anyString(), anyInt());
         verify(callLoggerService, never()).delete(any(CallLog.class));
     }
 

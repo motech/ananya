@@ -13,10 +13,6 @@
     <context:annotation-config/>
     <context:spring-configured/>
 
-
-    <context:component-scan base-package="org.motechproject.ananya"/>
-
-
     <bean id="smsService"
     class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
         <property name="serviceInterface" value="org.motechproject.ananya.webservice.OnMobileSendSMSService"/>
@@ -36,9 +32,10 @@
     <bean id="ananyaCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
         <property name="cacheManager" ref="defaultAnanyaEhCacheManager"/>
     </bean>
+    <context:component-scan base-package="org.motechproject.ananya"/>
 
     <import resource="classpath:applicationContext-hibernate.xml"/>
-    <import resource="classpath:applicationContext-flw.xml"/>
     <import resource="classpath:applicationContext-transaction.xml"/>
+    <import resource="classpath:applicationContext-flw.xml"/>
     <util:properties id="ananyaProperties" location="classpath:/ananya.properties"/>
 </beans>

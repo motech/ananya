@@ -6,9 +6,6 @@ import org.mockito.Mock;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.ananya.repository.AllOperators;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;

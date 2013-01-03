@@ -411,7 +411,6 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.3" id="29">
-        <!-- Following extension required to generate UUIDs. Assuming Postgres9.1 -->
         <sql splitStatements="false">
             CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
         </sql>
@@ -419,6 +418,11 @@
         <addColumn tableName="front_line_worker_dimension">
             <column name="flw_guid" type="varchar(36)"/>
         </addColumn>
+
+        <createTable tableName="temp_msisdn_flw_guid" schemaName="report">
+            <column name="msisdn" type="bigint"/>
+            <column name="flw_guid" type="varchar(36)"/>
+        </createTable>
 
         <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
     </changeSet>
@@ -453,11 +457,11 @@
 
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="34">
         <sql splitStatements="false">
-           CREATE INDEX ON report.registration_measure (location_id) ;
-           CREATE INDEX ON report.course_item_measure (location_id) ;
-           CREATE INDEX ON report.call_duration_measure (location_id) ;
-           CREATE INDEX ON report.job_aid_content_measure (location_id) ;
-           CREATE INDEX ON report.sms_sent_measure (location_id) ;
+            CREATE INDEX ON report.registration_measure (location_id) ;
+            CREATE INDEX ON report.course_item_measure (location_id) ;
+            CREATE INDEX ON report.call_duration_measure (location_id) ;
+            CREATE INDEX ON report.job_aid_content_measure (location_id) ;
+            CREATE INDEX ON report.sms_sent_measure (location_id) ;
         </sql>
     </changeSet>
 </databaseChangeLog>

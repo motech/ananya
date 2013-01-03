@@ -16,6 +16,7 @@
         <module>ananya-csv-exporter</module>
         <module>ananya-csv-importer</module>
         <module>ananya-performance</module>
+        <module>ananya-admin</module>
     </modules>
     <name>Ananya</name>
 
@@ -304,9 +305,9 @@
                 <version>2.3.1</version>
             </dependency>
             <dependency>
-                <groupId>org.motechproject</groupId>
+                <groupId>org.motechproject.delivery-ananya</groupId>
                 <artifactId>motech-seed</artifactId>
-                <version>0.3-SNAPSHOT</version>
+                <version>0.12-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>commons-lang</groupId>
@@ -670,9 +671,9 @@
             <version>2.3.1</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.delivery-ananya</groupId>
             <artifactId>motech-seed</artifactId>
-            <version>0.3-SNAPSHOT</version>
+            <version>0.12-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

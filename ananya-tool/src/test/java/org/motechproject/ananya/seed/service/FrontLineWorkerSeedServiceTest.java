@@ -3,16 +3,13 @@ package org.motechproject.ananya.seed.service;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
-import org.motechproject.ananya.repository.AllLocations;
-import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
-import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
@@ -21,31 +18,20 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FrontLineWorkerSeedServiceTest {
 
     private FrontLineWorkerSeedService seedService;
     @Mock
-    private DataAccessTemplate template;
-    @Mock
-    private AllLocations allLocations;
-    @Mock
-    private AllFrontLineWorkers allFrontLineWorkers;
-    @Mock
-    private AllRegistrationMeasures allRegistrationMeasures;
-    @Mock
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
     @Mock
-    private AllTimeDimensions allTimeDimensions;
-    @Mock
-    private AllLocationDimensions allLocationDimensions;
+    private AllFrontLineWorkers allFrontLineWorkers;
+
 
     @Before
     public void setUp() {
-        initMocks(this);
-        seedService = new FrontLineWorkerSeedService(template, allFrontLineWorkers, allFrontLineWorkerDimensions, allRegistrationMeasures,
-                allLocations, allTimeDimensions, allLocationDimensions);
+        seedService = new FrontLineWorkerSeedService(null, allFrontLineWorkers, allFrontLineWorkerDimensions, null, null,null, null);
     }
 
     @Test

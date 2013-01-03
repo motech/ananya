@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;

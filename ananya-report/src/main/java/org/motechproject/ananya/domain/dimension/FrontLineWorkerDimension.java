@@ -16,11 +16,9 @@ import java.util.UUID;
         @NamedQuery(name = FrontLineWorkerDimension.FIND_ALL_UNREGISTERED, query = "select f from FrontLineWorkerDimension f where f.status='UNREGISTERED'")
 })
 public class FrontLineWorkerDimension {
-    private static Logger log = LoggerFactory.getLogger(FrontLineWorkerDimension.class);
-
     public static final String FIND_BY_MSISDN = "find.by.msisdn";
-
     public static final String FIND_ALL_UNREGISTERED = "find.all.unregistered";
+    private final static Logger logger = LoggerFactory.getLogger(FrontLineWorkerDimension.class);
 
     @Id
     @Column(name = "id")
@@ -194,8 +192,8 @@ public class FrontLineWorkerDimension {
     }
 
     private void updateFlwId(UUID flwId) {
-        if(this.flwId != null && !this.flwId.equals(flwId)) {
-            log.warn(String.format("Changing FLWDimension ID for msisdn[%s]", this.msisdn));
+        if (this.flwId != null && !this.flwId.equals(flwId)) {
+            logger.warn(String.format("Changing FLWDimension ID for msisdn[%s]", this.msisdn));
         }
 
         this.flwId = flwId;

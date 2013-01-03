@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -22,6 +23,7 @@ import org.motechproject.ananya.service.measure.RegistrationMeasureService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -126,13 +128,45 @@ public class RegistrationMeasureServiceTest {
 
     @Test
     public void shouldNotRunWhenThereIsNoRegistrationLog() {
-        String callId = "919986574410-3235233";
+        String callerId = "919986574410";
 
-        when(registrationLogService.getRegistrationLogFor(callId)).thenReturn(null);
+        when(registrationLogService.getRegistrationLogFor(callerId)).thenReturn(null);
 
-        registrationMeasureService.createFor(callId);
+        registrationMeasureService.createFor(callerId);
 
-        verify(frontLineWorkerService, never()).findByCallerId(any(String.class));
+        verify(frontLineWorkerService, never()).findByCallerId(callerId);
+    }
+
+    @Test
+    public void shouldCreateRegistrationMeasureWithoutLog() {
+        String callerId = "919986574410";
+        String callId = "919986574410-12312312";
+        String operator = "operator";
+        String circle = "circle";
+        DateTime registeredDate = DateTime.now();
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        frontLineWorker.setCircle(circle);
+        frontLineWorker.setRegisteredDate(registeredDate);
+        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat", LocationStatus.VALID.name());
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", null, VerificationStatus.SUCCESS);
+        TimeDimension timeDimension = new TimeDimension(registeredDate);
+
+        when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
+        when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
+        when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", UUID.fromString("11111111-1111-1111-1111-111111111111"), null)).thenReturn(frontLineWorkerDimension);
+        when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
+
+        registrationMeasureService.createRegistrationMeasure(callerId, callId);
+
+        ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
+        verify(allRegistrationMeasures).createOrUpdate(captor.capture());
+
+        RegistrationMeasure registrationMeasure = captor.getValue();
+        assertNotNull(registrationMeasure);
+        assertEquals(locationDimension, registrationMeasure.getLocationDimension());
+        assertEquals(frontLineWorkerDimension, registrationMeasure.getFrontLineWorkerDimension());
+        assertEquals(timeDimension, registrationMeasure.getTimeDimension());
     }
 
     @Test

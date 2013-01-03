@@ -1,5 +1,6 @@
 package org.motechproject.ananya.repository;
 
+import org.ektorp.BulkDeleteDocument;
 import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -36,4 +38,13 @@ public class AllSMSLogs extends MotechBaseRepository<SMSLog> {
         return smsLogs == null || smsLogs.isEmpty() ? null : smsLogs.get(0);
     }
 
+    @View(name = "by_invalid_msisdn", map="function(doc) { if(doc.type === 'SMSLog' && doc.callerId && doc.callerId.indexOf('E') !== -1 ) {emit(doc.callId, doc._id)} }")
+    public void deleteSMSLogsForInvalidMsisdns() {
+        List<SMSLog> smsLogs = queryView("by_invalid_msisdn");
+        List<BulkDeleteDocument> bulkDeleteDocuments = new ArrayList<>();
+        for (SMSLog smsLog : smsLogs) {
+            bulkDeleteDocuments.add(BulkDeleteDocument.of(smsLog));
+        }
+        db.executeBulk(bulkDeleteDocuments);
+    }
 }

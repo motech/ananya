@@ -3,7 +3,9 @@ package org.motechproject.ananya.service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
 import org.motechproject.ananya.contract.JobAidServiceRequest;
@@ -13,14 +15,17 @@ import org.motechproject.ananya.mapper.JobAidServiceRequestMapper;
 import org.motechproject.ananya.service.publish.FailedRecordsPublishService;
 import org.motechproject.ananya.utils.OMFtpSource;
 import org.motechproject.importer.CSVDataImporter;
+import org.motechproject.importer.domain.CSVImportResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class FailedRecordsService {
@@ -58,7 +63,8 @@ public class FailedRecordsService {
             return;
         }
 
-        csvDataImporter.importData("FailedRecordCSVRequest", getAbsolutePaths(csvFiles));
+        CSVImportResponse csvImportResponse = csvDataImporter.importData("FailedRecordCSVRequest", getAbsolutePaths(csvFiles));
+        recordDate = csvImportResponse.isImportSuccessful() ? recordDate : getDate(lastFailedRecordsProcessedDate, csvImportResponse.getLastProcessedFileName());
 
         for (File file : csvFiles) {
             file.delete();
@@ -67,9 +73,14 @@ public class FailedRecordsService {
         frontLineWorkerService.updateLastFailedRecordsProcessedDate(recordDate);
     }
 
+    private DateTime getDate(DateTime lastFailedRecordsProcessedDate, String lastProcessedFileName) {
+        return StringUtils.isEmpty(lastProcessedFileName) ? lastFailedRecordsProcessedDate :
+                DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime(lastProcessedFileName.replace("datapostmaxretry.", "").replaceAll(".csv.*", ""));
+    }
+
     private String[] getAbsolutePaths(List<File> csvFiles) {
         String[] csvFilePaths = new String[csvFiles.size()];
-        for(int i = 0; i < csvFilePaths.length; ++i){
+        for (int i = 0; i < csvFilePaths.length; ++i) {
             csvFilePaths[i] = csvFiles.get(i).getAbsolutePath();
         }
         return csvFilePaths;

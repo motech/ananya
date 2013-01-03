@@ -1,6 +1,8 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +16,7 @@ import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.service.publish.FailedRecordsPublishService;
 import org.motechproject.ananya.utils.OMFtpSource;
 import org.motechproject.importer.CSVDataImporter;
+import org.motechproject.importer.domain.CSVImportResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -195,6 +198,7 @@ public class FailedRecordsServiceTest {
         when(mockFile2.getAbsolutePath()).thenReturn("filePath2");
         failedRecordsCSVs.add(mockFile2);
         when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
+        when(csvDataImporter.importData(argThat(is("FailedRecordCSVRequest")), argThat(is("filePath1")), argThat(is("filePath2")))).thenReturn(new CSVImportResponse("filePath2", true));
 
         failedRecordsService.processFailedRecords(recordDate);
 
@@ -202,6 +206,56 @@ public class FailedRecordsServiceTest {
         verify(mockFile1).delete();
         verify(mockFile2).delete();
         verify(frontLineWorkerService).updateLastFailedRecordsProcessedDate(recordDate);
+    }
+
+    @Test
+    public void shouldNotUpdateTheRecordDateIfImportingFails() {
+        DateTime recordDate = DateTime.now();
+        DateTime lastProcessedDate = recordDate.minusDays(2);
+        when(frontLineWorkerService.getLastFailedRecordsProcessedDate()).thenReturn(lastProcessedDate);
+
+        ArrayList<File> failedRecordsCSVs = new ArrayList<>();
+        File mockFile1 = mock(File.class);
+        when(mockFile1.getAbsolutePath()).thenReturn("datapostmaxretry.11-12-2012.csv");
+        failedRecordsCSVs.add(mockFile1);
+        File mockFile2 = mock(File.class);
+        when(mockFile2.getAbsolutePath()).thenReturn("datapostmaxretry.12-12-2012.csv");
+        failedRecordsCSVs.add(mockFile2);
+        when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
+        when(csvDataImporter.importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")))).thenReturn(new CSVImportResponse("datapostmaxretry.11-12-2012.csv1234567890.csv", false));
+
+        failedRecordsService.processFailedRecords(recordDate);
+
+        verify(csvDataImporter).importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")));
+        verify(mockFile1).delete();
+        verify(mockFile2).delete();
+        verify(frontLineWorkerService).updateLastFailedRecordsProcessedDate(DateTimeFormat.forPattern("dd-MM-yyyy").parseDateTime("11-12-2012"));
+
+    }
+
+    @Test
+    public void shouldUpdateTheLastProcessedDateAsTheDateIfTheFirstFileItselfFailsValidation() {
+        DateTime recordDate = DateTime.now();
+        DateTime lastProcessedDate = recordDate.minusDays(2);
+        when(frontLineWorkerService.getLastFailedRecordsProcessedDate()).thenReturn(lastProcessedDate);
+
+        ArrayList<File> failedRecordsCSVs = new ArrayList<>();
+        File mockFile1 = mock(File.class);
+        when(mockFile1.getAbsolutePath()).thenReturn("datapostmaxretry.11-12-2012.csv");
+        failedRecordsCSVs.add(mockFile1);
+        File mockFile2 = mock(File.class);
+        when(mockFile2.getAbsolutePath()).thenReturn("datapostmaxretry.12-12-2012.csv");
+        failedRecordsCSVs.add(mockFile2);
+        when(OMFtpSource.downloadAllCsvFilesBetween(lastProcessedDate, recordDate)).thenReturn(failedRecordsCSVs);
+        when(csvDataImporter.importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")))).thenReturn(new CSVImportResponse(StringUtils.EMPTY, false));
+
+        failedRecordsService.processFailedRecords(recordDate);
+
+        verify(csvDataImporter).importData(argThat(is("FailedRecordCSVRequest")), argThat(is("datapostmaxretry.11-12-2012.csv")), argThat(is("datapostmaxretry.12-12-2012.csv")));
+        verify(mockFile1).delete();
+        verify(mockFile2).delete();
+        verify(frontLineWorkerService).updateLastFailedRecordsProcessedDate(lastProcessedDate);
+
     }
 
     @Test

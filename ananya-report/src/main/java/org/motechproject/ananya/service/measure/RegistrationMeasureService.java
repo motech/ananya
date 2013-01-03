@@ -59,6 +59,11 @@ public class RegistrationMeasureService {
         log.info(callId + "- registrationLog removed");
     }
 
+    @Transactional
+    public void createRegistrationMeasure(String callerId, String callId) {
+        createMeasure(callerId, callId);
+    }
+
     private void createMeasure(String callerId, String callId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
@@ -105,7 +110,6 @@ public class RegistrationMeasureService {
                 frontLineWorker.getStatus().toString(),
                 frontLineWorker.getFlwId(),
                 frontLineWorker.getVerificationStatus());
-
         RegistrationMeasure registrationMeasure = flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
                 : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);
         allRegistrationMeasures.createOrUpdate(registrationMeasure);

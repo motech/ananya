@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -150,7 +149,7 @@ public class FrontLineWorkerTest {
     }
 
     @Test
-    public void shouldAssignTheGivenDateTimeAsLastModifiedTime() {
+    public void shouldAssigntheGivenDateTimeAsLastModifiedTime() {
         DateTime lastModified = DateTime.now();
 
         FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("distrcit1", "block1", "panchayat1", 1, 2, 3, null, null), lastModified, flwId);

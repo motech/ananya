@@ -2,7 +2,6 @@ package org.motechproject.ananya.framework;
 
 import org.joda.time.DateTime;
 import org.motechproject.ananya.TestDataAccessTemplate;
-import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.RegistrationStatus;
@@ -11,7 +10,6 @@ import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.*;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
-import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -51,8 +50,6 @@ public class ReportDb {
     private AllTimeDimensions allTimeDimensions;
     @Autowired
     private AllCallDurationMeasures allCallDurationMeasures;
-    @Autowired
-    private AllFrontLineWorkers allFrontLineWorkers;
 
 
     public ReportDb confirmFLWDimensionForPartiallyRegistered(String callerId, String operator) {
@@ -150,9 +147,8 @@ public class ReportDb {
     }
 
     public ReportDb createMeasuresAndDimensionsForFlw(String callerId, String callId, String operator, String circle) {
-        FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
-                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED", frontLineWorker.getFlwId(), null);
+                new Long(callerId), operator, circle, "", "ANM", "PARTIALLY_REGISTERED", UUID.randomUUID(), null);
         Location defaultLocation = Location.getDefaultLocation();
         LocationDimension locationDimension = allLocationDimensions.getFor(defaultLocation.getExternalId());
         if (locationDimension == null)

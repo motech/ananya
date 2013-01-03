@@ -107,9 +107,11 @@
                             <target name="load.seed.data">
                                 <echo message="Seed data loading: START"/>
                                 <property name="compile_classpath" refid="maven.compile.classpath"/>
+                                <property name="test_classpath" refid="maven.test.classpath"/>
                                 <java classname="org.motechproject.deliverytools.seed.SetupSeedData" failonerror="true">
                                     <classpath>
                                         <pathelement path="${compile_classpath}"/>
+                                        <pathelement path="${test_classpath}"/>
                                     </classpath>
                                 </java>
                                 <echo message="Seed data loading: END"/>
@@ -283,6 +285,11 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya</groupId>
+            <artifactId>ananya-admin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-transaction</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -295,6 +302,7 @@
             <groupId>org.motechproject.ananya</groupId>
             <artifactId>ananya-tool</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>

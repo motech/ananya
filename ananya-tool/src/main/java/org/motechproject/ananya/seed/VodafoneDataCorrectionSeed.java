@@ -6,7 +6,7 @@ import org.motechproject.ananya.domain.RegistrationLog;
 import org.motechproject.ananya.domain.SMSLog;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
 import org.motechproject.ananya.repository.AllSMSLogs;
-import org.motechproject.ananya.seed.service.SMSSeedService;
+import org.motechproject.ananya.support.synchroniser.service.SMSService;
 import org.motechproject.deliverytools.seed.Seed;
 import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
@@ -27,13 +27,13 @@ public class VodafoneDataCorrectionSeed {
 
     private AllSMSLogs allSMSLogs;
 
-    private SMSSeedService smsSeedService;
+    private SMSService smsService;
 
     @Autowired
-    public VodafoneDataCorrectionSeed(AllRegistrationLogs allRegistrationLogs, AllSMSLogs allSMSLogs, SMSSeedService smsSeedService) {
+    public VodafoneDataCorrectionSeed(AllRegistrationLogs allRegistrationLogs, AllSMSLogs allSMSLogs, SMSService smsService) {
         this.allRegistrationLogs = allRegistrationLogs;
         this.allSMSLogs = allSMSLogs;
-        this.smsSeedService = smsSeedService;
+        this.smsService = smsService;
     }
 
     @Seed(priority = 0, version = "1.4", comment = "update registrationLogs sent for Vodafone w/o callIds after July7th release.Refer bug#122")
@@ -58,7 +58,7 @@ public class VodafoneDataCorrectionSeed {
     public void correctSMSLogs() {
         List<SMSLog> smsLogs = allSMSLogs.getAll();
         for (SMSLog smslog : smsLogs) {
-            smsSeedService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+            smsService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
             log.info("sent SMS and created measure for " + smslog.getCallerId());
             allSMSLogs.remove(smslog);
         }
