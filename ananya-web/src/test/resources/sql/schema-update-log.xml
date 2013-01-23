@@ -258,7 +258,7 @@
                     file_name = '0245_ch9_end_op.wav'
                 </sql>
     </changeSet>
-    
+
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="10">
         <sql>
             UPDATE
@@ -347,4 +347,11 @@
                 report.operator_dimension od WHERE cdm.operator = od.name;
         </sql>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="13">
+        <sql>
+            update report.location_dimension set district = initcap(district), block = initcap(block), panchayat=initcap(panchayat);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
