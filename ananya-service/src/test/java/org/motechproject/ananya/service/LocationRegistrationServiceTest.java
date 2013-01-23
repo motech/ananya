@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
@@ -33,6 +34,9 @@ public class LocationRegistrationServiceTest {
 
     @Mock
     private RegistrationService registrationService;
+
+    @Captor
+    private ArgumentCaptor<List<Location>> locationsCaptor;
 
     private LocationRegistrationService locationRegistrationService;
 
@@ -241,6 +245,21 @@ public class LocationRegistrationServiceTest {
         locationRegistrationService.updateAllExistingLocationStatusToValid();
 
         verify(locationService).updateAllLocationStatusToValid();
+    }
+
+    @Test
+    public void shouldUpdateAllLocationsToTitleCase() {
+        final Location location = new Location("DISTRICT", "block", "panA panB");
+        when(locationService.getAll()).thenReturn(new ArrayList<Location>() {{
+            add(location);
+        }});
+
+        locationRegistrationService.updateAllLocationsToTitleCase();
+
+        verify(locationService).updateAll(locationsCaptor.capture());
+        List<Location> locationList = locationsCaptor.getValue();
+        assertEquals(1, locationList.size());
+        assertEquals(new Location("District","Block","Pana Panb"), locationList.get(0));
     }
 
     private void verifyCouchAndPostgresLocationStatusUpdate(Location expectedLocation, LocationStatus locationStatus) {

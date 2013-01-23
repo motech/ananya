@@ -49,6 +49,11 @@ public class LocationSeed {
         locationRegistrationService.updateAllExistingLocationStatusToValid();
     }
 
+    @Seed(priority = 1,version = "1.13", comment = "title case all location components")
+    public void updateLocationDetailsToTitleCase() {
+        locationRegistrationService.updateAllLocationsToTitleCase();
+    }
+
     private void loadDefaultLocation() {
         locationRegistrationService.loadDefaultLocation();
     }

@@ -62,4 +62,15 @@ public class LocationTest {
         assertEquals("",defaultLocation.getPanchayat());
         assertEquals("S01D000B000V000",defaultLocation.getExternalId());
     }
+
+    @Test
+    public void shouldConvertLocationToTitleCase() {
+        Location location = new Location("DIST","block","pA pb");
+
+        location.convertToTitleCase();
+
+        assertEquals("Dist", location.getDistrict());
+        assertEquals("Block", location.getBlock());
+        assertEquals("Pa Pb", location.getPanchayat());
+    }
 }

@@ -1,6 +1,7 @@
 package org.motechproject.ananya.domain;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
@@ -150,5 +151,11 @@ public class Location extends MotechBaseDataObject {
                 ", locationStatus='" + locationStatus +
                 ", externalId='" + externalId +
                 '}';
+    }
+
+    public void convertToTitleCase() {
+        district = WordUtils.capitalizeFully(district);
+        block = WordUtils.capitalizeFully(block);
+        panchayat = WordUtils.capitalizeFully(panchayat);
     }
 }

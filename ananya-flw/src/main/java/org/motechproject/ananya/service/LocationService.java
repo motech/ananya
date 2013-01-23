@@ -47,4 +47,10 @@ public class LocationService {
         }
         allLocations.getAll();
     }
+
+    public void updateAll(List<Location> locationList) {
+        for (Location location : locationList) {
+            allLocations.update(location);
+        }
+    }
 }

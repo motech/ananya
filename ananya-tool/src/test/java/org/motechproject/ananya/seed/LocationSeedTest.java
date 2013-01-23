@@ -64,7 +64,7 @@ public class LocationSeedTest {
         Assert.assertEquals(location.getBlock(), locationDimension.getBlock());
         Assert.assertEquals(location.getPanchayat(), locationDimension.getPanchayat());
     }
-    
+
     @Test
     public void shouldUpdateAllLocationRegistrationService() {
         Location expectedLocation = new Location("d1", "b1", "p1");

@@ -101,4 +101,18 @@ public class LocationServiceTest {
         assertEquals(expectedLocation, actualLocation);
         assertEquals(LocationStatus.VALID, actualLocation.getLocationStatusAsEnum());
     }
+
+    @Test
+    public void shouldUpdateAllLocations() {
+        ArrayList<Location> locationList = new ArrayList<>();
+        Location location1 = new Location("D11", "B1", "P1");
+        Location location2 = new Location("D12", "B2", "P2");
+        locationList.add(location1);
+        locationList.add(location2);
+
+        locationService.updateAll(locationList);
+
+        verify(allLocations).update(location1);
+        verify(allLocations).update(location2);
+    }
 }

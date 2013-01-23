@@ -181,4 +181,12 @@ public class LocationRegistrationService {
         Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor, currentLocation.getLocationStatusAsEnum(), currentLocation.getLastModifiedTime());
         return locationToSave;
     }
+
+    public void updateAllLocationsToTitleCase() {
+        List<Location> locationList = locationService.getAll();
+        for (Location location : locationList) {
+            location.convertToTitleCase();
+        }
+        locationService.updateAll(locationList);
+    }
 }
