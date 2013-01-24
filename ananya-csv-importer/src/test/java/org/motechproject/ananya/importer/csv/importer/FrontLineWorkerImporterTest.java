@@ -58,15 +58,14 @@ public class FrontLineWorkerImporterTest {
     @Test
     public void shouldFailValidationIfFLWDoesNotHaveAllTheDetails() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
+        when(locationService.findFor("D1", "B1", "P1")).thenReturn(null);
         frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
         assertFalse(validationResponse.isValid());
         assertEquals(2, validationResponse.getErrors().size());
-        assertEquals("\"1asdf67890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"[Invalid msisdn]\"", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("\"1asdf67890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"[Invalid msisdn][Invalid location]\"", validationResponse.getErrors().get(1).getMessage());
     }
 
     @Test
