@@ -21,6 +21,17 @@ public class FrontLineWorkerValidator {
         return flwValidationResponse;
     }
 
+    public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
+                                                                   Location location,
+                                                                   Map<String, Integer> msisdnOccurrenceMap) {
+        FLWValidationResponse validationResponse = validate(frontLineWorkerRequest);
+        if(location == null)
+            validationResponse.forInvalidLocation();
+        if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
+            validationResponse.forDuplicates();
+        return validationResponse;
+    }
+
     private static void validateVerificationStatus(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         String verificationStatus = frontLineWorkerRequest.getVerificationStatus();
         if(StringUtils.isNotBlank(verificationStatus) && !VerificationStatus.isValid(verificationStatus))
@@ -46,14 +57,5 @@ public class FrontLineWorkerValidator {
     private static void validateMsisdn(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         if (frontLineWorkerRequest.isInvalidMsisdn())
             flwValidationResponse.forInvalidMsisdn();
-    }
-
-    public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
-                                                            Location location,
-                                                            Map<String, Integer> msisdnOccurrenceMap) {
-        FLWValidationResponse validationResponse = validate(frontLineWorkerRequest);
-        if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
-            validationResponse.forDuplicates();
-        return validationResponse;
     }
 }
