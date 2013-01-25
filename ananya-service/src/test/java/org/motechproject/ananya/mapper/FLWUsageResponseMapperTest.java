@@ -72,8 +72,8 @@ public class FLWUsageResponseMapperTest {
         assertEquals(endTime.toString(dateTimeFormat), ccFlwCallDetails.getEndTime());
         assertEquals(startTime.toString(dateTimeFormat), ccFlwCallDetails.getStartTime());
 
-        assertEquals(chapterIndex, frontLineWorkerUsageResponse.getBookmark().getChapter());
-        assertEquals(lessonIndex, frontLineWorkerUsageResponse.getBookmark().getLesson());
+        assertEquals(new Integer(chapterIndex + 1), frontLineWorkerUsageResponse.getBookmark().getChapter());
+        assertEquals(new Integer(lessonIndex + 1), frontLineWorkerUsageResponse.getBookmark().getLesson());
 
         assertEquals(1, frontLineWorkerUsageResponse.getSmsReferenceNumbers().size());
         assertEquals(smsReferenceNumber, frontLineWorkerUsageResponse.getSmsReferenceNumbers().get(0));
