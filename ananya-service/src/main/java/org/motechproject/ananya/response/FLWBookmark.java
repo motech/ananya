@@ -17,8 +17,16 @@ public class FLWBookmark {
     }
 
     public FLWBookmark(Integer chapter, Integer lesson) {
-        this.chapter = chapter;
-        this.lesson = lesson;
+        this.chapter = convertTo1BasedIndex(chapter);
+        this.lesson = convertTo1BasedIndex(lesson);
+    }
+
+
+    private Integer convertTo1BasedIndex(Integer value) {
+        if(value == null) {
+            return null;
+        }
+        return value + 1;
     }
 
     public Integer getChapter() {
