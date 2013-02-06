@@ -12,18 +12,34 @@ public class FLWBookmark {
     private Integer chapter;
     @XmlElement
     private Integer lesson;
+    @XmlElement
+    private Integer quiz;
+
+    public static final int NUMBER_OF_LESSONS_IN_A_CHAPTER = 4;
 
     public FLWBookmark() {
     }
 
-    public FLWBookmark(Integer chapter, Integer lesson) {
+    public FLWBookmark(Integer chapter, Integer lessonIndex) {
         this.chapter = convertTo1BasedIndex(chapter);
-        this.lesson = convertTo1BasedIndex(lesson);
+        splitToLessonAndQuizNumbers(convertTo1BasedIndex(lessonIndex));
     }
 
+    private void splitToLessonAndQuizNumbers(Integer lessonIndex) {
+        if (lessonIndex == null)
+            return;
+
+        if (lessonIndex > NUMBER_OF_LESSONS_IN_A_CHAPTER) {
+            this.lesson = NUMBER_OF_LESSONS_IN_A_CHAPTER;
+            this.quiz = lessonIndex - NUMBER_OF_LESSONS_IN_A_CHAPTER;
+        } else {
+            this.lesson = lessonIndex;
+            this.quiz = 0;
+        }
+    }
 
     private Integer convertTo1BasedIndex(Integer value) {
-        if(value == null) {
+        if (value == null) {
             return null;
         }
         return value + 1;
@@ -35,6 +51,10 @@ public class FLWBookmark {
 
     public Integer getLesson() {
         return lesson;
+    }
+
+    public Integer getQuiz() {
+        return quiz;
     }
 
     @Override

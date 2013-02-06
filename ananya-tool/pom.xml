@@ -53,10 +53,6 @@
             <artifactId>motech-platform-server-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-server-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.motechproject.delivery-ananya</groupId>
             <artifactId>motech-seed</artifactId>
         </dependency>

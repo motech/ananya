@@ -25,8 +25,10 @@ public class FLWUsageResponseMapperTest {
         final DateTime endTime = startTime.plusMinutes(2);
         String dateTimeFormat = "dd-MM-yyyy HH:mm:ss";
         FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "operator", "circle");
-        Integer lessonIndex = 11;
-        Integer chapterIndex = 12;
+        Integer lessonIndex = 7;
+        Integer chapterIndex = 9;
+        Integer expectedLessonIndex = 4;
+        Integer expectedQuizIndex = 4;
         frontLineWorker.addBookMark(new BookMark("some", chapterIndex, lessonIndex));
         final int month = 12;
         final int year = 2012;
@@ -73,7 +75,8 @@ public class FLWUsageResponseMapperTest {
         assertEquals(startTime.toString(dateTimeFormat), ccFlwCallDetails.getStartTime());
 
         assertEquals(new Integer(chapterIndex + 1), frontLineWorkerUsageResponse.getBookmark().getChapter());
-        assertEquals(new Integer(lessonIndex + 1), frontLineWorkerUsageResponse.getBookmark().getLesson());
+        assertEquals(expectedLessonIndex, frontLineWorkerUsageResponse.getBookmark().getLesson());
+        assertEquals(expectedQuizIndex, frontLineWorkerUsageResponse.getBookmark().getQuiz());
 
         assertEquals(1, frontLineWorkerUsageResponse.getSmsReferenceNumbers().size());
         assertEquals(smsReferenceNumber, frontLineWorkerUsageResponse.getSmsReferenceNumbers().get(0));
