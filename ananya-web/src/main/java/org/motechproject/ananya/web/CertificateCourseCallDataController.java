@@ -30,9 +30,10 @@ public class CertificateCourseCallDataController extends BaseAnanyaController {
                                    @RequestParam String operator,
                                    @RequestParam String circle,
                                    @RequestParam String calledNumber,
+                                   @RequestParam String language,
                                    @RequestParam String dataToPost) {
         CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber)
-                .withJson(dataToPost).withCircle(circle).withOperator(operator);
+                .withJson(dataToPost).withCircle(circle).withOperator(operator).withLanguage(language);
         certificateCourseService.handleDisconnect(serviceRequest);
 
         log.info(callId + "- course disconnect completed");

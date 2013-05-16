@@ -47,6 +47,7 @@ public class CallerDataController extends BaseAnanyaController {
         setContentType(response);
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
+                .addObject("language", callerData.getCallLanguage())
                 .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())
                 .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
                 .addObject("promptsHeard", callerData.getPromptsHeard());
@@ -69,6 +70,7 @@ public class CallerDataController extends BaseAnanyaController {
         return new ModelAndView("caller_data")
                 .addObject("bookmark", callerData.getBookmark())
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
+                .addObject("language", callerData.getCallLanguage())
                 .addObject("scoresByChapter", callerData.getScoresByChapter());
     }
 

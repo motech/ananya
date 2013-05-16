@@ -17,6 +17,8 @@ import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -37,6 +39,8 @@ public class CourseContentMeasureServiceTest {
     private AllTimeDimensions allTimeDimensions;
     @Mock
     private AllCourseItemDimensions allCourseItemDimensions;
+    @Mock
+    private AllLanguageDimension allLanguageDimension;
     @Mock
     private CertificateCourseLogService certificateCourseLogService;
     @Mock
@@ -66,7 +70,7 @@ public class CourseContentMeasureServiceTest {
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         frontLineWorkerDimension.setId(flwId);
         courseContentMeasureService = new CourseContentMeasureService(
-                certificateCourseLogService, allTimeDimensions, allCourseItemDimensions, allFrontLineWorkerDimensions,
+                certificateCourseLogService, allTimeDimensions, allLanguageDimension, allCourseItemDimensions, allFrontLineWorkerDimensions,
                 allRegistrationMeasures, allCourseItemMeasures);
     }
 
@@ -74,11 +78,12 @@ public class CourseContentMeasureServiceTest {
     public void shouldSaveCourseItemMeasure() {
         String contentName = "Chapter 1";
         String contentId = "contentId";
+        String language = "language";
         CourseItemType contentType = CourseItemType.CHAPTER;
         CourseItemState event = CourseItemState.START;
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
-        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now));
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "", language);
+        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, null, event, now, language));
 
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
@@ -106,11 +111,12 @@ public class CourseContentMeasureServiceTest {
     public void shouldSaveCourseItemWithScore() {
         String contentName = "Chapter 1";
         String contentId = "contentId";
+        String language = "language";
         CourseItemType contentType = CourseItemType.QUIZ;
         CourseItemState event = CourseItemState.START;
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
-        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, "3", event, now));
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "", language);
+        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, contentType, contentName, "3", event, now, language));
         CourseItemDimension courseItemDimension = new CourseItemDimension();
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
@@ -135,15 +141,16 @@ public class CourseContentMeasureServiceTest {
         CourseItemType contentType1 = CourseItemType.QUIZ;
         String contentName2 = "Chapter 2", contentId2 = "contentI21";
         CourseItemType contentType2 = CourseItemType.COURSE;
+        String language = "language";
         CourseItemState event = CourseItemState.START;
 
         TimeDimension timeDimension = new TimeDimension();
         CourseItemDimension courseItemDimension1 = new CourseItemDimension();
         CourseItemDimension courseItemDimension2 = new CourseItemDimension();
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
-        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId1, contentType1, contentName1, "3", event, now));
-        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId2, contentType2, contentName2, "", event, now.plusDays(5)));
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "", language);
+        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId1, contentType1, contentName1, "3", event, now, language));
+        certificationCourseLog.addCourseLogItem(new CertificationCourseLogItem(contentId2, contentType2, contentName2, "", event, now.plusDays(5), language));
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
@@ -184,8 +191,9 @@ public class CourseContentMeasureServiceTest {
     @Test
     public void shouldDeleteCourseLogAndAudioTrackerLogAndReturnWhenItemsAreEmpty() {
         String contentName = "Chapter 1";
+        String language = "language";
         CourseItemType contentType = CourseItemType.CHAPTER;
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "", language);
 
         when(certificateCourseLogService.getLogFor(callId)).thenReturn(certificationCourseLog);
 

@@ -48,8 +48,59 @@ public enum DiagnosticQuery {
                     " where ssm.smsSent = true " +
                     " and td.id = ssm.timeDimension.id " +
                     " and td.day = %s and td.month = %s and td.year = %s",
-            "SMS Sent Today");
+            "SMS Sent Today"),
 
+    /** New query for state*/
+    FIND_TOTAL_FLWS_GROUP_BY_STATE("select count(rem.*), rem.locationDimension.state from RegistrationMeasure rem group by rem.locationDimension.state order by rem.locationDimension.state", "FLWs"),
+
+    FIND_TOTAL_FLWS_BY_STATUS_GROUP_BY_STATE("select count(rem.*), rem.locationDimension.state, rem.frontLineWorkerDimension.status from RegistrationMeasure rem group by rem.locationDimension.state, rem.frontLineWorkerDimension.status order by rem.locationDimension.state", "FLWs by Status"),
+
+    FIND_TODAY_FLWS_GROUP_BY_STATE(
+            " select count(distinct cdm.frontLineWorkerDimension.id), cdm.locationDimension.state from CallDurationMeasure cdm, TimeDimension td" +
+                    " where td.id = cdm.timeDimension.id" +
+                    " and cdm.type='CALL'" +
+                    " and td.day = %s and td.month = %s and td.year = %s group by cdm.locationDimension.state order by cdm.locationDimension.state",
+            "FLWs Called Today"),
+
+    FIND_TODAY_FLWS_BY_STATUS_GROUP_BY_STATE(
+            "select count(distinct cdm.frontLineWorkerDimension.id), cdm.frontLineWorkerDimension.status, cdm.locationDimension.state from CallDurationMeasure cdm, TimeDimension td" +
+                    " where td.id = cdm.timeDimension.id" +
+                    " and cdm.type='CALL'" +
+                    " and td.day = %s and td.month = %s and td.year = %s" +
+                    " group by cdm.frontLineWorkerDimension.status, cdm.locationDimension.state order by cdm.locationDimension.state",
+            "FLWs Called Today By Status"),
+
+   FIND_TOTAL_JOB_AID_CALLS_GROUP_BY_STATE("select count(distinct callId), cdm.locationDimension.state from CallDurationMeasure cdm where cdm.type='JOBAID' group by cdm.locationDimension.state order by cdm.locationDimension.state", "JobAid Calls"),
+
+   FIND_TODAY_JOB_AID_CALLS_GROUP_BY_STATE(
+                    " select count(distinct cdm.callId), cdm.locationDimension.state from CallDurationMeasure cdm, TimeDimension td" +
+                            " where td.id = cdm.timeDimension.id" +
+                            " and cdm.type='JOBAID'" +
+                            " and td.day = %s and td.month = %s and td.year = %s " +
+                            "group by cdm.locationDimension.state order by cdm.locationDimension.state",
+                    "JobAid Calls Today"),
+     
+   FIND_TOTAL_COURSE_CALLS_GROUP_BY_STATE("select count(distinct callId), cdm.locationDimension.state from CallDurationMeasure cdm where cdm.type='CERTIFICATECOURSE'"+
+		   	" group by cdm.locationDimension.state order by cdm.locationDimension.state", "CertificateCourse Calls"),
+
+   FIND_TODAY_COURSE_CALLS_GROUP_BY_STATE(" select count(distinct cdm.callId), cdm.locationDimension.state from CallDurationMeasure cdm , TimeDimension td " +
+                                    " where td.id = cdm.timeDimension.id " +
+                                    " and cdm.type='CERTIFICATECOURSE'" +
+                                    " and td.day = %s and td.month = %s and td.year = %s"+
+                                    " group by cdm.locationDimension.state order by cdm.locationDimension.state",
+                            "CertificateCourse Calls Today"),
+                            
+   FIND_TOTAL_SMS_SENT_GROUP_BY_STATE("select count(*), locationDimension.state from SMSSentMeasure where smsSent = true"+
+		   " group by locationDimension.state order by locationDimension.state", "SMS Sent"),
+
+   FIND_TODAY_SMS_SENT_GROUP_BY_STATE("select count(*), ssm.locationDimension.state from SMSSentMeasure ssm, TimeDimension td " +
+                                            " where ssm.smsSent = true " +
+                                            " and td.id = ssm.timeDimension.id " +
+                                            " and td.day = %s and td.month = %s and td.year = %s"+
+                                            " group by ssm.locationDimension.state order by ssm.locationDimension.state",
+                                    "SMS Sent Today")                
+    ;
+    
     private String query;
     private String description;
 
@@ -64,6 +115,14 @@ public enum DiagnosticQuery {
 
     public String getQuery(DateTime today) {
         return (String.format(query, today.getDayOfYear(), today.getMonthOfYear(), today.getYear()));
+    }
+
+    public String getQueryByState(String state) {
+        return (String.format(query, state));
+    }
+
+    public String getQueryByState(DateTime today, String state) {
+        return (String.format(query, today.getDayOfYear(), today.getMonthOfYear(), today.getYear(), state));
     }
 
     public String title() {

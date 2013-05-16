@@ -23,7 +23,7 @@ public class FLWUsageResponseMapper {
     }
 
     public FLWUsageResponse mapUsageResponse(FrontLineWorker frontLineWorker, Location location, CallDetailsResponse callDetails, SMSReference smsReference) {
-        LocationResponse locationResponse = location == null ? null : new LocationResponse(location.getDistrict(), location.getBlock(), location.getPanchayat());
+        LocationResponse locationResponse = location == null ? null : new LocationResponse(location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat());
         List<FLWUsageDetail> flwUsageDetailList = mapUsageDetails(callDetails.getCallUsageDetailsList());
         List<FLWCallDetail> flwCallDetails = mapFrom(callDetails);
         BookMark bookmark = frontLineWorker.bookMark();

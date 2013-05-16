@@ -10,13 +10,14 @@ import java.lang.reflect.Type;
 
 public class AudioTrackerRequest extends BaseRequest {
     private String contentId;
+    private String language;
     private String time;
     private Integer duration;
 
     public AudioTrackerRequest() {
     }
 
-    public static AudioTrackerRequest createFrom(String callId, String callerId, String json, String token) {
+    public static AudioTrackerRequest createFrom(String callId, String callerId, String json, String token, String language) {
         Gson gson = new Gson();
         Type type = new TypeToken<AudioTrackerRequest>() {
         }.getType();
@@ -24,6 +25,7 @@ public class AudioTrackerRequest extends BaseRequest {
         audioTrackerRequest.callerId = callerId;
         audioTrackerRequest.callId = callId;
         audioTrackerRequest.token = token;
+        audioTrackerRequest.language=language;
         return audioTrackerRequest;
     }
 
@@ -48,4 +50,8 @@ public class AudioTrackerRequest extends BaseRequest {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+	public String getLanguage() {
+		return language;
+	}
 }

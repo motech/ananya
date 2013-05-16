@@ -152,7 +152,7 @@ public class ReportDb {
         Location defaultLocation = Location.getDefaultLocation();
         LocationDimension locationDimension = allLocationDimensions.getFor(defaultLocation.getExternalId());
         if (locationDimension == null)
-            locationDimension=allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(),defaultLocation.getDistrict(),defaultLocation.getBlock(),defaultLocation.getPanchayat(), LocationStatus.VALID.name()));
+            locationDimension=allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(),defaultLocation.getState(), defaultLocation.getDistrict(),defaultLocation.getBlock(),defaultLocation.getPanchayat(), LocationStatus.VALID.name()));
 
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
         allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));

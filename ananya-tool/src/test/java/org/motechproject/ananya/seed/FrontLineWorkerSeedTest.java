@@ -118,8 +118,9 @@ public class FrontLineWorkerSeedTest {
         RegistrationStatus registrationStatus = RegistrationStatus.UNREGISTERED;
         Designation designation = Designation.ASHA;
         String name = "Name";
+        String language= "language";
         Long msisdn = 919986574410l;
-        FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), null, UUID.randomUUID());
+        FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), language, null, UUID.randomUUID());
         template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId(), null));
         allFrontLineWorkers.add(frontLineWorkerCreated);
 
@@ -135,9 +136,10 @@ public class FrontLineWorkerSeedTest {
         RegistrationStatus registrationStatus = RegistrationStatus.UNREGISTERED;
         Designation designation = Designation.ASHA;
         String name = "Name";
+        String language= "language";
         Long msisdn = 1234567890L;
         Long correctMsisdn = 911234567890L;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), language, null, UUID.randomUUID());
         String operator = "Airtel";
         frontLineWorker.setOperator(operator);
         ReflectionTestUtils.setField(frontLineWorker, "msisdn", msisdn.toString());
@@ -166,7 +168,7 @@ public class FrontLineWorkerSeedTest {
     }
 
     private FrontLineWorker getFrontLineWorker(String msisdn, String operator, RegistrationStatus registrationStatus, Location location) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator, "");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, operator, "", "");
         frontLineWorker.setRegistrationStatus(registrationStatus);
         if (location != null) frontLineWorker.setLocation(location);
         return frontLineWorker;
@@ -178,7 +180,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldActivateNewRegistrationStatusesForAllFLWs() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "panchayat", 1, 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker notCalledPartialFLW = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
@@ -230,16 +232,17 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldCorrectInvalidDesignationsInCouchAndPostgresDB() throws IOException {
+    	String language= "language";
         FrontLineWorker flwInCSVWithInvalidDesignation1 = new FrontLineWorker("9000000001", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
         FrontLineWorker flwInCSVWithInvalidDesignation2 = new FrontLineWorker("9000000002", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
         FrontLineWorker flwInCSVWithInvalidDesignation3 = new FrontLineWorker("9000000003", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
         FrontLineWorker flwInCSVWithInvalidDesignation4 = new FrontLineWorker("9000000004", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
         FrontLineWorker invalidFLW = new FrontLineWorker("9000000005", "",
-                Designation.valueOf("INVALID"), Location.getDefaultLocation(), null, UUID.randomUUID());
+                Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
 
         FrontLineWorkerDimension frontLineWorkerDimension1 = getFLWDimensionFromFLW(flwInCSVWithInvalidDesignation1);
         FrontLineWorkerDimension frontLineWorkerDimension2 = getFLWDimensionFromFLW(flwInCSVWithInvalidDesignation2);
@@ -276,7 +279,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldNotCreateDimensionAndMeasureIfFLWAlreadyExistsInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "panchayat", 1, 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
@@ -303,7 +306,7 @@ public class FrontLineWorkerSeedTest {
 
     @Test
     public void shouldCreateDimensionAndMeasureIfFLWNotInPostgres() {
-        Location location = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "panchayat", 1, 1, 1, 1, null, null);
         allLocations.add(location);
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);

@@ -74,7 +74,8 @@ public class FLWDetailsServiceTest {
 
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, DateTime.now(), flwId);
+        String language= "language";
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, language, DateTime.now(), flwId);
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
         FLWUsageResponse expectedFLWResponse = new FLWUsageResponse();
@@ -106,9 +107,10 @@ public class FLWDetailsServiceTest {
         String msisdn = "919900501221";
         String startDate = "14-12-2009";
         String endDate = "15-12-2009";
+        String language= "language";
         final LocalDate startLocalDate = DateUtils.parseLocalDate(startDate);
         final LocalDate endLocalDate = DateUtils.parseLocalDate(endDate);
-        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null, language));
         FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(msisdn, Channel.CONTACT_CENTER, DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
 
         List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>() {{
@@ -117,7 +119,7 @@ public class FLWDetailsServiceTest {
         }};
         FLWNighttimeCallsResponse nighttimeCallsResponse = mock(FLWNighttimeCallsResponse.class);
 
-        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null));
+        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null, language));
         when(callDurationMeasureService.getJobAidCallDurations(msisdn, startLocalDate, endLocalDate)).thenReturn(jobAidCallDetailsList);
         when(flwResponseMapper.mapNighttimeCallsResponse(jobAidCallDetailsList)).thenReturn(nighttimeCallsResponse);
 

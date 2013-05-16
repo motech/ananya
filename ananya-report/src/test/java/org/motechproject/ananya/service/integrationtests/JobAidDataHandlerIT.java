@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
@@ -17,7 +19,9 @@ import org.motechproject.ananya.repository.AllAudioTrackerLogs;
 import org.motechproject.ananya.repository.AllCallLogs;
 import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllRegistrationLogs;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.requests.CallMessage;
@@ -44,11 +48,15 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;
     @Autowired
+    private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
+    @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;
     @Autowired
     private AllTimeDimensions allTimeDimensions;
     @Autowired
     private AllLocationDimensions allLocationDimensions;
+    @Autowired
+    AllLanguageDimension allLanguageDimension;
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired
@@ -99,21 +107,22 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         String callerId = "919876543210";
         String callId = "919876543210-12345678";
         String calledNumber = "577965";
-
+        String language= "language";
+        
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
         DateTime callEndTime = now.plusSeconds(20);
         DateTime jobAidStartTime = now.plusSeconds(5);
         DateTime jobAidEndTime = now.plusSeconds(15);
 
-        Location location = new Location("", "", "", 0, 0, 0, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "name", Designation.AWW, location, null, UUID.randomUUID());
+        Location location = new Location("", "", "", "", 1, 0, 0, 0, null, null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "name", Designation.AWW, location, language, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator("airtel");
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "airtel", ""));
 
-        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "VALID");
+        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
 
         CallLog callLog = new CallLog(callId, callerId.toString(), calledNumber);
@@ -122,15 +131,23 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         allCallLogs.add(callLog);
 
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
-        audioTrackerLog.addItem(new AudioTrackerLogItem("content1", now, 10));
-        audioTrackerLog.addItem(new AudioTrackerLogItem("content2", now, 20));
+        audioTrackerLog.addItem(new AudioTrackerLogItem("content1", language, now, 10));
+        audioTrackerLog.addItem(new AudioTrackerLogItem("content2", language, now, 20));
         allAudioTrackerLogs.add(audioTrackerLog);
-
-        JobAidContentDimension content1Dimension = new JobAidContentDimension("content1", null, "CHAPTER", "filename", "AUDIO", 100);
-        JobAidContentDimension content2Dimension = new JobAidContentDimension("content2", null, "LESSON", "filename", "AUDIO", 100);
+        
+        LanguageDimension languageDimension = new LanguageDimension(language, "hin", "badhai ho...");
+        allLanguageDimension.add(languageDimension);
+        
+        
+        JobAidContentDimension content1Dimension = new JobAidContentDimension("content1", null, "CHAPTER", "AUDIO");
+        JobAidContentDetailsDimension jobAidContent1DetailsDimension = new JobAidContentDetailsDimension( languageDimension.getId(), "content1", "filename", 100);
+        JobAidContentDimension content2Dimension = new JobAidContentDimension("content2", null, "LESSON", "AUDIO");
+        JobAidContentDetailsDimension jobAidContent2DetailsDimension = new JobAidContentDetailsDimension( languageDimension.getId(), "content2", "filename", 100);
         allJobAidContentDimensions.add(content1Dimension);
         allJobAidContentDimensions.add(content2Dimension);
-
+        allJobAidContentDetailsDimensions.add(jobAidContent1DetailsDimension);
+        allJobAidContentDetailsDimensions.add(jobAidContent2DetailsDimension);
+        
         allTimeDimensions.addOrUpdate(jobAidStartTime);
         allTimeDimensions.addOrUpdate(jobAidEndTime);
         allTimeDimensions.addOrUpdate(now);

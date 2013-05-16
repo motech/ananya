@@ -80,17 +80,18 @@ public class CertificateCourseItemSynchroniserIT {
         DateTime callStartTime = DateUtil.now();
         String contentId = "contentId";
         String contentName = "Chapter4";
+        String language= "language";
         CourseItemType courseItemType = CourseItemType.CHAPTER;
 
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "circle", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
         template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension, callId));
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType, null));
 
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", "airtel", callId, "1");
-        CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(contentId, courseItemType, contentName, "3", CourseItemState.START, DateUtil.now());
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog(callerId, "9909", "airtel", callId, "1", language);
+        CertificationCourseLogItem courseLogItem = new CertificationCourseLogItem(contentId, courseItemType, contentName, "3", CourseItemState.START, DateUtil.now(), language);
         certificationCourseLog.addCourseLogItem(courseLogItem);
         allCertificateCourseLogs.add(certificationCourseLog);
 

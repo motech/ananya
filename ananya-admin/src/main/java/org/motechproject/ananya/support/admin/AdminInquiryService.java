@@ -50,8 +50,10 @@ public class AdminInquiryService {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
             openSession();
-            result.put(ACADEMY_CALLS, callContentQueryResult(msisdn, AdminQuery.ACADEMY_CALLS));
-            result.put(KUNJI_CALLS, callContentQueryResult(msisdn, AdminQuery.KUNJI_CALLS));
+//          result.put(ACADEMY_CALLS, callContentQueryResult(msisdn, AdminQuery.ACADEMY_CALLS));
+//          result.put(KUNJI_CALLS, callContentQueryResult(msisdn, AdminQuery.KUNJI_CALLS));
+            result.put(ACADEMY_CALLS, callContentQueryResult(msisdn, AdminQuery.ACADEMY_CALLS_WITH_LANGUAGE));
+            result.put(KUNJI_CALLS, callContentQueryResult(msisdn, AdminQuery.KUNJI_CALLS_WITH_LANGUAGE));
             result.put(CALL_DETAILS, callDetailQueryResult(msisdn, AdminQuery.CALL_DETAILS));
             result.put(CALLER_DETAIL, callerDetailQueryResult(msisdn, AdminQuery.CALLER_DETAIL));
         } catch (Exception e) {

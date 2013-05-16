@@ -9,9 +9,10 @@ public class JobAidDisconnectRequest {
     private String callDuration;
     private String promptList;
     private String circle;
+    private String language;
 
     public JobAidDisconnectRequest(String callerId, String callId, String operator, String circle,
-                                   String calledNumber, String callDuration, String promptList, String jsonData) {
+                                   String calledNumber, String callDuration, String promptList, String jsonData, String language) {
         this.callerId = callerId;
         this.operator = operator;
         this.callId = callId;
@@ -20,6 +21,7 @@ public class JobAidDisconnectRequest {
         this.callDuration = callDuration;
         this.promptList = promptList;
         this.jsonData = jsonData;
+        this.language = language;
     }
 
     public String getCallerId() {
@@ -53,4 +55,9 @@ public class JobAidDisconnectRequest {
     public String getCircle() {
         return circle;
     }
+
+	public String getLanguage() {
+		return language;
+	}
+    
 }

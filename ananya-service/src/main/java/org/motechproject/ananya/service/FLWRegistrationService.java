@@ -115,7 +115,7 @@ public class FLWRegistrationService {
 
         String callerId = frontLineWorkerRequest.getMsisdn();
         UUID flwId = UUID.fromString(frontLineWorkerRequest.getFlwId());
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, frontLineWorkerRequest.getName(), Designation.getFor(frontLineWorkerRequest.getDesignation()), location, new DateTime(frontLineWorkerRequest.getLastModified()), flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, frontLineWorkerRequest.getName(), Designation.getFor(frontLineWorkerRequest.getDesignation()), location, frontLineWorkerRequest.getLanguage(), new DateTime(frontLineWorkerRequest.getLastModified()), flwId);
         frontLineWorker.setVerificationStatus(frontLineWorkerRequest.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         updateAllMeasures(frontLineWorker);
@@ -127,18 +127,19 @@ public class FLWRegistrationService {
     private Location getOrCreateLocation(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
         if (locationRequest == null) return null;
-        Location locationFromDb = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+        Location locationFromDb = locationService.findFor(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
         if (locationFromDb == null) {
-            LocationRequest request = new LocationRequest(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+            LocationRequest request = new LocationRequest(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
             locationRegistrationService.addOrUpdate(new LocationSyncRequest(request, request, LocationStatus.NOT_VERIFIED.name(), frontLineWorkerRequest.getLastModified()));
         }
-        return locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+        return locationService.findFor(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
     }
 
     private FrontLineWorkerRequest trim(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
         LocationRequest location = locationRequest != null ?
-                new LocationRequest(StringUtils.trimToEmpty(locationRequest.getDistrict()),
+                new LocationRequest(StringUtils.trimToEmpty(locationRequest.getState()),
+                		StringUtils.trimToEmpty(locationRequest.getDistrict()),
                         StringUtils.trimToEmpty(locationRequest.getBlock()),
                         StringUtils.trimToEmpty(locationRequest.getPanchayat()))
                 : null;
@@ -148,7 +149,8 @@ public class FLWRegistrationService {
                 location,
                 frontLineWorkerRequest.getLastModified(),
                 StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwId()),
-                frontLineWorkerRequest.getVerificationStatus());
+                frontLineWorkerRequest.getVerificationStatus(),
+                frontLineWorkerRequest.getLanguage());
     }
 
     private void updateAllMeasures(FrontLineWorker frontLineWorker) {

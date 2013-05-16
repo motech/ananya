@@ -8,6 +8,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class LocationResponse {
+	
+    @XmlElement
+    private String state;
     @XmlElement
     private String district;
     @XmlElement
@@ -18,12 +21,17 @@ public class LocationResponse {
     public LocationResponse() {
     }
 
-    public LocationResponse(String district, String block, String panchayat) {
-        this.district = district;
+    public LocationResponse(String state, String district, String block, String panchayat) {
+    	this.state = state;
+    	this.district = district;
         this.block = block;
         this.panchayat = panchayat;
     }
 
+	public String getState() {
+		return state;
+	}
+	
     public String getDistrict() {
         return district;
     }
@@ -39,7 +47,8 @@ public class LocationResponse {
     @Override
     public String toString() {
         return "{" +
-                "\"district\"=\"" + district + "\"" +
+        		"\"state\"=\"" + state + "\"" +
+                ", \"district\"=\"" + district + "\"" +
                 ", \"block\"=\"" + block + "\"" +
                 ", \"panchayat\"=\"" + panchayat + "\"" +
                 '}';
@@ -54,4 +63,5 @@ public class LocationResponse {
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
+
 }

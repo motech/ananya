@@ -46,6 +46,6 @@ public class LogsPageTest {
 
         List<FileInfo> filesInfo = (List<FileInfo>) modelAndView.getModel().get("logFilesInfo");
 
-        assertEquals(0, filesInfo.size());
+        assertEquals(3, filesInfo.size());
     }
 }

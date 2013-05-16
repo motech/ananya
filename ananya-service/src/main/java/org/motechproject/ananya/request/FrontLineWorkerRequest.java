@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
     private String msisdn;
+    private String language;
     private String designation;
     private LocationRequest location = new LocationRequest();
     private DateTime lastModified;
@@ -21,7 +22,7 @@ public class FrontLineWorkerRequest implements Serializable {
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus) {
+    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language) {
         this.name = name;
         this.msisdn = msisdn;
         this.designation = designation;
@@ -29,6 +30,7 @@ public class FrontLineWorkerRequest implements Serializable {
         this.lastModified = lastModified;
         this.flwId = flwId;
         this.verificationStatus = verificationStatus;
+        this.language =language;
     }
 
     public String getName() {
@@ -91,7 +93,16 @@ public class FrontLineWorkerRequest implements Serializable {
         this.verificationStatus = verificationStatus;
     }
 
-    @ColumnName(name = "district")
+    public String getLanguage() {
+		return language;
+	}
+    
+    @ColumnName(name = "language")
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+    
+	@ColumnName(name = "district")
     public void setDistrict(String district) {
         location.setDistrict(district);
     }
@@ -100,14 +111,19 @@ public class FrontLineWorkerRequest implements Serializable {
     public void setBlock(String block) {
         location.setBlock(block);
     }
-
+    
+    @ColumnName(name = "state")
+    public void setState(String state) {
+        location.setState(state);
+    }
+    
     @ColumnName(name = "panchayat")
     public void setPanchayat(String panchayat) {
         location.setPanchayat(panchayat);
     }
 
     public String toCSV() {
-        return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
+        return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + language + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getState() + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
     }
 
     @JsonIgnore

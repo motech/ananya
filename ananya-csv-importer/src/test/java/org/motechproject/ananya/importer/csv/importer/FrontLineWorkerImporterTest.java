@@ -43,54 +43,54 @@ public class FrontLineWorkerImporterTest {
     @Test
     public void shouldValidateFLWRequests() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        Location location = new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("S1", "D1", "B1", "P1")).thenReturn(location);
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
         assertTrue(validationResponse.isValid());
         assertEquals(2, validationResponse.getErrors().size());
         assertEquals("msisdn,name,designation,district,block,panchayat,error", validationResponse.getErrors().get(0).getMessage());
-        assertEquals("\"1234567890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"\"", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("\"1234567890\",\"name\",\"language\",\"ANM\",\"S1\",\"D1\",\"B1\",\"P1\",\"\"", validationResponse.getErrors().get(1).getMessage());
     }
 
     @Test
     public void shouldFailValidationIfFLWDoesNotHaveAllTheDetails() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(null);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        when(locationService.findFor("S1", "D1", "B1", "P1")).thenReturn(null);
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
         assertFalse(validationResponse.isValid());
         assertEquals(2, validationResponse.getErrors().size());
-        assertEquals("\"1asdf67890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"[Invalid msisdn][Invalid location]\"", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("\"1asdf67890\",\"name\",\"language\",\"ANM\",\"S1\",\"D1\",\"B1\",\"P1\",\"[Invalid msisdn][Invalid location]\"", validationResponse.getErrors().get(1).getMessage());
     }
 
     @Test
     public void shouldFailValidationIfThereAreDuplicateFLWs() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "anotherName", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        Location location = new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("S1", "D1", "B1", "P1")).thenReturn(location);
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "anotherName", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
         assertFalse(validationResponse.isValid());
         assertEquals(3, validationResponse.getErrors().size());
-        assertEquals("\"1234567890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"[Found duplicate FLW with the same MSISDN]\"", validationResponse.getErrors().get(1).getMessage());
-        assertEquals("\"1234567890\",\"anotherName\",\"ANM\",\"D1\",\"B1\",\"P1\",\"[Found duplicate FLW with the same MSISDN]\"", validationResponse.getErrors().get(2).getMessage());
+        assertEquals("\"1234567890\",\"name\",\"language\",\"ANM\",\"S1\",\"D1\",\"B1\",\"P1\",\"[Found duplicate FLW with the same MSISDN]\"", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("\"1234567890\",\"anotherName\",\"language\",\"ANM\",\"S1\",\"D1\",\"B1\",\"P1\",\"[Found duplicate FLW with the same MSISDN]\"", validationResponse.getErrors().get(2).getMessage());
     }
 
     @Test
     public void shouldSaveFLW() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
+        Location location = new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("S1", "D1", "B1", "P1")).thenReturn(location);
         String msisdn = "1234567890";
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
 
         frontLineWorkerImporter.postData(frontLineWorkerRequests);
 
@@ -103,13 +103,13 @@ public class FrontLineWorkerImporterTest {
     @Test
     public void shouldAddNoValidationErrorsIfFLWHasAllTheDetails() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
-        Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        Location location = new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("S1", "D1", "B1", "P1")).thenReturn(location);
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("S1", "D1", "B1", "P1"), null, flwId, null, "language"));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
         assertTrue(validationResponse.isValid());
-        assertEquals("\"1234567890\",\"name\",\"ANM\",\"D1\",\"B1\",\"P1\",\"\"", validationResponse.getErrors().get(1).getMessage());
+        assertEquals("\"1234567890\",\"name\",\"language\",\"ANM\",\"S1\",\"D1\",\"B1\",\"P1\",\"\"", validationResponse.getErrors().get(1).getMessage());
     }
 }

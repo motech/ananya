@@ -16,8 +16,8 @@ public class CertificateCourseStateRequestList {
         this.callerId = callerId;
     }
 
-    public void add(String json, String token) {
-        list.add(CertificateCourseStateRequest.createFrom(callerId, callId, token, json));
+    public void add(String json, String token, String language) {
+        list.add(CertificateCourseStateRequest.createFrom(callerId, callId, token, json, language));
     }
 
     public List<CertificateCourseStateRequest> all() {

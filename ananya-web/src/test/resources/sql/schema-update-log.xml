@@ -104,7 +104,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
+<!-- <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
         <createTable tableName="temp_content_correction" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -198,7 +198,7 @@
         <sql>
             drop table report.temp_content_correction;
         </sql>
-    </changeSet>
+    </changeSet> -->
 
     <changeSet context="setup" author="ThoughtWorks-version1.3" id="6">
         <sql>
@@ -248,7 +248,7 @@
         </sql>
     </changeSet>
 
-    <changeSet context="setup" author="ThoughtWorks-version1.10" id="9">
+<!-- <changeSet context="setup" author="ThoughtWorks-version1.10" id="9">
                 <sql>
                     UPDATE
                     report.course_item_dimension AS cid
@@ -258,7 +258,7 @@
                     file_name = '0245_ch9_end_op.wav'
                 </sql>
     </changeSet>
-
+-->
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="10">
         <sql>
             UPDATE

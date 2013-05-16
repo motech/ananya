@@ -84,14 +84,15 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateFrontLineWorker() {
-        LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
+        LocationRequest locationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now()));
         String msisdn = "91234545354";
         String designation = Designation.ANM.name();
         String name = "name";
+        String language = "language";
         VerificationStatus verificationStatus = VerificationStatus.SUCCESS;
 
-        RegistrationResponse registrationResponse = flwDetailsController.createOrUpdate(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString(), verificationStatus.name()));
+        RegistrationResponse registrationResponse = flwDetailsController.createOrUpdate(new FrontLineWorkerRequest(msisdn, name, designation, locationRequest, null, UUID.randomUUID().toString(), verificationStatus.name(), language));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);
@@ -135,7 +136,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         }};
         flwDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
         FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "unregistered",
-                new LocationResponse("my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
+                new LocationResponse("my_state", "my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
         when(flwDetailsService.getUsage(msisdn)).thenReturn(expectedResponse);
 

@@ -4,6 +4,8 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.service.handler.SendSMSHandler;
 import org.motechproject.scheduler.context.EventContext;
 
@@ -23,14 +25,17 @@ public class SendSMSServiceTest {
 
     @Mock
     EventContext context;
-
+    
     @Mock
     Properties smsProperties;
 
+    @Mock
+    AllLanguageDimension allLanguageDimension;
+    
     @Before
     public void setUp(){
         initMocks(this);
-        sendSMSService = new SendSMSService(smsProperties, context);
+        sendSMSService = new SendSMSService(smsProperties, context, allLanguageDimension);
     }
 
     @Test
@@ -42,12 +47,17 @@ public class SendSMSServiceTest {
         int courseAttempts = 1;
 
         // the results
-        String refNum = "001012987654321001";
+//        String refNum = "001012987654321001";
+        // Added state code
+        String refNum = "00001012987654321001";
         String message = "Hello";
+        String language = "hindi";
 
-        when(smsProperties.getProperty(argThat(is("course.completion.sms.message")))).thenReturn(message);
-
-        sendSMSService.buildAndSendSMS(callerId, locationId, courseAttempts);
+        LanguageDimension languageDimension = new LanguageDimension(language, "hin", message);
+//        when(smsProperties.getProperty(argThat(is("course.completion.sms.message")))).thenReturn(message);
+        when(allLanguageDimension.getFor(language)).thenReturn(languageDimension);
+        
+        sendSMSService.buildAndSendSMS(callerId, locationId, courseAttempts, language);
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put(SendSMSHandler.PARAMETER_MOBILE_NUMBER, callerId);

@@ -30,7 +30,7 @@ public class CertificateCourseCallDataControllerTest {
     @Test
     public void shouldCallCourseServiceWithServiceRequestFromHttpPayLoad() {
         ArgumentCaptor<CertificateCourseServiceRequest> captor = ArgumentCaptor.forClass(CertificateCourseServiceRequest.class);
-        String response = certificateCourseCallDataController.handleDisconnect("123-456", "123","airtel","bihar", "57711", "[]");
+        String response = certificateCourseCallDataController.handleDisconnect("123-456", "123","airtel","bihar", "57711", "bhojpuri", "[]");
 
         verify(certificateCourseService).handleDisconnect(captor.capture());
         CertificateCourseServiceRequest certificateCourseServiceRequest = captor.getValue();

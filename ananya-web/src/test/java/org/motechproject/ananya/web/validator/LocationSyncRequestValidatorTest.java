@@ -21,7 +21,7 @@ public class LocationSyncRequestValidatorTest {
 
     @Test
     public void shouldNotHaveErrorsForAValidRequest() {
-        LocationRequest locationRequest = new LocationRequest("d", "b", "p");
+        LocationRequest locationRequest = new LocationRequest("s", "d", "b", "p");
 
         Errors errors = LocationSyncRequestValidator.validate(new LocationSyncRequest(locationRequest, locationRequest, "VALID", DateTime.now()));
 

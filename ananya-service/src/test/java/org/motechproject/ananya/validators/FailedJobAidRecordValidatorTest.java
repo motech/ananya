@@ -1,5 +1,7 @@
 package org.motechproject.ananya.validators;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,11 +11,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
 import org.motechproject.ananya.contract.FailedRecordCSVRequestBuilder;
+import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
+import org.motechproject.ananya.repository.dimension.AllCourseItemDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
-
-import static org.mockito.Mockito.when;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FailedJobAidRecordValidatorTest {
@@ -21,6 +26,12 @@ public class FailedJobAidRecordValidatorTest {
     private AllCourseItemDimensions allCourseItemDimensions;
     @Mock
     private AllJobAidContentDimensions allJobAidContentDimensions;
+    @Mock
+    private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
+    @Mock
+    private AllCourseItemDetailsDimensions allCourseItemDetailsDimensions;
+    @Mock
+    private AllLanguageDimension allLanguageDimension;
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -28,7 +39,7 @@ public class FailedJobAidRecordValidatorTest {
 
     @Before
     public void setUp() {
-        failedJobAidRecordValidator = new FailedJobAidRecordValidator(allCourseItemDimensions, allJobAidContentDimensions);
+        failedJobAidRecordValidator = new FailedJobAidRecordValidator(allCourseItemDimensions, allJobAidContentDimensions, allCourseItemDetailsDimensions, allJobAidContentDetailsDimensions, allLanguageDimension);
     }
     @Test
     public void shouldInValidateIfFieldToPostIsInInvalidFormat() {
@@ -179,8 +190,11 @@ public class FailedJobAidRecordValidatorTest {
     public void shouldInValidateAudioTrackLogsForInvalidContentId() {
         expectedException.expect(FailedRecordValidationException.class);
         expectedException.expectMessage("Invalid audio tracker content id: invalid_contentId");
+        
         when(allJobAidContentDimensions.findByContentId("invalid_contentId")).thenReturn(null);
-
+        when(allCourseItemDetailsDimensions.getFor("invalid_contentId", null)).thenReturn(null);
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[{\"token\":4,\"data\":{\"duration\":55277,\"time\":1350379442356,\"contentId\":\"invalid_contentId\"},\"type\":\"audioTracker\"}]")
@@ -192,9 +206,12 @@ public class FailedJobAidRecordValidatorTest {
     @Test
     public void shouldInValidateIfAudioTrackLogsDurationIsGreaterThanTheActualDimensionDuration() {
         expectedException.expect(FailedRecordValidationException.class);
-        expectedException.expectMessage("Audio tracker duration greater than actual job aid content duration: 55277, actual: 55277, content id: 1234567890987654321");
-        when(allJobAidContentDimensions.findByContentId("1234567890987654321")).thenReturn(new JobAidContentDimension(null,null,null,null,null,1234));
-
+        expectedException.expectMessage("Audio tracker duration greater than actual job aid content duration: 55277, actual: 1234, content id: 1234567890987654321");
+        
+        when(allJobAidContentDimensions.findByContentId("1234567890987654321")).thenReturn(new JobAidContentDimension(null,null,null,null));
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        when(allJobAidContentDetailsDimensions.getFor("1234567890987654321", null)).thenReturn(new JobAidContentDetailsDimension(null, null, null, 1234));
+       
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[{\"token\":4,\"data\":{\"duration\":55277,\"time\":1350379442356,\"contentId\":\"1234567890987654321\"},\"type\":\"audioTracker\"}]")
@@ -207,7 +224,10 @@ public class FailedJobAidRecordValidatorTest {
     public void shouldInValidateIfAudioTrackLogsWithInvalidRequestTime() {
         expectedException.expect(FailedRecordValidationException.class);
         expectedException.expectMessage("Invalid audio tracker request time: 2sa");
-        when(allJobAidContentDimensions.findByContentId("1234567890987654321")).thenReturn(new JobAidContentDimension(null, null, null, null, null, 123433));
+        
+        when(allJobAidContentDimensions.findByContentId("1234567890987654321")).thenReturn(new JobAidContentDimension(null, null, null, null));
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        when(allJobAidContentDetailsDimensions.getFor("1234567890987654321", null)).thenReturn(new JobAidContentDetailsDimension(null, null, null, 55277));
 
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()

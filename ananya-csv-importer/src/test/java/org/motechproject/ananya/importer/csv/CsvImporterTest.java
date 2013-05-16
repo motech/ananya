@@ -40,9 +40,9 @@ public class CsvImporterTest extends SpringIntegrationTest {
     @Test
     public void shouldImportFlwData() throws Exception {
         template.save(new TimeDimension(DateTime.now()));
-        Location location = new Location("D1", "B1", "P1", 9, 9, 9, null, null);
+        Location location = new Location("S1", "D1", "B1", "P1", 9, 9, 9, 9, null, null);
         allLocations.add(location);
-        template.save(new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
+        template.save(new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
         URL flwData = this.getClass().getResource("/flwData.csv");
         String[] arguments = {"FrontLineWorker", flwData.getPath()};
 
@@ -56,9 +56,9 @@ public class CsvImporterTest extends SpringIntegrationTest {
     @Test
     @ExpectedException(InvalidArgumentException.class)
     public void shouldFailForRandomEntityNames() throws Exception {
-        Location location = new Location("D1", "B1", "P1", 9, 9, 9, null, null);
+        Location location = new Location("S1", "D1", "B1", "P1", 9, 9, 9, 9, null, null);
         allLocations.add(location);
-        template.save(new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
+        template.save(new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
         URL flwData = this.getClass().getResource("/flwData.csv");
         String[] arguments = {"RandomEntityName", flwData.getPath()};
 
@@ -68,9 +68,9 @@ public class CsvImporterTest extends SpringIntegrationTest {
     @Test
     @ExpectedException(WrongNumberArgsException.class)
     public void shouldFailForWrongNumberOfArguments() throws Exception {
-        Location location = new Location("D1", "B1", "P1", 9, 9, 9, null, null);
+        Location location = new Location("S1", "D1", "B1", "P1", 9, 9, 9, 9, null, null);
         allLocations.add(location);
-        template.save(new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
+        template.save(new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
         URL flwData = this.getClass().getResource("/flwData.csv");
         String[] arguments = {"FrontLineWorker", flwData.getPath(), "unwanted-argument"};
 
@@ -80,9 +80,9 @@ public class CsvImporterTest extends SpringIntegrationTest {
     @Test
     @ExpectedException(FileReadException.class)
     public void shouldFailForInvalidImportFile() throws Exception {
-        Location location = new Location("D1", "B1", "P1", 9, 9, 9, null, null);
+        Location location = new Location("S1", "D1", "B1", "P1", 9, 9, 9, 9, null, null);
         allLocations.add(location);
-        template.save(new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
+        template.save(new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), "VALID"));
         String[] arguments = {"FrontLineWorker", "random-file-path.csv"};
 
         CsvImporter.main(arguments);

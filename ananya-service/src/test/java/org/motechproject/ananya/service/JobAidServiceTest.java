@@ -107,12 +107,13 @@ public class JobAidServiceTest {
         String operator = "operator";
         int callDuration = 21;
         String circle = "circle";
+        String language = "language";
 
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
-                .withOperator(operator).withCircle(circle).withJson("[]").withCallDuration(callDuration);
+                .withOperator(operator).withCircle(circle).withJson("[]").withLanguage(language).withCallDuration(callDuration);
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
-        when(frontLineWorkerService.createOrUpdateForCall(callerId,operator, circle))
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
+        when(frontLineWorkerService.createOrUpdateForCall(callerId,operator, circle, language))
                 .thenReturn(new FrontLineWorkerCreateResponse(frontLineWorker, false));
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
@@ -120,7 +121,7 @@ public class JobAidServiceTest {
         InOrder inOrder = inOrder(allTransformers, frontLineWorkerService, audioTrackerService, callLoggerService, dataPublishService);
 
         inOrder.verify(allTransformers).process(jobAidServiceRequest);
-        inOrder.verify(frontLineWorkerService).createOrUpdateForCall(eq(callerId),eq(operator), eq(circle));
+        inOrder.verify(frontLineWorkerService).createOrUpdateForCall(eq(callerId),eq(operator), eq(circle), eq(language));
 
         ArgumentCaptor<FrontLineWorker> frontLineWorkerArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorker.class);
         inOrder.verify(frontLineWorkerService).updateJobAidState(frontLineWorkerArgumentCaptor.capture(), anyListOf(String.class), eq(callDuration));

@@ -25,6 +25,9 @@ public class LocationSeed {
     @Value("#{ananyaProperties['seed.location.file.out']}")
     private String outputFileName;
 
+    @Value("#{ananyaProperties['seed.location.file.with.new.state.data']}")
+    private String inputFileNameWithNewStateData;
+    
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
@@ -53,25 +56,48 @@ public class LocationSeed {
     public void updateLocationDetailsToTitleCase() {
         locationRegistrationService.updateAllLocationsToTitleCase();
     }
-
+    
+    @Seed(priority = 1,version = "1.14", comment = "add state name as bihar in the existing locations")
+    public void updateAllExistingLocationStateNameToBihar() {
+        locationRegistrationService.updateAllNullLocationStateName("Bihar");
+    }
+    
+    @Seed(priority = 1, version = "1.15", comment = "load all locations from csv file for new states")
+    public void loadNewLocationsFromCSVFile() throws IOException {
+    	if(inputFileNameWithNewStateData!=null){
+	        String inputCSVFileWithNewStateData = environment.equals("prod") ? inputFileNameWithNewStateData : (getClass().getResource(inputFileNameWithNewStateData)!=null?getClass().getResource(inputFileNameWithNewStateData).getPath(): inputFileNameWithNewStateData);
+	        File inputFileWithNewStateData=new File(inputCSVFileWithNewStateData);
+	        if(inputFileWithNewStateData.exists()){
+	        	String outputFilePath = inputFileWithNewStateData.getParent();
+		        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+		        File file = new File(outputCSVFile);
+		        file.createNewFile();
+		
+		        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+	        	loadFromCsv(inputCSVFileWithNewStateData);
+	        }
+    	}
+    }
+    
     private void loadDefaultLocation() {
         locationRegistrationService.loadDefaultLocation();
     }
 
     private void loadFromCsv(String path) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(path));
-        String currentDistrict, currentBlock, currentPanchayat;
+        String currentState, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
         List<LocationRequest> locationList = new ArrayList<LocationRequest>();
         //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
         while (currentRow != null) {
-            currentDistrict = currentRow[0];
-            currentBlock = currentRow[1];
-            currentPanchayat = currentRow[2];
+        	currentState = currentRow[0];
+            currentDistrict = currentRow[1];
+            currentBlock = currentRow[2];
+            currentPanchayat = currentRow[3];
 
-            locationList.add(new LocationRequest(currentDistrict, currentBlock, currentPanchayat));
+            locationList.add(new LocationRequest(currentState, currentDistrict, currentBlock, currentPanchayat));
 
             currentRow = csvReader.readNext();
         }

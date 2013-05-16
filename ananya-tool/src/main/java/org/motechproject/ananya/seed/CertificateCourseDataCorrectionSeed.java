@@ -119,6 +119,7 @@ public class CertificateCourseDataCorrectionSeed {
                             log.info("FLW " + msisdn + "had passed course. Sending FLW an SMS");
                             smsService.buildAndSendSMS(
                                     frontLineWorker.getMsisdn(),
+                                    frontLineWorker.getLanguage(),
                                     frontLineWorker.getLocationId(),
                                     frontLineWorker.currentCourseAttempt());
                         }

@@ -19,7 +19,9 @@ public class CertificationCourseStateRequestListTest {
     @Test
     public void shouldConvertJsonToCertificationCourseStateRequestAndAddToList() {
 
-        String token1 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
+    	String language= "language";
+        
+    	String token1 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"lessonEndMenu\",\"courseItemState\":\"end\"," +
                 "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
 
@@ -28,8 +30,8 @@ public class CertificationCourseStateRequestListTest {
                 "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
 
-        courseStateRequestList.add(token1, "1");
-        courseStateRequestList.add(token2, "2");
+        courseStateRequestList.add(token1, "1", language);
+        courseStateRequestList.add(token2, "2", language);
 
         assertThat(courseStateRequestList.all().size(), is(2));
         assertTrue(courseStateRequestList.isNotEmpty());
@@ -50,9 +52,10 @@ public class CertificationCourseStateRequestListTest {
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playCourseResult\",\"courseItemState\":\"start\"," +
                 "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
-
-        courseStateRequestList.add(token1, "1");
-        courseStateRequestList.add(token2, "2");
+        String language= "language";
+        
+        courseStateRequestList.add(token1, "1", language);
+        courseStateRequestList.add(token2, "2", language);
 
         assertTrue(courseStateRequestList.hasCourseCompletionInteraction());
 

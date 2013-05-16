@@ -14,7 +14,8 @@ public class CertificationCourseLogItemMapper {
                 stateRequest.getContentName(),
                 stateRequest.getContentData(),
                 CourseItemState.valueOf(stateRequest.getCourseItemState().toUpperCase()),
-                stateRequest.getTimeAsDateTime()
+                stateRequest.getTimeAsDateTime(),
+                stateRequest.getLanguage()
         );
 
     }

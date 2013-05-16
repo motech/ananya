@@ -1,5 +1,7 @@
 package org.motechproject.ananya.repository.measure;
 
+import java.util.List;
+
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
@@ -7,8 +9,6 @@ import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
 @Transactional

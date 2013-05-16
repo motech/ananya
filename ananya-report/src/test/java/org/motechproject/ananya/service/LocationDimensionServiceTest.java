@@ -57,9 +57,10 @@ public class LocationDimensionServiceTest {
         String panchayat = "p";
         String block = "b";
         String district = "d";
-        when(allLocationDimensions.getFilteredLocationFor(district, block, panchayat)).thenReturn(locationDimensions);
+        String state = "s";
+		when(allLocationDimensions.getFilteredLocationFor(state, district, block, panchayat)).thenReturn(locationDimensions);
 
-        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(district, block, panchayat);
+        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(state, district, block, panchayat);
 
         assertEquals(locationDimensions, filteredLocations);
     }
@@ -67,7 +68,7 @@ public class LocationDimensionServiceTest {
     @Test
     public void shouldUpdateLocationStatus() {
         String locationCode = "locationCode";
-        LocationDimension locationDimension = new LocationDimension(locationCode, null, null, null, "VALID");
+        LocationDimension locationDimension = new LocationDimension(locationCode, null, null, null, null, "VALID");
         when(allLocationDimensions.getFor(locationCode)).thenReturn(locationDimension);
 
         locationDimensionService.updateStatus(locationCode, LocationStatus.VALID);

@@ -126,24 +126,24 @@ public class AudioTrackerSynchronizerIT {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId),
                 "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         template.save(frontLineWorkerDimension);
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
         TimeDimension timeDimension = new TimeDimension(new DateTime(new Long(timeStamp)));
         template.save(timeDimension);
-        template.save(new CourseItemDimension("name", contentId, CourseItemType.AUDIO, null, "filename", 123));
+        template.save(new CourseItemDimension("name", contentId, CourseItemType.AUDIO, null));
         template.save(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, ""));
-        template.save(new JobAidContentDimension(contentId, null, "name", "filename", "type", 123));
+        template.save(new JobAidContentDimension(contentId, null, "name", "type"));
     }
 
     private void setUpReportDataForCertificateCourse(String callId, String callerId, String contentId, String timeStamp) {
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.CERTIFICATE_COURSE);
-        audioTrackerLog.addItem(new AudioTrackerLogItem(contentId, new DateTime(new Long(timeStamp)), 123));
+        audioTrackerLog.addItem(new AudioTrackerLogItem(contentId, "language", new DateTime(new Long(timeStamp)), 123));
         allAudioTrackerLogs.add(audioTrackerLog);
     }
 
     private void setUpReportDataForJobAid(String callId, String callerId, String contentId, String timeStamp) {
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
-        audioTrackerLog.addItem(new AudioTrackerLogItem(contentId, new DateTime(new Long(timeStamp)), 123));
+        audioTrackerLog.addItem(new AudioTrackerLogItem(contentId, "language", new DateTime(new Long(timeStamp)), 123));
         allAudioTrackerLogs.add(audioTrackerLog);
     }
 

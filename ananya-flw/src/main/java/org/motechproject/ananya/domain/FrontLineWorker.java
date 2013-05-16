@@ -1,5 +1,9 @@
 package org.motechproject.ananya.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -10,10 +14,6 @@ import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
@@ -49,6 +49,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Designation designation;
 
     @JsonProperty
+    private String language;
+    
+    @JsonProperty
     private String locationId = Location.getDefaultLocation().getExternalId();
 
     @JsonProperty
@@ -83,14 +86,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = 0;
     }
 
-    public FrontLineWorker(String msisdn, String operator, String circle) {
+    public FrontLineWorker(String msisdn, String operator, String circle, String language) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.circle = circle;
         this.operator = operator;
+        this.language= language;
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, DateTime lastModified, UUID flwId) {
+    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.name = name;
@@ -98,6 +102,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
         this.lastModified = lastModified;
         this.flwId = flwId;
+        this.language =language;
     }
 
     @Override
@@ -313,6 +318,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
             this.designation = frontLineWorker.getDesignation();
             this.name = frontLineWorker.name();
             this.registeredDate = frontLineWorker.getRegisteredDate();
+            this.language =frontLineWorker.getLanguage();
         }
         if (this.bookmark == null) {
             this.bookmark = frontLineWorker.bookMark();
@@ -411,4 +417,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
          }
          return (DateUtil.isOnOrBefore(lastModified, updatedOn));
     }
+
+	public String getLanguage() {
+		return language;
+	}
+	
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 }

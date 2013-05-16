@@ -11,13 +11,17 @@ import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -44,6 +48,10 @@ public class JobAidContentMeasureServiceTest {
     @Mock
     private AllJobAidContentDimensions allJobAidContentDimensions;
     @Mock
+    private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
+    @Mock
+    private AllLanguageDimension allLanguageDimension; 
+    @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
     @Mock
     private AllJobAidContentMeasures allJobAidContentMeasures;
@@ -61,8 +69,10 @@ public class JobAidContentMeasureServiceTest {
     private RegistrationMeasure registrationMeasure;
     private FrontLineWorkerDimension frontLineWorkerDimension;
     private LocationDimension locationDimension;
+    private LanguageDimension languageDimension;
     private TimeDimension timeDimension;
     private JobAidContentDimension jobAidContentDimension;
+    private JobAidContentDetailsDimension jobAidContentDetailsDimension;
 
     @Before
     public void setUp() throws Exception {
@@ -70,14 +80,16 @@ public class JobAidContentMeasureServiceTest {
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         frontLineWorkerDimension.setId(flwId);
 
-        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         timeDimension = new TimeDimension();
+        languageDimension = new LanguageDimension("language", "lang", "badhai ho...");
         jobAidContentDimension = new JobAidContentDimension();
-        jobAidContentDimension.setDuration(100);
-
+        jobAidContentDetailsDimension = new JobAidContentDetailsDimension();
+        jobAidContentDetailsDimension.setDuration(100);
+        
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         jobAidContentMeasureService = new JobAidContentMeasureService(audioTrackerLogService, allFrontLineWorkerDimensions,
-                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures, locationDimensionService);
+                allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures, locationDimensionService, allLanguageDimension, allJobAidContentDetailsDimensions);
     }
 
     @Test
@@ -86,15 +98,18 @@ public class JobAidContentMeasureServiceTest {
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
         Integer duration = 30;
         String contentId = "contentId";
+        String language = "language";
         DateTime now = DateTime.now();
-        audioTrackerLog.items().add(new AudioTrackerLogItem(contentId, now, duration));
+        audioTrackerLog.items().add(new AudioTrackerLogItem(contentId, language, now, duration));
 
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allJobAidContentDimensions.findByContentId(contentId)).thenReturn(jobAidContentDimension);
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
-
+        when(allLanguageDimension.getFor(language)).thenReturn(languageDimension);
+        when(allJobAidContentDetailsDimensions.getFor(contentId, languageDimension.getId())).thenReturn(jobAidContentDetailsDimension);
+        
         jobAidContentMeasureService.createFor(callId);
 
         ArgumentCaptor<JobAidContentMeasure> captor = ArgumentCaptor.forClass(JobAidContentMeasure.class);
@@ -167,8 +182,8 @@ public class JobAidContentMeasureServiceTest {
         String newLocationId = "newLocationId";
         String oldLocationId = "oldLocationId";
         ArrayList<JobAidContentMeasure> jobAidContentMeasures = new ArrayList<>();
-        jobAidContentMeasures.add(new JobAidContentMeasure(null, null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, DateTime.now(), null, null));
-        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+        jobAidContentMeasures.add(new JobAidContentMeasure(null, null, new LocationDimension(oldLocationId, null, null, null, null, "VALID"), null, null, null, DateTime.now(), null, null));
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, null, "VALID"));
         when(allJobAidContentMeasures.findByLocationId(oldLocationId)).thenReturn(jobAidContentMeasures);
 
         jobAidContentMeasureService.updateLocation(oldLocationId, newLocationId);

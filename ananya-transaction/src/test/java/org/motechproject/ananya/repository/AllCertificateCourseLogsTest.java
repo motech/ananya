@@ -45,9 +45,9 @@ public class AllCertificateCourseLogsTest {
         String invalidCallerId1 = "123E+12";
         String invalidCallerId2 = "123E12";
         String validCallerId = "12312";
-        CertificationCourseLog log1 = new CertificationCourseLog(invalidCallerId1, null, null, null, null);
-        CertificationCourseLog log2 = new CertificationCourseLog(invalidCallerId2, null, null, null, null);
-        CertificationCourseLog log3 = new CertificationCourseLog(validCallerId, null, null, null, null);
+        CertificationCourseLog log1 = new CertificationCourseLog(invalidCallerId1, null, null, null, null,"");
+        CertificationCourseLog log2 = new CertificationCourseLog(invalidCallerId2, null, null, null, null,"");
+        CertificationCourseLog log3 = new CertificationCourseLog(validCallerId, null, null, null, null,"");
         allCertificateCourseLogs.add(log1);
         allCertificateCourseLogs.add(log2);
         allCertificateCourseLogs.add(log3);
@@ -62,7 +62,7 @@ public class AllCertificateCourseLogsTest {
     @Test
     public void shouldDeleteCertificateCourseLogForAGivenCallId() {
         String callId = "callId";
-        CertificationCourseLog entity = new CertificationCourseLog("callerId", "number", "", callId, "");
+        CertificationCourseLog entity = new CertificationCourseLog("callerId", "number", "", callId, "","");
         allCertificateCourseLogs.add(entity);
         assertNotNull(allCertificateCourseLogs.findByCallId(callId));
 

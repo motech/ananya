@@ -49,15 +49,17 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldGetFilteredLocationsList() {
-        allLocationDimensions.saveOrUpdate(new LocationDimension("1", "D1", "B1", "P1", "VALID"));
-        allLocationDimensions.saveOrUpdate(new LocationDimension("2", "D1", "B2", "P2", "VALID"));
-        allLocationDimensions.saveOrUpdate(new LocationDimension("3", "D1", "B2", "P3", "VALID"));
-        allLocationDimensions.saveOrUpdate(new LocationDimension("4", "D2", "B3", "P5", "VALID"));
-        allLocationDimensions.saveOrUpdate(new LocationDimension("5", "D2", "B4", "P4", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("1", "S1", "D1", "B1", "P1", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("2", "S1", "D1", "B2", "P2", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("3", "S1", "D1", "B2", "P3", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("3", "S2", "D1", "B2", "P3", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("4", "S1", "D2", "B3", "P5", "VALID"));
+        allLocationDimensions.saveOrUpdate(new LocationDimension("5", "S1", "D2", "B4", "P4", "VALID"));
+        when(request.getParameter("state")).thenReturn("S1");
         when(request.getParameter("district")).thenReturn("D1");
         when(request.getParameter("block")).thenReturn("B2");
         when(request.getParameter("panchayat")).thenReturn(null);
-
+        
         List<LocationResponse> locations = locationDetailsController.search(request);
 
         assertEquals(2, locations.size());
@@ -65,7 +67,7 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateNewLocation() {
-        LocationRequest locationRequest = new LocationRequest("d", "b", "p");
+        LocationRequest locationRequest = new LocationRequest("s", "d", "b", "p");
         LocationSyncRequest locationSyncRequest = new LocationSyncRequest(locationRequest, locationRequest, "VALID", DateTime.now());
         locationDetailsController = new LocationDetailsController(locationRegistrationService);
 

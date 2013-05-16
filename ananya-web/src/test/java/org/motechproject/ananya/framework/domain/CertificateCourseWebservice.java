@@ -24,7 +24,7 @@ public class CertificateCourseWebservice {
     }
 
     protected String getAppServerUrl() {
-        return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
+        return "http://localhost:" + (ananyaProperties.getProperty("app.server.port")!=null?ananyaProperties.getProperty("app.server.port"):"9979");
     }
 
     public CertificateCourseResponse requestForDisconnect(CertificateCourseRequest request) throws IOException {
@@ -35,7 +35,8 @@ public class CertificateCourseWebservice {
         MyWebClient.PostParam operator = MyWebClient.PostParam.param("operator", request.getOperator());
         MyWebClient.PostParam circle = MyWebClient.PostParam.param("circle", request.getCircle());
         MyWebClient.PostParam calledNumber = MyWebClient.PostParam.param("calledNumber", request.getCalledNumber());
-        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost, circle, operator, calledNumber);
+        MyWebClient.PostParam language = MyWebClient.PostParam.param("language", request.getLanguage());
+        return makePostRequestForDisconnect(webPage,callId, callerId, dataToPost, circle, operator, calledNumber, language);
     }
 
     private CertificateCourseResponse makeRequest(String webPage) throws IOException {
@@ -43,8 +44,8 @@ public class CertificateCourseWebservice {
         return CertificateCourseResponse.make(page.getWebResponse().getContentAsString());
     }
 
-    private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost, MyWebClient.PostParam circle, MyWebClient.PostParam operator, MyWebClient.PostParam calledNumber) throws IOException {
-        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, operator, circle, calledNumber);
+    private CertificateCourseResponse makePostRequestForDisconnect(String webPage, MyWebClient.PostParam callId, MyWebClient.PostParam callerId, MyWebClient.PostParam dataToPost, MyWebClient.PostParam circle, MyWebClient.PostParam operator, MyWebClient.PostParam calledNumber, MyWebClient.PostParam language) throws IOException {
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, operator, circle, calledNumber, language);
         return CertificateCourseResponse.makeForNonJson(page.getWebResponse().getContentAsString());
     }
 }

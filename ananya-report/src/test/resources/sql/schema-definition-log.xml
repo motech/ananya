@@ -464,4 +464,93 @@
             CREATE INDEX ON report.sms_sent_measure (location_id) ;
         </sql>
     </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="35">
+        <createTable tableName="language_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(30)"/>
+            <column name="language_code" type="varchar(10)"/>
+            <column name="sms_message" type="varchar(255)">
+            	<constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="language_dimension" columnNames="name" constraintName="unq_lang_name"/>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="36">
+        <createTable tableName="course_item_details_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="language_id" type="integer"/>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="course_item_details_dimension" columnNames="language_id,content_id" constraintName="unq_content_lang"/>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="37">
+        <createTable tableName="job_aid_content_details_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="language_id" type="integer"/>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="job_aid_content_details_dimension" columnNames="language_id,content_id" constraintName="unq_ja_content_lang"/>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="38">
+        <addColumn tableName="course_item_measure">
+            <column name="language_id" type="integer"/>
+        </addColumn>
+        <sql splitStatements="false">
+            UPDATE report.course_item_measure SET language_id = 1;
+            ALTER TABLE report.course_item_measure ALTER language_id SET NOT NULL;
+        </sql>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_language_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="language_id"
+                                 referencedTableName="language_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="39">
+        <addColumn tableName="job_aid_content_measure">
+            <column name="language_id" type="integer"/>
+        </addColumn>
+        <sql splitStatements="false">
+            UPDATE report.job_aid_content_measure SET language_id = 1;
+            ALTER TABLE report.job_aid_content_measure ALTER language_id SET NOT NULL;
+        </sql>
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_language_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="language_id"
+                                 referencedTableName="language_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="40">
+        <sql splitStatements="false">
+            ALTER TABLE report.location_dimension ADD COLUMN state VARCHAR(36);
+            UPDATE report.location_dimension SET state = 'Bihar';
+            ALTER TABLE report.location_dimension ALTER state SET NOT NULL;
+        </sql>
+    </changeSet>
+    
+   	<changeSet context="setup" author="Onmobile-version1.0" id="41">
+        <sql splitStatements="false">
+        	INSERT INTO report.course_item_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.course_item_dimension;
+            ALTER TABLE report.course_item_dimension DROP COLUMN file_name;
+			ALTER TABLE report.course_item_dimension DROP COLUMN duration;
+			INSERT INTO report.job_aid_content_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.job_aid_content_dimension;
+            ALTER TABLE report.job_aid_content_dimension DROP COLUMN file_name;
+			ALTER TABLE report.job_aid_content_dimension DROP COLUMN duration;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

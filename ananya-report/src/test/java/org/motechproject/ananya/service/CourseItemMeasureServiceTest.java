@@ -58,10 +58,10 @@ public class CourseItemMeasureServiceTest {
     public void shouldUpdateLocationForAllCourseItemMeasures() {
         String newLocationId = "newLocationId";
         String oldLocationId = "oldLocationId";
-        LocationDimension newLocation = new LocationDimension(newLocationId, "D2", "B2", "P2", "VALID");
+        LocationDimension newLocation = new LocationDimension(newLocationId, "S1", "D2", "B2", "P2", "VALID");
         ArrayList<CourseItemMeasure> courseItemMeasures = new ArrayList<>();
         CourseItemMeasure courseItemMeasure = new CourseItemMeasure();
-        courseItemMeasure.setLocationDimension(new LocationDimension(oldLocationId, "D1", "B1", "P1", "VALID"));
+        courseItemMeasure.setLocationDimension(new LocationDimension(oldLocationId, "S1", "D1", "B1", "P1", "VALID"));
         courseItemMeasures.add(courseItemMeasure);
         when(allCourseItemMeasures.findByLocationId(oldLocationId)).thenReturn(courseItemMeasures);
         when(locationDimensionService.getFor(newLocationId)).thenReturn(newLocation);

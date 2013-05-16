@@ -1,5 +1,7 @@
 package org.motechproject.ananya.seed.service;
 
+import java.util.List;
+
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
 import org.motechproject.ananya.repository.AllNodes;
@@ -8,8 +10,6 @@ import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class JobAidSeedService {
@@ -36,7 +36,8 @@ public class JobAidSeedService {
         Long shortCode = -1L;
 
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension(node.getId(), parentDimension,
-                node.getName(), null, node.data().get("type"), null);
+                node.getName(), node.data().get("type"));
+
         if (nodeType.equalsIgnoreCase("Lesson")) {
             shortCode = Long.valueOf(prodShortCode + node.data().get("shortcode"));
             jobAidContentDimension.setShortCode(shortCode);
@@ -44,8 +45,9 @@ public class JobAidSeedService {
         allJobAidContentDimensions.add(jobAidContentDimension);
 
         for (StringContent content : node.contents()) {
-            JobAidContentDimension audioContentDimension = new JobAidContentDimension(content.getId(), jobAidContentDimension, content.getName(),
-                    content.getValue(), "Audio", Integer.valueOf(content.getMetadata().get("duration")));
+//            JobAidContentDimension audioContentDimension = new JobAidContentDimension(content.getId(), jobAidContentDimension, content.getName(),
+//                    content.getValue(), "Audio", Integer.valueOf(content.getMetadata().get("duration")));
+            JobAidContentDimension audioContentDimension = new JobAidContentDimension(content.getId(), jobAidContentDimension, content.getName(), "Audio");
             if (nodeType.equalsIgnoreCase("Lesson"))
                 audioContentDimension.setShortCode(shortCode);
             allJobAidContentDimensions.add(audioContentDimension);
@@ -69,7 +71,7 @@ public class JobAidSeedService {
         allNodes.update(node);
 
         JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(stringContent.getId());
-        jobAidContentDimension.setDuration(Integer.parseInt(duration));
+//      jobAidContentDimension.setDuration(Integer.parseInt(duration));
         allJobAidContentDimensions.update(jobAidContentDimension);
     }
 

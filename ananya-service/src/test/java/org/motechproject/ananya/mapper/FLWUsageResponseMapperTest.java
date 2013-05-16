@@ -24,7 +24,7 @@ public class FLWUsageResponseMapperTest {
         final DateTime startTime = DateTime.now();
         final DateTime endTime = startTime.plusMinutes(2);
         String dateTimeFormat = "dd-MM-yyyy HH:mm:ss";
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "operator", "circle");
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "operator", "circle", "language");
         Integer lessonIndex = 7;
         Integer chapterIndex = 9;
         Integer expectedLessonIndex = 4;
@@ -54,6 +54,7 @@ public class FLWUsageResponseMapperTest {
         assertEquals(frontLineWorker.getStatus().name(), frontLineWorkerUsageResponse.getRegistrationStatus());
         assertEquals(location.getBlock(), frontLineWorkerUsageResponse.getLocation().getBlock());
         assertEquals(location.getDistrict(), frontLineWorkerUsageResponse.getLocation().getDistrict());
+        assertEquals(location.getState(), frontLineWorkerUsageResponse.getLocation().getState());
         assertEquals(location.getPanchayat(), frontLineWorkerUsageResponse.getLocation().getPanchayat());
         assertEquals(month, (int) frontLineWorkerUsageResponse.getUsageDetails().get(0).getMonth());
         assertEquals(year, (int) frontLineWorkerUsageResponse.getUsageDetails().get(0).getYear());

@@ -18,7 +18,7 @@ public class FrontLineWorkerList {
     }
 
     public FrontLineWorker findLongCodeDuplicate(String msisdn) {
-        int i = Collections.binarySearch(frontLineWorkers, new FrontLineWorker("91" + msisdn, "", ""), comparator);
+        int i = Collections.binarySearch(frontLineWorkers, new FrontLineWorker("91" + msisdn, "", "", null), comparator);
         return i > 0 ? frontLineWorkers.get(i) : null;
     }
 

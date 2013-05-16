@@ -20,7 +20,9 @@ public class AudioTrackerRequestListTest {
                         "}";
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId,  callerId);
 
-        audioTrackerRequestList.add(jsonString, dataToken);
+        String language= "language";
+        
+        audioTrackerRequestList.add(jsonString, dataToken, language);
 
         assertEquals(1, audioTrackerRequestList.all().size());
     }
@@ -36,8 +38,9 @@ public class AudioTrackerRequestListTest {
                         "    \"duration\" : \"123\",                             " +
                         "    \"time\" : \"123456789\"                          " +
                         "}";
+        String language= "language";
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callId,  callerId);
-        audioTrackerRequestList.add(jsonString, dataToken);
+        audioTrackerRequestList.add(jsonString, dataToken, language);
 
         boolean audioTrackerRequestListEmpty = audioTrackerRequestList.isEmpty();
 

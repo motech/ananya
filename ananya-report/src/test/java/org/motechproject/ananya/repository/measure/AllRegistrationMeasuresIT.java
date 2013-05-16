@@ -45,7 +45,7 @@ public class AllRegistrationMeasuresIT extends SpringIntegrationTest {
                 "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         template.save(frontLineWorkerDimension);
         String locationId = "locationId";
-        LocationDimension locationDimension = new LocationDimension(locationId, "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension(locationId, "state", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         template.save(timeDimension);

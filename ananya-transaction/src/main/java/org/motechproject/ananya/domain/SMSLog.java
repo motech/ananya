@@ -11,6 +11,9 @@ public class SMSLog extends BaseLog {
 
     @JsonProperty
     private Integer courseAttempts;
+    
+    @JsonProperty
+    private String language;
 
     public SMSLog(){
     }
@@ -19,10 +22,11 @@ public class SMSLog extends BaseLog {
         super(callerId, "", "", "");
     }
 
-    public SMSLog(String callId, String callerId, String locationId, Integer courseAttempts) {
+    public SMSLog(String callId, String callerId, String locationId, Integer courseAttempts, String language) {
         super(callId, callerId);
         this.locationId = locationId;
         this.courseAttempts = courseAttempts;
+        this.language=language;
     }
 
     public String getLocationId() {
@@ -32,4 +36,9 @@ public class SMSLog extends BaseLog {
     public Integer getCourseAttempts() {
         return courseAttempts;
     }
+
+	public String getLanguage() {
+		return language;
+	}
+    
 }

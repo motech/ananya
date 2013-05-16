@@ -40,11 +40,11 @@ public class MonitorPageTest {
     public void shouldCallCouchDbDiagnosticsAndPostgresDiagnosticsAndPopulateModelAndView() throws IOException {
 
         Map<String, String> couchdbDiagnosticResult = new HashMap<String, String>();
-        Map<String, String> postgresDiagnosticResult = new HashMap<String, String>();
+        Map<String, Map<String, String>> postgresDiagnosticResult = new HashMap<String, Map<String, String>>();
         Map<String, String> machineDiagnosticResult = new HashMap<String, String>();
 
         when(couchDBDiagnostic.collect()).thenReturn(couchdbDiagnosticResult);
-        when(postgresDiagnostic.collect()).thenReturn(postgresDiagnosticResult);
+        when(postgresDiagnostic.collectByState()).thenReturn(postgresDiagnosticResult);
         when(machineDiagnostic.collect()).thenReturn(machineDiagnosticResult);
 
         ModelAndView monitorDisplay = monitorPage.display();
@@ -54,7 +54,7 @@ public class MonitorPageTest {
         List<MenuLink> menu = menuMap.get("Production");
 
         verify(couchDBDiagnostic).collect();
-        verify(postgresDiagnostic).collect();
+        verify(postgresDiagnostic).collectByState();
         verify(machineDiagnostic).collect();
 
         assertEquals(couchdbDiagnosticResult, model.get("couchdbData"));

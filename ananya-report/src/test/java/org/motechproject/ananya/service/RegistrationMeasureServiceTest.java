@@ -65,12 +65,14 @@ public class RegistrationMeasureServiceTest {
         String callId = "919986574410-12345";
         String operator = "operator";
         String circle = "circle";
+        String language = "language";
+        
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
-        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", "VALID");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationLog registrationLog = new RegistrationLog(callId, callerId, operator, circle);
@@ -102,12 +104,13 @@ public class RegistrationMeasureServiceTest {
         String callerId = "919986574410";
         String operator = "operator";
         String circle = "circle";
+        String language = "language";
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
-        LocationDimension oldLocationDimension = new LocationDimension("oldid", "olddistrict", "oldblock", "oldpanchayat", "VALID");
-        LocationDimension newLocationDimension = new LocationDimension("id", "district", "block", "panchayat", "VALID");
+        LocationDimension oldLocationDimension = new LocationDimension("oldid", "oldstate", "olddistrict", "oldblock", "oldpanchayat", "VALID");
+        LocationDimension newLocationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", "VALID");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
         frontLineWorkerDimension.setId(flwId);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
@@ -143,11 +146,13 @@ public class RegistrationMeasureServiceTest {
         String callId = "919986574410-12312312";
         String operator = "operator";
         String circle = "circle";
+        String language= "language";
+        
         DateTime registeredDate = DateTime.now();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
-        LocationDimension locationDimension = new LocationDimension("id", "district", "block", "panchayat", LocationStatus.VALID.name());
+        LocationDimension locationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", LocationStatus.VALID.name());
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", null, VerificationStatus.SUCCESS);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
 
@@ -173,10 +178,10 @@ public class RegistrationMeasureServiceTest {
     public void shouldUpdateLocation() {
         String oldLocationId = "oldLocationId";
         ArrayList<RegistrationMeasure> registrationMeasures = new ArrayList<>();
-        registrationMeasures.add(new RegistrationMeasure(null, new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null));
+        registrationMeasures.add(new RegistrationMeasure(null, new LocationDimension(oldLocationId, null, null, null, null, "VALID"), null, null));
         when(allRegistrationMeasures.findByLocationId(oldLocationId)).thenReturn(registrationMeasures);
         String newLocationId = "newLocationId";
-        when(allLocationDimensions.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+        when(allLocationDimensions.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, null, "VALID"));
 
         registrationMeasureService.updateLocation(oldLocationId, newLocationId);
 

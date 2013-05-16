@@ -25,7 +25,7 @@ public class AudioTrackerLogTest {
         assertNull(audioTrackerLog.time());
 
         DateTime now = DateUtil.now();
-        audioTrackerLog.addItem(new AudioTrackerLogItem("cid", now, 123));
+        audioTrackerLog.addItem(new AudioTrackerLogItem("cid", "language", now, 123));
         assertThat(audioTrackerLog.time(), is(now));
     }
 }

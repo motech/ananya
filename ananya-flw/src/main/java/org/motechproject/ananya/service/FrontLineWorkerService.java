@@ -61,14 +61,14 @@ public class FrontLineWorkerService {
         return frontLineWorker;
     }
 
-    public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle) {
+    public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle, String language) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
 
         //new flw
         if (frontLineWorker == null) {
             try {
                 allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
-                frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+                frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
                 frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
                 allFrontLineWorkers.add(frontLineWorker);
 
@@ -80,17 +80,25 @@ public class FrontLineWorkerService {
             }
         }
 
-        //no-change flw
-        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered())
+        //no-change flw only if FLW's language is null so updated language is not null
+        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage()==null && language!=null))
             return new FrontLineWorkerCreateResponse(frontLineWorker, false);
 
+        // 
+        if(frontLineWorker.getLanguage()==null){
+        	if(language!=null)
+        		frontLineWorker.setLanguage(language);
+        }else if(!frontLineWorker.getLanguage().equalsIgnoreCase(language)){
+        	log.error("received a request for different language. User language is "+frontLineWorker.getLanguage()+" but recevied language with "+language);
+        }
+        	
         //updated flw
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         allFrontLineWorkers.updateFlw(frontLineWorker);
         log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
-                "] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator());
+                "] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator()+ ", language : " + frontLineWorker.getLanguage());
 
         return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }

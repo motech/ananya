@@ -78,7 +78,7 @@ public class CalledNumberCorrectionSeed {
 
                 SMSLog smslog = smsLogService.getSMSLogFor(callId);
                 if (smslog != null) {
-                    sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+                    sendSMSService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts(), smslog.getLanguage());
                     smsLogService.deleteFor(smslog);
                 }
                 log.info("Corrected calledNumber for Course: [" + calledNumber + "=>" + callLog.getCalledNumber() + "]");

@@ -28,11 +28,12 @@ public class LocationDataSource {
     public ArrayList<LocationReportData> queryReport(HashMap<String, String> criteria) {
         if(criteria == null)
             criteria = new HashMap<String, String>();
+        String state = criteria.get("state");
         String district = criteria.get("district");
         String block = criteria.get("block");
         String panchayat = criteria.get("panchayat");
 
-        List<LocationDimension> locationDimensions = locationDimensionService.getFilteredLocations(district, block, panchayat);
+        List<LocationDimension> locationDimensions = locationDimensionService.getFilteredLocations(state, district, block, panchayat);
 
         ArrayList<LocationReportData> locationReportDataList = new ArrayList<LocationReportData>();
         LocationDataMapper locationDataMapper = new LocationDataMapper();

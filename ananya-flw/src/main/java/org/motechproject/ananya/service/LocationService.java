@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.apache.commons.lang.WordUtils;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.repository.AllLocations;
@@ -30,8 +31,9 @@ public class LocationService {
         allLocations.add(location);
     }
 
-    public Location findFor(String district, String block, String panchayat) {
-        return allLocations.findByDistrictBlockPanchayat(district, block, panchayat);
+    public Location findFor(String state, String district, String block, String panchayat) {
+       // return allLocations.findByDistrictBlockPanchayat(district, block, panchayat);
+    	 return allLocations.findByStateDistrictBlockPanchayat(state, district, block, panchayat);
     }
 
     public void updateStatus(Location location, LocationStatus status) {
@@ -48,6 +50,17 @@ public class LocationService {
         allLocations.getAll();
     }
 
+    public void updateAllLocationStateName(String state) {
+        List<Location> locationList = allLocations.getAll();
+        for (Location location : locationList) {
+            if(location.getState()==null){
+            	location.setState(WordUtils.capitalizeFully(state));
+            	allLocations.update(location);
+            }
+        }
+        allLocations.getAll();
+    }
+    
     public void updateAll(List<Location> locationList) {
         for (Location location : locationList) {
             allLocations.update(location);

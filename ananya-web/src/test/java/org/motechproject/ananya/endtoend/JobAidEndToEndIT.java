@@ -32,6 +32,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
     private String callId = "919686577090-1234567890";
     private String circle = "bihar";
     private String operator = "airtel";
+    private String langauge = "bhojpuri";
     private int allowedUsagePerMonth=39;
 
     @Before
@@ -56,7 +57,7 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnValidResponseForExistingCaller() throws IOException {
-        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle)
+        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle, langauge)
                 .updatePromptsHeard(callerId, "welcome.wav")
                 .updateCurrentJobAidUsage(callerId, 23);
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
@@ -71,13 +72,14 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         String calledNumber = "5771122334455";
         String callDuration = "30000";
         String promptList = "['prompt1', 'prompt2']";
+        String language = "language";
         Integer expectedJobAidUsageByPulse = 60000;
         int allowedUsagePerMonth = 39 * 60 * 1000;
 
         List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");
         String json = testJsonData.forJobAidDisconnect(nodeNames);
 
-        JobAidDisconnectRequest request = new JobAidDisconnectRequest(callerId, callId, operator, circle, calledNumber, callDuration, promptList, json);
+        JobAidDisconnectRequest request = new JobAidDisconnectRequest(callerId, callId, operator, circle, calledNumber, callDuration, promptList, json, language);
         jobAidWebService.requestForDisconnect(request);
 
         couchDb.confirmPartiallyRegistered(callerId, operator)

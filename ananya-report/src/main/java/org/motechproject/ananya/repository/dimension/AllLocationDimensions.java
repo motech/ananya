@@ -29,8 +29,10 @@ public class AllLocationDimensions {
         return locationDimension;
     }
 
-    public List<LocationDimension> getFilteredLocationFor(String district, String block, String panchayat) {
+    public List<LocationDimension> getFilteredLocationFor(String state, String district, String block, String panchayat) {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(LocationDimension.class);
+        if (state != null)
+            detachedCriteria.add(Restrictions.eq("state", state).ignoreCase());
         if (district != null)
             detachedCriteria.add(Restrictions.eq("district", district).ignoreCase());
         if (block != null)

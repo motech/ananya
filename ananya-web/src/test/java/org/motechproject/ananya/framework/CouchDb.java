@@ -106,8 +106,8 @@ public class CouchDb {
         return this;
     }
 
-    public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operatorName, String circle) {
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operatorName, circle);
+    public CouchDb createPartiallyRegisteredFlwFor(String callerId, String operatorName, String circle, String language) {
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operatorName, circle, language);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         allFrontLineWorkers.add(frontLineWorker);
         return this;

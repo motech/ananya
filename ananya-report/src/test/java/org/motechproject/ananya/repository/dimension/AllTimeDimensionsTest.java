@@ -1,5 +1,7 @@
 package org.motechproject.ananya.repository.dimension;
 
+import static org.junit.Assert.assertEquals;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -8,9 +10,6 @@ import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AllTimeDimensionsTest extends SpringIntegrationTest{
     @Autowired

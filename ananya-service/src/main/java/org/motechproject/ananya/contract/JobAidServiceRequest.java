@@ -58,6 +58,11 @@ public class JobAidServiceRequest extends BaseServiceRequest {
         return this;
     }
 
+    public JobAidServiceRequest withLanguage(String language) {
+		this.language=language;
+		return this;
+	}
+    
     @Override
     public ServiceType getType() {
         return ServiceType.JOB_AID;

@@ -30,13 +30,14 @@ public class JobAidCallDataController {
                                    @RequestParam String operator,
                                    @RequestParam String circle,
                                    @RequestParam String calledNumber,
+                                   @RequestParam String language,
                                    @RequestParam String dataToPost,
                                    @RequestParam String promptList,
                                    @RequestParam Integer callDuration) {
 
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
                 .withCallDuration(callDuration).withPromptList(promptList).withOperator(operator).withCircle(circle)
-                .withJson(dataToPost);
+                .withJson(dataToPost).withLanguage(language);
 
         jobAidService.handleDisconnect(jobAidServiceRequest);
 

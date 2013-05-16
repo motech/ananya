@@ -13,6 +13,7 @@ public class JobAidServiceRequestMapper {
                 fieldsToPostMap.get("callId"), failedRecordCSVRequest.getMsisdn(), failedRecordCSVRequest.getCalledNumber())
                 .withCircle(fieldsToPostMap.get("circle"))
                 .withOperator(fieldsToPostMap.get("operator"))
+                .withLanguage(fieldsToPostMap.get("language"))
                 .withJson(failedRecordCSVRequest.getDataToPost())
                 .withCallDuration(Integer.parseInt(fieldsToPostMap.get("callDuration")))
                 .withPromptList(fieldsToPostMap.get("promptList"));

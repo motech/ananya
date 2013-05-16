@@ -15,7 +15,7 @@ public class MyWebClient {
     private WebClient webClient = new WebClient();
 
     public Page getPage(String url) throws IOException {
-        return webClient.getPage(url);
+    	return webClient.getPage(url);
     }
 
     public Page post(String url, PostParam... params) throws IOException {

@@ -4,12 +4,14 @@ import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -27,6 +29,7 @@ public class CourseContentMeasureService {
 
     private AllCourseItemMeasures allCourseItemMeasures;
     private AllTimeDimensions allTimeDimensions;
+    private AllLanguageDimension allLanguageDimension;
     private AllCourseItemDimensions allCourseItemDimensions;
     private CertificateCourseLogService certificateCourseLogService;
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -38,12 +41,14 @@ public class CourseContentMeasureService {
     @Autowired
     public CourseContentMeasureService(CertificateCourseLogService certificateCourseLogService,
                                        AllTimeDimensions allTimeDimensions,
+                                       AllLanguageDimension allLanguageDimension,
                                        AllCourseItemDimensions allCourseItemDimensions,
                                        AllFrontLineWorkerDimensions allFrontLineWorkerDimensions,
                                        AllRegistrationMeasures allRegistrationMeasures,
                                        AllCourseItemMeasures allCourseItemMeasures) {
         this.allCourseItemMeasures = allCourseItemMeasures;
         this.allTimeDimensions = allTimeDimensions;
+        this.allLanguageDimension = allLanguageDimension;
         this.allCourseItemDimensions = allCourseItemDimensions;
         this.certificateCourseLogService = certificateCourseLogService;
         this.allFrontLineWorkerDimensions = allFrontLineWorkerDimensions;
@@ -68,14 +73,14 @@ public class CourseContentMeasureService {
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
         TimeDimension timeDimension = allTimeDimensions.getFor(courseLog.time());
-
+        LanguageDimension languageDimension = allLanguageDimension.getFor(courseLog.getLanguage());
         for (CertificationCourseLogItem logItem : courseLog.items()) {
             CourseItemDimension courseItemDimension = allCourseItemDimensions.getFor(
                     logItem.getContentName(),
                     logItem.getContentType());
 
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension,
-                    frontLineWorkerDimension, locationDimension,
+                    frontLineWorkerDimension, locationDimension, languageDimension, 
                     logItem.getTime(), logItem.giveScore(), logItem.getCourseItemState(), callId);
 
             allCourseItemMeasures.save(courseItemMeasure);

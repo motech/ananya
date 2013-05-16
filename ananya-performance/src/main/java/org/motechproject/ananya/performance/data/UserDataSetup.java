@@ -64,8 +64,9 @@ public class UserDataSetup {
             String callerId = msisdnPrefix + prefix + "" + j;
             String callId = callerId + "-" + DateTime.now().getMillisOfDay();
             String circle = "bihar";
+            String language = "hindi";
 
-            frontLineWorkerService.createOrUpdateForCall(callerId, operatorName, circle);
+            frontLineWorkerService.createOrUpdateForCall(callerId, operatorName, circle, language);
             registrationLogService.add(new RegistrationLog(callId, callerId, operatorName, circle));
             registrationMeasureService.createFor(callId);
 

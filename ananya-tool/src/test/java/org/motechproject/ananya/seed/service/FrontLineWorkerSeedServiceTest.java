@@ -36,25 +36,26 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformationOld() {
-        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
-        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, null, null);
+    	String language= "language";
+        Location completeLocation = new Location("state", "district", "block", "panchayat", 1, 1, 1, 1, null, null);
+        Location incompleteLocation = new Location("state", "district", "block", "", 1, 1, 1, 0, null, null);
         Location defaultLocation = Location.getDefaultLocation();
 
         UUID flwId = UUID.randomUUID();
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, null, flwId);
+                "1234", "name", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, null, flwId);
+                "1234", "", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, flwId);
+                "1234", "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, null, flwId);
+                "1234", "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, null, flwId);
+                "1234", "name", Designation.ANM, defaultLocation, language, null, flwId);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, null, flwId);
+                "1234", "name", Designation.ANM, incompleteLocation, language, null, flwId);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, null, flwId);
+                "1234", "", null, defaultLocation, language, null, flwId);
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));
@@ -74,14 +75,15 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldMergeFLWs_CourseAttemptSame() {
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null);
+    	String language= "language";
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.addBookMark(new BookMark("type", 2, 2));
         frontLineWorker1.reportCard().addScore(new Score("1", "4", true, "987654321-1"));
         frontLineWorker1.reportCard().addScore(new Score("1", "5", true, "987654321-1"));
         frontLineWorker1.markPromptHeard("prompt1");
 
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null);
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", false, "987654321-2"));
@@ -98,12 +100,13 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldMergeFLWs_CourseAttemptDifferent() {
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null);
+    	String language= "language";
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.addBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("welcome");
 
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null);
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
@@ -121,13 +124,14 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldMergeFLWs_CourseAttemptOfFLW2Lesser() {
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null);
+    	String language= "language";
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.addBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("prompt1");
 
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null);
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", true, "987654321-2"));
@@ -146,8 +150,9 @@ public class FrontLineWorkerSeedServiceTest {
     @Test
     public void shouldMergeFLWs_OtherFields() throws Exception {
         DateTime now = DateTime.now();
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null);
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null);
+        String language= "language";
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
 
         frontLineWorker1.setName(null);
         frontLineWorker2.setName("Ramya");
@@ -279,7 +284,7 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldCopyIDsFromFLWDimension() {
-        FrontLineWorker frontlineWorker = new FrontLineWorker("911234567890", "Airtel", "Circle");
+        FrontLineWorker frontlineWorker = new FrontLineWorker("911234567890", "Airtel", "Circle", "language");
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
         when(allFrontLineWorkerDimensions.fetchFor(frontlineWorker.msisdn())).thenReturn(frontLineWorkerDimension);
 

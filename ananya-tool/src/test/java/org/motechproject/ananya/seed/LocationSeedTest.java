@@ -67,7 +67,7 @@ public class LocationSeedTest {
 
     @Test
     public void shouldUpdateAllLocationRegistrationService() {
-        Location expectedLocation = new Location("d1", "b1", "p1");
+        Location expectedLocation = new Location("s1", "d1", "b1", "p1");
         allLocations.add(expectedLocation);
 
         locationSeed.locationStatusUpdateToValid();

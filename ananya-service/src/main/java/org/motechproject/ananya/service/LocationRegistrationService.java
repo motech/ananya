@@ -38,7 +38,7 @@ public class LocationRegistrationService {
 
     public void loadDefaultLocation() {
         Location location = Location.getDefaultLocation();
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), location.getLocationStatus());
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), location.getLocationStatus());
         locationService.add(location);
         locationDimensionService.add(locationDimension);
     }
@@ -55,9 +55,9 @@ public class LocationRegistrationService {
             LocationRequest newLocationRequest = locationSyncRequest.getNewLocation();
             DateTime lastModifiedTime = locationSyncRequest.getLastModifiedTime();
             if (locationSyncRequest.getLocationStatusAsEnum().equals(LocationStatus.INVALID)) {
-                registerLocationForSync(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
-                Location oldLocation = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
-                Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
+                registerLocationForSync(newLocationRequest.getState(), newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat(), locationList, LocationStatus.VALID, lastModifiedTime);
+                Location oldLocation = locationList.getFor(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
+                Location newLocation = locationList.getFor(newLocationRequest.getState(), newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
                 logger.info(String.format("Remapping location references from : %s to: %s", oldLocation, newLocation));
                 reMapOldLocationReferences(oldLocation, newLocation);
             }
@@ -68,22 +68,22 @@ public class LocationRegistrationService {
 
     private boolean isNotLatestRequest(LocationSyncRequest locationSyncRequest) {
         LocationRequest existingLocationRequest = locationSyncRequest.getExistingLocation();
-        Location existingLocation = locationService.findFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
+        Location existingLocation = locationService.findFor(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
         return existingLocation != null && existingLocation.getLastModifiedTime() != null && existingLocation.getLastModifiedTime().isAfter(locationSyncRequest.getLastModifiedTime());
     }
 
     private void updateLocationDetailsOnFLW(LocationRequest existingLocationRequest, LocationRequest newLocationRequest, LocationList locationList) {
-        Location oldLocation = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
-        Location newLocation = locationList.getFor(newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
+        Location oldLocation = locationList.getFor(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
+        Location newLocation = locationList.getFor(newLocationRequest.getState(), newLocationRequest.getDistrict(), newLocationRequest.getBlock(), newLocationRequest.getPanchayat());
         registrationService.updateLocationOnFLW(oldLocation, newLocation);
     }
 
     private void createOrUpdateLocation(LocationRequest existingLocationRequest, LocationStatus locationStatus, LocationList locationList, DateTime lastModifiedTime) {
-        Location location = locationList.getFor(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
+        Location location = locationList.getFor(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat());
         if (location != null)
             updateLocationStatus(location, locationStatus, lastModifiedTime);
         else
-            registerLocationForSync(existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat(), locationList, locationStatus, lastModifiedTime);
+            registerLocationForSync(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat(), locationList, locationStatus, lastModifiedTime);
     }
 
     private void updateLocationStatus(Location location, LocationStatus status, DateTime lastModifiedTime) {
@@ -108,21 +108,21 @@ public class LocationRegistrationService {
     public List<LocationRegistrationResponse> registerAllLocationsWithDefaultLocations(List<LocationRequest> locationsToSave) {
         LocationList locationList = new LocationList(locationService.getAll());
         List<LocationRegistrationResponse> responses = saveLocations(locationsToSave, locationList);
-        registerDefaultLocationForDistrictBlock(locationList);
+        registerDefaultLocationForStateDistrictBlock(locationList);
         return responses;
     }
 
-    private void registerLocationForSync(String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus, DateTime lastModifiedTime) {
-        if (locationList.getFor(district, block, panchayat) != null) {
-            logger.info(String.format("Not saving new location since district : %s, block : %s, panchayat: %s already exists.", district, block, panchayat));
+    private void registerLocationForSync(String state, String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus, DateTime lastModifiedTime) {
+        if (locationList.getFor(state, district, block, panchayat) != null) {
+            logger.info(String.format("Not saving new location since state: %s, district : %s, block : %s, panchayat: %s already exists.", state, district, block, panchayat));
             return;
         }
-        saveNewLocation(new Location(district, block, panchayat, 0, 0, 0, locationStatus, lastModifiedTime), locationList);
+        saveNewLocation(new Location(state, district, block, panchayat, 0, 0, 0, 0, locationStatus, lastModifiedTime), locationList);
     }
 
-    private LocationRegistrationResponse registerLocation(String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus) {
-        LocationRegistrationResponse response = new LocationRegistrationResponse(district, block, panchayat);
-        Location location = new Location(district, block, panchayat, 0, 0, 0, locationStatus, null);
+    private LocationRegistrationResponse registerLocation(String state, String district, String block, String panchayat, LocationList locationList, LocationStatus locationStatus) {
+        LocationRegistrationResponse response = new LocationRegistrationResponse(state, district, block, panchayat);
+        Location location = new Location(state ,district, block, panchayat, 0, 0, 0, 0, locationStatus, null);
         LocationValidator locationValidator = new LocationValidator(locationList);
         LocationValidationResponse validationResponse = locationValidator.validate(location);
         if (validationResponse.isInValid())
@@ -134,7 +134,7 @@ public class LocationRegistrationService {
     }
 
     public List<LocationResponse> getFilteredLocations(LocationRequest request) {
-        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(request.getDistrict(), request.getBlock(), request.getPanchayat());
+        List<LocationDimension> filteredLocations = locationDimensionService.getFilteredLocations(request.getState(), request.getDistrict(), request.getBlock(), request.getPanchayat());
         List<LocationResponse> locationResponses = new ArrayList<>();
         for (LocationDimension locationDimension : filteredLocations) {
             locationResponses.add(LocationMapper.mapFrom(locationDimension));
@@ -146,19 +146,23 @@ public class LocationRegistrationService {
         locationService.updateAllLocationStatusToValid();
     }
 
+    public void updateAllNullLocationStateName(String stateName){
+    	locationService.updateAllLocationStateName(stateName);
+    }
+    
     private List<LocationRegistrationResponse> saveLocations(List<LocationRequest> locationsToSave, LocationList locationList) {
         List<LocationRegistrationResponse> responses = new ArrayList<>();
         for (LocationRequest location : locationsToSave) {
-            LocationRegistrationResponse locationRegistrationResponse = registerLocation(location.getDistrict(), location.getBlock(), location.getPanchayat(), locationList, LocationStatus.VALID);
+            LocationRegistrationResponse locationRegistrationResponse = registerLocation(location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), locationList, LocationStatus.VALID);
             responses.add(locationRegistrationResponse);
         }
         return responses;
     }
 
-    private void registerDefaultLocationForDistrictBlock(LocationList locationList) {
-        List<Location> uniqueDistrictBlockLocations = locationList.getUniqueDistrictBlockLocations();
-        for (Location location : uniqueDistrictBlockLocations) {
-            LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), location.getLocationStatus());
+    private void registerDefaultLocationForStateDistrictBlock(LocationList locationList) {
+        List<Location> uniqueStateDistrictBlockLocations = locationList.getUniqueStateDistrictBlockLocations();
+        for (Location location : uniqueStateDistrictBlockLocations) {
+            LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), location.getLocationStatus());
             locationService.add(location);
             locationDimensionService.add(locationDimension);
         }
@@ -166,7 +170,7 @@ public class LocationRegistrationService {
 
     private void saveNewLocation(Location currentLocation, LocationList locationList) {
         Location location = createNewLocation(currentLocation, locationList);
-        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getDistrict(), location.getBlock(), location.getPanchayat(), currentLocation.getLocationStatus());
+        LocationDimension locationDimension = new LocationDimension(location.getExternalId(), location.getState(), location.getDistrict(), location.getBlock(), location.getPanchayat(), currentLocation.getLocationStatus());
         locationService.add(location);
         logger.info("Saved location to couchDB : " + location);
         locationDimensionService.add(locationDimension);
@@ -175,10 +179,11 @@ public class LocationRegistrationService {
     }
 
     private Location createNewLocation(Location currentLocation, LocationList locationList) {
+    	Integer stateCodeFor = locationList.getStateCodeFor(currentLocation);
         Integer districtCodeFor = locationList.getDistrictCodeFor(currentLocation);
         Integer blockCodeFor = locationList.getBlockCodeFor(currentLocation);
         Integer panchayatCodeFor = locationList.getPanchayatCodeFor(currentLocation);
-        Location locationToSave = new Location(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), districtCodeFor, blockCodeFor, panchayatCodeFor, currentLocation.getLocationStatusAsEnum(), currentLocation.getLastModifiedTime());
+        Location locationToSave = new Location(currentLocation.getState(), currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat(), stateCodeFor, districtCodeFor, blockCodeFor, panchayatCodeFor, currentLocation.getLocationStatusAsEnum(), currentLocation.getLastModifiedTime());
         return locationToSave;
     }
 

@@ -9,6 +9,7 @@ public abstract class BaseServiceRequest extends BaseRequest {
     protected TransferDataList transferDataList;
     protected String circle;
     protected String operator;
+    protected String language;
 
     public BaseServiceRequest(String callId, String callerId, String calledNumber) {
         super(callId, callerId, calledNumber);
@@ -22,7 +23,7 @@ public abstract class BaseServiceRequest extends BaseRequest {
         AudioTrackerRequestList audioTrackerList = new AudioTrackerRequestList(callId, callerId);
         for (TransferData transferData : transferDataList.all())
             if (transferData.isAudioTrackerState())
-                audioTrackerList.add(transferData.getData(), transferData.getToken());
+                audioTrackerList.add(transferData.getData(), transferData.getToken(), this.language);
         return audioTrackerList;
     }
 
@@ -41,4 +42,8 @@ public abstract class BaseServiceRequest extends BaseRequest {
     public String getCircle() {
         return circle;
     }
+
+	public String getLanguage() {
+		return language;
+	}
 }

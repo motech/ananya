@@ -52,9 +52,10 @@ public class LocationServiceTest {
     @Test
     public void shouldGetLocation() {
         Location expectedLocation = new Location();
-        when(allLocations.findByDistrictBlockPanchayat("D1", "B1", "P1")).thenReturn(expectedLocation);
-
-        Location actualLocation = locationService.findFor("D1", "B1", "P1");
+        //when(allLocations.findByDistrictBlockPanchayat("D1", "B1", "P1")).thenReturn(expectedLocation);
+        when(allLocations.findByStateDistrictBlockPanchayat("S1", "D1", "B1", "P1")).thenReturn(expectedLocation);
+        
+        Location actualLocation = locationService.findFor("S1", "D1", "B1", "P1");
 
         assertEquals(expectedLocation, actualLocation);
     }
@@ -87,7 +88,7 @@ public class LocationServiceTest {
         ArrayList<Location> locations = new ArrayList<>();
         InOrder inOrder = inOrder(allLocations);
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
-        Location expectedLocation = new Location("D1", "B1", "P1");
+        Location expectedLocation = new Location("S1", "D1", "B1", "P1");
         locations.add(expectedLocation);
         when(allLocations.getAll()).thenReturn(locations);
 
@@ -105,8 +106,8 @@ public class LocationServiceTest {
     @Test
     public void shouldUpdateAllLocations() {
         ArrayList<Location> locationList = new ArrayList<>();
-        Location location1 = new Location("D11", "B1", "P1");
-        Location location2 = new Location("D12", "B2", "P2");
+        Location location1 = new Location("S1", "D11", "B1", "P1");
+        Location location2 = new Location("S2", "D12", "B2", "P2");
         locationList.add(location1);
         locationList.add(location2);
 

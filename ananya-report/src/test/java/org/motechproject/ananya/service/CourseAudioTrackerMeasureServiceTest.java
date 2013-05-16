@@ -12,8 +12,10 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.repository.dimension.AllCourseItemDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -34,6 +36,10 @@ public class CourseAudioTrackerMeasureServiceTest {
     private AllTimeDimensions allTimeDimensions;
     @Mock
     private AllCourseItemDimensions allCourseItemDimensions;
+    @Mock
+    private AllLanguageDimension allLanguageDimension;
+    @Mock
+    private AllCourseItemDetailsDimensions allCourseItemDetailsDimensions;
     @Mock
     private AudioTrackerLogService audioTrackerLogService;
     @Mock
@@ -59,13 +65,14 @@ public class CourseAudioTrackerMeasureServiceTest {
         frontLineWorkerDimension = new FrontLineWorkerDimension();
         frontLineWorkerDimension.setId(flwId);
 
-        locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         timeDimension = new TimeDimension();
-
+        
+        
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 
         courseAudioTrackerMeasureService = new CourseAudioTrackerMeasureService(
-                allCourseItemMeasures, allTimeDimensions, allCourseItemDimensions, audioTrackerLogService, allFrontLineWorkerDimensions, allRegistrationMeasures);
+                allCourseItemMeasures, allTimeDimensions, allCourseItemDimensions, allLanguageDimension, allCourseItemDetailsDimensions, audioTrackerLogService, allFrontLineWorkerDimensions, allRegistrationMeasures);
     }
 
     @Test
@@ -88,19 +95,24 @@ public class CourseAudioTrackerMeasureServiceTest {
         int duration = 38;
         int totalCourseDuration = 1000;
         String contentId = "contentId";
+        String language = "language";
 
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.CERTIFICATE_COURSE);
         DateTime dateTime = DateTime.parse("2012-04-29T09:38:49Z");
 
-        AudioTrackerLogItem audioTrackerLogItem = new AudioTrackerLogItem(contentId, dateTime, duration);
+        AudioTrackerLogItem audioTrackerLogItem = new AudioTrackerLogItem(contentId, language, dateTime, duration);
         audioTrackerLog.addItem(audioTrackerLogItem);
-
+        
+        LanguageDimension languageDimension = new LanguageDimension(language, "lang", "badhai ho..."); 
         TimeDimension timeDimension = new TimeDimension(dateTime);
-        CourseItemDimension courseItemDimension = new CourseItemDimension("blah", contentId, CourseItemType.AUDIO, null, "filename", totalCourseDuration);
-
+        CourseItemDimension courseItemDimension = new CourseItemDimension("blah", contentId, CourseItemType.AUDIO, null);
+        CourseItemDetailsDimension courseItemDetailsDimension = new CourseItemDetailsDimension(1, contentId, "fileName", totalCourseDuration);
+        
         when(audioTrackerLogService.getLogFor(callId)).thenReturn(audioTrackerLog);
         when(allTimeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
         when(allCourseItemDimensions.getFor(audioTrackerLogItem.getContentId())).thenReturn(courseItemDimension);
+        when(allLanguageDimension.getFor(audioTrackerLogItem.getLanguage())).thenReturn(languageDimension);
+        when(allCourseItemDetailsDimensions.getFor(audioTrackerLogItem.getContentId(), languageDimension.getId())).thenReturn(courseItemDetailsDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         courseAudioTrackerMeasureService.createFor(callId);
