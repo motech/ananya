@@ -21,4 +21,3 @@ test-output/
 *.log*
 ananya-web/src/main/webapp/audio/*
 *.wav
-hello
