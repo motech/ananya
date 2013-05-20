@@ -129,7 +129,7 @@ public class FLWRegistrationService {
         if (locationRequest == null) return null;
         Location locationFromDb = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
         if (locationFromDb == null) {
-            LocationRequest request = new LocationRequest(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+            LocationRequest request = new LocationRequest(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
             locationRegistrationService.addOrUpdate(new LocationSyncRequest(request, request, LocationStatus.NOT_VERIFIED.name(), frontLineWorkerRequest.getLastModified()));
         }
         return locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
@@ -138,7 +138,7 @@ public class FLWRegistrationService {
     private FrontLineWorkerRequest trim(FrontLineWorkerRequest frontLineWorkerRequest) {
         LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
         LocationRequest location = locationRequest != null ?
-                new LocationRequest(StringUtils.trimToEmpty(locationRequest.getDistrict()),
+                new LocationRequest(StringUtils.trimToEmpty(locationRequest.getState()), StringUtils.trimToEmpty(locationRequest.getDistrict()),
                         StringUtils.trimToEmpty(locationRequest.getBlock()),
                         StringUtils.trimToEmpty(locationRequest.getPanchayat()))
                 : null;

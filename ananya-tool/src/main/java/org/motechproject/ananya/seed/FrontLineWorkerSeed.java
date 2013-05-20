@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -96,7 +95,7 @@ public class FrontLineWorkerSeed {
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
                     designation,
-                    new LocationRequest(currentDistrict, currentBlock, currentPanchayat),
+                    new LocationRequest(null, currentDistrict, currentBlock, currentPanchayat),
                     lastModified, flwId, null));
 
             currentRow = csvReader.readNext();

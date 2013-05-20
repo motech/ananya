@@ -65,7 +65,7 @@ public class LocationDetailsControllerTest extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateNewLocation() {
-        LocationRequest locationRequest = new LocationRequest("d", "b", "p");
+        LocationRequest locationRequest = new LocationRequest("s", "d", "b", "p");
         LocationSyncRequest locationSyncRequest = new LocationSyncRequest(locationRequest, locationRequest, "VALID", DateTime.now());
         locationDetailsController = new LocationDetailsController(locationRegistrationService);
 

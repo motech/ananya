@@ -71,7 +71,7 @@ public class LocationSeed {
             currentBlock = currentRow[1];
             currentPanchayat = currentRow[2];
 
-            locationList.add(new LocationRequest(currentDistrict, currentBlock, currentPanchayat));
+            locationList.add(new LocationRequest(null, currentDistrict, currentBlock, currentPanchayat));
 
             currentRow = csvReader.readNext();
         }

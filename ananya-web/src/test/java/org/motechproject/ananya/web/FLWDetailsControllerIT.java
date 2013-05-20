@@ -84,7 +84,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateFrontLineWorker() {
-        LocationRequest locationRequest = new LocationRequest("D1", "B1", "P1");
+        LocationRequest locationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now()));
         String msisdn = "91234545354";
         String designation = Designation.ANM.name();

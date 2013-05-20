@@ -50,7 +50,8 @@ public class LocationDetailsController extends BaseDataAPIController {
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
-        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
+        String state = request.getParameter("state");
+        LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
 
         return locationRegistrationService.getFilteredLocations(locationRequest);
     }

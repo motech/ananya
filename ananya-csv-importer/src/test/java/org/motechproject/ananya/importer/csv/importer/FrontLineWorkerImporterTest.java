@@ -45,7 +45,7 @@ public class FrontLineWorkerImporterTest {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
         Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
         when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
@@ -59,7 +59,7 @@ public class FrontLineWorkerImporterTest {
     public void shouldFailValidationIfFLWDoesNotHaveAllTheDetails() {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
         when(locationService.findFor("D1", "B1", "P1")).thenReturn(null);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1asdf67890", "name", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
@@ -73,8 +73,8 @@ public class FrontLineWorkerImporterTest {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
         Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
         when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "anotherName", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "anotherName", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
@@ -90,7 +90,7 @@ public class FrontLineWorkerImporterTest {
         Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
         when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
         String msisdn = "1234567890";
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn, "name", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
 
         frontLineWorkerImporter.postData(frontLineWorkerRequests);
 
@@ -105,7 +105,7 @@ public class FrontLineWorkerImporterTest {
         ArrayList<FrontLineWorkerRequest> frontLineWorkerRequests = new ArrayList<FrontLineWorkerRequest>();
         Location location = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
         when(locationService.findFor("D1", "B1", "P1")).thenReturn(location);
-        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("D1", "B1", "P1"), null, flwId, null));
+        frontLineWorkerRequests.add(new FrontLineWorkerRequest("1234567890", "name", Designation.ANM.name(), new LocationRequest("state", "D1", "B1", "P1"), null, flwId, null));
 
         ValidationResponse validationResponse = frontLineWorkerImporter.validate(frontLineWorkerRequests);
 
