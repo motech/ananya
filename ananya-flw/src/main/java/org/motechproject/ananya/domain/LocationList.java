@@ -14,7 +14,7 @@ public class LocationList {
     }
 
     public boolean isAlreadyPresent(Location currentLocation) {
-        return getFor(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat()) != null;
+        return getFor(currentLocation.getState(), currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat()) != null;
     }
 
     public Integer getDistrictCodeFor(Location currentLocation) {
@@ -57,7 +57,7 @@ public class LocationList {
         String emptyPanchayat = "";
 
         for (Location location : locations) {
-            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID, null);
+            Location defaultLocation = new Location(location.getState(), location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID, null);
             if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
                 uniqueDistrictBlockList.add(defaultLocation);
             }
@@ -65,8 +65,9 @@ public class LocationList {
         return uniqueDistrictBlockList;
     }
 
-    public Location getFor(String district, String block, String panchayat) {
-        Location locationToBeMatched = new Location(district, block, panchayat, 0, 0, 0, null, null);
+    public Location getFor(String state, String district, String block, String panchayat) {
+        //ToDo:Vishal
+        Location locationToBeMatched = new Location(state, district, block, panchayat, 0, 0, 0, null, null);
         for (Location location : locations) {
             if (locationToBeMatched.equals(location)) {
                 return location;

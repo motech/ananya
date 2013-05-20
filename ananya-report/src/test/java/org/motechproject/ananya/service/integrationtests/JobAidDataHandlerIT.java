@@ -106,7 +106,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         DateTime jobAidStartTime = now.plusSeconds(5);
         DateTime jobAidEndTime = now.plusSeconds(15);
 
-        Location location = new Location("", "", "", 0, 0, 0, null, null);
+        Location location = new Location("", "", "", "", 0, 0, 0, null, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "name", Designation.AWW, location, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator("airtel");

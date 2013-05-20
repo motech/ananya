@@ -93,7 +93,7 @@ public class LocationRegistrationServiceTest {
         locations.add(location3);
         LocationRequest defaultLocation1 = new LocationRequest("S1", "D1", "B1", "");
         LocationRequest defaultLocation2 = new LocationRequest("S2", "D2", "B2", "");
-        LocationRequest defaultLocation3 = new LocationRequest("S3", "D1", "B3", "");
+        LocationRequest defaultLocation3 = new LocationRequest("S1", "D1", "B3", "");
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
 
         locationRegistrationService.registerAllLocationsWithDefaultLocations(locations);
@@ -135,7 +135,7 @@ public class LocationRegistrationServiceTest {
         LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
         ArrayList<Location> locationList = new ArrayList<>();
         DateTime lastModifiedTime = DateTime.now();
-        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(state, district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         locationList.add(expectedLocation);
         when(locationService.getAll()).thenReturn(locationList);
 
@@ -152,7 +152,7 @@ public class LocationRegistrationServiceTest {
         String panchayat = "panchayat";
         String state = "state";
         LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
-        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, DateTime.now());
+        Location expectedLocation = new Location(state, district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, DateTime.now());
         when(locationService.findFor(district, block, panchayat)).thenReturn(expectedLocation);
 
         locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now().minusDays(1)));
@@ -172,7 +172,7 @@ public class LocationRegistrationServiceTest {
         LocationRequest oldLocationRequest = new LocationRequest(oldState, oldDistrict, oldBlock, oldPanchayat);
         LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         locationList.add(expectedLocation);
         String expectedStatus = LocationStatus.VALID.name();
         when(locationService.getAll()).thenReturn(locationList);
@@ -199,7 +199,7 @@ public class LocationRegistrationServiceTest {
         LocationRequest oldLocationRequest = new LocationRequest(oldState, oldDistrict, oldBlock, oldPanchayat);
         LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         String expectedStatus = LocationStatus.VALID.name();
         when(locationService.getAll()).thenReturn(locationList);
 
@@ -231,8 +231,8 @@ public class LocationRegistrationServiceTest {
         LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
         DateTime lastModifiedTime = DateTime.now();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
-        Location newLocation = new Location("D1", "B1", "P1", 1, 2, 3, LocationStatus.VALID, null);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location newLocation = new Location("S1", "D1", "B1", "P1", 1, 2, 3, LocationStatus.VALID, null);
         locationList.add(expectedLocation);
         locationList.add(newLocation);
         when(locationService.getAll()).thenReturn(locationList);
@@ -255,7 +255,7 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldUpdateAllLocationsToTitleCase() {
-        final Location location = new Location("DISTRICT", "block", "panA panB");
+        final Location location = new Location("state", "DISTRICT", "block", "panA panB");
         when(locationService.getAll()).thenReturn(new ArrayList<Location>() {{
             add(location);
         }});
@@ -265,7 +265,7 @@ public class LocationRegistrationServiceTest {
         verify(locationService).updateAll(locationsCaptor.capture());
         List<Location> locationList = locationsCaptor.getValue();
         assertEquals(1, locationList.size());
-        assertEquals(new Location("District","Block","Pana Panb"), locationList.get(0));
+        assertEquals(new Location("State", "District","Block","Pana Panb"), locationList.get(0));
     }
 
     private void verifyCouchAndPostgresLocationStatusUpdate(Location expectedLocation, LocationStatus locationStatus) {
@@ -300,6 +300,6 @@ public class LocationRegistrationServiceTest {
     }
 
     private Location getLocationFrom(LocationRequest locationRequest) {
-        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null, null);
+        return new Location(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null, null);
     }
 }

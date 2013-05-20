@@ -36,8 +36,8 @@ public class FrontLineWorkerSeedServiceTest {
 
     @Test
     public void shouldDeduceCorrectFLWStatusBasedOnInformationOld() {
-        Location completeLocation = new Location("district", "block", "panchayat", 1, 1, 1, null, null);
-        Location incompleteLocation = new Location("district", "block", "", 1, 1, 0, null, null);
+        Location completeLocation = new Location("state", "district", "block", "panchayat", 1, 1, 1, null, null);
+        Location incompleteLocation = new Location("state", "district", "block", "", 1, 1, 0, null, null);
         Location defaultLocation = Location.getDefaultLocation();
 
         UUID flwId = UUID.randomUUID();

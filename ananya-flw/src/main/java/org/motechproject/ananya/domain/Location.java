@@ -14,6 +14,8 @@ public class Location extends MotechBaseDataObject {
     private String district;
 
     @JsonProperty
+    private String state;
+    @JsonProperty
     private String block;
     @JsonProperty
     private String panchayat;
@@ -34,7 +36,8 @@ public class Location extends MotechBaseDataObject {
     public Location() {
     }
 
-    public Location(String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus, DateTime lastModifiedTime) {
+    public Location(String state, String district, String block, String panchayat, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus, DateTime lastModifiedTime) {
+        this.state = state;
         this.locationStatus = locationStatus == null ? null : locationStatus.name();
         this.district = StringUtils.trimToEmpty(district);
         this.block = StringUtils.trimToEmpty(block);
@@ -46,14 +49,15 @@ public class Location extends MotechBaseDataObject {
         this.externalId = "S01" + "D" + prependZeros(districtCode) + "B" + prependZeros(blockCode) + "V" + prependZeros(panchayatCode);
     }
 
-    public Location(String district, String block, String panchayat) {
+    public Location(String state, String district, String block, String panchayat) {
+        this.state = state;
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
     }
 
     public static Location getDefaultLocation() {
-        return new Location("C00", "C00", "", 0, 0, 0, LocationStatus.VALID, null);
+        return new Location("Bihar", "C00", "C00", "", 0, 0, 0, LocationStatus.VALID, null);
     }
 
     public String getLocationStatus() {
@@ -95,7 +99,10 @@ public class Location extends MotechBaseDataObject {
 
     @JsonIgnore
     public boolean isMissingDetails() {
-        return StringUtils.isBlank(district) || StringUtils.isBlank(block) || StringUtils.isBlank(panchayat);
+        return StringUtils.isBlank(state)
+                ||  StringUtils.isBlank(district)
+                || StringUtils.isBlank(block)
+                || StringUtils.isBlank(panchayat);
     }
 
     private String prependZeros(int code) {
@@ -114,6 +121,14 @@ public class Location extends MotechBaseDataObject {
         this.lastModifiedTime = lastModifiedTime;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,9 +136,11 @@ public class Location extends MotechBaseDataObject {
 
         Location location = (Location) o;
 
-        if (block != null ? !StringUtils.equalsIgnoreCase(district, location.district) : location.block != null)
+        if (state != null ? !StringUtils.equalsIgnoreCase(state, location.state) : location.state != null)
             return false;
-        if (district != null ? !StringUtils.equalsIgnoreCase(block, location.block) : location.district != null)
+        if (district != null ? !StringUtils.equalsIgnoreCase(district, location.district) : location.district != null)
+            return false;
+        if (block != null ? !StringUtils.equalsIgnoreCase(block, location.block) : location.block != null)
             return false;
         if (panchayat != null ? !StringUtils.equalsIgnoreCase(panchayat, location.panchayat) : location.panchayat != null)
             return false;
@@ -134,6 +151,7 @@ public class Location extends MotechBaseDataObject {
     @Override
     public int hashCode() {
         int result = district != null ? district.hashCode() : 0;
+        result = 31 * result + state.hashCode();
         result = 31 * result + (block != null ? block.hashCode() : 0);
         result = 31 * result + (panchayat != null ? panchayat.hashCode() : 0);
         result = 31 * result + blockCode;
@@ -145,7 +163,8 @@ public class Location extends MotechBaseDataObject {
     @Override
     public String toString() {
         return "Location{" +
-                "district='" + district +
+                "state='" + state +
+                ", district='" + district +
                 ", block='" + block +
                 ", panchayat='" + panchayat +
                 ", locationStatus='" + locationStatus +
@@ -157,5 +176,6 @@ public class Location extends MotechBaseDataObject {
         district = WordUtils.capitalizeFully(district);
         block = WordUtils.capitalizeFully(block);
         panchayat = WordUtils.capitalizeFully(panchayat);
+        state = WordUtils.capitalizeFully(state);
     }
 }

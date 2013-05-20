@@ -72,8 +72,8 @@ public class RegistrationServiceTest {
 
     @Test
     public void shouldUpdateLocation() {
-        Location oldLocation = new Location("d1", "b1", "p1");
-        Location newLocation = new Location("d2", "b2", "p2");
+        Location oldLocation = new Location("s1", "d1", "b1", "p1");
+        Location newLocation = new Location("s2", "d2", "b2", "p2");
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<>();
         String msisdn = "911234567890";
         frontLineWorkers.add(new FrontLineWorker(msisdn, "name", Designation.ANM, oldLocation, DateTime.now(), UUID.randomUUID()));

@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldAddAndRetrieveRecord() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "village", 2, 3, 4, null, null);
+        Location location = new Location("state", "district", "block", "village", 2, 3, 4, null, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
@@ -47,8 +46,8 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldFetchFLWsByLocationId() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "village", 2, 3, 4, null, null);
-        Location location1 = new Location("distr1ict", "bloc1k", "vi1llage", 2, 3, 5, null, null);
+        Location location = new Location("state", "district", "block", "village", 2, 3, 4, null, null);
+        Location location1 = new Location("state", "distr1ict", "bloc1k", "vi1llage", 2, 3, 5, null, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, UUID.randomUUID());
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", "name", designation, location1, null, UUID.randomUUID());
         allFrontLineWorkers.add(frontLineWorker);

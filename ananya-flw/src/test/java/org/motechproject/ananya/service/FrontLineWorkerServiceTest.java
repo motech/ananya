@@ -139,7 +139,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String name = "name";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, LocationStatus.VALID, null);
+        Location location = new Location("state", "district", "block", "panchayat", 123, 124, 125, LocationStatus.VALID, null);
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), null, flwId);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
@@ -231,7 +231,7 @@ public class FrontLineWorkerServiceTest {
         DateTime lastModified = DateTime.now();
         VerificationStatus verificationStatus = VerificationStatus.SUCCESS;
         UUID flwId = UUID.randomUUID();
-        Location location = new Location("district", "block", "panchayat", 123, 124, 125, null, null);
+        Location location = new Location("state", "district", "block", "panchayat", 123, 124, 125, null, null);
 
         when(existingFrontLineWorker.update(name, designation, location, lastModified, flwId, verificationStatus)).thenReturn(false);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
@@ -293,8 +293,8 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldUpdateFrontLineWorkerLocation() {
-        Location newLocation = new Location("D1", "B1", "P1", 1, 1, 1, null, null);
-        Location oldLocation = new Location("D2", "B2", "P2", 1, 2, 1, null, null);
+        Location newLocation = new Location("S1", "D1", "B1", "P1", 1, 1, 1, null, null);
+        Location oldLocation = new Location("S2", "D2", "B2", "P2", 1, 2, 1, null, null);
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<>();
         String msisdn = "123";
         frontLineWorkers.add(new FrontLineWorker(msisdn, "airtel", "bihar"));

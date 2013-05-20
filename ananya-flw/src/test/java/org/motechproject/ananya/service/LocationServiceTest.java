@@ -87,7 +87,7 @@ public class LocationServiceTest {
         ArrayList<Location> locations = new ArrayList<>();
         InOrder inOrder = inOrder(allLocations);
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
-        Location expectedLocation = new Location("D1", "B1", "P1");
+        Location expectedLocation = new Location("S1", "D1", "B1", "P1");
         locations.add(expectedLocation);
         when(allLocations.getAll()).thenReturn(locations);
 
@@ -105,8 +105,8 @@ public class LocationServiceTest {
     @Test
     public void shouldUpdateAllLocations() {
         ArrayList<Location> locationList = new ArrayList<>();
-        Location location1 = new Location("D11", "B1", "P1");
-        Location location2 = new Location("D12", "B2", "P2");
+        Location location1 = new Location("S11", "D11", "B1", "P1");
+        Location location2 = new Location("S12", "D12", "B2", "P2");
         locationList.add(location1);
         locationList.add(location2);
 

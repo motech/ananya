@@ -18,7 +18,7 @@ public class LocationValidationResponse {
 
     public LocationValidationResponse withIncompleteDetails() {
         isValid = false;
-        message = "[One or more of District, Block, Panchayat details are missing]";
+        message = "[One or more of State, District, Block, Panchayat details are missing]";
         return this;
     }
 

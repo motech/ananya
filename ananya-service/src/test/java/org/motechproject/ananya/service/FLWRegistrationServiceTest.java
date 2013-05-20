@@ -71,7 +71,7 @@ public class FLWRegistrationServiceTest {
     public void shouldSaveNewFLWAndPublishForReport() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name());
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -117,7 +117,7 @@ public class FLWRegistrationServiceTest {
     public void shouldUpdateAllMeasuresForExistingFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), null);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
@@ -179,7 +179,7 @@ public class FLWRegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         String designation = "invalid_designation";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, null, null);
         flwRegistrationService = new FLWRegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService, locationRegistrationService);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null);
@@ -203,7 +203,7 @@ public class FLWRegistrationServiceTest {
         String designation = Designation.AWW.name();
         UUID flwId1 = UUID.randomUUID();
         UUID flwId2 = UUID.randomUUID();
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, null, null);
         when(locationService.findFor("district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<>();
         frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("state", "district", "block", "village"), null, flwId1.toString(), null));
@@ -331,7 +331,7 @@ public class FLWRegistrationServiceTest {
     public void shouldCreateANewLocationIfNotPresentAndUpdateTheFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name());
         when(locationService.findFor("district", "block", "village")).thenReturn(null, location);
