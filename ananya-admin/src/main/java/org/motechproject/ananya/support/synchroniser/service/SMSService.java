@@ -30,9 +30,7 @@ public class SMSService {
         String districtCode = extractDistrictCode(locationId);
         String blockCode = extractBlockCode(locationId);
         String referenceNumber = stateCode + districtCode + blockCode + callerId + String.format("%02d", courseAttemptNumber);
-//      String smsMessageToSend = this.ananyaProperties.getProperty(COURSE_COMPLETION_SMS_MESSAGE_KEY) + referenceNumber;
         String smsMessageToSend = allLanguageDimension.getFor(language).getSmsMessage()!=null?allLanguageDimension.getFor(language).getSmsMessage()+referenceNumber:this.ananyaProperties.getProperty(COURSE_COMPLETION_SMS_MESSAGE_KEY) + referenceNumber;
-        
         sendSMSClient.sendSingleSMS(callerId, smsMessageToSend, referenceNumber);
         log.info("sent sms for " + callerId + "|" + referenceNumber);
     }

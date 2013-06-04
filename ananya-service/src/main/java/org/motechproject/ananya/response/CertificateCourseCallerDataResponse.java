@@ -8,19 +8,19 @@ import java.util.Map;
 public class CertificateCourseCallerDataResponse {
     private String bookmark;
     private boolean isCallerRegistered;
-    private String callerLanguage;
+    private String language;
     private Map<String, Integer> scoresByChapter;
 
     public CertificateCourseCallerDataResponse(String bookmark, boolean callerRegistered, String language, Map<String, Integer> scoresByChapter) {
         this.bookmark = bookmark;
-        this.callerLanguage =language;
+        this.language =language;
         isCallerRegistered = callerRegistered;
         this.scoresByChapter = scoresByChapter;
     }
 
     public CertificateCourseCallerDataResponse(FrontLineWorker frontLineWorker) {
         this.bookmark = frontLineWorker.bookMark().asJson();
-        this.callerLanguage= frontLineWorker.getLanguage();
+        this.language= frontLineWorker.getLanguage();
         this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
         this.scoresByChapter = frontLineWorker.reportCard().scoresByChapterIndex();
     }
@@ -41,7 +41,7 @@ public class CertificateCourseCallerDataResponse {
         return scoresByChapter;
     }
 
-	public String getCallLanguage() {
-		return callerLanguage;
+	public String getLanguage() {
+		return language;
 	}
 }

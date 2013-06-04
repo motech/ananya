@@ -1,12 +1,20 @@
 package org.motechproject.ananya.seed.service;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.ektorp.CouchDbConnector;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.motechproject.ananya.domain.*;
+import org.motechproject.ananya.domain.BookMark;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
+import org.motechproject.ananya.domain.ReportCard;
+import org.motechproject.ananya.domain.Score;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
@@ -26,10 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class FrontLineWorkerSeedService {
@@ -478,6 +482,14 @@ public class FrontLineWorkerSeedService {
         log.info(String.format("FLW with msisdn[%s] updated with ID[%s]", msisdn, frontLineWorker.getFlwId()));
     }
 
+	public void updateLocationCode(String currentLocationCode, String newLocationCode) {
+		List<FrontLineWorker> frontLineWorkerList = allFrontLineWorkers.findByLocationId(currentLocationCode);
+		for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
+			frontLineWorker.setLocationId(newLocationCode);
+			allFrontLineWorkers.update(frontLineWorker);
+		}
+	}
+	
     private DateTime lessRecentOf(DateTime dateTime1, DateTime dateTime2) {
         return dateTime2 == null || (dateTime1 != null && dateTime1.isBefore(dateTime2))
                 ? dateTime1 : dateTime2;
@@ -567,4 +579,5 @@ public class FrontLineWorkerSeedService {
     private int valIfNull(Integer value) {
         return value == null ? -1 : value;
     }
+
 }

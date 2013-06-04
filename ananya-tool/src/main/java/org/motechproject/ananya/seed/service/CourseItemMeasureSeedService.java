@@ -32,19 +32,6 @@ public class CourseItemMeasureSeedService {
                 startDate.toDate(), endDate.toDate()
         );
 
-//        return
-//                (List<CourseItemMeasure>) template.findByNamedQueryAndNamedParam(
-//                        "select " +
-//                            "c " +
-//                        "from " +
-//                            "CourseItemMeasure c " +
-//                        "where " +
-//                            "c.courseItemDimension.type = 'QUIZ' and " +
-//                            "c.event = 'START' and " +
-//                            "c.timestamp >= start_date and " +
-//                            "c.timestamp <= end_date",
-//                        new String[] { "start_date", "end_date"},
-//                        new Object[] { startDate, endDate });
     }
 
     @Transactional
@@ -63,20 +50,6 @@ public class CourseItemMeasureSeedService {
                     "c.timestamp <= ?",
                 startDate.toDate(), endDate.toDate()
         );
-
-//        return
-//                (List<CourseItemMeasure>) template.findByNamedQueryAndNamedParam(
-//                        "select " +
-//                            "c " +
-//                        "from " +
-//                            "CourseItemMeasure c " +
-//                        "where " +
-//                            "c.courseItemDimension.type = 'QUIZ' and " +
-//                            "c.event = 'END' and " +
-//                            "c.timestamp >= start_date and " +
-//                            "c.timestamp <= end_date",
-//                        new String[] { "start_date", "end_date"},
-//                        new Object[] { startDate, endDate });
         
     }
 

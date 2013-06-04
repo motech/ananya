@@ -25,8 +25,8 @@ public class LocationSeed {
     @Value("#{ananyaProperties['seed.location.file.out']}")
     private String outputFileName;
 
-    @Value("#{ananyaProperties['seed.location.file.with.new.state.data']}")
-    private String inputFileNameWithNewStateData;
+    @Value("#{ananyaProperties['seed.location.file.with.odisa.data']}")
+    private String inputFileNameWithOdisaData;
     
     @Value("#{ananyaProperties['environment']}")
     private String environment;
@@ -57,33 +57,41 @@ public class LocationSeed {
         locationRegistrationService.updateAllLocationsToTitleCase();
     }
     
-    @Seed(priority = 1,version = "1.14", comment = "add state name as bihar in the existing locations")
+    @Seed(priority = 1,version = "1.14", comment = "uodate external id and state name of default location")
+    public void updateStateAndExternalIdForDefaultLocation() {
+        String currentExternalId="S01D000B000V000";
+		String newExternalId="S00D000B000V000";
+		String state = "C00";
+		locationRegistrationService.updateExternalId(currentExternalId, newExternalId);
+		locationRegistrationService.updateStateNameByExternalId(newExternalId, state);
+    }
+    
+    @Seed(priority = 1,version = "1.15", comment = "add state name as bihar in the existing locations")
     public void updateAllExistingLocationStateNameToBihar() {
         locationRegistrationService.updateAllNullLocationStateName("Bihar");
     }
     
-    @Seed(priority = 1, version = "1.15", comment = "load all locations from csv file for new states")
-    public void loadNewLocationsFromCSVFile() throws IOException {
-    	if(inputFileNameWithNewStateData!=null){
-	        String inputCSVFileWithNewStateData = environment.equals("prod") ? inputFileNameWithNewStateData : (getClass().getResource(inputFileNameWithNewStateData)!=null?getClass().getResource(inputFileNameWithNewStateData).getPath(): inputFileNameWithNewStateData);
-	        File inputFileWithNewStateData=new File(inputCSVFileWithNewStateData);
-	        if(inputFileWithNewStateData.exists()){
-	        	String outputFilePath = inputFileWithNewStateData.getParent();
-		        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
-		        File file = new File(outputCSVFile);
-		        file.createNewFile();
-		
-		        writer = new BufferedWriter(new FileWriter(outputCSVFile));
-	        	loadFromCsv(inputCSVFileWithNewStateData);
-	        }
-    	}
+    @Seed(priority = 1, version = "1.16", comment = "load all locations from csv file for odisa")
+    public void loadOdisaLocationsFromCSVFile() throws IOException {
+    	String inputCSVFileOdisaData = environment.equals("prod") ? inputFileNameWithOdisaData : getClass().getResource(inputFileNameWithOdisaData).getPath();
+    	loadFromCsv(inputCSVFileOdisaData);
     }
-    
+
     private void loadDefaultLocation() {
         locationRegistrationService.loadDefaultLocation();
     }
+    
+    private void reInitiateWriter(String inputCSVFile) throws IOException{
+        String outputFilePath = new File(inputCSVFile).getParent();
+        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+        File file = new File(outputCSVFile);
+        file.createNewFile();
 
+        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+    }
+    
     private void loadFromCsv(String path) throws IOException {
+    	reInitiateWriter(path);
         CSVReader csvReader = new CSVReader(new FileReader(path));
         String currentState, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;

@@ -49,7 +49,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323")
+                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323;language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -62,7 +62,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel")
+                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel;language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -75,7 +75,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;callDuration:123;promptList:[]")
+                .withFieldsToPost("callId:9886000002-1346784033040;callDuration:123;promptList:[];language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -88,7 +88,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("operator:airtel;callDuration:123;promptList:[]")
+                .withFieldsToPost("operator:airtel;callDuration:123;promptList:[];language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -101,7 +101,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;operator:airtel;promptList:[]")
+                .withFieldsToPost("callId:9886000002-1346784033040;operator:airtel;promptList:[];language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -114,7 +114,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;operator:airtel;callDuration:123")
+                .withFieldsToPost("callId:9886000002-1346784033040;operator:airtel;callDuration:123;language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -127,7 +127,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:90002-1346784033040;operator:airtel;callDuration:123;promptList:[]")
+                .withFieldsToPost("callId:90002-1346784033040;operator:airtel;callDuration:123;promptList:[];language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -140,7 +140,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:[]")
+                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:[];language:language")
                 .withMsisdn("123")
                 .build();
         failedJobAidRecordValidator.validate(request);
@@ -154,7 +154,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:[]")
+                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:[];language:language")
                 .withCalledNumber("123a")
                 .build();
         failedJobAidRecordValidator.validate(request);
@@ -168,7 +168,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:something")
+                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:something;language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }
@@ -181,7 +181,7 @@ public class FailedJobAidRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withJobAidDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:something")
+                .withFieldsToPost("callId:1234567890-1346784033040;operator:airtel;callDuration:123;promptList:something;language:language")
                 .build();
         failedJobAidRecordValidator.validate(request);
     }

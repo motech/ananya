@@ -32,7 +32,7 @@ public class AllCertificateCourseLogsTest {
 
     @Test
     public void shouldSaveACertificationLog() {
-        CertificationCourseLog log = new CertificationCourseLog();//"caller", "9999990000", "1", null, null, null, null, null);
+        CertificationCourseLog log = new CertificationCourseLog();
         assertThat(log.getId(), is(nullValue()));
         allCertificateCourseLogs.add(log);
         assertThat(log.getId(), is(notNullValue()));

@@ -73,7 +73,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323")
+                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -86,7 +86,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel")
+                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -99,7 +99,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;")
+                .withFieldsToPost("callId:9886000002-1346784033040;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -112,7 +112,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("operator:airtel;")
+                .withFieldsToPost("operator:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -125,7 +125,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:123456789a-3343; operator:airtel")
+                .withFieldsToPost("callId:123456789a-3343; operator:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }

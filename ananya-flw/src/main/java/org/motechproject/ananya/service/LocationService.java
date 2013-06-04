@@ -32,7 +32,6 @@ public class LocationService {
     }
 
     public Location findFor(String state, String district, String block, String panchayat) {
-       // return allLocations.findByDistrictBlockPanchayat(district, block, panchayat);
     	 return allLocations.findByStateDistrictBlockPanchayat(state, district, block, panchayat);
     }
 
@@ -66,4 +65,18 @@ public class LocationService {
             allLocations.update(location);
         }
     }
+
+	public void updateLocationExternalId(String currentLocationCode, String newLocationCode) {
+		Location location = findByExternalId(currentLocationCode);
+		if(location!=null){
+			location.setExternalId(newLocationCode);
+			allLocations.update(location);
+		}
+	}
+
+	public void updateStateNameByExternalId(String externalId, String state) {
+		Location location = findByExternalId(externalId);
+		location.setState(WordUtils.capitalizeFully(state));
+		allLocations.update(location);
+	}
 }

@@ -194,4 +194,12 @@ public class LocationRegistrationService {
         }
         locationService.updateAll(locationList);
     }
+
+	public void updateExternalId(String currentExternalId, String newExternalId) {
+		locationService.updateLocationExternalId(currentExternalId, newExternalId);
+	}
+
+	public void updateStateNameByExternalId(String externalId, String state) {
+		locationService.updateStateNameByExternalId(externalId, state);
+	}
 }

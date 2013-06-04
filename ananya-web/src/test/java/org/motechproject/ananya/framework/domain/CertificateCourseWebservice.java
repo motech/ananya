@@ -24,7 +24,7 @@ public class CertificateCourseWebservice {
     }
 
     protected String getAppServerUrl() {
-        return "http://localhost:" + (ananyaProperties.getProperty("app.server.port")!=null?ananyaProperties.getProperty("app.server.port"):"9979");
+        return "http://localhost:" + ananyaProperties.getProperty("app.server.port");
     }
 
     public CertificateCourseResponse requestForDisconnect(CertificateCourseRequest request) throws IOException {

@@ -46,15 +46,12 @@ public class SendSMSServiceTest {
         String locationId = "S001D001B012V111";
         int courseAttempts = 1;
 
-        // the results
-//        String refNum = "001012987654321001";
         // Added state code
         String refNum = "00001012987654321001";
         String message = "Hello";
         String language = "hindi";
 
         LanguageDimension languageDimension = new LanguageDimension(language, "hin", message);
-//        when(smsProperties.getProperty(argThat(is("course.completion.sms.message")))).thenReturn(message);
         when(allLanguageDimension.getFor(language)).thenReturn(languageDimension);
         
         sendSMSService.buildAndSendSMS(callerId, locationId, courseAttempts, language);

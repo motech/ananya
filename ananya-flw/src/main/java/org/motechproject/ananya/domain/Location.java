@@ -108,6 +108,10 @@ public class Location extends MotechBaseDataObject {
         return externalId;
     }
 
+    public void setExternalId(String externalId){
+    	this.externalId = externalId;
+    }
+    
     @JsonIgnore
     public boolean isMissingDetails() {
         return StringUtils.isBlank(state) || StringUtils.isBlank(district) || StringUtils.isBlank(block) || StringUtils.isBlank(panchayat);

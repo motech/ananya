@@ -145,7 +145,7 @@ public class PostgresDataDiagnostic {
     	while (iterator.hasNext()) {
             Object[] row = (Object[]) iterator.next();
             Long count = (Long) row[0];
-            Long status = (Long) row[1];
+            String status = (String) row[1];
             String state = (String) row[2];
             List<String> statusList;
         	if(stateWiseStatusListMap.containsKey(state)){

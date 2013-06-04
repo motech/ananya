@@ -30,7 +30,7 @@ public class FailedCertificateCourseRecordValidator extends FailedRecordValidato
         fieldToPostDefinitions = new HashMap<String, Boolean>() {{
             put("callId", true);
             put("operator", true);
-            put("language", false);
+            put("language", true);
             put("circle", false);
         }};
     }

@@ -477,6 +477,10 @@
             </column>
         </createTable>
         <addUniqueConstraint tableName="language_dimension" columnNames="name" constraintName="unq_lang_name"/>
+        <sql splitStatements="false">
+        	INSERT INTO report.language_dimension values (1, 'bhojpuri', 'bho', 'Badhai ho Didi, apne Mobile Academy course pura kar liya hai. Certificate paane ke liye is SMS ko apne subcenter meeting mein dikhayen. No.');
+        	INSERT INTO report.language_dimension values (2, 'odia', 'oda', 'Badhai ho Didi No.');
+        </sql>
     </changeSet>
     
     <changeSet context="setup" author="Onmobile-version1.0" id="36">
@@ -540,15 +544,17 @@
             ALTER TABLE report.location_dimension ADD COLUMN state VARCHAR(36);
             UPDATE report.location_dimension SET state = 'Bihar';
             ALTER TABLE report.location_dimension ALTER state SET NOT NULL;
+            UPDATE report.location_dimension SET location_id = 'S00D000B000V000' where location_id='S01D000B000V000';
+            UPDATE report.location_dimension SET state = 'C00' where location_id='S00D000B000V000';
         </sql>
     </changeSet>
     
    	<changeSet context="setup" author="Onmobile-version1.0" id="41">
         <sql splitStatements="false">
-        	INSERT INTO report.course_item_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.course_item_dimension;
+        	INSERT INTO report.course_item_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
             ALTER TABLE report.course_item_dimension DROP COLUMN file_name;
 			ALTER TABLE report.course_item_dimension DROP COLUMN duration;
-			INSERT INTO report.job_aid_content_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.job_aid_content_dimension;
+			INSERT INTO report.job_aid_content_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
             ALTER TABLE report.job_aid_content_dimension DROP COLUMN file_name;
 			ALTER TABLE report.job_aid_content_dimension DROP COLUMN duration;
         </sql>

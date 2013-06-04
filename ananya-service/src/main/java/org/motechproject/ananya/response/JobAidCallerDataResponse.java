@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class JobAidCallerDataResponse {
     private boolean isCallerRegistered;
-    private String callerLanguage;
+    private String language;
     private Integer currentJobAidUsage;
     private Integer maxAllowedUsageForOperator;
     private Map<String, Integer> promptsHeard;
@@ -17,7 +17,7 @@ public class JobAidCallerDataResponse {
         this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         this.promptsHeard = frontLineWorker.getPromptsHeard();
         this.maxAllowedUsageForOperator = maxUsage;
-        this.callerLanguage = frontLineWorker.getLanguage();
+        this.language = frontLineWorker.getLanguage();
     }
 
     public JobAidCallerDataResponse() {
@@ -27,7 +27,7 @@ public class JobAidCallerDataResponse {
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
         jobAidCallerDataResponse.isCallerRegistered = false;
         jobAidCallerDataResponse.currentJobAidUsage = 0;
-        jobAidCallerDataResponse.callerLanguage = null;
+        jobAidCallerDataResponse.language = null;
         jobAidCallerDataResponse.promptsHeard = new HashMap<String, Integer>();
         jobAidCallerDataResponse.maxAllowedUsageForOperator = maxOperatorUsage;
         return jobAidCallerDataResponse;
@@ -49,7 +49,7 @@ public class JobAidCallerDataResponse {
         return promptsHeard;
     }
 
-	public String getCallLanguage() {
-		return callerLanguage;
+	public String getLanguage() {
+		return language;
 	}
 }

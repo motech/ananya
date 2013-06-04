@@ -138,6 +138,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return locationId;
     }
 
+    public void setLocationId(String locationId) {
+        this.locationId=locationId;
+    }
+    
     public String getMsisdn() {
         return msisdn;
     }

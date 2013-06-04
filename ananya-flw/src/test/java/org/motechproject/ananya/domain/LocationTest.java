@@ -13,8 +13,6 @@ public class LocationTest {
         Location location = new Location("Stat", "Dis", "Blo", "Pan", 4, 10, 9, 1, null, null);
 
         String externalId = location.getExternalId();
-
-//        assertEquals("S01D010B009V001", externalId);
         assertEquals("S04D010B009V001", externalId);
     }
 
@@ -71,7 +69,6 @@ public class LocationTest {
         assertEquals("C00",defaultLocation.getDistrict());
         assertEquals("C00",defaultLocation.getBlock());
         assertEquals("",defaultLocation.getPanchayat());
-//      assertEquals("S01D000B000V000",defaultLocation.getExternalId());
         assertEquals("S00D000B000V000",defaultLocation.getExternalId());
     }
 

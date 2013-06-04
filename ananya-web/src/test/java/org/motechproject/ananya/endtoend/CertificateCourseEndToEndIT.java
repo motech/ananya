@@ -89,23 +89,19 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
 
 
         couchDb.confirmBookmarkUpdated(callerId, new EmptyBookmark());
-//              .confirmSMSReference(callerId, "00000091998734564501");
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId)
                 .confirmCallDurationMeasure(callId, callerId, "5771102")
                 .confirmCourseItemMeasure(callId, callerId);
-//              .confirmSMSSent(callerId, "00000091998734564501")
 
         couchDb.confirmNoRegistrationLogFor(callId)
                 .confirmNoAudioTrackerLogFor(callId)
                 .confirmNoCallLogFor(callId)
                 .confirmNoCourseLogFor(callId);
-//              .confirmNoSMSLog(callId);
 
         reportDb.clearCallDurationMeasure(callId)
                 .clearCourseItemMeasure(callId);
-//              .clearSMSSentMeasure(callerId)
     }
 
     private List<Score> presetScores() {

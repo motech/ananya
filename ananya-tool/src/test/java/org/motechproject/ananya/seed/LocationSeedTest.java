@@ -77,4 +77,18 @@ public class LocationSeedTest {
         assertEquals(expectedLocation, locationList.get(0));
         assertEquals(LocationStatus.VALID, locationList.get(0).getLocationStatusAsEnum());
     }
+    
+    @Test
+    public void shouldUpdateDefaultLocationStateNameAndExternalId() {
+        Location previousDefaultLocation = new Location();
+        previousDefaultLocation.setExternalId("S01D000B000V000");
+        allLocations.add(previousDefaultLocation);
+
+        locationSeed.updateStateAndExternalIdForDefaultLocation();
+
+        List<Location> locationList = allLocations.getAll();
+        assertEquals(1, locationList.size());
+        assertEquals(locationList.get(0).getState(), "C00");
+        assertEquals(locationList.get(0).getExternalId(), "S00D000B000V000");
+    }
 }

@@ -1,6 +1,6 @@
 var callerData = {
    "isRegistered" : "${isCallerRegistered}",
-   "language" : "${language}",
+   "language" : ${language},
    "bookmark" : ${bookmark},
    "scoresByChapter" : {
        #set($chaptersCount = $scoresByChapter.size())

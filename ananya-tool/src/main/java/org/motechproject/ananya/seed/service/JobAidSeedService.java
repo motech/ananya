@@ -45,8 +45,6 @@ public class JobAidSeedService {
         allJobAidContentDimensions.add(jobAidContentDimension);
 
         for (StringContent content : node.contents()) {
-//            JobAidContentDimension audioContentDimension = new JobAidContentDimension(content.getId(), jobAidContentDimension, content.getName(),
-//                    content.getValue(), "Audio", Integer.valueOf(content.getMetadata().get("duration")));
             JobAidContentDimension audioContentDimension = new JobAidContentDimension(content.getId(), jobAidContentDimension, content.getName(), "Audio");
             if (nodeType.equalsIgnoreCase("Lesson"))
                 audioContentDimension.setShortCode(shortCode);
@@ -71,7 +69,6 @@ public class JobAidSeedService {
         allNodes.update(node);
 
         JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(stringContent.getId());
-//      jobAidContentDimension.setDuration(Integer.parseInt(duration));
         allJobAidContentDimensions.update(jobAidContentDimension);
     }
 

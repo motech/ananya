@@ -58,9 +58,6 @@ public class LocationRegistrationServiceTest {
         Location location = locationCaptor.getValue();
         LocationDimension locationDimension = locationDimensionCaptor.getValue();
 
-//        assertEquals("S01D000B000V000", location.getExternalId());
-//        assertEquals("S01D000B000V000", locationDimension.getLocationId());
-        
         assertEquals("S00D000B000V000", location.getExternalId());
         assertEquals("S00D000B000V000", locationDimension.getLocationId());
     }

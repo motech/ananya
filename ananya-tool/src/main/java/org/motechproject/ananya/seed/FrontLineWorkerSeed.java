@@ -261,6 +261,13 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
+    @Seed(priority = 1,version = "1.14", comment = "update location code for default location")
+    public void updateAllFLWDefaultLocation() {
+        String currentLocationCode="S01D000B000V000";
+		String newLocationCode="S00D000B000V000";
+		seedService.updateLocationCode(currentLocationCode, newLocationCode);
+    }
+    
     private String getInputCSV() {
         return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
     }

@@ -51,9 +51,9 @@ public enum DiagnosticQuery {
             "SMS Sent Today"),
 
     /** New query for state*/
-    FIND_TOTAL_FLWS_GROUP_BY_STATE("select count(rem.*), rem.locationDimension.state from RegistrationMeasure rem group by rem.locationDimension.state order by rem.locationDimension.state", "FLWs"),
+    FIND_TOTAL_FLWS_GROUP_BY_STATE("select count(rem), rem.locationDimension.state from RegistrationMeasure rem group by rem.locationDimension.state order by rem.locationDimension.state", "FLWs"),
 
-    FIND_TOTAL_FLWS_BY_STATUS_GROUP_BY_STATE("select count(rem.*), rem.locationDimension.state, rem.frontLineWorkerDimension.status from RegistrationMeasure rem group by rem.locationDimension.state, rem.frontLineWorkerDimension.status order by rem.locationDimension.state", "FLWs by Status"),
+    FIND_TOTAL_FLWS_BY_STATUS_GROUP_BY_STATE("select count(rem), rem.frontLineWorkerDimension.status, rem.locationDimension.state from RegistrationMeasure rem group by rem.locationDimension.state, rem.frontLineWorkerDimension.status order by rem.locationDimension.state", "FLWs by Status"),
 
     FIND_TODAY_FLWS_GROUP_BY_STATE(
             " select count(distinct cdm.frontLineWorkerDimension.id), cdm.locationDimension.state from CallDurationMeasure cdm, TimeDimension td" +
@@ -113,16 +113,16 @@ public enum DiagnosticQuery {
         return query;
     }
 
-    public String getQuery(DateTime today) {
-        return (String.format(query, today.getDayOfYear(), today.getMonthOfYear(), today.getYear()));
+    public String getQuery(DateTime date) {
+        return (String.format(query, date.getDayOfYear(), date.getMonthOfYear(), date.getYear()));
     }
 
     public String getQueryByState(String state) {
         return (String.format(query, state));
     }
 
-    public String getQueryByState(DateTime today, String state) {
-        return (String.format(query, today.getDayOfYear(), today.getMonthOfYear(), today.getYear(), state));
+    public String getQueryByState(DateTime date, String state) {
+        return (String.format(query, date.getDayOfYear(), date.getMonthOfYear(), date.getYear(), state));
     }
 
     public String title() {

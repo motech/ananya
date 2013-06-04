@@ -29,7 +29,6 @@ public class MonitorPage {
 
     public ModelAndView display() throws IOException {
         Map<String, String> couchDbData = couchDBDiagnostic.collect();
-        //Map<String, String> postgresData = postgresDiagnostics.collect();
         Map<String, Map<String, String>> postgresData = postgresDiagnostics.collectByState();
         Map<String, String> machineData = machineDiagnostic.collect();
 

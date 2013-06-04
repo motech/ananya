@@ -27,7 +27,7 @@ public class FailedJobAidRecordValidator extends FailedRecordValidator {
         fieldToPostDefinitions = new HashMap<String, Boolean>() {{
             put("callId", true);
             put("operator", true);
-            put("language", false);
+            put("language", true);
             put("callDuration", true);
             put("promptList", true);
             put("circle", false);

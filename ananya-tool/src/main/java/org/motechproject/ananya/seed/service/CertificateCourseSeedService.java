@@ -77,14 +77,6 @@ public class CertificateCourseSeedService {
         *           name -> "lesson_0024_ch1_4_ca.wav"
         */
         for (StringContent content : node.contents()) {
-//            CourseItemDimension audioContentDimension = new CourseItemDimension(
-//                    content.getName() + ":" + content.getValue(),
-//                    content.getId(),
-//                    CourseItemType.AUDIO,
-//                    courseItemDimension,
-//                    content.getValue(),
-//                    Integer.valueOf(content.getMetadata() == null ? "0" : content.getMetadata().get("duration"))
-//            );
             CourseItemDimension audioContentDimension = new CourseItemDimension(
                     content.getName() + ":" + content.getValue(),
                     content.getId(),
