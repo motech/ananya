@@ -116,4 +116,68 @@ public class JobAidTree {
         metadata.put("duration", duration);
         return metadata;
     }
+    
+	public Map<String, List<Node>> buildAdditionalChaptersForMK(Map<String, List<Node>> hmParentNodeNameChildNodes){		
+		Node chapter = null;
+		List<Node> chapterNodeslevel1 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel2 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel3 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel4 = new ArrayList<Node>();
+		
+		chapter = chapterNode("Level 1 Chapter 5", "5", "0015_lessons_1.1.5.wav", "26718", "0016_select_lesson_1.1.5.wav", "27731");
+		addLessonsToChapter(chapter, new String[][]{{"93", "0017_handwashing_when_and_why", "117012"}, {"85", "0018_open_defecation_1", "124719"}, {"86", "0019_open_defecation_2", "105442"}});
+		chapterNodeslevel1.add(chapter);		
+		chapter = chapterNode("Level 1 Chapter 6", "6", "0017_lessons_1.1.6.wav", "26718", "0018_select_lesson_1.1.6.wav", "27731");
+		addLessonsToChapter(chapter, new String[][]{{"98", "0017_malaria_prevention", "117012"}, {"99", "0018_malaria_treatment_and_management", "124719"}});
+		chapterNodeslevel1.add(chapter);
+		hmParentNodeNameChildNodes.put("level 1",chapterNodeslevel1);
+		
+		chapter = chapterNode("Level 2 Chapter 5", "5", "0023_lessons_1.2.5.wav", "36740", "0024_select_lesson_1.2.5.wav", "33398");
+		addLessonsToChapter(chapter, new String[][]{{"93", "0028_when_and_why_to_wash_hands", "106275"}, {"94", "0029_diarrahoea_prevention", "118255"}, {"85", "0025_open_defecation_1", "120467"}, {"86", "0026_open_defecation_2", "135660"}});
+		chapterNodeslevel2.add(chapter);
+		chapter = chapterNode("Level 2 Chapter 6", "6", "0025_lessons_1.2.6.wav", "33267", "0026_select_lesson_1.2.6.wav", "28985");
+		addLessonsToChapter(chapter, new String[][]{{"96", "0017_pneumonia_prevention", "117012"}, {"97", "0020_pneumonia_tratment_and_management", "115268"}, {"98", "0035_malaria_prevention", "115264"}, {"99", "0036_malaria_treatment_and_management", "110353"}});
+		chapterNodeslevel2.add(chapter);
+		hmParentNodeNameChildNodes.put("level 2",chapterNodeslevel2);
+		
+		chapter = chapterNode("Level 3 Chapter 5", "5", "0031_lessons_1.3.5.wav", "37428", "0032_select_lesson_1.3.5.wav", "32944");
+		addLessonsToChapter(chapter, new String[][]{{"94", "0025_diarrhea_prevention", "120467"}, {"95", "0026_management_and_treatment_of_diarrhea", "135660"}, {"96", "pneumonia_prevention", "120683"}, {"97", "0036_pneumonia_tratment_and_management", "106275"}, {"98", "0036_malaria_prevention", "106275"}, {"99", "0036_malaria_treatment_and_management", "106275"}});
+		chapterNodeslevel3.add(chapter);
+		hmParentNodeNameChildNodes.put("level 3",chapterNodeslevel3);
+		
+		chapter = chapterNode("Level 4 Chapter 5", "5", "0039_lessons_1.4.5.wav", "33971", "0040_select_lesson_1.4.5.wav", "32952");
+		addLessonsToChapter(chapter, new String[][]{{"94", "0025_diarrhea_prevention", "120467"}, {"95", "0026_management_and_treatment_of_diarrhea", "135660"}, {"96", "pneumonia_prevention", "120683"}, {"97", "0036_pneumonia_tratment_and_management", "106275"}, {"98", "0036_malaria_prevention", "106275"}, {"99", "0036_malaria_treatment_and_management", "106275"}});
+		chapterNodeslevel4.add(chapter);
+		hmParentNodeNameChildNodes.put("level 4",chapterNodeslevel4);
+		
+		return hmParentNodeNameChildNodes;
+	}
+
+	public Map<String, List<Node>> buildAdditionalLessonsForMK(Map<String, List<Node>> hmParentNodeNameChildNodes) {
+		Node lesson = null;
+		ArrayList<Node> lessonNodeslevel3 = new ArrayList<Node>();	
+		ArrayList<Node> lessonNodeslevel4 = new ArrayList<Node>();	
+
+		lesson = makeLessonNode("Level 3 Chapter 4", new String[]{"85", "0018_open_defecation_1", "124719"}, 5);
+		lessonNodeslevel3.add(lesson);
+		lesson = makeLessonNode("Level 3 Chapter 4", new String[]{"86", "0019_open_defecation_2", "105442"}, 6);
+		lessonNodeslevel3.add(lesson);
+		hmParentNodeNameChildNodes.put("Level 3 Chapter 4", lessonNodeslevel3);
+
+		lesson = makeLessonNode("Level 4 Chapter 4", new String[]{"86", "0019_open_defecation_2", "105442"}, 5);
+		lessonNodeslevel4.add(lesson);
+
+		hmParentNodeNameChildNodes.put("Level 4 Chapter 4", lessonNodeslevel4);
+		
+		return hmParentNodeNameChildNodes;
+	}
+	
+	public Node makeLessonNode(String parentName, String[] lesson, int latestLessonNo) {
+		String name = parentName + " Lesson" + latestLessonNo;
+		String number = latestLessonNo + "";
+		String shortcode = lesson[0];
+		String detail = "" + lesson[1] + ".wav";
+		String duration = lesson[2];
+		return lessonNode(name, number, shortcode, detail, duration);
+	}
 }

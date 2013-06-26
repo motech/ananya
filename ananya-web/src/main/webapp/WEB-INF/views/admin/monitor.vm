@@ -66,11 +66,14 @@
         </div>
     #else
      #foreach($entryWithState in $dataWithStateMap.entrySet())
+     	
+     	<div class="row-fluid">
+        	<div class="span4">
+            	<h2>$entryWithState.key</h2>
+        	</div>
+    	</div>
         <table class="table table-striped table-bordered">
             <thead>
-            <tr>
-            	<th rowspan="2">$entryWithState.key</th>
-            </tr>
             <tr>
                 <th width="50%">$column1Title</th>
                 <th>$column2Title</th>

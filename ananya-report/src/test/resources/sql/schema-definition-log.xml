@@ -551,10 +551,12 @@
     
    	<changeSet context="setup" author="Onmobile-version1.0" id="41">
         <sql splitStatements="false">
-        	INSERT INTO report.course_item_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
+        	INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 1, content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
+            INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 2, content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
             ALTER TABLE report.course_item_dimension DROP COLUMN file_name;
 			ALTER TABLE report.course_item_dimension DROP COLUMN duration;
-			INSERT INTO report.job_aid_content_details_dimension SELECT id, 1, content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
+			INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 1, content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
+            INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 2, content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
             ALTER TABLE report.job_aid_content_dimension DROP COLUMN file_name;
 			ALTER TABLE report.job_aid_content_dimension DROP COLUMN duration;
         </sql>
