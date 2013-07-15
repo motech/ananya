@@ -69,13 +69,13 @@ public class JobAidTree {
 
 
 
-	public HashMap<String, ArrayList<Node>> buildAdditionalChaptersForMK(HashMap<String, ArrayList<Node>> hmParentNodeNameChildNodes){		//Map<String, ArrayList<Node>>
+	public Map<String, List<Node>> buildAdditionalChaptersForMK(Map<String, List<Node>> hmParentNodeNameChildNodes){		//Map<String, ArrayList<Node>>
 
 		Node chapter = null;
-		ArrayList<Node> chapterNodeslevel1 = new ArrayList<Node>();
-		ArrayList<Node> chapterNodeslevel2 = new ArrayList<Node>();
-		ArrayList<Node> chapterNodeslevel3 = new ArrayList<Node>();
-		ArrayList<Node> chapterNodeslevel4 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel1 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel2 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel3 = new ArrayList<Node>();
+		List<Node> chapterNodeslevel4 = new ArrayList<Node>();
 		
 		chapter = chapterNode("Level 1 Chapter 5", "5", "0014.1_lessons_1.1.5.wav", "43054", "0014.2_select_lesson_1.1.5.wav", "27999");
 		addLessonsToChapter(chapter, new String[][]{{"93", "0017_handwashing_when_and_why", "117012"}, {"85", "0018_open_defecation_1", "124719"}, {"86", "0019_open_defecation_2", "105442"}});
@@ -106,11 +106,11 @@ public class JobAidTree {
 		return hmParentNodeNameChildNodes;
 	}
 
-	public HashMap<String, ArrayList<Node>> buildAdditionalLessonsForMK(HashMap<String, ArrayList<Node>> hmParentNodeNameChildNodes) {
+	public Map<String, List<Node>> buildAdditionalLessonsForMK(Map<String, List<Node>> hmParentNodeNameChildNodes) {
 
 		Node lesson = null;
-		ArrayList<Node> lessonNodeslevel3 = new ArrayList<Node>();	
-		ArrayList<Node> lessonNodeslevel4 = new ArrayList<Node>();	
+		List<Node> lessonNodeslevel3 = new ArrayList<Node>();	
+		List<Node> lessonNodeslevel4 = new ArrayList<Node>();	
 
 		lesson = makeLessonNode("Level 3 Chapter 4", new String[]{"85", "0018_open_defecation_1", "124719"}, 5);
 		lessonNodeslevel3.add(lesson);
