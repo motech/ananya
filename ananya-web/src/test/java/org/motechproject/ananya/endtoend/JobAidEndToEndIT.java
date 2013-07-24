@@ -72,11 +72,11 @@ public class JobAidEndToEndIT extends SpringIntegrationTest {
         String calledNumber = "5771122334455";
         String callDuration = "30000";
         String promptList = "['prompt1', 'prompt2']";
-        String language = "language";
+        String language = "bhojpuri";
         Integer expectedJobAidUsageByPulse = 60000;
         int allowedUsagePerMonth = 39 * 60 * 1000;
 
-        List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson2", "Level 3 Chapter 2 Lesson3");
+        List<String> nodeNames = Arrays.asList("Level 3 Chapter 2 Lesson3", "Level 3 Chapter 2 Lesson4");
         String json = testJsonData.forJobAidDisconnect(nodeNames);
 
         JobAidDisconnectRequest request = new JobAidDisconnectRequest(callerId, callId, operator, circle, calledNumber, callDuration, promptList, json, language);
