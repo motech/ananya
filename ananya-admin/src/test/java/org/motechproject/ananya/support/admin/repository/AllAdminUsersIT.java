@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-admin.xml")
-public class AllAdminUsersTest {
+public class AllAdminUsersIT {
 
     @Autowired
     private AllAdminUsers allAdminUsers;

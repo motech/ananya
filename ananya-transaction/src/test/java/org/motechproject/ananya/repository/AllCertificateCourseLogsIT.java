@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-transaction.xml")
-public class AllCertificateCourseLogsTest {
+public class AllCertificateCourseLogsIT {
     @Autowired
     private AllCertificateCourseLogs allCertificateCourseLogs;
 

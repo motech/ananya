@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class AllAudioTrackerLogsTest extends SpringIntegrationTest {
+public class AllAudioTrackerLogsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;

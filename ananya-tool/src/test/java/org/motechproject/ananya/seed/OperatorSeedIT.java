@@ -22,7 +22,7 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class OperatorSeedTest {
+public class OperatorSeedIT {
 
     @Autowired
     private OperatorSeed seed;

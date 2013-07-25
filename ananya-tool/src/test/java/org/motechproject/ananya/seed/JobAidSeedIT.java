@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class JobAidSeedTest {
+public class JobAidSeedIT {
 
     @Autowired
     private JobAidSeed jobAidSeed;

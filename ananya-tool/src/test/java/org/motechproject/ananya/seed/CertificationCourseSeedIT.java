@@ -19,7 +19,7 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class CertificationCourseSeedTest {
+public class CertificationCourseSeedIT {
 
     @Autowired
     private CertificationCourseSeed certificationCourseSeed;

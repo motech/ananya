@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class AllCallLogsTest extends SpringIntegrationTest{
+public class AllCallLogsIT extends SpringIntegrationTest{
 
     @Autowired
     private AllCallLogs allCallLogs;

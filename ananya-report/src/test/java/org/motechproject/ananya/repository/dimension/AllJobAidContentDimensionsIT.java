@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertNotNull;
 
-public class AllJobAidContentDimensionsTest extends SpringIntegrationTest{
+public class AllJobAidContentDimensionsIT extends SpringIntegrationTest{
 
     @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;

@@ -15,7 +15,7 @@ import java.net.URL;
 import static junit.framework.Assert.assertEquals;
 
 @Ignore
-public class LocationPerformanceTest extends SpringIntegrationTest {
+public class LocationPerformanceIT extends SpringIntegrationTest {
 
     @Autowired
     private AllLocations allLocations;

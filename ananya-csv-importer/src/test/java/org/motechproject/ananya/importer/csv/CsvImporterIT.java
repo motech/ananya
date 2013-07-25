@@ -21,7 +21,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class CsvImporterTest extends SpringIntegrationTest {
+public class CsvImporterIT extends SpringIntegrationTest {
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
     @Autowired

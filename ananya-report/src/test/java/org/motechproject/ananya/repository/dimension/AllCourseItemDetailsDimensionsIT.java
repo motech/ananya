@@ -9,7 +9,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.dimension.CourseItemDetailsDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AllCourseItemDetailsDimensionsTest extends SpringIntegrationTest {
+public class AllCourseItemDetailsDimensionsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllCourseItemDetailsDimensions allCourseItemDetailDimensions;

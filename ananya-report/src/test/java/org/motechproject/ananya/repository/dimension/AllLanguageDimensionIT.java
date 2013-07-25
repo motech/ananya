@@ -11,7 +11,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AllLanguageDimensionTest extends SpringIntegrationTest{
+public class AllLanguageDimensionIT extends SpringIntegrationTest{
     @Autowired
     AllLanguageDimension allLanguageDimension;
 

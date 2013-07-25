@@ -21,3 +21,4 @@ test-output/
 *.log*
 ananya-web/src/main/webapp/audio/*
 *.wav
+ananya-csv-exporter/outputFileName.csv

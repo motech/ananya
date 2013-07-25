@@ -12,7 +12,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-public class AllLocationDimensionsTest extends SpringIntegrationTest {
+public class AllLocationDimensionsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllLocationDimensions allLocationDimensions;

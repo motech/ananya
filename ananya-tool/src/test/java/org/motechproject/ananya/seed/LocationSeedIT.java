@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class LocationSeedTest {
+public class LocationSeedIT {
 
     @Autowired
     private LocationSeed locationSeed;

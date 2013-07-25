@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class AllCourseItemDimensionsTest extends SpringIntegrationTest {
+public class AllCourseItemDimensionsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllCourseItemDimensions allCourseItemDimensions;

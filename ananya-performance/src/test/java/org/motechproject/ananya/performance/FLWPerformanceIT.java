@@ -15,12 +15,11 @@ import org.motechproject.ananya.repository.AllLocations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
 @Ignore
-public class FLWPerformanceTest extends SpringIntegrationTest {
+public class FLWPerformanceIT extends SpringIntegrationTest {
 
     @Autowired
     private AllLocations allLocations;
@@ -37,7 +36,7 @@ public class FLWPerformanceTest extends SpringIntegrationTest {
             template.deleteAll(template.loadAll(LocationDimension.class));
             allLocations.removeAll();
             URL locationData = this.getClass().getResource("/locations_5000.csv");
-            LocationPerformanceTest.loadLocationData(locationData, 5000);
+            LocationPerformanceIT.loadLocationData(locationData, 5000);
             locationLoaded = true;
         }
     }

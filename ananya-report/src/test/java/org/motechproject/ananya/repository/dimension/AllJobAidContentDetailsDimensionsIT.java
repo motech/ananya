@@ -7,7 +7,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AllJobAidContentDetailsDimensionsTest extends SpringIntegrationTest{
+public class AllJobAidContentDetailsDimensionsIT extends SpringIntegrationTest{
 
     @Autowired
     private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;

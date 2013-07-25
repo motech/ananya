@@ -11,7 +11,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AllTimeDimensionsTest extends SpringIntegrationTest{
+public class AllTimeDimensionsIT extends SpringIntegrationTest{
     @Autowired
     private AllTimeDimensions allTimeDimensions;
 

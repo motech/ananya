@@ -27,7 +27,7 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-admin.xml")
-public class AdminInquiryServiceTest {
+public class AdminInquiryServiceIT {
     @Autowired
     private AdminInquiryService adminInquiryService;
     @Autowired
@@ -89,6 +89,7 @@ public class AdminInquiryServiceTest {
         template.deleteAll(template.loadAll(CourseItemMeasure.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
         template.deleteAll(template.loadAll(SMSSentMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
     }
 
     @Test

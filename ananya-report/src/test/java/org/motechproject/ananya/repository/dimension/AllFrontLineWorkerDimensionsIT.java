@@ -23,7 +23,7 @@ import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
+public class AllFrontLineWorkerDimensionsIT extends SpringIntegrationTest {
 
     @Autowired
     AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;

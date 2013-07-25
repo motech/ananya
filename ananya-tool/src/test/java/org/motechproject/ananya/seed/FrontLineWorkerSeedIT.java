@@ -35,7 +35,7 @@ import static junit.framework.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class FrontLineWorkerSeedTest {
+public class FrontLineWorkerSeedIT {
 
     @Autowired
     private AllFrontLineWorkers allFrontLineWorkers;
