@@ -95,7 +95,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
 
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         allCourseItemDimensions.add(courseItemDimension);
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         allLocationDimensions.saveOrUpdate(locationDimension);
 
 
@@ -128,7 +128,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
         FrontLineWorkerDimension frontLineWorkerDimension1 = allFrontLineWorkerDimensions.createOrUpdate(msisdn1, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimensionForYesterday = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allCourseItemDimensions.add(courseItemDimension);
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         allLocationDimensions.saveOrUpdate(locationDimension);
         CourseItemMeasure courseItemMeasureForYesterday = new CourseItemMeasure(timeDimensionForYesterday, courseItemDimension, frontLineWorkerDimension1, locationDimension, languageDimension, DateTime.now(), 0, event,callId);
 
@@ -159,7 +159,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
         LanguageDimension languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         allCourseItemDimensions.add(courseItemDimension);
         CourseItemMeasure actualCourseItemMeasure = new CourseItemMeasure("callId", timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, languageDimension, DateTime.now(), 20, 20);
         allCourseItemMeasures.save(actualCourseItemMeasure);
@@ -180,7 +180,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
         LanguageDimension languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
         allLocationDimensions.saveOrUpdate(locationDimension);
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         allCourseItemDimensions.add(courseItemDimension);
         CourseItemMeasure actualCourseItemMeasure = new CourseItemMeasure("callId", timeDimension, courseItemDimension, frontLineWorkerDimension, locationDimension, languageDimension, DateTime.now(), 20, 20);
         allCourseItemMeasures.save(actualCourseItemMeasure);

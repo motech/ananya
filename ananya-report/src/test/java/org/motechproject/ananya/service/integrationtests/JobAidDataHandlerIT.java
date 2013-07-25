@@ -136,7 +136,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         allAudioTrackerLogs.add(audioTrackerLog);
         
         LanguageDimension languageDimension = new LanguageDimension(language, "hin", "badhai ho...");
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         
         
         JobAidContentDimension content1Dimension = new JobAidContentDimension("content1", null, "CHAPTER", "AUDIO");

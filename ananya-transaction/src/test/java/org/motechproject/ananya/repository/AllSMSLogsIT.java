@@ -12,7 +12,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 public class AllSMSLogsIT extends SpringIntegrationTest{
 
     @Autowired

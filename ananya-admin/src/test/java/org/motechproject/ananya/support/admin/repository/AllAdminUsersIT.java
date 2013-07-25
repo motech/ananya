@@ -7,6 +7,7 @@ import org.motechproject.ananya.support.admin.domain.AdminUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -14,6 +15,7 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-admin.xml")
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class AllAdminUsersIT {
 
     @Autowired

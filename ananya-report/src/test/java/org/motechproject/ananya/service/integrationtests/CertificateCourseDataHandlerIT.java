@@ -48,8 +48,6 @@ import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-report.xml")
 public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     @Autowired
@@ -146,7 +144,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
         LanguageDimension languageDimension = new LanguageDimension(language, "hin", "badhai ho...");
-        allLanguageDimension.add(languageDimension);
+        allLanguageDimension.addOrUpdate(languageDimension);
         TimeDimension callStartTimeDimension = allTimeDimensions.addOrUpdate(callStartTime);
 
         CallLog callLog = new CallLog(callId, callerId, calledNumber);
