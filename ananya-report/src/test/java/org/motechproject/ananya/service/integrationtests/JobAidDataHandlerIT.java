@@ -82,6 +82,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(JobAidContentDimension.class));
         template.flush();
         template.deleteAll(template.loadAll(JobAidContentMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
         template.flush();
         template.clear();
     }

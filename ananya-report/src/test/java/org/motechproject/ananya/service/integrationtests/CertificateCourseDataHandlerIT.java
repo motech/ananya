@@ -98,6 +98,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
     }
 
     @Test
