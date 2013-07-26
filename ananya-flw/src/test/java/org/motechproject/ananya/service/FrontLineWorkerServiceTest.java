@@ -46,7 +46,7 @@ public class FrontLineWorkerServiceTest {
 
     @Test
     public void shouldCreateNewFLWIfNotPresentInDB() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("123", "name", Designation.ANM, new Location(), "language", DateTime.now(), null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("123", null, "name", Designation.ANM, new Location(), "language", DateTime.now(), null);
         String msisdn = frontLineWorker.getMsisdn();
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(null);
@@ -68,7 +68,7 @@ public class FrontLineWorkerServiceTest {
         String circle = "circle";
         String operator = "airtel";
         Location location = Location.getDefaultLocation();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
@@ -90,7 +90,7 @@ public class FrontLineWorkerServiceTest {
         String newOperator = "airtel";
         Location location = new Location();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(oldOperator);
         frontLineWorker.setCircle(circle);
 
@@ -112,7 +112,7 @@ public class FrontLineWorkerServiceTest {
         String operator = "vodafone";
         Location location = new Location();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, null , null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, null , null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
 
@@ -136,7 +136,7 @@ public class FrontLineWorkerServiceTest {
         String newLanguage ="hindi";
         Location location = Location.getDefaultLocation();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, oldLanguage , null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, oldLanguage , null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
@@ -156,7 +156,7 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String operator = "vodafone";
         Location location = new Location();
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", Designation.ANM, location, "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(operator);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
@@ -186,11 +186,11 @@ public class FrontLineWorkerServiceTest {
         String name = "name";
         Designation designation = Designation.AWW;
         Location location = new Location("state", "district", "block", "panchayat", 1, 123, 124, 125, LocationStatus.VALID, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, new Location(), "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, null, null, new Location(), "language", null, flwId);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, "language", null, flwId), location);
+        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, null, name, designation, location, "language", null, flwId), location);
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker.getName(), name);
@@ -283,7 +283,7 @@ public class FrontLineWorkerServiceTest {
         when(existingFrontLineWorker.update(name, designation, location, lastModified, flwId, verificationStatus)).thenReturn(false);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
-        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, name, designation, location, "language", lastModified.minusDays(1), flwId), location);
+        frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, null, name, designation, location, "language", lastModified.minusDays(1), flwId), location);
 
         verify(allFrontLineWorkers, never()).update(any(FrontLineWorker.class));
     }

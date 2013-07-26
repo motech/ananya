@@ -75,7 +75,7 @@ public class FLWDetailsServiceTest {
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
         String language= "language";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "Name", Designation.ANM, defaultLocation, language, DateTime.now(), flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "Name", Designation.ANM, defaultLocation, language, DateTime.now(), flwId);
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
         FLWUsageResponse expectedFLWResponse = new FLWUsageResponse();

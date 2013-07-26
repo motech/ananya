@@ -61,7 +61,7 @@ public class CallDurationMeasureServiceTest {
     @Before
     public void setup() {
         initMocks(this);
-        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID(), null);
+        frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, null, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(flwId);
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         callDurationMeasureService = new CallDurationMeasureService(callLoggerService, allCallDurationMeasures, allFrontLineWorkerDimensions, allRegistrationMeasures, allTimeDimensions, locationDimensionService, operatorService);
@@ -119,7 +119,7 @@ public class CallDurationMeasureServiceTest {
         String calledNumber = "321";
         LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, null, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(flwId);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
 

@@ -7,7 +7,6 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
@@ -34,8 +33,6 @@ import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.handler.CertificateCourseDataHandler;
 import org.motechproject.event.MotechEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -98,6 +95,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
     }
 
     @Test
@@ -134,7 +132,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
         Location location = new Location("", "", "", "", 1, 0, 0, 0, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, language, null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, null, "", Designation.AWW, location, language, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator(operatorName);
         allFrontLineWorkers.add(frontLineWorker);

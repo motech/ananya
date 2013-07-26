@@ -28,6 +28,9 @@ public class FrontLineWorkerDimension {
     @Column(name = "msisdn")
     private Long msisdn;
 
+    @Column(name = "alternate_contact_number")
+    private Long alternateContactNumber;
+
     @Column(name = "operator")
     private String operator;
 
@@ -54,8 +57,9 @@ public class FrontLineWorkerDimension {
     public FrontLineWorkerDimension() {
     }
 
-    public FrontLineWorkerDimension(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
+    public FrontLineWorkerDimension(Long msisdn, Long alternateContactNumber, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
         this.msisdn = msisdn;
+        this.alternateContactNumber = alternateContactNumber;
         this.operator = operator;
         this.name = name;
         this.designation = designation;
@@ -113,13 +117,14 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-	public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId, VerificationStatus verificationStatus) {
+	public FrontLineWorkerDimension update(String circle, Long alternateContactNumber, String operator, String name, String status, String designation, UUID flwId, VerificationStatus verificationStatus) {
         this.operator = operator;
         this.name = name;
         this.status = status;
         this.designation = designation;
         this.circle = circle;
         this.verificationStatus = verificationStatus;
+        this.alternateContactNumber = alternateContactNumber;
         updateFlwId(flwId);
         return this;
     }
@@ -197,5 +202,9 @@ public class FrontLineWorkerDimension {
         }
 
         this.flwId = flwId;
+    }
+
+    public Long getAlternateContactNumber() {
+        return alternateContactNumber;
     }
 }

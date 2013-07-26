@@ -561,4 +561,11 @@
 			ALTER TABLE report.job_aid_content_dimension DROP COLUMN duration;
         </sql>
     </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="42">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension ADD COLUMN alternate_contact_number bigint;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

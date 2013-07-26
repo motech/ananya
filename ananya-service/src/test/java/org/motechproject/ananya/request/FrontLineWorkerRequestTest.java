@@ -33,4 +33,21 @@ public class FrontLineWorkerRequestTest {
         frontLineWorkerRequest.setMsisdn("a. b S.  ");
         assertFalse(frontLineWorkerRequest.isInvalidName());
     }
+
+    @Test
+    public void shouldCheckAlternateContactNumber() {
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest();
+
+        frontLineWorkerRequest.setAlternateContactNumber("");
+        assertFalse(frontLineWorkerRequest.isInvalidAlternateContactNumber());
+
+        frontLineWorkerRequest.setAlternateContactNumber(null);
+        assertFalse(frontLineWorkerRequest.isInvalidAlternateContactNumber());
+
+        frontLineWorkerRequest.setAlternateContactNumber("1234567890");
+        assertFalse(frontLineWorkerRequest.isInvalidAlternateContactNumber());
+
+        frontLineWorkerRequest.setAlternateContactNumber("1234");
+        assertTrue(frontLineWorkerRequest.isInvalidAlternateContactNumber());
+    }
 }

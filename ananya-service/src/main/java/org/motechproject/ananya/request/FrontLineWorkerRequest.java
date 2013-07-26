@@ -9,6 +9,8 @@ import org.motechproject.importer.annotation.ColumnName;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
     private String msisdn;
@@ -18,13 +20,15 @@ public class FrontLineWorkerRequest implements Serializable {
     private DateTime lastModified;
     private String flwId;
     private String verificationStatus;
+    private String alternateContactNumber;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language) {
+    public FrontLineWorkerRequest(String msisdn, String alternateContactNumber, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language) {
         this.name = name;
         this.msisdn = msisdn;
+        this.alternateContactNumber = alternateContactNumber;
         this.designation = designation;
         this.location = location;
         this.lastModified = lastModified;
@@ -47,6 +51,10 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    public void setAlternateContactNumber(String alternateContactNumber) {
+        this.alternateContactNumber = alternateContactNumber;
     }
 
     public String getDesignation() {
@@ -122,13 +130,26 @@ public class FrontLineWorkerRequest implements Serializable {
         location.setPanchayat(panchayat);
     }
 
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
+    }
+
     public String toCSV() {
         return "\"" + msisdn + "\"" + "," + "\"" + name + "\"" + "," + "\"" + language + "\"" + "," + "\"" + designation + "\"" + "," + "\"" + location.getState() + "\"" + "," + "\"" + location.getDistrict() + "\"" + "," + "\"" + location.getBlock() + "\"" + "," + "\"" + location.getPanchayat() + "\"";
     }
 
     @JsonIgnore
     public boolean isInvalidMsisdn() {
+        return validateMsisdn(msisdn);
+    }
+
+    private boolean validateMsisdn(String msisdn) {
         return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
+    }
+
+    @JsonIgnore
+    public boolean isInvalidAlternateContactNumber() {
+        return isNotBlank(alternateContactNumber) && validateMsisdn(alternateContactNumber);
     }
 
     @JsonIgnore

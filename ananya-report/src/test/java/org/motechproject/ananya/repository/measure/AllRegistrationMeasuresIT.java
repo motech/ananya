@@ -42,7 +42,7 @@ public class AllRegistrationMeasuresIT extends SpringIntegrationTest {
     public void shouldFindAllRegistrationMeasuresByLocationId() {
         long msisdn = 123L;
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(msisdn,
-                "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
+                null, "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         template.save(frontLineWorkerDimension);
         String locationId = "locationId";
         LocationDimension locationDimension = new LocationDimension(locationId, "state", "district", "block", "panchayat", "VALID");

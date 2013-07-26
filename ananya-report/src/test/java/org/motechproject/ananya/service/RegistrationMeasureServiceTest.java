@@ -73,7 +73,7 @@ public class RegistrationMeasureServiceTest {
         frontLineWorker.setRegisteredDate(registeredDate);
         frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
         LocationDimension locationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", "VALID");
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), null, operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationLog registrationLog = new RegistrationLog(callId, callerId, operator, circle);
 
@@ -81,12 +81,12 @@ public class RegistrationMeasureServiceTest {
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
-        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), VerificationStatus.OTHER)).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), null, operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), VerificationStatus.OTHER)).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
         registrationMeasureService.createFor(callId);
 
-        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), VerificationStatus.OTHER);
+        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), null, operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), VerificationStatus.OTHER);
         ArgumentCaptor<RegistrationMeasure> captor = ArgumentCaptor.forClass(RegistrationMeasure.class);
         verify(allRegistrationMeasures).createOrUpdate(captor.capture());
         verify(registrationLogService).delete(registrationLog);
@@ -109,22 +109,23 @@ public class RegistrationMeasureServiceTest {
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
+        frontLineWorker.setAlternateContactNumber(callerId);
         LocationDimension oldLocationDimension = new LocationDimension("oldid", "oldstate", "olddistrict", "oldblock", "oldpanchayat", "VALID");
         LocationDimension newLocationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", "VALID");
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), null, operator, circle, "", "", "", frontLineWorker.getFlwId(), null);
         frontLineWorkerDimension.setId(flwId);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, oldLocationDimension, timeDimension, null);
 
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(true);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
-        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), null)).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), null)).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
         when(allLocationDimensions.getFor(any(String.class))).thenReturn(newLocationDimension);
 
         registrationMeasureService.createOrUpdateFor(callerId);
 
-        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), null);
+        verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), null);
         verify(allRegistrationMeasures).createOrUpdate(registrationMeasure);
         assertEquals(newLocationDimension, registrationMeasure.getLocationDimension());
     }
@@ -153,13 +154,13 @@ public class RegistrationMeasureServiceTest {
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegisteredDate(registeredDate);
         LocationDimension locationDimension = new LocationDimension("id", "state", "district", "block", "panchayat", LocationStatus.VALID.name());
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), operator, circle, "", "", "", null, VerificationStatus.SUCCESS);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), null, operator, circle, "", "", "", null, VerificationStatus.SUCCESS);
         TimeDimension timeDimension = new TimeDimension(registeredDate);
 
         when(frontLineWorkerDimensionService.exists(Long.parseLong(callerId))).thenReturn(false);
         when(frontLineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
         when(allLocationDimensions.getFor(anyString())).thenReturn(locationDimension);
-        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", UUID.fromString("11111111-1111-1111-1111-111111111111"), null)).thenReturn(frontLineWorkerDimension);
+        when(frontLineWorkerDimensionService.createOrUpdate(Long.valueOf(callerId), null, operator, circle, null, null, "UNREGISTERED", UUID.fromString("11111111-1111-1111-1111-111111111111"), null)).thenReturn(frontLineWorkerDimension);
         when(allTimeDimensions.getFor(registeredDate)).thenReturn(timeDimension);
 
         registrationMeasureService.createRegistrationMeasure(callerId, callId);

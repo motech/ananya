@@ -308,7 +308,7 @@ public class FrontLineWorkerSeedService {
 
         frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
                 frontLineWorker.msisdn(),
-                frontLineWorker.getOperator(),
+                null, frontLineWorker.getOperator(),
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),

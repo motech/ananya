@@ -16,8 +16,8 @@ public class FLWValidationResponse {
         return message;
     }
 
-    public FLWValidationResponse forInvalidMsisdn() {
-        message += "[Invalid msisdn]";
+    public FLWValidationResponse forInvalidMsisdn(final String fieldName) {
+        message += "[Invalid " + fieldName + "]";
         isValid = false;
         return this;
     }
@@ -48,6 +48,12 @@ public class FLWValidationResponse {
 
     public FLWValidationResponse forInvalidVerificationStatus() {
         message += "[Invalid verification status]";
+        isValid = false;
+        return this;
+    }
+
+    public FLWValidationResponse forMissingAlternateContactNumber() {
+        message += "[Alternate contact number mandatory for success registration]";
         isValid = false;
         return this;
     }

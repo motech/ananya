@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 @Service
 public class FLWRegistrationService {
     private static Logger log = LoggerFactory.getLogger(FLWRegistrationService.class);
@@ -103,20 +105,23 @@ public class FLWRegistrationService {
     }
 
     @Transactional
-    private RegistrationResponse registerFlw(FrontLineWorkerRequest frontLineWorkerRequest) {
+    private RegistrationResponse registerFlw(FrontLineWorkerRequest request) {
         RegistrationResponse registrationResponse = new RegistrationResponse();
 
-        FLWValidationResponse FLWValidationResponse = FrontLineWorkerValidator.validate(frontLineWorkerRequest);
+        FLWValidationResponse FLWValidationResponse = FrontLineWorkerValidator.validate(request);
         if (FLWValidationResponse.isInValid()) {
             return registrationResponse.withValidationResponse(FLWValidationResponse);
         }
 
-        Location location = getOrCreateLocation(frontLineWorkerRequest);
+        Location location = getOrCreateLocation(request);
 
-        String callerId = frontLineWorkerRequest.getMsisdn();
-        UUID flwId = UUID.fromString(frontLineWorkerRequest.getFlwId());
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, frontLineWorkerRequest.getName(), Designation.getFor(frontLineWorkerRequest.getDesignation()), location, frontLineWorkerRequest.getLanguage(), new DateTime(frontLineWorkerRequest.getLastModified()), flwId);
-        frontLineWorker.setVerificationStatus(frontLineWorkerRequest.getVerificationStatusAsEnum());
+        String callerId = request.getMsisdn();
+        UUID flwId = UUID.fromString(request.getFlwId());
+        String alternateContactNumber = isBlank(request.getAlternateContactNumber()) ? null : request.getAlternateContactNumber();
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, alternateContactNumber, request.getName(),
+                Designation.getFor(request.getDesignation()), location, request.getLanguage(),
+                new DateTime(request.getLastModified()), flwId);
+        frontLineWorker.setVerificationStatus(request.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         updateAllMeasures(frontLineWorker);
 
@@ -135,22 +140,23 @@ public class FLWRegistrationService {
         return locationService.findFor(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
     }
 
-    private FrontLineWorkerRequest trim(FrontLineWorkerRequest frontLineWorkerRequest) {
-        LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
+    private FrontLineWorkerRequest trim(FrontLineWorkerRequest request) {
+        LocationRequest locationRequest = request.getLocation();
         LocationRequest location = locationRequest != null ?
                 new LocationRequest(StringUtils.trimToEmpty(locationRequest.getState()),
                 		StringUtils.trimToEmpty(locationRequest.getDistrict()),
                         StringUtils.trimToEmpty(locationRequest.getBlock()),
                         StringUtils.trimToEmpty(locationRequest.getPanchayat()))
                 : null;
-        return new FrontLineWorkerRequest(StringUtils.trimToEmpty(frontLineWorkerRequest.getMsisdn()),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getName()),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getDesignation()),
+        return new FrontLineWorkerRequest(StringUtils.trimToEmpty(request.getMsisdn()),
+                request.getAlternateContactNumber(),
+                StringUtils.trimToEmpty(request.getName()),
+                StringUtils.trimToEmpty(request.getDesignation()),
                 location,
-                frontLineWorkerRequest.getLastModified(),
-                StringUtils.trimToEmpty(frontLineWorkerRequest.getFlwId()),
-                frontLineWorkerRequest.getVerificationStatus(),
-                frontLineWorkerRequest.getLanguage());
+                request.getLastModified(),
+                StringUtils.trimToEmpty(request.getFlwId()),
+                request.getVerificationStatus(),
+                request.getLanguage());
     }
 
     private void updateAllMeasures(FrontLineWorker frontLineWorker) {

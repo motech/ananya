@@ -56,9 +56,9 @@ public class FrontLineWorkerDimensionServiceTest {
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         UUID flwId = UUID.randomUUID();
 
-        frontLineWorkerDimensionService.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
+        frontLineWorkerDimensionService.createOrUpdate(msisdn, msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
 
-        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
+        verify(allFrontLineWorkerDimensions).createOrUpdate(msisdn, msisdn, operator, circle, name, designation, registrationStatus, flwId, VerificationStatus.OTHER);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class FrontLineWorkerDimensionServiceTest {
         String designation = Designation.ANM.name();
         String registrationStatus = RegistrationStatus.PARTIALLY_REGISTERED.name();
         ArrayList<FrontLineWorkerDimension> frontLineWorkerDimensions = new ArrayList<FrontLineWorkerDimension>();
-        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle, UUID.randomUUID(), null));
+        frontLineWorkerDimensions.add(new FrontLineWorkerDimension(Long.parseLong(msisdn), null, name, registrationStatus, designation, operator, circle, UUID.randomUUID(), null));
         when(allFrontLineWorkerDimensions.getFilteredFLWFor(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle)).thenReturn(frontLineWorkerDimensions);
 
         List<FrontLineWorkerDimension> filteredFLWs = frontLineWorkerDimensionService.getFilteredFLW(null, Long.parseLong(msisdn), name, registrationStatus, designation, operator, circle);

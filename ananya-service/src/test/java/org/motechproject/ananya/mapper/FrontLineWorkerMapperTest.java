@@ -24,7 +24,7 @@ public class FrontLineWorkerMapperTest {
         String status = RegistrationStatus.REGISTERED.name();
         VerificationStatus verificationStatus = VerificationStatus.OTHER;
 
-        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, UUID.randomUUID(), verificationStatus));
+        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, null, operator, circle, name, designation, status, UUID.randomUUID(), verificationStatus));
 
         assertEquals(msisdn.toString(), frontLineWorkerResponse.getMsisdn());
         assertEquals(name, frontLineWorkerResponse.getName());
@@ -43,7 +43,7 @@ public class FrontLineWorkerMapperTest {
         String designation = Designation.ANM.name();
         String status = RegistrationStatus.REGISTERED.name();
 
-        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, UUID.randomUUID(), null));
+        FrontLineWorkerResponse frontLineWorkerResponse = FrontLineWorkerMapper.mapFrom(new FrontLineWorkerDimension(msisdn, null, operator, circle, name, designation, status, UUID.randomUUID(), null));
 
         assertEquals(StringUtils.EMPTY, frontLineWorkerResponse.getVerificationStatus());
     }

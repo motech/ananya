@@ -34,8 +34,8 @@ public class FrontLineWorkerDimensionService {
     }
 
     @Transactional
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId, VerificationStatus verificationStatus) {
-        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, verificationStatus);
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, Long alternateContactNumber, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId, VerificationStatus verificationStatus) {
+        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, alternateContactNumber, operator, circle, name, designation, registrationStatus, flwId, verificationStatus);
     }
 
     public boolean exists(Long msisdn) {

@@ -71,7 +71,7 @@ public class RegistrationMeasureService {
 
         FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
                 frontLineWorker.msisdn(),
-                frontLineWorker.getOperator(),
+                frontLineWorker.alternateContactNumber(), frontLineWorker.getOperator(),
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
@@ -103,6 +103,7 @@ public class RegistrationMeasureService {
 
         FrontLineWorkerDimension frontLineWorkerDimension = frontLineWorkerDimensionService.createOrUpdate(
                 frontLineWorker.msisdn(),
+                frontLineWorker.alternateContactNumber(),
                 frontLineWorker.getOperator(),
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),

@@ -31,6 +31,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String msisdn;
 
     @JsonProperty
+    private String alternateContactNumber;
+
+    @JsonProperty
     private String operator;
 
     @JsonProperty
@@ -94,9 +97,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.language= language;
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
+    public FrontLineWorker(String msisdn, String alternateContactNumber, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
+        this.alternateContactNumber = prefixMsisdnWith91(alternateContactNumber);
         this.name = name;
         this.designation = designation;
         this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
@@ -146,6 +150,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return msisdn;
     }
 
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
+    }
+
     public String getName() {
         return name;
     }
@@ -160,6 +168,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public Long msisdn() {
         return Long.valueOf(msisdn);
+    }
+
+    public Long alternateContactNumber() {
+        return alternateContactNumber == null ? null : Long.valueOf(alternateContactNumber);
     }
 
     public BookMark bookMark() {
@@ -425,8 +437,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
 	public String getLanguage() {
 		return language;
 	}
-	
+
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+
+    public void setAlternateContactNumber(String alternateContactNumber) {
+        this.alternateContactNumber = alternateContactNumber;
+    }
+
 }

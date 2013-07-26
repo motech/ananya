@@ -82,6 +82,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(JobAidContentDimension.class));
         template.flush();
         template.deleteAll(template.loadAll(JobAidContentMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
         template.flush();
         template.clear();
     }
@@ -116,7 +117,7 @@ public class JobAidDataHandlerIT extends SpringIntegrationTest {
         DateTime jobAidEndTime = now.plusSeconds(15);
 
         Location location = new Location("", "", "", "", 1, 0, 0, 0, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "name", Designation.AWW, location, language, null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, null, "name", Designation.AWW, location, language, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator("airtel");
         allFrontLineWorkers.add(frontLineWorker);

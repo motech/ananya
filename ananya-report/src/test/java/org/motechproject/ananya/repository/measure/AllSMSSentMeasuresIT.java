@@ -59,13 +59,13 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void shouldNotInsertSMSSentMeasureWhenTimeDimensionIsNull() {
-        template.save(new SMSSentMeasure(2, "23123123", false, new FrontLineWorkerDimension(9876543210L, "", "", "", "", "", flwId, null), null, null));
+        template.save(new SMSSentMeasure(2, "23123123", false, new FrontLineWorkerDimension(9876543210L, null, "", "", "", "", "", flwId, null), null, null));
     }
 
     @Test
     public void shouldFetchBasedOnFLW() {
         String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), null, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -79,7 +79,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchBasedOnFLWCallerId() {
         String smsReferenceNumber = "refNo";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), null, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
@@ -94,7 +94,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
     public void shouldFetchBasedOnLocationId() {
         String smsReferenceNumber = "refNo";
         String locationId = "locationId";
-        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
+        FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), null, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
         LocationDimension locationDimension = new LocationDimension(locationId, "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);

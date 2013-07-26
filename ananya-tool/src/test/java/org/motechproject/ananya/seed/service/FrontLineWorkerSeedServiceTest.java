@@ -43,19 +43,19 @@ public class FrontLineWorkerSeedServiceTest {
 
         UUID flwId = UUID.randomUUID();
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, language, null, flwId);
+                "1234", null, "", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, language, null, flwId);
+                "1234", null, "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, language, null, flwId);
+                "1234", null, "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, defaultLocation, language, null, flwId);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, incompleteLocation, language, null, flwId);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, language, null, flwId);
+                "1234", null, "", null, defaultLocation, language, null, flwId);
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));
