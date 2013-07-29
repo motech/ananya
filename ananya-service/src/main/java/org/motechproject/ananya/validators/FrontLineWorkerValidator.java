@@ -63,8 +63,6 @@ public class FrontLineWorkerValidator {
     }
 
     private static void validateAlternateContactNumber(FrontLineWorkerRequest request, FLWValidationResponse response) {
-        if (request.getAlternateContactNumber() == null && VerificationStatus.SUCCESS.name().equals(request.getVerificationStatus()))
-            response.forMissingAlternateContactNumber();
         if (request.isInvalidAlternateContactNumber())
             response.forInvalidMsisdn("alternate contact number");
     }

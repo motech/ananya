@@ -86,14 +86,6 @@ public class FrontLineWorkerValidatorTest {
     }
 
     @Test
-    public void alternateContactNumberMustBePresentForSuccessRegistration() {
-        FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("1234567890", null, "name", Designation.ANM.name(), null, null, flwId, "SUCCESS", null));
-
-        assertTrue(flwValidationResponse.isInValid());
-        assertEquals("[Alternate contact number mandatory for success registration]", flwValidationResponse.getMessage());
-    }
-
-    @Test
     public void shouldNotInValidateIfJustLocationIsBlank() {
         FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validate(new FrontLineWorkerRequest("9876543210", null, "name", Designation.ANM.name(), null, null, flwId, null, null));
 

@@ -51,10 +51,4 @@ public class FLWValidationResponse {
         isValid = false;
         return this;
     }
-
-    public FLWValidationResponse forMissingAlternateContactNumber() {
-        message += "[Alternate contact number mandatory for success registration]";
-        isValid = false;
-        return this;
-    }
 }
