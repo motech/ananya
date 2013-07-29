@@ -290,7 +290,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
                 frontLineWorker.msisdn(),
-                null, frontLineWorker.getOperator(),
+                frontLineWorker.alternateContactNumber(), frontLineWorker.getOperator(),
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
@@ -301,6 +301,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         assertEquals(frontLineWorkerDimension.getId(), frontLineWorkerDimensionFromDb.getId());
+        assertNull(frontLineWorkerDimension.getAlternateContactNumber());
 
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         assertNull(registrationMeasure);
@@ -313,6 +314,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
         frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
+        frontLineWorker.setAlternateContactNumber("1");
         allFrontLineWorkers.add(frontLineWorker);
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
@@ -320,6 +322,7 @@ public class FrontLineWorkerSeedIT {
         FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         assertNotNull(frontLineWorkerDimensionFromDb);
         assertEquals(VerificationStatus.OTHER, frontLineWorkerDimensionFromDb.getVerificationStatus());
+        assertEquals(1, frontLineWorkerDimensionFromDb.getAlternateContactNumber().longValue());
 
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimensionFromDb.getId());
         assertNotNull(registrationMeasure);

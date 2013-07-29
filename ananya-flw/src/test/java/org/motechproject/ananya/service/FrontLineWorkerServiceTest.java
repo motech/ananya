@@ -190,13 +190,15 @@ public class FrontLineWorkerServiceTest {
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
-        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, null, name, designation, location, "language", null, flwId), location);
+        String alternateContactNumber = "1";
+        frontLineWorker = frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, alternateContactNumber, name, designation, location, "language", null, flwId), location);
 
         verify(allFrontLineWorkers).update(frontLineWorker);
         assertEquals(frontLineWorker.getName(), name);
         assertEquals(frontLineWorker.getDesignation(), designation);
         assertEquals(frontLineWorker.getLocationId(), location.getExternalId());
         assertEquals(RegistrationStatus.REGISTERED, frontLineWorker.getStatus());
+        assertEquals(alternateContactNumber, frontLineWorker.getAlternateContactNumber());
     }
 
     @Test
@@ -280,7 +282,7 @@ public class FrontLineWorkerServiceTest {
         UUID flwId = UUID.randomUUID();
         Location location = new Location("state", "district", "block", "panchayat", 1, 123, 124, 125, null, null);
 
-        when(existingFrontLineWorker.update(name, designation, location, lastModified, flwId, verificationStatus)).thenReturn(false);
+        when(existingFrontLineWorker.update(name, designation, location, lastModified, flwId, verificationStatus, null)).thenReturn(false);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(existingFrontLineWorker);
 
         frontLineWorkerService.createOrUpdate(new FrontLineWorker(msisdn, null, name, designation, location, "language", lastModified.minusDays(1), flwId), location);

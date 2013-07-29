@@ -143,7 +143,9 @@ public class FrontLineWorkerService {
     }
 
     private FrontLineWorker updateExistingFrontLineWorker(FrontLineWorker existingFrontLineWorker, FrontLineWorker frontLineWorker, Location location) {
-        boolean updated = existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location, frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus());
+        boolean updated = existingFrontLineWorker.update(frontLineWorker.getName(), frontLineWorker.getDesignation(), location,
+                frontLineWorker.getLastModified(), frontLineWorker.getFlwId(), frontLineWorker.getVerificationStatus(),
+                frontLineWorker.getAlternateContactNumber());
         if (!updated) {
             return existingFrontLineWorker;
         }

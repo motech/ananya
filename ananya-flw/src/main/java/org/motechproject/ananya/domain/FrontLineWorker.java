@@ -253,11 +253,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus) {
+    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus, String alternateContactNumber) {
         if(!canBeUpdated(lastModified)) {
             return false;
         }
-
+        this.alternateContactNumber = alternateContactNumber;
         this.name = name;
         this.designation = designation;
         this.lastModified = lastModified == null ? this.lastModified : lastModified;
@@ -335,6 +335,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
             this.name = frontLineWorker.name();
             this.registeredDate = frontLineWorker.getRegisteredDate();
             this.language =frontLineWorker.getLanguage();
+            this.alternateContactNumber = frontLineWorker.getAlternateContactNumber();
         }
         if (this.bookmark == null) {
             this.bookmark = frontLineWorker.bookMark();

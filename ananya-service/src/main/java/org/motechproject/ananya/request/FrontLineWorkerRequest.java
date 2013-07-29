@@ -34,7 +34,7 @@ public class FrontLineWorkerRequest implements Serializable {
         this.lastModified = lastModified;
         this.flwId = flwId;
         this.verificationStatus = verificationStatus;
-        this.language =language;
+        this.language = language;
     }
 
     public String getName() {
@@ -51,6 +51,10 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
     }
 
     public void setAlternateContactNumber(String alternateContactNumber) {
@@ -102,15 +106,15 @@ public class FrontLineWorkerRequest implements Serializable {
     }
 
     public String getLanguage() {
-		return language;
-	}
-    
+        return language;
+    }
+
     @ColumnName(name = "language")
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-    
-	@ColumnName(name = "district")
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @ColumnName(name = "district")
     public void setDistrict(String district) {
         location.setDistrict(district);
     }
@@ -119,19 +123,15 @@ public class FrontLineWorkerRequest implements Serializable {
     public void setBlock(String block) {
         location.setBlock(block);
     }
-    
+
     @ColumnName(name = "state")
     public void setState(String state) {
         location.setState(state);
     }
-    
+
     @ColumnName(name = "panchayat")
     public void setPanchayat(String panchayat) {
         location.setPanchayat(panchayat);
-    }
-
-    public String getAlternateContactNumber() {
-        return alternateContactNumber;
     }
 
     public String toCSV() {
@@ -140,16 +140,16 @@ public class FrontLineWorkerRequest implements Serializable {
 
     @JsonIgnore
     public boolean isInvalidMsisdn() {
-        return validateMsisdn(msisdn);
+        return invalidFormat(msisdn);
     }
 
-    private boolean validateMsisdn(String msisdn) {
-        return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
+    private boolean invalidFormat(String msisdn) {
+        return StringUtils.length(msisdn) < 10 || !StringUtils.isNumeric(msisdn);
     }
 
     @JsonIgnore
     public boolean isInvalidAlternateContactNumber() {
-        return isNotBlank(alternateContactNumber) && validateMsisdn(alternateContactNumber);
+        return isNotBlank(alternateContactNumber) && invalidFormat(alternateContactNumber);
     }
 
     @JsonIgnore
