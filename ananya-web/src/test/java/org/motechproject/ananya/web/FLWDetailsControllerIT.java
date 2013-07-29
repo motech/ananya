@@ -137,7 +137,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
             add("1234");
         }};
         flwDetailsController = new FLWDetailsController(flwRegistrationService, flwDetailsService);
-        FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "unregistered",
+        FLWUsageResponse expectedResponse = new FLWUsageResponse("my_name", "ANM", "success", "unregistered", "1234567890",
                 new LocationResponse("my_state", "my_district", "my_block", "my_panchayat"), flwUsageDetails, flwCallDetails,
                 new FLWBookmark(1, 1), smsReferenceNumbers);
         when(flwDetailsService.getUsage(msisdn)).thenReturn(expectedResponse);

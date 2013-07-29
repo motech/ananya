@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.trimToEmpty;
+
 @Component
 public class FLWUsageResponseMapper {
 
@@ -28,10 +30,14 @@ public class FLWUsageResponseMapper {
         List<FLWCallDetail> flwCallDetails = mapFrom(callDetails);
         BookMark bookmark = frontLineWorker.bookMark();
         FLWBookmark flwBookmark = bookmark.isEmptyBookmark() ? null : new FLWBookmark(bookmark.getChapterIndex(), bookmark.getLessonIndex());
+        String verificationStatus = frontLineWorker.getVerificationStatus() == null ? "" : frontLineWorker.getVerificationStatus().name();
+        String alternateContactNumber = trimToEmpty(frontLineWorker.getAlternateContactNumber());
         return new FLWUsageResponse(
                 frontLineWorker.getName(),
                 frontLineWorker.designationName(),
+                verificationStatus,
                 frontLineWorker.getStatus().name(),
+                alternateContactNumber,
                 locationResponse,
                 flwUsageDetailList,
                 flwCallDetails,
