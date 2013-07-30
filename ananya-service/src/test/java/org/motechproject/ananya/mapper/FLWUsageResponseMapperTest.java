@@ -52,6 +52,7 @@ public class FLWUsageResponseMapperTest {
 
         FLWUsageResponse frontLineWorkerUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(frontLineWorker, location, callDetails, smsReference);
 
+        assertEquals(frontLineWorker.getFlwId().toString(), frontLineWorkerUsageResponse.getId());
         assertEquals(frontLineWorker.getName(), frontLineWorkerUsageResponse.getName());
         assertEquals(frontLineWorker.getDesignation(), frontLineWorkerUsageResponse.getDesignation());
         assertEquals(frontLineWorker.getVerificationStatus().name(), frontLineWorkerUsageResponse.getVerificationStatus());

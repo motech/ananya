@@ -33,6 +33,7 @@ public class FLWUsageResponseMapper {
         String verificationStatus = frontLineWorker.getVerificationStatus() == null ? "" : frontLineWorker.getVerificationStatus().name();
         String alternateContactNumber = trimToEmpty(frontLineWorker.getAlternateContactNumber());
         return new FLWUsageResponse(
+                frontLineWorker.getFlwId().toString(),
                 frontLineWorker.getName(),
                 frontLineWorker.designationName(),
                 verificationStatus,

@@ -13,6 +13,8 @@ import java.util.List;
 public class FLWUsageResponse {
 
     @XmlElement
+    private String id;
+    @XmlElement
     private String name;
     @XmlElement
     private String designation;
@@ -39,7 +41,8 @@ public class FLWUsageResponse {
     public FLWUsageResponse() {
     }
 
-    public FLWUsageResponse(String name,
+    public FLWUsageResponse(String flwId,
+                            String name,
                             String designation,
                             String verificationStatus,
                             String registrationStatus,
@@ -49,6 +52,7 @@ public class FLWUsageResponse {
                             List<FLWCallDetail> callDetails,
                             FLWBookmark bookmark,
                             List<String> smsReferenceNumbers) {
+        this.id = flwId;
         this.name = name;
         this.designation = designation;
         this.verificationStatus = verificationStatus;
@@ -109,5 +113,9 @@ public class FLWUsageResponse {
 
     public String getAlternateContactNumber() {
         return alternateContactNumber;
+    }
+
+    public String getId() {
+        return id;
     }
 }
