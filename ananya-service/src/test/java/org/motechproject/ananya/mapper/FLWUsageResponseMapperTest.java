@@ -121,6 +121,15 @@ public class FLWUsageResponseMapperTest {
     }
 
     @Test
+    public void shouldHandleAlternateContactNumberWith12Digits() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.setAlternateContactNumber("911234567890");
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(frontLineWorker, null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
+
+        assertEquals("1234567890", flwUsageResponse.getAlternateContactNumber());
+    }
+
+    @Test
     public void shouldHandleNullVerificationStatus() {
         FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
 

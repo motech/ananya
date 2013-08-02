@@ -31,7 +31,7 @@ public class FLWUsageResponseMapper {
         BookMark bookmark = frontLineWorker.bookMark();
         FLWBookmark flwBookmark = bookmark.isEmptyBookmark() ? null : new FLWBookmark(bookmark.getChapterIndex(), bookmark.getLessonIndex());
         String verificationStatus = frontLineWorker.getVerificationStatus() == null ? "" : frontLineWorker.getVerificationStatus().name();
-        String alternateContactNumber = trimToEmpty(frontLineWorker.getAlternateContactNumber());
+        String alternateContactNumber = formatNumber(frontLineWorker.getAlternateContactNumber());
         return new FLWUsageResponse(
                 frontLineWorker.getFlwId().toString(),
                 frontLineWorker.getName(),
@@ -45,6 +45,11 @@ public class FLWUsageResponseMapper {
                 flwBookmark,
                 mapFrom(smsReference)
         );
+    }
+
+    private String formatNumber(String alternateContactNumber) {
+        String trimmedNumber = trimToEmpty(alternateContactNumber);
+        return trimmedNumber.length() == 12 ? trimmedNumber.substring(2):trimmedNumber;
     }
 
     private List<FLWCallDetail> mapFrom(CallDetailsResponse callDetails) {
