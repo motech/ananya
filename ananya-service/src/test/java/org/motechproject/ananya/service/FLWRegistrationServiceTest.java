@@ -71,11 +71,12 @@ public class FLWRegistrationServiceTest {
     public void shouldSaveNewFLWAndPublishForReport() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name());
-        when(locationService.findFor("district", "block", "village")).thenReturn(location);
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
+        String language = "language";
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name(), language);
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -96,8 +97,9 @@ public class FLWRegistrationServiceTest {
         String callerId = "919986574410";
         String name = "name";
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, null, flwId.toString(), VerificationStatus.OTHER.name());
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, null, null, flwId), null)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
+        String language = "language";
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), null, null, flwId.toString(), VerificationStatus.OTHER.name(), language);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, null, language, null, flwId), null)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -117,17 +119,18 @@ public class FLWRegistrationServiceTest {
     public void shouldUpdateAllMeasuresForExistingFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        String language = "language";
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString(), null);
-        when(locationService.findFor("district", "block", "village")).thenReturn(location);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator", Designation.ANM, location, null, flwId);
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwId), location)).thenReturn(frontLineWorker);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), null, language);
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "operator", Designation.ANM, location, language, null, flwId);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, language, null, flwId), location)).thenReturn(frontLineWorker);
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));
-        verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwId), location);
+        verify(frontLineWorkerService).createOrUpdate(new FrontLineWorker(callerId, name, designation, location, language, null, flwId), location);
         verify(registrationMeasureService).createOrUpdateFor(callerId);
         verify(courseItemMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
         verify(jobAidContentMeasureService).updateLocation(Long.parseLong(callerId), location.getExternalId());
@@ -139,9 +142,10 @@ public class FLWRegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidLocation() {
         String callerId = "919986574410";
         String name = "name";
+        String language= "language";
         Designation designation = Designation.AWW;
-        when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest(null, "block", "village"), null, flwId.toString(), null);
+        when(locationService.findFor(anyString(), anyString(), anyString(), anyString())).thenReturn(null);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", null, "block", "village"), null, flwId.toString(), null, language);
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -154,10 +158,11 @@ public class FLWRegistrationServiceTest {
     public void shouldNotSaveFLWForInvalidCallerId() {
         String callerId = "";
         String name = "name";
+        String language= "language";
         Designation designation = Designation.AWW;
-        when(locationService.findFor(anyString(), anyString(), anyString())).thenReturn(null);
+        when(locationService.findFor(anyString(), anyString(), anyString(), anyString())).thenReturn(null);
 
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwId.toString(), null);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null, language);
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -166,7 +171,7 @@ public class FLWRegistrationServiceTest {
         verify(registrationMeasureService, never()).createOrUpdateFor(callerId);
 
         callerId = "abcdef";
-        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district", "block", "village"), null, flwId.toString(), null);
+        frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null, language);
         registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Invalid msisdn"));
@@ -178,12 +183,13 @@ public class FLWRegistrationServiceTest {
     public void shouldSaveFLWWithInvalidDesignationAsPartiallyRegistered() {
         String callerId = "919986574410";
         String name = "name";
+        String language= "language";
         String designation = "invalid_designation";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
         flwRegistrationService = new FLWRegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService, locationRegistrationService);
-        when(locationService.findFor("district", "block", "village")).thenReturn(location);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId.toString(), null);
-        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null, language);
+        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -198,18 +204,19 @@ public class FLWRegistrationServiceTest {
     public void shouldRegisterMultipleFLWs() {
         String callerId = "1234532532523 ";
         String callerId1 = "123434255434";
+        String language= "language";
         String name = "name";
         String name1 = " name1";
         String designation = Designation.AWW.name();
         UUID flwId1 = UUID.randomUUID();
         UUID flwId2 = UUID.randomUUID();
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
-        when(locationService.findFor("district", "block", "village")).thenReturn(location);
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         List<FrontLineWorkerRequest> frontLineWorkerRequestList = new ArrayList<>();
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("district", "block", "village"), null, flwId1.toString(), null));
-        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("district", "block", "village"), null, flwId2.toString(), null));
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, null, flwId1), location)).thenReturn(new FrontLineWorker(callerId.trim(), "airtel", "bihar"));
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, null, flwId2), location)).thenReturn(new FrontLineWorker(callerId1, "airtel", "bihar"));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId, name, designation, new LocationRequest("state", "district", "block", "village"), null, flwId1.toString(), null, language));
+        frontLineWorkerRequestList.add(new FrontLineWorkerRequest(callerId1, name1, designation, new LocationRequest("state", "district", "block", "village"), null, flwId2.toString(), null, language));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId.trim(), name, Designation.valueOf(designation), location, language, null, flwId1), location)).thenReturn(new FrontLineWorker(callerId.trim(), "airtel", "bihar", language));
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId1, name1, Designation.valueOf(designation), location, language, null, flwId2), location)).thenReturn(new FrontLineWorker(callerId1, "airtel", "bihar", language));
 
         List<RegistrationResponse> registrationResponses = flwRegistrationService.registerAllFLWs(frontLineWorkerRequestList);
 
@@ -331,15 +338,16 @@ public class FLWRegistrationServiceTest {
     public void shouldCreateANewLocationIfNotPresentAndUpdateTheFLW() {
         String callerId = "919986574410";
         String name = "name";
-        Location location = new Location("district", "block", "village", 1, 1, 1, null, null);
+        String language= "language";
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
         Designation designation = Designation.AWW;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name());
-        when(locationService.findFor("district", "block", "village")).thenReturn(null, location);
-        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar"));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name(), language);
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(null, location);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
 
         RegistrationResponse registrationResponse = flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        LocationRequest locationRequest = new LocationRequest("district", "block", "village");
+        LocationRequest locationRequest = new LocationRequest("state", "district", "block", "village");
         verify(locationRegistrationService).addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.NOT_VERIFIED.name(), frontLineWorkerRequest.getLastModified()));
 
         assertTrue(StringUtils.contains(registrationResponse.getMessage(), "Created/Updated FLW record"));

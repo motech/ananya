@@ -60,14 +60,14 @@ public class VodafoneDataCorrectionSeedTest {
 
     @Test
     public void shouldBuildAndSendSMS() {
-        SMSLog smsLog1 = new SMSLog("callId1", "callerId1", "locationId1", 1);
-        SMSLog smsLog2 = new SMSLog("callId2", "callerId2", "locationId2", 2);
+        SMSLog smsLog1 = new SMSLog("callId1", "callerId1", "locationId1", 1, "language1");
+        SMSLog smsLog2 = new SMSLog("callId2", "callerId2", "locationId2", 2, "language2");
         List<SMSLog> smsLogs = Arrays.asList(smsLog1, smsLog2);
         when(allSMSLogs.getAll()).thenReturn(smsLogs);
 
         seed.correctSMSLogs();
 
-        verify(smsService).buildAndSendSMS("callerId1", "locationId1", 1);
-        verify(smsService).buildAndSendSMS("callerId2", "locationId2", 2);
+        verify(smsService).buildAndSendSMS("callerId1", "language1", "locationId1", 1);
+        verify(smsService).buildAndSendSMS("callerId2", "language2", "locationId2", 2);
     }
 }

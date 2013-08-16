@@ -35,8 +35,9 @@ public class JobAidWebService {
         MyWebClient.PostParam calledNumber = MyWebClient.PostParam.param("calledNumber", request.getCalledNumber());
         MyWebClient.PostParam callDuration = MyWebClient.PostParam.param("callDuration", request.getCallDuration());
         MyWebClient.PostParam promptList = MyWebClient.PostParam.param("promptList", request.getPromptList());
+        MyWebClient.PostParam language = MyWebClient.PostParam.param("language", request.getLanguage());
 
-        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, calledNumber, callDuration, promptList, operator, circle);
+        Page page = webClient.post(getAppServerUrl() + webPage, callId, callerId, dataToPost, calledNumber, callDuration, promptList, operator, circle, language);
         return JobAidResponse.makeForNonJson(page.getWebResponse().getContentAsString());
     }
 

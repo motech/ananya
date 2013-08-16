@@ -29,9 +29,10 @@ public class BookmarkActionTest {
         String json2 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startQuiz\",\"courseItemState\":\"end\"," +
                 "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
-
-        stateRequestList.add(json1, "1");
-        stateRequestList.add(json2, "2");
+        String language= "language";
+        
+        stateRequestList.add(json1, "1", language);
+        stateRequestList.add(json2, "2", language);
 
         bookmarkAction.process(frontLineWorker, stateRequestList);
 

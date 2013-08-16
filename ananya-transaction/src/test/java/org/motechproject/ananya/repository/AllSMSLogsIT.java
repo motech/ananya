@@ -12,8 +12,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-public class AllSMSLogsTest extends SpringIntegrationTest{
+public class AllSMSLogsIT extends SpringIntegrationTest{
 
     @Autowired
     AllSMSLogs allSMSLogs;
@@ -21,7 +20,7 @@ public class AllSMSLogsTest extends SpringIntegrationTest{
     @Test
     public void shouldFindByCallId() {
         String callId = "callId";
-        SMSLog entity = new SMSLog(callId, "", "", 0);
+        SMSLog entity = new SMSLog(callId, "", "", 0,"language");
         allSMSLogs.add(entity);
         markForDeletion(entity);
 
@@ -34,9 +33,9 @@ public class AllSMSLogsTest extends SpringIntegrationTest{
         String invalidCallerId1 = "123E+10";
         String invalidCallerId2 = "123E10";
         String validCallerId = "1234";
-        SMSLog entity1 = new SMSLog(callId, invalidCallerId1, "", 0);
-        SMSLog entity2 = new SMSLog(callId, invalidCallerId2, "", 0);
-        SMSLog entity3 = new SMSLog(callId, validCallerId, "", 0);
+        SMSLog entity1 = new SMSLog(callId, invalidCallerId1, "", 0,"");
+        SMSLog entity2 = new SMSLog(callId, invalidCallerId2, "", 0,"");
+        SMSLog entity3 = new SMSLog(callId, validCallerId, "", 0,"");
         allSMSLogs.add(entity1);
         allSMSLogs.add(entity2);
         allSMSLogs.add(entity3);
@@ -54,7 +53,8 @@ public class AllSMSLogsTest extends SpringIntegrationTest{
         String callId = "callId";
         String callerId = "9988776655";
         int courseAttempts = 2;
-        SMSLog entity = new SMSLog(callId, callerId, "", courseAttempts);
+        String language ="language";
+        SMSLog entity = new SMSLog(callId, callerId, "", courseAttempts, language);
         allSMSLogs.add(entity);
         markForDeletion(entity);
 

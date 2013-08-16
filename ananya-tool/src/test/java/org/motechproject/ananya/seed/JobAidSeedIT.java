@@ -13,6 +13,7 @@ import org.motechproject.cmslite.api.model.StringContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class JobAidSeedTest {
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+public class JobAidSeedIT {
 
     @Autowired
     private JobAidSeed jobAidSeed;
@@ -96,12 +98,6 @@ public class JobAidSeedTest {
 
         assertNodeDuration(nodeName1, "138742");
         assertNodeDuration(nodeName2, "138742");
-
-        JobAidContentDimension contentDimension1 = allJobAidContentDimensions.findByContentId(getStringContent(nodeName1).getId());
-        assertThat(contentDimension1.getDuration(), is(138742));
-        JobAidContentDimension contentDimension2 = allJobAidContentDimensions.findByContentId(getStringContent(nodeName2).getId());
-        assertThat(contentDimension2.getDuration(), is(138742));
-
     }
 
     private void assertNodeDuration(String nodeName, String duration) {

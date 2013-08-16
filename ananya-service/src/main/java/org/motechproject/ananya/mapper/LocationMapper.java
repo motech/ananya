@@ -5,7 +5,8 @@ import org.motechproject.ananya.response.LocationResponse;
 
 public class LocationMapper {
     public static LocationResponse mapFrom(LocationDimension locationDimension) {
-        return new LocationResponse(locationDimension.getDistrict(),
+        return new LocationResponse(locationDimension.getState(),
+        		locationDimension.getDistrict(),
                 locationDimension.getBlock(),
                 locationDimension.getPanchayat()
         );

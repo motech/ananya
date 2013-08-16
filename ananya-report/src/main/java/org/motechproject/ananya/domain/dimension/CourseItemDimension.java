@@ -32,12 +32,6 @@ public class CourseItemDimension {
     @JoinColumn(name = "parent_id")
     private CourseItemDimension parent;
 
-    @Column(name = "file_name")
-    private String fileName;
-
-    @Column(name = "duration")
-    private Integer duration;
-
     @Column(name = "type")
     private String type;
 
@@ -51,14 +45,6 @@ public class CourseItemDimension {
         this.parent = parent;
     }
 
-    public CourseItemDimension(String name, String contentId, CourseItemType type, CourseItemDimension parent,
-                               String fileName, Integer duration) {
-        this(name, contentId, type, parent);
-        this.fileName = fileName;
-        this.duration = duration;
-    }
-
-
     public Integer getId() {
         return id;
     }
@@ -69,10 +55,6 @@ public class CourseItemDimension {
 
     public String getContentId() {
         return contentId;
-    }
-
-    public Integer getDuration() {
-        return duration;
     }
 
     public CourseItemType getType() {

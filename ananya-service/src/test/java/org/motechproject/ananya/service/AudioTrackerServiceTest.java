@@ -32,6 +32,7 @@ public class AudioTrackerServiceTest {
     public void shouldSaveAudioTrackerLogs() {
         String callid = "callid";
         String callerid = "callerid";
+        String language= "language";
         String dataToken = "1";
         String jsonString =
                 "{" +
@@ -40,7 +41,7 @@ public class AudioTrackerServiceTest {
                         "    \"time\" : \"123456789\"                          " +
                         "}";
         AudioTrackerRequestList audioTrackerRequestList = new AudioTrackerRequestList(callid, callerid);
-        audioTrackerRequestList.add(jsonString, dataToken);
+        audioTrackerRequestList.add(jsonString, dataToken, language);
 
         audioTrackerService.saveAudioTrackerState(audioTrackerRequestList, ServiceType.CERTIFICATE_COURSE);
 

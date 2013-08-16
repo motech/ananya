@@ -67,7 +67,7 @@ public class SMSSentMeasureServiceTest {
         String flwId = "77abcd";
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(1);
-        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
@@ -100,7 +100,7 @@ public class SMSSentMeasureServiceTest {
 
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(flwd_id);
-        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         SMSReference smsReference = new SMSReference(callerId, flwId);
 
@@ -147,10 +147,10 @@ public class SMSSentMeasureServiceTest {
     public void shouldUpdateLocationForAllSMSSentMeasures() {
         String newLocationId = "newLocationId";
         String oldLocationId = "oldLocationId";
-        LocationDimension newLocation = new LocationDimension(newLocationId, "D2", "B2", "P2", "VALID");
+        LocationDimension newLocation = new LocationDimension(newLocationId, "S1", "D2", "B2", "P2", "VALID");
         ArrayList<SMSSentMeasure> smsSentMeasures = new ArrayList<>();
         SMSSentMeasure smsSentMeasure = new SMSSentMeasure();
-        smsSentMeasure.setLocationDimension(new LocationDimension(oldLocationId, "D1", "B1", "P1", "VALID"));
+        smsSentMeasure.setLocationDimension(new LocationDimension(oldLocationId, "S1", "D1", "B1", "P1", "VALID"));
         smsSentMeasures.add(smsSentMeasure);
         when(allSMSSentMeasures.findByLocationId(oldLocationId)).thenReturn(smsSentMeasures);
         when(locationDimensionService.getFor(newLocationId)).thenReturn(newLocation);

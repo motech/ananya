@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class AllAudioTrackerLogsTest extends SpringIntegrationTest {
+public class AllAudioTrackerLogsIT extends SpringIntegrationTest {
 
     @Autowired
     private AllAudioTrackerLogs allAudioTrackerLogs;
@@ -24,7 +24,7 @@ public class AllAudioTrackerLogsTest extends SpringIntegrationTest {
         String callerId = "123";
         String callId = "123456";
         AudioTrackerLog audioTrackerLog = new AudioTrackerLog(callId, callerId, ServiceType.JOB_AID);
-        audioTrackerLog.addItem(new AudioTrackerLogItem("contentId", DateTime.now(), 312));
+        audioTrackerLog.addItem(new AudioTrackerLogItem("contentId", "language", DateTime.now(), 312));
         allAudioTrackerLogs.add(audioTrackerLog);
         markForDeletion(audioTrackerLog);
 

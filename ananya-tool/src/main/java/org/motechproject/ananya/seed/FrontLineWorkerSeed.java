@@ -57,7 +57,7 @@ public class FrontLineWorkerSeed {
         String[] row;
         String inputCSV = getInputCSV();
         String outputCSV = getOutputCSV(new File(inputCSV).getParent());
-        String msisdn, name, designation, district, block, panchayat;
+        String msisdn, name, designation, state, district, block, panchayat, language;
 
         File file = new File(outputCSV);
         file.createNewFile();
@@ -74,7 +74,7 @@ public class FrontLineWorkerSeed {
     */
     public void loadFromCsv(String inputCSVFile) throws IOException {
         CSVReader csvReader = new CSVReader(new FileReader(inputCSVFile));
-        String msisdn, name, designation, currentDistrict, currentBlock, currentPanchayat, flwId;
+        String msisdn, name, designation, currentState, currentDistrict, currentBlock, currentPanchayat, flwId, language;
         String circle = null;
         String[] currentRow;
         DateTime lastModified = DateUtil.now();
@@ -88,16 +88,18 @@ public class FrontLineWorkerSeed {
             msisdn = currentRow[0];
             name = currentRow[1];
             designation = currentRow[2];
-            currentDistrict = currentRow[3];
-            currentBlock = currentRow[4];
-            currentPanchayat = currentRow[5];
+            currentState = currentRow[3];
+            currentDistrict = currentRow[4];
+            currentBlock = currentRow[5];
+            currentPanchayat = currentRow[6];
+            language =  currentRow[7];
             flwId = getFlwId(currentRow);
 
             frontLineWorkerRequests.add(new FrontLineWorkerRequest(msisdn,
                     name,
                     designation,
-                    new LocationRequest(currentDistrict, currentBlock, currentPanchayat),
-                    lastModified, flwId, null));
+                    new LocationRequest(currentState, currentDistrict, currentBlock, currentPanchayat),
+                    lastModified, flwId, null, language));
 
             currentRow = csvReader.readNext();
         }
@@ -106,7 +108,7 @@ public class FrontLineWorkerSeed {
     }
 
     private String getFlwId(String[] currentRow) {
-        return currentRow.length > 6 && StringUtils.isNotEmpty(currentRow[6]) ? currentRow[6] : DUMMY_UUID;
+        return currentRow.length > 8 && StringUtils.isNotEmpty(currentRow[8]) ? currentRow[8] : DUMMY_UUID;
     }
 
     private void logResponses(List<RegistrationResponse> responses) throws IOException {
@@ -259,6 +261,13 @@ public class FrontLineWorkerSeed {
         }, batchSize);
     }
 
+    @Seed(priority = 1,version = "1.14", comment = "update location code for default location")
+    public void updateAllFLWDefaultLocation() {
+        String currentLocationCode="S01D000B000V000";
+		String newLocationCode="S00D000B000V000";
+		seedService.updateLocationCode(currentLocationCode, newLocationCode);
+    }
+    
     private String getInputCSV() {
         return environment.equals("prod") ? inputFileName : getClass().getResource(inputFileName).getPath();
     }

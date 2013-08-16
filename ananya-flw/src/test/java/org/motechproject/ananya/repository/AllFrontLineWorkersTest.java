@@ -1,19 +1,18 @@
 package org.motechproject.ananya.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.motechproject.ananya.domain.Designation;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.RegistrationStatus;
-import org.springframework.beans.factory.annotation.Autowired;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.motechproject.ananya.domain.Designation;
+import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.Location;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AllFrontLineWorkersTest extends SpringBaseIT {
     @Autowired
@@ -29,8 +28,8 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldAddAndRetrieveRecord() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "village", 2, 3, 4, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, flwId);
+        Location location = new Location("state", "district", "block", "village", 1, 2, 3, 4, null, null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, "language", null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -47,10 +46,10 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldFetchFLWsByLocationId() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        Location location = new Location("district", "block", "village", 2, 3, 4, null, null);
-        Location location1 = new Location("distr1ict", "bloc1k", "vi1llage", 2, 3, 5, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, null, UUID.randomUUID());
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", "name", designation, location1, null, UUID.randomUUID());
+        Location location = new Location("state", "district", "block", "village", 1, 2, 3, 4, null, null);
+        Location location1 = new Location("state", "distr1ict", "bloc1k", "vi1llage", 1, 2, 3, 5, null, null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, "language", null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", "name", designation, location1, "language", null, UUID.randomUUID());
         allFrontLineWorkers.add(frontLineWorker);
         allFrontLineWorkers.add(frontLineWorker1);
         markForDeletion(frontLineWorker);
@@ -65,7 +64,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), "language", null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -78,9 +77,9 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveAllFrontLineWorkersForMsisdn() {
         String msisdn = "654321";
         String anotherMsisdn = "4321";
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle");
-        FrontLineWorker duplicateFrontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle");
-        FrontLineWorker notTheSameFLW = new FrontLineWorker(anotherMsisdn, "airtel", "circle");
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle", "language");
+        FrontLineWorker duplicateFrontLineWorker = new FrontLineWorker(msisdn, "airtel", "circle", "language");
+        FrontLineWorker notTheSameFLW = new FrontLineWorker(anotherMsisdn, "airtel", "circle", "language");
         allFrontLineWorkers.add(frontLineWorker);
         allFrontLineWorkers.add(duplicateFrontLineWorker);
         allFrontLineWorkers.add(notTheSameFLW);
@@ -95,12 +94,12 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
 
     @Test
     public void shouldRetrieveOnlyRequestedCountOfMsisdns() {
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9999991", "airtel", "circle");
-        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9999992", "airtel", "circle");
-        FrontLineWorker frontLineWorker3 = new FrontLineWorker("9999993", "airtel", "circle");
-        FrontLineWorker frontLineWorker4 = new FrontLineWorker("9999994", "airtel", "circle");
-        FrontLineWorker frontLineWorker5 = new FrontLineWorker("9999995", "airtel", "circle");
-        FrontLineWorker frontLineWorker6 = new FrontLineWorker("9999996", "airtel", "circle");
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("9999991", "airtel", "circle", "language");
+        FrontLineWorker frontLineWorker2 = new FrontLineWorker("9999992", "airtel", "circle", "language");
+        FrontLineWorker frontLineWorker3 = new FrontLineWorker("9999993", "airtel", "circle", "language");
+        FrontLineWorker frontLineWorker4 = new FrontLineWorker("9999994", "airtel", "circle", "language");
+        FrontLineWorker frontLineWorker5 = new FrontLineWorker("9999995", "airtel", "circle", "language");
+        FrontLineWorker frontLineWorker6 = new FrontLineWorker("9999996", "airtel", "circle", "language");
         allFrontLineWorkers.add(frontLineWorker1);
         allFrontLineWorkers.add(frontLineWorker2);
         allFrontLineWorkers.add(frontLineWorker3);

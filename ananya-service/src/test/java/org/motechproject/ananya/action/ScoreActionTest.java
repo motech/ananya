@@ -33,11 +33,12 @@ public class ScoreActionTest {
         frontLineWorker.reportCard().addScore(new Score());
         when(frontlineWorkerService.findByCallerId("123")).thenReturn(frontLineWorker);
 
+        String language= "language";
         CertificateCourseStateRequestList stateRequestList = new CertificateCourseStateRequestList("123456", "123");
         String json = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startCertificationCourse\",\"courseItemState\":\"end\"," +
                 "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
+        stateRequestList.add(json, "1", language);
 
         scoreAction.process(frontLineWorker, stateRequestList);
 
@@ -56,7 +57,8 @@ public class ScoreActionTest {
         String json = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"startQuiz\",\"courseItemState\":\"end\"," +
                 "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
+        String language= "language";
+        stateRequestList.add(json, "1", language);
 
         scoreAction.process(frontLineWorker, stateRequestList);
 
@@ -75,7 +77,7 @@ public class ScoreActionTest {
         String json = "{\"result\":true,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a66d5\"," +
                 "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playAnswerExplanation\",\"courseItemState\":\"end\"," +
                 "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":1,\"lessonOrQuestionIndex\":0}";
-        stateRequestList.add(json, "1");
+        stateRequestList.add(json, "1", "language");
 
         scoreAction.process(frontLineWorker, stateRequestList);
 

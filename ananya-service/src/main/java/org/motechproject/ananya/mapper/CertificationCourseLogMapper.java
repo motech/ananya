@@ -10,6 +10,7 @@ public class CertificationCourseLogMapper {
                 courseStateRequest.getCalledNumber(),
                 "",
                 courseStateRequest.getCallId(),
-                courseStateRequest.getCertificateCourseId());
+                courseStateRequest.getCertificateCourseId(),
+                courseStateRequest.getLanguage());
     }
 }

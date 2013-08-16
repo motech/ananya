@@ -48,7 +48,7 @@ public class FrontLineWorkerImporter {
 
         for (FrontLineWorkerRequest frontLineWorkerRequest : frontLineWorkerRequests) {
             LocationRequest locationRequest = frontLineWorkerRequest.getLocation();
-            Location location = locationService.findFor(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
+            Location location = locationService.findFor(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
 
             FLWValidationResponse flwValidationResponse = FrontLineWorkerValidator.validateWithBulkValidation(frontLineWorkerRequest, location, msisdnOccurrenceMap);
 

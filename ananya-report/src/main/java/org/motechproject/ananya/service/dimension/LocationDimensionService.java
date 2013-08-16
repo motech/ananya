@@ -40,7 +40,7 @@ public class LocationDimensionService {
         allLocationDimensions.saveOrUpdate(locationDimension);
     }
 
-    public List<LocationDimension> getFilteredLocations(String district, String block, String panchayat) {
-        return allLocationDimensions.getFilteredLocationFor(district, block, panchayat);
+    public List<LocationDimension> getFilteredLocations(String state, String district, String block, String panchayat) {
+        return allLocationDimensions.getFilteredLocationFor(state, district, block, panchayat);
     }
 }

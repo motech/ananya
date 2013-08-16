@@ -47,10 +47,11 @@ public class LocationDetailsController extends BaseDataAPIController {
     public
     @ResponseBody
     List<LocationResponse> search(HttpServletRequest request) {
+    	String state = request.getParameter("state");
         String district = request.getParameter("district");
         String block = request.getParameter("block");
         String panchayat = request.getParameter("panchayat");
-        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
+        LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
 
         return locationRegistrationService.getFilteredLocations(locationRequest);
     }

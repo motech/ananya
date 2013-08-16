@@ -12,6 +12,7 @@ public class AudioTrackerLogItemMapperTest {
     public void shouldMapAudioTrackRequestToAudioLogItem() {
         String callerId = "555";
         String callId = "555:123";
+        String language= "language";
         String dataToken = "1";
         String jsonString =
                 "{" +
@@ -19,7 +20,7 @@ public class AudioTrackerLogItemMapperTest {
                         "    \"duration\" : \"123\",                             " +
                         "    \"time\" : \"123456789\"" +
                         "}";
-        AudioTrackerRequest audioTrackerRequest = AudioTrackerRequest.createFrom(callId, callerId, jsonString, dataToken);
+        AudioTrackerRequest audioTrackerRequest = AudioTrackerRequest.createFrom(callId, callerId, jsonString, dataToken, language);
 
         AudioTrackerLogItem audioTrackerLogItem = AudioTrackerLogItemMapper.mapFrom(audioTrackerRequest);
 

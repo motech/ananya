@@ -13,13 +13,15 @@ import org.motechproject.cmslite.api.model.StringContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class CertificationCourseSeedTest {
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+public class CertificationCourseSeedIT {
 
     @Autowired
     private CertificationCourseSeed certificationCourseSeed;

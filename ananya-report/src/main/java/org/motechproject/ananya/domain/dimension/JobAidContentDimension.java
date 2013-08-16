@@ -25,14 +25,8 @@ public class JobAidContentDimension {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "file_name")
-    private String fileName;
-
     @Column(name = "type")
     private String type;
-
-    @Column(name = "duration")
-    private Integer duration;
 
     @Column(name = "short_code")
     private Long shortCode;
@@ -41,21 +35,11 @@ public class JobAidContentDimension {
     }
 
     public JobAidContentDimension(String contentId, JobAidContentDimension parent,
-                                  String name, String fileName, String type, Integer duration) {
+                                  String name, String type) {
         this.contentId = contentId;
         this.parent = parent;
         this.name = name;
-        this.fileName = fileName;
         this.type = type;
-        this.duration = duration;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
     }
 
     public Integer getId() {

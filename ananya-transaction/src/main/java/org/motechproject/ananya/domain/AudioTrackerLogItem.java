@@ -7,6 +7,8 @@ public class AudioTrackerLogItem {
     @JsonProperty
     private String contentId;
     @JsonProperty
+    private String language;
+    @JsonProperty
     private DateTime time;
     @JsonProperty
     private Integer duration;
@@ -14,8 +16,9 @@ public class AudioTrackerLogItem {
     public AudioTrackerLogItem() {
     }
 
-    public AudioTrackerLogItem(String contentId, DateTime time, Integer duration) {
+    public AudioTrackerLogItem(String contentId, String language, DateTime time, Integer duration) {
         this.contentId = contentId;
+        this.language=language;
         this.time = time;
         this.duration = duration;
     }
@@ -39,4 +42,9 @@ public class AudioTrackerLogItem {
     public int getPercentage(Integer totalDuration) {
         return (int) Math.round((double) duration * 100 / totalDuration);
     }
+
+	public String getLanguage() {
+		return language;
+	}
+    
 }

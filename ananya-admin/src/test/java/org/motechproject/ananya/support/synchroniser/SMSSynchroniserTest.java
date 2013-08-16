@@ -40,16 +40,16 @@ public class SMSSynchroniserTest {
     @Test
     public void shouldBuildAndSendSMS() {
         long delta = DateTime.now().minusDays(4).getMillis();
-        SMSLog smsLog1 = new SMSLog("callId1-" + delta, "callerId1", "locationId1", 1);
-        SMSLog smsLog2 = new SMSLog("callId2-" + delta, "callerId2", "locationId2", 2);
+        SMSLog smsLog1 = new SMSLog("callId1-" + delta, "callerId1", "locationId1", 1, "language");
+        SMSLog smsLog2 = new SMSLog("callId2-" + delta, "callerId2", "locationId2", 2, "language");
         List<SMSLog> smsLogs = Arrays.asList(smsLog1, smsLog2);
         when(allSMSLogs.getAll()).thenReturn(smsLogs);
         when(properties.getProperty("synchroniser.log.delta.days")).thenReturn("2");
 
         SynchroniserLog synchroniserLog = smsSynchroniser.replicate();
 
-        verify(smsSeedService).buildAndSendSMS("callerId1", "locationId1", 1);
-        verify(smsSeedService).buildAndSendSMS("callerId2", "locationId2", 2);
+        verify(smsSeedService).buildAndSendSMS("callerId1", "language", "locationId1", 1);
+        verify(smsSeedService).buildAndSendSMS("callerId2", "language", "locationId2", 2);
         verify(allSMSLogs).remove(smsLog1);
         verify(allSMSLogs).remove(smsLog2);
 

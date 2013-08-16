@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
@@ -40,6 +41,10 @@ public class CourseItemMeasure {
     @JoinColumn(name = "location_id", nullable = false)
     private LocationDimension locationDimension;
 
+    @ManyToOne
+    @JoinColumn(name = "language_id", nullable = false)
+    private LanguageDimension languageDimension;
+    
     @Column(name = "score")
     private Integer score;
 
@@ -101,10 +106,19 @@ public class CourseItemMeasure {
         this.locationDimension = locationDimension;
     }
 
-    public CourseItemMeasure(TimeDimension timeDimension,
+    public LanguageDimension getLanguageDimension() {
+		return languageDimension;
+	}
+
+	public void setLanguageDimension(LanguageDimension languageDimension) {
+		this.languageDimension = languageDimension;
+	}
+
+	public CourseItemMeasure(TimeDimension timeDimension,
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
+                             LanguageDimension languageDimension,
                              DateTime timestamp,
                              Integer score,
                              CourseItemState event,
@@ -113,6 +127,7 @@ public class CourseItemMeasure {
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.locationDimension = locationDimension;
+        this.languageDimension=languageDimension;
         this.timestamp = new Timestamp(timestamp.getMillis());
         this.score = score;
         this.event = String.valueOf(event);
@@ -123,6 +138,7 @@ public class CourseItemMeasure {
                              CourseItemDimension courseItemDimension,
                              FrontLineWorkerDimension frontLineWorkerDimension,
                              LocationDimension locationDimension,
+                             LanguageDimension languageDimension,
                              DateTime timestamp,
                              Integer duration,
                              Integer percentage) {
@@ -130,6 +146,7 @@ public class CourseItemMeasure {
         this.courseItemDimension = courseItemDimension;
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.locationDimension = locationDimension;
+        this.languageDimension=languageDimension;
         this.timestamp = new Timestamp(timestamp.getMillis());
         this.duration = duration;
         this.percentage = percentage;

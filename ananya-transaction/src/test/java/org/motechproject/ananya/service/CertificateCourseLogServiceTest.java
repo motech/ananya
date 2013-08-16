@@ -28,7 +28,7 @@ public class CertificateCourseLogServiceTest {
     @Test
     public void shouldGetAllCertificateCourseLogsForACallId(){
         String callId = "callId";
-        CertificationCourseLog certificationCourseLog = new CertificationCourseLog("callerId", "calledNumber", "", callId, "courseId");
+        CertificationCourseLog certificationCourseLog = new CertificationCourseLog("callerId", "calledNumber", "", callId, "courseId", "language");
         when(allCertificateCourseLogs.findByCallId(callId)).thenReturn(certificationCourseLog);
         CertificationCourseLog courseLog = certificateCourseLogService.getLogFor(callId);
         assertEquals(certificationCourseLog, courseLog);

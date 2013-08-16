@@ -36,4 +36,11 @@ public class AllLocations extends MotechBaseRepository<Location> {
         if (locations == null || locations.isEmpty()) return null;
         return locations.get(0);
     }
+    
+    @View(name = "by_state_and_district_and_block_and_panchayat", map = "function(doc){if(doc.type === 'Location') emit([doc.state.toLowerCase(), doc.district.toLowerCase(), doc.block.toLowerCase(), doc.panchayat.toLowerCase()]);}")
+    public Location findByStateDistrictBlockPanchayat(String state, String district, String block, String panchayat) {
+        List<Location> locations = queryView("by_state_and_district_and_block_and_panchayat", ComplexKey.of(state.toLowerCase(), district.toLowerCase(), block.toLowerCase(), panchayat.toLowerCase()));
+        if (locations == null || locations.isEmpty()) return null;
+        return locations.get(0);
+    }
 }

@@ -14,12 +14,22 @@ public class LocationList {
     }
 
     public boolean isAlreadyPresent(Location currentLocation) {
-        return getFor(currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat()) != null;
+        return getFor(currentLocation.getState(), currentLocation.getDistrict(), currentLocation.getBlock(), currentLocation.getPanchayat()) != null;
     }
 
+    public Integer getStateCodeFor(Location currentLocation) {
+        for (Location location : locations) {
+            if (location.getState().equals(currentLocation.getState())) {
+                return location.getStateCode();
+            }
+        }
+        return getNextStateCode();
+    }
+    
     public Integer getDistrictCodeFor(Location currentLocation) {
         for (Location location : locations) {
-            if (location.getDistrict().equals(currentLocation.getDistrict())) {
+        	if (location.getState().equals(currentLocation.getState()) 
+        			&& location.getDistrict().equals(currentLocation.getDistrict())) {
                 return location.getDistrictCode();
             }
         }
@@ -28,7 +38,8 @@ public class LocationList {
 
     public Integer getBlockCodeFor(Location currentLocation) {
         for (Location location : locations) {
-            if (location.getDistrict().equals(currentLocation.getDistrict())
+            if (location.getState().equals(currentLocation.getState()) 
+            		&& location.getDistrict().equals(currentLocation.getDistrict())
                     && location.getBlock().equals(currentLocation.getBlock())) {
                 return location.getBlockCode();
             }
@@ -39,7 +50,8 @@ public class LocationList {
     public Integer getPanchayatCodeFor(Location currentLocation) {
         int maxPanchayatCode = 0;
         for (Location location : locations) {
-            if (location.getDistrict().equals(currentLocation.getDistrict())
+            if (location.getState().equals(currentLocation.getState()) 
+            		&& location.getDistrict().equals(currentLocation.getDistrict())
                     && location.getBlock().equals(currentLocation.getBlock())
                     && location.getPanchayatCode() > maxPanchayatCode) {
                 maxPanchayatCode = location.getPanchayatCode();
@@ -52,21 +64,21 @@ public class LocationList {
         locations.add(location);
     }
 
-    public List<Location> getUniqueDistrictBlockLocations() {
-        ArrayList<Location> uniqueDistrictBlockList = new ArrayList<Location>();
+    public List<Location> getUniqueStateDistrictBlockLocations() {
+        ArrayList<Location> uniqueStateDistrictBlockList = new ArrayList<Location>();
         String emptyPanchayat = "";
 
         for (Location location : locations) {
-            Location defaultLocation = new Location(location.getDistrict(), location.getBlock(), emptyPanchayat, location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID, null);
-            if (!uniqueDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
-                uniqueDistrictBlockList.add(defaultLocation);
+            Location defaultLocation = new Location(location.getState(), location.getDistrict(), location.getBlock(), emptyPanchayat, location.getStateCode(), location.getDistrictCode(), location.getBlockCode(), 0, LocationStatus.VALID, null);
+            if (!uniqueStateDistrictBlockList.contains(defaultLocation) && !locations.contains(defaultLocation)) {
+                uniqueStateDistrictBlockList.add(defaultLocation);
             }
         }
-        return uniqueDistrictBlockList;
+        return uniqueStateDistrictBlockList;
     }
 
-    public Location getFor(String district, String block, String panchayat) {
-        Location locationToBeMatched = new Location(district, block, panchayat, 0, 0, 0, null, null);
+    public Location getFor(String state, String district, String block, String panchayat) {
+        Location locationToBeMatched = new Location(state, district, block, panchayat, 0, 0, 0, 0, null, null);
         for (Location location : locations) {
             if (locationToBeMatched.equals(location)) {
                 return location;
@@ -75,6 +87,16 @@ public class LocationList {
         return null;
     }
 
+    private Integer getNextStateCode() {
+        int maxLocationCode = 0;
+        for (Location location : locations) {
+            if (location.getStateCode() > maxLocationCode) {
+                maxLocationCode = location.getStateCode();
+            }
+        }
+        return maxLocationCode + 1;
+    }
+    
     private Integer getNextDistrictCode() {
         int maxLocationCode = 0;
         for (Location location : locations) {

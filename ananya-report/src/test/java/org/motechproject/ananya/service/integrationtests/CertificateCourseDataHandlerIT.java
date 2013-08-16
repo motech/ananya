@@ -12,6 +12,7 @@ import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.CallDurationMeasure;
@@ -23,6 +24,7 @@ import org.motechproject.ananya.repository.AllFrontLineWorkers;
 import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
@@ -46,8 +48,6 @@ import static junit.framework.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-report.xml")
 public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
 
     @Autowired
@@ -68,6 +68,9 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
     @Autowired
     AllLocationDimensions allLocationDimensions;
 
+    @Autowired
+    AllLanguageDimension allLanguageDimension;
+    
     @Autowired
     AllRegistrationMeasures allRegistrationMeasures;
 
@@ -95,6 +98,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         template.deleteAll(template.loadAll(CourseItemDimension.class));
         template.deleteAll(template.loadAll(CallDurationMeasure.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
     }
 
     @Test
@@ -122,6 +126,7 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         String contentName = "Chapter 1";
         String contentId = "contentId";
         String operatorName = "airtel";
+        String language = "hindi";
 
         DateTime now = DateTime.now();
         DateTime callStartTime = now;
@@ -129,16 +134,18 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         DateTime certificateCourseEndTime = now.plusSeconds(15);
 
-        Location location = new Location("", "", "", 0, 0, 0, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, null, UUID.randomUUID());
+        Location location = new Location("", "", "", "", 1, 0, 0, 0, null, null);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, "", Designation.AWW, location, language, null, UUID.randomUUID());
         frontLineWorker.setRegisteredDate(now);
         frontLineWorker.setOperator(operatorName);
         allFrontLineWorkers.add(frontLineWorker);
         registrationLogService.add(new RegistrationLog(callId, callerId, "", ""));
         allOperators.add(new Operator(operatorName, 39 * 60 * 1000, 0, 60000));
 
-        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "VALID");
+        LocationDimension locationDimension = new LocationDimension("S01D000B000V000", "", "", "", "", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
+        LanguageDimension languageDimension = new LanguageDimension(language, "hin", "badhai ho...");
+        allLanguageDimension.addOrUpdate(languageDimension);
         TimeDimension callStartTimeDimension = allTimeDimensions.addOrUpdate(callStartTime);
 
         CallLog callLog = new CallLog(callId, callerId, calledNumber);
@@ -146,11 +153,11 @@ public class CertificateCourseDataHandlerIT extends SpringIntegrationTest {
         callLog.addItem(new CallLogItem(CallFlowType.CERTIFICATECOURSE, certificateCourseStartTime, certificateCourseEndTime));
         allCallLogs.add(callLog);
 
-        CertificationCourseLog courseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "");
+        CertificationCourseLog courseLog = new CertificationCourseLog(callerId, calledNumber, "", callId, "", language);
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, CourseItemType.CHAPTER, contentName, "",
-                CourseItemState.START, certificateCourseStartTime));
+                CourseItemState.START, certificateCourseStartTime, language));
         courseLog.addCourseLogItem(new CertificationCourseLogItem(contentId, CourseItemType.CHAPTER, contentName, "",
-                CourseItemState.END, certificateCourseEndTime));
+                CourseItemState.END, certificateCourseEndTime, language));
         allCertificateCourseLogs.add(courseLog);
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, CourseItemType.CHAPTER, null));
 

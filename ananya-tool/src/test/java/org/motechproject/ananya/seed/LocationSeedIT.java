@@ -15,6 +15,7 @@ import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +24,8 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-tool.xml")
-public class LocationSeedTest {
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+public class LocationSeedIT {
 
     @Autowired
     private LocationSeed locationSeed;
@@ -67,7 +69,7 @@ public class LocationSeedTest {
 
     @Test
     public void shouldUpdateAllLocationRegistrationService() {
-        Location expectedLocation = new Location("d1", "b1", "p1");
+        Location expectedLocation = new Location("s1", "d1", "b1", "p1");
         allLocations.add(expectedLocation);
 
         locationSeed.locationStatusUpdateToValid();
@@ -76,5 +78,19 @@ public class LocationSeedTest {
         assertEquals(1, locationList.size());
         assertEquals(expectedLocation, locationList.get(0));
         assertEquals(LocationStatus.VALID, locationList.get(0).getLocationStatusAsEnum());
+    }
+    
+    @Test
+    public void shouldUpdateDefaultLocationStateNameAndExternalId() {
+        Location previousDefaultLocation = new Location();
+        previousDefaultLocation.setExternalId("S01D000B000V000");
+        allLocations.add(previousDefaultLocation);
+
+        locationSeed.updateStateAndExternalIdForDefaultLocation();
+
+        List<Location> locationList = allLocations.getAll();
+        assertEquals(1, locationList.size());
+        assertEquals(locationList.get(0).getState(), "C00");
+        assertEquals(locationList.get(0).getExternalId(), "S00D000B000V000");
     }
 }

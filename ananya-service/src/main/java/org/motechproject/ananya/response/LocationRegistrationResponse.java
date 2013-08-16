@@ -5,8 +5,8 @@ public class LocationRegistrationResponse {
     private String message;
     private String locationDetails;
 
-    public LocationRegistrationResponse(String district, String block, String panchayat) {
-        locationDetails = district + "," + block + "," + panchayat;
+    public LocationRegistrationResponse(String state, String district, String block, String panchayat) {
+        locationDetails = state + "," + district + "," + block + "," + panchayat;
     }
 
     public LocationRegistrationResponse withSuccessfulRegistration() {

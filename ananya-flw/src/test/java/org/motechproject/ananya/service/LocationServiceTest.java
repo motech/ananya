@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -52,9 +53,9 @@ public class LocationServiceTest {
     @Test
     public void shouldGetLocation() {
         Location expectedLocation = new Location();
-        when(allLocations.findByDistrictBlockPanchayat("D1", "B1", "P1")).thenReturn(expectedLocation);
-
-        Location actualLocation = locationService.findFor("D1", "B1", "P1");
+        when(allLocations.findByStateDistrictBlockPanchayat("S1", "D1", "B1", "P1")).thenReturn(expectedLocation);
+        
+        Location actualLocation = locationService.findFor("S1", "D1", "B1", "P1");
 
         assertEquals(expectedLocation, actualLocation);
     }
@@ -87,7 +88,7 @@ public class LocationServiceTest {
         ArrayList<Location> locations = new ArrayList<>();
         InOrder inOrder = inOrder(allLocations);
         ArgumentCaptor<Location> locationArgumentCaptor = ArgumentCaptor.forClass(Location.class);
-        Location expectedLocation = new Location("D1", "B1", "P1");
+        Location expectedLocation = new Location("S1", "D1", "B1", "P1");
         locations.add(expectedLocation);
         when(allLocations.getAll()).thenReturn(locations);
 
@@ -105,8 +106,8 @@ public class LocationServiceTest {
     @Test
     public void shouldUpdateAllLocations() {
         ArrayList<Location> locationList = new ArrayList<>();
-        Location location1 = new Location("D11", "B1", "P1");
-        Location location2 = new Location("D12", "B2", "P2");
+        Location location1 = new Location("S1", "D11", "B1", "P1");
+        Location location2 = new Location("S2", "D12", "B2", "P2");
         locationList.add(location1);
         locationList.add(location2);
 
@@ -114,5 +115,27 @@ public class LocationServiceTest {
 
         verify(allLocations).update(location1);
         verify(allLocations).update(location2);
+    }
+    
+    @Test
+    public void shouldUpdateStateNameAndExternalIdForDefaultLocation(){
+        String oldDefaultLocExtId="S01D000B000V000";
+		String newDefaultLocExtId="S00D000B000V000";
+		String defaultLocStateName = "C00";
+    	
+    	Location olderDefaultLocation = new Location(null, "C00", "C00", null, 1, 0, 0, 0, null, new DateTime());
+    	olderDefaultLocation.setExternalId(oldDefaultLocExtId);
+    	
+    	Location newDefaultLocation = new Location(null, "C00", "C00", null, 0, 0, 0, 0, null, new DateTime());
+    	newDefaultLocation.setExternalId(newDefaultLocExtId);
+    	
+        when(allLocations.findByExternalId(oldDefaultLocExtId)).thenReturn(olderDefaultLocation);
+        when(allLocations.findByExternalId(newDefaultLocExtId)).thenReturn(newDefaultLocation);
+        
+        locationService.updateLocationExternalId(oldDefaultLocExtId, newDefaultLocExtId);
+        locationService.updateStateNameByExternalId(newDefaultLocExtId, defaultLocStateName);
+        
+        assertEquals(olderDefaultLocation.getExternalId(), newDefaultLocExtId);
+        assertEquals(newDefaultLocation.getState(), defaultLocStateName);
     }
 }

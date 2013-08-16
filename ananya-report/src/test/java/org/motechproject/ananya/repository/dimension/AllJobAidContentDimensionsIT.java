@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertNotNull;
 
-public class AllJobAidContentDimensionsTest extends SpringIntegrationTest{
+public class AllJobAidContentDimensionsIT extends SpringIntegrationTest{
 
     @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;
@@ -17,7 +17,7 @@ public class AllJobAidContentDimensionsTest extends SpringIntegrationTest{
     public void shouldFetchJobAidContentDimensionByContentId(){
         String contentId = "contentId";
         JobAidContentDimension jobAidContentDimension =
-                new JobAidContentDimension(contentId, null, "name", "filename", "audio", 12);
+                new JobAidContentDimension(contentId, null, "name", "audio");
 
         template.save(jobAidContentDimension);
 

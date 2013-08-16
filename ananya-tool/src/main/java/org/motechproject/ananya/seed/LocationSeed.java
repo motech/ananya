@@ -25,6 +25,9 @@ public class LocationSeed {
     @Value("#{ananyaProperties['seed.location.file.out']}")
     private String outputFileName;
 
+    @Value("#{ananyaProperties['seed.location.file.with.odisa.data']}")
+    private String inputFileNameWithOdisaData;
+    
     @Value("#{ananyaProperties['environment']}")
     private String environment;
 
@@ -53,25 +56,56 @@ public class LocationSeed {
     public void updateLocationDetailsToTitleCase() {
         locationRegistrationService.updateAllLocationsToTitleCase();
     }
+    
+    @Seed(priority = 1,version = "1.14", comment = "uodate external id and state name of default location")
+    public void updateStateAndExternalIdForDefaultLocation() {
+        String currentExternalId="S01D000B000V000";
+		String newExternalId="S00D000B000V000";
+		String state = "C00";
+		locationRegistrationService.updateExternalId(currentExternalId, newExternalId);
+		locationRegistrationService.updateStateNameByExternalId(newExternalId, state);
+    }
+    
+    @Seed(priority = 1,version = "1.15", comment = "add state name as bihar in the existing locations")
+    public void updateAllExistingLocationStateNameToBihar() {
+        locationRegistrationService.updateAllNullLocationStateName("Bihar");
+    }
+    
+    @Seed(priority = 1, version = "1.16", comment = "load all locations from csv file for odisa")
+    public void loadOdisaLocationsFromCSVFile() throws IOException {
+    	String inputCSVFileOdisaData = environment.equals("prod") ? inputFileNameWithOdisaData : getClass().getResource(inputFileNameWithOdisaData).getPath();
+    	loadFromCsv(inputCSVFileOdisaData);
+    }
 
     private void loadDefaultLocation() {
         locationRegistrationService.loadDefaultLocation();
     }
+    
+    private void reInitiateWriter(String inputCSVFile) throws IOException{
+        String outputFilePath = new File(inputCSVFile).getParent();
+        String outputCSVFile = outputFilePath + File.separator + outputFileName + new Date().getTime();
+        File file = new File(outputCSVFile);
+        file.createNewFile();
 
+        writer = new BufferedWriter(new FileWriter(outputCSVFile));
+    }
+    
     private void loadFromCsv(String path) throws IOException {
+    	reInitiateWriter(path);
         CSVReader csvReader = new CSVReader(new FileReader(path));
-        String currentDistrict, currentBlock, currentPanchayat;
+        String currentState, currentDistrict, currentBlock, currentPanchayat;
         String[] currentRow;
         List<LocationRequest> locationList = new ArrayList<LocationRequest>();
         //skip header
         csvReader.readNext();
         currentRow = csvReader.readNext();
         while (currentRow != null) {
-            currentDistrict = currentRow[0];
-            currentBlock = currentRow[1];
-            currentPanchayat = currentRow[2];
+        	currentState = currentRow[0];
+            currentDistrict = currentRow[1];
+            currentBlock = currentRow[2];
+            currentPanchayat = currentRow[3];
 
-            locationList.add(new LocationRequest(currentDistrict, currentBlock, currentPanchayat));
+            locationList.add(new LocationRequest(currentState, currentDistrict, currentBlock, currentPanchayat));
 
             currentRow = csvReader.readNext();
         }

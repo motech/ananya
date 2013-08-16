@@ -98,11 +98,12 @@ public class CertificateCourseServiceTest {
         String callerId = "123";
         String operator = "airtel";
         String circle = "circle";
-
+        String language= "language";
+        
         CertificateCourseStateRequestList stateRequestList = mock(CertificateCourseStateRequestList.class);
         AudioTrackerRequestList audioTrackerList = mock(AudioTrackerRequestList.class);
         CallDurationList callDurationList = mock(CallDurationList.class);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         CertificateCourseServiceRequest request = mock(CertificateCourseServiceRequest.class);
 
         when(request.getCallId()).thenReturn(callId);
@@ -112,11 +113,12 @@ public class CertificateCourseServiceTest {
         when(request.getCallDurationList()).thenReturn(callDurationList);
         when(request.getOperator()).thenReturn(operator);
         when(request.getCircle()).thenReturn(circle);
-
+        when(request.getLanguage()).thenReturn(language);
+        
         when(stateRequestList.isNotEmpty()).thenReturn(true);
         when(stateRequestList.getCallerId()).thenReturn(callerId);
 
-        when(frontlineWorkerService.createOrUpdateForCall(callerId, operator, circle)).thenReturn(new FrontLineWorkerCreateResponse(frontLineWorker, false));
+        when(frontlineWorkerService.createOrUpdateForCall(callerId, operator, circle, language)).thenReturn(new FrontLineWorkerCreateResponse(frontLineWorker, false));
 
         certificateCourseService.handleDisconnect(request);
 

@@ -7,6 +7,7 @@ public class AudioTrackerLogItemMapper {
     public static AudioTrackerLogItem mapFrom(AudioTrackerRequest audioTrackerRequest) {
         return new AudioTrackerLogItem(
                 audioTrackerRequest.getContentId(),
+                audioTrackerRequest.getLanguage(),
                 audioTrackerRequest.getTimeAsDateTime(),
                 audioTrackerRequest.getDuration());
     }

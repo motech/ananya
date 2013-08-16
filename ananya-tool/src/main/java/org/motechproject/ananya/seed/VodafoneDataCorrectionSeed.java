@@ -58,7 +58,7 @@ public class VodafoneDataCorrectionSeed {
     public void correctSMSLogs() {
         List<SMSLog> smsLogs = allSMSLogs.getAll();
         for (SMSLog smslog : smsLogs) {
-            smsService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+            smsService.buildAndSendSMS(smslog.getCallerId(), smslog.getLanguage(), smslog.getLocationId(), smslog.getCourseAttempts());
             log.info("sent SMS and created measure for " + smslog.getCallerId());
             allSMSLogs.remove(smslog);
         }

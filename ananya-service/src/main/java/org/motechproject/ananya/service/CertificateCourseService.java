@@ -57,7 +57,7 @@ public class CertificateCourseService {
     public void handleDisconnect(CertificateCourseServiceRequest request) {
         allTransformers.process(request);
 
-        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(request.getCallerId(), request.getOperator(), request.getCircle());
+        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(request.getCallerId(), request.getOperator(), request.getCircle(), request.getLanguage());
         if (frontLineWorkerCreateResponse.isModified())
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 

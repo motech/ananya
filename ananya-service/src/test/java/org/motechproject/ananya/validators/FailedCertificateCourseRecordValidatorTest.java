@@ -8,9 +8,14 @@ import org.mockito.Mock;
 import org.motechproject.ananya.contract.FailedRecordCSVRequest;
 import org.motechproject.ananya.contract.FailedRecordCSVRequestBuilder;
 import org.motechproject.ananya.domain.CourseItemType;
+import org.motechproject.ananya.domain.dimension.CourseItemDetailsDimension;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
+import org.motechproject.ananya.repository.dimension.AllCourseItemDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -25,25 +30,38 @@ public class FailedCertificateCourseRecordValidatorTest {
 
     @Mock
     private AllJobAidContentDimensions allJobAidContentDimensions;
-
+    @Mock
+    private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
+    @Mock
+    private AllCourseItemDetailsDimensions allCourseItemDetailsDimensions;
+    @Mock
+    private AllLanguageDimension allLanguageDimension;
+    
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setUp() {
         initMocks(this);
-        failedCertificateCourseRecordValidator = new FailedCertificateCourseRecordValidator(allCourseItemDimensions, allJobAidContentDimensions);
+        failedCertificateCourseRecordValidator = new FailedCertificateCourseRecordValidator(allCourseItemDimensions, allJobAidContentDimensions, allCourseItemDetailsDimensions, allJobAidContentDetailsDimensions, allLanguageDimension);
     }
 
     @Test
     public void shouldValidateAValidCertificateCourseRecord() {
         when(allCourseItemDimensions.getFor("Chapter 1 Lesson 4", CourseItemType.LESSON)).thenReturn(new CourseItemDimension());
         when(allCourseItemDimensions.getFor("Chapter 1", CourseItemType.QUIZ)).thenReturn(new CourseItemDimension());
-        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cced8")).thenReturn(new CourseItemDimension(null, null, null, null, null, 6122));
-        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597ccf1c")).thenReturn(new CourseItemDimension(null, null, null, null, null, 7435));
-        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597c4d3b")).thenReturn(new CourseItemDimension(null, null, null, null, null, 7435));
-        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cdcdd")).thenReturn(new CourseItemDimension(null, null, null, null, null, 7435));
-        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cdea4")).thenReturn(new CourseItemDimension(null, null, null, null, null, 7435));
+        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cced8")).thenReturn(new CourseItemDimension(null, null, null, null));
+        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597ccf1c")).thenReturn(new CourseItemDimension(null, null, null, null));
+        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597c4d3b")).thenReturn(new CourseItemDimension(null, null, null, null));
+        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cdcdd")).thenReturn(new CourseItemDimension(null, null, null, null));
+        when(allCourseItemDimensions.getFor("7a823ae22badc42018c6542c597cdea4")).thenReturn(new CourseItemDimension(null, null, null, null));
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho.."));
+        when(allCourseItemDetailsDimensions.getFor("7a823ae22badc42018c6542c597cced8", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 6122));
+        when(allCourseItemDetailsDimensions.getFor("7a823ae22badc42018c6542c597ccf1c", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 7435));
+        when(allCourseItemDetailsDimensions.getFor("7a823ae22badc42018c6542c597c4d3b", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 4551));
+        when(allCourseItemDetailsDimensions.getFor("7a823ae22badc42018c6542c597cdcdd", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 3087));
+        when(allCourseItemDetailsDimensions.getFor("7a823ae22badc42018c6542c597cdea4", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 3083));
+
         failedCertificateCourseRecordValidator.validate(new FailedRecordCSVRequestBuilder().withCertificateCourseDefaults().build());
     }
 
@@ -55,7 +73,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323")
+                .withFieldsToPost("callId:9886000002-1346784033040;operator: ;callerId:232323;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -68,7 +86,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel")
+                .withFieldsToPost("callId:9886000002-1346784033040;Opeartor:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -81,7 +99,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:9886000002-1346784033040;")
+                .withFieldsToPost("callId:9886000002-1346784033040;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -94,7 +112,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("operator:airtel;")
+                .withFieldsToPost("operator:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -107,7 +125,7 @@ public class FailedCertificateCourseRecordValidatorTest {
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[]")
-                .withFieldsToPost("callId:123456789a-3343; operator:airtel")
+                .withFieldsToPost("callId:123456789a-3343; operator:airtel;language:language")
                 .build();
         failedCertificateCourseRecordValidator.validate(request);
     }
@@ -275,8 +293,11 @@ public class FailedCertificateCourseRecordValidatorTest {
     public void shouldInValidateAudioTrackLogsForInvalidContentId() {
         expectedException.expect(FailedRecordValidationException.class);
         expectedException.expectMessage("Invalid audio tracker content id: invalid_contentId");
+        
         when(allCourseItemDimensions.getFor("invalid_contentId")).thenReturn(null);
-
+        when(allCourseItemDetailsDimensions.getFor("invalid_contentId", null)).thenReturn(null);
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[{\"token\":4,\"data\":{\"duration\":55277,\"time\":1350379442356,\"contentId\":\"invalid_contentId\"},\"type\":\"audioTracker\"}]")
@@ -289,8 +310,11 @@ public class FailedCertificateCourseRecordValidatorTest {
     public void shouldInValidateIfAudioTrackLogsDurationIsGreaterThanTheActualDimensionDuration() {
         expectedException.expect(FailedRecordValidationException.class);
         expectedException.expectMessage("Audio tracker duration greater than actual course item duration: 55277, actual: 1234");
-        when(allCourseItemDimensions.getFor("1234567890987654321")).thenReturn(new CourseItemDimension(null,null,null,null,null,1234));
-
+       
+        when(allCourseItemDimensions.getFor("1234567890987654321")).thenReturn(new CourseItemDimension(null,null,null,null));
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        when(allCourseItemDetailsDimensions.getFor("1234567890987654321", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 1234));
+       
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()
                 .withDataToPost("[{\"token\":4,\"data\":{\"duration\":55277,\"time\":1350379442356,\"contentId\":\"1234567890987654321\"},\"type\":\"audioTracker\"}]")
@@ -303,7 +327,10 @@ public class FailedCertificateCourseRecordValidatorTest {
     public void shouldInValidateIfAudioTrackLogsWithInvalidRequestTime() {
         expectedException.expect(FailedRecordValidationException.class);
         expectedException.expectMessage("Invalid audio tracker request time: 2sa");
-        when(allCourseItemDimensions.getFor("1234567890987654321")).thenReturn(new CourseItemDimension(null,null,null,null,null,123433));
+        
+        when(allCourseItemDimensions.getFor("1234567890987654321")).thenReturn(new CourseItemDimension(null,null,null,null));
+        when(allLanguageDimension.getFor("language")).thenReturn(new LanguageDimension("language", "lang", "badhai ho..."));
+        when(allCourseItemDetailsDimensions.getFor("1234567890987654321", null)).thenReturn(new CourseItemDetailsDimension(null, null, null, 55277));
 
         FailedRecordCSVRequest request = new FailedRecordCSVRequestBuilder()
                 .withCertificateCourseDefaults()

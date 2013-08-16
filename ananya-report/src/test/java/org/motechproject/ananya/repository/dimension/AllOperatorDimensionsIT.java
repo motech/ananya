@@ -11,7 +11,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-public class AllOperatorDimensionsTest extends SpringIntegrationTest{
+public class AllOperatorDimensionsIT extends SpringIntegrationTest{
     @Autowired
     AllOperatorDimensions allOperatorDimensions;
 

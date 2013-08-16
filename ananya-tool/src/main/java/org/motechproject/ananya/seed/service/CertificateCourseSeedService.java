@@ -1,17 +1,17 @@
 package org.motechproject.ananya.seed.service;
 
-import org.motechproject.ananya.seed.domain.CertificateCourseItemAction;
+import java.util.List;
+
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.Node;
 import org.motechproject.ananya.domain.dimension.CourseItemDimension;
 import org.motechproject.ananya.repository.AllNodes;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.ananya.seed.domain.CertificateCourseItemAction;
 import org.motechproject.cmslite.api.model.StringContent;
 import org.motechproject.cmslite.api.repository.AllStringContents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CertificateCourseSeedService {
@@ -20,6 +20,7 @@ public class CertificateCourseSeedService {
     private AllNodes allNodes;
     @Autowired
     private AllCourseItemDimensions allCourseItemDimensions;
+    
     @Autowired
     private AllStringContents allStringContents;
 
@@ -80,9 +81,7 @@ public class CertificateCourseSeedService {
                     content.getName() + ":" + content.getValue(),
                     content.getId(),
                     CourseItemType.AUDIO,
-                    courseItemDimension,
-                    content.getValue(),
-                    Integer.valueOf(content.getMetadata() == null ? "0" : content.getMetadata().get("duration"))
+                    courseItemDimension
             );
             allCourseItemDimensions.add(audioContentDimension);
         }

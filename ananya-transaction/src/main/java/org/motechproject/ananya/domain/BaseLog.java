@@ -14,6 +14,7 @@ public class BaseLog extends MotechBaseDataObject {
     @JsonProperty
     protected String operator;
 
+    
     public BaseLog() {
     }
 
@@ -52,4 +53,5 @@ public class BaseLog extends MotechBaseDataObject {
     public void setCalledNumber(String calledNumber) {
         this.calledNumber = calledNumber;
     }
+
 }

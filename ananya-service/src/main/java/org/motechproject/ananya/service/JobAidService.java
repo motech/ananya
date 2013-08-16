@@ -57,7 +57,7 @@ public class JobAidService {
     public void handleDisconnect(JobAidServiceRequest request) {
         allTransformers.process(request);
         FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
-                request.getCallerId(), request.getOperator(), request.getCircle());
+                request.getCallerId(), request.getOperator(), request.getCircle(), request.getLanguage());
 
         if (frontLineWorkerCreateResponse.isModified())
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));

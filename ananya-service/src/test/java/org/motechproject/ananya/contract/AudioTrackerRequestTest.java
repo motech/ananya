@@ -21,7 +21,9 @@ public class AudioTrackerRequestTest {
                         "    \"time\" : \"123456789\"                          " +
                         "}";
 
-        AudioTrackerRequest audioTrackerRequest = AudioTrackerRequest.createFrom(callId, callerId, jsonString, dataToken);
+        String language= "language";
+        
+        AudioTrackerRequest audioTrackerRequest = AudioTrackerRequest.createFrom(callId, callerId, jsonString, dataToken, language);
 
         assertEquals("e79139b5540bf3fc8d96635bc2926f90", audioTrackerRequest.getContentId());
         assertEquals(123, (int) audioTrackerRequest.getDuration());

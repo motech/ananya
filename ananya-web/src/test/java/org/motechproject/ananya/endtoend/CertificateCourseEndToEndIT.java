@@ -36,6 +36,7 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
     private String callId = "919987345645-123456789";
     private String operator = "airtel";
     private String circle = "circle";
+    private String langauge = "bhojpuri";
     private String calledNumber = "5771122";
 
     @Before
@@ -49,7 +50,7 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
 
     @Test
     public void shouldReturnADefaultResponseForANewCaller() throws IOException {
-        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber, langauge);
         CertificateCourseResponse certificateCourseResponse = certificateCourseWebService.requestForCallerData(request);
 
         certificateCourseResponse.confirmPartiallyRegistered().confirmEmptyBookMark().confirmEmptyScores();
@@ -67,10 +68,10 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
         Map<String, Integer> scoresMap = new HashMap<String, Integer>();
         scoresMap.put("0", 2);
 
-        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 3, 4).updateScores(callerId, scores);
+        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle, langauge).updateBookMark(callerId, 3, 4).updateScores(callerId, scores);
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
-        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber, langauge);
         CertificateCourseResponse certificateCourseResponse = certificateCourseWebService.requestForCallerData(request);
         certificateCourseResponse.confirmPartiallyRegistered().confirmBookMarkAt(3, 4).confirmScores(scoresMap);
     }
@@ -78,33 +79,29 @@ public class CertificateCourseEndToEndIT extends SpringIntegrationTest {
     @Test
     public void shouldCreateLogsDimensionsMeasuresForDisconnectOfACallerFinishingCourse() throws IOException, InterruptedException {
         couchDb.createOperator(operator, 39 * 60 * 1000, 0, 60000);
-        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle).updateBookMark(callerId, 8, 3).updateScores(callerId, presetScores());
+        couchDb.createPartiallyRegisteredFlwFor(callerId, operator, circle, langauge).updateBookMark(callerId, 8, 3).updateScores(callerId, presetScores());
         couchDb.addANode("Chapter 9");
         reportDb.createMeasuresAndDimensionsForFlw(callerId, callId, operator, circle);
 
-        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber);
+        CertificateCourseRequest request = new CertificateCourseRequest(callerId, operator, circle, callId, calledNumber, langauge);
         request.setJsonPostData(testJsonData.forCourseDisconnect());
         certificateCourseWebService.requestForDisconnect(request);
 
 
         couchDb.confirmBookmarkUpdated(callerId, new EmptyBookmark());
-//              .confirmSMSReference(callerId, "00000091998734564501");
 
         reportDb.confirmFLWDimensionForPartiallyRegistered(callerId, operator)
                 .confirmRegistrationMeasureForPartiallyRegistered(callerId)
                 .confirmCallDurationMeasure(callId, callerId, "5771102")
                 .confirmCourseItemMeasure(callId, callerId);
-//              .confirmSMSSent(callerId, "00000091998734564501")
 
         couchDb.confirmNoRegistrationLogFor(callId)
                 .confirmNoAudioTrackerLogFor(callId)
                 .confirmNoCallLogFor(callId)
                 .confirmNoCourseLogFor(callId);
-//              .confirmNoSMSLog(callId);
 
         reportDb.clearCallDurationMeasure(callId)
                 .clearCourseItemMeasure(callId);
-//              .clearSMSSentMeasure(callerId)
     }
 
     private List<Score> presetScores() {

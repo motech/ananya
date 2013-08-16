@@ -19,6 +19,7 @@ import org.motechproject.ananya.support.admin.domain.CallerDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,8 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-admin.xml")
-public class AdminInquiryServiceTest {
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+public class AdminInquiryServiceIT {
     @Autowired
     private AdminInquiryService adminInquiryService;
     @Autowired
@@ -35,13 +37,19 @@ public class AdminInquiryServiceTest {
     @Autowired
     private AllCourseItemDimensions allCourseItemDimensions;
     @Autowired
+    private AllCourseItemDetailsDimensions allCourseItemDetailsDimensions;
+    @Autowired
     private AllCourseItemMeasures allCourseItemMeasures;
     @Autowired
     private AllTimeDimensions allTimeDimensions;
     @Autowired
     private AllLocationDimensions allLocationDimensions;
     @Autowired
+    private AllLanguageDimension allLanguageDimension;
+    @Autowired
     private AllJobAidContentDimensions allJobAidContentDimensions;
+    @Autowired
+    private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
     @Autowired
     private AllJobAidContentMeasures allJobAidContentMeasures;
     @Autowired
@@ -53,6 +61,7 @@ public class AdminInquiryServiceTest {
     private TimeDimension timeDimensionTwoDaysAgo;
     private TimeDimension timeDimensionNow;
     private LocationDimension locationDimension;
+    private LanguageDimension languageDimension;
 
     @Before
     public void setUp() {
@@ -61,7 +70,10 @@ public class AdminInquiryServiceTest {
         twoDaysAgo = now.minusDays(2);
         timeDimensionTwoDaysAgo = allTimeDimensions.addOrUpdate(twoDaysAgo);
         timeDimensionNow = allTimeDimensions.addOrUpdate(now);
-        locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension("S00D00V01", "light", "my", "fire", "VALID"));
+        locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension("S00D00V01", "please", "light", "my", "fire", "VALID"));
+        languageDimension = allLanguageDimension.getFor("bhojpuri");
+        if(languageDimension==null)
+        	languageDimension = allLanguageDimension.addOrUpdate(new LanguageDimension("bhojpuri", "bho", "badhai ho..."));
     }
 
     @After
@@ -79,6 +91,7 @@ public class AdminInquiryServiceTest {
         template.deleteAll(template.loadAll(CourseItemMeasure.class));
         template.deleteAll(template.loadAll(RegistrationMeasure.class));
         template.deleteAll(template.loadAll(SMSSentMeasure.class));
+        template.deleteAll(template.loadAll(LanguageDimension.class));
     }
 
     @Test
@@ -133,15 +146,20 @@ public class AdminInquiryServiceTest {
     private void setUpKunjiCalls(String callerId) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "vodafone", "bihar", "Ambala", "ANGANWADI", "REGISTERED", UUID.randomUUID(), null);
 
-        JobAidContentDimension root = new JobAidContentDimension("root", null, "Welcome", "root.mp3", "root", 50);
+        JobAidContentDimension root = new JobAidContentDimension("root", null, "Welcome", "root");
         allJobAidContentDimensions.add(root);
-        JobAidContentDimension ja1 = new JobAidContentDimension("ja1", root, "Chapter 1", "chapter1.mp3", "chapter", 1000);
+        JobAidContentDimension ja1 = new JobAidContentDimension("ja1", root, "Chapter 1", "chapter");
         allJobAidContentDimensions.add(ja1);
-        JobAidContentDimension ja2 = new JobAidContentDimension("ja2", root, "Chapter 2", "chapter2.mp3", "chapter", 5000);
+        JobAidContentDimension ja2 = new JobAidContentDimension("ja2", root, "Chapter 2", "chapter");
         allJobAidContentDimensions.add(ja2);
 
-        allJobAidContentMeasures.add(new JobAidContentMeasure(callerId + "-654", frontLineWorkerDimension, locationDimension, ja1, timeDimensionTwoDaysAgo, twoDaysAgo, 777, 80));
-        allJobAidContentMeasures.add(new JobAidContentMeasure(callerId + "-999", frontLineWorkerDimension, locationDimension, ja2, timeDimensionNow, now, 2500, 50));
+        if(allJobAidContentDetailsDimensions.getFor("ja1", languageDimension.getId())==null)
+        	allJobAidContentDetailsDimensions.addOrUpdate(new JobAidContentDetailsDimension(languageDimension.getId(), "ja1", "Chapter 1", 1234));
+        if(allJobAidContentDetailsDimensions.getFor("ja2", languageDimension.getId())==null)
+        	allJobAidContentDetailsDimensions.addOrUpdate(new JobAidContentDetailsDimension(languageDimension.getId(), "ja2", "chapter 2", 1234));
+
+        allJobAidContentMeasures.add(new JobAidContentMeasure(callerId + "-654", frontLineWorkerDimension, locationDimension, ja1, timeDimensionTwoDaysAgo, languageDimension, twoDaysAgo, 777, 80));
+        allJobAidContentMeasures.add(new JobAidContentMeasure(callerId + "-999", frontLineWorkerDimension, locationDimension, ja2, timeDimensionNow, languageDimension, now, 2500, 50));
     }
 
     private void setUpAcademyCalls(String callerId) {
@@ -150,7 +168,12 @@ public class AdminInquiryServiceTest {
         CourseItemDimension c1l1 = allCourseItemDimensions.add(new CourseItemDimension("chapter 1 lesson 1", "c1l1", CourseItemType.LESSON, root));
         CourseItemDimension c1l2 = allCourseItemDimensions.add(new CourseItemDimension("chapter 1 lesson 2", "c1l2", CourseItemType.LESSON, root));
 
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimensionTwoDaysAgo, c1l1, frontLineWorkerDimension, locationDimension, twoDaysAgo, 14, CourseItemState.END, callerId + "-123"));
-        allCourseItemMeasures.save(new CourseItemMeasure(timeDimensionNow, c1l2, frontLineWorkerDimension, locationDimension, now, 14, CourseItemState.END, callerId + "-567"));
+        if(allCourseItemDetailsDimensions.getFor("c1l1", languageDimension.getId())==null)
+        	allCourseItemDetailsDimensions.addOrUpdate(new CourseItemDetailsDimension(languageDimension.getId(), "c1l1", "chapter 1 lesson 1", 1234));
+        if(allCourseItemDetailsDimensions.getFor("c1l2", languageDimension.getId())==null)
+        	allCourseItemDetailsDimensions.addOrUpdate(new CourseItemDetailsDimension(languageDimension.getId(), "c1l2", "chapter 1 lesson 2", 1234));
+        
+        allCourseItemMeasures.save(new CourseItemMeasure(timeDimensionTwoDaysAgo, c1l1, frontLineWorkerDimension, locationDimension, languageDimension, twoDaysAgo, 14, CourseItemState.END, callerId + "-123"));
+        allCourseItemMeasures.save(new CourseItemMeasure(timeDimensionNow, c1l2, frontLineWorkerDimension, locationDimension, languageDimension, now, 14, CourseItemState.END, callerId + "-567"));
     }
 }

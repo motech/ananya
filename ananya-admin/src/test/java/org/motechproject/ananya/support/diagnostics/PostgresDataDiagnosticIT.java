@@ -1,5 +1,11 @@
 package org.motechproject.ananya.support.diagnostics;
 
+import static junit.framework.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import org.hibernate.classic.Session;
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -7,9 +13,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.ananya.domain.Location;
-import org.motechproject.ananya.domain.dimension.*;
-import org.motechproject.ananya.domain.measure.*;
-import org.motechproject.ananya.repository.DataAccessTemplate;
+import org.motechproject.ananya.domain.dimension.CourseItemDimension;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
+import org.motechproject.ananya.domain.dimension.LocationDimension;
+import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.measure.CallDurationMeasure;
+import org.motechproject.ananya.domain.measure.CourseItemMeasure;
+import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.domain.measure.SMSSentMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
 import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
@@ -18,18 +31,13 @@ import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.motechproject.ananya.support.TestDataAccessTemplate;
 import org.motechproject.ananya.support.diagnostics.base.DiagnosticQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static junit.framework.Assert.assertEquals;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-admin.xml")
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class PostgresDataDiagnosticIT {
 
     @Autowired
@@ -119,7 +127,7 @@ public class PostgresDataDiagnosticIT {
         long calledNumber = 57711L;
 
         Location defaultLocation = Location.getDefaultLocation();
-        LocationDimension locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat(), "VALID"));
+        LocationDimension locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getState(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat(), "VALID"));
 
         TimeDimension todayTimeDimension = allTimeDimensions.addOrUpdate(today);
         TimeDimension yesterdayTimeDimension = allTimeDimensions.addOrUpdate(yesterday);

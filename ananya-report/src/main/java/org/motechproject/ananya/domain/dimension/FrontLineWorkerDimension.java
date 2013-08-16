@@ -113,7 +113,7 @@ public class FrontLineWorkerDimension {
         this.status = status;
     }
 
-    public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId, VerificationStatus verificationStatus) {
+	public FrontLineWorkerDimension update(String circle, String operator, String name, String status, String designation, UUID flwId, VerificationStatus verificationStatus) {
         this.operator = operator;
         this.name = name;
         this.status = status;

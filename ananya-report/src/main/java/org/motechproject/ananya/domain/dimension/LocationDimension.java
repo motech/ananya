@@ -15,6 +15,9 @@ public class LocationDimension {
     @Column(name = "location_id")
     private String locationId;
 
+    @Column(name = "state")
+    private String state;
+    
     @Column(name = "district")
     private String district;
 
@@ -32,8 +35,9 @@ public class LocationDimension {
     public LocationDimension() {
     }
 
-    public LocationDimension(String locationId, String district, String block, String panchayat, String status) {
+    public LocationDimension(String locationId, String state, String district, String block, String panchayat, String status) {
         this.locationId = locationId;
+        this.state = state;
         this.district = district;
         this.block = block;
         this.panchayat = panchayat;
@@ -48,7 +52,11 @@ public class LocationDimension {
         return locationId;
     }
 
-    public String getDistrict() {
+    public String getState() {
+		return state;
+	}
+
+	public String getDistrict() {
         return district;
     }
 
@@ -74,7 +82,7 @@ public class LocationDimension {
         if (o == null || getClass() != o.getClass()) return false;
 
         LocationDimension that = (LocationDimension) o;
-
+        if (state != null ? !state.equals(that.state) : that.state != null) return false;
         if (block != null ? !block.equals(that.block) : that.block != null) return false;
         if (district != null ? !district.equals(that.district) : that.district != null) return false;
         if (locationId != null ? !locationId.equals(that.locationId) : that.locationId != null) return false;
@@ -86,6 +94,7 @@ public class LocationDimension {
     @Override
     public int hashCode() {
         int result = locationId != null ? locationId.hashCode() : 0;
+        result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (district != null ? district.hashCode() : 0);
         result = 31 * result + (block != null ? block.hashCode() : 0);
         result = 31 * result + (panchayat != null ? panchayat.hashCode() : 0);
@@ -96,6 +105,7 @@ public class LocationDimension {
     public String toString() {
         return "LocationDimension{" +
                 "locationId='" + locationId +
+                ", state='" + state +
                 ", district='" + district +
                 ", block='" + block +
                 ", panchayat='" + panchayat +

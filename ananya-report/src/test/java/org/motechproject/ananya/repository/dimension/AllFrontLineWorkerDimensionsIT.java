@@ -1,5 +1,18 @@
 package org.motechproject.ananya.repository.dimension;
 
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,18 +23,7 @@ import org.motechproject.ananya.domain.VerificationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
+public class AllFrontLineWorkerDimensionsIT extends SpringIntegrationTest {
 
     @Autowired
     AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
@@ -229,9 +231,9 @@ public class AllFrontLineWorkerDimensionsTest extends SpringIntegrationTest {
         Designation anm = Designation.ANM;
         String bihar = "Bihar";
         String up = "UP";
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(), flwId, null);
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(msisdn1, bsnl, up, "name2", anm.name(), RegistrationStatus.REGISTERED.name(),flwId, null);
         FrontLineWorkerDimension frontLineWorkerDimension2 = new FrontLineWorkerDimension(msisdn2, bsnl, up, "name3", anm.name(), RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
-        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(), UUID.randomUUID(), null));
+        template.save(new FrontLineWorkerDimension(msisdn, airtel, bihar, "name1", anganwadi.name(), RegistrationStatus.PARTIALLY_REGISTERED.name(),UUID.randomUUID(), null));
         template.save(frontLineWorkerDimension1);
         template.save(frontLineWorkerDimension2);
         ArrayList<Long> allFilteredMsisdns = new ArrayList<Long>();

@@ -67,7 +67,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
         String smsReferenceNumber = "refNo";
         FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
         allSMSSentMeasures.save(new SMSSentMeasure(1, smsReferenceNumber, true, frontLineWorker, timeDimension, locationDimension));
 
@@ -81,7 +81,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
         String smsReferenceNumber = "refNo";
         FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
-        LocationDimension locationDimension = new LocationDimension("locationId", "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
         allSMSSentMeasures.save(new SMSSentMeasure(1, smsReferenceNumber, true, frontLineWorker, timeDimension, locationDimension));
 
@@ -96,7 +96,7 @@ public class AllSMSSentMeasuresIT extends SpringIntegrationTest {
         String locationId = "locationId";
         FrontLineWorkerDimension frontLineWorker = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf("9876"), "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
         TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now());
-        LocationDimension locationDimension = new LocationDimension(locationId, "district", "block", "panchayat", "VALID");
+        LocationDimension locationDimension = new LocationDimension(locationId, "state", "district", "block", "panchayat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
         allSMSSentMeasures.save(new SMSSentMeasure(1, smsReferenceNumber, true, frontLineWorker, timeDimension, locationDimension));
 

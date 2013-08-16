@@ -58,8 +58,8 @@ public class LocationRegistrationServiceTest {
         Location location = locationCaptor.getValue();
         LocationDimension locationDimension = locationDimensionCaptor.getValue();
 
-        assertEquals("S01D000B000V000", location.getExternalId());
-        assertEquals("S01D000B000V000", locationDimension.getLocationId());
+        assertEquals("S00D000B000V000", location.getExternalId());
+        assertEquals("S00D000B000V000", locationDimension.getLocationId());
     }
 
     @Test
@@ -67,15 +67,17 @@ public class LocationRegistrationServiceTest {
         List<LocationDimension> locationDimensions = new ArrayList<LocationDimension>();
         String externalId = "121";
         String block = "B1";
+        String state = "S1";
         String district = "D1";
         String panchayat = "P1";
-        locationDimensions.add(new LocationDimension(externalId, district, block, panchayat, "VALID"));
-        when(locationDimensionService.getFilteredLocations(district, null, null)).thenReturn(locationDimensions);
-        LocationRequest locationRequest = new LocationRequest(district, null, null);
+        locationDimensions.add(new LocationDimension(externalId, state, district, block, panchayat, "VALID"));
+        when(locationDimensionService.getFilteredLocations(state, district, null, null)).thenReturn(locationDimensions);
+        LocationRequest locationRequest = new LocationRequest(state, district, null, null);
 
         List<LocationResponse> locationResponses = locationRegistrationService.getFilteredLocations(locationRequest);
 
         assertEquals(1, locationResponses.size());
+        assertEquals(state, locationResponses.get(0).getState());
         assertEquals(district, locationResponses.get(0).getDistrict());
         assertEquals(block, locationResponses.get(0).getBlock());
         assertEquals(panchayat, locationResponses.get(0).getPanchayat());
@@ -84,15 +86,15 @@ public class LocationRegistrationServiceTest {
     @Test
     public void shouldSaveAllLocationsAndCreateDefaultLocationsForTheSame() {
         List<LocationRequest> locations = new ArrayList<LocationRequest>();
-        LocationRequest location1 = new LocationRequest("D1", "B1", "P1");
+        LocationRequest location1 = new LocationRequest("S1", "D1", "B1", "P1");
         locations.add(location1);
-        LocationRequest location2 = new LocationRequest("D2", "B2", "P5");
+        LocationRequest location2 = new LocationRequest("S1", "D2", "B2", "P5");
         locations.add(location2);
-        LocationRequest location3 = new LocationRequest("D1", "B3", "P2");
+        LocationRequest location3 = new LocationRequest("S1", "D1", "B3", "P2");
         locations.add(location3);
-        LocationRequest defaultLocation1 = new LocationRequest("D1", "B1", "");
-        LocationRequest defaultLocation2 = new LocationRequest("D2", "B2", "");
-        LocationRequest defaultLocation3 = new LocationRequest("D1", "B3", "");
+        LocationRequest defaultLocation1 = new LocationRequest("S1", "D1", "B1", "");
+        LocationRequest defaultLocation2 = new LocationRequest("S1", "D2", "B2", "");
+        LocationRequest defaultLocation3 = new LocationRequest("S1", "D1", "B3", "");
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
 
         locationRegistrationService.registerAllLocationsWithDefaultLocations(locations);
@@ -110,7 +112,7 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldAddNewLocation() {
-        LocationRequest locationRequest = new LocationRequest("district", "block", "panchayat");
+        LocationRequest locationRequest = new LocationRequest("state", "district", "block", "panchayat");
         when(locationService.getAll()).thenReturn(new ArrayList<Location>());
         String status = LocationStatus.NOT_VERIFIED.name();
         DateTime lastModifiedTime = DateTime.now();
@@ -130,10 +132,11 @@ public class LocationRegistrationServiceTest {
         String district = "district";
         String block = "block";
         String panchayat = "panchayat";
-        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
+        String state= " state";
+        LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
         ArrayList<Location> locationList = new ArrayList<>();
         DateTime lastModifiedTime = DateTime.now();
-        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(state, district, block, panchayat, 1, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         locationList.add(expectedLocation);
         when(locationService.getAll()).thenReturn(locationList);
 
@@ -148,9 +151,10 @@ public class LocationRegistrationServiceTest {
         String district = "district";
         String block = "block";
         String panchayat = "panchayat";
-        LocationRequest locationRequest = new LocationRequest(district, block, panchayat);
-        Location expectedLocation = new Location(district, block, panchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, DateTime.now());
-        when(locationService.findFor(district, block, panchayat)).thenReturn(expectedLocation);
+        String state = "state";
+        LocationRequest locationRequest = new LocationRequest(state, district, block, panchayat);
+        Location expectedLocation = new Location(state, district, block, panchayat, 1, 1, 1, 1, LocationStatus.NOT_VERIFIED, DateTime.now());
+        when(locationService.findFor(state, district, block, panchayat)).thenReturn(expectedLocation);
 
         locationRegistrationService.addOrUpdate(new LocationSyncRequest(locationRequest, locationRequest, LocationStatus.VALID.name(), DateTime.now().minusDays(1)));
 
@@ -164,11 +168,12 @@ public class LocationRegistrationServiceTest {
         String oldDistrict = "oldDistrict";
         String oldBlock = "oldBlock";
         String oldPanchayat = "oldPanchayat";
+        String oldState = "oldState";
         DateTime lastModifiedTime = DateTime.now();
-        LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
-        LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
+        LocationRequest oldLocationRequest = new LocationRequest(oldState, oldDistrict, oldBlock, oldPanchayat);
+        LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         locationList.add(expectedLocation);
         String expectedStatus = LocationStatus.VALID.name();
         when(locationService.getAll()).thenReturn(locationList);
@@ -187,14 +192,15 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldCreateNewLocationAndSkipUpdateingExistingLocationReferencesToTheNewLocationIfTheOldLocationIsNotPresent() {
-        String oldDistrict = "oldDistrict";
+    	String oldState = "oldState";
+    	String oldDistrict = "oldDistrict";
         String oldBlock = "oldBlock";
         String oldPanchayat = "oldPanchayat";
         DateTime lastModifiedTime = DateTime.now();
-        LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
-        LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
+        LocationRequest oldLocationRequest = new LocationRequest(oldState, oldDistrict, oldBlock, oldPanchayat);
+        LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
         String expectedStatus = LocationStatus.VALID.name();
         when(locationService.getAll()).thenReturn(locationList);
 
@@ -218,15 +224,16 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldNotCreateANewLocationIfTheNewLocationAlreadyExists() {
+    	String oldState = "oldState";
         String oldDistrict = "oldDistrict";
         String oldBlock = "oldBlock";
         String oldPanchayat = "oldPanchayat";
-        LocationRequest oldLocationRequest = new LocationRequest(oldDistrict, oldBlock, oldPanchayat);
-        LocationRequest newLocationRequest = new LocationRequest("D1", "B1", "P1");
+        LocationRequest oldLocationRequest = new LocationRequest(oldState, oldDistrict, oldBlock, oldPanchayat);
+        LocationRequest newLocationRequest = new LocationRequest("S1", "D1", "B1", "P1");
         ArrayList<Location> locationList = new ArrayList<>();
         DateTime lastModifiedTime = DateTime.now();
-        Location expectedLocation = new Location(oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
-        Location newLocation = new Location("D1", "B1", "P1", 1, 2, 3, LocationStatus.VALID, null);
+        Location expectedLocation = new Location(oldState, oldDistrict, oldBlock, oldPanchayat, 1, 1, 1, 1, LocationStatus.NOT_VERIFIED, lastModifiedTime);
+        Location newLocation = new Location("S1", "D1", "B1", "P1", 1, 1, 2, 3, LocationStatus.VALID, null);
         locationList.add(expectedLocation);
         locationList.add(newLocation);
         when(locationService.getAll()).thenReturn(locationList);
@@ -249,7 +256,7 @@ public class LocationRegistrationServiceTest {
 
     @Test
     public void shouldUpdateAllLocationsToTitleCase() {
-        final Location location = new Location("DISTRICT", "block", "panA panB");
+        final Location location = new Location("StatE", "DISTRICT", "block", "panA panB");
         when(locationService.getAll()).thenReturn(new ArrayList<Location>() {{
             add(location);
         }});
@@ -259,7 +266,7 @@ public class LocationRegistrationServiceTest {
         verify(locationService).updateAll(locationsCaptor.capture());
         List<Location> locationList = locationsCaptor.getValue();
         assertEquals(1, locationList.size());
-        assertEquals(new Location("District","Block","Pana Panb"), locationList.get(0));
+        assertEquals(new Location("State", "District","Block","Pana Panb"), locationList.get(0));
     }
 
     private void verifyCouchAndPostgresLocationStatusUpdate(Location expectedLocation, LocationStatus locationStatus) {
@@ -294,6 +301,6 @@ public class LocationRegistrationServiceTest {
     }
 
     private Location getLocationFrom(LocationRequest locationRequest) {
-        return new Location(locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, null, null);
+        return new Location(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat(), 0, 0, 0, 0, null, null);
     }
 }

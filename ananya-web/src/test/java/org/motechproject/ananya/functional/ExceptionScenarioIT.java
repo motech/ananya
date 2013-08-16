@@ -13,7 +13,7 @@ import java.io.IOException;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class ExceptionScenarioTests extends SpringIntegrationTest {
+public class ExceptionScenarioIT extends SpringIntegrationTest {
     @Autowired
     private FLWDetailsController frontLineWorkerDetailsController;
     
@@ -23,7 +23,7 @@ public class ExceptionScenarioTests extends SpringIntegrationTest {
         jsonHttpClient.addHeader("APIKey", "1234");
         String response = (String) jsonHttpClient.post("\"foo\":\"bar\"");
 
-        assertTrue(StringUtils.containsIgnoreCase(response, "Exception"));
+        assertTrue(StringUtils.containsIgnoreCase(response, "AN ERROR OCCURRED"));
         assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, jsonHttpClient.getStatus());
     }
 

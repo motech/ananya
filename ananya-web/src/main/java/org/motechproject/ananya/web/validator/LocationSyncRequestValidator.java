@@ -19,6 +19,7 @@ public class LocationSyncRequestValidator {
 
     private static void checkForBlankFields(LocationRequest locationRequest, Errors errors) {
         if(locationRequest == null
+        		||StringUtils.isBlank(locationRequest.getState())
                 ||StringUtils.isBlank(locationRequest.getDistrict())
                 || StringUtils.isBlank(locationRequest.getBlock())
                 || StringUtils.isBlank(locationRequest.getPanchayat()))

@@ -26,7 +26,7 @@ public class JobAidCallDataControllerTest {
 
     @Test
     public void shouldCallJobAidServiceWithServiceRequestFromHttpPayLoad() {
-        String response = controller.handleDisconnect("123-456", "123", "airtel", "bihar", "57711", "[]", "['prompt1', 'prompt2']", 111);
+        String response = controller.handleDisconnect("123-456", "123", "airtel", "bihar", "57711", "bhojpuri", "[]", "['prompt1', 'prompt2']", 111);
 
         ArgumentCaptor<JobAidServiceRequest> captor = ArgumentCaptor.forClass(JobAidServiceRequest.class);
         verify(jobAidService).handleDisconnect(captor.capture());

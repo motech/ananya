@@ -17,8 +17,8 @@ public class AudioTrackerRequestList {
         audioTrackerRequestList = new ArrayList<>();
     }
 
-    public void add(String json, String token) {
-        audioTrackerRequestList.add(AudioTrackerRequest.createFrom(callId, callerId, json, token));
+    public void add(String json, String token, String language) {
+        audioTrackerRequestList.add(AudioTrackerRequest.createFrom(callId, callerId, json, token, language));
     }
 
     public List<AudioTrackerRequest> all() {

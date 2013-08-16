@@ -35,8 +35,8 @@ public class LocationDataSourceTest {
     public void shouldCreateLocationReport() {
         HashMap<String, String> criteria = new HashMap<String, String>();
         ArrayList<LocationDimension> locationDimensions = new ArrayList<LocationDimension>();
-        locationDimensions.add(new LocationDimension("locId", "d1", "b1", "p1", "VALID"));
-        when(locationDimensionService.getFilteredLocations(null, null, null)).thenReturn(locationDimensions);
+        locationDimensions.add(new LocationDimension("locId", "s1", "d1", "b1", "p1", "VALID"));
+        when(locationDimensionService.getFilteredLocations(null, null, null, null)).thenReturn(locationDimensions);
 
         ArrayList<LocationReportData> locationReportDataList = locationDataSource.queryReport(criteria);
 

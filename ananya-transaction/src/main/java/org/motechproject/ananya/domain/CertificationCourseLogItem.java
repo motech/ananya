@@ -14,6 +14,8 @@ public class CertificationCourseLogItem {
     @JsonProperty
     private String contentData;
     @JsonProperty
+    private String language;
+    @JsonProperty
     private CourseItemState courseItemState;
     @JsonProperty
     private DateTime time;
@@ -21,13 +23,14 @@ public class CertificationCourseLogItem {
     public CertificationCourseLogItem() {
     }
 
-    public CertificationCourseLogItem(String contentId, CourseItemType contentType, String contentName, String contentData, CourseItemState courseItemState, DateTime time) {
+    public CertificationCourseLogItem(String contentId, CourseItemType contentType, String contentName, String contentData, CourseItemState courseItemState, DateTime time, String language) {
         this.contentId = contentId;
         this.contentType = contentType;
         this.contentName = contentName;
         this.contentData = contentData;
         this.courseItemState = courseItemState;
         this.time = time;
+        this.language=language;
     }
 
     public String getContentId() {
@@ -54,7 +57,11 @@ public class CertificationCourseLogItem {
         return contentName;
     }
 
-    public Integer giveScore() {
+    public String getLanguage() {
+		return language;
+	}
+
+	public Integer giveScore() {
         return StringUtils.isEmpty(contentData) ? null : Integer.valueOf(getContentData());
     }
 }

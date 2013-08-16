@@ -117,7 +117,7 @@ public class CallDurationMeasureServiceTest {
         DateTime certificateCourseEndTime = now.plusSeconds(15);
         DateTime certificateCourseStartTime = now.plusSeconds(5);
         String calledNumber = "321";
-        LocationDimension locationDimension = new LocationDimension("", "", "", "", "VALID");
+        LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(callerId, "airtel", "", "anganwadi-worker", "ANGANWADI", "Registered", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(flwId);
@@ -248,8 +248,8 @@ public class CallDurationMeasureServiceTest {
         String newLocationId = "newLocationId";
         String oldLocationId = "oldLocationId";
         ArrayList<CallDurationMeasure> callDurationMeasures = new ArrayList<>();
-        callDurationMeasures.add(new CallDurationMeasure(new FrontLineWorkerDimension(), new LocationDimension(oldLocationId, null, null, null, "VALID"), null, null, null, 10, DateTime.now(), DateTime.now(), null, 0));
-        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, "VALID"));
+        callDurationMeasures.add(new CallDurationMeasure(new FrontLineWorkerDimension(), new LocationDimension(oldLocationId, null, null, null, null, "VALID"), null, null, null, 10, DateTime.now(), DateTime.now(), null, 0));
+        when(locationDimensionService.getFor(newLocationId)).thenReturn(new LocationDimension(newLocationId, null, null, null, null, "VALID"));
         when(allCallDurationMeasures.findByLocationId(oldLocationId)).thenReturn(callDurationMeasures);
 
         callDurationMeasureService.updateLocation(oldLocationId, newLocationId);

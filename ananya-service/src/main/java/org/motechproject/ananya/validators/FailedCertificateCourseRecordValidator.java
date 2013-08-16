@@ -9,8 +9,11 @@ import org.motechproject.ananya.domain.CourseItemState;
 import org.motechproject.ananya.domain.CourseItemType;
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.mapper.CertificateCourseServiceRequestMapper;
+import org.motechproject.ananya.repository.dimension.AllCourseItemDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
+import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
 import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
+import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +25,12 @@ public class FailedCertificateCourseRecordValidator extends FailedRecordValidato
     private HashMap<String, Boolean> fieldToPostDefinitions;
 
     @Autowired
-    public FailedCertificateCourseRecordValidator(AllCourseItemDimensions allCourseItemDimensions, AllJobAidContentDimensions allJobAidContentDimensions) {
-        super(allCourseItemDimensions, allJobAidContentDimensions);
+    public FailedCertificateCourseRecordValidator(AllCourseItemDimensions allCourseItemDimensions, AllJobAidContentDimensions allJobAidContentDimensions, AllCourseItemDetailsDimensions allCourseItemDetailsDimensions, AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions, AllLanguageDimension allLanguageDimension) {
+        super(allCourseItemDimensions, allJobAidContentDimensions, allCourseItemDetailsDimensions, allJobAidContentDetailsDimensions, allLanguageDimension);
         fieldToPostDefinitions = new HashMap<String, Boolean>() {{
             put("callId", true);
             put("operator", true);
+            put("language", true);
             put("circle", false);
         }};
     }

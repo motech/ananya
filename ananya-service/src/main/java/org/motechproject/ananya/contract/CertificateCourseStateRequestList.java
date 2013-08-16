@@ -16,8 +16,8 @@ public class CertificateCourseStateRequestList {
         this.callerId = callerId;
     }
 
-    public void add(String json, String token) {
-        list.add(CertificateCourseStateRequest.createFrom(callerId, callId, token, json));
+    public void add(String json, String token, String language) {
+        list.add(CertificateCourseStateRequest.createFrom(callerId, callId, token, json, language));
     }
 
     public List<CertificateCourseStateRequest> all() {
@@ -51,7 +51,7 @@ public class CertificateCourseStateRequestList {
 
     public boolean hasCourseCompletionInteraction() {
         for (CertificateCourseStateRequest stateRequest : list)
-            if (stateRequest.getInteractionKey().equalsIgnoreCase(Interaction.PlayCourseResult))
+            if (stateRequest.getInteractionKey().equalsIgnoreCase(Interaction.PlayThanks))
                 return true;
         return false;
     }

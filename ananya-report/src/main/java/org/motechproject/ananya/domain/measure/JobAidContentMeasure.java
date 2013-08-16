@@ -3,10 +3,12 @@ package org.motechproject.ananya.domain.measure;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
+import org.motechproject.ananya.domain.dimension.LanguageDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -40,6 +42,10 @@ public class JobAidContentMeasure {
     @JoinColumn(name = "time_id", nullable = false)
     private TimeDimension timeDimension;
 
+    @ManyToOne
+    @JoinColumn(name = "language_id", nullable = false)
+    private LanguageDimension languageDimension;
+    
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
@@ -54,11 +60,12 @@ public class JobAidContentMeasure {
 
     public JobAidContentMeasure(String callId, FrontLineWorkerDimension frontLineWorkerDimension,
                                 LocationDimension locationDimension, JobAidContentDimension jobAidContentDimension,
-                                TimeDimension timeDimension, DateTime timestamp, Integer duration, Integer percentage) {
+                                TimeDimension timeDimension, LanguageDimension languageDimension, DateTime timestamp, Integer duration, Integer percentage) {
         this.frontLineWorkerDimension = frontLineWorkerDimension;
         this.callId = callId;
         this.locationDimension = locationDimension;
         this.jobAidContentDimension = jobAidContentDimension;
+        this.languageDimension=languageDimension;
         this.timeDimension = timeDimension;
         this.timestamp = new Timestamp(timestamp.getMillis());
         this.duration = duration;
@@ -104,4 +111,13 @@ public class JobAidContentMeasure {
     public void setLocationDimension(LocationDimension locationDimension) {
         this.locationDimension = locationDimension;
     }
+
+	public LanguageDimension getLanguageDimension() {
+		return languageDimension;
+	}
+
+	public void setLanguageDimension(LanguageDimension languageDimension) {
+		this.languageDimension = languageDimension;
+	}
+    
 }

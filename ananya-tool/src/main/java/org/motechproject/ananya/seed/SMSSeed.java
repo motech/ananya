@@ -28,7 +28,7 @@ public class SMSSeed {
             log.info("FLW not present to send SMS:" + callerId);
             return;
         }
-        smsService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLocationId(), 0);
+        smsService.buildAndSendSMS(frontLineWorker.getMsisdn(), frontLineWorker.getLanguage(), frontLineWorker.getLocationId(), 0);
         log.info("Sent SMS for:" + callerId);
     }
 }

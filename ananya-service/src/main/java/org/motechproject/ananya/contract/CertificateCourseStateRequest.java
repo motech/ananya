@@ -14,6 +14,7 @@ public class CertificateCourseStateRequest extends BaseRequest {
     private String time;
     private String interactionKey;
     private String contentId;
+    private String language;
     private String contentType;
     private String contentName;
     private String contentData;
@@ -23,13 +24,14 @@ public class CertificateCourseStateRequest extends BaseRequest {
     public CertificateCourseStateRequest() {
     }
 
-    public static CertificateCourseStateRequest createFrom(String callerId, String callId, String token, String json) {
+    public static CertificateCourseStateRequest createFrom(String callerId, String callId, String token, String json, String language) {
         CertificateCourseStateRequest certificationCourseStateRequest = new Gson().fromJson(json,
                 new TypeToken<CertificateCourseStateRequest>() {
         }.getType());
         certificationCourseStateRequest.callerId = callerId;
         certificationCourseStateRequest.callId = callId;
         certificationCourseStateRequest.token = token;
+        certificationCourseStateRequest.language = language;
         return certificationCourseStateRequest;
     }
 
@@ -81,7 +83,11 @@ public class CertificateCourseStateRequest extends BaseRequest {
         return time;
     }
 
-    public DateTime getTimeAsDateTime() {
+    public String getLanguage() {
+		return language;
+	}
+
+	public DateTime getTimeAsDateTime() {
         return StringUtils.isBlank(time) ? null : new DateTime(Long.valueOf(time));
     }
 

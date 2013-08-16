@@ -35,7 +35,7 @@ public class SMSSynchroniser extends BaseSynchronizer implements Synchroniser {
         for (SMSLog smslog : smsLogs) {
             try {
                 if(!shouldProcessLog(smslog)) continue;
-                smsService.buildAndSendSMS(smslog.getCallerId(), smslog.getLocationId(), smslog.getCourseAttempts());
+                smsService.buildAndSendSMS(smslog.getCallerId(), smslog.getLanguage(), smslog.getLocationId(), smslog.getCourseAttempts());
                 synchroniserLog.add(smslog.getCallerId(), "Success");
                 allSMSLogs.remove(smslog);
             } catch (Exception e) {
