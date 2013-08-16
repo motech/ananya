@@ -51,7 +51,7 @@ public class CertificateCourseStateRequestList {
 
     public boolean hasCourseCompletionInteraction() {
         for (CertificateCourseStateRequest stateRequest : list)
-            if (stateRequest.getInteractionKey().equalsIgnoreCase(Interaction.PlayCourseResult))
+            if (stateRequest.getInteractionKey().equalsIgnoreCase(Interaction.PlayThanks))
                 return true;
         return false;
     }

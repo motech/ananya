@@ -47,20 +47,20 @@ public class BookMarkTest {
 
     @Test
     public void shouldReturnTrueWhenCurrentInteractionKeyIsNotPlayCourseResult() {
-        BookMark bookMark = new BookMark("playThanks", 9, 0);
+        BookMark bookMark = new BookMark("playCourseResult", 9, 0);
 
-        boolean isNotAtPlayCourseResult = bookMark.notAtPlayCourseResult();
+        boolean isNotAtPlayThanks = bookMark.notAtPlayThanks();
 
-        assertTrue(isNotAtPlayCourseResult);
+        assertTrue(isNotAtPlayThanks);
     }
 
     @Test
     public void shouldReturnFalseWhenCurrentInteractionKeyIsAtPlayCourseResult() {
-        BookMark bookMark = new BookMark(Interaction.PlayCourseResult, 9, 0);
+        BookMark bookMark = new BookMark(Interaction.PlayThanks, 9, 0);
 
-        boolean isNotAtPlayCourseResult = bookMark.notAtPlayCourseResult();
+        boolean isNotAtPlayThanks = bookMark.notAtPlayThanks();
 
-        assertFalse(isNotAtPlayCourseResult);
+        assertFalse(isNotAtPlayThanks);
     }
 
     @Test
