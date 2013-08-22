@@ -49,11 +49,10 @@ public class CertificationCourseStateRequestListTest {
                 "\"contentName\":\"Chapter 1 Lesson 1\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":0}";
 
         String token2 = "{\"result\":null,\"questionResponse\":null,\"contentId\":\"0cccd9b516233e4bb1c6c04fed6a807e\"," +
-                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playCourseResult\",\"courseItemState\":\"start\"," +
+                "\"contentType\":\"lesson\",\"certificateCourseId\":\"\",\"contentData\":null,\"interactionKey\":\"playThanks\",\"courseItemState\":\"start\"," +
                 "\"contentName\":\"Chapter 1 Lesson 2\",\"time\":\"123456789\",\"chapterIndex\":0,\"lessonOrQuestionIndex\":1}";
 
-        String language= "language";
-        
+        String language="language";
         courseStateRequestList.add(token1, "1", language);
         courseStateRequestList.add(token2, "2", language);
 

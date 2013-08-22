@@ -395,7 +395,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public boolean courseInProgress() {
-        return bookMark().notAtPlayCourseResult();
+    	 return bookMark().notAtPlayThanks();
     }
 
     private String prefixMsisdnWith91(String msisdn) {

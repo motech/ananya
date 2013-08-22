@@ -209,14 +209,14 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldCallBookmarkToCheckIfCourseIsInProgress() {
         BookMark bookMark = mock(BookMark.class);
-        when(bookMark.notAtPlayCourseResult()).thenReturn(true);
+        when(bookMark.notAtPlayThanks()).thenReturn(true);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.addBookMark(bookMark);
 
         boolean courseInProgress = frontLineWorker.courseInProgress();
 
-        verify(bookMark).notAtPlayCourseResult();
+        verify(bookMark).notAtPlayThanks();
         assertTrue(courseInProgress);
     }
 
