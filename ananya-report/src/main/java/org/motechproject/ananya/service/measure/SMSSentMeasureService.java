@@ -96,4 +96,8 @@ public class SMSSentMeasureService {
         }
         allSMSSentMeasures.updateAll(smsSentMeasureList);
     }
+
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allSMSSentMeasures.transfer(SMSSentMeasure.class, fromFlw.getId(), toFlw.getId());
+    }
 }

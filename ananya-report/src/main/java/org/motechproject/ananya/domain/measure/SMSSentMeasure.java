@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "sms_sent_measure")
 @NamedQuery(name = SMSSentMeasure.FIND_SMS_SENT_MEASURE_BY_FLW,
         query = "select r from SMSSentMeasure r where r.frontLineWorkerDimension.id=:flw_id")
-public class SMSSentMeasure {
+public class SMSSentMeasure extends Measure{
     public static final String FIND_SMS_SENT_MEASURE_BY_FLW = "find.sms.sent.measure.by.flw";
 
     @Id

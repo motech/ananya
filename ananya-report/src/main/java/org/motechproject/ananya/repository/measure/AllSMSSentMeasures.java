@@ -12,9 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllSMSSentMeasures {
-
-    private DataAccessTemplate template;
+public class AllSMSSentMeasures extends AllMeasures {
 
     public AllSMSSentMeasures() {
     }

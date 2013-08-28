@@ -28,8 +28,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllCallDurationMeasures {
-    private DataAccessTemplate template;
+public class AllCallDurationMeasures extends AllMeasures{
     private Long certificateCourseShortCode;
     private Long certificateCourseLongCode;
     private Integer numberOfRecentCallDetails;

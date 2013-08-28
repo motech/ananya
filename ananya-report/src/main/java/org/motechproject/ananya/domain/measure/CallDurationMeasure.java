@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "call_duration_measure")
 @NamedQuery(name = CallDurationMeasure.FIND_BY_CALL_ID, query = "select cd from CallDurationMeasure cd where cd.callId=:callId")
-public class CallDurationMeasure {
+public class CallDurationMeasure extends Measure{
 
     public static final String FIND_BY_CALL_ID = "find.by.call.id";
 

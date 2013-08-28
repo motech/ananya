@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "job_aid_content_measure")
 @NamedQuery(name = JobAidContentMeasure.FIND_BY_CALL_ID, query = "select m from JobAidContentMeasure m where m.callId = :call_id")
-public class JobAidContentMeasure {
+public class JobAidContentMeasure extends Measure{
 
     public static final String FIND_BY_CALL_ID = "find.by.job.aid.call.id";
 

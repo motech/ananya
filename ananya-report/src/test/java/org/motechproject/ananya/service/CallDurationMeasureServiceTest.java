@@ -269,7 +269,7 @@ public class CallDurationMeasureServiceTest {
         final LocalTime startTime = new LocalTime(19, 0, 0);
         LocalTime endTime = new LocalTime(6, 59, 59);
 
-        List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>(){{
+        List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>() {{
             add(new JobAidCallDetails(now, now.plusMinutes(2), 2));
             add(new JobAidCallDetails(now.plusDays(1), now.plusDays(1).plusMinutes(2), 2));
             add(new JobAidCallDetails(now.plusDays(2), now.plusDays(2).plusMinutes(2), 2));
@@ -280,4 +280,15 @@ public class CallDurationMeasureServiceTest {
 
         assertEquals(3, jobAidCallDurations.size());
     }
+
+    @Test
+    public void shouldTransferRecords() {
+        FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
+        fromFlw.setId(1);
+        FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
+        toFlw.setId(2);
+        callDurationMeasureService.transfer(fromFlw, toFlw);
+        verify(allCallDurationMeasures).transfer(CallDurationMeasure.class, 1, 2);
+    }
+
 }

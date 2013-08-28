@@ -1,5 +1,6 @@
 package org.motechproject.ananya.service;
 
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
@@ -45,9 +46,13 @@ public class CourseItemMeasureService {
         log.info(String.format("Updated course item measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         LocationDimension newLocation = locationDimensionService.getFor(newLocationId);
         List<CourseItemMeasure> courseItemMeasureList = allCourseItemMeasures.findByLocationId(oldLocationId);
-        for(CourseItemMeasure courseItemMeasure : courseItemMeasureList) {
+        for (CourseItemMeasure courseItemMeasure : courseItemMeasureList) {
             courseItemMeasure.setLocationDimension(newLocation);
         }
         allCourseItemMeasures.updateAll(courseItemMeasureList);
+    }
+
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allCourseItemMeasures.transfer(CourseItemMeasure.class, fromFlw.getId(), toFlw.getId());
     }
 }

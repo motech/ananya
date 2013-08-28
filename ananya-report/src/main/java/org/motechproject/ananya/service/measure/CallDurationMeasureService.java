@@ -137,4 +137,8 @@ public class CallDurationMeasureService {
         List<JobAidCallDetails> jobAidCallDetails = allCallDurationMeasures.getJobAidNighttimeCallDetails(Long.valueOf(msisdn), startDate, endDate);
         return jobAidCallDetails;
     }
+
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allCallDurationMeasures.transfer(CallDurationMeasure.class, fromFlw.getId(), toFlw.getId());
+    }
 }
