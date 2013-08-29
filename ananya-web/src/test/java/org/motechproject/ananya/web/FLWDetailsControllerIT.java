@@ -93,7 +93,7 @@ public class FLWDetailsControllerIT extends SpringIntegrationTest {
         String language = "language";
         VerificationStatus verificationStatus = VerificationStatus.SUCCESS;
 
-        RegistrationResponse registrationResponse = flwDetailsController.createOrUpdate(new FrontLineWorkerRequest(msisdn, "", name, designation, locationRequest, null, UUID.randomUUID().toString(), verificationStatus.name(), language));
+        RegistrationResponse registrationResponse = flwDetailsController.createOrUpdate(new FrontLineWorkerRequest(msisdn, "", name, designation, locationRequest, null, UUID.randomUUID().toString(), verificationStatus.name(), language, null));
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(Long.parseLong(msisdn));
         assertNotNull(frontLineWorkerDimension);

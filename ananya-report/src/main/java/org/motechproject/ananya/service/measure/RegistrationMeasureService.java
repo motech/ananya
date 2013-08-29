@@ -128,4 +128,10 @@ public class RegistrationMeasureService {
         log.info(String.format("Updated registration measures with old location id :%s to new location id : %s", oldLocationId, newLocationId));
         allRegistrationMeasures.updateAll(registrationMeasureList);
     }
+
+    @Transactional
+    public void remove(Integer flwId) {
+        RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwId);
+        allRegistrationMeasures.remove(registrationMeasure);
+    }
 }

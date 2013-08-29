@@ -124,9 +124,36 @@ public class FLWRegistrationService {
         frontLineWorker.setVerificationStatus(request.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         updateAllMeasures(frontLineWorker);
+        processChangeMsisdn(request);
 
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
+    }
+
+    private void processChangeMsisdn(FrontLineWorkerRequest request) {
+        String newMsisdn = request.getNewMsisdn();
+        if (isBlank(newMsisdn))
+            return;
+        frontLineWorkerService.changeMsisdn(request.getMsisdn(),newMsisdn);
+        changeMsisdnInReportDB(request, newMsisdn);
+    }
+
+    private void changeMsisdnInReportDB(FrontLineWorkerRequest request, String newMsisdn) {
+        FrontLineWorkerDimension toFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(request.msisdn());
+        FrontLineWorkerDimension fromFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(newMsisdn));
+        String operator = null;
+        if (fromFlw != null) {
+            operator = fromFlw.getOperator();
+            courseItemMeasureService.transfer(fromFlw, toFlw);
+            callDurationMeasureService.transfer(fromFlw, toFlw);
+            jobAidContentMeasureService.transfer(fromFlw, toFlw);
+            smsSentMeasureService.transfer(fromFlw, toFlw);
+            registrationMeasureService.remove(fromFlw.getId());
+            frontLineWorkerDimensionService.remove(fromFlw);
+        }
+        toFlw.setMsisdn(Long.valueOf(newMsisdn));
+        toFlw.setOperator(operator);
+        frontLineWorkerDimensionService.update(toFlw);
     }
 
     private Location getOrCreateLocation(FrontLineWorkerRequest frontLineWorkerRequest) {
@@ -144,11 +171,11 @@ public class FLWRegistrationService {
         LocationRequest locationRequest = request.getLocation();
         LocationRequest location = locationRequest != null ?
                 new LocationRequest(StringUtils.trimToEmpty(locationRequest.getState()),
-                		StringUtils.trimToEmpty(locationRequest.getDistrict()),
+                        StringUtils.trimToEmpty(locationRequest.getDistrict()),
                         StringUtils.trimToEmpty(locationRequest.getBlock()),
                         StringUtils.trimToEmpty(locationRequest.getPanchayat()))
                 : null;
-        return new FrontLineWorkerRequest(StringUtils.trimToEmpty(request.getMsisdn()),
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(StringUtils.trimToEmpty(request.getMsisdn()),
                 request.getAlternateContactNumber(),
                 StringUtils.trimToEmpty(request.getName()),
                 StringUtils.trimToEmpty(request.getDesignation()),
@@ -156,7 +183,8 @@ public class FLWRegistrationService {
                 request.getLastModified(),
                 StringUtils.trimToEmpty(request.getFlwId()),
                 request.getVerificationStatus(),
-                request.getLanguage());
+                request.getLanguage(), request.getNewMsisdn());
+        return frontLineWorkerRequest;
     }
 
     private void updateAllMeasures(FrontLineWorker frontLineWorker) {

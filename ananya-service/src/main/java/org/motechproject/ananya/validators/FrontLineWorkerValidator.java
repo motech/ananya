@@ -21,7 +21,13 @@ public class FrontLineWorkerValidator {
         validateLocation(frontLineWorkerRequest, flwValidationResponse);
         validateFLWId(frontLineWorkerRequest, flwValidationResponse);
         validateVerificationStatus(frontLineWorkerRequest, flwValidationResponse);
+        validateNewMsisdn(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
+    }
+
+    private static void validateNewMsisdn(FrontLineWorkerRequest request, FLWValidationResponse response) {
+        if (request.isInvalidNewMsisdn())
+            response.forInvalidMsisdn("newMsisdn");
     }
 
     public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,

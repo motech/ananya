@@ -110,4 +110,11 @@ public class FrontLineWorkerDimensionServiceTest {
         assertEquals(expectedFLW, frontLineWorkerDimensions.get(0));
         assertEquals(status, frontLineWorkerDimensions.get(0).getStatus());
     }
+
+    @Test
+    public void shouldUpdateFrontLineWorkerDimension(){
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension();
+        frontLineWorkerDimensionService.update(frontLineWorkerDimension);
+        verify(allFrontLineWorkerDimensions).update(frontLineWorkerDimension);
+    }
 }

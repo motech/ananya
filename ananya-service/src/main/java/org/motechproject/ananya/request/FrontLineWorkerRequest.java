@@ -9,6 +9,7 @@ import org.motechproject.importer.annotation.ColumnName;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class FrontLineWorkerRequest implements Serializable {
@@ -22,10 +23,20 @@ public class FrontLineWorkerRequest implements Serializable {
     private String verificationStatus;
     private String alternateContactNumber;
 
+    public String getNewMsisdn() {
+        return newMsisdn;
+    }
+
+    public void setNewMsisdn(String newMsisdn) {
+        this.newMsisdn = newMsisdn;
+    }
+
+    private String newMsisdn;
+
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String alternateContactNumber, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language) {
+    public FrontLineWorkerRequest(String msisdn, String alternateContactNumber, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language, String newMsisdn) {
         this.name = name;
         this.msisdn = msisdn;
         this.alternateContactNumber = alternateContactNumber;
@@ -35,6 +46,7 @@ public class FrontLineWorkerRequest implements Serializable {
         this.flwId = flwId;
         this.verificationStatus = verificationStatus;
         this.language = language;
+        this.newMsisdn = newMsisdn;
     }
 
     public String getName() {
@@ -47,6 +59,10 @@ public class FrontLineWorkerRequest implements Serializable {
 
     public String getMsisdn() {
         return msisdn;
+    }
+
+    public Long msisdn() {
+        return Long.valueOf(msisdn);
     }
 
     public void setMsisdn(String msisdn) {
@@ -155,5 +171,10 @@ public class FrontLineWorkerRequest implements Serializable {
     @JsonIgnore
     public boolean isInvalidName() {
         return StringUtils.isNotBlank(name) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", name);
+    }
+    @JsonIgnore
+    public boolean isInvalidNewMsisdn() {
+        if(isBlank(newMsisdn)) return false;
+        return invalidFormat(newMsisdn);
     }
 }

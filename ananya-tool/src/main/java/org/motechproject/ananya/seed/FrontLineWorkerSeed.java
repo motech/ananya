@@ -98,7 +98,7 @@ public class FrontLineWorkerSeed {
                     null, name,
                     designation,
                     new LocationRequest(currentState, currentDistrict, currentBlock, currentPanchayat),
-                    lastModified, flwId, null, language));
+                    lastModified, flwId, null, language, null));
 
             currentRow = csvReader.readNext();
         }

@@ -357,4 +357,24 @@ public class FrontLineWorkerServiceTest {
         assertEquals(newLocation.getExternalId(), frontLineWorker.getLocationId());
         assertEquals(msisdn, frontLineWorker.getMsisdn());
     }
+
+    @Test
+    public void shouldChangeMsisdn() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        FrontLineWorker fromFlw = new FrontLineWorker();
+        fromFlw.setMsisdn(msisdn);
+        FrontLineWorker toFlw = new FrontLineWorker();
+        toFlw.setMsisdn(newMsisdn);
+        toFlw.setOperator("Airtel");
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(toFlw.getOperator(), fromFlw.getOperator());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
 }

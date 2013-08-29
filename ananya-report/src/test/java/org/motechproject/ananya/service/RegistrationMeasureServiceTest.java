@@ -66,7 +66,7 @@ public class RegistrationMeasureServiceTest {
         String operator = "operator";
         String circle = "circle";
         String language = "language";
-        
+
         DateTime registeredDate = DateTime.now();
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
@@ -147,8 +147,8 @@ public class RegistrationMeasureServiceTest {
         String callId = "919986574410-12312312";
         String operator = "operator";
         String circle = "circle";
-        String language= "language";
-        
+        String language = "language";
+
         DateTime registeredDate = DateTime.now();
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.setCircle(circle);
@@ -190,5 +190,16 @@ public class RegistrationMeasureServiceTest {
         List<RegistrationMeasure> actualRegistrationMeauresSavedToDb = registrationMeasuresCaptor.getValue();
         assertEquals(1, actualRegistrationMeauresSavedToDb.size());
         assertEquals(newLocationId, actualRegistrationMeauresSavedToDb.get(0).getLocationDimension().getLocationId());
+    }
+
+    @Test
+    public void shouldRemoveRegistrationMeasure() {
+        int flwId = 1;
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure();
+        when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+
+        registrationMeasureService.remove(flwId);
+        verify(allRegistrationMeasures).fetchFor(flwId);
+        verify(allRegistrationMeasures).remove(registrationMeasure);
     }
 }

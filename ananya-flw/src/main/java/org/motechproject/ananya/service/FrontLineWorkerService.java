@@ -81,24 +81,24 @@ public class FrontLineWorkerService {
         }
 
         //no-change flw only if FLW's language is null so updated language is not null
-        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage()==null && language!=null))
+        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
             return new FrontLineWorkerCreateResponse(frontLineWorker, false);
 
         // 
-        if(frontLineWorker.getLanguage()==null){
-        	if(language!=null)
-        		frontLineWorker.setLanguage(language);
-        }else if(!frontLineWorker.getLanguage().equalsIgnoreCase(language)){
-        	log.error("received a request for different language. User language is "+frontLineWorker.getLanguage()+" but recevied language with "+language);
+        if (frontLineWorker.getLanguage() == null) {
+            if (language != null)
+                frontLineWorker.setLanguage(language);
+        } else if (!frontLineWorker.getLanguage().equalsIgnoreCase(language)) {
+            log.error("received a request for different language. User language is " + frontLineWorker.getLanguage() + " but recevied language with " + language);
         }
-        	
+
         //updated flw
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         allFrontLineWorkers.updateFlw(frontLineWorker);
         log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
-                "] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator()+ ", language : " + frontLineWorker.getLanguage());
+                "] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator() + ", language : " + frontLineWorker.getLanguage());
 
         return new FrontLineWorkerCreateResponse(frontLineWorker, true);
     }
@@ -187,5 +187,18 @@ public class FrontLineWorkerService {
             allFailedRecordsProcessingStates.update(failedRecordsProcessingState);
             log.info("Updated last processed date:" + recordDate);
         }
+    }
+
+    public void changeMsisdn(String msisdn, String newMsisdn) {
+        FrontLineWorker flwByNewMsisdn = allFrontLineWorkers.findByMsisdn(newMsisdn);
+        String newOperator = null;
+        if (flwByNewMsisdn != null) {
+            newOperator = flwByNewMsisdn.getOperator();
+            allFrontLineWorkers.remove(flwByNewMsisdn);
+        }
+        FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
+        flwByOldMsisdn.setMsisdn(newMsisdn);
+        flwByOldMsisdn.setOperator(newOperator);
+        allFrontLineWorkers.update(flwByOldMsisdn);
     }
 }

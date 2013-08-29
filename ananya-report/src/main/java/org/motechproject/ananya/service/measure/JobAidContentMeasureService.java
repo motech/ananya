@@ -126,6 +126,7 @@ public class JobAidContentMeasureService {
         allJobAidContentMeasures.updateAll(jobAidContentMeasures);
     }
 
+    @Transactional
     public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
         allJobAidContentMeasures.transfer(JobAidContentMeasure.class, fromFlw.getId(), toFlw.getId());
     }

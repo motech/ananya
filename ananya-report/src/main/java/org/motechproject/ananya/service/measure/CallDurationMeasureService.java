@@ -138,6 +138,7 @@ public class CallDurationMeasureService {
         return jobAidCallDetails;
     }
 
+    @Transactional
     public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
         allCallDurationMeasures.transfer(CallDurationMeasure.class, fromFlw.getId(), toFlw.getId());
     }
