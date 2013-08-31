@@ -177,4 +177,8 @@ public class FrontLineWorkerRequest implements Serializable {
         if(isBlank(newMsisdn)) return false;
         return invalidFormat(newMsisdn);
     }
+
+    public boolean hasMsisdnChange() {
+        return isNotBlank(newMsisdn);
+    }
 }

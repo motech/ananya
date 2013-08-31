@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.mockito.*;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
 import org.motechproject.ananya.request.LocationSyncRequest;
@@ -14,6 +15,7 @@ import org.motechproject.ananya.requests.FLWStatusChangeRequest;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerHistoryService;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
@@ -44,6 +46,8 @@ public class FLWRegistrationServiceTest {
     @Mock
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     @Mock
+    private FrontLineWorkerHistoryService frontLineWorkerHistoryService;
+    @Mock
     private CourseItemMeasureService courseItemMeasureService;
     @Mock
     private CallDurationMeasureService callDurationMeasureService;
@@ -64,7 +68,7 @@ public class FLWRegistrationServiceTest {
     public void setUp() {
         initMocks(this);
         flwRegistrationService = new FLWRegistrationService(
-                frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService,
+                frontLineWorkerService, frontLineWorkerHistoryService, courseItemMeasureService, frontLineWorkerDimensionService,
                 registrationMeasureService, locationService, jobAidContentMeasureService,
                 callDurationMeasureService, smsSentMeasureService, locationRegistrationService);
     }
@@ -153,6 +157,25 @@ public class FLWRegistrationServiceTest {
         assertEquals(fromFlw.getOperator(), toFlw.getOperator());
         verify(frontLineWorkerDimensionService).update(toFlw);
         verify(frontLineWorkerService).changeMsisdn(frontLineWorkerRequest.getMsisdn(), frontLineWorkerRequest.getNewMsisdn());
+    }
+
+    @Test
+    public void changeMsisdnShouldRetainHistory() {
+        FrontLineWorkerRequest frontLineWorkerRequest = flwRequestWithForMsisdnChange();
+        Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
+        when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
+        when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
+        FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
+        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
+        FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
+        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(fromFlw);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure();
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+
+        flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
+
+        verify(frontLineWorkerHistoryService).create(registrationMeasure);
+        verify(frontLineWorkerHistoryService).markCurrentAsOld(fromFlw);
     }
 
     @Test
@@ -271,10 +294,11 @@ public class FLWRegistrationServiceTest {
         String language = "language";
         String designation = "invalid_designation";
         Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
-        flwRegistrationService = new FLWRegistrationService(frontLineWorkerService, courseItemMeasureService, frontLineWorkerDimensionService, registrationMeasureService, locationService, jobAidContentMeasureService, callDurationMeasureService, smsSentMeasureService, locationRegistrationService);
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, null, name, designation, new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null, language, null);
-        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, null, name, designation,
+                new LocationRequest("state", "district", "block", "village"), null, flwId.toString(), null, language, null);
+        when(frontLineWorkerService.createOrUpdate(any(FrontLineWorker.class), any(Location.class))).
+                thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 

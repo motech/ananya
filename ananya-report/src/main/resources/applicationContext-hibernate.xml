@@ -13,6 +13,7 @@
         <property name="annotatedClasses">
             <list>
                 <value>org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension</value>
+                <value>org.motechproject.ananya.domain.dimension.FrontLineWorkerHistory</value>
                 <value>org.motechproject.ananya.domain.dimension.LocationDimension</value>
                 <value>org.motechproject.ananya.domain.dimension.TimeDimension</value>
                 <value>org.motechproject.ananya.domain.dimension.CourseItemDimension</value>

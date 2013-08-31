@@ -568,4 +568,80 @@
         </sql>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="100">
+        <sql splitStatements="false">
+            create table report.front_line_worker_history
+            (
+                id                          serial not null,
+                flw_id                      integer,
+                msisdn                      bigint,
+                operator                    varchar(30),
+                name                        varchar(255),
+                status                      varchar(30),
+                designation                 varchar(30),
+                circle                      varchar(30),
+                guid                        uuid,
+                verification_status         varchar(20),
+                alternate_contact_number    integer,
+                location_id                 smallint,
+                time_id                     integer,
+                call_id                     varchar(255),
+                is_current                  boolean,
+                timestamp                   timestamp with time zone
+            );
+
+            INSERT into report.front_line_worker_history
+            (
+                flw_id,
+                msisdn,
+                operator,
+                name,
+                status,
+                designation,
+                circle,
+                guid,
+                verification_status,
+                alternate_contact_number,
+                location_id,
+                time_id,
+                call_id,
+                is_current,
+                timestamp
+            )
+            (
+                select
+                    d.id as flw_id,
+                    d.msisdn,
+                    d.operator,
+                    d.name,
+                    d.status,
+                    d.designation,
+                    d.circle,
+                    d.flw_id as guid,
+                    d.verification_status,
+                    d.alternate_contact_number,
+                    m.location_id,
+                    m.time_id,
+                    m.call_id,
+                    true as is_current,
+                    CURRENT_TIMESTAMP as timestamp
+                from
+                    report.front_line_worker_dimension d
+                    join report.registration_measure m on (d.id = m.flw_id)
+            );
+        </sql>
+
+        <addForeignKeyConstraint constraintName="fk_front_line_worker_history_location_dimension"
+                                 baseTableName="front_line_worker_history" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint constraintName="fk_front_line_worker_history_time_dimension"
+                                 baseTableName="front_line_worker_history" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+
 </databaseChangeLog>

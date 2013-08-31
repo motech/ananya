@@ -8,6 +8,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.mapper.FrontLineWorkerMapper;
 import org.motechproject.ananya.request.FrontLineWorkerRequest;
 import org.motechproject.ananya.request.LocationRequest;
@@ -16,6 +17,7 @@ import org.motechproject.ananya.response.FLWValidationResponse;
 import org.motechproject.ananya.response.FrontLineWorkerResponse;
 import org.motechproject.ananya.response.RegistrationResponse;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerHistoryService;
 import org.motechproject.ananya.service.measure.CallDurationMeasureService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
 import org.motechproject.ananya.service.measure.RegistrationMeasureService;
@@ -39,6 +41,7 @@ public class FLWRegistrationService {
     private static Logger log = LoggerFactory.getLogger(FLWRegistrationService.class);
 
     private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerHistoryService frontLineWorkerHistoryService;
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
     private CourseItemMeasureService courseItemMeasureService;
     private RegistrationMeasureService registrationMeasureService;
@@ -53,6 +56,7 @@ public class FLWRegistrationService {
 
     @Autowired
     public FLWRegistrationService(FrontLineWorkerService frontLineWorkerService,
+                                  FrontLineWorkerHistoryService frontLineWorkerHistoryService,
                                   CourseItemMeasureService courseItemMeasureService,
                                   FrontLineWorkerDimensionService frontLineWorkerDimensionService,
                                   RegistrationMeasureService registrationMeasureService,
@@ -62,6 +66,7 @@ public class FLWRegistrationService {
                                   SMSSentMeasureService smsSentMeasureService,
                                   LocationRegistrationService locationRegistrationService) {
         this.frontLineWorkerService = frontLineWorkerService;
+        this.frontLineWorkerHistoryService = frontLineWorkerHistoryService;
         this.courseItemMeasureService = courseItemMeasureService;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.registrationMeasureService = registrationMeasureService;
@@ -123,37 +128,42 @@ public class FLWRegistrationService {
                 new DateTime(request.getLastModified()), flwId);
         frontLineWorker.setVerificationStatus(request.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
-        updateAllMeasures(frontLineWorker);
-        processChangeMsisdn(request);
-
+        RegistrationMeasure registrationMeasure = updateAllMeasures(frontLineWorker);
+        if (request.hasMsisdnChange()) processChangeMsisdn(request, registrationMeasure);
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }
 
-    private void processChangeMsisdn(FrontLineWorkerRequest request) {
+    private void processChangeMsisdn(FrontLineWorkerRequest request, RegistrationMeasure registrationMeasure) {
         String newMsisdn = request.getNewMsisdn();
-        if (isBlank(newMsisdn))
-            return;
-        frontLineWorkerService.changeMsisdn(request.getMsisdn(),newMsisdn);
-        changeMsisdnInReportDB(request, newMsisdn);
+        frontLineWorkerService.changeMsisdn(request.getMsisdn(), newMsisdn);
+        updateReportsForMsisdnChange(request, Long.valueOf(newMsisdn), registrationMeasure);
     }
 
-    private void changeMsisdnInReportDB(FrontLineWorkerRequest request, String newMsisdn) {
+    private void updateReportsForMsisdnChange(FrontLineWorkerRequest request, Long newMsisdn,
+                                              RegistrationMeasure registrationMeasure) {
         FrontLineWorkerDimension toFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(request.msisdn());
-        FrontLineWorkerDimension fromFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(newMsisdn));
-        String operator = null;
-        if (fromFlw != null) {
-            operator = fromFlw.getOperator();
-            courseItemMeasureService.transfer(fromFlw, toFlw);
-            callDurationMeasureService.transfer(fromFlw, toFlw);
-            jobAidContentMeasureService.transfer(fromFlw, toFlw);
-            smsSentMeasureService.transfer(fromFlw, toFlw);
-            registrationMeasureService.remove(fromFlw.getId());
-            frontLineWorkerDimensionService.remove(fromFlw);
-        }
-        toFlw.setMsisdn(Long.valueOf(newMsisdn));
+        FrontLineWorkerDimension fromFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(newMsisdn);
+        String operator = msisdnTransfer(fromFlw) ? doTransfer(toFlw, fromFlw) : null;
         toFlw.setOperator(operator);
+        toFlw.setMsisdn(newMsisdn);
         frontLineWorkerDimensionService.update(toFlw);
+        frontLineWorkerHistoryService.create(registrationMeasure);
+    }
+
+    private boolean msisdnTransfer(FrontLineWorkerDimension fromFlw) {
+        return fromFlw != null;
+    }
+
+    private String doTransfer(FrontLineWorkerDimension toFlw, FrontLineWorkerDimension fromFlw) {
+        courseItemMeasureService.transfer(fromFlw, toFlw);
+        callDurationMeasureService.transfer(fromFlw, toFlw);
+        jobAidContentMeasureService.transfer(fromFlw, toFlw);
+        smsSentMeasureService.transfer(fromFlw, toFlw);
+        registrationMeasureService.remove(fromFlw.getId());
+        frontLineWorkerDimensionService.remove(fromFlw);
+        frontLineWorkerHistoryService.markCurrentAsOld(fromFlw);
+        return fromFlw.getOperator();
     }
 
     private Location getOrCreateLocation(FrontLineWorkerRequest frontLineWorkerRequest) {
@@ -187,11 +197,12 @@ public class FLWRegistrationService {
         return frontLineWorkerRequest;
     }
 
-    private void updateAllMeasures(FrontLineWorker frontLineWorker) {
-        registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());
+    private RegistrationMeasure updateAllMeasures(FrontLineWorker frontLineWorker) {
+        RegistrationMeasure registrationMeasure = registrationMeasureService.createOrUpdateFor(frontLineWorker.getMsisdn());
         courseItemMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         callDurationMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         jobAidContentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         smsSentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
+        return registrationMeasure;
     }
 }

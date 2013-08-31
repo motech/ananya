@@ -95,7 +95,7 @@ public class RegistrationMeasureService {
     }
 
     @Transactional
-    public void createOrUpdateFor(String callerId) {
+    public RegistrationMeasure createOrUpdateFor(String callerId) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
         LocationDimension locationDimension = allLocationDimensions.getFor(frontLineWorker.getLocationId());
         boolean flwDimensionAlreadyExists = frontLineWorkerDimensionService.exists(frontLineWorker.msisdn());
@@ -117,6 +117,7 @@ public class RegistrationMeasureService {
 
         log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
                 "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");
+        return registrationMeasure;
     }
 
     public void updateLocation(String oldLocationId, String newLocationId) {
@@ -134,4 +135,5 @@ public class RegistrationMeasureService {
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(flwId);
         allRegistrationMeasures.remove(registrationMeasure);
     }
+
 }

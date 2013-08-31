@@ -24,6 +24,7 @@ public class AllLocationDimensions {
         return (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
     }
 
+    @Transactional
     public LocationDimension saveOrUpdate(LocationDimension locationDimension) {
         template.saveOrUpdate(locationDimension);
         return locationDimension;
