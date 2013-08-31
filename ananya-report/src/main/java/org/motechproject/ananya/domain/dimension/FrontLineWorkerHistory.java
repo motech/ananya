@@ -1,6 +1,5 @@
 package org.motechproject.ananya.domain.dimension;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.VerificationStatus;
@@ -19,6 +18,7 @@ import java.util.UUID;
 public class FrontLineWorkerHistory {
 
     public static final String GET_CURRENT = "current.flw.history";
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,15 +93,8 @@ public class FrontLineWorkerHistory {
         timestamp = new Timestamp(DateTime.now().getMillis());
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public void markOld() {
         isCurrent = false;
     }
 
-    public boolean isSame(FrontLineWorkerHistory other) {
-        return EqualsBuilder.reflectionEquals(this, other, new String[]{"timestamp"});
-    }
 }

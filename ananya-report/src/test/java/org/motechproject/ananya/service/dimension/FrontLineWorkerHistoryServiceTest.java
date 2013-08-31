@@ -1,6 +1,7 @@
 package org.motechproject.ananya.service.dimension;
 
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,8 @@ import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerHistory;
 
+import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -50,7 +53,8 @@ public class FrontLineWorkerHistoryServiceTest {
 
         ArgumentCaptor<FrontLineWorkerHistory> frontLineWorkerHistoryArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorkerHistory.class);
         inOrder.verify(allFrontLineWorkerHistory).createOrUpdate(frontLineWorkerHistoryArgumentCaptor.capture());
-        assertTrue(frontLineWorkerHistoryArgumentCaptor.getValue().isSame(new FrontLineWorkerHistory(registrationMeasure)));
+        FrontLineWorkerHistory argument = frontLineWorkerHistoryArgumentCaptor.getValue();
+        assertTrue(reflectionEquals(argument, new FrontLineWorkerHistory(registrationMeasure), new String[]{"timestamp"}));
     }
 
     private FrontLineWorkerDimension getFrontLineWorkerDimension(int flwDimensionId) {

@@ -1,5 +1,6 @@
 package org.motechproject.ananya.repository.dimension;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
@@ -15,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.*;
+import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 @Transactional
 public class AllFrontLineWorkerHistoryIT extends SpringIntegrationTest {
@@ -27,7 +32,29 @@ public class AllFrontLineWorkerHistoryIT extends SpringIntegrationTest {
     private AllLocationDimensions allLocationDimensions;
 
     @Autowired
+    private AllTimeDimensions allTimeDimensions;
+
+    @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+
+    @Test
+    public void shouldConstructFlwHistory() {
+        FrontLineWorkerDimension flwDimension = getFlwDimension();
+
+        RegistrationMeasure registrationMeasure = getRegistrationMeasure(flwDimension);
+        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory(registrationMeasure);
+        ReflectionToStringBuilder.setDefaultStyle(SHORT_PREFIX_STYLE);
+        String flwHistory = ReflectionToStringBuilder.toStringExclude(frontLineWorkerHistory,
+                asList("flwId", "guid", "timestamp", "locationId", "timeId"));
+        assertEquals("FrontLineWorkerHistory[id=<null>,msisdn=911234567890,operator=operator," +
+                "circle=circle,name=name,designation=AWW,status=status,verificationStatus=OTHER," +
+                "alternateContactNumber=911234567899,callId=123222,isCurrent=true]", flwHistory);
+        assertEquals(flwDimension.getId(), getField(frontLineWorkerHistory, "flwId"));
+        assertEquals(flwDimension.getFlwId(), getField(frontLineWorkerHistory, "guid"));
+        assertEquals(registrationMeasure.getLocationDimension().getId(), getField(frontLineWorkerHistory, "locationId"));
+        assertEquals(registrationMeasure.getTimeDimension().getId(), getField(frontLineWorkerHistory, "timeId"));
+        assertNotNull(getField(frontLineWorkerHistory, "timestamp"));
+    }
 
     @Test
     public void shouldGetCurrentHistory() {
@@ -40,25 +67,28 @@ public class AllFrontLineWorkerHistoryIT extends SpringIntegrationTest {
 
         FrontLineWorkerHistory current = allFrontLineWorkerHistory.getCurrent(flwDimension.getId());
 
-        assertTrue(current.isSame(currentFrontLineWorkerHistory));
+        assertTrue(reflectionEquals(current, currentFrontLineWorkerHistory));
     }
 
     @Test
     public void shouldCreateNewFrontLineWorkerHistory() {
-        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory(getRegistrationMeasure(getFlwDimension()));
-        assertNull(frontLineWorkerHistory.getId());
+        FrontLineWorkerDimension flwDimension = getFlwDimension();
+        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory(getRegistrationMeasure(flwDimension));
+
         allFrontLineWorkerHistory.createOrUpdate(frontLineWorkerHistory);
-        assertNotNull(frontLineWorkerHistory.getId());
+
+        FrontLineWorkerHistory current = allFrontLineWorkerHistory.getCurrent(flwDimension.getId());
+        assertTrue(reflectionEquals(current, frontLineWorkerHistory));
     }
 
     private FrontLineWorkerDimension getFlwDimension() {
-        return allFrontLineWorkerDimensions.createOrUpdate(911234567890L, null, "operator", "circle", "name", Designation.AWW.name(), "status", UUID.randomUUID(), VerificationStatus.OTHER);
+        return allFrontLineWorkerDimensions.createOrUpdate(911234567890L, 911234567899L, "operator", "circle", "name", Designation.AWW.name(), "status", UUID.randomUUID(), VerificationStatus.OTHER);
     }
 
     private RegistrationMeasure getRegistrationMeasure(FrontLineWorkerDimension frontLineWorkerDimension) {
         LocationDimension locationDimension = new LocationDimension("ZZZ999", "bihar", "Mandwa", "Algarh", "Gujarat", "VALID");
         allLocationDimensions.saveOrUpdate(locationDimension);
-        TimeDimension timeDimension = new TimeDimension(DateTime.now());
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
         return new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "123222");
     }
 
