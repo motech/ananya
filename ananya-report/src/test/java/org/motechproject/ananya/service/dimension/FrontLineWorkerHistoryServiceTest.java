@@ -1,7 +1,6 @@
 package org.motechproject.ananya.service.dimension;
 
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,6 @@ import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerHistory;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +46,7 @@ public class FrontLineWorkerHistoryServiceTest {
 
         InOrder inOrder = inOrder(allFrontLineWorkerHistory, currentFlwHistory);
         inOrder.verify(allFrontLineWorkerHistory).getCurrent(flwDimensionId);
-        inOrder.verify(currentFlwHistory).markOld();
+        inOrder.verify(currentFlwHistory).markAsOld();
         inOrder.verify(allFrontLineWorkerHistory).createOrUpdate(currentFlwHistory);
 
         ArgumentCaptor<FrontLineWorkerHistory> frontLineWorkerHistoryArgumentCaptor = ArgumentCaptor.forClass(FrontLineWorkerHistory.class);
@@ -72,7 +70,19 @@ public class FrontLineWorkerHistoryServiceTest {
         frontLineWorkerHistoryService.markCurrentAsOld(frontLineWorkerDimension);
 
         verify(allFrontLineWorkerHistory).getCurrent(flwDimensionId);
-        verify(currentFlwHistory).markOld();
+        verify(currentFlwHistory).markAsOld();
         verify(allFrontLineWorkerHistory).createOrUpdate(currentFlwHistory);
+    }
+
+    @Test
+    public void shouldMarkCurrentHistoryAsOldOnlyIfItExists() {
+        int flwDimensionId = 1;
+        FrontLineWorkerDimension frontLineWorkerDimension = getFrontLineWorkerDimension(flwDimensionId);
+        when(allFrontLineWorkerHistory.getCurrent(flwDimensionId)).thenReturn(null);
+
+        frontLineWorkerHistoryService.markCurrentAsOld(frontLineWorkerDimension);
+
+        verify(allFrontLineWorkerHistory).getCurrent(flwDimensionId);
+        verify(allFrontLineWorkerHistory, never()).createOrUpdate(any(FrontLineWorkerHistory.class));
     }
 }

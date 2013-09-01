@@ -12,6 +12,7 @@ import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.RegistrationLogService;
 import org.motechproject.ananya.service.dimension.FrontLineWorkerDimensionService;
+import org.motechproject.ananya.service.dimension.FrontLineWorkerHistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class RegistrationMeasureService {
 
     private FrontLineWorkerService frontLineWorkerService;
     private FrontLineWorkerDimensionService frontLineWorkerDimensionService;
+    private FrontLineWorkerHistoryService frontLineWorkerHistoryService;
     private AllLocationDimensions allLocationDimensions;
     private AllTimeDimensions allTimeDimensions;
     private AllRegistrationMeasures allRegistrationMeasures;
@@ -36,15 +38,18 @@ public class RegistrationMeasureService {
 
     @Autowired
     public RegistrationMeasureService(FrontLineWorkerService frontLineWorkerService,
-                                      FrontLineWorkerDimensionService frontLineWorkerDimensionService, AllLocationDimensions allLocationDimensions,
+                                      FrontLineWorkerDimensionService frontLineWorkerDimensionService,
+                                      FrontLineWorkerHistoryService frontLineWorkerHistoryService, AllLocationDimensions allLocationDimensions,
                                       AllTimeDimensions allTimeDimensions,
-                                      AllRegistrationMeasures allRegistrationMeasures, RegistrationLogService registrationLogService) {
+                                      AllRegistrationMeasures allRegistrationMeasures,
+                                      RegistrationLogService registrationLogService) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.allTimeDimensions = allTimeDimensions;
         this.allLocationDimensions = allLocationDimensions;
         this.frontLineWorkerDimensionService = frontLineWorkerDimensionService;
         this.allRegistrationMeasures = allRegistrationMeasures;
         this.registrationLogService = registrationLogService;
+        this.frontLineWorkerHistoryService = frontLineWorkerHistoryService;
     }
 
     @Transactional
@@ -91,6 +96,7 @@ public class RegistrationMeasureService {
                 timeDimension,
                 callId);
         allRegistrationMeasures.createOrUpdate(registrationMeasure);
+        frontLineWorkerHistoryService.create(registrationMeasure);
         log.info(callId + "- registrationMeasure created for " + frontLineWorker.getMsisdn());
     }
 
@@ -114,6 +120,8 @@ public class RegistrationMeasureService {
         RegistrationMeasure registrationMeasure = flwDimensionAlreadyExists ? allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId()).update(locationDimension)
                 : new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, null);
         allRegistrationMeasures.createOrUpdate(registrationMeasure);
+
+        if (!flwDimensionAlreadyExists) frontLineWorkerHistoryService.create(registrationMeasure);
 
         log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
                 "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");

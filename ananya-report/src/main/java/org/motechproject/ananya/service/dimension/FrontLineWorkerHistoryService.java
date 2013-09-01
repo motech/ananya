@@ -30,7 +30,9 @@ public class FrontLineWorkerHistoryService {
     @Transactional
     public void markCurrentAsOld(FrontLineWorkerDimension frontLineWorkerDimension) {
         FrontLineWorkerHistory current = allFrontLineWorkerHistory.getCurrent(frontLineWorkerDimension.getId());
-        current.markOld();
-        allFrontLineWorkerHistory.createOrUpdate(current);
+        if (current != null) {
+            current.markAsOld();
+            allFrontLineWorkerHistory.createOrUpdate(current);
+        }
     }
 }

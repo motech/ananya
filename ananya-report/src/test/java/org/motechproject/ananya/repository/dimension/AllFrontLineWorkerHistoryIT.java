@@ -60,7 +60,7 @@ public class AllFrontLineWorkerHistoryIT extends SpringIntegrationTest {
     public void shouldGetCurrentHistory() {
         FrontLineWorkerDimension flwDimension = getFlwDimension();
         FrontLineWorkerHistory oldFrontLineWorkerHistory = new FrontLineWorkerHistory(getRegistrationMeasure(flwDimension));
-        oldFrontLineWorkerHistory.markOld();
+        oldFrontLineWorkerHistory.markAsOld();
         allFrontLineWorkerHistory.createOrUpdate(oldFrontLineWorkerHistory);
         FrontLineWorkerHistory currentFrontLineWorkerHistory = new FrontLineWorkerHistory(getRegistrationMeasure(flwDimension));
         allFrontLineWorkerHistory.createOrUpdate(currentFrontLineWorkerHistory);

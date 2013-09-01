@@ -137,15 +137,14 @@ public class FLWRegistrationService {
     private void processChangeMsisdn(FrontLineWorkerRequest request, RegistrationMeasure registrationMeasure) {
         String newMsisdn = request.getNewMsisdn();
         frontLineWorkerService.changeMsisdn(request.getMsisdn(), newMsisdn);
-        updateReportsForMsisdnChange(request, Long.valueOf(newMsisdn), registrationMeasure);
+        updateReportsForMsisdnChange(Long.valueOf(newMsisdn), registrationMeasure);
     }
 
-    private void updateReportsForMsisdnChange(FrontLineWorkerRequest request, Long newMsisdn,
-                                              RegistrationMeasure registrationMeasure) {
-        FrontLineWorkerDimension toFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(request.msisdn());
+    private void updateReportsForMsisdnChange(Long newMsisdn, RegistrationMeasure registrationMeasure) {
+        FrontLineWorkerDimension toFlw = registrationMeasure.getFrontLineWorkerDimension();
         FrontLineWorkerDimension fromFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(newMsisdn);
-        String operator = msisdnTransfer(fromFlw) ? doTransfer(toFlw, fromFlw) : null;
-        toFlw.setOperator(operator);
+        String newOperator = msisdnTransfer(fromFlw) ? doTransfer(toFlw, fromFlw) : null;
+        toFlw.setOperator(newOperator);
         toFlw.setMsisdn(newMsisdn);
         frontLineWorkerDimensionService.update(toFlw);
         frontLineWorkerHistoryService.create(registrationMeasure);

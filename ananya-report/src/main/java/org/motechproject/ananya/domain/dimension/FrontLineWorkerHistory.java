@@ -93,7 +93,7 @@ public class FrontLineWorkerHistory {
         timestamp = new Timestamp(DateTime.now().getMillis());
     }
 
-    public void markOld() {
+    public void markAsOld() {
         isCurrent = false;
     }
 

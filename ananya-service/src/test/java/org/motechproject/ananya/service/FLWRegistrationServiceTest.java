@@ -55,6 +55,8 @@ public class FLWRegistrationServiceTest {
     private SMSSentMeasureService smsSentMeasureService;
     @Mock
     private LocationRegistrationService locationRegistrationService;
+    @Mock
+    private RegistrationMeasure registrationMeasure;
 
     @Captor
     private ArgumentCaptor<List<FLWStatusChangeRequest>> flwStatusChangeRequestCaptor;
@@ -63,6 +65,7 @@ public class FLWRegistrationServiceTest {
     private String name;
     private Designation designation;
     private String language;
+    private InOrder order;
 
     @Before
     public void setUp() {
@@ -71,6 +74,7 @@ public class FLWRegistrationServiceTest {
                 frontLineWorkerService, frontLineWorkerHistoryService, courseItemMeasureService, frontLineWorkerDimensionService,
                 registrationMeasureService, locationService, jobAidContentMeasureService,
                 callDurationMeasureService, smsSentMeasureService, locationRegistrationService);
+        order = Mockito.inOrder(registrationMeasureService, frontLineWorkerDimensionService, courseItemMeasureService, callDurationMeasureService, jobAidContentMeasureService, smsSentMeasureService, registrationMeasure);
     }
 
     @Test
@@ -107,13 +111,13 @@ public class FLWRegistrationServiceTest {
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
-        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
         FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
         when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(fromFlw);
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+        when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        InOrder order = Mockito.inOrder(frontLineWorkerDimensionService, courseItemMeasureService, callDurationMeasureService, jobAidContentMeasureService, smsSentMeasureService);
         verifyMocksForChangeMsisdnMeasureTransfer(frontLineWorkerRequest, toFlw, fromFlw, order);
     }
 
@@ -124,12 +128,13 @@ public class FLWRegistrationServiceTest {
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
-        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+        when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
         when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(null);
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()));
+        verify(registrationMeasure).getFrontLineWorkerDimension();
         verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()));
         verify(courseItemMeasureService, never()).transfer(any(FrontLineWorkerDimension.class), any(FrontLineWorkerDimension.class));
         verify(callDurationMeasureService, never()).transfer(any(FrontLineWorkerDimension.class), any(FrontLineWorkerDimension.class));
@@ -146,7 +151,8 @@ public class FLWRegistrationServiceTest {
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
-        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+        when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
         FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
         fromFlw.setOperator("Hero");
         when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(fromFlw);
@@ -166,11 +172,10 @@ public class FLWRegistrationServiceTest {
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
-        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+        when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
         FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
         when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(fromFlw);
-        RegistrationMeasure registrationMeasure = new RegistrationMeasure();
-        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
@@ -185,15 +190,14 @@ public class FLWRegistrationServiceTest {
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
-        when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()))).thenReturn(toFlw);
+        when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
+        when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
         FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
         when(frontLineWorkerDimensionService.getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()))).thenReturn(fromFlw);
 
         flwRegistrationService.createOrUpdateFLW(frontLineWorkerRequest);
 
-        verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()));
         verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()));
-        InOrder order = Mockito.inOrder(registrationMeasureService, frontLineWorkerDimensionService, courseItemMeasureService, callDurationMeasureService, jobAidContentMeasureService, smsSentMeasureService);
 
         verifyMocksForChangeMsisdnMeasureTransfer(frontLineWorkerRequest, toFlw, fromFlw, order);
         order.verify(registrationMeasureService).remove(fromFlw.getId());
@@ -469,7 +473,8 @@ public class FLWRegistrationServiceTest {
     }
 
     private void verifyMocksForChangeMsisdnMeasureTransfer(FrontLineWorkerRequest frontLineWorkerRequest, FrontLineWorkerDimension toFlw, FrontLineWorkerDimension fromFlw, InOrder inOrder) {
-        inOrder.verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getMsisdn()));
+        inOrder.verify(registrationMeasureService).createOrUpdateFor(callerId);
+        inOrder.verify(registrationMeasure).getFrontLineWorkerDimension();
         inOrder.verify(frontLineWorkerDimensionService).getFrontLineWorkerDimension(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()));
         inOrder.verify(courseItemMeasureService).transfer(fromFlw, toFlw);
         inOrder.verify(callDurationMeasureService).transfer(fromFlw, toFlw);
