@@ -3,6 +3,7 @@ package org.motechproject.ananya.service.dimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerHistory;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.domain.measure.TransferableMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,9 @@ public class FrontLineWorkerHistoryService {
             current.markAsOld();
             allFrontLineWorkerHistory.createOrUpdate(current);
         }
+    }
+
+    public void addHistory(TransferableMeasure transferableMeasure) {
+        transferableMeasure.addFlwHistory(allFrontLineWorkerHistory.getCurrent(transferableMeasure.flwId()));
     }
 }

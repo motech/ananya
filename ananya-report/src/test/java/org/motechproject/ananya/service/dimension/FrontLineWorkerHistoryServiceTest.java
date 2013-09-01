@@ -13,6 +13,7 @@ import org.motechproject.ananya.domain.dimension.FrontLineWorkerHistory;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.domain.measure.TransferableMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerHistory;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
@@ -28,11 +29,28 @@ public class FrontLineWorkerHistoryServiceTest {
     @Mock
     private FrontLineWorkerHistory currentFlwHistory;
 
+    @Mock
+    private TransferableMeasure transferableMeasure;
+
     private FrontLineWorkerHistoryService frontLineWorkerHistoryService;
 
     @Before
     public void setUp() {
         frontLineWorkerHistoryService = new FrontLineWorkerHistoryService(allFrontLineWorkerHistory);
+    }
+
+    @Test
+    public void shouldAddFlwHistory() {
+        int flwId = 1;
+        when(transferableMeasure.flwId()).thenReturn(flwId);
+        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory();
+        when(allFrontLineWorkerHistory.getCurrent(flwId)).thenReturn(frontLineWorkerHistory);
+
+        frontLineWorkerHistoryService.addHistory(transferableMeasure);
+
+        verify(transferableMeasure).flwId();
+        verify(allFrontLineWorkerHistory).getCurrent(flwId);
+        verify(transferableMeasure).addFlwHistory(frontLineWorkerHistory);
     }
 
     @Test
@@ -85,4 +103,5 @@ public class FrontLineWorkerHistoryServiceTest {
         verify(allFrontLineWorkerHistory).getCurrent(flwDimensionId);
         verify(allFrontLineWorkerHistory, never()).createOrUpdate(any(FrontLineWorkerHistory.class));
     }
+
 }

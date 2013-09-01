@@ -10,17 +10,13 @@ import javax.persistence.*;
 @Table(name = "sms_sent_measure")
 @NamedQuery(name = SMSSentMeasure.FIND_SMS_SENT_MEASURE_BY_FLW,
         query = "select r from SMSSentMeasure r where r.frontLineWorkerDimension.id=:flw_id")
-public class SMSSentMeasure extends Measure{
+public class SMSSentMeasure extends TransferableMeasure {
     public static final String FIND_SMS_SENT_MEASURE_BY_FLW = "find.sms.sent.measure.by.flw";
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "flw_id", nullable = false)
-    private FrontLineWorkerDimension frontLineWorkerDimension;
 
     @ManyToOne
     @JoinColumn(name = "time_id", nullable = false)

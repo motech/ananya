@@ -186,7 +186,7 @@ public class AllCourseItemMeasuresIT extends SpringIntegrationTest {
         List<CourseItemMeasure> courseItemMeasuresByCallId1 = allCourseItemMeasures.fetchFor("callId1");
         assertEquals(1, courseItemMeasuresByCallId1.size());
         assertEquals(1, courseItemMeasuresByCallId2.size());
-        assertEquals(courseItemMeasuresByCallId1.get(0).getFlwId(), flw2.getId());
-        assertEquals(courseItemMeasuresByCallId2.get(0).getFlwId(), flw2.getId());
+        assertEquals(courseItemMeasuresByCallId1.get(0).flwId(), flw2.getId());
+        assertEquals(courseItemMeasuresByCallId2.get(0).flwId(), flw2.getId());
     }
 }

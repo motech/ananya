@@ -6,14 +6,12 @@ import org.motechproject.ananya.domain.Location;
 import org.motechproject.ananya.domain.LocationStatus;
 import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerHistory;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.dimension.TimeDimension;
 import org.motechproject.ananya.domain.measure.*;
 import org.motechproject.ananya.repository.AllAudioTrackerLogs;
-import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.dimension.*;
 import org.motechproject.ananya.repository.measure.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,6 +30,8 @@ public class ReportDb {
     private AllLocationDimensions allLocationDimensions;
     @Autowired
     private AllFrontLineWorkerDimensions allFrontLineWorkerDimensions;
+    @Autowired
+    private AllFrontLineWorkerHistory allFrontLineWorkerHistory;
     @Autowired
     private AllRegistrationMeasures allRegistrationMeasures;
     @Autowired
@@ -149,10 +149,12 @@ public class ReportDb {
     public ReportDb createMeasuresAndDimensionsForFlw(String callerId, String callId, String operator, String circle) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
                 new Long(callerId), null, operator, circle, "", "ANM", "PARTIALLY_REGISTERED", UUID.randomUUID(), null);
+        RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, new LocationDimension(), new TimeDimension(), callerId);
+        allFrontLineWorkerHistory.createOrUpdate(new FrontLineWorkerHistory(registrationMeasure));
         Location defaultLocation = Location.getDefaultLocation();
         LocationDimension locationDimension = allLocationDimensions.getFor(defaultLocation.getExternalId());
         if (locationDimension == null)
-            locationDimension=allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(),defaultLocation.getState(), defaultLocation.getDistrict(),defaultLocation.getBlock(),defaultLocation.getPanchayat(), LocationStatus.VALID.name()));
+            locationDimension = allLocationDimensions.saveOrUpdate(new LocationDimension(defaultLocation.getExternalId(), defaultLocation.getState(), defaultLocation.getDistrict(), defaultLocation.getBlock(), defaultLocation.getPanchayat(), LocationStatus.VALID.name()));
 
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(DateTime.now());
         allRegistrationMeasures.createOrUpdate(new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId));

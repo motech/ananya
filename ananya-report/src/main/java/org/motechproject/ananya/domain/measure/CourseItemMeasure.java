@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @NamedQueries(value = {
         @NamedQuery(name = CourseItemMeasure.FIND_BY_CALL_ID, query = "select r from CourseItemMeasure r where r.callId=:callId")
 })
-public class CourseItemMeasure extends Measure {
+public class CourseItemMeasure extends TransferableMeasure {
 
     public static final String FIND_BY_CALL_ID = "find.by.callId";
 
@@ -28,10 +28,6 @@ public class CourseItemMeasure extends Measure {
     @ManyToOne
     @JoinColumn(name = "course_item_id", nullable = false)
     private CourseItemDimension courseItemDimension;
-
-    @ManyToOne
-    @JoinColumn(name = "flw_id", nullable = false)
-    private FrontLineWorkerDimension frontLineWorkerDimension;
 
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false)

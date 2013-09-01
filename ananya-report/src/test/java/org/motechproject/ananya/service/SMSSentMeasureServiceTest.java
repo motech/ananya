@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -19,6 +20,7 @@ import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.SMSSentMeasureService;
+import org.motechproject.ananya.service.measure.TransferableMeasureService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SMSSentMeasureServiceTest {
@@ -78,17 +79,26 @@ public class SMSSentMeasureServiceTest {
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(1)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         smsSentMeasureService.createSMSSentMeasure(callerId);
 
+        InOrder inOrder = inOrder(allSMSSentMeasures, smsSentMeasureService);
         ArgumentCaptor<SMSSentMeasure> captor = ArgumentCaptor.forClass(SMSSentMeasure.class);
-        verify(allSMSSentMeasures).save(captor.capture());
+
+        inOrder.verify(smsSentMeasureService).addFlwHistory(captor.capture());
+        inOrder.verify(allSMSSentMeasures).save(captor.capture());
 
         SMSSentMeasure smsSentMeasure = captor.getValue();
         assertEquals(smsSentMeasure.getSmsReferenceNumber(), smsRefNum);
         assertEquals(smsSentMeasure.getFrontLineWorkerDimension().getMsisdn(), Long.valueOf(callerId));
         assertTrue(smsSentMeasure.getSmsSent());
         assertEquals(smsSentMeasure.getCourseAttempt(), courseAttemptNum);
+    }
+
+    private void mockAddFlwHistory() {
+        smsSentMeasureService = spy(smsSentMeasureService);
+        doNothing().when((TransferableMeasureService) smsSentMeasureService).addFlwHistory(any(SMSSentMeasure.class));
     }
 
     @Test
@@ -112,6 +122,7 @@ public class SMSSentMeasureServiceTest {
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(flwd_id)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         smsSentMeasureService.createSMSSentMeasure(callerId);
 

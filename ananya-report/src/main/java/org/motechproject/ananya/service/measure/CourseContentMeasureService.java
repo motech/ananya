@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CourseContentMeasureService {
+public class CourseContentMeasureService extends TransferableMeasureService{
 
     private static final Logger log = LoggerFactory.getLogger(CourseContentMeasureService.class);
 
@@ -82,7 +82,7 @@ public class CourseContentMeasureService {
             CourseItemMeasure courseItemMeasure = new CourseItemMeasure(timeDimension, courseItemDimension,
                     frontLineWorkerDimension, locationDimension, languageDimension, 
                     logItem.getTime(), logItem.giveScore(), logItem.getCourseItemState(), callId);
-
+            addFlwHistory(courseItemMeasure);
             allCourseItemMeasures.save(courseItemMeasure);
         }
         log.info(callId + "- courseLog courseItemMeasures added");

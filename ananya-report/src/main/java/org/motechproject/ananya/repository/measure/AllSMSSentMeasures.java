@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllSMSSentMeasures extends AllMeasures {
+public class AllSMSSentMeasures extends AllTransferableMeasures {
 
     public AllSMSSentMeasures() {
     }

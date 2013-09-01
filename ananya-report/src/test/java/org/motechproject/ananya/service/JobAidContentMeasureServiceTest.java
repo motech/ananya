@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
@@ -13,11 +14,13 @@ import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
+import org.motechproject.ananya.domain.measure.TransferableMeasure;
 import org.motechproject.ananya.repository.dimension.*;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
+import org.motechproject.ananya.service.measure.TransferableMeasureService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,11 +103,14 @@ public class JobAidContentMeasureServiceTest {
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allLanguageDimension.getFor(language)).thenReturn(languageDimension);
         when(allJobAidContentDetailsDimensions.getFor(contentId, languageDimension.getId())).thenReturn(jobAidContentDetailsDimension);
+        mockAddFlwHistory();
 
         jobAidContentMeasureService.createFor(callId);
 
+        InOrder inOrder = inOrder(jobAidContentMeasureService, allJobAidContentMeasures);
         ArgumentCaptor<JobAidContentMeasure> captor = ArgumentCaptor.forClass(JobAidContentMeasure.class);
-        verify(allJobAidContentMeasures).add(captor.capture());
+        inOrder.verify(jobAidContentMeasureService).addFlwHistory(captor.capture());
+        inOrder.verify(allJobAidContentMeasures).add(captor.capture());
         verify(audioTrackerLogService).remove(audioTrackerLog);
 
         JobAidContentMeasure jobAidContentMeasure = captor.getValue();
@@ -115,6 +121,11 @@ public class JobAidContentMeasureServiceTest {
         assertEquals(callId, jobAidContentMeasure.getCallId());
         assertEquals(30, (int) jobAidContentMeasure.getPercentage());
         assertEquals(duration, jobAidContentMeasure.getDuration());
+    }
+
+    private void mockAddFlwHistory() {
+        jobAidContentMeasureService = spy(jobAidContentMeasureService);
+        doNothing().when((TransferableMeasureService) jobAidContentMeasureService).addFlwHistory(any(JobAidContentMeasure.class));
     }
 
     @Test

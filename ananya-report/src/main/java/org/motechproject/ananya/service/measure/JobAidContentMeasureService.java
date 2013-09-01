@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class JobAidContentMeasureService {
+public class JobAidContentMeasureService extends TransferableMeasureService{
 
     private static final Logger log = LoggerFactory.getLogger(JobAidContentMeasureService.class);
 
@@ -89,7 +89,7 @@ public class JobAidContentMeasureService {
                     audioTrackerLogItem.getTime(),
                     audioTrackerLogItem.getDuration(),
                     audioTrackerLogItem.getPercentage(jobAidContentDetailsDimension.getDuration()));
-
+            addFlwHistory(jobAidContentMeasure);
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
         log.info(callId + "- audioTrackerLog jobAidContentMeasures added");

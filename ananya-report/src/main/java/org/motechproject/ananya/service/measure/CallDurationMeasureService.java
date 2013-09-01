@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CallDurationMeasureService {
+public class CallDurationMeasureService extends TransferableMeasureService{
     private static Logger log = LoggerFactory.getLogger(CallDurationMeasureService.class);
 
     private CallLogService callLoggerService;
@@ -93,6 +93,7 @@ public class CallDurationMeasureService {
                     callLogItem.getEndTime(),
                     callLogItem.getCallFlowType().name(),
                     durationInPulse);
+            addFlwHistory(callDurationMeasure);
             allCallDurationMeasures.add(callDurationMeasure);
         }
         log.info(callId + "- callLog callDurationMeasures added");

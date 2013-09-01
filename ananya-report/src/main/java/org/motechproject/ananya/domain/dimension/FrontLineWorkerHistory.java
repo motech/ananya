@@ -97,4 +97,7 @@ public class FrontLineWorkerHistory {
         isCurrent = false;
     }
 
+    public Integer id() {
+        return id;
+    }
 }

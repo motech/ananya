@@ -3,7 +3,6 @@ package org.motechproject.ananya.repository.measure;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllJobAidContentMeasures extends AllMeasures{
+public class AllJobAidContentMeasures extends AllTransferableMeasures {
 
     public AllJobAidContentMeasures() {
     }

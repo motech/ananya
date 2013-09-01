@@ -213,7 +213,7 @@ public class AllCallDurationMeasuresIT extends SpringIntegrationTest {
 
     private void certificateCourseSetup(Long callerId, long calledNumber, DateTime now) {
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, null, "operator", "circle", "name", "ASHA", "REGISTERED", flwId, null);
-        TimeDimension timeDimension = allTimeDimensions.getFor(now);
+        TimeDimension timeDimension = allTimeDimensions.addOrUpdate(now);
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", calledNumber, 600, now, now.plusMinutes(10), "CALL", 10));
         allCallDurationMeasures.add(new CallDurationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "callId", calledNumber, 540, now.plusSeconds(60), now.plusMinutes(10), "CERTIFICATECOURSE", 9));
     }

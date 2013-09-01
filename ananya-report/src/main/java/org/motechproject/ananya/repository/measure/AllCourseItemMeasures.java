@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllCourseItemMeasures extends AllMeasures {
+public class AllCourseItemMeasures extends AllTransferableMeasures {
 
     public AllCourseItemMeasures() {
     }

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "job_aid_content_measure")
 @NamedQuery(name = JobAidContentMeasure.FIND_BY_CALL_ID, query = "select m from JobAidContentMeasure m where m.callId = :call_id")
-public class JobAidContentMeasure extends Measure{
+public class JobAidContentMeasure extends TransferableMeasure {
 
     public static final String FIND_BY_CALL_ID = "find.by.job.aid.call.id";
 
@@ -22,10 +22,6 @@ public class JobAidContentMeasure extends Measure{
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "flw_id", nullable = false)
-    private FrontLineWorkerDimension frontLineWorkerDimension;
 
     @Column(name = "call_id")
     private String callId;

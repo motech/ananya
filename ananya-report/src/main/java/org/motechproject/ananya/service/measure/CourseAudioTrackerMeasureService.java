@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CourseAudioTrackerMeasureService {
+public class CourseAudioTrackerMeasureService extends TransferableMeasureService{
 
     private static final Logger log = LoggerFactory.getLogger(CourseAudioTrackerMeasureService.class);
 
@@ -88,6 +88,7 @@ public class CourseAudioTrackerMeasureService {
                     logItem.getTime(), logItem.getDuration(),
                     logItem.getPercentage(courseItemDetailsDimension.getDuration())
             );
+            addFlwHistory(courseItemMeasure);
             allCourseItemMeasures.save(courseItemMeasure);
         }
         log.info(callId + "- audioTrackerLog courseItemMeasures added");
