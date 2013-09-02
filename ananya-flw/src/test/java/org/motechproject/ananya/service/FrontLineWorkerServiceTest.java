@@ -112,7 +112,7 @@ public class FrontLineWorkerServiceTest {
         String operator = "vodafone";
         Location location = new Location();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, null , null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, null, null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
 
@@ -126,17 +126,17 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
         assertEquals(true, frontLineWorkerResponse.isModified());
     }
-    
+
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDBButNotUpdateFLWIfLanguageIsModified() {
         String msisdn = "123";
         String circle = "circle";
         String operator = "vodafone";
-        String oldLanguage ="bhojpuri";
-        String newLanguage ="hindi";
+        String oldLanguage = "bhojpuri";
+        String newLanguage = "hindi";
         Location location = Location.getDefaultLocation();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, oldLanguage , null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, oldLanguage, null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
@@ -150,7 +150,7 @@ public class FrontLineWorkerServiceTest {
         assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
         assertEquals(false, frontLineWorkerResponse.isModified());
     }
-    
+
     @Test
     public void shouldNotCreateNewFLWIfAlreadyPresentInDBButUpdateWhenCircleIsDifferent() {
         String msisdn = "123";
@@ -362,11 +362,8 @@ public class FrontLineWorkerServiceTest {
     public void shouldChangeMsisdn() {
         String msisdn = "123";
         String newMsisdn = "456";
-        FrontLineWorker fromFlw = new FrontLineWorker();
-        fromFlw.setMsisdn(msisdn);
-        FrontLineWorker toFlw = new FrontLineWorker();
-        toFlw.setMsisdn(newMsisdn);
-        toFlw.setOperator("Airtel");
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        FrontLineWorker toFlw = createFLW(newMsisdn, "Airtel");
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
         when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
 
@@ -376,5 +373,76 @@ public class FrontLineWorkerServiceTest {
         assertEquals(toFlw.getOperator(), fromFlw.getOperator());
         verify(allFrontLineWorkers).remove(toFlw);
         verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+
+    @Test
+    public void shouldCopyOverHighestBookMarkAndScores() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        BookMark lowerBookMark = new BookMark("A", 5, 2);
+        BookMark higherBookMark = new BookMark("B", 7, 2);
+        ReportCard higherReport = createReportCardWithSomeScores();
+        higherReport.addScore(new Score("3", "3", true));
+        ReportCard lowerReport = createReportCardWithSomeScores();
+
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        FrontLineWorker toFlw = createFLW(newMsisdn, "Airtel");
+        setBookMarkAndReportCard(lowerBookMark, higherReport, fromFlw);
+        setBookMarkAndReportCard(higherBookMark, lowerReport, toFlw);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(toFlw.getOperator(), fromFlw.getOperator());
+        assertEquals(toFlw.getBookmark(), fromFlw.getBookmark());
+        assertEquals(higherReport, fromFlw.getReportCard());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldNotCopyOverBookMarkAndScores() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        BookMark bookMark = new BookMark("A", 5, 2);
+        ReportCard reportCard = createReportCardWithSomeScores();
+        reportCard.addScore(new Score("3", "3", true));
+
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        FrontLineWorker toFlw = createFLW(newMsisdn, "Airtel");
+        setBookMarkAndReportCard(bookMark, reportCard, fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(toFlw.getOperator(), fromFlw.getOperator());
+        assertEquals(bookMark, fromFlw.getBookmark());
+        assertEquals(reportCard, fromFlw.getReportCard());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    private void setBookMarkAndReportCard(BookMark bookMark1, ReportCard reportCard1, FrontLineWorker fromFlw) {
+        fromFlw.setBookMark(bookMark1);
+        fromFlw.setReportCard(reportCard1);
+    }
+
+    private ReportCard createReportCardWithSomeScores() {
+        ReportCard reportCard = new ReportCard();
+        reportCard.addScore(new Score("1", "1", true));
+        reportCard.addScore(new Score("2", "2", true));
+        return reportCard;
+    }
+
+    private FrontLineWorker createFLW(String newMsisdn, String operator) {
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.setMsisdn(newMsisdn);
+        frontLineWorker.setOperator(operator);
+        return frontLineWorker;
     }
 }

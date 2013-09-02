@@ -431,7 +431,7 @@ public class FrontLineWorkerSeedService {
         if (frontLineWorker1.currentCourseAttempt() == frontLineWorker2.currentCourseAttempt()) {
             if (bookmarkAfter(frontLineWorker2, frontLineWorker1)) {
                 log.info("FLWs have SAME course attempts. Merging bookmark.");
-                frontLineWorker1.addBookMark(frontLineWorker2.bookMark());
+                frontLineWorker1.setBookMark(frontLineWorker2.bookMark());
             }
 
             ReportCard mergedReportCard = new ReportCard();
@@ -460,7 +460,7 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker1.incrementCertificateCourseAttempts();
             }
 
-            frontLineWorker1.addBookMark(frontLineWorker2.bookMark());
+            frontLineWorker1.setBookMark(frontLineWorker2.bookMark());
             frontLineWorker1.reportCard().clearAllScores();
             for (Score score : frontLineWorker2.reportCard().scores())
                 frontLineWorker1.reportCard().addScore(score);

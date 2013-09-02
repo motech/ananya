@@ -29,7 +29,7 @@ public class FLWUsageResponseMapperTest {
         Integer chapterIndex = 9;
         Integer expectedLessonIndex = 4;
         Integer expectedQuizIndex = 4;
-        frontLineWorker.addBookMark(new BookMark("some", chapterIndex, lessonIndex));
+        frontLineWorker.setBookMark(new BookMark("some", chapterIndex, lessonIndex));
         frontLineWorker.setVerificationStatus(VerificationStatus.SUCCESS);
         String alternateContactNumber = "123";
         frontLineWorker.setAlternateContactNumber(alternateContactNumber);

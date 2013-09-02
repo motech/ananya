@@ -150,7 +150,7 @@ public class CouchDb {
     public CouchDb updateBookMark(String callerId, int chapIndex, int lessonIndex) {
         FrontLineWorker frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
         BookMark bookmark = new BookMark("", chapIndex, lessonIndex);
-        frontLineWorker.addBookMark(bookmark);
+        frontLineWorker.setBookMark(bookmark);
         allFrontLineWorkers.update(frontLineWorker);
         return this;
     }

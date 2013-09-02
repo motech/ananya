@@ -78,14 +78,14 @@ public class FrontLineWorkerSeedServiceTest {
     	String language= "language";
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark("type", 2, 2));
+        frontLineWorker1.setBookMark(new BookMark("type", 2, 2));
         frontLineWorker1.reportCard().addScore(new Score("1", "4", true, "987654321-1"));
         frontLineWorker1.reportCard().addScore(new Score("1", "5", true, "987654321-1"));
         frontLineWorker1.markPromptHeard("prompt1");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", false, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");
@@ -103,13 +103,13 @@ public class FrontLineWorkerSeedServiceTest {
     	String language= "language";
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark(null, null, null));
+        frontLineWorker1.setBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("welcome");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", true, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");
@@ -128,12 +128,12 @@ public class FrontLineWorkerSeedServiceTest {
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark(null, null, null));
+        frontLineWorker1.setBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("prompt1");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", true, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");

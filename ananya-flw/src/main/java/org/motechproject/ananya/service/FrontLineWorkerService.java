@@ -199,6 +199,24 @@ public class FrontLineWorkerService {
         FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
         flwByOldMsisdn.setMsisdn(newMsisdn);
         flwByOldMsisdn.setOperator(newOperator);
+        flwByOldMsisdn.setReportCard(getHighestReportCard(flwByOldMsisdn, flwByNewMsisdn));
+        flwByOldMsisdn.setBookMark(getHighestBookMark(flwByOldMsisdn, flwByNewMsisdn));
         allFrontLineWorkers.update(flwByOldMsisdn);
+    }
+
+    private BookMark getHighestBookMark(FrontLineWorker fromFlw, FrontLineWorker toFlw) {
+        BookMark fromFlwBookmark = fromFlw.getBookmark();
+        if (toFlw == null || toFlw.getBookmark() == null) return fromFlwBookmark;
+        BookMark toFlwBookmark = toFlw.getBookmark();
+        if (fromFlwBookmark.getChapterIndex() == toFlwBookmark.getChapterIndex())
+            return fromFlwBookmark.getLessonIndex() < toFlwBookmark.getChapterIndex() ? toFlwBookmark : fromFlwBookmark;
+        return fromFlwBookmark.getChapterIndex() < toFlwBookmark.getChapterIndex() ? toFlwBookmark : fromFlwBookmark;
+    }
+
+    private ReportCard getHighestReportCard(FrontLineWorker fromFlw, FrontLineWorker toFlw) {
+        ReportCard oldMsisdnReportCard = fromFlw.getReportCard();
+        if (toFlw == null || toFlw.getReportCard() == null) return oldMsisdnReportCard;
+        ReportCard newMsisdnReportCard = toFlw.getReportCard();
+        return oldMsisdnReportCard.totalScore() < newMsisdnReportCard.totalScore() ? newMsisdnReportCard : oldMsisdnReportCard;
     }
 }

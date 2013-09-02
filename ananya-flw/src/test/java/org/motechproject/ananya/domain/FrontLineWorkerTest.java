@@ -212,7 +212,7 @@ public class FrontLineWorkerTest {
         when(bookMark.notAtPlayThanks()).thenReturn(true);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
-        frontLineWorker.addBookMark(bookMark);
+        frontLineWorker.setBookMark(bookMark);
 
         boolean courseInProgress = frontLineWorker.courseInProgress();
 
