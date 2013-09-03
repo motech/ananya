@@ -42,7 +42,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private BookMark bookmark;
 
-
     @JsonProperty
     private ReportCard reportCard = new ReportCard();
 
@@ -117,6 +116,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
         this.currentJobAidUsage = currentJobAidUsage;
+    }
+
+    public void setCertificateCourseAttempts(Integer certificateCourseAttempts) {
+        this.certificateCourseAttempts = certificateCourseAttempts;
     }
 
     public void setReportCard(ReportCard reportCard) {
@@ -221,7 +224,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return ++certificateCourseAttempts;
     }
 
-    public Integer currentCourseAttempt() {
+//    @JsonIgnore
+    public Integer currentCourseAttempts() {
         return certificateCourseAttempts;
     }
 

@@ -36,7 +36,7 @@ public class SMSReferenceService {
 
     public boolean isSMSSentFor(FrontLineWorker frontLineWorker) {
         SMSReference smsReference = allSMSReferences.findByMsisdn(frontLineWorker.getMsisdn());
-        return smsReference != null && smsReference.referenceNumbers(frontLineWorker.currentCourseAttempt()) != null;
+        return smsReference != null && smsReference.referenceNumbers(frontLineWorker.currentCourseAttempts()) != null;
     }
 
 }

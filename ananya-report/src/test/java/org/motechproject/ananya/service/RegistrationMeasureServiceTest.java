@@ -120,6 +120,8 @@ public class RegistrationMeasureServiceTest {
         assertEquals(frontLineWorkerDimension, registrationMeasure.getFrontLineWorkerDimension());
         assertEquals(timeDimension, registrationMeasure.getTimeDimension());
         verify(frontLineWorkerHistoryService).create(registrationMeasure);
+        verify(frontLineWorkerHistoryService, never()).updateOperatorIfNotSet(frontLineWorkerDimension);
+
     }
 
     @Test
@@ -131,6 +133,7 @@ public class RegistrationMeasureServiceTest {
         verify(frontLineWorkerDimensionService).createOrUpdate(Long.valueOf(callerId), Long.valueOf(callerId), operator, circle, null, null, "UNREGISTERED", frontLineWorker.getFlwId(), null);
         verify(allRegistrationMeasures).createOrUpdate(registrationMeasure);
         assertEquals(newLocationDimension, registrationMeasure.getLocationDimension());
+        verify(frontLineWorkerHistoryService, never()).create(registrationMeasure);
     }
 
     @Test
@@ -169,6 +172,7 @@ public class RegistrationMeasureServiceTest {
         assertEquals(frontLineWorkerDimension, registrationMeasure.getFrontLineWorkerDimension());
         assertEquals(timeDimension, registrationMeasure.getTimeDimension());
         verify(frontLineWorkerHistoryService).create(registrationMeasure);
+        verify(frontLineWorkerHistoryService, never()).updateOperatorIfNotSet(frontLineWorkerDimension);
     }
 
     @Test
@@ -181,6 +185,7 @@ public class RegistrationMeasureServiceTest {
 
         verify(allRegistrationMeasures, never()).createOrUpdate(any(RegistrationMeasure.class));
         verify(frontLineWorkerHistoryService, never()).create(registrationMeasure);
+        verify(frontLineWorkerHistoryService).updateOperatorIfNotSet(any(FrontLineWorkerDimension.class));
     }
 
     @Test

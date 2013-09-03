@@ -428,7 +428,7 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker1.getStatus().weight >= frontLineWorker2.getStatus().weight
                         ? frontLineWorker1.getStatus() : frontLineWorker2.getStatus());
 
-        if (frontLineWorker1.currentCourseAttempt() == frontLineWorker2.currentCourseAttempt()) {
+        if (frontLineWorker1.currentCourseAttempts() == frontLineWorker2.currentCourseAttempts()) {
             if (bookmarkAfter(frontLineWorker2, frontLineWorker1)) {
                 log.info("FLWs have SAME course attempts. Merging bookmark.");
                 frontLineWorker1.setBookMark(frontLineWorker2.bookMark());
@@ -454,9 +454,9 @@ public class FrontLineWorkerSeedService {
             for (Score score : mergedReportCard.scores()) {
                 frontLineWorker1.reportCard().addScore(score);
             }
-        } else if (frontLineWorker2.currentCourseAttempt() > frontLineWorker1.currentCourseAttempt()) {
+        } else if (frontLineWorker2.currentCourseAttempts() > frontLineWorker1.currentCourseAttempts()) {
             log.info("FLWs have DIFFERENT course attempts. Merging bookmark and score blindly.");
-            while (frontLineWorker1.currentCourseAttempt() < frontLineWorker2.currentCourseAttempt()) {
+            while (frontLineWorker1.currentCourseAttempts() < frontLineWorker2.currentCourseAttempts()) {
                 frontLineWorker1.incrementCertificateCourseAttempts();
             }
 

@@ -92,7 +92,7 @@ public class FrontLineWorkerSeedServiceTest {
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(1, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(1, (int) frontLineWorker1.currentCourseAttempts());
         assertEquals(3, (int) frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(1, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(2, frontLineWorker1.getPromptsHeard().size());
@@ -116,7 +116,7 @@ public class FrontLineWorkerSeedServiceTest {
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(2, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(2, (int) frontLineWorker1.currentCourseAttempts());
         assertEquals(3, (int) frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(2, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(2, frontLineWorker1.getPromptsHeard().size());
@@ -141,7 +141,7 @@ public class FrontLineWorkerSeedServiceTest {
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(2, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(2, (int) frontLineWorker1.currentCourseAttempts());
         assertNull(frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(0, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(3, frontLineWorker1.getPromptsHeard().size());

@@ -17,6 +17,7 @@ import org.motechproject.ananya.domain.measure.TransferableMeasure;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerHistory;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -102,6 +103,38 @@ public class FrontLineWorkerHistoryServiceTest {
 
         verify(allFrontLineWorkerHistory).getCurrent(flwDimensionId);
         verify(allFrontLineWorkerHistory, never()).createOrUpdate(any(FrontLineWorkerHistory.class));
+    }
+
+    @Test
+    public void shouldUpdateFlwHistoryWhenOperatorIsNotSet() {
+        String operator = "ABC";
+        FrontLineWorkerDimension flw = new FrontLineWorkerDimension();
+        flw.setId(1);
+        flw.setOperator(operator);
+        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory();
+        frontLineWorkerHistory.setOperator(null);
+        when(allFrontLineWorkerHistory.getCurrent(flw.getId())).thenReturn(frontLineWorkerHistory);
+
+        frontLineWorkerHistoryService.updateOperatorIfNotSet(flw);
+
+        assertEquals(operator, frontLineWorkerHistory.getOperator());
+        verify(allFrontLineWorkerHistory).getCurrent(flw.getId());
+        verify(allFrontLineWorkerHistory).createOrUpdate(frontLineWorkerHistory);
+    }
+
+    @Test
+    public void shouldNotUpdateFlwHistoryWhenOperatorIsThere() {
+        String operator = "ABC";
+        FrontLineWorkerDimension flw = new FrontLineWorkerDimension();
+        flw.setId(1);
+        FrontLineWorkerHistory frontLineWorkerHistory = new FrontLineWorkerHistory();
+        frontLineWorkerHistory.setOperator(operator);
+        when(allFrontLineWorkerHistory.getCurrent(flw.getId())).thenReturn(frontLineWorkerHistory);
+
+        frontLineWorkerHistoryService.updateOperatorIfNotSet(flw);
+
+        verify(allFrontLineWorkerHistory).getCurrent(flw.getId());
+        verify(allFrontLineWorkerHistory, never()).createOrUpdate(frontLineWorkerHistory);
     }
 
 }

@@ -87,6 +87,7 @@ public class RegistrationMeasureService {
 
         if (dimensionAlreadyExists) {
             log.info(callId + "- registrationMeasure already exists for " + frontLineWorker.getMsisdn());
+            frontLineWorkerHistoryService.updateOperatorIfNotSet(frontLineWorkerDimension);
             return;
         }
         TimeDimension timeDimension = allTimeDimensions.getFor(frontLineWorker.getRegisteredDate());

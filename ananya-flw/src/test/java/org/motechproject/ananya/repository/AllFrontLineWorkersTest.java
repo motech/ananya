@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
@@ -20,6 +21,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     private UUID flwId = UUID.randomUUID();
 
     @Before
+    @After
     public void setUp() throws IOException {
         allFrontLineWorkers.removeAll();
     }

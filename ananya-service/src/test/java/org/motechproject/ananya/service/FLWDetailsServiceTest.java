@@ -49,7 +49,6 @@ public class FLWDetailsServiceTest {
     private String nightStartTime = "19:00:00";
     private String nightEndTime = "06:59:59";
 
-
     @Before
     public void setup(){
         initMocks(this);

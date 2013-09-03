@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 @Service
 public class FrontLineWorkerService {
 
@@ -122,7 +124,7 @@ public class FrontLineWorkerService {
 
     public int getCurrentCourseAttempt(String callerId) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-        return frontLineWorker.currentCourseAttempt();
+        return frontLineWorker.currentCourseAttempts();
     }
 
     public List<FrontLineWorker> getAll() {
@@ -191,32 +193,97 @@ public class FrontLineWorkerService {
 
     public void changeMsisdn(String msisdn, String newMsisdn) {
         FrontLineWorker flwByNewMsisdn = allFrontLineWorkers.findByMsisdn(newMsisdn);
-        String newOperator = null;
+        ToFrontLineWorker toFrontLineWorker = new ToFrontLineWorker();
         if (flwByNewMsisdn != null) {
-            newOperator = flwByNewMsisdn.getOperator();
+            toFrontLineWorker.setFields(flwByNewMsisdn);
             allFrontLineWorkers.remove(flwByNewMsisdn);
         }
         FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
-        flwByOldMsisdn.setMsisdn(newMsisdn);
-        flwByOldMsisdn.setOperator(newOperator);
-        flwByOldMsisdn.setReportCard(getHighestReportCard(flwByOldMsisdn, flwByNewMsisdn));
-        flwByOldMsisdn.setBookMark(getHighestBookMark(flwByOldMsisdn, flwByNewMsisdn));
+        setFlwFields(newMsisdn, toFrontLineWorker, flwByOldMsisdn);
         allFrontLineWorkers.update(flwByOldMsisdn);
     }
 
-    private BookMark getHighestBookMark(FrontLineWorker fromFlw, FrontLineWorker toFlw) {
-        BookMark fromFlwBookmark = fromFlw.getBookmark();
-        if (toFlw == null || toFlw.getBookmark() == null) return fromFlwBookmark;
-        BookMark toFlwBookmark = toFlw.getBookmark();
-        if (fromFlwBookmark.getChapterIndex() == toFlwBookmark.getChapterIndex())
-            return fromFlwBookmark.getLessonIndex() < toFlwBookmark.getChapterIndex() ? toFlwBookmark : fromFlwBookmark;
-        return fromFlwBookmark.getChapterIndex() < toFlwBookmark.getChapterIndex() ? toFlwBookmark : fromFlwBookmark;
+    private void setFlwFields(String newMsisdn, ToFrontLineWorker toFrontLineWorker, FrontLineWorker flwByOldMsisdn) {
+        flwByOldMsisdn.setMsisdn(newMsisdn);
+        flwByOldMsisdn.setOperator(getTheOperator(flwByOldMsisdn.getOperator(), toFrontLineWorker.getNewOperator()));
+        flwByOldMsisdn.setReportCard(getHighestReportCard(flwByOldMsisdn.getReportCard(), toFrontLineWorker.getNewReportCard()));
+        flwByOldMsisdn.setBookMark(getHighestBookMark(flwByOldMsisdn.getBookmark(), toFrontLineWorker.getNewBookMark()));
+        flwByOldMsisdn.setCurrentJobAidUsage(getTheUsage(flwByOldMsisdn.getCurrentJobAidUsage(), toFrontLineWorker.getNewCurrentUsage()));
+        flwByOldMsisdn.setLastJobAidAccessTime(getTheLastJobAidAccessTime(flwByOldMsisdn.getLastJobAidAccessTime(), toFrontLineWorker.getNewLastJobAidAccessTime()));
+        flwByOldMsisdn.setCertificateCourseAttempts(getTheCourseAttempt(flwByOldMsisdn.currentCourseAttempts(), toFrontLineWorker.getNewCourseAttempts()));
     }
 
-    private ReportCard getHighestReportCard(FrontLineWorker fromFlw, FrontLineWorker toFlw) {
-        ReportCard oldMsisdnReportCard = fromFlw.getReportCard();
-        if (toFlw == null || toFlw.getReportCard() == null) return oldMsisdnReportCard;
-        ReportCard newMsisdnReportCard = toFlw.getReportCard();
-        return oldMsisdnReportCard.totalScore() < newMsisdnReportCard.totalScore() ? newMsisdnReportCard : oldMsisdnReportCard;
+    private Integer getTheCourseAttempt(Integer currentCourseAttempt, Integer newCourseAttemps) {
+        return newCourseAttemps == null ? currentCourseAttempt : newCourseAttemps;
+    }
+
+    private DateTime getTheLastJobAidAccessTime(DateTime lastJobAidAccessTime, DateTime newLastJobAidAccessTime) {
+        return newLastJobAidAccessTime == null ? lastJobAidAccessTime : newLastJobAidAccessTime;
+
+    }
+
+    private Integer getTheUsage(Integer oldCurrentJobAidUsage, Integer newCurrentJobAidUsage) {
+        return newCurrentJobAidUsage == null ? oldCurrentJobAidUsage : newCurrentJobAidUsage;
+    }
+
+    private String getTheOperator(String operator, String newOperator) {
+        return isBlank(newOperator) ? operator : newOperator;
+    }
+
+    private BookMark getHighestBookMark(BookMark oldBookMark, BookMark newBookMark) {
+        if (newBookMark == null) return oldBookMark;
+        if (oldBookMark.getChapterIndex() == newBookMark.getChapterIndex())
+            return oldBookMark.getLessonIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
+        return oldBookMark.getChapterIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
+    }
+
+    private ReportCard getHighestReportCard(ReportCard oldReportCard, ReportCard newReportCard) {
+        if (newReportCard == null) return oldReportCard;
+        return oldReportCard.totalScore() < newReportCard.totalScore() ? newReportCard : oldReportCard;
+    }
+
+    private class ToFrontLineWorker {
+        private String newOperator;
+        private BookMark newBookMark;
+        private ReportCard newReportCard;
+        private Integer newCurrentUsage;
+        private Integer newCourseAttempts;
+        private DateTime newLastJobAidAccessTime;
+
+        public ToFrontLineWorker() {
+        }
+
+        public void setFields(FrontLineWorker flwByNewMsisdn) {
+            newCourseAttempts = flwByNewMsisdn.currentCourseAttempts();
+            newOperator = flwByNewMsisdn.getOperator();
+            newBookMark = flwByNewMsisdn.getBookmark();
+            newReportCard = flwByNewMsisdn.getReportCard();
+            newCurrentUsage = flwByNewMsisdn.getCurrentJobAidUsage();
+            newLastJobAidAccessTime = flwByNewMsisdn.getLastJobAidAccessTime();
+        }
+
+        public String getNewOperator() {
+            return newOperator;
+        }
+
+        public BookMark getNewBookMark() {
+            return newBookMark;
+        }
+
+        public ReportCard getNewReportCard() {
+            return newReportCard;
+        }
+
+        public Integer getNewCurrentUsage() {
+            return newCurrentUsage;
+        }
+
+        private Integer getNewCourseAttempts() {
+            return newCourseAttempts;
+        }
+
+        private DateTime getNewLastJobAidAccessTime() {
+            return newLastJobAidAccessTime;
+        }
     }
 }

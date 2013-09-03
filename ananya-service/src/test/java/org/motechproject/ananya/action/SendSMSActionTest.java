@@ -40,7 +40,7 @@ public class SendSMSActionTest {
 
         when(mockedFrontLineWorker.getMsisdn()).thenReturn(callerId);
         when(mockedFrontLineWorker.getLocationId()).thenReturn(locationId);
-        when(mockedFrontLineWorker.currentCourseAttempt()).thenReturn(courseAttempts);
+        when(mockedFrontLineWorker.currentCourseAttempts()).thenReturn(courseAttempts);
         when(mockedStateRequestList.getCallId()).thenReturn(callId);
     }
 

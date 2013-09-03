@@ -375,6 +375,179 @@ public class FrontLineWorkerServiceTest {
         verify(allFrontLineWorkers).update(fromFlw);
     }
 
+    @Test
+    public void shouldNotCopyOverOperatorWhenNewOperatorIsMissing() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        String operator = "Voda";
+        FrontLineWorker fromFlw = createFLW(msisdn, operator);
+        FrontLineWorker toFlw = createFLW(newMsisdn, null);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(operator, fromFlw.getOperator());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldNotCopyOverNewCourseAttemptsWhenNull() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        Integer certificateCourseAttempts = 1;
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        fromFlw.setCertificateCourseAttempts(certificateCourseAttempts);
+        FrontLineWorker toFlw = createFLW(msisdn, "abba");
+        toFlw.setCertificateCourseAttempts(null);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(certificateCourseAttempts, fromFlw.currentCourseAttempts());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldCopyOverNewCourseAttempts() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        Integer certificateCourseAttempts = 1;
+        Integer newCertificateCourseAttempts = 2;
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        fromFlw.setCertificateCourseAttempts(certificateCourseAttempts);
+        FrontLineWorker toFlw = createFLW(newMsisdn, null);
+        toFlw.setCertificateCourseAttempts(newCertificateCourseAttempts);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(newCertificateCourseAttempts, fromFlw.currentCourseAttempts());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+
+    @Test
+    public void shouldCopyOverNewJobAidUsage() {
+        Integer newCurrentJobAidUsage = 1;
+        String msisdn = "123";
+        String newMsisdn = "456";
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        fromFlw.setCurrentJobAidUsage(2);
+        FrontLineWorker toFlw = createFLW(newMsisdn, null);
+        toFlw.setCurrentJobAidUsage(newCurrentJobAidUsage);
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(newCurrentJobAidUsage, fromFlw.getCurrentJobAidUsage());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldCopyOverNewLastJobAidAccessTime() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        DateTime newJobAidAccessTime = new DateTime();
+        fromFlw.setLastJobAidAccessTime(new DateTime().minusDays(1));
+        FrontLineWorker toFlw = createFLW(newMsisdn, null);
+        toFlw.setLastJobAidAccessTime(newJobAidAccessTime);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(newJobAidAccessTime, fromFlw.getLastJobAidAccessTime());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldNotCopyOverFieldsWhenNewFlwDoesNotExist() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        Integer currentJobAidUsage = 2;
+        Integer certificateCourseAttempts = 3;
+        DateTime lastJobAidAccessTime = new DateTime();
+        ReportCard reportCard = new ReportCard();
+        BookMark bookMark = new BookMark();
+        String operator = "Voda";
+
+        FrontLineWorker fromFlw = createFLW(msisdn, operator);
+        fromFlw.setCurrentJobAidUsage(currentJobAidUsage);
+        fromFlw.setCertificateCourseAttempts(certificateCourseAttempts);
+        fromFlw.setLastJobAidAccessTime(lastJobAidAccessTime);
+        fromFlw.setReportCard(reportCard);
+        fromFlw.setBookMark(bookMark);
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(null);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(operator, fromFlw.getOperator());
+        assertEquals(currentJobAidUsage, fromFlw.getCurrentJobAidUsage());
+        assertEquals(certificateCourseAttempts, fromFlw.currentCourseAttempts());
+        assertEquals(lastJobAidAccessTime, fromFlw.getLastJobAidAccessTime());
+        assertEquals(reportCard, fromFlw.getReportCard());
+        assertEquals(bookMark, fromFlw.getBookmark());
+        verify(allFrontLineWorkers, never()).remove(any(FrontLineWorker.class));
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldNotCopyOverNewLastJobAidAccessTimeWhenNull() {
+        String msisdn = "123";
+        String newMsisdn = "456";
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        DateTime lastJobAidAccessTime = new DateTime().minusDays(1);
+        fromFlw.setLastJobAidAccessTime(lastJobAidAccessTime);
+        FrontLineWorker toFlw = createFLW(newMsisdn, null);
+        toFlw.setLastJobAidAccessTime(null);
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(toFlw);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(lastJobAidAccessTime, fromFlw.getLastJobAidAccessTime());
+        verify(allFrontLineWorkers).remove(toFlw);
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
+
+    @Test
+    public void shouldNotCopyOverNewJobAidUsageWhenNull() {
+        Integer currentJobAidUsage = 2;
+        String msisdn = "123";
+        String newMsisdn = "456";
+        FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
+        fromFlw.setCurrentJobAidUsage(currentJobAidUsage);
+
+        when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
+        when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(null);
+
+        frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
+
+        assertEquals(newMsisdn, fromFlw.getMsisdn());
+        assertEquals(currentJobAidUsage, fromFlw.getCurrentJobAidUsage());
+        verify(allFrontLineWorkers, never()).remove(any(FrontLineWorker.class));
+        verify(allFrontLineWorkers).update(fromFlw);
+    }
 
     @Test
     public void shouldCopyOverHighestBookMarkAndScores() {

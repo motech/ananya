@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 @Service
 public class FrontLineWorkerHistoryService {
 
@@ -39,5 +41,13 @@ public class FrontLineWorkerHistoryService {
 
     public void addHistory(TransferableMeasure transferableMeasure) {
         transferableMeasure.addFlwHistory(allFrontLineWorkerHistory.getCurrent(transferableMeasure.flwId()));
+    }
+
+    @Transactional
+    public void updateOperatorIfNotSet(FrontLineWorkerDimension flw) {
+        FrontLineWorkerHistory flwHistory = allFrontLineWorkerHistory.getCurrent(flw.getId());
+        if(!isBlank(flwHistory.getOperator())) return;
+        flwHistory.setOperator(flw.getOperator());
+        allFrontLineWorkerHistory.createOrUpdate(flwHistory);
     }
 }
