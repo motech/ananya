@@ -411,7 +411,6 @@
     </changeSet>
 
     <changeSet context="setup" author="ThoughtWorks-version1.10" id="29">
-        <validCheckSum>3:9292040160ee62a6cc48aaf98252492a</validCheckSum>
         <!-- Following extension required to generate UUIDs. Assuming Postgres9.1 -->
         <sql splitStatements="false">
             CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -475,7 +474,6 @@
     </changeSet>
 
     <changeSet context="setup" author="Onmobile-version1.0" id="35">
-        <validCheckSum>3:691d9cb4e7e28f552f10a3762b1f9711</validCheckSum>
         <createTable tableName="language_dimension" schemaName="report">
             <column name="id" type="serial">
                 <constraints nullable="false" primaryKey="true"/>
@@ -563,7 +561,6 @@
     </changeSet>
 
     <changeSet context="setup" author="Onmobile-version1.0" id="41">
-        <validCheckSum>3:625373475a0b233aaa5fc8121d47235a</validCheckSum>
         <sql splitStatements="false">
             INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 1,
             content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
