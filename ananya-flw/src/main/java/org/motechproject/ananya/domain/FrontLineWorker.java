@@ -224,7 +224,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return ++certificateCourseAttempts;
     }
 
-//    @JsonIgnore
     public Integer currentCourseAttempts() {
         return certificateCourseAttempts;
     }

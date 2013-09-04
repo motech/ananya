@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-
 @Service
 public class FrontLineWorkerService {
 
@@ -83,7 +81,8 @@ public class FrontLineWorkerService {
         }
 
         //no-change flw only if FLW's language is null so updated language is not null
-        if (frontLineWorker.circleIs(circle) && frontLineWorker.operatorIs(operator) && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
+        boolean operatorHasNotChanged = frontLineWorker.operatorIs(operator);
+        if (frontLineWorker.circleIs(circle) && operatorHasNotChanged && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
             return new FrontLineWorkerCreateResponse(frontLineWorker, false);
 
         // 
@@ -95,7 +94,10 @@ public class FrontLineWorkerService {
         }
 
         //updated flw
-        frontLineWorker.setOperator(operator);
+        if (!operatorHasNotChanged) {
+            frontLineWorker.setOperator(operator);
+            frontLineWorker.resetJobAidUsageAndPrompts();
+        }
         frontLineWorker.setCircle(circle);
         frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
         allFrontLineWorkers.updateFlw(frontLineWorker);
@@ -193,97 +195,22 @@ public class FrontLineWorkerService {
 
     public void changeMsisdn(String msisdn, String newMsisdn) {
         FrontLineWorker flwByNewMsisdn = allFrontLineWorkers.findByMsisdn(newMsisdn);
-        ToFrontLineWorker toFrontLineWorker = new ToFrontLineWorker();
         if (flwByNewMsisdn != null) {
-            toFrontLineWorker.setFields(flwByNewMsisdn);
             allFrontLineWorkers.remove(flwByNewMsisdn);
         }
         FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
-        setFlwFields(newMsisdn, toFrontLineWorker, flwByOldMsisdn);
+        FlwChangeSelector changeSelector = new FlwChangeSelector(flwByOldMsisdn, flwByNewMsisdn);
+        setFlwFields(newMsisdn, changeSelector, flwByOldMsisdn);
         allFrontLineWorkers.update(flwByOldMsisdn);
     }
 
-    private void setFlwFields(String newMsisdn, ToFrontLineWorker toFrontLineWorker, FrontLineWorker flwByOldMsisdn) {
+    private void setFlwFields(String newMsisdn, FlwChangeSelector changeSelector, FrontLineWorker flwByOldMsisdn) {
         flwByOldMsisdn.setMsisdn(newMsisdn);
-        flwByOldMsisdn.setOperator(getTheOperator(flwByOldMsisdn.getOperator(), toFrontLineWorker.getNewOperator()));
-        flwByOldMsisdn.setReportCard(getHighestReportCard(flwByOldMsisdn.getReportCard(), toFrontLineWorker.getNewReportCard()));
-        flwByOldMsisdn.setBookMark(getHighestBookMark(flwByOldMsisdn.getBookmark(), toFrontLineWorker.getNewBookMark()));
-        flwByOldMsisdn.setCurrentJobAidUsage(getTheUsage(flwByOldMsisdn.getCurrentJobAidUsage(), toFrontLineWorker.getNewCurrentUsage()));
-        flwByOldMsisdn.setLastJobAidAccessTime(getTheLastJobAidAccessTime(flwByOldMsisdn.getLastJobAidAccessTime(), toFrontLineWorker.getNewLastJobAidAccessTime()));
-        flwByOldMsisdn.setCertificateCourseAttempts(getTheCourseAttempt(flwByOldMsisdn.currentCourseAttempts(), toFrontLineWorker.getNewCourseAttempts()));
-    }
-
-    private Integer getTheCourseAttempt(Integer currentCourseAttempt, Integer newCourseAttemps) {
-        return newCourseAttemps == null ? currentCourseAttempt : newCourseAttemps;
-    }
-
-    private DateTime getTheLastJobAidAccessTime(DateTime lastJobAidAccessTime, DateTime newLastJobAidAccessTime) {
-        return newLastJobAidAccessTime == null ? lastJobAidAccessTime : newLastJobAidAccessTime;
-
-    }
-
-    private Integer getTheUsage(Integer oldCurrentJobAidUsage, Integer newCurrentJobAidUsage) {
-        return newCurrentJobAidUsage == null ? oldCurrentJobAidUsage : newCurrentJobAidUsage;
-    }
-
-    private String getTheOperator(String operator, String newOperator) {
-        return isBlank(newOperator) ? operator : newOperator;
-    }
-
-    private BookMark getHighestBookMark(BookMark oldBookMark, BookMark newBookMark) {
-        if (newBookMark == null) return oldBookMark;
-        if (oldBookMark.getChapterIndex() == newBookMark.getChapterIndex())
-            return oldBookMark.getLessonIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
-        return oldBookMark.getChapterIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
-    }
-
-    private ReportCard getHighestReportCard(ReportCard oldReportCard, ReportCard newReportCard) {
-        if (newReportCard == null) return oldReportCard;
-        return oldReportCard.totalScore() < newReportCard.totalScore() ? newReportCard : oldReportCard;
-    }
-
-    private class ToFrontLineWorker {
-        private String newOperator;
-        private BookMark newBookMark;
-        private ReportCard newReportCard;
-        private Integer newCurrentUsage;
-        private Integer newCourseAttempts;
-        private DateTime newLastJobAidAccessTime;
-
-        public ToFrontLineWorker() {
-        }
-
-        public void setFields(FrontLineWorker flwByNewMsisdn) {
-            newCourseAttempts = flwByNewMsisdn.currentCourseAttempts();
-            newOperator = flwByNewMsisdn.getOperator();
-            newBookMark = flwByNewMsisdn.getBookmark();
-            newReportCard = flwByNewMsisdn.getReportCard();
-            newCurrentUsage = flwByNewMsisdn.getCurrentJobAidUsage();
-            newLastJobAidAccessTime = flwByNewMsisdn.getLastJobAidAccessTime();
-        }
-
-        public String getNewOperator() {
-            return newOperator;
-        }
-
-        public BookMark getNewBookMark() {
-            return newBookMark;
-        }
-
-        public ReportCard getNewReportCard() {
-            return newReportCard;
-        }
-
-        public Integer getNewCurrentUsage() {
-            return newCurrentUsage;
-        }
-
-        private Integer getNewCourseAttempts() {
-            return newCourseAttempts;
-        }
-
-        private DateTime getNewLastJobAidAccessTime() {
-            return newLastJobAidAccessTime;
-        }
+        flwByOldMsisdn.setOperator(changeSelector.getTheLatestOperator());
+        flwByOldMsisdn.setReportCard(changeSelector.getHighestReportCard());
+        flwByOldMsisdn.setBookMark(changeSelector.getHighestBookMark());
+        flwByOldMsisdn.setCurrentJobAidUsage(changeSelector.getTheLatestJobAidUsage());
+        flwByOldMsisdn.setLastJobAidAccessTime(changeSelector.getTheLatestLastJobAidAccessTime());
+        flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
     }
 }

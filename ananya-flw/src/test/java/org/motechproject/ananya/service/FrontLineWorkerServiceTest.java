@@ -15,6 +15,7 @@ import org.motechproject.ananya.repository.AllSMSReferences;
 import java.util.*;
 
 import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -58,6 +59,7 @@ public class FrontLineWorkerServiceTest {
         FrontLineWorker savedFrontLineWorker = captor.getValue();
         assertEquals(frontLineWorker.getMsisdn(), savedFrontLineWorker.getMsisdn());
         assertEquals(frontLineWorker.getOperator(), savedFrontLineWorker.getOperator());
+        assertEquals(new Integer(0), savedFrontLineWorker.getCurrentJobAidUsage());
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, savedFrontLineWorker.getStatus());
         assertNotNull(savedFrontLineWorker.getFlwId());
     }
@@ -68,9 +70,11 @@ public class FrontLineWorkerServiceTest {
         String circle = "circle";
         String operator = "airtel";
         Location location = Location.getDefaultLocation();
+        Integer currentJobAidUsage = 2;
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setCurrentJobAidUsage(currentJobAidUsage);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
 
@@ -78,7 +82,9 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers, never()).updateFlw(frontLineWorker);
-        assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
+        FrontLineWorker flw = frontLineWorkerResponse.getFrontLineWorker();
+        assertEquals(frontLineWorker, flw);
+        assertEquals(currentJobAidUsage, flw.getCurrentJobAidUsage());
         assertEquals(false, frontLineWorkerResponse.isModified());
     }
 
@@ -89,6 +95,7 @@ public class FrontLineWorkerServiceTest {
         String oldOperator = "vodafone";
         String newOperator = "airtel";
         Location location = new Location();
+        Integer minimumResetLimit = 0;
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(oldOperator);
@@ -101,7 +108,9 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).updateFlw(frontLineWorker);
-        assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
+        FrontLineWorker flw = frontLineWorkerResponse.getFrontLineWorker();
+        assertEquals(frontLineWorker, flw);
+        assertEquals(minimumResetLimit, flw.getCurrentJobAidUsage());
         assertEquals(true, frontLineWorkerResponse.isModified());
     }
 
@@ -110,11 +119,13 @@ public class FrontLineWorkerServiceTest {
         String msisdn = "123";
         String circle = "circle";
         String operator = "vodafone";
+        Integer currentJobAidUsage = 3;
         Location location = new Location();
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, null, null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setCurrentJobAidUsage(currentJobAidUsage);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(location);
@@ -123,7 +134,9 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).updateFlw(frontLineWorker);
-        assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
+        FrontLineWorker flw = frontLineWorkerResponse.getFrontLineWorker();
+        assertEquals(frontLineWorker, flw);
+        assertEquals(currentJobAidUsage, flw.getCurrentJobAidUsage());
         assertEquals(true, frontLineWorkerResponse.isModified());
     }
 
@@ -134,11 +147,13 @@ public class FrontLineWorkerServiceTest {
         String operator = "vodafone";
         String oldLanguage = "bhojpuri";
         String newLanguage = "hindi";
+        Integer usage = 1;
         Location location = Location.getDefaultLocation();
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, oldLanguage, null, flwId);
         frontLineWorker.setOperator(operator);
         frontLineWorker.setCircle(circle);
+        frontLineWorker.setCurrentJobAidUsage(usage);
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(location);
@@ -147,7 +162,9 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers, never()).updateFlw(frontLineWorker);
-        assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
+        FrontLineWorker flw = frontLineWorkerResponse.getFrontLineWorker();
+        assertEquals(frontLineWorker, flw);
+        assertEquals(usage, flw.getCurrentJobAidUsage());
         assertEquals(false, frontLineWorkerResponse.isModified());
     }
 
@@ -158,6 +175,8 @@ public class FrontLineWorkerServiceTest {
         Location location = new Location();
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", Designation.ANM, location, "language", null, flwId);
         frontLineWorker.setOperator(operator);
+        Integer usage = 1;
+        frontLineWorker.setCurrentJobAidUsage(usage);
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(frontLineWorker);
         when(locationService.findByExternalId(frontLineWorker.getLocationId())).thenReturn(location);
@@ -166,7 +185,9 @@ public class FrontLineWorkerServiceTest {
 
         verify(allFrontLineWorkers, never()).add(frontLineWorker);
         verify(allFrontLineWorkers).updateFlw(frontLineWorker);
-        assertEquals(frontLineWorker, frontLineWorkerResponse.getFrontLineWorker());
+        FrontLineWorker flw = frontLineWorkerResponse.getFrontLineWorker();
+        assertEquals(frontLineWorker, flw);
+        assertEquals(usage, flw.getCurrentJobAidUsage());
         assertEquals(true, frontLineWorkerResponse.isModified());
     }
 

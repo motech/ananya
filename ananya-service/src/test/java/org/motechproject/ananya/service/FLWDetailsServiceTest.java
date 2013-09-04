@@ -50,7 +50,7 @@ public class FLWDetailsServiceTest {
     private String nightEndTime = "06:59:59";
 
     @Before
-    public void setup(){
+    public void setup() {
         initMocks(this);
         when(ananyaProperties.getProperty("nighttime.calls.start.time")).thenReturn(nightStartTime);
         when(ananyaProperties.getProperty("nighttime.calls.end.time")).thenReturn(nightEndTime);
@@ -73,7 +73,7 @@ public class FLWDetailsServiceTest {
 
         Location defaultLocation = Location.getDefaultLocation();
         String msisdn = "911234567890";
-        String language= "language";
+        String language = "language";
         FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "Name", Designation.ANM, defaultLocation, language, DateTime.now(), flwId);
         SMSReference smsReference = new SMSReference();
         CallDetailsResponse callDetailsResponse = new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>());
@@ -86,7 +86,7 @@ public class FLWDetailsServiceTest {
 
         FLWUsageResponse actualResponse = flwDetailsService.getUsage(msisdn);
 
-        assertEquals(expectedFLWResponse,actualResponse);
+        assertEquals(expectedFLWResponse, actualResponse);
     }
 
     @Test
@@ -106,15 +106,15 @@ public class FLWDetailsServiceTest {
         String msisdn = "919900501221";
         String startDate = "14-12-2009";
         String endDate = "15-12-2009";
-        String language= "language";
+        String language = "language";
         final LocalDate startLocalDate = DateUtils.parseLocalDate(startDate);
         final LocalDate endLocalDate = DateUtils.parseLocalDate(endDate);
         when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(new FrontLineWorker(msisdn, "AIRTEL", null, language));
         FLWNighttimeCallsRequest nighttimeCallsRequest = new FLWNighttimeCallsRequest(msisdn, Channel.CONTACT_CENTER, DateUtils.parseLocalDate(startDate), DateUtils.parseLocalDate(endDate));
 
         List<JobAidCallDetails> jobAidCallDetailsList = new ArrayList<JobAidCallDetails>() {{
-           add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
-           add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
+            add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
+            add(new JobAidCallDetails(startLocalDate.toDateTime(LocalTime.now()), endLocalDate.toDateTime(LocalTime.now()), 1));
         }};
         FLWNighttimeCallsResponse nighttimeCallsResponse = mock(FLWNighttimeCallsResponse.class);
 
