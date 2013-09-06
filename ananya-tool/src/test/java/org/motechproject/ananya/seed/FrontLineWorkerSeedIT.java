@@ -122,8 +122,8 @@ public class FrontLineWorkerSeedIT {
         String name = "Name";
         String language= "language";
         Long msisdn = 919986574410l;
-        FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), name, designation, new Location(), language, null, UUID.randomUUID());
-        template.save(new FrontLineWorkerDimension(msisdn, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId(), null));
+        FrontLineWorker frontLineWorkerCreated = new FrontLineWorker(msisdn.toString(), null, name, designation, new Location(), language, null, UUID.randomUUID());
+        template.save(new FrontLineWorkerDimension(msisdn, null, "Airtel", "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorkerCreated.getFlwId(), null));
         allFrontLineWorkers.add(frontLineWorkerCreated);
 
         frontLineWorkerSeed.updateRegistrationStatusOfFrontLineWorkersRegisteredViaCalls();
@@ -141,13 +141,13 @@ public class FrontLineWorkerSeedIT {
         String language= "language";
         Long msisdn = 1234567890L;
         Long correctMsisdn = 911234567890L;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), name, designation, Location.getDefaultLocation(), language, null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn.toString(), null, name, designation, Location.getDefaultLocation(), language, null, UUID.randomUUID());
         String operator = "Airtel";
         frontLineWorker.setOperator(operator);
         ReflectionTestUtils.setField(frontLineWorker, "msisdn", msisdn.toString());
         allFrontLineWorkers.add(frontLineWorker);
 
-        template.save(new FrontLineWorkerDimension(msisdn, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwId(), null));
+        template.save(new FrontLineWorkerDimension(msisdn, null, null, "Bihar", name, designation.name(), registrationStatus.name(), frontLineWorker.getFlwId(), null));
 
         frontLineWorkerSeed.updateCorrectCallerIdsCircleOperatorAndDesignation();
 
@@ -165,7 +165,7 @@ public class FrontLineWorkerSeedIT {
 
     private FrontLineWorkerDimension getFLWDimensionFromFLW(FrontLineWorker frontLineWorker) {
         return new FrontLineWorkerDimension(frontLineWorker.msisdn(),
-                frontLineWorker.getOperator(), frontLineWorker.getCircle(), frontLineWorker.getName(),
+                null, frontLineWorker.getOperator(), frontLineWorker.getCircle(), frontLineWorker.getName(),
                 frontLineWorker.designationName(), frontLineWorker.getStatus().toString(), frontLineWorker.getFlwId(), null);
     }
 
@@ -235,15 +235,15 @@ public class FrontLineWorkerSeedIT {
     @Test
     public void shouldCorrectInvalidDesignationsInCouchAndPostgresDB() throws IOException {
     	String language= "language";
-        FrontLineWorker flwInCSVWithInvalidDesignation1 = new FrontLineWorker("9000000001", "",
+        FrontLineWorker flwInCSVWithInvalidDesignation1 = new FrontLineWorker("9000000001", null, "",
                 Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
-        FrontLineWorker flwInCSVWithInvalidDesignation2 = new FrontLineWorker("9000000002", "",
+        FrontLineWorker flwInCSVWithInvalidDesignation2 = new FrontLineWorker("9000000002", null, "",
                 Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
-        FrontLineWorker flwInCSVWithInvalidDesignation3 = new FrontLineWorker("9000000003", "",
+        FrontLineWorker flwInCSVWithInvalidDesignation3 = new FrontLineWorker("9000000003", null, "",
                 Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
-        FrontLineWorker flwInCSVWithInvalidDesignation4 = new FrontLineWorker("9000000004", "",
+        FrontLineWorker flwInCSVWithInvalidDesignation4 = new FrontLineWorker("9000000004", null, "",
                 Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
-        FrontLineWorker invalidFLW = new FrontLineWorker("9000000005", "",
+        FrontLineWorker invalidFLW = new FrontLineWorker("9000000005", null, "",
                 Designation.valueOf("INVALID"), Location.getDefaultLocation(), language, null, UUID.randomUUID());
 
         FrontLineWorkerDimension frontLineWorkerDimension1 = getFLWDimensionFromFLW(flwInCSVWithInvalidDesignation1);
@@ -290,7 +290,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(
                 frontLineWorker.msisdn(),
-                frontLineWorker.getOperator(),
+                frontLineWorker.alternateContactNumber(), frontLineWorker.getOperator(),
                 frontLineWorker.getCircle(),
                 frontLineWorker.name(),
                 frontLineWorker.designationName(),
@@ -301,6 +301,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         assertEquals(frontLineWorkerDimension.getId(), frontLineWorkerDimensionFromDb.getId());
+        assertNull(frontLineWorkerDimension.getAlternateContactNumber());
 
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         assertNull(registrationMeasure);
@@ -313,6 +314,7 @@ public class FrontLineWorkerSeedIT {
 
         FrontLineWorker frontLineWorker = getFrontLineWorker("9999991", null, RegistrationStatus.PARTIALLY_REGISTERED, null);
         frontLineWorker.setVerificationStatus(VerificationStatus.OTHER);
+        frontLineWorker.setAlternateContactNumber("1");
         allFrontLineWorkers.add(frontLineWorker);
 
         frontLineWorkerSeed.createDimensionAndRegistrationMeasureForMissingFLWs();
@@ -320,6 +322,7 @@ public class FrontLineWorkerSeedIT {
         FrontLineWorkerDimension frontLineWorkerDimensionFromDb = allFrontLineWorkerDimensions.fetchFor(frontLineWorker.msisdn());
         assertNotNull(frontLineWorkerDimensionFromDb);
         assertEquals(VerificationStatus.OTHER, frontLineWorkerDimensionFromDb.getVerificationStatus());
+        assertEquals(1, frontLineWorkerDimensionFromDb.getAlternateContactNumber().longValue());
 
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimensionFromDb.getId());
         assertNotNull(registrationMeasure);

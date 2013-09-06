@@ -14,9 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllCourseItemMeasures {
-
-    private DataAccessTemplate template;
+public class AllCourseItemMeasures extends AllTransferableMeasures {
 
     public AllCourseItemMeasures() {
     }
@@ -63,4 +61,5 @@ public class AllCourseItemMeasures {
 
         return template.findByCriteria(criteria);
     }
+
 }

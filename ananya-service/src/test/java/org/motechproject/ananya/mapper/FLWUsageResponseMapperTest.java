@@ -30,7 +30,10 @@ public class FLWUsageResponseMapperTest {
         Integer chapterIndex = 9;
         Integer expectedLessonIndex = 4;
         Integer expectedQuizIndex = 4;
-        frontLineWorker.addBookMark(new BookMark("some", chapterIndex, lessonIndex));
+        frontLineWorker.setBookMark(new BookMark("some", chapterIndex, lessonIndex));
+        frontLineWorker.setVerificationStatus(VerificationStatus.SUCCESS);
+        String alternateContactNumber = "123";
+        frontLineWorker.setAlternateContactNumber(alternateContactNumber);
         final int month = 12;
         final int year = 2012;
         ArrayList<CallUsageDetails> jobAidCallUsageDetails = new ArrayList<CallUsageDetails>() {{
@@ -50,9 +53,12 @@ public class FLWUsageResponseMapperTest {
 
         FLWUsageResponse frontLineWorkerUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(frontLineWorker, location, callDetails, smsReference);
 
+        assertEquals(frontLineWorker.getFlwId().toString(), frontLineWorkerUsageResponse.getId());
         assertEquals(frontLineWorker.getName(), frontLineWorkerUsageResponse.getName());
         assertEquals(frontLineWorker.getDesignation(), frontLineWorkerUsageResponse.getDesignation());
+        assertEquals(frontLineWorker.getVerificationStatus().name(), frontLineWorkerUsageResponse.getVerificationStatus());
         assertEquals(frontLineWorker.getStatus().name(), frontLineWorkerUsageResponse.getRegistrationStatus());
+        assertEquals(alternateContactNumber, frontLineWorkerUsageResponse.getAlternateContactNumber());
         assertEquals(location.getBlock(), frontLineWorkerUsageResponse.getLocation().getBlock());
         assertEquals(location.getDistrict(), frontLineWorkerUsageResponse.getLocation().getDistrict());
         assertEquals(location.getState(), frontLineWorkerUsageResponse.getLocation().getState());
@@ -106,6 +112,29 @@ public class FLWUsageResponseMapperTest {
         FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
 
         assertNull(flwUsageResponse.getLocation());
+    }
+
+    @Test
+    public void shouldHandleNullAlternateContactNumber() {
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
+
+        assertEquals("", flwUsageResponse.getAlternateContactNumber());
+    }
+
+    @Test
+    public void shouldHandleAlternateContactNumberWith12Digits() {
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        frontLineWorker.setAlternateContactNumber("911234567890");
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(frontLineWorker, null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
+
+        assertEquals("1234567890", flwUsageResponse.getAlternateContactNumber());
+    }
+
+    @Test
+    public void shouldHandleNullVerificationStatus() {
+        FLWUsageResponse flwUsageResponse = new FLWUsageResponseMapper().mapUsageResponse(new FrontLineWorker(), null, new CallDetailsResponse(new ArrayList<CallUsageDetails>(), new ArrayList<CallDurationMeasure>(), new ArrayList<CallDurationMeasure>()), new SMSReference());
+
+        assertEquals("", flwUsageResponse.getVerificationStatus());
     }
 
     @Test

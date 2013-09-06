@@ -59,7 +59,7 @@ public class SendSMSClientTest {
         assertEquals(mobileNumber, captured.getMsisdn());
 
         verify(smsSentMeasureService).createSMSSentMeasure(mobileNumber);
-        verify(smsLogService).deleteFor(mobileNumber, frontLineWorker.currentCourseAttempt());
+        verify(smsLogService).deleteFor(mobileNumber, frontLineWorker.currentCourseAttempts());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class SendSMSClientTest {
         assertEquals(smsReference, captured);
 
         verify(smsSentMeasureService).createSMSSentMeasure(mobileNumber);
-        verify(smsLogService).deleteFor(mobileNumber, frontLineWorker.currentCourseAttempt());
+        verify(smsLogService).deleteFor(mobileNumber, frontLineWorker.currentCourseAttempts());
     }
 
     @Test

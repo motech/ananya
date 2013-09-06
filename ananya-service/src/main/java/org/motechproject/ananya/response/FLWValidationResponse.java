@@ -16,8 +16,8 @@ public class FLWValidationResponse {
         return message;
     }
 
-    public FLWValidationResponse forInvalidMsisdn() {
-        message += "[Invalid msisdn]";
+    public FLWValidationResponse forInvalidMsisdn(final String fieldName) {
+        message += "[Invalid " + fieldName + "]";
         isValid = false;
         return this;
     }

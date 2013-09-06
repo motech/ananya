@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class SMSSentMeasureService {
+public class SMSSentMeasureService extends TransferableMeasureService{
 
     private static final Logger log = LoggerFactory.getLogger(SMSSentMeasureService.class);
 
@@ -73,6 +73,7 @@ public class SMSSentMeasureService {
 
         SMSSentMeasure smsSentMeasure = new SMSSentMeasure(courseAttempt, referenceNumber, smsSent,
                 frontLineWorkerDimension, timeDimension, locationDimension);
+        addFlwHistory(smsSentMeasure);
         allSMSSentMeasures.save(smsSentMeasure);
         log.info("Added SMS measure for " + callerId + "[smsRefNumber" + referenceNumber + "|attempt=" + courseAttempt + "]");
     }
@@ -95,5 +96,10 @@ public class SMSSentMeasureService {
             smsSentMeasure.setLocationDimension(newLocation);
         }
         allSMSSentMeasures.updateAll(smsSentMeasureList);
+    }
+
+    @Transactional
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allSMSSentMeasures.transfer(SMSSentMeasure.class, fromFlw.getId(), toFlw.getId());
     }
 }

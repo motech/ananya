@@ -34,12 +34,26 @@ public class FrontLineWorkerDimensionService {
     }
 
     @Transactional
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId, VerificationStatus verificationStatus) {
-        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, operator, circle, name, designation, registrationStatus, flwId, verificationStatus);
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, Long alternateContactNumber, String operator, String circle, String name, String designation, String registrationStatus, UUID flwId, VerificationStatus verificationStatus) {
+        return allFrontLineWorkerDimensions.createOrUpdate(msisdn, alternateContactNumber, operator, circle, name, designation, registrationStatus, flwId, verificationStatus);
+    }
+
+    @Transactional
+    public void update(FrontLineWorkerDimension frontLineWorkerDimension){
+        allFrontLineWorkerDimensions.update(frontLineWorkerDimension);
     }
 
     public boolean exists(Long msisdn) {
-        return allFrontLineWorkerDimensions.fetchFor(msisdn) != null;
+        return getFrontLineWorkerDimension(msisdn) != null;
+    }
+
+    public FrontLineWorkerDimension getFrontLineWorkerDimension(Long msisdn) {
+        return allFrontLineWorkerDimensions.fetchFor(msisdn);
+    }
+
+    @Transactional
+    public void remove(FrontLineWorkerDimension frontLineWorkerDimension){
+        allFrontLineWorkerDimensions.remove(frontLineWorkerDimension);
     }
 
     public List<FrontLineWorkerDimension> getFilteredFLW(List<Long> allFilteredMsisdns, Long msisdn, String name, String status, String designation, String operator, String circle) {
@@ -52,7 +66,7 @@ public class FrontLineWorkerDimensionService {
         for (FLWStatusChangeRequest request : flwStatusChangeRequests) {
             Long msisdn = request.getMsisdn();
             String registrationStatus = request.getRegistrationStatus();
-            FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(msisdn);
+            FrontLineWorkerDimension frontLineWorkerDimension = getFrontLineWorkerDimension(msisdn);
             frontLineWorkerDimension.setStatus(registrationStatus);
             log.info(String.format("Updating frontLineWorkerDimensions for : %s with status : %s", msisdn, registrationStatus));
             frontLineWorkerDimensions.add(frontLineWorkerDimension);

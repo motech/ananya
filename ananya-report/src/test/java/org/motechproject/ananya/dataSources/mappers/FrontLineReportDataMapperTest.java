@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 public class FrontLineReportDataMapperTest {
     @Test
     public void shouldMapFromFrontLineWorkerDimension() {
-        FlwReportData flwReportData = new FrontLineReportDataMapper().mapFrom(new FrontLineWorkerDimension(1234L, "operator1", "circle1", "name1", "designation1", "status1", UUID.randomUUID(), null));
+        FlwReportData flwReportData = new FrontLineReportDataMapper().mapFrom(new FrontLineWorkerDimension(1234L, null, "operator1", "circle1", "name1", "designation1", "status1", UUID.randomUUID(), null));
         assertEquals("1234", flwReportData.getMsisdn());
         assertEquals("name1", flwReportData.getName());
         assertEquals("designation1", flwReportData.getDesignation());

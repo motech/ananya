@@ -91,7 +91,7 @@ public class CertificateCourseDataCorrectionSeed {
                 allFrontLineWorkers.update(frontLineWorker);
             }
 
-            if (frontLineWorker.currentCourseAttempt() > 0) {
+            if (frontLineWorker.currentCourseAttempts() > 0) {
                 log.info("Checking FLW " + msisdn + " who has completed the course.");
                 int previousChapterIndex = -1;
                 int counter = 0;
@@ -121,7 +121,7 @@ public class CertificateCourseDataCorrectionSeed {
                                     frontLineWorker.getMsisdn(),
                                     frontLineWorker.getLanguage(),
                                     frontLineWorker.getLocationId(),
-                                    frontLineWorker.currentCourseAttempt());
+                                    frontLineWorker.currentCourseAttempts());
                         }
                         reportCard = new ReportCard();
                     }

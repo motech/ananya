@@ -14,9 +14,7 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class AllJobAidContentMeasures {
-
-    private DataAccessTemplate template;
+public class AllJobAidContentMeasures extends AllTransferableMeasures {
 
     public AllJobAidContentMeasures() {
     }

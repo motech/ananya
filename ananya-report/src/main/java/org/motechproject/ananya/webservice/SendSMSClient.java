@@ -52,7 +52,7 @@ public class SendSMSClient {
 
     private void addSMSReferenceNumber(String callerId, String smsReferenceNumber) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(callerId);
-        Integer courseAttempts = frontLineWorker.currentCourseAttempt();
+        Integer courseAttempts = frontLineWorker.currentCourseAttempts();
 
         SMSReference smsReference = smsReferenceService.getSMSReferenceNumber(callerId);
         if (smsReference == null) {

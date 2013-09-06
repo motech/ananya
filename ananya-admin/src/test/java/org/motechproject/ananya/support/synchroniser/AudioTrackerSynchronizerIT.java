@@ -124,7 +124,7 @@ public class AudioTrackerSynchronizerIT {
 
     private void setUpTransactionData(String callerId, String contentId, String timeStamp) {
         FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId),
-                "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
+                null, "airtel", "bihar", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         template.save(frontLineWorkerDimension);
         LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);

@@ -23,7 +23,7 @@ public class BookmarkAction implements CourseAction {
                 lastRequest.getChapterIndex(),
                 lastRequest.getLessonOrQuestionIndex());
 
-        frontLineWorker.addBookMark(bookMark);
+        frontLineWorker.setBookMark(bookMark);
         log.info(callId + "- updated bookmark for " + frontLineWorker.getMsisdn());
     }
 }

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
@@ -19,6 +20,7 @@ import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.repository.measure.AllSMSSentMeasures;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.SMSSentMeasureService;
+import org.motechproject.ananya.service.measure.TransferableMeasureService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class SMSSentMeasureServiceTest {
@@ -65,30 +66,39 @@ public class SMSSentMeasureServiceTest {
         Integer courseAttemptNum = 1;
         String smsRefNum = "41413";
         String flwId = "77abcd";
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), null, "", "", "", "", "", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(1);
         LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
 
         when(frontLineWorkerService.getCurrentCourseAttempt(callerId)).thenReturn(courseAttemptNum);
-        SMSReference smsReference = new SMSReference(callerId,flwId);
+        SMSReference smsReference = new SMSReference(callerId, flwId);
         smsReference.add(smsRefNum, courseAttemptNum);
         when(smsReferenceService.getSMSReferenceNumber(callerId)).thenReturn(smsReference);
         when(frontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(timeDimensions.getFor(any(DateTime.class))).thenReturn(timeDimension);
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(1)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         smsSentMeasureService.createSMSSentMeasure(callerId);
 
+        InOrder inOrder = inOrder(allSMSSentMeasures, smsSentMeasureService);
         ArgumentCaptor<SMSSentMeasure> captor = ArgumentCaptor.forClass(SMSSentMeasure.class);
-        verify(allSMSSentMeasures).save(captor.capture());
+
+        inOrder.verify(smsSentMeasureService).addFlwHistory(captor.capture());
+        inOrder.verify(allSMSSentMeasures).save(captor.capture());
 
         SMSSentMeasure smsSentMeasure = captor.getValue();
         assertEquals(smsSentMeasure.getSmsReferenceNumber(), smsRefNum);
         assertEquals(smsSentMeasure.getFrontLineWorkerDimension().getMsisdn(), Long.valueOf(callerId));
         assertTrue(smsSentMeasure.getSmsSent());
-        assertEquals(smsSentMeasure.getCourseAttempt(),courseAttemptNum);
+        assertEquals(smsSentMeasure.getCourseAttempt(), courseAttemptNum);
+    }
+
+    private void mockAddFlwHistory() {
+        smsSentMeasureService = spy(smsSentMeasureService);
+        doNothing().when((TransferableMeasureService) smsSentMeasureService).addFlwHistory(any(SMSSentMeasure.class));
     }
 
     @Test
@@ -98,7 +108,7 @@ public class SMSSentMeasureServiceTest {
         String flwId = "77abcd";
         int flwd_id = 1;
 
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), "", "", "", "", "", UUID.randomUUID(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(Long.valueOf(callerId), null, "", "", "", "", "", UUID.randomUUID(), null);
         frontLineWorkerDimension.setId(flwd_id);
         LocationDimension locationDimension = new LocationDimension("", "", "", "", "", "VALID");
         TimeDimension timeDimension = new TimeDimension(DateTime.now());
@@ -112,6 +122,7 @@ public class SMSSentMeasureServiceTest {
 
         RegistrationMeasure registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, "");
         when(allRegistrationMeasures.fetchFor(flwd_id)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         smsSentMeasureService.createSMSSentMeasure(callerId);
 
@@ -119,10 +130,10 @@ public class SMSSentMeasureServiceTest {
         verify(allSMSSentMeasures).save(captor.capture());
 
         SMSSentMeasure smsSentMeasure = captor.getValue();
-        assertEquals(null ,smsSentMeasure.getSmsReferenceNumber());
-        assertEquals(Long.valueOf(callerId) , smsSentMeasure.getFrontLineWorkerDimension().getMsisdn());
+        assertEquals(null, smsSentMeasure.getSmsReferenceNumber());
+        assertEquals(Long.valueOf(callerId), smsSentMeasure.getFrontLineWorkerDimension().getMsisdn());
         assertFalse(smsSentMeasure.getSmsSent());
-        assertEquals(smsSentMeasure.getCourseAttempt(),courseAttemptNum);
+        assertEquals(smsSentMeasure.getCourseAttempt(), courseAttemptNum);
     }
 
     @Test
@@ -131,7 +142,8 @@ public class SMSSentMeasureServiceTest {
         String location_id = "location_id";
         final SMSSentMeasure smsSentMeasure = new SMSSentMeasure();
         ArrayList<SMSSentMeasure> smsSentMeasures = new ArrayList<SMSSentMeasure>() {{
-            add(smsSentMeasure); }};
+            add(smsSentMeasure);
+        }};
         LocationDimension expectedLocationDimension = new LocationDimension();
         when(locationDimensionService.getFor(location_id)).thenReturn(expectedLocationDimension);
         when(allSMSSentMeasures.findByCallerId(callerId)).thenReturn(smsSentMeasures);
@@ -161,5 +173,15 @@ public class SMSSentMeasureServiceTest {
         List<SMSSentMeasure> actualSMSSentMeasures = captor.getValue();
         assertEquals(1, actualSMSSentMeasures.size());
         assertEquals(newLocation, actualSMSSentMeasures.get(0).getLocationDimension());
+    }
+
+    @Test
+    public void shouldTransferRecords() {
+        FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
+        fromFlw.setId(1);
+        FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
+        toFlw.setId(2);
+        smsSentMeasureService.transfer(fromFlw, toFlw);
+        verify(allSMSSentMeasures).transfer(SMSSentMeasure.class, 1, 2);
     }
 }

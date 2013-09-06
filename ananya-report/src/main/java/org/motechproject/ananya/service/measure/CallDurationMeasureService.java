@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CallDurationMeasureService {
+public class CallDurationMeasureService extends TransferableMeasureService{
     private static Logger log = LoggerFactory.getLogger(CallDurationMeasureService.class);
 
     private CallLogService callLoggerService;
@@ -93,6 +93,7 @@ public class CallDurationMeasureService {
                     callLogItem.getEndTime(),
                     callLogItem.getCallFlowType().name(),
                     durationInPulse);
+            addFlwHistory(callDurationMeasure);
             allCallDurationMeasures.add(callDurationMeasure);
         }
         log.info(callId + "- callLog callDurationMeasures added");
@@ -136,5 +137,10 @@ public class CallDurationMeasureService {
     public List<JobAidCallDetails> getJobAidCallDurations(String msisdn, LocalDate startDate, LocalDate endDate) {
         List<JobAidCallDetails> jobAidCallDetails = allCallDurationMeasures.getJobAidNighttimeCallDetails(Long.valueOf(msisdn), startDate, endDate);
         return jobAidCallDetails;
+    }
+
+    @Transactional
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allCallDurationMeasures.transfer(CallDurationMeasure.class, fromFlw.getId(), toFlw.getId());
     }
 }

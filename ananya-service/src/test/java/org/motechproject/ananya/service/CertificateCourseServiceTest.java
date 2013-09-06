@@ -57,7 +57,7 @@ public class CertificateCourseServiceTest {
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         BookMark bookMark = new BookMark("type", 1, 2);
-        frontLineWorker.addBookMark(bookMark);
+        frontLineWorker.setBookMark(bookMark);
         frontLineWorker.reportCard().addScore(new Score("0", "0", true));
         frontLineWorker.reportCard().addScore(new Score("0", "1", true));
         frontLineWorker.reportCard().addScore(new Score("1", "2", true));

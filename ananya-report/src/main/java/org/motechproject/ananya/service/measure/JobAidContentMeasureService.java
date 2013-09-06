@@ -1,23 +1,11 @@
 package org.motechproject.ananya.service.measure;
 
-import java.util.Date;
-import java.util.List;
-
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
-import org.motechproject.ananya.domain.dimension.LanguageDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
-import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.dimension.*;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.AudioTrackerLogService;
@@ -28,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
-public class JobAidContentMeasureService {
+public class JobAidContentMeasureService extends TransferableMeasureService{
 
     private static final Logger log = LoggerFactory.getLogger(JobAidContentMeasureService.class);
 
@@ -52,7 +43,7 @@ public class JobAidContentMeasureService {
                                        AllRegistrationMeasures allRegistrationMeasures,
                                        AllJobAidContentDimensions allJobAidContentDimensions,
                                        AllTimeDimensions allTimeDimensions,
-                                       AllJobAidContentMeasures allJobAidContentMeasures, 
+                                       AllJobAidContentMeasures allJobAidContentMeasures,
                                        LocationDimensionService locationDimensionService,
                                        AllLanguageDimension allLanguageDimension,
                                        AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions) {
@@ -63,9 +54,9 @@ public class JobAidContentMeasureService {
         this.allTimeDimensions = allTimeDimensions;
         this.allJobAidContentMeasures = allJobAidContentMeasures;
         this.locationDimensionService = locationDimensionService;
-        this.allLanguageDimension= allLanguageDimension;
-        this.allJobAidContentDetailsDimensions= allJobAidContentDetailsDimensions;
-        
+        this.allLanguageDimension = allLanguageDimension;
+        this.allJobAidContentDetailsDimensions = allJobAidContentDetailsDimensions;
+
     }
 
     @Transactional
@@ -89,16 +80,16 @@ public class JobAidContentMeasureService {
         LocationDimension locationDimension = registrationMeasure.getLocationDimension();
 
         for (AudioTrackerLogItem audioTrackerLogItem : audioTrackerLog.items()) {
-        	LanguageDimension languageDimension= allLanguageDimension.getFor(audioTrackerLogItem.getLanguage());
-        	JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
-        	JobAidContentDetailsDimension jobAidContentDetailsDimension = allJobAidContentDetailsDimensions.getFor(audioTrackerLogItem.getContentId(), languageDimension.getId());
-        	
+            LanguageDimension languageDimension = allLanguageDimension.getFor(audioTrackerLogItem.getLanguage());
+            JobAidContentDimension jobAidContentDimension = allJobAidContentDimensions.findByContentId(audioTrackerLogItem.getContentId());
+            JobAidContentDetailsDimension jobAidContentDetailsDimension = allJobAidContentDetailsDimensions.getFor(audioTrackerLogItem.getContentId(), languageDimension.getId());
+
             JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure(callId,
-                    frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension, 
+                    frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension,
                     audioTrackerLogItem.getTime(),
                     audioTrackerLogItem.getDuration(),
                     audioTrackerLogItem.getPercentage(jobAidContentDetailsDimension.getDuration()));
-
+            addFlwHistory(jobAidContentMeasure);
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }
         log.info(callId + "- audioTrackerLog jobAidContentMeasures added");
@@ -133,5 +124,10 @@ public class JobAidContentMeasureService {
             jobAidContentMeasure.setLocationDimension(newLocation);
         }
         allJobAidContentMeasures.updateAll(jobAidContentMeasures);
+    }
+
+    @Transactional
+    public void transfer(FrontLineWorkerDimension fromFlw, FrontLineWorkerDimension toFlw) {
+        allJobAidContentMeasures.transfer(JobAidContentMeasure.class, fromFlw.getId(), toFlw.getId());
     }
 }

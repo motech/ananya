@@ -4,7 +4,9 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.motechproject.ananya.domain.CertificationCourseLog;
 import org.motechproject.ananya.domain.CertificationCourseLogItem;
 import org.motechproject.ananya.domain.CourseItemState;
@@ -17,12 +19,12 @@ import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
 import org.motechproject.ananya.repository.dimension.AllCourseItemDimensions;
 import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
 import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
 import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.measure.CourseContentMeasureService;
+import org.motechproject.ananya.service.measure.TransferableMeasureService;
 
 import java.util.List;
 
@@ -92,6 +94,7 @@ public class CourseContentMeasureServiceTest {
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         courseContentMeasureService.createFor(callId);
 
@@ -105,6 +108,11 @@ public class CourseContentMeasureServiceTest {
         assertEquals(courseItemDimension, courseItemMeasure.getCourseItemDimension());
         assertEquals(event, courseItemMeasure.getEvent());
         assertEquals(null, courseItemMeasure.getScore());
+    }
+
+    private void mockAddFlwHistory() {
+        courseContentMeasureService = spy(courseContentMeasureService);
+        doNothing().when((TransferableMeasureService) courseContentMeasureService).addFlwHistory(any(CourseItemMeasure.class));
     }
 
     @Test
@@ -124,11 +132,14 @@ public class CourseContentMeasureServiceTest {
         when(allCourseItemDimensions.getFor(contentName, contentType)).thenReturn(courseItemDimension);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         courseContentMeasureService.createFor(callId);
 
+        InOrder inOrder = inOrder(courseContentMeasureService, allCourseItemMeasures);
         ArgumentCaptor<CourseItemMeasure> captor = ArgumentCaptor.forClass(CourseItemMeasure.class);
-        verify(allCourseItemMeasures).save(captor.capture());
+        inOrder.verify(courseContentMeasureService).addFlwHistory(captor.capture());
+        inOrder.verify(allCourseItemMeasures).save(captor.capture());
         verify(certificateCourseLogService).remove(certificationCourseLog);
 
         CourseItemMeasure courseItemMeasure = captor.getValue();
@@ -159,6 +170,7 @@ public class CourseContentMeasureServiceTest {
         when(allCourseItemDimensions.getFor(contentName2, contentType2)).thenReturn(courseItemDimension2);
         when(allFrontLineWorkerDimensions.fetchFor(Long.valueOf(callerId))).thenReturn(frontLineWorkerDimension);
         when(allRegistrationMeasures.fetchFor(flwId)).thenReturn(registrationMeasure);
+        mockAddFlwHistory();
 
         courseContentMeasureService.createFor(callId);
 

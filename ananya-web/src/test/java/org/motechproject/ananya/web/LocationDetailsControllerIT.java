@@ -40,9 +40,13 @@ public class LocationDetailsControllerIT extends SpringIntegrationTest {
     private LocationRegistrationService locationRegistrationService;
 
     @Before
-    @After
     public void setUp() {
+        tearDown();
         initMocks(this);
+    }
+
+    @After
+    public void tearDown() {
         allLocations.removeAll();
         template.deleteAll(template.loadAll(LocationDimension.class));
     }
@@ -59,7 +63,7 @@ public class LocationDetailsControllerIT extends SpringIntegrationTest {
         when(request.getParameter("district")).thenReturn("D1");
         when(request.getParameter("block")).thenReturn("B2");
         when(request.getParameter("panchayat")).thenReturn(null);
-        
+
         List<LocationResponse> locations = locationDetailsController.search(request);
 
         assertEquals(2, locations.size());

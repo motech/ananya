@@ -1,21 +1,16 @@
 package org.motechproject.ananya.domain;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.joda.time.DateTime;
+import org.junit.Test;
 
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
-import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class FrontLineWorkerTest {
 
@@ -23,14 +18,14 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldReturnEmptyBookmarkIfThereIsNoBookmark() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.AWW, new Location(), "language", null, flwId);
+        FrontLineWorker flw = new FrontLineWorker("msisdn", null, "name", Designation.AWW, new Location(), "language", null, flwId);
         assertNotNull(flw.bookMark());
         assertThat(flw.bookMark(), is(EmptyBookmark.class));
     }
 
     @Test
     public void shouldIncrementPromptHeard() {
-        FrontLineWorker flw = new FrontLineWorker("msisdn", "name", Designation.AWW, new Location(), "language", null, flwId);
+        FrontLineWorker flw = new FrontLineWorker("msisdn", null, "name", Designation.AWW, new Location(), "language", null, flwId);
         String promptKey = "prompt1";
 
         Map<String, Integer> promptsHeard = flw.getPromptsHeard();
@@ -47,7 +42,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldAppend91ToCallerId() {
-        FrontLineWorker flw = new FrontLineWorker("9986554790", "name", Designation.AWW, new Location(), "language", null, flwId);
+        FrontLineWorker flw = new FrontLineWorker("9986554790", null, "name", Designation.AWW, new Location(), "language", null, flwId);
         assertEquals("919986554790", flw.getMsisdn());
 
         FrontLineWorker flw2 = new FrontLineWorker("9986554790", "airtel", "circle", "language");
@@ -59,7 +54,7 @@ public class FrontLineWorkerTest {
         Location existingLocation = mock(Location.class);
         String existingMsisdn = "9986554790";
         when(existingLocation.getExternalId()).thenReturn("existingLocationId");
-        FrontLineWorker existingFlw = new FrontLineWorker(existingMsisdn, "existingFLWName", Designation.AWW, existingLocation, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
+        FrontLineWorker existingFlw = new FrontLineWorker(existingMsisdn, null, "existingFLWName", Designation.AWW, existingLocation, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
         existingFlw.setVerificationStatus(VerificationStatus.SUCCESS);
 
         String newLocationId = "newLocationId";
@@ -68,7 +63,8 @@ public class FrontLineWorkerTest {
         when(newLocation.getExternalId()).thenReturn(newLocationId);
         DateTime newLastModified = new DateTime(2012, 3, 16, 8, 15, 0, 0);
 
-        boolean updated = existingFlw.update(newFlwName, Designation.ANM, newLocation, newLastModified, flwId, VerificationStatus.INVALID);
+        String alternateContactNumber = "1";
+        boolean updated = existingFlw.update(newFlwName, Designation.ANM, newLocation, newLastModified, flwId, VerificationStatus.INVALID, alternateContactNumber);
 
         assertTrue(updated);
         assertEquals(Designation.ANM, existingFlw.getDesignation());
@@ -76,6 +72,7 @@ public class FrontLineWorkerTest {
         assertEquals(newFlwName, existingFlw.getName());
         assertEquals(newLastModified, existingFlw.getLastModified());
         assertEquals(VerificationStatus.INVALID, existingFlw.getVerificationStatus());
+        assertEquals(alternateContactNumber, existingFlw.getAlternateContactNumber());
     }
 
     @Test
@@ -83,7 +80,7 @@ public class FrontLineWorkerTest {
         Location existingLocation = mock(Location.class);
         when(existingLocation.isMissingDetails()).thenReturn(true);
         when(existingLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.NOT_VERIFIED);
-        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", "existingFLWName", Designation.AWW, null, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
+        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", null, "existingFLWName", Designation.AWW, null, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
 
         existingFlw.decideRegistrationStatus(existingLocation);
 
@@ -93,7 +90,7 @@ public class FrontLineWorkerTest {
         when(newLocation.isMissingDetails()).thenReturn(false);
         when(newLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
 
-        boolean updated = existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.INVALID);
+        boolean updated = existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.INVALID, null);
 
         assertTrue(updated);
         assertEquals(RegistrationStatus.REGISTERED, existingFlw.getStatus());
@@ -101,7 +98,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldNotUpdateRegistrationStatusIfUnregistered() {
-        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", "existingFLWName", Designation.AWW, null, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
+        FrontLineWorker existingFlw = new FrontLineWorker("9986554790", null, "existingFLWName", Designation.AWW, null, "language", new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID());
 
         assertEquals(RegistrationStatus.UNREGISTERED, existingFlw.getStatus());
 
@@ -109,7 +106,7 @@ public class FrontLineWorkerTest {
         when(newLocation.isMissingDetails()).thenReturn(false);
         when(newLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
 
-        boolean updated = existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.SUCCESS);
+        boolean updated = existingFlw.update("existingFLWName", Designation.AWW, newLocation, new DateTime(2011, 3, 16, 8, 18, 0, 0), UUID.randomUUID(), VerificationStatus.SUCCESS, null);
 
         assertTrue(updated);
         assertEquals(RegistrationStatus.UNREGISTERED, existingFlw.getStatus());
@@ -119,9 +116,9 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldNotUpdateLastModifiedIfNull() {
         DateTime existingLastModifiedTime = new DateTime(2011, 3, 16, 8, 18, 0, 0);
-        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", "existingFLWName", Designation.AWW, new Location(), "language", existingLastModifiedTime, UUID.randomUUID());
+        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", null, "existingFLWName", Designation.AWW, new Location(), "language", existingLastModifiedTime, UUID.randomUUID());
 
-        boolean updated  = existingFlw.update("newFlwName", Designation.ANM, new Location(), null, flwId, VerificationStatus.SUCCESS);
+        boolean updated = existingFlw.update("newFlwName", Designation.ANM, new Location(), null, flwId, VerificationStatus.SUCCESS, null);
 
         assertTrue(updated);
         assertEquals(existingLastModifiedTime, existingFlw.getLastModified());
@@ -133,12 +130,12 @@ public class FrontLineWorkerTest {
         when(existingLocation.getExternalId()).thenReturn("existingLocaitonId");
         when(existingLocation.getLocationStatusAsEnum()).thenReturn(LocationStatus.VALID);
         when(existingLocation.isMissingDetails()).thenReturn(false);
-        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", "existingFLWName", Designation.AWW, existingLocation, "language", DateTime.now(), UUID.randomUUID());
+        FrontLineWorker existingFlw = new FrontLineWorker("9900503456", null, "existingFLWName", Designation.AWW, existingLocation, "language", DateTime.now(), UUID.randomUUID());
         existingFlw.decideRegistrationStatus(existingLocation);
 
         assertEquals(RegistrationStatus.REGISTERED, existingFlw.getStatus());
 
-        boolean updated  = existingFlw.update("newFlwName", Designation.ANM, null, null, flwId, VerificationStatus.SUCCESS);
+        boolean updated = existingFlw.update("newFlwName", Designation.ANM, null, null, flwId, VerificationStatus.SUCCESS, null);
 
         assertTrue(updated);
         assertEquals(Location.getDefaultLocation().getExternalId(), existingFlw.getLocationId());
@@ -147,7 +144,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldCreateAnFlwWhenMsisdnIsNotGiven() {
-        FrontLineWorker flw = new FrontLineWorker(null, "name", Designation.AWW, new Location(), "language", null, flwId);
+        FrontLineWorker flw = new FrontLineWorker(null, null, "name", Designation.AWW, new Location(), "language", null, flwId);
         assertNull(flw.getMsisdn());
     }
 
@@ -155,7 +152,7 @@ public class FrontLineWorkerTest {
     public void shouldAssigntheGivenDateTimeAsLastModifiedTime() {
         DateTime lastModified = DateTime.now();
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", "name1", Designation.ASHA, new Location("state1", "distrcit1", "block1", "panchayat1", 1, 1, 2, 3, null, null), "language", lastModified, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker("msisdn", null, "name1", Designation.ASHA, new Location("state1", "distrcit1", "block1", "panchayat1", 1, 1, 2, 3, null, null), "language", lastModified, flwId);
 
         assertEquals(lastModified, frontLineWorker.getLastModified());
     }
@@ -168,42 +165,42 @@ public class FrontLineWorkerTest {
         Location locationWithStatusNotValid = new Location("state", "district", "block", "panchayat", 1, 1, 1, 1, LocationStatus.INVALID, null);
 
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, "language", null, flwId);
+                "1234", null, "name", Designation.ANM, completeLocation, "language", null, flwId);
         flwWithCompleteDetails.decideRegistrationStatus(completeLocation);
         assertEquals(RegistrationStatus.REGISTERED, flwWithCompleteDetails.getStatus());
 
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, "language", null, flwId);
+                "1234", null, "", Designation.ANM, completeLocation, "language", null, flwId);
         flwWithoutName.decideRegistrationStatus(completeLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutName.getStatus());
 
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, "language", null, flwId);
+                "1234", null, "name", null, completeLocation, "language", null, flwId);
         flwWithoutDesignation.decideRegistrationStatus(completeLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithoutDesignation.getStatus());
 
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, "language", null, flwId);
+                "1234", null, "name", null, completeLocation, "language", null, flwId);
         flwWithInvalidDesignation.decideRegistrationStatus(completeLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithInvalidDesignation.getStatus());
 
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, "language", null, flwId);
+                "1234", null, "name", Designation.ANM, defaultLocation, "language", null, flwId);
         flwWithDefaultLocation.decideRegistrationStatus(defaultLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithDefaultLocation.getStatus());
 
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, "language", null, flwId);
+                "1234", null, "name", Designation.ANM, incompleteLocation, "language", null, flwId);
         flwWithIncompleteLocation.decideRegistrationStatus(incompleteLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithIncompleteLocation.getStatus());
 
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, "language", null, flwId);
+                "1234", null, "", null, defaultLocation, "language", null, flwId);
         flwWithNoDetails.decideRegistrationStatus(defaultLocation);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.getStatus());
 
         FrontLineWorker flwWithLocationStatusNotAsValid = new FrontLineWorker(
-                "1234", "", null, locationWithStatusNotValid, "language", null, flwId);
+                "1234", null, "", null, locationWithStatusNotValid, "language", null, flwId);
         flwWithLocationStatusNotAsValid.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
         flwWithNoDetails.decideRegistrationStatus(locationWithStatusNotValid);
         assertEquals(RegistrationStatus.PARTIALLY_REGISTERED, flwWithNoDetails.getStatus());
@@ -215,7 +212,7 @@ public class FrontLineWorkerTest {
         when(bookMark.notAtPlayThanks()).thenReturn(true);
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
-        frontLineWorker.addBookMark(bookMark);
+        frontLineWorker.setBookMark(bookMark);
 
         boolean courseInProgress = frontLineWorker.courseInProgress();
 
@@ -242,7 +239,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldUpdateLocationAndUpdateRegistrationStatusAccordingly() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, "language", DateTime.now(), UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", null, "bane", Designation.ANM, null, "language", DateTime.now(), UUID.randomUUID());
         frontLineWorker.setRegistrationStatus(RegistrationStatus.PARTIALLY_REGISTERED);
 
         frontLineWorker.updateLocation(new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, LocationStatus.VALID, null));
@@ -252,7 +249,7 @@ public class FrontLineWorkerTest {
 
     @Test
     public void shouldUpdateLocationAndNotUpdateRegistrationStatusIfRegStatusIsUnregistered() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", "bane", Designation.ANM, null, "language", DateTime.now(), UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker("1234567890", null, "bane", Designation.ANM, null, "language", DateTime.now(), UUID.randomUUID());
         frontLineWorker.setRegistrationStatus(RegistrationStatus.UNREGISTERED);
 
         frontLineWorker.updateLocation(new Location("S1", "D1", "B1", "P1", 1, 1, 1, 1, LocationStatus.VALID, null));
@@ -264,12 +261,12 @@ public class FrontLineWorkerTest {
     public void shouldSetDummyFlwIdWhenFlwIsCreated() {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
 
-        assertEquals(UUID.fromString("11111111-1111-1111-1111-111111111111"),frontLineWorker.getFlwId());
+        assertEquals(UUID.fromString("11111111-1111-1111-1111-111111111111"), frontLineWorker.getFlwId());
     }
 
     @Test
     public void shouldSetLocationToDefaultIfNull() {
-        FrontLineWorker frontLineWorker = new FrontLineWorker("9900495678", "name", Designation.ANM, null, "language", null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker("9900495678", null, "name", Designation.ANM, null, "language", null, UUID.randomUUID());
         assertEquals(Location.getDefaultLocation().getExternalId(), frontLineWorker.getLocationId());
     }
 
@@ -277,9 +274,9 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldNotUpdateIfNewLastModifiedIsBeforeExistingLastModifiedTime() {
         DateTime now = DateTime.now();
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, now, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, now, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, now.minusDays(1), UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, now.minusDays(1), UUID.randomUUID(), null, null);
 
         assertFalse(update);
     }
@@ -287,9 +284,9 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldUpdateIfNewLastModifiedIsAfterExistingLastModifiedTime() {
         DateTime now = DateTime.now();
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, now, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, now, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, now.plusDays(1), UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, now.plusDays(1), UUID.randomUUID(), null, null);
 
         assertTrue(update);
     }
@@ -297,9 +294,9 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldUpdateIfNewLastModifiedIsSameAsExistingLastModifiedTime() {
         DateTime now = DateTime.now();
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, now, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, now, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, now, UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, now, UUID.randomUUID(), null, null);
 
         assertTrue(update);
     }
@@ -307,28 +304,39 @@ public class FrontLineWorkerTest {
     @Test
     public void shouldUpdateIfNewLastModifiedIsNull() {
         DateTime now = DateTime.now();
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, now, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, now, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, null, UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, null, UUID.randomUUID(), null, null);
 
         assertTrue(update);
     }
 
     @Test
     public void shouldUpdateIfExistingLastModifiedTimeIsNull() {
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, null, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, DateTime.now(), UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, DateTime.now(), UUID.randomUUID(), null, null);
 
         assertTrue(update);
     }
 
     @Test
     public void shouldUpdateIfNewAndExistingLastModifiedTimeAreNull() {
-        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, null);
+        FrontLineWorker existingFrontLineWorker = new FrontLineWorker(null, null, null, null, null, null, null, null);
 
-        boolean update = existingFrontLineWorker.update(null, null, null, null, UUID.randomUUID(), null);
+        boolean update = existingFrontLineWorker.update(null, null, null, null, UUID.randomUUID(), null, null);
 
         assertTrue(update);
+    }
+
+    @Test
+    public void shouldMergeAlternateContactNumber() {
+        FrontLineWorker source = new FrontLineWorker();
+        String alternateContactNumber = "123";
+        source.setAlternateContactNumber(alternateContactNumber);
+        FrontLineWorker destination = new FrontLineWorker();
+        destination.merge(source);
+        assertEquals(alternateContactNumber, destination.getAlternateContactNumber());
+
     }
 }

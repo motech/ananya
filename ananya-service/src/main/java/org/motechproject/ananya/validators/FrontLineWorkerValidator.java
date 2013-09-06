@@ -9,23 +9,32 @@ import org.motechproject.ananya.response.FLWValidationResponse;
 
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 public class FrontLineWorkerValidator {
 
     public static FLWValidationResponse validate(FrontLineWorkerRequest frontLineWorkerRequest) {
         FLWValidationResponse flwValidationResponse = new FLWValidationResponse();
         validateMsisdn(frontLineWorkerRequest, flwValidationResponse);
+        validateAlternateContactNumber(frontLineWorkerRequest, flwValidationResponse);
         validateName(frontLineWorkerRequest, flwValidationResponse);
         validateLocation(frontLineWorkerRequest, flwValidationResponse);
         validateFLWId(frontLineWorkerRequest, flwValidationResponse);
         validateVerificationStatus(frontLineWorkerRequest, flwValidationResponse);
+        validateNewMsisdn(frontLineWorkerRequest, flwValidationResponse);
         return flwValidationResponse;
+    }
+
+    private static void validateNewMsisdn(FrontLineWorkerRequest request, FLWValidationResponse response) {
+        if (request.isInvalidNewMsisdn())
+            response.forInvalidMsisdn("newMsisdn");
     }
 
     public static FLWValidationResponse validateWithBulkValidation(FrontLineWorkerRequest frontLineWorkerRequest,
                                                                    Location location,
                                                                    Map<String, Integer> msisdnOccurrenceMap) {
         FLWValidationResponse validationResponse = validate(frontLineWorkerRequest);
-        if(location == null)
+        if (location == null)
             validationResponse.forInvalidLocation();
         if (msisdnOccurrenceMap.get(frontLineWorkerRequest.getMsisdn()) != 1)
             validationResponse.forDuplicates();
@@ -34,13 +43,13 @@ public class FrontLineWorkerValidator {
 
     private static void validateVerificationStatus(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         String verificationStatus = frontLineWorkerRequest.getVerificationStatus();
-        if(StringUtils.isNotBlank(verificationStatus) && !VerificationStatus.isValid(verificationStatus))
+        if (StringUtils.isNotBlank(verificationStatus) && !VerificationStatus.isValid(verificationStatus))
             flwValidationResponse.forInvalidVerificationStatus();
     }
 
     private static void validateLocation(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         LocationRequest location = frontLineWorkerRequest.getLocation();
-        if (location != null && (StringUtils.isBlank(location.getState()) || StringUtils.isBlank(location.getBlock()) || StringUtils.isBlank(location.getDistrict()) || StringUtils.isBlank(location.getPanchayat())))
+        if (location != null && (isBlank(location.getState()) || isBlank(location.getBlock()) || isBlank(location.getDistrict()) || isBlank(location.getPanchayat())))
             flwValidationResponse.forInvalidLocation();
     }
 
@@ -56,6 +65,11 @@ public class FrontLineWorkerValidator {
 
     private static void validateMsisdn(FrontLineWorkerRequest frontLineWorkerRequest, FLWValidationResponse flwValidationResponse) {
         if (frontLineWorkerRequest.isInvalidMsisdn())
-            flwValidationResponse.forInvalidMsisdn();
+            flwValidationResponse.forInvalidMsisdn("msisdn");
+    }
+
+    private static void validateAlternateContactNumber(FrontLineWorkerRequest request, FLWValidationResponse response) {
+        if (request.isInvalidAlternateContactNumber())
+            response.forInvalidMsisdn("alternate contact number");
     }
 }

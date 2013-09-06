@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.domain.Designation;
@@ -20,6 +21,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     private UUID flwId = UUID.randomUUID();
 
     @Before
+    @After
     public void setUp() throws IOException {
         allFrontLineWorkers.removeAll();
     }
@@ -29,7 +31,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
         Location location = new Location("state", "district", "block", "village", 1, 2, 3, 4, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", designation, location, "language", null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 
@@ -48,8 +50,8 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
         Designation designation = Designation.AWW;
         Location location = new Location("state", "district", "block", "village", 1, 2, 3, 4, null, null);
         Location location1 = new Location("state", "distr1ict", "bloc1k", "vi1llage", 1, 2, 3, 5, null, null);
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, location, "language", null, UUID.randomUUID());
-        FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", "name", designation, location1, "language", null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", designation, location, "language", null, UUID.randomUUID());
+        FrontLineWorker frontLineWorker1 = new FrontLineWorker("911234567890", null, "name", designation, location1, "language", null, UUID.randomUUID());
         allFrontLineWorkers.add(frontLineWorker);
         allFrontLineWorkers.add(frontLineWorker1);
         markForDeletion(frontLineWorker);
@@ -64,7 +66,7 @@ public class AllFrontLineWorkersTest extends SpringBaseIT {
     public void shouldRetrieveFrontLineWorkerByMSISDN() {
         String msisdn = "919988776655";
         Designation designation = Designation.AWW;
-        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, "name", designation, new Location(), "language", null, flwId);
+        FrontLineWorker frontLineWorker = new FrontLineWorker(msisdn, null, "name", designation, new Location(), "language", null, flwId);
 
         allFrontLineWorkers.add(frontLineWorker);
 

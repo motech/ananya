@@ -9,6 +9,9 @@ import org.motechproject.importer.annotation.ColumnName;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 public class FrontLineWorkerRequest implements Serializable {
     private String name;
     private String msisdn;
@@ -18,19 +21,32 @@ public class FrontLineWorkerRequest implements Serializable {
     private DateTime lastModified;
     private String flwId;
     private String verificationStatus;
+    private String alternateContactNumber;
+
+    public String getNewMsisdn() {
+        return newMsisdn;
+    }
+
+    public void setNewMsisdn(String newMsisdn) {
+        this.newMsisdn = newMsisdn;
+    }
+
+    private String newMsisdn;
 
     public FrontLineWorkerRequest() {
     }
 
-    public FrontLineWorkerRequest(String msisdn, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language) {
+    public FrontLineWorkerRequest(String msisdn, String alternateContactNumber, String name, String designation, LocationRequest location, DateTime lastModified, String flwId, String verificationStatus, String language, String newMsisdn) {
         this.name = name;
         this.msisdn = msisdn;
+        this.alternateContactNumber = alternateContactNumber;
         this.designation = designation;
         this.location = location;
         this.lastModified = lastModified;
         this.flwId = flwId;
         this.verificationStatus = verificationStatus;
-        this.language =language;
+        this.language = language;
+        this.newMsisdn = newMsisdn;
     }
 
     public String getName() {
@@ -45,8 +61,20 @@ public class FrontLineWorkerRequest implements Serializable {
         return msisdn;
     }
 
+    public Long msisdn() {
+        return Long.valueOf(msisdn);
+    }
+
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
+    }
+
+    public void setAlternateContactNumber(String alternateContactNumber) {
+        this.alternateContactNumber = alternateContactNumber;
     }
 
     public String getDesignation() {
@@ -94,15 +122,15 @@ public class FrontLineWorkerRequest implements Serializable {
     }
 
     public String getLanguage() {
-		return language;
-	}
-    
+        return language;
+    }
+
     @ColumnName(name = "language")
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-    
-	@ColumnName(name = "district")
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    @ColumnName(name = "district")
     public void setDistrict(String district) {
         location.setDistrict(district);
     }
@@ -111,12 +139,12 @@ public class FrontLineWorkerRequest implements Serializable {
     public void setBlock(String block) {
         location.setBlock(block);
     }
-    
+
     @ColumnName(name = "state")
     public void setState(String state) {
         location.setState(state);
     }
-    
+
     @ColumnName(name = "panchayat")
     public void setPanchayat(String panchayat) {
         location.setPanchayat(panchayat);
@@ -128,11 +156,29 @@ public class FrontLineWorkerRequest implements Serializable {
 
     @JsonIgnore
     public boolean isInvalidMsisdn() {
-        return StringUtils.length(msisdn)<10 || !StringUtils.isNumeric(msisdn);
+        return invalidFormat(msisdn);
+    }
+
+    private boolean invalidFormat(String msisdn) {
+        return StringUtils.length(msisdn) < 10 || !StringUtils.isNumeric(msisdn);
+    }
+
+    @JsonIgnore
+    public boolean isInvalidAlternateContactNumber() {
+        return isNotBlank(alternateContactNumber) && invalidFormat(alternateContactNumber);
     }
 
     @JsonIgnore
     public boolean isInvalidName() {
         return StringUtils.isNotBlank(name) && !Pattern.matches("[a-zA-Z0-9\\s\\.]*", name);
+    }
+    @JsonIgnore
+    public boolean isInvalidNewMsisdn() {
+        if(isBlank(newMsisdn)) return false;
+        return invalidFormat(newMsisdn);
+    }
+
+    public boolean hasMsisdnChange() {
+        return isNotBlank(newMsisdn);
     }
 }

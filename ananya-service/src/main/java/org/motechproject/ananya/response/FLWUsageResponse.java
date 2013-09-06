@@ -13,11 +13,17 @@ import java.util.List;
 public class FLWUsageResponse {
 
     @XmlElement
+    private String id;
+    @XmlElement
     private String name;
     @XmlElement
     private String designation;
     @XmlElement
+    private String verificationStatus;
+    @XmlElement
     private String registrationStatus;
+    @XmlElement
+    private String alternateContactNumber;
     @XmlElement
     private LocationResponse location;
     @XmlElementWrapper(name = "usageDetails")
@@ -35,14 +41,23 @@ public class FLWUsageResponse {
     public FLWUsageResponse() {
     }
 
-    public FLWUsageResponse(String name, String designation, String registrationStatus, LocationResponse location,
+    public FLWUsageResponse(String flwId,
+                            String name,
+                            String designation,
+                            String verificationStatus,
+                            String registrationStatus,
+                            String alternateContactNumber,
+                            LocationResponse location,
                             List<FLWUsageDetail> usageDetails,
                             List<FLWCallDetail> callDetails,
                             FLWBookmark bookmark,
                             List<String> smsReferenceNumbers) {
+        this.id = flwId;
         this.name = name;
         this.designation = designation;
+        this.verificationStatus = verificationStatus;
         this.registrationStatus = registrationStatus;
+        this.alternateContactNumber = alternateContactNumber;
         this.location = location;
         this.usageDetails = usageDetails;
         this.callDetails = callDetails;
@@ -90,5 +105,17 @@ public class FLWUsageResponse {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    public String getVerificationStatus() {
+        return verificationStatus;
+    }
+
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
+    }
+
+    public String getId() {
+        return id;
     }
 }

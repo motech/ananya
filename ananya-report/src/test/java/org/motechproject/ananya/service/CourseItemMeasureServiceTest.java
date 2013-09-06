@@ -7,6 +7,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
 import org.motechproject.ananya.domain.dimension.LocationDimension;
 import org.motechproject.ananya.domain.measure.CourseItemMeasure;
 import org.motechproject.ananya.repository.measure.AllCourseItemMeasures;
@@ -33,6 +34,16 @@ public class CourseItemMeasureServiceTest {
     @Before
     public void setUp() {
         courseItemMeasureService = new CourseItemMeasureService(allCourseItemMeasures, locationDimensionService);
+    }
+
+    @Test
+    public void shouldTransferRecords() {
+        FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
+        fromFlw.setId(1);
+        FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
+        toFlw.setId(2);
+        courseItemMeasureService.transfer(fromFlw, toFlw);
+        verify(allCourseItemMeasures).transfer(CourseItemMeasure.class, 1, 2);
     }
 
     @Test

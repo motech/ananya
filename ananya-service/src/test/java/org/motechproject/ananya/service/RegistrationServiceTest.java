@@ -76,7 +76,7 @@ public class RegistrationServiceTest {
         Location newLocation = new Location("s2", "d2", "b2", "p2");
         ArrayList<FrontLineWorker> frontLineWorkers = new ArrayList<>();
         String msisdn = "911234567890";
-        frontLineWorkers.add(new FrontLineWorker(msisdn, "name", Designation.ANM, oldLocation, "language", DateTime.now(), UUID.randomUUID()));
+        frontLineWorkers.add(new FrontLineWorker(msisdn, null, "name", Designation.ANM, oldLocation, "language", DateTime.now(), UUID.randomUUID()));
         when(frontLineWorkerService.updateLocation(oldLocation, newLocation)).thenReturn(frontLineWorkers);
 
         registrationService.updateLocationOnFLW(oldLocation, newLocation);

@@ -31,6 +31,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private String msisdn;
 
     @JsonProperty
+    private String alternateContactNumber;
+
+    @JsonProperty
     private String operator;
 
     @JsonProperty
@@ -50,7 +53,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     @JsonProperty
     private String language;
-    
+
     @JsonProperty
     private String locationId = Location.getDefaultLocation().getExternalId();
 
@@ -91,18 +94,19 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.msisdn = prefixMsisdnWith91(msisdn);
         this.circle = circle;
         this.operator = operator;
-        this.language= language;
+        this.language = language;
     }
 
-    public FrontLineWorker(String msisdn, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
+    public FrontLineWorker(String msisdn, String alternateContactNumber, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
         this();
         this.msisdn = prefixMsisdnWith91(msisdn);
+        this.alternateContactNumber = prefixMsisdnWith91(alternateContactNumber);
         this.name = name;
         this.designation = designation;
         this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
         this.lastModified = lastModified;
         this.flwId = flwId;
-        this.language =language;
+        this.language = language;
     }
 
     @Override
@@ -112,6 +116,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
         this.currentJobAidUsage = currentJobAidUsage;
+    }
+
+    public void setCertificateCourseAttempts(Integer certificateCourseAttempts) {
+        this.certificateCourseAttempts = certificateCourseAttempts;
+    }
+
+    public void setReportCard(ReportCard reportCard) {
+        this.reportCard = reportCard;
     }
 
     public void setLocation(Location location) {
@@ -139,11 +151,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public void setLocationId(String locationId) {
-        this.locationId=locationId;
+        this.locationId = locationId;
     }
-    
+
     public String getMsisdn() {
         return msisdn;
+    }
+
+    public String getAlternateContactNumber() {
+        return alternateContactNumber;
     }
 
     public String getName() {
@@ -154,12 +170,20 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return designation;
     }
 
+    public BookMark getBookmark() {
+        return bookmark;
+    }
+
     public String designationName() {
         return designation != null ? designation.name() : null;
     }
 
     public Long msisdn() {
         return Long.valueOf(msisdn);
+    }
+
+    public Long alternateContactNumber() {
+        return alternateContactNumber == null ? null : Long.valueOf(alternateContactNumber);
     }
 
     public BookMark bookMark() {
@@ -179,7 +203,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return this.name;
     }
 
-    public void addBookMark(BookMark bookMark) {
+    public void setBookMark(BookMark bookMark) {
         this.bookmark = bookMark;
     }
 
@@ -200,7 +224,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return ++certificateCourseAttempts;
     }
 
-    public Integer currentCourseAttempt() {
+    public Integer currentCourseAttempts() {
         return certificateCourseAttempts;
     }
 
@@ -241,18 +265,18 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.status = status;
     }
 
-    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus) {
-        if(!canBeUpdated(lastModified)) {
+    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus, String alternateContactNumber) {
+        if (!canBeUpdated(lastModified)) {
             return false;
         }
-
+        this.alternateContactNumber = alternateContactNumber;
         this.name = name;
         this.designation = designation;
         this.lastModified = lastModified == null ? this.lastModified : lastModified;
         this.verificationStatus = verificationStatus;
         updateFlwId(flwId);
 
-        if(location ==  null) {
+        if (location == null) {
             location = Location.getDefaultLocation();
         }
         this.locationId = location.getExternalId();
@@ -322,7 +346,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
             this.designation = frontLineWorker.getDesignation();
             this.name = frontLineWorker.name();
             this.registeredDate = frontLineWorker.getRegisteredDate();
-            this.language =frontLineWorker.getLanguage();
+            this.language = frontLineWorker.getLanguage();
+            this.alternateContactNumber = frontLineWorker.getAlternateContactNumber();
         }
         if (this.bookmark == null) {
             this.bookmark = frontLineWorker.bookMark();
@@ -382,7 +407,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public boolean courseInProgress() {
-    	 return bookMark().notAtPlayThanks();
+        return bookMark().notAtPlayThanks();
     }
 
     private String prefixMsisdnWith91(String msisdn) {
@@ -390,7 +415,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     private void updateFlwId(UUID flwId) {
-        if(this.flwId != null && !this.flwId.equals(flwId)) {
+        if (this.flwId != null && !this.flwId.equals(flwId)) {
             log.warn(String.format("Changing FLW ID for msisdn[%s]", this.msisdn));
         }
 
@@ -416,17 +441,25 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     private boolean canBeUpdated(DateTime updatedOn) {
-         if (lastModified == null || updatedOn == null) {
+        if (lastModified == null || updatedOn == null) {
             return true;
-         }
-         return (DateUtil.isOnOrBefore(lastModified, updatedOn));
+        }
+        return (DateUtil.isOnOrBefore(lastModified, updatedOn));
     }
 
-	public String getLanguage() {
-		return language;
-	}
-	
-	public void setLanguage(String language) {
-		this.language = language;
-	}
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setAlternateContactNumber(String alternateContactNumber) {
+        this.alternateContactNumber = alternateContactNumber;
+    }
+
+    public ReportCard getReportCard() {
+        return reportCard;
+    }
 }

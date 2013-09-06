@@ -6,27 +6,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.motechproject.ananya.domain.AudioTrackerLog;
 import org.motechproject.ananya.domain.AudioTrackerLogItem;
 import org.motechproject.ananya.domain.ServiceType;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDetailsDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
-import org.motechproject.ananya.domain.dimension.LanguageDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
 import org.motechproject.ananya.domain.measure.RegistrationMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDetailsDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
-import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.domain.measure.TransferableMeasure;
+import org.motechproject.ananya.repository.dimension.*;
 import org.motechproject.ananya.repository.measure.AllJobAidContentMeasures;
 import org.motechproject.ananya.repository.measure.AllRegistrationMeasures;
 import org.motechproject.ananya.service.dimension.LocationDimensionService;
 import org.motechproject.ananya.service.measure.JobAidContentMeasureService;
+import org.motechproject.ananya.service.measure.TransferableMeasureService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +44,7 @@ public class JobAidContentMeasureServiceTest {
     @Mock
     private AllJobAidContentDetailsDimensions allJobAidContentDetailsDimensions;
     @Mock
-    private AllLanguageDimension allLanguageDimension; 
+    private AllLanguageDimension allLanguageDimension;
     @Mock
     private AllRegistrationMeasures allRegistrationMeasures;
     @Mock
@@ -86,7 +80,7 @@ public class JobAidContentMeasureServiceTest {
         jobAidContentDimension = new JobAidContentDimension();
         jobAidContentDetailsDimension = new JobAidContentDetailsDimension();
         jobAidContentDetailsDimension.setDuration(100);
-        
+
         registrationMeasure = new RegistrationMeasure(frontLineWorkerDimension, locationDimension, timeDimension, callId);
         jobAidContentMeasureService = new JobAidContentMeasureService(audioTrackerLogService, allFrontLineWorkerDimensions,
                 allRegistrationMeasures, allJobAidContentDimensions, allTimeDimensions, allJobAidContentMeasures, locationDimensionService, allLanguageDimension, allJobAidContentDetailsDimensions);
@@ -109,11 +103,14 @@ public class JobAidContentMeasureServiceTest {
         when(allTimeDimensions.getFor(now)).thenReturn(timeDimension);
         when(allLanguageDimension.getFor(language)).thenReturn(languageDimension);
         when(allJobAidContentDetailsDimensions.getFor(contentId, languageDimension.getId())).thenReturn(jobAidContentDetailsDimension);
-        
+        mockAddFlwHistory();
+
         jobAidContentMeasureService.createFor(callId);
 
+        InOrder inOrder = inOrder(jobAidContentMeasureService, allJobAidContentMeasures);
         ArgumentCaptor<JobAidContentMeasure> captor = ArgumentCaptor.forClass(JobAidContentMeasure.class);
-        verify(allJobAidContentMeasures).add(captor.capture());
+        inOrder.verify(jobAidContentMeasureService).addFlwHistory(captor.capture());
+        inOrder.verify(allJobAidContentMeasures).add(captor.capture());
         verify(audioTrackerLogService).remove(audioTrackerLog);
 
         JobAidContentMeasure jobAidContentMeasure = captor.getValue();
@@ -124,6 +121,11 @@ public class JobAidContentMeasureServiceTest {
         assertEquals(callId, jobAidContentMeasure.getCallId());
         assertEquals(30, (int) jobAidContentMeasure.getPercentage());
         assertEquals(duration, jobAidContentMeasure.getDuration());
+    }
+
+    private void mockAddFlwHistory() {
+        jobAidContentMeasureService = spy(jobAidContentMeasureService);
+        doNothing().when((TransferableMeasureService) jobAidContentMeasureService).addFlwHistory(any(JobAidContentMeasure.class));
     }
 
     @Test
@@ -192,5 +194,15 @@ public class JobAidContentMeasureServiceTest {
         List<JobAidContentMeasure> jobAidContentMeasureList = captor.getValue();
         Assert.assertEquals(1, jobAidContentMeasureList.size());
         Assert.assertEquals(newLocationId, jobAidContentMeasureList.get(0).getLocationDimension().getLocationId());
+    }
+
+    @Test
+    public void shouldTransferRecords() {
+        FrontLineWorkerDimension fromFlw = new FrontLineWorkerDimension();
+        FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
+        fromFlw.setId(1);
+        toFlw.setId(2);
+        jobAidContentMeasureService.transfer(fromFlw, toFlw);
+        verify(allJobAidContentMeasures).transfer(JobAidContentMeasure.class, 1, 2);
     }
 }

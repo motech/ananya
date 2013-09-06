@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AllLanguageDimensionIT extends SpringIntegrationTest{
     @Autowired
-    AllLanguageDimension allLanguageDimension;
+    private AllLanguageDimension allLanguageDimension;
 
     @Before
     @After

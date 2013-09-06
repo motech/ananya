@@ -85,7 +85,7 @@ public class CertificateCourseItemSynchroniserIT {
 
         LocationDimension locationDimension = new LocationDimension("locationId", "state", "district", "block", "panchayat", "VALID");
         template.save(locationDimension);
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), "airtel", "circle", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(Long.valueOf(callerId), null, "airtel", "circle", "name", Designation.ANM.name(), RegistrationStatus.PARTIALLY_REGISTERED.toString(), UUID.randomUUID(), null);
         TimeDimension timeDimension = allTimeDimensions.addOrUpdate(callStartTime);
         template.save(new RegistrationMeasure(frontLineWorkerDimension,locationDimension,timeDimension, callId));
         allCourseItemDimensions.add(new CourseItemDimension(contentName, contentId, courseItemType, null));

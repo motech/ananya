@@ -43,19 +43,19 @@ public class FrontLineWorkerSeedServiceTest {
 
         UUID flwId = UUID.randomUUID();
         FrontLineWorker flwWithCompleteDetails = new FrontLineWorker(
-                "1234", "name", Designation.ANM, completeLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutName = new FrontLineWorker(
-                "1234", "", Designation.ANM, completeLocation, language, null, flwId);
+                "1234", null, "", Designation.ANM, completeLocation, language, null, flwId);
         FrontLineWorker flwWithoutDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, language, null, flwId);
+                "1234", null, "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithInvalidDesignation = new FrontLineWorker(
-                "1234", "name", null, completeLocation, language, null, flwId);
+                "1234", null, "name", null, completeLocation, language, null, flwId);
         FrontLineWorker flwWithDefaultLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, defaultLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, defaultLocation, language, null, flwId);
         FrontLineWorker flwWithIncompleteLocation = new FrontLineWorker(
-                "1234", "name", Designation.ANM, incompleteLocation, language, null, flwId);
+                "1234", null, "name", Designation.ANM, incompleteLocation, language, null, flwId);
         FrontLineWorker flwWithNoDetails = new FrontLineWorker(
-                "1234", "", null, defaultLocation, language, null, flwId);
+                "1234", null, "", null, defaultLocation, language, null, flwId);
 
         assertEquals(RegistrationStatus.REGISTERED,
                 seedService.deduceRegistrationStatusOld(flwWithCompleteDetails, completeLocation));
@@ -78,21 +78,21 @@ public class FrontLineWorkerSeedServiceTest {
     	String language= "language";
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark("type", 2, 2));
+        frontLineWorker1.setBookMark(new BookMark("type", 2, 2));
         frontLineWorker1.reportCard().addScore(new Score("1", "4", true, "987654321-1"));
         frontLineWorker1.reportCard().addScore(new Score("1", "5", true, "987654321-1"));
         frontLineWorker1.markPromptHeard("prompt1");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", false, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(1, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(1, (int) frontLineWorker1.currentCourseAttempts());
         assertEquals(3, (int) frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(1, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(2, frontLineWorker1.getPromptsHeard().size());
@@ -103,20 +103,20 @@ public class FrontLineWorkerSeedServiceTest {
     	String language= "language";
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark(null, null, null));
+        frontLineWorker1.setBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("welcome");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", true, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(2, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(2, (int) frontLineWorker1.currentCourseAttempts());
         assertEquals(3, (int) frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(2, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(2, frontLineWorker1.getPromptsHeard().size());
@@ -128,12 +128,12 @@ public class FrontLineWorkerSeedServiceTest {
         FrontLineWorker frontLineWorker1 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker1.incrementCertificateCourseAttempts();
         frontLineWorker1.incrementCertificateCourseAttempts();
-        frontLineWorker1.addBookMark(new BookMark(null, null, null));
+        frontLineWorker1.setBookMark(new BookMark(null, null, null));
         frontLineWorker1.markPromptHeard("prompt1");
 
         FrontLineWorker frontLineWorker2 = new FrontLineWorker("9876543210", "airtel", null, language);
         frontLineWorker2.incrementCertificateCourseAttempts();
-        frontLineWorker2.addBookMark(new BookMark("type", 2, 3));
+        frontLineWorker2.setBookMark(new BookMark("type", 2, 3));
         frontLineWorker2.reportCard().addScore(new Score("1", "4", true, "987654321-2"));
         frontLineWorker2.reportCard().addScore(new Score("1", "5", true, "987654321-2"));
         frontLineWorker1.markPromptHeard("prompt2");
@@ -141,7 +141,7 @@ public class FrontLineWorkerSeedServiceTest {
 
         seedService.mergeFrontLineWorker(frontLineWorker1, frontLineWorker2);
 
-        assertEquals(2, (int) frontLineWorker1.currentCourseAttempt());
+        assertEquals(2, (int) frontLineWorker1.currentCourseAttempts());
         assertNull(frontLineWorker1.bookMark().getLessonIndex());
         assertEquals(0, (int) frontLineWorker1.reportCard().totalScore());
         assertEquals(3, frontLineWorker1.getPromptsHeard().size());

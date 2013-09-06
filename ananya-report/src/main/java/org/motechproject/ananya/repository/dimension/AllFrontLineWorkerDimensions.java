@@ -26,12 +26,12 @@ public class AllFrontLineWorkerDimensions {
     public AllFrontLineWorkerDimensions() {
     }
 
-    public FrontLineWorkerDimension createOrUpdate(Long msisdn, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
+    public FrontLineWorkerDimension createOrUpdate(Long msisdn, Long alternateContactNumber, String operator, String circle, String name, String designation, String status, UUID flwId, VerificationStatus verificationStatus) {
         FrontLineWorkerDimension frontLineWorkerDimension;
         frontLineWorkerDimension = fetchFor(msisdn);
         frontLineWorkerDimension = frontLineWorkerDimension == null ?
-                new FrontLineWorkerDimension(msisdn, operator, circle, name, designation, status, flwId, verificationStatus) :
-                frontLineWorkerDimension.update(circle, operator, name, status, designation, flwId, verificationStatus);
+                new FrontLineWorkerDimension(msisdn, alternateContactNumber, operator, circle, name, designation, status, flwId, verificationStatus) :
+                frontLineWorkerDimension.update(circle, alternateContactNumber, operator, name, status, designation, flwId, verificationStatus);
 
         template.saveOrUpdate(frontLineWorkerDimension);
         return frontLineWorkerDimension;

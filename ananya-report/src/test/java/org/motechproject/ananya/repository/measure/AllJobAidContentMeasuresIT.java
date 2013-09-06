@@ -6,17 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.ananya.SpringIntegrationTest;
 import org.motechproject.ananya.domain.RegistrationStatus;
-import org.motechproject.ananya.domain.dimension.FrontLineWorkerDimension;
-import org.motechproject.ananya.domain.dimension.JobAidContentDimension;
-import org.motechproject.ananya.domain.dimension.LanguageDimension;
-import org.motechproject.ananya.domain.dimension.LocationDimension;
-import org.motechproject.ananya.domain.dimension.TimeDimension;
+import org.motechproject.ananya.domain.dimension.*;
 import org.motechproject.ananya.domain.measure.JobAidContentMeasure;
-import org.motechproject.ananya.repository.dimension.AllFrontLineWorkerDimensions;
-import org.motechproject.ananya.repository.dimension.AllJobAidContentDimensions;
-import org.motechproject.ananya.repository.dimension.AllLanguageDimension;
-import org.motechproject.ananya.repository.dimension.AllLocationDimensions;
-import org.motechproject.ananya.repository.dimension.AllTimeDimensions;
+import org.motechproject.ananya.repository.dimension.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -46,8 +38,24 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
 
     @Autowired
     AllLanguageDimension allLanguageDimension;
-    
+    private LocationDimension locationDimension;
+    private LanguageDimension languageDimension;
+    private TimeDimension timeDimension;
+    private JobAidContentDimension jobAidContentDimension;
+    private String locationId = "locationId";
+
     @Before
+    public void setUp() {
+        tearDown();
+        locationDimension = new LocationDimension(locationId, "", "", "", "", "VALID");
+        languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
+        timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
+        allLocationDimensions.saveOrUpdate(locationDimension);
+        jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "type");
+        allJobAidContentDimensions.add(jobAidContentDimension);
+        allLanguageDimension.add(languageDimension);
+    }
+
     @After
     public void tearDown() {
         template.deleteAll(template.loadAll(JobAidContentDimension.class));
@@ -60,24 +68,20 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
 
     @Test
     public void shouldGetFilteredMsisdns() {
-        TimeDimension timeDimension = new TimeDimension(DateTime.now());
-        TimeDimension timeDimension1 = new TimeDimension(DateTime.now().minusDays(1));
+        TimeDimension now = new TimeDimension(DateTime.now());
+        TimeDimension timeDimension1 = timeDimension;
         TimeDimension timeDimension2 = new TimeDimension(DateTime.now().minusDays(2));
-        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
-        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
-        LocationDimension locationDimension = new LocationDimension("S02123431243", "S1", "D1", "B1", "P1", "VALID");
-        LanguageDimension languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
+        FrontLineWorkerDimension frontLineWorkerDimension = new FrontLineWorkerDimension(911234567890L, null, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
+        FrontLineWorkerDimension frontLineWorkerDimension1 = new FrontLineWorkerDimension(911234567891L, null, "airtel", "bihar", "name", "ANM", RegistrationStatus.REGISTERED.name(), UUID.randomUUID(), null);
+
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "type");
-        JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension, DateTime.now(), 123, 12);
+        JobAidContentMeasure jobAidContentMeasure = new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, now, languageDimension, DateTime.now(), 123, 12);
         JobAidContentMeasure jobAidContentMeasure1 = new JobAidContentMeasure("callId", frontLineWorkerDimension1, locationDimension, jobAidContentDimension, timeDimension1, languageDimension, DateTime.now(), 123, 12);
         JobAidContentMeasure jobAidContentMeasure2 = new JobAidContentMeasure("callId", frontLineWorkerDimension1, locationDimension, jobAidContentDimension, timeDimension2, languageDimension, DateTime.now(), 123, 12);
-        template.save(timeDimension);
-        template.save(timeDimension1);
+        template.save(now);
         template.save(timeDimension2);
-        template.save(languageDimension);
         template.save(frontLineWorkerDimension);
         template.save(frontLineWorkerDimension1);
-        template.save(locationDimension);
         template.save(jobAidContentDimension);
         template.save(jobAidContentMeasure);
         template.save(jobAidContentMeasure1);
@@ -92,14 +96,9 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchAllJobAidContentMeasuresForACallerId() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
-        LocationDimension locationDimension = new LocationDimension("locationId", "", "", "", "", "VALID");
-        LanguageDimension languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
-        TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
-        allLocationDimensions.saveOrUpdate(locationDimension);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, null, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
         JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "type");
         allJobAidContentDimensions.add(jobAidContentDimension);
-        allLanguageDimension.add(languageDimension);
         allJobAidContentMeasures.add(new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension, DateTime.now(), 23, 23));
 
         List<JobAidContentMeasure> jobAidContentMeasureList = allJobAidContentMeasures.findByCallerId(callerId);
@@ -111,20 +110,27 @@ public class AllJobAidContentMeasuresIT extends SpringIntegrationTest {
     @Test
     public void shouldFetchAllJobAidContentMeasuresForALocationId() {
         Long callerId = 1234L;
-        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
-        String locationId = "locationId";
-        LocationDimension locationDimension = new LocationDimension(locationId, "", "", "", "", "VALID");
-        LanguageDimension languageDimension = new LanguageDimension("bhojpuri", "bho", "badhai ho..");
-        TimeDimension timeDimension = allTimeDimensions.makeFor(DateTime.now().minusDays(1));
-        allLocationDimensions.saveOrUpdate(locationDimension);
-        JobAidContentDimension jobAidContentDimension = new JobAidContentDimension("1234567", null, "name", "type");
-        allJobAidContentDimensions.add(jobAidContentDimension);
-        allLanguageDimension.add(languageDimension);
+        FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.createOrUpdate(callerId, null, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
+
         allJobAidContentMeasures.add(new JobAidContentMeasure("callId", frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension, DateTime.now(), 23, 23));
 
         List<JobAidContentMeasure> jobAidContentMeasureList = allJobAidContentMeasures.findByLocationId(locationId);
 
         assertEquals(1, jobAidContentMeasureList.size());
         assertEquals(callerId, jobAidContentMeasureList.get(0).getFrontLineWorkerDimension().getMsisdn());
+    }
+
+    @Test
+    public void shouldTransferRecords() {
+        Long msisdnOfFlw1 = 1234L;
+        FrontLineWorkerDimension flw1 = allFrontLineWorkerDimensions.createOrUpdate(msisdnOfFlw1, null, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
+        Long msisdnOfFlw2 = 12345L;
+        FrontLineWorkerDimension flw2 = allFrontLineWorkerDimensions.createOrUpdate(msisdnOfFlw2, null, "operator", "circle", "name", "ASHA", "REGISTERED", UUID.randomUUID(), null);
+        allJobAidContentMeasures.add(new JobAidContentMeasure("callId", flw1, locationDimension, jobAidContentDimension, timeDimension, languageDimension, DateTime.now(), 23, 23));
+        allJobAidContentMeasures.add(new JobAidContentMeasure("callId", flw2, locationDimension, jobAidContentDimension, timeDimension, languageDimension, DateTime.now(), 23, 23));
+
+        allJobAidContentMeasures.transfer(JobAidContentMeasure.class, flw1.getId(), flw2.getId());
+        assertEquals(0, allJobAidContentMeasures.findByCallerId(msisdnOfFlw1).size());
+        assertEquals(2, allJobAidContentMeasures.findByCallerId(msisdnOfFlw2).size());
     }
 }
