@@ -8,7 +8,9 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class FlwChangeSelectorTest {
 
@@ -19,6 +21,7 @@ public class FlwChangeSelectorTest {
     private Integer latestCurrentJobAidUsage;
     private DateTime latestLastJobAidAccessTime;
     private Integer latestCourseAttempts;
+    private HashMap<String,Integer> promptsHeard;
 
     @Before
     public void setUpComparator() {
@@ -29,17 +32,20 @@ public class FlwChangeSelectorTest {
         latestCurrentJobAidUsage = 1;
         latestLastJobAidAccessTime = new DateTime().plusDays(1);
         latestCourseAttempts = 1;
-        changeSelector = new FlwChangeSelector(getFrontLineWorker("O1", new BookMark("1", 1, 1), new ReportCard(), 1, new DateTime(), 1)
-                , getFrontLineWorker(latestOperator, latestBookMark, latestReportCard, latestCurrentJobAidUsage, latestLastJobAidAccessTime, latestCourseAttempts));
+        promptsHeard = new HashMap<String, Integer>();
+        promptsHeard.put("1",1);
+        changeSelector = new FlwChangeSelector(getFrontLineWorker("O1", new BookMark("1", 1, 1), new ReportCard(), 1, new DateTime(), 1, new HashMap<String, Integer>())
+                , getFrontLineWorker(latestOperator, latestBookMark, latestReportCard, latestCurrentJobAidUsage, latestLastJobAidAccessTime, latestCourseAttempts, promptsHeard));
     }
 
-    private FrontLineWorker getFrontLineWorker(String operator, BookMark bookMark, ReportCard reportCard, Integer currentJobAidUsage, DateTime lastJobAidAccessTime, int certificateCourseAttempts) {
+    private FrontLineWorker getFrontLineWorker(String operator, BookMark bookMark, ReportCard reportCard, Integer currentJobAidUsage, DateTime lastJobAidAccessTime, int certificateCourseAttempts, HashMap<String, Integer> promptsHeard) {
         FrontLineWorker frontLineWorker = new FrontLineWorker(null, operator, "C1", null);
         frontLineWorker.setBookMark(bookMark);
         frontLineWorker.setReportCard(reportCard);
         frontLineWorker.setCurrentJobAidUsage(currentJobAidUsage);
         frontLineWorker.setLastJobAidAccessTime(lastJobAidAccessTime);
         frontLineWorker.setCertificateCourseAttempts(certificateCourseAttempts);
+        frontLineWorker.setPromptsHeard(promptsHeard);
         return frontLineWorker;
     }
 
@@ -71,5 +77,25 @@ public class FlwChangeSelectorTest {
     @Test
     public void shouldGetLatestCourseAttempts() {
         assertEquals(latestCourseAttempts, changeSelector.getLatestCourseAttempt());
+    }
+
+    @Test
+    public void shouldGetLatestPromptHeard() {
+        assertEquals(promptsHeard, changeSelector.getLatestPromptsHeard());
+    }
+
+    @Test
+    public void shouldGetDefaultWhenFLWsDoNotHaveAnyRecords(){
+        changeSelector = new FlwChangeSelector(new FrontLineWorker()
+                , new FrontLineWorker());
+
+        assertNull(changeSelector.getTheLatestLastJobAidAccessTime());
+        assertNull(changeSelector.getTheLatestOperator());
+
+        assertNotNull(changeSelector.getTheLatestJobAidUsage());
+        assertNotNull(changeSelector.getHighestReportCard());
+        assertNotNull(changeSelector.getLatestCourseAttempt());
+        assertNotNull(changeSelector.getHighestBookMark());
+        assertNotNull(changeSelector.getLatestPromptsHeard());
     }
 }

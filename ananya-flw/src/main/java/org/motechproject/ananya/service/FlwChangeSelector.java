@@ -5,6 +5,8 @@ import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 
+import java.util.Map;
+
 import static org.apache.commons.lang.StringUtils.isBlank;
 
 public class FlwChangeSelector {
@@ -21,7 +23,7 @@ public class FlwChangeSelector {
     }
 
     public DateTime getTheLatestLastJobAidAccessTime() {
-        return toFlw == null || toFlw.getLastJobAidAccessTime() == null ? fromFlw.getLastJobAidAccessTime() : toFlw.getLastJobAidAccessTime();
+        return toFlw == null ? fromFlw.getLastJobAidAccessTime() : toFlw.getLastJobAidAccessTime();
 
     }
 
@@ -34,9 +36,10 @@ public class FlwChangeSelector {
     }
 
     public BookMark getHighestBookMark() {
-        BookMark oldBookMark = fromFlw.getBookmark();
-        if (toFlw == null || toFlw.getBookmark() == null) return oldBookMark;
-        BookMark newBookMark = toFlw.getBookmark();
+        if (toFlw == null || toFlw.getBookmark() == null) return fromFlw.bookMark();
+        if (fromFlw.getBookmark() == null) return toFlw.bookMark();
+        BookMark oldBookMark = fromFlw.bookMark();
+        BookMark newBookMark = toFlw.bookMark();
         if (oldBookMark.getChapterIndex().equals(newBookMark.getChapterIndex()))
             return oldBookMark.getLessonIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
         return oldBookMark.getChapterIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
@@ -48,4 +51,9 @@ public class FlwChangeSelector {
         ReportCard newReportCard = toFlw.getReportCard();
         return oldReportCard.totalScore() < newReportCard.totalScore() ? newReportCard : oldReportCard;
     }
+
+    public Map<String, Integer> getLatestPromptsHeard(){
+        return toFlw == null ? fromFlw.getPromptsHeard() : toFlw.getPromptsHeard();
+    }
+
 }
