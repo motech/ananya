@@ -462,4 +462,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public ReportCard getReportCard() {
         return reportCard;
     }
+
+    public void setPromptsHeard(Map<String, Integer> promptsHeard) {
+        this.promptsHeard = promptsHeard;
+    }
 }

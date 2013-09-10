@@ -532,7 +532,7 @@ public class FrontLineWorkerServiceTest {
     }
 
     @Test
-    public void shouldNotCopyOverNewLastJobAidAccessTimeWhenNull() {
+    public void shouldCopyOverNewLastJobAidAccessTimeEvenWhenNull() {
         String msisdn = "123";
         String newMsisdn = "456";
         FrontLineWorker fromFlw = createFLW(msisdn, "Voda");
@@ -546,7 +546,7 @@ public class FrontLineWorkerServiceTest {
         frontLineWorkerService.changeMsisdn(msisdn, newMsisdn);
 
         assertEquals(newMsisdn, fromFlw.getMsisdn());
-        assertEquals(lastJobAidAccessTime, fromFlw.getLastJobAidAccessTime());
+        assertEquals(null, fromFlw.getLastJobAidAccessTime());
         verify(allFrontLineWorkers).remove(toFlw);
         verify(allFrontLineWorkers).update(fromFlw);
     }
