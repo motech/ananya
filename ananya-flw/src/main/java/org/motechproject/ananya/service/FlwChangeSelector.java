@@ -34,9 +34,10 @@ public class FlwChangeSelector {
     }
 
     public BookMark getHighestBookMark() {
-        BookMark oldBookMark = fromFlw.getBookmark();
-        if (toFlw == null || toFlw.getBookmark() == null) return oldBookMark;
-        BookMark newBookMark = toFlw.getBookmark();
+        if (toFlw == null || toFlw.getBookmark() == null) return fromFlw.bookMark();
+        if (fromFlw.getBookmark() == null) return toFlw.bookMark();
+        BookMark oldBookMark = fromFlw.bookMark();
+        BookMark newBookMark = toFlw.bookMark();
         if (oldBookMark.getChapterIndex().equals(newBookMark.getChapterIndex()))
             return oldBookMark.getLessonIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
         return oldBookMark.getChapterIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;

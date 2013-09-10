@@ -8,7 +8,7 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FlwChangeSelectorTest {
 
@@ -71,5 +71,21 @@ public class FlwChangeSelectorTest {
     @Test
     public void shouldGetLatestCourseAttempts() {
         assertEquals(latestCourseAttempts, changeSelector.getLatestCourseAttempt());
+    }
+
+    @Test
+    public void shouldGetDefaultWhenFLWsDoNotHaveAnyRecords(){
+        changeSelector = new FlwChangeSelector(new FrontLineWorker()
+                , new FrontLineWorker());
+
+        assertNull(changeSelector.getTheLatestLastJobAidAccessTime());
+        assertNull(changeSelector.getTheLatestOperator());
+
+        assertNotNull(changeSelector.getTheLatestJobAidUsage());
+        assertNotNull(changeSelector.getHighestReportCard());
+        assertNotNull(changeSelector.getLatestCourseAttempt());
+        assertNotNull(changeSelector.getHighestBookMark());
+
+
     }
 }
