@@ -1,5 +1,6 @@
 package org.motechproject.ananya.domain;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -93,6 +94,21 @@ public class ReportCardTest {
         Collection<Score> scoreList = reportCard.getScoresForChapter("1");
 
         assertEquals(3, scoreList.size());
+    }
+
+    @Test
+    public void testComparison() {
+        ReportCard score1 = new ReportCard();
+        ReportCard score2 = new ReportCard();
+        assertEquals(0, score2.compareTo(score1));
+        assertEquals(0, score1.compareTo(score2));
+        score2.addScore(new Score("1", "1", true));
+        assertEquals(score2, ObjectUtils.max(score1, score2));
+        score1.addScore(new Score("1", "1", true));
+        assertEquals(0, score2.compareTo(score1));
+        assertEquals(0, score1.compareTo(score2));
+        score1.addScore(new Score("2", "1", true));
+        assertEquals(score1, ObjectUtils.max(score1, score2));
     }
 
     private ReportCard makeTestReportCard() {

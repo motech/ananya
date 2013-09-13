@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class BookMark {
+import static org.apache.commons.lang3.ObjectUtils.compare;
+
+public class BookMark implements Comparable<BookMark> {
     @JsonProperty
     private String type;
     @JsonProperty
@@ -69,7 +71,7 @@ public class BookMark {
   /*  public boolean notAtPlayCourseResult() {
         return !Interaction.PlayCourseResult.equals(type);
     }*/
-    
+
     public boolean notAtPlayThanks() {
         return !Interaction.PlayThanks.equals(type);
     }
@@ -77,5 +79,12 @@ public class BookMark {
     @JsonIgnore
     public boolean isEmptyBookmark() {
         return type == null && chapterIndex == null && lessonIndex == null;
+    }
+
+    @Override
+    public int compareTo(BookMark other) {
+        int chapterComparison = compare(this.chapterIndex, other.chapterIndex);
+        if (chapterComparison != 0) return chapterComparison;
+        return compare(this.lessonIndex, other.lessonIndex);
     }
 }

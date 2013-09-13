@@ -5,9 +5,11 @@ import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.ObjectUtils.max;
 
 public class FlwChangeSelector {
     private FrontLineWorker fromFlw;
@@ -23,8 +25,7 @@ public class FlwChangeSelector {
     }
 
     public DateTime getTheLatestLastJobAidAccessTime() {
-        return toFlw == null ? fromFlw.getLastJobAidAccessTime() : toFlw.getLastJobAidAccessTime();
-
+        return (toFlw == null) ? null : toFlw.getLastJobAidAccessTime();
     }
 
     public Integer getTheLatestJobAidUsage() {
@@ -36,24 +37,17 @@ public class FlwChangeSelector {
     }
 
     public BookMark getHighestBookMark() {
-        if (toFlw == null || toFlw.getBookmark() == null) return fromFlw.bookMark();
-        if (fromFlw.getBookmark() == null) return toFlw.bookMark();
-        BookMark oldBookMark = fromFlw.bookMark();
-        BookMark newBookMark = toFlw.bookMark();
-        if (oldBookMark.getChapterIndex().equals(newBookMark.getChapterIndex()))
-            return oldBookMark.getLessonIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
-        return oldBookMark.getChapterIndex() < newBookMark.getChapterIndex() ? newBookMark : oldBookMark;
+        if (toFlw == null) return fromFlw.bookMark();
+        return max(toFlw.bookMark(), fromFlw.bookMark());
     }
 
     public ReportCard getHighestReportCard() {
-        ReportCard oldReportCard = fromFlw.getReportCard();
-        if (toFlw == null || toFlw.getReportCard() == null) return oldReportCard;
-        ReportCard newReportCard = toFlw.getReportCard();
-        return oldReportCard.totalScore() < newReportCard.totalScore() ? newReportCard : oldReportCard;
+        if (toFlw == null) return fromFlw.reportCard();
+        return max(fromFlw.getReportCard(), toFlw.getReportCard());
     }
 
-    public Map<String, Integer> getLatestPromptsHeard(){
-        return toFlw == null ? fromFlw.getPromptsHeard() : toFlw.getPromptsHeard();
+    public Map<String, Integer> getLatestPromptsHeard() {
+        return toFlw == null ? new HashMap<String, Integer>() : toFlw.getPromptsHeard();
     }
 
 }

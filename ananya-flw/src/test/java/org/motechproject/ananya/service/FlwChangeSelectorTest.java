@@ -8,7 +8,9 @@ import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.ReportCard;
 import org.motechproject.ananya.domain.Score;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -21,10 +23,10 @@ public class FlwChangeSelectorTest {
     private Integer latestCurrentJobAidUsage;
     private DateTime latestLastJobAidAccessTime;
     private Integer latestCourseAttempts;
-    private HashMap<String,Integer> promptsHeard;
+    private HashMap<String, Integer> promptsHeard;
 
     @Before
-    public void setUpComparator() {
+    public void setUp() {
         latestReportCard = new ReportCard();
         latestReportCard.addScore(new Score("1", "1", true));
         latestOperator = "O2";
@@ -33,7 +35,7 @@ public class FlwChangeSelectorTest {
         latestLastJobAidAccessTime = new DateTime().plusDays(1);
         latestCourseAttempts = 1;
         promptsHeard = new HashMap<String, Integer>();
-        promptsHeard.put("1",1);
+        promptsHeard.put("1", 1);
         changeSelector = new FlwChangeSelector(getFrontLineWorker("O1", new BookMark("1", 1, 1), new ReportCard(), 1, new DateTime(), 1, new HashMap<String, Integer>())
                 , getFrontLineWorker(latestOperator, latestBookMark, latestReportCard, latestCurrentJobAidUsage, latestLastJobAidAccessTime, latestCourseAttempts, promptsHeard));
     }
@@ -55,6 +57,13 @@ public class FlwChangeSelectorTest {
     }
 
     @Test
+    public void shouldReturnNullDateTimeIfNewMsisdnIsNotRegistered() {
+        FrontLineWorker fromFlw = new FrontLineWorker();
+        fromFlw.setLastJobAidAccessTime(new DateTime());
+        assertNull(new FlwChangeSelector(fromFlw, null).getTheLatestLastJobAidAccessTime());
+    }
+
+    @Test
     public void shouldGetLatestCurrentJobAidUsage() {
         assertEquals(latestCurrentJobAidUsage, changeSelector.getTheLatestJobAidUsage());
     }
@@ -62,6 +71,22 @@ public class FlwChangeSelectorTest {
     @Test
     public void shouldGetLatestBookMark() {
         assertEquals(latestBookMark, changeSelector.getHighestBookMark());
+    }
+
+    @Test
+    public void shouldReturnOldBookMarkIfNewMsisdnIsNotRegistered() {
+        FrontLineWorker flwByOldMsisdn = new FrontLineWorker();
+        BookMark bookMark = new BookMark();
+        flwByOldMsisdn.setBookMark(bookMark);
+        assertEquals(bookMark, new FlwChangeSelector(flwByOldMsisdn, null).getHighestBookMark());
+    }
+
+    @Test
+    public void shouldReturnOldReportCardIfNewMsisdnNotRegistered() {
+        FrontLineWorker flwByOldMsisdn = new FrontLineWorker();
+        ReportCard reportCard = new ReportCard();
+        flwByOldMsisdn.setReportCard(reportCard);
+        assertEquals(reportCard, new FlwChangeSelector(flwByOldMsisdn, null).getHighestReportCard());
     }
 
     @Test
@@ -85,7 +110,15 @@ public class FlwChangeSelectorTest {
     }
 
     @Test
-    public void shouldGetDefaultWhenFLWsDoNotHaveAnyRecords(){
+    public void shouldReturnEmptyPromptsIfNewMsisdnIsNotRegistered() {
+        FrontLineWorker fromFlw = new FrontLineWorker();
+        Map<String, Integer> promptsHeardByOldMsisdn = Collections.singletonMap("1", 1);
+        fromFlw.setPromptsHeard(promptsHeardByOldMsisdn);
+        assertEquals(0, new FlwChangeSelector(fromFlw, null).getLatestPromptsHeard().size());
+    }
+
+    @Test
+    public void shouldGetDefaultWhenFLWsDoNotHaveAnyRecords() {
         changeSelector = new FlwChangeSelector(new FrontLineWorker()
                 , new FrontLineWorker());
 

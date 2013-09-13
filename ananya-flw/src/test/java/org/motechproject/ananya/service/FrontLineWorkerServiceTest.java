@@ -524,7 +524,7 @@ public class FrontLineWorkerServiceTest {
         assertEquals(operator, fromFlw.getOperator());
         assertEquals(currentJobAidUsage, fromFlw.getCurrentJobAidUsage());
         assertEquals(certificateCourseAttempts, fromFlw.currentCourseAttempts());
-        assertEquals(lastJobAidAccessTime, fromFlw.getLastJobAidAccessTime());
+        assertNull(fromFlw.getLastJobAidAccessTime());
         assertEquals(reportCard, fromFlw.getReportCard());
         assertEquals(bookMark, fromFlw.getBookmark());
         verify(allFrontLineWorkers, never()).remove(any(FrontLineWorker.class));
