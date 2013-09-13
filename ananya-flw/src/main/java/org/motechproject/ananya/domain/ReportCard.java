@@ -3,6 +3,7 @@ package org.motechproject.ananya.domain;
 import ch.lambdaj.group.Group;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.ObjectUtils;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -13,8 +14,9 @@ import static ch.lambdaj.Lambda.filter;
 import static ch.lambdaj.Lambda.on;
 import static ch.lambdaj.group.Groups.by;
 import static ch.lambdaj.group.Groups.group;
+import static org.apache.commons.lang3.ObjectUtils.compare;
 
-public class ReportCard {
+public class ReportCard implements Comparable<ReportCard>{
     @JsonProperty
     private List<Score> scores;
 
@@ -63,6 +65,11 @@ public class ReportCard {
         for (Integer score : scores)
             totalScore += score;
         return totalScore;
+    }
+
+    @Override
+    public int compareTo(ReportCard other) {
+        return compare(this.totalScore(), other.totalScore());
     }
 
 
