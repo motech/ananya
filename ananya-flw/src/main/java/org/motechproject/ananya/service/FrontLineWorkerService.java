@@ -212,5 +212,6 @@ public class FrontLineWorkerService {
         flwByOldMsisdn.setCurrentJobAidUsage(changeSelector.getTheLatestJobAidUsage());
         flwByOldMsisdn.setLastJobAidAccessTime(changeSelector.getTheLatestLastJobAidAccessTime());
         flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
+        flwByOldMsisdn.setPromptsHeard(changeSelector.getLatestPromptsHeard());
     }
 }
