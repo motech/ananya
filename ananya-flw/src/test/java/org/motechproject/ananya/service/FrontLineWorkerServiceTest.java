@@ -15,7 +15,6 @@ import org.motechproject.ananya.repository.AllSMSReferences;
 import java.util.*;
 
 import static junit.framework.Assert.*;
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -514,6 +513,7 @@ public class FrontLineWorkerServiceTest {
         fromFlw.setLastJobAidAccessTime(lastJobAidAccessTime);
         fromFlw.setReportCard(reportCard);
         fromFlw.setBookMark(bookMark);
+        fromFlw.setPromptsHeard(Collections.singletonMap("1", 1));
 
         when(allFrontLineWorkers.findByMsisdn(msisdn)).thenReturn(fromFlw);
         when(allFrontLineWorkers.findByMsisdn(newMsisdn)).thenReturn(null);
@@ -525,6 +525,7 @@ public class FrontLineWorkerServiceTest {
         assertEquals(currentJobAidUsage, fromFlw.getCurrentJobAidUsage());
         assertEquals(certificateCourseAttempts, fromFlw.currentCourseAttempts());
         assertNull(fromFlw.getLastJobAidAccessTime());
+        assertEquals(0, fromFlw.getPromptsHeard().size());
         assertEquals(reportCard, fromFlw.getReportCard());
         assertEquals(bookMark, fromFlw.getBookmark());
         verify(allFrontLineWorkers, never()).remove(any(FrontLineWorker.class));
