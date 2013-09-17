@@ -66,6 +66,7 @@ public class FLWRegistrationServiceTest {
     private Designation designation;
     private String language;
     private InOrder order;
+    private String newMsisdn;
 
     @Before
     public void setUp() {
@@ -150,6 +151,8 @@ public class FLWRegistrationServiceTest {
         Location location = new Location("state", "district", "block", "village", 1, 1, 1, 1, null, null);
         when(locationService.findFor("state", "district", "block", "village")).thenReturn(location);
         when(frontLineWorkerService.createOrUpdate(new FrontLineWorker(callerId, callerId, name, designation, location, language, null, flwId), location)).thenReturn(new FrontLineWorker(callerId, "operator", "bihar", language));
+        String status = "UNREGISTERED";
+        when(frontLineWorkerService.changeMsisdn(callerId, newMsisdn, location)).thenReturn(status);
         FrontLineWorkerDimension toFlw = new FrontLineWorkerDimension();
         when(registrationMeasureService.createOrUpdateFor(callerId)).thenReturn(registrationMeasure);
         when(registrationMeasure.getFrontLineWorkerDimension()).thenReturn(toFlw);
@@ -161,8 +164,9 @@ public class FLWRegistrationServiceTest {
 
         assertEquals(Long.valueOf(frontLineWorkerRequest.getNewMsisdn()), toFlw.getMsisdn());
         assertEquals(fromFlw.getOperator(), toFlw.getOperator());
+        assertEquals(status, toFlw.getStatus());
         verify(frontLineWorkerDimensionService).update(toFlw);
-        verify(frontLineWorkerService).changeMsisdn(frontLineWorkerRequest.getMsisdn(), frontLineWorkerRequest.getNewMsisdn());
+        verify(frontLineWorkerService).changeMsisdn(frontLineWorkerRequest.getMsisdn(), frontLineWorkerRequest.getNewMsisdn(), location);
     }
 
     @Test
@@ -489,7 +493,8 @@ public class FLWRegistrationServiceTest {
         language = "language";
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, null, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name(), language, null);
         frontLineWorkerRequest.setAlternateContactNumber(callerId);
-        frontLineWorkerRequest.setNewMsisdn("1234567890");
+        newMsisdn = "1234567890";
+        frontLineWorkerRequest.setNewMsisdn(newMsisdn);
         return frontLineWorkerRequest;
     }
 

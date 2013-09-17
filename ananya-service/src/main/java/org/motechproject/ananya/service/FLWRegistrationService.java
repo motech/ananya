@@ -129,28 +129,29 @@ public class FLWRegistrationService {
         frontLineWorker.setVerificationStatus(request.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         RegistrationMeasure registrationMeasure = updateAllMeasures(frontLineWorker);
-        if (request.hasMsisdnChange()) processChangeMsisdn(request, registrationMeasure);
+        if (request.hasMsisdnChange()) processChangeMsisdn(request, registrationMeasure, location);
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }
 
-    private void processChangeMsisdn(FrontLineWorkerRequest request, RegistrationMeasure registrationMeasure) {
+    private void processChangeMsisdn(FrontLineWorkerRequest request, RegistrationMeasure registrationMeasure, Location location) {
         String newMsisdn = request.getNewMsisdn();
-        frontLineWorkerService.changeMsisdn(request.getMsisdn(), newMsisdn);
-        updateReportsForMsisdnChange(Long.valueOf(newMsisdn), registrationMeasure);
+        String status = frontLineWorkerService.changeMsisdn(request.getMsisdn(), newMsisdn, location);
+        updateReportsForMsisdnChange(Long.valueOf(newMsisdn), registrationMeasure, status);
     }
 
-    private void updateReportsForMsisdnChange(Long newMsisdn, RegistrationMeasure registrationMeasure) {
-        FrontLineWorkerDimension toFlw = registrationMeasure.getFrontLineWorkerDimension();
-        FrontLineWorkerDimension fromFlw = frontLineWorkerDimensionService.getFrontLineWorkerDimension(newMsisdn);
-        String newOperator = msisdnTransfer(fromFlw) ? doTransfer(toFlw, fromFlw) : null;
-        toFlw.setOperator(newOperator);
-        toFlw.setMsisdn(newMsisdn);
-        frontLineWorkerDimensionService.update(toFlw);
+    private void updateReportsForMsisdnChange(Long newMsisdn, RegistrationMeasure registrationMeasure, String status) {
+        FrontLineWorkerDimension flwToBeUpdated = registrationMeasure.getFrontLineWorkerDimension();
+        FrontLineWorkerDimension flwToBeRemove = frontLineWorkerDimensionService.getFrontLineWorkerDimension(newMsisdn);
+        String newOperator = flwExists(flwToBeRemove) ? doTransfer(flwToBeUpdated, flwToBeRemove) : null;
+        flwToBeUpdated.setOperator(newOperator);
+        flwToBeUpdated.setMsisdn(newMsisdn);
+        flwToBeUpdated.setStatus(status);
+        frontLineWorkerDimensionService.update(flwToBeUpdated);
         frontLineWorkerHistoryService.create(registrationMeasure);
     }
 
-    private boolean msisdnTransfer(FrontLineWorkerDimension fromFlw) {
+    private boolean flwExists(FrontLineWorkerDimension fromFlw) {
         return fromFlw != null;
     }
 

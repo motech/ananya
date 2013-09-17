@@ -3,10 +3,7 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.ananya.domain.BookMark;
-import org.motechproject.ananya.domain.FrontLineWorker;
-import org.motechproject.ananya.domain.ReportCard;
-import org.motechproject.ananya.domain.Score;
+import org.motechproject.ananya.domain.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -130,5 +127,16 @@ public class FlwChangeSelectorTest {
         assertNotNull(changeSelector.getLatestCourseAttempt());
         assertNotNull(changeSelector.getHighestBookMark());
         assertNotNull(changeSelector.getLatestPromptsHeard());
+        assertEquals(RegistrationStatus.UNREGISTERED, changeSelector.getLatestRegistrationStatus());
+    }
+
+    @Test
+    public void shouldReturnRegistrationStatusOfNewMsisdnIsRegistered(){
+
+        FrontLineWorker toFlw = new FrontLineWorker();
+        toFlw.setRegistrationStatus(RegistrationStatus.REGISTERED);
+        changeSelector = new FlwChangeSelector(new FrontLineWorker()
+                , toFlw);
+        assertEquals(RegistrationStatus.REGISTERED, changeSelector.getLatestRegistrationStatus());
     }
 }

@@ -193,7 +193,7 @@ public class FrontLineWorkerService {
         }
     }
 
-    public void changeMsisdn(String msisdn, String newMsisdn) {
+    public String changeMsisdn(String msisdn, String newMsisdn, Location location) {
         FrontLineWorker flwByNewMsisdn = allFrontLineWorkers.findByMsisdn(newMsisdn);
         if (flwByNewMsisdn != null) {
             allFrontLineWorkers.remove(flwByNewMsisdn);
@@ -201,7 +201,10 @@ public class FrontLineWorkerService {
         FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
         FlwChangeSelector changeSelector = new FlwChangeSelector(flwByOldMsisdn, flwByNewMsisdn);
         setFlwFields(newMsisdn, changeSelector, flwByOldMsisdn);
+        if (flwByOldMsisdn.isAlreadyRegistered())
+            flwByOldMsisdn.decideRegistrationStatus(location);
         allFrontLineWorkers.update(flwByOldMsisdn);
+        return flwByOldMsisdn.getStatus().toString();
     }
 
     private void setFlwFields(String newMsisdn, FlwChangeSelector changeSelector, FrontLineWorker flwByOldMsisdn) {
@@ -213,5 +216,6 @@ public class FrontLineWorkerService {
         flwByOldMsisdn.setLastJobAidAccessTime(changeSelector.getTheLatestLastJobAidAccessTime());
         flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
         flwByOldMsisdn.setPromptsHeard(changeSelector.getLatestPromptsHeard());
+        flwByOldMsisdn.setRegistrationStatus(changeSelector.getLatestRegistrationStatus());
     }
 }
