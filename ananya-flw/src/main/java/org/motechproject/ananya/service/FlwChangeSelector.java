@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.domain.BookMark;
 import org.motechproject.ananya.domain.FrontLineWorker;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.ReportCard;
 
 import java.util.HashMap;
@@ -50,4 +51,7 @@ public class FlwChangeSelector {
         return toFlw == null ? new HashMap<String, Integer>() : toFlw.getPromptsHeard();
     }
 
+    public RegistrationStatus getLatestRegistrationStatus() {
+        return toFlw == null ? RegistrationStatus.UNREGISTERED : toFlw.getStatus();
+    }
 }
