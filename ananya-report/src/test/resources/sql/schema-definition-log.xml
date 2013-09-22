@@ -679,4 +679,13 @@
         </addColumn>
     </changeSet>
 
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="105">
+        <sql>
+            CREATE INDEX front_line_worker_history_current_idx
+            ON report.front_line_worker_history
+            USING BTREE
+            (flw_id, is_current);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
