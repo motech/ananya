@@ -86,6 +86,11 @@ ON report.call_duration_measure
 USING BTREE
 (location_id);
 
+CREATE INDEX idx_call_duration_measure_flw_id
+  ON report.call_duration_measure
+  USING btree
+  (flw_id);
+
 ALTER SEQUENCE report.call_duration_measure_id_seq OWNED BY report.call_duration_measure.id;
 ALTER TABLE report.call_duration_measure ALTER COLUMN id SET DEFAULT nextval('report.call_duration_measure_id_seq');
 
