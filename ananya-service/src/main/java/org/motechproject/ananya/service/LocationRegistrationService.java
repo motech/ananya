@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -26,7 +27,8 @@ public class LocationRegistrationService {
     private LocationService locationService;
     private LocationDimensionService locationDimensionService;
     private RegistrationService registrationService;
-    private static final Object SYNC_LOCK = new Object();
+ // private static final Object SYNC_LOCK = new Object();
+ 	private static HashMap<String, Object> hmLocationDetailsLock = new HashMap<String, Object>();
     Logger logger = Logger.getLogger(LocationRegistrationService.class);
 
     @Autowired
@@ -44,7 +46,8 @@ public class LocationRegistrationService {
     }
 
     public void addOrUpdate(LocationSyncRequest locationSyncRequest) {
-        synchronized (SYNC_LOCK) {
+    	Object syncLockObject = getSyncLockObject(locationSyncRequest);
+		synchronized (syncLockObject) {
             if (isNotLatestRequest(locationSyncRequest)) {
                 logger.info("Not syncing " + locationSyncRequest + " since it is not the latest request.");
                 return;
@@ -201,5 +204,17 @@ public class LocationRegistrationService {
 
 	public void updateStateNameByExternalId(String externalId, String state) {
 		locationService.updateStateNameByExternalId(externalId, state);
+	}
+	
+	private Object getSyncLockObject(LocationSyncRequest locationSyncRequest){
+		LocationRequest existingLocationRequest = locationSyncRequest.getExistingLocation();
+		String key = getKey(new Location(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat()));
+		if(!hmLocationDetailsLock.containsKey(key))
+			hmLocationDetailsLock.put(key, new Object());
+		return hmLocationDetailsLock.get(key);
+	}
+
+	private String getKey(Location location){
+		return location.getState()+"_"+location.getDistrict()+"_"+location.getBlock()+"_"+location.getPanchayat();
 	}
 }

@@ -3,6 +3,7 @@ package org.motechproject.ananya.service;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.JobAidCallDetails;
 import org.motechproject.ananya.domain.Location;
+import org.motechproject.ananya.domain.RegistrationStatus;
 import org.motechproject.ananya.domain.SMSReference;
 import org.motechproject.ananya.exception.ValidationException;
 import org.motechproject.ananya.mapper.FLWUsageResponseMapper;
@@ -38,13 +39,17 @@ public class FLWDetailsService {
     }
 
     public FLWUsageResponse getUsage(String msisdn) {
-        FrontLineWorker frontLineWorker = getFrontLineWorker(msisdn);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);
+        if(frontLineWorker==null){
+        	return new FLWUsageResponse(RegistrationStatus.NEW_USER.name());
+        }
         Location location = locationService.findByExternalId(frontLineWorker.getLocationId());
         CallDetailsResponse callDetails = callDurationMeasureService.getCallDetails(msisdn);
         SMSReference smsReferenceNumber = smsReferenceService.getSMSReferenceNumber(msisdn);
 
         return frontLineWorkerUsageResponseMapper.mapUsageResponse(frontLineWorker, location, callDetails, smsReferenceNumber);
     }
+
 
     private FrontLineWorker getFrontLineWorker(String msisdn) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);

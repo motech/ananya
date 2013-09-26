@@ -3,7 +3,8 @@ package org.motechproject.ananya.domain;
 public enum RegistrationStatus {
     REGISTERED(30),
     PARTIALLY_REGISTERED(20),
-    UNREGISTERED(10);
+    UNREGISTERED(10),
+    NEW_USER(0);
 
     public final int weight;
 

@@ -64,6 +64,10 @@ public class FLWUsageResponse {
         this.bookmark = bookmark;
         this.smsReferenceNumbers = smsReferenceNumbers;
     }
+    
+    public FLWUsageResponse(String registrationStatus) {
+		this.registrationStatus = registrationStatus;
+	}
 
     public String getName() {
         return name;
