@@ -58,16 +58,6 @@ public class FLWDetailsServiceTest {
     }
 
     @Test
-    public void shouldRaiseExceptionIfMsisdnIsInvalid() {
-        String msisdn = "msisdn";
-        expectedException.expect(ValidationException.class);
-        expectedException.expectMessage("unknown msisdn : " + msisdn);
-        when(frontLineWorkerService.findByCallerId(msisdn)).thenReturn(null);
-
-        flwDetailsService.getUsage(msisdn);
-    }
-
-    @Test
     public void shouldReturnUsageDetailsForAValidMsisdn() {
         UUID flwId = UUID.randomUUID();
 
