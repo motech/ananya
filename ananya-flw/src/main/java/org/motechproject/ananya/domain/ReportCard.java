@@ -3,7 +3,7 @@ package org.motechproject.ananya.domain;
 import ch.lambdaj.group.Group;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang3.ObjectUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -15,10 +15,13 @@ import static ch.lambdaj.Lambda.on;
 import static ch.lambdaj.group.Groups.by;
 import static ch.lambdaj.group.Groups.group;
 import static org.apache.commons.lang3.ObjectUtils.compare;
+import static org.apache.commons.lang3.ObjectUtils.max;
 
 public class ReportCard implements Comparable<ReportCard>{
     @JsonProperty
     private List<Score> scores;
+    @JsonIgnore
+    private Score latestScore;
 
     public ReportCard() {
         scores = new ArrayList<Score>();
@@ -42,6 +45,17 @@ public class ReportCard implements Comparable<ReportCard>{
     public List<Score> scores() {
         return Collections.unmodifiableList(scores);
     }
+    
+    public Score getlatestScore(){
+    	List<Score> scores = scores();
+    	if(scores==null || scores.isEmpty())
+    		return new Score("0", "0", false);
+    	latestScore = scores.get(0);
+    	for(Score score: scores){
+    			latestScore = max(score, latestScore);
+    	}
+    	return latestScore;
+    }
 
     public Map<String, Integer> scoresByChapterIndex() {
         Map<String, Integer> scoresByChapterIndex = new HashMap();
@@ -54,7 +68,7 @@ public class ReportCard implements Comparable<ReportCard>{
         }
         return scoresByChapterIndex;
     }
-
+    
     public Collection<Score> getScoresForChapter(String chapterIndex) {
         return CollectionUtils.select(scores, Score.findByChapterId(chapterIndex));
     }

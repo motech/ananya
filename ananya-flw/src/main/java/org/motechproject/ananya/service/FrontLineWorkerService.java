@@ -1,5 +1,8 @@
 package org.motechproject.ananya.service;
 
+import static org.apache.commons.lang3.ObjectUtils.compare;
+import static org.apache.commons.lang3.ObjectUtils.max;
+
 import org.ektorp.UpdateConflictException;
 import org.joda.time.DateTime;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
@@ -13,7 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 public class FrontLineWorkerService {
@@ -217,5 +225,21 @@ public class FrontLineWorkerService {
         flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
         flwByOldMsisdn.setPromptsHeard(changeSelector.getLatestPromptsHeard());
         flwByOldMsisdn.setRegistrationStatus(changeSelector.getLatestRegistrationStatus());
+        updateReportCardBasedOnChapterIndices(flwByOldMsisdn);
     }
+    
+    private void updateReportCardBasedOnChapterIndices(FrontLineWorker flwByOldMsisdn){
+    	BookMark bookamrk = flwByOldMsisdn.bookMark();
+    	Score latestScore = flwByOldMsisdn.getReportCard().getlatestScore();
+    	if(compare(bookamrk.getChapterIndex(), Integer.parseInt(latestScore.chapterIndex()))>0){
+    		int limit = bookamrk.getLessonIndex()<4?bookamrk.getChapterIndex()-1:bookamrk.getChapterIndex();
+    		for(int chapIndex=Integer.parseInt(latestScore.chapterIndex());chapIndex<limit;chapIndex++){
+    			for(int questionIndex=4;questionIndex<8;questionIndex++){
+    				Score score = new Score(String.valueOf(chapIndex),String.valueOf(questionIndex),false,latestScore.getCallId());
+    				flwByOldMsisdn.getReportCard().addScore(score);
+    			}
+    		}
+    	}
+    }
+
 }

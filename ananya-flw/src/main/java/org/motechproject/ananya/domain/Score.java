@@ -1,10 +1,12 @@
 package org.motechproject.ananya.domain;
 
+import static org.apache.commons.lang3.ObjectUtils.compare;
+
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Score {
+public class Score implements Comparable<Score> {
     @JsonProperty
     private String chapterIndex;
     @JsonProperty
@@ -97,4 +99,12 @@ public class Score {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+    
+    @Override
+    public int compareTo(Score other) {
+    	int chapterComparison = compare(this.chapterIndex, other.chapterIndex);
+        if(chapterComparison!=0) return chapterComparison;
+        return compare(this.questionIndex, other.questionIndex);
+    }
+    
 }

@@ -81,10 +81,13 @@ public class BookMark implements Comparable<BookMark> {
         return type == null && chapterIndex == null && lessonIndex == null;
     }
 
-    @Override
-    public int compareTo(BookMark other) {
-        int chapterComparison = compare(this.chapterIndex, other.chapterIndex);
-        if (chapterComparison != 0) return chapterComparison;
-        return compare(this.lessonIndex, other.lessonIndex);
-    }
+  	@Override
+	public int compareTo(BookMark other) {
+		int chapterComparison = compare(this.chapterIndex, other.chapterIndex);
+		if (chapterComparison != 0) return chapterComparison;
+		int lessonCompare = compare(this.lessonIndex, other.lessonIndex);
+		if(this.type!=null&&other.type!=null&&lessonCompare==0)
+			return compare(BookMarkTypeEnum.valueOf(this.type).getIndex(), BookMarkTypeEnum.valueOf(other.type).getIndex());
+		return lessonCompare;
+	}
 }
