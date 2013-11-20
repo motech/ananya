@@ -233,7 +233,7 @@ public class FrontLineWorkerService {
     	Score latestScore = flwByOldMsisdn.getReportCard().getlatestScore();
     	if(compare(bookamrk.getChapterIndex(), Integer.parseInt(latestScore.chapterIndex()))>0){
     		int limit = bookamrk.getLessonIndex()<4?bookamrk.getChapterIndex()-1:bookamrk.getChapterIndex();
-    		for(int chapIndex=Integer.parseInt(latestScore.chapterIndex());chapIndex<limit;chapIndex++){
+    		for(int chapIndex=Integer.parseInt(latestScore.chapterIndex()+1);chapIndex<=limit;chapIndex++){
     			for(int questionIndex=4;questionIndex<8;questionIndex++){
     				Score score = new Score(String.valueOf(chapIndex),String.valueOf(questionIndex),false,latestScore.getCallId());
     				flwByOldMsisdn.getReportCard().addScore(score);
