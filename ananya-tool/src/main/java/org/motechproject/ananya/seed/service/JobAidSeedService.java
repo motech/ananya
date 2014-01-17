@@ -104,7 +104,7 @@ public class JobAidSeedService {
 		allNodes.update(node);
 	}	
 
-	public void saveChaptersOrLessonsInCouchDBWithAdditionalDescents(Map<String, List<Node>> hmParentNodeNameChildNodes) {
+	public void saveNodesInCouchDBWithAdditionalDescents(Map<String, List<Node>> hmParentNodeNameChildNodes) {
 		for(String parentNodeName: hmParentNodeNameChildNodes.keySet()){
 			Node parentNode = allNodes.findByName(parentNodeName);
 			List<Node> childNodes = new ArrayList<Node>(); 
@@ -150,4 +150,11 @@ public class JobAidSeedService {
 			recursivelyAddNodesToReportDB(level, allJobAidContentDimensions.findByContentId(allNodes.findByName("Level 3 Chapter 4").getId()), languageDimension.getId());
 		recursivelyAddNodesToReportDB(level4Chap4Le5, allJobAidContentDimensions.findByContentId(allNodes.findByName("Level 4 Chapter 4").getId()), languageDimension.getId());
 	}
+	
+	public void addAdditionalNodesToReportDbForMK(String language, String nodeName, String parentName) {
+		Node node = allNodes.findByName(nodeName);	
+		LanguageDimension languageDimension = new LanguageDimension();
+		languageDimension = allLanguageDimension.getFor(language);	
+		recursivelyAddNodesToReportDB(node, allJobAidContentDimensions.findByContentId(allNodes.findByName(parentName).getId()), languageDimension.getId());
+		}
 }

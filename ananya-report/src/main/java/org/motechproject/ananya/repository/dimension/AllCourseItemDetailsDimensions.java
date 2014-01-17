@@ -17,7 +17,7 @@ public class AllCourseItemDetailsDimensions {
     }
 
     public CourseItemDetailsDimension getFor(String contentId, Integer languageId) {
-        return (CourseItemDetailsDimension) template.getUniqueResult(CourseItemDetailsDimension.FIND_BY_CONTENT_ID_AND_LANGUAGE_ID, new String[]{"contentId", "languageId"}, new Object[]{contentId, languageId});
+        return (CourseItemDetailsDimension) template.getUniqueResult(CourseItemDetailsDimension.FIND_BY_CONTENT_ID_AND_LANGUAGE_ID, new String[]{"contentId", "languageId"}, new Object[]{contentId.trim(), languageId});
     }
 
     public CourseItemDetailsDimension add(CourseItemDetailsDimension courseItemDetailsDimension) {

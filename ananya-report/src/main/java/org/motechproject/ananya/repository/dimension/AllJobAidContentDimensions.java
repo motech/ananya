@@ -19,7 +19,7 @@ public class AllJobAidContentDimensions {
 
     public JobAidContentDimension findByContentId(String contentId) {
         return (JobAidContentDimension) template.getUniqueResult(JobAidContentDimension.FIND_BY_CONTENT_ID,
-                new String[]{"content_id"}, new Object[]{contentId});
+                new String[]{"content_id"}, new Object[]{contentId.trim()});
     }
 
     public void update(JobAidContentDimension jobAidContentDimension) {

@@ -21,7 +21,7 @@ public class AllLocationDimensions {
     }
 
     public LocationDimension getFor(String locationCode) {
-        return (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode});
+        return (LocationDimension) template.getUniqueResult(LocationDimension.FIND_BY_LOCATION_ID, new String[]{"location_id"}, new Object[]{locationCode.trim()});
     }
 
     @Transactional

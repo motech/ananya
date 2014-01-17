@@ -41,7 +41,7 @@ public class JobAidSeed {
 		JobAidTree jobAidTree = new JobAidTree();
 		hmParentNodeNameChildNodes=jobAidTree.buildAdditionalChaptersForMK(hmParentNodeNameChildNodes);   
 		hmParentNodeNameChildNodes=jobAidTree.buildAdditionalLessonsForMK(hmParentNodeNameChildNodes); 
-		seedService.saveChaptersOrLessonsInCouchDBWithAdditionalDescents(hmParentNodeNameChildNodes);
+		seedService.saveNodesInCouchDBWithAdditionalDescents(hmParentNodeNameChildNodes);
 		for (String nodeName : Arrays.asList("Level 2 Chapter 4 Lesson3", "Level 2 Chapter 4 Lesson4"))
 			seedService.removeLessons(nodeName);
 		seedService.updateLessonNodeForMK();
@@ -52,4 +52,20 @@ public class JobAidSeed {
 		String language = "odia";
 		seedService.addAdditionalNodesToReportDbForMK(language);
 	}
+	
+	@Seed(priority = 0, version = "1.17", comment = "Create and persist the json-tree jobaid data structure with additional chapter for ICDS ")
+	public void addICDSJobAidCourseStructure() {
+		Map<String, List<Node>> hmParentNodeNameChildNodes = new HashMap<String, List<Node>>();
+		JobAidTree jobAidTree = new JobAidTree();
+		hmParentNodeNameChildNodes=jobAidTree.buildAdditionalLevelForMKICDS(hmParentNodeNameChildNodes);   
+		seedService.saveNodesInCouchDBWithAdditionalDescents(hmParentNodeNameChildNodes);	
+	}
+	
+	@Seed(priority = 0, version = "1.18", comment = "Create and persist the json-tree jobaid data structure with additional lessons in reportDb for ICDS")
+	public void addICDSJobAidCourseStructureToReportDb() {
+		String language = "bhojpuri";
+		seedService.addAdditionalNodesToReportDbForMK(language,"level 5","JobAidCourse");
+	}
+	
+	
 }

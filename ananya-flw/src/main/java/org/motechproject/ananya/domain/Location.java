@@ -37,7 +37,7 @@ public class Location extends MotechBaseDataObject {
 
     public Location() {
     }
-
+//new location in java
     public Location(String state, String district, String block, String panchayat, int stateCode, int districtCode, int blockCode, int panchayatCode, LocationStatus locationStatus, DateTime lastModifiedTime) {
         this.locationStatus = locationStatus == null ? null : locationStatus.name();
         this.state = StringUtils.trimToEmpty(state);

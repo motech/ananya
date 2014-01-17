@@ -126,6 +126,30 @@ public class JobAidTree {
 		return hmParentNodeNameChildNodes;
 	}
 
+	
+	public Map<String, List<Node>> buildAdditionalLevelForMKICDS(Map<String, List<Node>> hmParentNodeNameChildNodes) {
+
+		List<Node> levelNodes = new ArrayList<Node>();
+		
+		Node level5 = levelNode("level 5", "5", "0007_select_chapter_1.5.wav", "0");
+	   
+		Node level5Chap1 = chapterNode("Level 5 Chapter 1", "1", "0039_lessons_1.5.1.wav", "0", "0040_select_lesson_1.5.1.wav", "0");
+		Node level5Chap2 = chapterNode("Level 5 Chapter 2", "2", "0041_lessons_1.5.2.wav", "0", "0042_select_lesson_1.5.2.wav", "0");
+		Node level5Chap3 = chapterNode("Level 5 Chapter 3", "3", "0043_lessons_1.5.3.wav", "0", "0044_select_lesson_1.5.3.wav", "0");
+		for (Node level : asList(level5Chap1, level5Chap2, level5Chap3))
+			level5.addChild(level);
+		
+		addLessonsToChapter(level5Chap1, new String[][]{{"15", "0040_need_fp", "117012"}, {"16", "0041_spacing_and_y", "124719"}});
+		addLessonsToChapter(level5Chap2, new String[][]{{"17", "0042_tubal_ligation", "118300"}});
+		addLessonsToChapter(level5Chap3, new String[][]{{"18", "0043_comp_feeding", "113575"}, {"19", "0044_active_feeding", "110351"}, {"25", "0045_quality_food_hand_washing", "130363"}});
+	
+		levelNodes.add(level5);
+		hmParentNodeNameChildNodes.put("JobAidCourse", levelNodes);
+		
+		return hmParentNodeNameChildNodes;
+	}
+
+	
 	private Node courseNode(String name, String menu, String duration) {
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("type", "Level");

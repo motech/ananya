@@ -17,7 +17,7 @@ public class AllLanguageDimension {
     }
 
     public LanguageDimension getFor(String name) {
-        return (LanguageDimension) template.getUniqueResult(LanguageDimension.FIND_BY_LANGUAGE_NAME, new String[]{"name"}, new Object[]{name});
+        return (LanguageDimension) template.getUniqueResult(LanguageDimension.FIND_BY_LANGUAGE_NAME, new String[]{"name"}, new Object[]{name.trim()});
     }
 
     public LanguageDimension add(LanguageDimension languageDimension) {

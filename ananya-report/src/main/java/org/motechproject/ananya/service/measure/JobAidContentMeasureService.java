@@ -60,9 +60,8 @@ public class JobAidContentMeasureService extends TransferableMeasureService{
     }
 
     @Transactional
-    public void createFor(String callId) {
+    public void createFor(String callId) { 	
         AudioTrackerLog audioTrackerLog = audioTrackerLogService.getLogFor(callId);
-
         if (audioTrackerLog == null) {
             log.info(callId + "- audioTrackerLog not present");
             return;
@@ -73,7 +72,6 @@ public class JobAidContentMeasureService extends TransferableMeasureService{
             removeLog(callId, audioTrackerLog);
             return;
         }
-
         FrontLineWorkerDimension frontLineWorkerDimension = allFrontLineWorkerDimensions.fetchFor(audioTrackerLog.callerIdAsLong());
         RegistrationMeasure registrationMeasure = allRegistrationMeasures.fetchFor(frontLineWorkerDimension.getId());
         TimeDimension timeDimension = allTimeDimensions.getFor(audioTrackerLog.time());
@@ -88,7 +86,7 @@ public class JobAidContentMeasureService extends TransferableMeasureService{
                     frontLineWorkerDimension, locationDimension, jobAidContentDimension, timeDimension, languageDimension,
                     audioTrackerLogItem.getTime(),
                     audioTrackerLogItem.getDuration(),
-                    audioTrackerLogItem.getPercentage(jobAidContentDetailsDimension.getDuration()));
+                    audioTrackerLogItem.getPercentage(jobAidContentDetailsDimension!=null?jobAidContentDetailsDimension.getDuration():1));
             addFlwHistory(jobAidContentMeasure);
             allJobAidContentMeasures.add(jobAidContentMeasure);
         }

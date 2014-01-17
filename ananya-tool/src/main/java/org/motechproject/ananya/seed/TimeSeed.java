@@ -18,10 +18,10 @@ public class TimeSeed {
     @Autowired
     private DataAccessTemplate template;
 
-    @Seed(priority = 2, version = "1.0", comment = "load dimensions for 2 years from 1-1-2012 to 1-1-2014")
+    @Seed(priority = 2, version = "1.0", comment = "load dimensions for 2 years from 1-1-2012 to 1-1-2016")
     public void createDimensionsInPostgres() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
-        LocalDate endDate = DateUtil.newDate(2014, 1, 1);
+        LocalDate endDate = DateUtil.newDate(2016, 1, 1);
 
         while (DateUtil.isOnOrBefore(startDate.toDateTimeAtStartOfDay(),
                 endDate.toDateTimeAtStartOfDay())) {
@@ -33,7 +33,7 @@ public class TimeSeed {
     @Seed(priority = 2, version = "1.2", comment = "update the newly added column date for all dimensions")
     public void updateNewlyAddedDateFieldForAllDimensions() {
         LocalDate startDate = DateUtil.newDate(2012, 1, 1);
-        LocalDate endDate = DateUtil.newDate(2014, 1, 1);
+        LocalDate endDate = DateUtil.newDate(2016, 1, 1);
 
         while (DateUtil.isOnOrBefore(startDate.toDateTimeAtStartOfDay(),
                 endDate.toDateTimeAtStartOfDay())) {

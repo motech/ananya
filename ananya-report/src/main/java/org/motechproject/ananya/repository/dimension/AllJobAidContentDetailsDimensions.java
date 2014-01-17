@@ -17,7 +17,7 @@ public class AllJobAidContentDetailsDimensions {
     }
 
     public JobAidContentDetailsDimension getFor(String contentId, Integer languageId) {
-        return (JobAidContentDetailsDimension) template.getUniqueResult(JobAidContentDetailsDimension.FIND_BY_CONTENT_ID_AND_LANGUAGE_ID, new String[]{"contentId", "languageId"}, new Object[]{contentId, languageId});
+        return (JobAidContentDetailsDimension) template.getUniqueResult(JobAidContentDetailsDimension.FIND_BY_CONTENT_ID_AND_LANGUAGE_ID, new String[]{"contentId", "languageId"}, new Object[]{contentId.trim(), languageId});
     }
 
     public JobAidContentDetailsDimension add(JobAidContentDetailsDimension jobAidContentDetailsDimension) {

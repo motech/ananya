@@ -18,11 +18,11 @@ public class AllCourseItemDimensions {
     }
 
     public CourseItemDimension getFor(String name, CourseItemType type) {
-        return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME_AND_TYPE, new String[]{"name", "type"}, new Object[]{name, type.name()});
+        return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_NAME_AND_TYPE, new String[]{"name", "type"}, new Object[]{name.trim(), type.name()});
     }
 
     public CourseItemDimension getFor(String contentId) {
-        return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_CONTENT_ID, new String[]{"contentId"}, new Object[]{contentId});
+        return (CourseItemDimension) template.getUniqueResult(CourseItemDimension.FIND_BY_CONTENT_ID, new String[]{"contentId"}, new Object[]{contentId.trim()});
     }
 
     public CourseItemDimension add(CourseItemDimension courseItemDimension) {

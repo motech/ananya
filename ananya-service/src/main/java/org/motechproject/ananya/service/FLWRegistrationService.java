@@ -129,7 +129,10 @@ public class FLWRegistrationService {
         frontLineWorker.setVerificationStatus(request.getVerificationStatusAsEnum());
         frontLineWorker = frontLineWorkerService.createOrUpdate(frontLineWorker, location);
         RegistrationMeasure registrationMeasure = updateAllMeasures(frontLineWorker);
-        if (request.hasMsisdnChange()) processChangeMsisdn(request, registrationMeasure, location);
+        if (request.hasMsisdnChange()) {
+        	log.info("processing change msisdn request: "+request.toString());
+        	processChangeMsisdn(request, registrationMeasure, location);
+        }
         log.info("Registered new FLW:" + callerId);
         return registrationResponse.withNewRegistrationDone();
     }
@@ -174,6 +177,7 @@ public class FLWRegistrationService {
             LocationRequest request = new LocationRequest(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
             locationRegistrationService.addOrUpdate(new LocationSyncRequest(request, request, LocationStatus.NOT_VERIFIED.name(), frontLineWorkerRequest.getLastModified()));
         }
+        
         return locationService.findFor(locationRequest.getState(), locationRequest.getDistrict(), locationRequest.getBlock(), locationRequest.getPanchayat());
     }
 

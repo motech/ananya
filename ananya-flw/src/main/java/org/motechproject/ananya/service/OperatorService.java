@@ -20,7 +20,7 @@ public class OperatorService {
         return StringUtils.isNotBlank(operator) ?
                 allOperators.findByName(operator).getAllowedUsagePerMonth() : 0;
     }
-
+    
     public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec) {
         Operator operator = allOperators.findByName(operatorName);
         Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
