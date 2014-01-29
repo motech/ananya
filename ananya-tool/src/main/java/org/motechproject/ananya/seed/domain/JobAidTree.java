@@ -127,21 +127,21 @@ public class JobAidTree {
 	}
 
 	
-	public Map<String, List<Node>> buildAdditionalLevelForMKICDS(Map<String, List<Node>> hmParentNodeNameChildNodes) {
+		public Map<String, List<Node>> buildAdditionalLevelForMKICDS(Map<String, List<Node>> hmParentNodeNameChildNodes) {
 
 		List<Node> levelNodes = new ArrayList<Node>();
 		
-		Node level5 = levelNode("level 5", "5", "0007_select_chapter_1.5.wav", "0");
+		Node level5 = levelNode("level 5", "5", "0006.1_select_ch1.5.wav", "1000");
 	   
-		Node level5Chap1 = chapterNode("Level 5 Chapter 1", "1", "0039_lessons_1.5.1.wav", "0", "0040_select_lesson_1.5.1.wav", "0");
-		Node level5Chap2 = chapterNode("Level 5 Chapter 2", "2", "0041_lessons_1.5.2.wav", "0", "0042_select_lesson_1.5.2.wav", "0");
-		Node level5Chap3 = chapterNode("Level 5 Chapter 3", "3", "0043_lessons_1.5.3.wav", "0", "0044_select_lesson_1.5.3.wav", "0");
+		Node level5Chap1 = chapterNode("Level 5 Chapter 1", "1", "0038.3_Lesson 1.5.1.wav", "1000", "0038.4_select_lesons1.5.1.wav", "1000");
+		Node level5Chap2 = chapterNode("Level 5 Chapter 2", "2", "0038.5_Lesson 1.5.2.wav", "1000", "0038.6_select_lesons1.5.2.wav", "1000");
+		Node level5Chap3 = chapterNode("Level 5 Chapter 3", "3", "0038.7_Lesson 1.5.3.wav", "1000", "0038.8_select_lesons1.5.3.wav", "1000");
 		for (Node level : asList(level5Chap1, level5Chap2, level5Chap3))
 			level5.addChild(level);
 		
-		addLessonsToChapter(level5Chap1, new String[][]{{"15", "0040_need_fp", "117012"}, {"16", "0041_spacing_and_y", "124719"}});
-		addLessonsToChapter(level5Chap2, new String[][]{{"17", "0042_tubal_ligation", "118300"}});
-		addLessonsToChapter(level5Chap3, new String[][]{{"18", "0043_comp_feeding", "113575"}, {"19", "0044_active_feeding", "110351"}, {"25", "0045_quality_food_hand_washing", "130363"}});
+		addLessonsToChapter(level5Chap1, new String[][]{{"15", "0044_Growth_monitoring_imp", "1000"}, {"16", "0045_Developmental_milestones", "1000"}});
+		addLessonsToChapter(level5Chap2, new String[][]{{"17", "0046_Malnutrition", "1000"}});
+		addLessonsToChapter(level5Chap3, new String[][]{{"18", "0047_Iron_deficiency", "1000"}, {"19", "0048_VitaminA", "1000"}, {"25", "0049_Iodine", "1000"}});
 	
 		levelNodes.add(level5);
 		hmParentNodeNameChildNodes.put("JobAidCourse", levelNodes);
