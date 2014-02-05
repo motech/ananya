@@ -73,7 +73,7 @@ public class FrontLineWorkerService {
 
     public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle, String language) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-
+		log.info("frontLineWorker="+frontLineWorker);
         //new flw
         if (frontLineWorker == null) {
             try {
