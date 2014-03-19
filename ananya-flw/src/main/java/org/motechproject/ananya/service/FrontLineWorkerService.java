@@ -73,7 +73,7 @@ public class FrontLineWorkerService {
 
     public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle, String language) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-		log.info("frontLineWorker="+frontLineWorker);
+        log.info("frontLineWorker="+frontLineWorker);
         //new flw
         if (frontLineWorker == null) {
             try {
@@ -204,6 +204,7 @@ public class FrontLineWorkerService {
     }
 
     public String changeMsisdn(String msisdn, String newMsisdn, Location location) {
+    	log.info("change msisdn request for: "+msisdn+" with "+newMsisdn);
         FrontLineWorker flwByNewMsisdn = allFrontLineWorkers.findByMsisdn(newMsisdn);
         if (flwByNewMsisdn != null) {
             allFrontLineWorkers.remove(flwByNewMsisdn);

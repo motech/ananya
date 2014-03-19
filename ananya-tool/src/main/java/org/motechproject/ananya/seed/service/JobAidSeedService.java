@@ -116,7 +116,7 @@ public class JobAidSeedService {
 		}
 	}
 
-	public void removeLessons(String nodeName) {
+	public void removeNode(String nodeName) {
 		allNodes.remove(allNodes.findByName(nodeName));
 	}
 

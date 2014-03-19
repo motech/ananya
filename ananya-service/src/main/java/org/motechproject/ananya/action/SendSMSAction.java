@@ -1,7 +1,10 @@
 package org.motechproject.ananya.action;
 
+import java.util.List;
+
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.domain.SMSLog;
+import org.motechproject.ananya.contract.CertificateCourseStateRequest;
 import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.service.SMSLogService;
 import org.slf4j.Logger;
@@ -23,6 +26,7 @@ public class SendSMSAction implements CourseAction {
 
     @Override
     public void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
+    	log.info("stateRequestList="+stateRequestList+" ");
         if (frontLineWorker.courseInProgress() && frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
             frontLineWorker.incrementCertificateCourseAttempts();
 

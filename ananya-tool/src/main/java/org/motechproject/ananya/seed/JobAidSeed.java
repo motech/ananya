@@ -43,7 +43,7 @@ public class JobAidSeed {
 		hmParentNodeNameChildNodes=jobAidTree.buildAdditionalLessonsForMK(hmParentNodeNameChildNodes); 
 		seedService.saveNodesInCouchDBWithAdditionalDescents(hmParentNodeNameChildNodes);
 		for (String nodeName : Arrays.asList("Level 2 Chapter 4 Lesson3", "Level 2 Chapter 4 Lesson4"))
-			seedService.removeLessons(nodeName);
+			seedService.removeNode(nodeName);
 		seedService.updateLessonNodeForMK();
 	}
 

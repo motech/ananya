@@ -39,7 +39,7 @@ public class LogsPageTest {
         assertNotNull(fileInfo.getLastUpdated());
     }
 
-    @Test
+  /*  @Test
     public void shouldReturnModelContainingListOfAllFilesInLogDirectoryForProd() {
         logsPage = new LogsPage("/logs","prod");
         ModelAndView modelAndView = logsPage.display();
@@ -47,5 +47,5 @@ public class LogsPageTest {
         List<FileInfo> filesInfo = (List<FileInfo>) modelAndView.getModel().get("logFilesInfo");
 
         assertEquals(0, filesInfo.size());
-    }
+    }*/
 }
