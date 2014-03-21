@@ -189,7 +189,7 @@ public class FLWRegistrationService {
                         StringUtils.trimToEmpty(locationRequest.getBlock()),
                         StringUtils.trimToEmpty(locationRequest.getPanchayat()))
                 : null;
-        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(StringUtils.trimToEmpty(request.getMsisdn()),
+        FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(StringUtils.trimToEmpty(prefixMsisdnWith91(request.getMsisdn())),
                 request.getAlternateContactNumber(),
                 StringUtils.trimToEmpty(request.getName()),
                 StringUtils.trimToEmpty(request.getDesignation()),
@@ -197,7 +197,7 @@ public class FLWRegistrationService {
                 request.getLastModified(),
                 StringUtils.trimToEmpty(request.getFlwId()),
                 request.getVerificationStatus(),
-                request.getLanguage(), request.getNewMsisdn());
+                request.getLanguage(), prefixMsisdnWith91(request.getNewMsisdn()));
         return frontLineWorkerRequest;
     }
 
@@ -208,5 +208,9 @@ public class FLWRegistrationService {
         jobAidContentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         smsSentMeasureService.updateLocation(frontLineWorker.msisdn(), frontLineWorker.getLocationId());
         return registrationMeasure;
+    }
+    
+    private String prefixMsisdnWith91(String msisdn) {
+        return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
     }
 }
