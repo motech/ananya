@@ -493,7 +493,7 @@ public class FLWRegistrationServiceTest {
         language = "language";
         FrontLineWorkerRequest frontLineWorkerRequest = new FrontLineWorkerRequest(callerId, null, name, designation.name(), new LocationRequest("state", "district ", " block", "village"), null, flwId.toString(), VerificationStatus.OTHER.name(), language, null);
         frontLineWorkerRequest.setAlternateContactNumber(callerId);
-        newMsisdn = "1234567890";
+        newMsisdn = "911234567890";
         frontLineWorkerRequest.setNewMsisdn(newMsisdn);
         return frontLineWorkerRequest;
     }
