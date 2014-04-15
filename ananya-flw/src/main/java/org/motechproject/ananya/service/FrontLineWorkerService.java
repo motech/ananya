@@ -70,10 +70,22 @@ public class FrontLineWorkerService {
         }
         return frontLineWorker;
     }
+    
+    public FrontLineWorker findForCourseCallerDataWithUsage(String callerId) {
+        FrontLineWorker frontLineWorker = findByCallerId(callerId);
+        if (frontLineWorker != null  && frontLineWorker.courseLastAccessedPreviousMonth()) {
+        	if(frontLineWorker.jobAidLastAccessedPreviousMonth())
+        		frontLineWorker.resetJobAidUsageAndPrompts();
+        	frontLineWorker.resetCourseUsageAndPrompts();
+            allFrontLineWorkers.update(frontLineWorker);
+            log.info("reset last usage certificate course and jobaid for " + frontLineWorker.getMsisdn());
+        }
+        return frontLineWorker;
+    }
 
     public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle, String language) {
         FrontLineWorker frontLineWorker = findByCallerId(callerId);
-         log.info("frontLineWorker="+frontLineWorker+" for callerId "+callerId);
+        log.info("frontLineWorker="+frontLineWorker+" for callerId "+callerId);
         //new flw
         if (frontLineWorker == null) {
             try {
@@ -90,6 +102,7 @@ public class FrontLineWorkerService {
             }
         }
 
+        
         //no-change flw only if FLW's language is null so updated language is not null
         boolean operatorHasNotChanged = frontLineWorker.operatorIs(operator);
         if (frontLineWorker.circleIs(circle) && operatorHasNotChanged && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
@@ -122,6 +135,8 @@ public class FrontLineWorkerService {
         log.info("updated certificate course state for " + frontLineWorker.getMsisdn());
     }
 
+ 
+    
     public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
         for (String prompt : promptList)
             frontLineWorker.markPromptHeard(prompt);
@@ -132,6 +147,18 @@ public class FrontLineWorkerService {
 
         allFrontLineWorkers.update(frontLineWorker);
         log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker.getMsisdn());
+    }
+    
+    public void updateCCState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
+        for (String prompt : promptList)
+            frontLineWorker.markPromptHeardForMA(prompt);
+
+        Integer usageByPulseInMilliSec = operatorService.usageByPulseInMilliSec(frontLineWorker.getOperator(), currentCallDuration, frontLineWorker.getCircle());
+        frontLineWorker.updateCourseUsage(usageByPulseInMilliSec);
+        frontLineWorker.setLastCourseAccessTime(DateTime.now());
+
+        allFrontLineWorkers.update(frontLineWorker);
+        log.info("updated prompts-heard, certificate-usage and access-time for " + frontLineWorker.getMsisdn());
     }
 
     public int getCurrentCourseAttempt(String callerId) {
@@ -225,6 +252,7 @@ public class FrontLineWorkerService {
         flwByOldMsisdn.setBookMark(changeSelector.getHighestBookMark());
         flwByOldMsisdn.setCurrentJobAidUsage(changeSelector.getTheLatestJobAidUsage());
         flwByOldMsisdn.setLastJobAidAccessTime(changeSelector.getTheLatestLastJobAidAccessTime());
+        flwByOldMsisdn.setLastCourseAccessTime(changeSelector.getTheLatestLastCourseAccessTime());
         flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
         flwByOldMsisdn.setPromptsHeard(changeSelector.getLatestPromptsHeard());
         flwByOldMsisdn.setRegistrationStatus(changeSelector.getLatestRegistrationStatus());

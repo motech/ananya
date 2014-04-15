@@ -27,6 +27,15 @@ public class SendSMSAction implements CourseAction {
     @Override
     public void process(FrontLineWorker frontLineWorker, CertificateCourseStateRequestList stateRequestList) {
     	log.info("stateRequestList="+stateRequestList+" ");
+    	if(stateRequestList!=null){
+    		log.info("stateRequestList not null. printing all values="+stateRequestList.toString());
+    		log.info(stateRequestList.all().toString());
+    		List<CertificateCourseStateRequest> list= stateRequestList.all();
+    		 for (CertificateCourseStateRequest stateRequest : list)
+    			 log.info(stateRequest.toString());
+    			
+ 
+    	}
         if (frontLineWorker.courseInProgress() && frontLineWorker.hasPassedTheCourse() && stateRequestList.hasCourseCompletionInteraction()) {
             frontLineWorker.incrementCertificateCourseAttempts();
 

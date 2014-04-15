@@ -3,6 +3,7 @@ package org.motechproject.ananya.web;
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
 import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.response.CertificateCourseCallerDataWithUsageForCappingResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.motechproject.ananya.service.JobAidService;
@@ -48,6 +49,7 @@ public class CallerDataController extends BaseAnanyaController {
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("language", (callerData.getLanguage()!=null?callerData.getLanguage():"null"))
+                .addObject("currentCourseUsage", callerData.getCurrentCertificatCourseUsage())
                 .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())
                 .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
                 .addObject("promptsHeard", callerData.getPromptsHeard());
@@ -72,6 +74,33 @@ public class CallerDataController extends BaseAnanyaController {
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
                 .addObject("language", (callerData.getLanguage()!=null?callerData.getLanguage():"null"))
                 .addObject("scoresByChapter", callerData.getScoresByChapter());
+    }
+    
+    
+    //Include capping for certificate course usage
+    @RequestMapping(method = RequestMethod.GET, value = "/dynamic/certificatecourse/caller_data.js")
+    public ModelAndView getCallerDataForCourseWithUsageForCapping(HttpServletResponse response,
+                                               @RequestParam String callId,
+                                               @RequestParam String callerId,
+                                               @RequestParam String operator,
+                                               @RequestParam String circle) throws Exception {
+
+        CertificateCourseServiceRequest certificateCourseServiceRequest = new CertificateCourseServiceRequest(callId, callerId)
+                .withCircle(circle).withOperator(operator);
+
+        CertificateCourseCallerDataWithUsageForCappingResponse callerData = certificateCourseService.createCallerDataWithUsage(certificateCourseServiceRequest);
+        log.info(callId + "- fetched caller data for course "+callerData);
+
+        setContentType(response);
+        return new ModelAndView("caller_data_capping")
+                .addObject("bookmark", callerData.getBookmark())
+                .addObject("isCallerRegistered", callerData.isCallerRegistered())
+                .addObject("language", (callerData.getLanguage()!=null?callerData.getLanguage():"null"))
+                .addObject("scoresByChapter", callerData.getScoresByChapter())
+                .addObject("currentCourseUsage", callerData.getCurrentCertificatCourseUsage())
+                .addObject("currentJobAidUsage", callerData.getCombinedUsage())
+                .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
+                .addObject("promptsHeardForMA", callerData.getPromptsHeardForMA());
     }
 
     private void setContentType(HttpServletResponse response) {

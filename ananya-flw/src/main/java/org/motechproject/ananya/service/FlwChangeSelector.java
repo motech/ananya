@@ -28,6 +28,10 @@ public class FlwChangeSelector {
     public DateTime getTheLatestLastJobAidAccessTime() {
         return (toFlw == null) ? null : toFlw.getLastJobAidAccessTime();
     }
+    
+    public DateTime getTheLatestLastCourseAccessTime() {
+        return (toFlw == null) ? null : toFlw.getLastCourseAccessTime();
+    }
 
     public Integer getTheLatestJobAidUsage() {
         return toFlw == null || toFlw.getCurrentJobAidUsage() == null ? fromFlw.getCurrentJobAidUsage() : toFlw.getCurrentJobAidUsage();

@@ -24,7 +24,7 @@ public class AllOperatorDimensionsIT extends SpringIntegrationTest{
     @Test
     public void shouldSaveOperatorDimension() {
         String operatorName = "airtel";
-        allOperatorDimensions.add(new OperatorDimension(operatorName,0,0,0));
+        allOperatorDimensions.add(new OperatorDimension(operatorName,0,0,0,""));
         List<OperatorDimension> operatorDimensions = template.loadAll(OperatorDimension.class);
         assertEquals(operatorName, operatorDimensions.get(0).getName());
     }

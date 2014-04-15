@@ -67,7 +67,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private Integer currentJobAidUsage;
 
     @JsonProperty
+    private Integer currentCourseUsage;
+
+    @JsonProperty
     private DateTime lastJobAidAccessTime;
+    
+    @JsonProperty
+    private DateTime lastCourseAccessTime;
 
     @JsonProperty
     private DateTime lastModified;
@@ -75,6 +81,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonProperty
     private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
+    @JsonProperty
+    private Map<String, Integer> promptsHeardForMA = new HashMap<String, Integer>();
+
+    
     @JsonIgnore
     private boolean modified;
 
@@ -87,6 +97,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public FrontLineWorker() {
         this.certificateCourseAttempts = 0;
         this.currentJobAidUsage = 0;
+        this.currentCourseUsage = 0;
     }
 
     public FrontLineWorker(String msisdn, String operator, String circle, String language) {
@@ -244,16 +255,34 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public Map<String, Integer> getPromptsHeard() {
         return this.promptsHeard;
     }
+    
+    public void markPromptHeardForMA(String promptKey) {
+        this.promptsHeardForMA.put(promptKey,
+                this.promptsHeardForMA.containsKey(promptKey) ? this.promptsHeardForMA.get(promptKey) + 1 : 1);
+    }
 
-    public void setLastJobAidAccessTime(DateTime lastJobAidAccessTime) {
+
+    public Map<String, Integer> getPromptsHeardForMA() {
+		return promptsHeardForMA;
+	}
+
+	public void setLastJobAidAccessTime(DateTime lastJobAidAccessTime) {
         this.lastJobAidAccessTime = lastJobAidAccessTime;
     }
 
     public DateTime getLastJobAidAccessTime() {
         return lastJobAidAccessTime;
     }
+    
+    public DateTime getLastCourseAccessTime() {
+		return lastCourseAccessTime;
+	}
 
-    public DateTime getLastModified() {
+	public void setLastCourseAccessTime(DateTime lastCourseAccessTime) {
+		this.lastCourseAccessTime = lastCourseAccessTime;
+	}
+
+	public DateTime getLastModified() {
         return lastModified;
     }
 
@@ -296,6 +325,11 @@ public class FrontLineWorker extends MotechBaseDataObject {
         this.currentJobAidUsage = 0;
         this.promptsHeard.remove("Max_Usage");
     }
+    
+    public void resetCourseUsageAndPrompts() {
+        this.currentCourseUsage = 0;
+        this.promptsHeardForMA.remove("Max_Usage");
+    }
 
     public boolean circleIs(String circle) {
         return StringUtils.equalsIgnoreCase(this.circle, circle);
@@ -315,6 +349,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return lastJobAidAccessTime != null &&
                 (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                         lastJobAidAccessTime.getYear() != now.getYear());
+    }
+    
+    @JsonIgnore
+    public boolean courseLastAccessedPreviousMonth() {
+        DateTime now = DateTime.now();
+        return lastCourseAccessTime != null &&
+                (lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                		lastCourseAccessTime.getYear() != now.getYear());
     }
 
     @JsonIgnore
@@ -353,6 +395,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
             this.bookmark = frontLineWorker.bookMark();
             this.reportCard = frontLineWorker.reportCard();
             this.certificateCourseAttempts = frontLineWorker.certificateCourseAttempts;
+            this.currentCourseUsage = frontLineWorker.currentCourseUsage;
+            this.promptsHeardForMA = frontLineWorker.promptsHeardForMA;
+            this.lastCourseAccessTime = frontLineWorker.lastCourseAccessTime;
         }
         if (this.currentJobAidUsage == 0) {
             this.currentJobAidUsage = frontLineWorker.currentJobAidUsage;
@@ -425,6 +470,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void updateJobAidUsage(Integer durationInMilliSec) {
         this.currentJobAidUsage += durationInMilliSec;
     }
+    
+    public void updateCourseUsage(Integer durationInMilliSec) {
+        this.currentCourseUsage += durationInMilliSec;
+    }
 
     public void updateLocation(Location location) {
         locationId = location.getExternalId();
@@ -466,4 +515,19 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void setPromptsHeard(Map<String, Integer> promptsHeard) {
         this.promptsHeard = promptsHeard;
     }
+    
+
+	public void setPromptsHeardForMA(Map<String, Integer> promptsHeardForMA) {
+		this.promptsHeardForMA = promptsHeardForMA;
+	}
+
+	public Integer getCurrentCourseUsage() {
+		return this.currentCourseUsage != null ? this.currentCourseUsage : 0;
+	}
+
+	public void setCurrentCourseUsage(Integer currentCourseUsage) {
+		this.currentCourseUsage = currentCourseUsage;
+	}
+    
+    
 }

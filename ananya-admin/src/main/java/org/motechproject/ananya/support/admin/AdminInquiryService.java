@@ -8,6 +8,7 @@ import org.hibernate.classic.Session;
 import org.motechproject.ananya.domain.FrontLineWorker;
 import org.motechproject.ananya.repository.DataAccessTemplate;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.response.CertificateCourseCallerDataWithUsageForCappingResponse;
 import org.motechproject.ananya.response.JobAidCallerDataResponse;
 import org.motechproject.ananya.service.FrontLineWorkerService;
 import org.motechproject.ananya.service.OperatorService;
@@ -94,11 +95,11 @@ public class AdminInquiryService {
             return String.format(CALLER_DATA_JSON, "{}", "{}");
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        int maxUsage = operatorService.findMaximumUsageFor(frontLineWorker.getOperator());
+        int maxUsage = operatorService.findMaximumUsageFor(frontLineWorker.getOperator(),frontLineWorker.getCircle());
 
         return String.format(CALLER_DATA_JSON,
                 gson.toJson(new JobAidCallerDataResponse(frontLineWorker, maxUsage)),
-                gson.toJson(new CertificateCourseCallerDataResponse(frontLineWorker)));
+                gson.toJson(new CertificateCourseCallerDataWithUsageForCappingResponse(frontLineWorker, maxUsage)));
     }
 
     private List<CallContent> callContentQueryResult(String callerId, AdminQuery queryType) {

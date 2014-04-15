@@ -1,10 +1,18 @@
 package org.motechproject.ananya.contract;
 
+import java.util.List;
+
 import org.motechproject.ananya.domain.ServiceType;
 import org.motechproject.ananya.domain.TransferData;
 import org.motechproject.ananya.domain.TransferDataList;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 public class CertificateCourseServiceRequest extends BaseServiceRequest {
+	
+	 private String promptList;
+	 private Integer ccCallDuration;
 
     public CertificateCourseServiceRequest(String callId, String callerId, String calledNumber) {
         super(callId, callerId, calledNumber);
@@ -42,8 +50,29 @@ public class CertificateCourseServiceRequest extends BaseServiceRequest {
         return this;
     }
     
+    public CertificateCourseServiceRequest withPromptList(String promptList) {
+        this.promptList = promptList;
+        return this;
+    }
+    
+    public CertificateCourseServiceRequest withCallDuration(Integer ccCallDuration) {
+        this.ccCallDuration = ccCallDuration;
+        return this;
+    }
+    
     @Override
     public ServiceType getType() {
         return ServiceType.CERTIFICATE_COURSE;
     }
+
+    public List<String> getPrompts() {
+        return new Gson().fromJson(promptList, new TypeToken<List<String>>() {
+        }.getType());
+    }
+
+	public Integer getCcCallDuration() {
+		return ccCallDuration;
+	}
+    
+    
 }

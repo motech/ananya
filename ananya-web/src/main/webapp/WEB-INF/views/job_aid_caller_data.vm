@@ -11,5 +11,6 @@ var callerData = {
             ,
             #end
         #end
-    }
+    },
+    "currentCourseUsage" : ${currentCourseUsage}
 };

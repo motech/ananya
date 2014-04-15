@@ -9,6 +9,7 @@ public class JobAidCallerDataResponse {
     private boolean isCallerRegistered;
     private String language;
     private Integer currentJobAidUsage;
+    private Integer currentCertificatCourseUsage;
     private Integer maxAllowedUsageForOperator;
     private Map<String, Integer> promptsHeard;
 
@@ -18,6 +19,7 @@ public class JobAidCallerDataResponse {
         this.promptsHeard = frontLineWorker.getPromptsHeard();
         this.maxAllowedUsageForOperator = maxUsage;
         this.language = frontLineWorker.getLanguage();
+        this.currentCertificatCourseUsage = frontLineWorker.getCurrentCourseUsage();
     }
 
     public JobAidCallerDataResponse() {
@@ -30,6 +32,7 @@ public class JobAidCallerDataResponse {
         jobAidCallerDataResponse.language = null;
         jobAidCallerDataResponse.promptsHeard = new HashMap<String, Integer>();
         jobAidCallerDataResponse.maxAllowedUsageForOperator = maxOperatorUsage;
+        jobAidCallerDataResponse.currentCertificatCourseUsage = 0;
         return jobAidCallerDataResponse;
     }
 
@@ -41,6 +44,10 @@ public class JobAidCallerDataResponse {
         return currentJobAidUsage;
     }
 
+    public Integer getCurrentCertificatCourseUsage() {
+		return currentCertificatCourseUsage;
+	}
+    
     public Integer getMaxAllowedUsageForOperator() {
         return maxAllowedUsageForOperator;
     }

@@ -16,13 +16,22 @@ public class OperatorService {
         this.allOperators = allOperators;
     }
 
-    public Integer findMaximumUsageFor(String operator) {
-        return StringUtils.isNotBlank(operator) ?
-                allOperators.findByName(operator).getAllowedUsagePerMonth() : 0;
+    public Integer findMaximumUsageFor(String operator, String circle) {
+        return (operator!=null && StringUtils.isNotBlank(operator)) ?
+                allOperators.findByName(operator, circle).getAllowedUsagePerMonth() : 0;
     }
     
     public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec) {
-        Operator operator = allOperators.findByName(operatorName);
+        Operator operator = allOperators.findByName(operatorName, null);
+        Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
+        Integer startOfPulseInMilliSec = operator.getStartOfPulseInMilliSec();
+
+        double durationConsideringStartOfPulse = findDurationConsideringStartOfPulse(durationInMilliSec, startOfPulseInMilliSec);
+        return calculatePulse(pulseToMilliSecForOperator, durationConsideringStartOfPulse) * pulseToMilliSecForOperator;
+    }
+    
+    public Integer usageByPulseInMilliSec(String operatorName, Integer durationInMilliSec, String circle) {
+        Operator operator = allOperators.findByName(operatorName, circle);
         Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
         Integer startOfPulseInMilliSec = operator.getStartOfPulseInMilliSec();
 
@@ -31,7 +40,7 @@ public class OperatorService {
     }
 
     public Integer usageInPulse(String operatorName, Integer durationInMilliSec) {
-        Operator operator = allOperators.findByName(operatorName);
+        Operator operator = allOperators.findByName(operatorName, null);
         Integer pulseToMilliSecForOperator = operator.getPulseToMilliSec();
         Integer startOfPulseInMilliSec = operator.getStartOfPulseInMilliSec();
 

@@ -11,6 +11,7 @@ import org.motechproject.ananya.contract.CertificateCourseStateRequestList;
 import org.motechproject.ananya.contract.FrontLineWorkerCreateResponse;
 import org.motechproject.ananya.domain.*;
 import org.motechproject.ananya.response.CertificateCourseCallerDataResponse;
+import org.motechproject.ananya.response.CertificateCourseCallerDataWithUsageForCappingResponse;
 import org.motechproject.ananya.service.publish.DataPublishService;
 import org.motechproject.ananya.transformers.AllTransformers;
 
@@ -39,12 +40,14 @@ public class CertificateCourseServiceTest {
     private AllTransformers allTransformers;
     @Mock
     private AllCourseActions allCourseActions;
+    @Mock
+    private OperatorService operatorService;
 
     @Before
     public void setUp() {
         initMocks(this);
         certificateCourseService = new CertificateCourseService(audioTrackerService, frontlineWorkerService,
-                registrationLogService, callLoggerService, dataPublishService, allTransformers, allCourseActions);
+                registrationLogService, callLoggerService, dataPublishService, allTransformers, allCourseActions, operatorService);
     }
 
     @Test
@@ -131,4 +134,32 @@ public class CertificateCourseServiceTest {
         inOrder.verify(callLoggerService).saveAll(callDurationList);
         inOrder.verify(dataPublishService).publishDisconnectEvent(callId, ServiceType.CERTIFICATE_COURSE);
     }
+    
+
+  /*  @Test
+    public void shouldCreateCallerDataForGivenCallerIdWithCappingInfo() {
+        String callId = "123432";
+        String callerId = "123";
+        String operator = "bsnl";
+        String circle = "up";
+        CertificateCourseServiceRequest request = new CertificateCourseServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
+        BookMark bookMark = new BookMark("type", 1, 2);
+        frontLineWorker.setBookMark(bookMark);
+        frontLineWorker.reportCard().addScore(new Score("0", "0", true));
+        frontLineWorker.reportCard().addScore(new Score("0", "1", true));
+        frontLineWorker.reportCard().addScore(new Score("1", "2", true));
+        frontLineWorker.reportCard().addScore(new Score("1", "3", false));
+        when(frontlineWorkerService.findByCallerId(callerId)).thenReturn(frontLineWorker);
+
+        CertificateCourseCallerDataWithUsageForCappingResponse callerData = certificateCourseService.createCallerDataWithUsage(request);
+
+        assertEquals(bookMark.asJson(), callerData.getBookmark());
+        assertEquals(2, callerData.getScoresByChapter().keySet().size());
+        assertEquals(2, (int)callerData.getScoresByChapter().get("0"));
+        assertEquals(1, (int)callerData.getScoresByChapter().get("1"));
+        
+        verify(allTransformers).process(request);
+    }*/
 }

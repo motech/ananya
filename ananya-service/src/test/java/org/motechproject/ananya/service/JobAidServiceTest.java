@@ -64,7 +64,7 @@ public class JobAidServiceTest {
         frontLineWorker.setCurrentJobAidUsage(new Integer(9));
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId)).thenReturn(frontLineWorker);
-        when(operatorService.findMaximumUsageFor(operator)).thenReturn(new Integer(10));
+        when(operatorService.findMaximumUsageFor(operator, circle)).thenReturn(new Integer(10));
 
         JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
 
@@ -87,7 +87,7 @@ public class JobAidServiceTest {
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).withCircle(circle).withOperator(operator);
 
         when(frontLineWorkerService.findForJobAidCallerData(callerId)).thenReturn(null);
-        when(operatorService.findMaximumUsageFor(operator)).thenReturn(maxUsageOperator);
+        when(operatorService.findMaximumUsageFor(operator,circle)).thenReturn(maxUsageOperator);
 
         JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
 

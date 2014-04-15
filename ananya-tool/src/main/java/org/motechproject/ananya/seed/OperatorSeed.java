@@ -6,6 +6,7 @@ import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.repository.dimension.AllOperatorDimensions;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,6 +21,9 @@ public class OperatorSeed {
 
     @Autowired
     private AllOperatorDimensions allOperatorDimensions;
+    
+    @Value("#{ananyaProperties['circle.name.up']}")
+    private String circleUp;
 
     protected final static HashMap<String, Integer> operator_usage = new HashMap<>();
     protected final static HashMap<String, Integer> start_of_pulse_map = new HashMap<>();
@@ -37,6 +41,7 @@ public class OperatorSeed {
         operator_usage.put("bsnl", convertMinutesToMilliSeconds(28));
         operator_usage.put("undefined", convertMinutesToMilliSeconds(28));
         operator_usage.put("longcode", convertMinutesToMilliSeconds(50));
+        
 
         start_of_pulse_map.put("tata", 500);
         start_of_pulse_map.put("idea", 500);
@@ -82,7 +87,7 @@ public class OperatorSeed {
     @Seed(priority = 0, version = "1.9", comment = "adding pulse to second mapping for operators")
     public void addPulseToSec() throws IOException {
         for (String operatorName : end_of_pulse_map.keySet()) {
-            Operator operator = allOperators.findByName(operatorName);
+            Operator operator = allOperators.findByName(operatorName, null);
             operator.setStartOfPulseInMilliSec(start_of_pulse_map.get(operatorName));
             operator.setEndOfPulseInMilliSec(end_of_pulse_map.get(operatorName));
             allOperators.update(operator);
@@ -90,5 +95,13 @@ public class OperatorSeed {
             allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec() ));
         }
+    }
+    
+    @Seed(priority = 0, version = "1.19", comment = "adding pulse to second mapping for operators")
+    public void addNewOperatorWithCircleAndPulseToSec() throws IOException {    	
+             Operator operator = new Operator("bsnl", convertMinutesToMilliSeconds(60), 500, 60500,circleUp);
+             allOperators.add(operator);     
+             allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
+                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),circleUp ));
     }
 }

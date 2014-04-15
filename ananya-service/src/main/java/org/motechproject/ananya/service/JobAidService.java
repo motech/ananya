@@ -46,7 +46,7 @@ public class JobAidService {
 
         allTransformers.process(request);
         FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerData(request.getCallerId());
-        Integer maxOperatorUsage = operatorService.findMaximumUsageFor(request.getOperator());
+        Integer maxOperatorUsage = operatorService.findMaximumUsageFor(request.getOperator(),request.getCircle());
 
         log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
         return (frontLineWorker != null)

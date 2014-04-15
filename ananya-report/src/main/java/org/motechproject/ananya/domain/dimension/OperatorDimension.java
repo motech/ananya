@@ -12,6 +12,9 @@ public class OperatorDimension {
 
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "circle")
+    private String circle;
 
     @Column(name = "allowed_usage_per_month")
     private Integer allowedUsagePerMonth;
@@ -27,6 +30,15 @@ public class OperatorDimension {
         this.allowedUsagePerMonth = allowedUsagePerMonth;
         this.startOfPulseInMilliSec = startOfPulseInMilliSec;
         this.endOfPulseInMilliSec = endOfPulseInMilliSec;
+        this.circle = null;
+    }
+    
+    public OperatorDimension(String name, Integer allowedUsagePerMonth, Integer startOfPulseInMilliSec, Integer endOfPulseInMilliSec, String circle) {
+        this.name = name;
+        this.allowedUsagePerMonth = allowedUsagePerMonth;
+        this.startOfPulseInMilliSec = startOfPulseInMilliSec;
+        this.endOfPulseInMilliSec = endOfPulseInMilliSec;
+        this.circle = circle;
     }
 
     public OperatorDimension() {
@@ -47,4 +59,10 @@ public class OperatorDimension {
     public Integer getAllowedUsagePerMonth() {
         return allowedUsagePerMonth;
     }
+
+	public String getCircle() {
+		return circle;
+	}
+    
+    
 }

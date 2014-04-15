@@ -51,7 +51,7 @@ public class OperatorSeedIT {
         seed.load();
 
         String airtelOperator = "airtel";
-        Operator airtel = allOperators.findByName(airtelOperator);
+        Operator airtel = allOperators.findByName(airtelOperator, null);
         Assert.assertEquals(airtel.getAllowedUsagePerMonth(), OperatorSeed.operator_usage.get(airtelOperator));
     }
 

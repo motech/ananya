@@ -417,6 +417,8 @@ public class FrontLineWorkerSeedService {
         }
 
         frontLineWorker1.setLastJobAidAccessTime(moreRecentOf(frontLineWorker1.getLastJobAidAccessTime(), frontLineWorker2.getLastJobAidAccessTime()));
+        
+        frontLineWorker1.setLastCourseAccessTime(moreRecentOf(frontLineWorker1.getLastCourseAccessTime(), frontLineWorker2.getLastCourseAccessTime()));
 
         frontLineWorker1.setRegisteredDate(lessRecentOf(frontLineWorker1.getRegisteredDate(), frontLineWorker2.getRegisteredDate()));
 
@@ -424,6 +426,11 @@ public class FrontLineWorkerSeedService {
                 frontLineWorker1.getCurrentJobAidUsage() != null && frontLineWorker1.getCurrentJobAidUsage() >= frontLineWorker2.getCurrentJobAidUsage()
                         ? frontLineWorker1.getCurrentJobAidUsage() : frontLineWorker2.getCurrentJobAidUsage());
 
+        frontLineWorker1.setCurrentCourseUsage(
+                frontLineWorker1.getCurrentCourseUsage() != null && frontLineWorker1.getCurrentCourseUsage() >= frontLineWorker2.getCurrentCourseUsage()
+                        ? frontLineWorker1.getCurrentCourseUsage() : frontLineWorker2.getCurrentCourseUsage());
+
+        
         frontLineWorker1.setRegistrationStatus(
                 frontLineWorker1.getStatus().weight >= frontLineWorker2.getStatus().weight
                         ? frontLineWorker1.getStatus() : frontLineWorker2.getStatus());

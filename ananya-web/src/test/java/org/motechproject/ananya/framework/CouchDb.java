@@ -51,7 +51,7 @@ public class CouchDb {
 
     public CouchDb confirmJobAidUsage(String callerId, Integer currentUsage, Integer maxUsage) {
         FrontLineWorker worker = allFrontLineWorkers.findByMsisdn(callerId);
-        Operator operator = allOperators.findByName(worker.getOperator());
+        Operator operator = allOperators.findByName(worker.getOperator(), worker.getCircle());
         assertEquals(currentUsage, worker.getCurrentJobAidUsage());
         assertEquals(new Integer(maxUsage), operator.getAllowedUsagePerMonth());
         return this;
@@ -114,7 +114,7 @@ public class CouchDb {
     }
 
     public void createOperator(String operatorName, int allowedUsagePerMonth, int startOfPulseInMilliSec, int endOfPulseInMilliSec) {
-        Operator operator = allOperators.findByName(operatorName);
+        Operator operator = allOperators.findByName(operatorName, null);
         if(operator==null)
             allOperators.add(new Operator(operatorName, allowedUsagePerMonth, startOfPulseInMilliSec, endOfPulseInMilliSec ));
     }

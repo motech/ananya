@@ -9,6 +9,9 @@ import org.motechproject.model.MotechBaseDataObject;
 public class Operator extends MotechBaseDataObject {
     @JsonProperty
     private String name;
+    
+    @JsonProperty
+    private String circle;
 
     @JsonProperty
     private Integer allowedUsagePerMonth;
@@ -24,6 +27,14 @@ public class Operator extends MotechBaseDataObject {
         this.allowedUsagePerMonth = allowedUsagePerMonth;
         this.startOfPulseInMilliSec = startOfPulseInMilliSec;
         this.endOfPulseInMilliSec = endOfPulseInMilliSec;
+    }
+    
+    public Operator(String name, Integer allowedUsagePerMonth, Integer startOfPulseInMilliSec, Integer endOfPulseInMilliSec, String circle) {
+        this.name = name;
+        this.allowedUsagePerMonth = allowedUsagePerMonth;
+        this.startOfPulseInMilliSec = startOfPulseInMilliSec;
+        this.endOfPulseInMilliSec = endOfPulseInMilliSec;
+        this.circle = circle;
     }
 
     public Operator() {
@@ -57,4 +68,15 @@ public class Operator extends MotechBaseDataObject {
     public void setEndOfPulseInMilliSec(Integer endOfPulseInMilliSec) {
         this.endOfPulseInMilliSec = endOfPulseInMilliSec;
     }
+
+    @JsonIgnore
+	public String getCircle() {
+		return circle;
+	}
+
+	public void setCircle(String circle) {
+		this.circle = circle;
+	}
+    
+    
 }

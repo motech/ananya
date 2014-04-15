@@ -1,6 +1,7 @@
 package org.motechproject.ananya.web;
 
 import org.motechproject.ananya.contract.CertificateCourseServiceRequest;
+import org.motechproject.ananya.contract.JobAidServiceRequest;
 import org.motechproject.ananya.service.CertificateCourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,29 @@ public class CertificateCourseCallDataController extends BaseAnanyaController {
         log.info(callId + "- course call ended");
         return getReturnVxml();
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/certificatecourse/transferdata/disconnect")
+    @ResponseBody
+    public String handleDisconnect(@RequestParam String callId,
+                                   @RequestParam String callerId,
+                                   @RequestParam String operator,
+                                   @RequestParam String circle,
+                                   @RequestParam String calledNumber,
+                                   @RequestParam String language,
+                                   @RequestParam String dataToPost,
+                                   @RequestParam String promptInfo,
+                                   @RequestParam Integer ccCallDuration) {
+
+    	CertificateCourseServiceRequest serviceRequest = new CertificateCourseServiceRequest(callId, callerId, calledNumber)
+        .withJson(dataToPost).withCircle(circle).withOperator(operator).withLanguage(language).withCallDuration(ccCallDuration).withPromptList(promptInfo);
+
+        certificateCourseService.handleDisconnectWithCapping(serviceRequest);
+
+        log.info(callId + "- course disconnect completed");
+        log.info(callId + "- course call ended");
+        return getReturnVxml();
+    }
+    
 
     private String getReturnVxml() {
         StringBuilder builder = new StringBuilder();
