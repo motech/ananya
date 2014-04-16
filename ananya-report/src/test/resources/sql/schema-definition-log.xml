@@ -691,7 +691,7 @@
      <changeSet context="setup" author="Onmobile-version1.11" id="106">
         <sql splitStatements="false">
             ALTER TABLE report.operator_dimension ADD COLUMN circle VARCHAR(100);
-			INSERT INTO report.language_dimension (id,name,language_code,sms_message) SELECT 3,name, language_code, sms_message FROM report.language_dimension where name='bhojpuri';
+			INSERT INTO report.language_dimension (id,name,language_code,sms_message) SELECT 3,'bhojpuri_up', language_code, sms_message FROM report.language_dimension where name='bhojpuri';
 			 INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
             content_id, file_name, duration FROM report.course_item_details_dimension where duration is not null and language_id=2;
 			INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
