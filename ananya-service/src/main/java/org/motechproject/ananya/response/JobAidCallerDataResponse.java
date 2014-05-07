@@ -35,7 +35,19 @@ public class JobAidCallerDataResponse {
         jobAidCallerDataResponse.currentCertificatCourseUsage = 0;
         return jobAidCallerDataResponse;
     }
+    
+    public JobAidCallerDataResponse(FrontLineWorker frontLineWorker) {
+        this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
+        this.language = frontLineWorker.getLanguage();
+    }
 
+    public static JobAidCallerDataResponse forNewUser() {
+        JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
+        jobAidCallerDataResponse.isCallerRegistered = false;
+        jobAidCallerDataResponse.language = null;
+        return jobAidCallerDataResponse;
+    }
+    
     public boolean isCallerRegistered() {
         return isCallerRegistered;
     }

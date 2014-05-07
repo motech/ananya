@@ -45,6 +45,25 @@ public class JobAidCallDataController {
         return getReturnVxml();
     }
     
+     @RequestMapping(method = RequestMethod.POST, value = "/jobaid/nocapping/transferdata/disconnect")
+    @ResponseBody
+    public String handleDisconnectWithoutCapping(@RequestParam String callId,
+                                   @RequestParam String callerId,
+                                   @RequestParam String operator,
+                                   @RequestParam String circle,
+                                   @RequestParam String calledNumber,
+                                   @RequestParam String language,
+                                   @RequestParam String dataToPost) {
+
+        JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
+                .withOperator(operator).withCircle(circle)
+                .withJson(dataToPost).withLanguage(language);
+
+        jobAidService.handleDisconnectWithoutCapping(jobAidServiceRequest);
+
+        log.info(callId + "- jobaid call ended");
+        return getReturnVxml();
+    }
     
 
     private String getReturnVxml() {

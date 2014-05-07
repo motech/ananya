@@ -53,6 +53,15 @@ public class JobAidService {
                 ? new JobAidCallerDataResponse(frontLineWorker, maxOperatorUsage)
                 : JobAidCallerDataResponse.forNewUser(maxOperatorUsage);
     }
+    
+    public JobAidCallerDataResponse getCallerDataForNoCapping(JobAidServiceRequest request) {
+        allTransformers.process(request);
+        FrontLineWorker frontLineWorker = frontLineWorkerService.findForJobAidCallerDataWithoutCapping(request.getCallerId());
+        log.info(request.getCallId() + "- fetched caller data for " + request.getCallerId());
+        return (frontLineWorker != null)
+                ? new JobAidCallerDataResponse(frontLineWorker)
+                : JobAidCallerDataResponse.forNewUser();
+    }
 
     public void handleDisconnect(JobAidServiceRequest request) {
         allTransformers.process(request);
@@ -63,6 +72,19 @@ public class JobAidService {
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
         frontLineWorkerService.updateJobAidState(frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCallDuration());
+        audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
+        callLoggerService.saveAll(request.getCallDurationList());
+        dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);
+    }
+    
+    public void handleDisconnectWithoutCapping(JobAidServiceRequest request) {
+        allTransformers.process(request);
+        FrontLineWorkerCreateResponse frontLineWorkerCreateResponse = frontLineWorkerService.createOrUpdateForCall(
+                request.getCallerId(), request.getOperator(), request.getCircle(), request.getLanguage());
+
+        if (frontLineWorkerCreateResponse.isModified())
+            registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
+
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);

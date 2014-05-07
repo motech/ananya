@@ -71,6 +71,11 @@ public class FrontLineWorkerService {
 		}
 		return frontLineWorker;
 	}
+	
+	public FrontLineWorker findForJobAidCallerDataWithoutCapping(String callerId) {
+		FrontLineWorker frontLineWorker = findByCallerId(callerId);
+		return frontLineWorker;
+	}
 
 	public FrontLineWorker findForCourseCallerDataWithUsage(String callerId) {
 		FrontLineWorker frontLineWorker = findByCallerId(callerId);
@@ -85,76 +90,63 @@ public class FrontLineWorkerService {
 	}
 
 	public FrontLineWorkerCreateResponse createOrUpdateForCall(String callerId, String operator, String circle, String language) {
-		try{
-			FrontLineWorker frontLineWorker = findByCallerId(callerId);
-			log.info("frontLineWorker="+frontLineWorker+" for callerId "+callerId);
-			//new flw
-			if (frontLineWorker == null) {
-				try {
-					allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
-					frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
-					frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
-					allFrontLineWorkers.add(frontLineWorker);
 
-					log.info("created:" + frontLineWorker);
-					return new FrontLineWorkerCreateResponse(frontLineWorker, true);
-				}catch (UpdateConflictException e) {
-					frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-					return new FrontLineWorkerCreateResponse(frontLineWorker, false);
-				}
-			}
-
-
-			//no-change flw only if FLW's language is null so updated language is not null
-			boolean operatorHasNotChanged = frontLineWorker.operatorIs(operator);
-			if (frontLineWorker.circleIs(circle) && operatorHasNotChanged && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
-				return new FrontLineWorkerCreateResponse(frontLineWorker, false);
-
-			// 
-			if (frontLineWorker.getLanguage() == null) {
-				if (language != null)
-					frontLineWorker.setLanguage(language);
-			} else if (!frontLineWorker.getLanguage().equalsIgnoreCase(language)) {
-				log.error("received a request for different language. User language is " + frontLineWorker.getLanguage() + " but recevied language with " + language);
-			}
-
-			//updated flw
-			if (!operatorHasNotChanged) {
-				frontLineWorker.setOperator(operator);
-				frontLineWorker.resetJobAidUsageAndPrompts();
-			}
-			frontLineWorker.setCircle(circle);
-			frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
-			allFrontLineWorkers.updateFlw(frontLineWorker);
-			log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
-					"] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator() + ", language : " + frontLineWorker.getLanguage());
-
-			return new FrontLineWorkerCreateResponse(frontLineWorker, true);
-		}catch(Exception e){
-			log.info("caught exception while processing request for callerId:"+callerId+" exception message:"+e.getMessage());
-			log.info("Assuming the exception is because of msisdn change, trying to create new frontline worker");
-			FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
+		FrontLineWorker frontLineWorker = findByCallerId(callerId);
+		log.info("frontLineWorker="+frontLineWorker+" for callerId "+callerId);
+		//new flw
+		if (frontLineWorker == null) {
 			try {
-					allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
-					frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
-					allFrontLineWorkers.add(frontLineWorker);
-					log.info("created:" + frontLineWorker);
-					return new FrontLineWorkerCreateResponse(frontLineWorker, true);
-				} catch (UpdateConflictException e1) {
-					log.info("callerId "+callerId+" caught UpdateConflictException exception:" + e1.getMessage());
-					frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
-					return new FrontLineWorkerCreateResponse(frontLineWorker, false);
-				}catch(Exception e1){
-					log.info(callerId+" callerId Caught exception:"+e.getMessage()+"  ");
-					return new FrontLineWorkerCreateResponse(frontLineWorker, false);
-				}
+				allFrontLineWorkerKeys.add(new FrontLineWorkerKey(callerId));
+				frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
+				frontLineWorker.decideRegistrationStatus(Location.getDefaultLocation());
+				allFrontLineWorkers.add(frontLineWorker);
+
+				log.info("created:" + frontLineWorker);
+				return new FrontLineWorkerCreateResponse(frontLineWorker, true);
+			}catch (UpdateConflictException e) {
+				frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+				log.info("caught exception for callid "+callerId+": frontlineworker=" + frontLineWorker);
+				return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+			}catch (Exception e) {
+				frontLineWorker = allFrontLineWorkers.findByMsisdn(callerId);
+				log.info("caught exception for callid "+callerId+": frontlineworker=" + frontLineWorker);
+				return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+			}
 		}
+
+
+		//no-change flw only if FLW's language is null so updated language is not null
+		boolean operatorHasNotChanged = frontLineWorker.operatorIs(operator);
+		if (frontLineWorker.circleIs(circle) && operatorHasNotChanged && frontLineWorker.isAlreadyRegistered() && !(frontLineWorker.getLanguage() == null && language != null))
+			return new FrontLineWorkerCreateResponse(frontLineWorker, false);
+
+		// 
+		if (frontLineWorker.getLanguage() == null) {
+			if (language != null)
+				frontLineWorker.setLanguage(language);
+		} else if (!frontLineWorker.getLanguage().equalsIgnoreCase(language)) {
+			log.error("received a request for different language. User language is " + frontLineWorker.getLanguage() + " but recevied language with " + language);
+		}
+
+		//updated flw
+		if (!operatorHasNotChanged) {
+			frontLineWorker.setOperator(operator);
+			frontLineWorker.resetJobAidUsageAndPrompts();
+		}
+		frontLineWorker.setCircle(circle);
+		frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
+		allFrontLineWorkers.updateFlw(frontLineWorker);
+		log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
+				"] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator() + ", language : " + frontLineWorker.getLanguage());
+
+		return new FrontLineWorkerCreateResponse(frontLineWorker, true);
+
 	}
 
 	public void updateCertificateCourseState(FrontLineWorker frontLineWorker) {
 		allFrontLineWorkers.update(frontLineWorker);
 		log.info("updated certificate course state for " + frontLineWorker.getMsisdn());
-		
+
 	}
 
 
@@ -259,12 +251,23 @@ public class FrontLineWorkerService {
 			allFrontLineWorkers.remove(flwByNewMsisdn);
 		}
 		FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
+		//Removing oldmsisdn from frontlineworker key
+		removeFrontLineWorkerKey(msisdn);
 		FlwChangeSelector changeSelector = new FlwChangeSelector(flwByOldMsisdn, flwByNewMsisdn);
 		setFlwFields(newMsisdn, changeSelector, flwByOldMsisdn);
 		if (flwByOldMsisdn.isAlreadyRegistered())
 			flwByOldMsisdn.decideRegistrationStatus(location);
 		allFrontLineWorkers.update(flwByOldMsisdn);
+
 		return flwByOldMsisdn.getStatus().toString();
+	}
+
+	private void removeFrontLineWorkerKey(String msisdn) {
+		// TODO Auto-generated method stub
+		FrontLineWorkerKey frontlineWorkerKey = allFrontLineWorkerKeys.get(msisdn);
+		if(frontlineWorkerKey!=null){
+			allFrontLineWorkerKeys.remove(frontlineWorkerKey);
+		}
 	}
 
 	private void setFlwFields(String newMsisdn, FlwChangeSelector changeSelector, FrontLineWorker flwByOldMsisdn) {
