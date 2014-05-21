@@ -1,0 +1,702 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet context="setup" author="ThoughtWorks" id="1">
+        <createTable tableName="location_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="varchar(30)"/>
+            <column name="district" type="varchar(255)"/>
+            <column name="block" type="varchar(255)"/>
+            <column name="panchayat" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="2">
+        <createTable tableName="time_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="day" type="smallint"/>
+            <column name="week" type="smallint"/>
+            <column name="month" type="smallint"/>
+            <column name="year" type="smallint"/>
+        </createTable>
+        <addUniqueConstraint tableName="time_dimension" columnNames="day,week,month,year"
+                             constraintName="unq_day_week_month_year"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="3">
+        <createTable tableName="front_line_worker_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="msisdn" type="bigint"/>
+            <column name="operator" type="varchar(30)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="status" type="varchar(30)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="4">
+        <createTable tableName="registration_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="smallint"/>
+            <column name="time_id" type="integer"/>
+            <column name="flw_id" type="bigint"/>
+        </createTable>
+
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_location_id">
+            <column name="location_id"/>
+        </createIndex>
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+        <createIndex tableName="registration_measure" indexName="idx_registration_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_registration_measure_flw_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_registration_measure_time_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_registration_measure_location_dimension"
+                                 baseTableName="registration_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="5">
+        <createTable tableName="course_item_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="type" type="varchar(30)"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="course_item_dimension" columnNames="name,type" constraintName="unq_name_type"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="6">
+        <createTable tableName="course_item_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="course_item_id" type="integer"/>
+            <column name="time_id" type="integer"/>
+            <column name="score" type="integer"/>
+            <column name="event" type="varchar(30)"/>
+        </createTable>
+
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_course_item_id">
+            <column name="course_item_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_measure" indexName="idx_course_item_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_flw_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_time_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_course_item_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="course_item_id"
+                                 referencedTableName="course_item_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="7">
+        <createTable tableName="call_duration_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="call_id" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+            <column name="type" type="varchar(30)"/>
+        </createTable>
+
+        <createIndex tableName="call_duration_measure" indexName="idx_call_duration_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_flw_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks" id="8">
+        <createTable tableName="sms_sent_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="time_id" type="integer"/>
+            <column name="course_attempt" type="integer"/>
+            <column name="sms_sent" type="boolean"/>
+            <column name="sms_reference_number" type="varchar(30)"/>
+        </createTable>
+
+        <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_flw_id">
+            <column name="flw_id"/>
+        </createIndex>
+        <createIndex tableName="sms_sent_measure" indexName="idx_sms_sent_measure_time_id">
+            <column name="time_id"/>
+        </createIndex>
+
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_flw_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_time_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="9">
+        <addColumn tableName="course_item_measure">
+            <column name="location_id" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="course_item_measure">
+            <column name="timestamp" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="course_item_measure">
+            <column name="percentage" type="smallint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_location_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="10">
+        <addColumn tableName="call_duration_measure">
+            <column name="location_id" type="bigint"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="start_time" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="end_time" type="timestamp"/>
+        </addColumn>
+        <addColumn tableName="call_duration_measure">
+            <column name="called_number" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_location_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="11">
+        <addColumn tableName="sms_sent_measure">
+            <column name="location_id" type="bigint"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_sms_sent_measure_location_dimension"
+                                 baseTableName="sms_sent_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="12">
+        <addColumn tableName="time_dimension">
+            <column name="date" type="date"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="13">
+        <addColumn tableName="course_item_dimension">
+            <column name="parent_id" type="integer"/>
+        </addColumn>
+        <addColumn tableName="course_item_dimension">
+            <column name="file_name" type="varchar(255)"/>
+        </addColumn>
+        <addColumn tableName="course_item_dimension">
+            <column name="duration" type="integer"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_course_item_dimension_course_item_dimension"
+                                 baseTableName="course_item_dimension" baseColumnNames="parent_id"
+                                 referencedTableName="course_item_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="14">
+        <createTable tableName="job_aid_content_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="parent_id" type="bigint"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="type" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_dimension_job_aid_content_dimension"
+                                 baseTableName="job_aid_content_dimension" baseColumnNames="parent_id"
+                                 referencedTableName="job_aid_content_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="15">
+        <createTable tableName="job_aid_content_measure" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="bigint"/>
+            <column name="call_id" type="varchar(255)"/>
+            <column name="location_id" type="bigint"/>
+            <column name="job_aid_content_id" type="integer"/>
+            <column name="timestamp" type="timestamp"/>
+            <column name="percentage" type="smallint"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_flw_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="flw_id"
+                                 referencedTableName="front_line_worker_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_location_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint constraintName="fk_ja_content_measure_ja_content_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="job_aid_content_id"
+                                 referencedTableName="job_aid_content_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="16">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="designation" type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="17">
+        <addColumn tableName="job_aid_content_measure">
+            <column name="time_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_time_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="18">
+        <addColumn tableName="course_item_measure">
+            <column name="call_id" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="19">
+        <addColumn tableName="course_item_measure">
+            <column name="duration" type="int"/>
+        </addColumn>
+
+        <addColumn tableName="job_aid_content_measure">
+            <column name="duration" type="int"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="20">
+        <createIndex tableName="front_line_worker_dimension" indexName="idx_front_line_worker_dimension_msisdn">
+            <column name="msisdn"/>
+        </createIndex>
+        <createIndex tableName="time_dimension" indexName="idx_time_dimension_year_month_day">
+            <column name="year, month, day"/>
+        </createIndex>
+        <createIndex tableName="job_aid_content_dimension" indexName="idx_job_aid_content_dimension_content_id">
+            <column name="content_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_dimension" indexName="idx_course_item_dimension_content_id">
+            <column name="content_id"/>
+        </createIndex>
+        <createIndex tableName="course_item_dimension" indexName="idx_course_item_dimension_name_type">
+            <column name="name, type"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="21">
+        <addColumn tableName="job_aid_content_dimension">
+            <column name="short_code" type="bigint"/>
+        </addColumn>
+
+        <addColumn tableName="call_duration_measure">
+            <column name="time_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint constraintName="fk_call_duration_measure_time_dimension"
+                                 baseTableName="call_duration_measure" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="22">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="circle" type="varchar(30)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.1" id="23">
+        <createIndex tableName="location_dimension" indexName="idx_location_dimension_location_id">
+            <column name="location_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.2" id="24">
+        <addUniqueConstraint columnNames="msisdn" tableName="front_line_worker_dimension"
+                             constraintName="unq_front_line_worker_dimension_msisdn"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="25">
+        <addColumn tableName="registration_measure">
+            <column name="call_id" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="26">
+        <addColumn tableName="call_duration_measure">
+            <column name="duration_in_pulse" type="integer"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="27">
+        <sql splitStatements="false">
+            ALTER TABLE report.call_duration_measure ADD COLUMN operator VARCHAR(30);
+
+            UPDATE report.front_line_worker_dimension SET operator = 'unknown' WHERE operator IS NULL;
+
+            UPDATE report.call_duration_measure AS cdm
+            SET operator=flwd.operator
+            FROM report.front_line_worker_dimension AS flwd WHERE cdm.flw_id = flwd.id;
+
+            ALTER TABLE report.call_duration_measure ALTER operator SET NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="28">
+        <createTable tableName="operator_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="allowed_usage_per_month" type="integer"/>
+            <column name="start_of_pulse_in_milli_sec" type="integer"/>
+            <column name="end_of_pulse_in_milli_sec" type="integer"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="29">
+        <!-- Following extension required to generate UUIDs. Assuming Postgres9.1 -->
+        <sql splitStatements="false">
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
+
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="flw_guid" type="varchar(36)"/>
+        </addColumn>
+
+        <createTable tableName="temp_msisdn_flw_guid" schemaName="report">
+            <column name="msisdn" type="bigint"/>
+            <column name="flw_guid" type="varchar(36)"/>
+        </createTable>
+
+        <sql splitStatements="false">
+            UPDATE report.front_line_worker_dimension SET flw_guid = ((SELECT '11111111-1111-1111-1111-111111111111'
+            WHERE id=id)) where flw_guid is null;
+        </sql>
+
+        <addNotNullConstraint tableName="front_line_worker_dimension" columnName="flw_guid"/>
+
+        <dropTable tableName="temp_msisdn_flw_guid" schemaName="report"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="30">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension ALTER COLUMN flw_guid TYPE uuid USING flw_guid::uuid;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="31">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension RENAME COLUMN flw_guid TO flw_id;
+        </sql>
+    </changeSet>
+
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="32">
+        <sql splitStatements="false">
+            ALTER TABLE report.location_dimension ADD COLUMN status VARCHAR(36);
+            UPDATE report.location_dimension SET status = 'VALID';
+            ALTER TABLE report.location_dimension ALTER status SET NOT NULL;
+        </sql>
+    </changeSet>
+
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="33">
+        <addColumn tableName="front_line_worker_dimension">
+            <column name="verification_status" type="varchar(20)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="34">
+        <sql splitStatements="false">
+            CREATE INDEX ON report.registration_measure (location_id) ;
+            CREATE INDEX ON report.course_item_measure (location_id) ;
+            CREATE INDEX ON report.call_duration_measure (location_id) ;
+            CREATE INDEX ON report.job_aid_content_measure (location_id) ;
+            CREATE INDEX ON report.sms_sent_measure (location_id) ;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="35">
+        <createTable tableName="language_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(30)"/>
+            <column name="language_code" type="varchar(10)"/>
+            <column name="sms_message" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="language_dimension" columnNames="name" constraintName="unq_lang_name"/>
+        <sql splitStatements="false">
+            INSERT INTO report.language_dimension values (1, 'bhojpuri', 'bho', 'Badhai ho Didi, apne Mobile Academy
+            course pura kar liya hai. Certificate paane ke liye is SMS ko apne subcenter meeting mein dikhayen. No.');
+            INSERT INTO report.language_dimension values (2, 'odia', 'oda', 'Badhai ho Didi No.');
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="36">
+        <createTable tableName="course_item_details_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="language_id" type="integer"/>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="course_item_details_dimension" columnNames="language_id,content_id"
+                             constraintName="unq_content_lang"/>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="37">
+        <createTable tableName="job_aid_content_details_dimension" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="language_id" type="integer"/>
+            <column name="content_id" type="varchar(255)"/>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="duration" type="integer"/>
+        </createTable>
+
+        <addUniqueConstraint tableName="job_aid_content_details_dimension" columnNames="language_id,content_id"
+                             constraintName="unq_ja_content_lang"/>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="38">
+        <addColumn tableName="course_item_measure">
+            <column name="language_id" type="integer"/>
+        </addColumn>
+        <sql splitStatements="false">
+            UPDATE report.course_item_measure SET language_id = 1;
+            ALTER TABLE report.course_item_measure ALTER language_id SET NOT NULL;
+        </sql>
+        <addForeignKeyConstraint constraintName="fk_course_item_measure_language_dimension"
+                                 baseTableName="course_item_measure" baseColumnNames="language_id"
+                                 referencedTableName="language_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="39">
+        <addColumn tableName="job_aid_content_measure">
+            <column name="language_id" type="integer"/>
+        </addColumn>
+        <sql splitStatements="false">
+            UPDATE report.job_aid_content_measure SET language_id = 1;
+            ALTER TABLE report.job_aid_content_measure ALTER language_id SET NOT NULL;
+        </sql>
+        <addForeignKeyConstraint constraintName="fk_job_aid_content_measure_language_dimension"
+                                 baseTableName="job_aid_content_measure" baseColumnNames="language_id"
+                                 referencedTableName="language_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="40">
+        <sql splitStatements="false">
+            ALTER TABLE report.location_dimension ADD COLUMN state VARCHAR(36);
+            UPDATE report.location_dimension SET state = 'Bihar';
+            ALTER TABLE report.location_dimension ALTER state SET NOT NULL;
+            UPDATE report.location_dimension SET location_id = 'S00D000B000V000' where location_id='S01D000B000V000';
+            UPDATE report.location_dimension SET state = 'C00' where location_id='S00D000B000V000';
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="41">
+        <sql splitStatements="false">
+            INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 1,
+            content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
+            INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 2,
+            content_id, file_name, duration FROM report.course_item_dimension where duration is not null;
+            ALTER TABLE report.course_item_dimension DROP COLUMN file_name;
+            ALTER TABLE report.course_item_dimension DROP COLUMN duration;
+            INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 1,
+            content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
+            INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 2,
+            content_id, file_name, duration FROM report.job_aid_content_dimension where duration is not null;
+            ALTER TABLE report.job_aid_content_dimension DROP COLUMN file_name;
+            ALTER TABLE report.job_aid_content_dimension DROP COLUMN duration;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="42">
+        <sql splitStatements="false">
+            ALTER TABLE report.front_line_worker_dimension ADD COLUMN alternate_contact_number bigint;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="100">
+        <createTable tableName="front_line_worker_history" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="flw_id" type="integer"/>
+            <column name="msisdn" type="bigint"/>
+            <column name="operator" type="varchar(30)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="status" type="varchar(30)"/>
+            <column name="designation" type="varchar(30)"/>
+            <column name="circle" type="varchar(30)"/>
+            <column name="guid" type="uuid"/>
+            <column name="verification_status" type="varchar(20)"/>
+            <column name="alternate_contact_number" type="bigint"/>
+            <column name="location_id" type="smallint"/>
+            <column name="time_id" type="integer"/>
+            <column name="call_id" type="varchar(255)"/>
+            <column name="is_current" type="boolean"/>
+            <column name="timestamp" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="101">
+        <sql splitStatements="false">
+            INSERT into report.front_line_worker_history
+            (
+            flw_id,
+            msisdn,
+            operator,
+            name,
+            status,
+            designation,
+            circle,
+            guid,
+            verification_status,
+            alternate_contact_number,
+            location_id,
+            time_id,
+            call_id,
+            is_current,
+            timestamp
+            )
+            (
+            select
+            d.id as flw_id,
+            d.msisdn,
+            d.operator,
+            d.name,
+            d.status,
+            d.designation,
+            d.circle,
+            d.flw_id as guid,
+            d.verification_status,
+            d.alternate_contact_number,
+            m.location_id,
+            m.time_id,
+            m.call_id,
+            true as is_current,
+            CURRENT_TIMESTAMP as timestamp
+            from
+            report.front_line_worker_dimension d
+            join report.registration_measure m on (d.id = m.flw_id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="102">
+        <addForeignKeyConstraint constraintName="fk_front_line_worker_history_location_dimension"
+                                 baseTableName="front_line_worker_history" baseColumnNames="location_id"
+                                 referencedTableName="location_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="103">
+        <addForeignKeyConstraint constraintName="fk_front_line_worker_history_time_dimension"
+                                 baseTableName="front_line_worker_history" baseColumnNames="time_id"
+                                 referencedTableName="time_dimension" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="104">
+        <addColumn tableName="call_duration_measure">
+            <column name="flw_history_id" type="integer"/>
+        </addColumn>
+        <addColumn tableName="course_item_measure">
+            <column name="flw_history_id" type="integer"/>
+        </addColumn>
+        <addColumn tableName="job_aid_content_measure">
+            <column name="flw_history_id" type="integer"/>
+        </addColumn>
+        <addColumn tableName="sms_sent_measure">
+            <column name="flw_history_id" type="integer"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="105">
+        <sql>
+            CREATE INDEX front_line_worker_history_current_idx
+            ON report.front_line_worker_history
+            USING BTREE
+            (flw_id, is_current);
+        </sql>
+    </changeSet>
+    
+     <changeSet context="setup" author="Onmobile-version1.11" id="106">
+        <sql splitStatements="false">
+            ALTER TABLE report.operator_dimension ADD COLUMN circle VARCHAR(100);
+			INSERT INTO report.language_dimension (id,name,language_code,sms_message) SELECT 3,'bhojpuri_up', language_code, sms_message FROM report.language_dimension where name='bhojpuri';
+			 INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
+            content_id, file_name, duration FROM report.course_item_details_dimension where duration is not null and language_id=2;
+			INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
+            content_id, file_name, duration FROM report.job_aid_content_details_dimension where duration is not null and language_id=2;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
