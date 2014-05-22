@@ -41,19 +41,14 @@ public class AdminInquiryService {
     private OperatorService operatorService;
     private DataAccessTemplate dataAccessTemplate;
     private Session session;
-    private String circleWithCappingMA;
-    private String circleWithCappingMK;
     
 
     @Autowired
-    public AdminInquiryService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, DataAccessTemplate dataAccessTemplate
-    		,@Value("#{ananyaProperties['circle.with.capping.ma']}") String circleWithCappingMA
-    		,@Value("#{ananyaProperties['circle.with.capping.mk']}") String circleWithCappingMK) {
+    public AdminInquiryService(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, DataAccessTemplate dataAccessTemplate) {
         this.frontLineWorkerService = frontLineWorkerService;
         this.operatorService = operatorService;
         this.dataAccessTemplate = dataAccessTemplate;
-        this.circleWithCappingMA = circleWithCappingMA;
-        this.circleWithCappingMK = circleWithCappingMK;
+        
     }
    
     public Map<String, Object> getInquiryData(String msisdn) {
@@ -107,8 +102,8 @@ public class AdminInquiryService {
         int maxUsage = operatorService.findMaximumUsageFor(frontLineWorker.getOperator(),frontLineWorker.getCircle());
 
         return String.format(CALLER_DATA_JSON,
-                gson.toJson(circleWithCappingMK!=null&&circleWithCappingMK.toLowerCase().contains(frontLineWorker.getCircle().toLowerCase())?new JobAidCallerDataResponse(frontLineWorker, maxUsage):new JobAidCallerDataResponse(frontLineWorker)),
-                gson.toJson(circleWithCappingMA!=null&&circleWithCappingMA.toLowerCase().contains(frontLineWorker.getCircle().toLowerCase())?new CertificateCourseCallerDataWithUsageForCappingResponse(frontLineWorker, maxUsage):new CertificateCourseCallerDataResponse(frontLineWorker)));
+                gson.toJson(frontLineWorker.isCappingEnabledMK()?new JobAidCallerDataResponse(frontLineWorker, maxUsage):new JobAidCallerDataResponse(frontLineWorker)),
+                gson.toJson(frontLineWorker.isCappingEnabledMA()?new CertificateCourseCallerDataWithUsageForCappingResponse(frontLineWorker, maxUsage):new CertificateCourseCallerDataResponse(frontLineWorker)));
     }
 
     private List<CallContent> callContentQueryResult(String callerId, AdminQuery queryType) {

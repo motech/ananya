@@ -71,6 +71,7 @@ public class JobAidService {
         if (frontLineWorkerCreateResponse.isModified())
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
+        
         frontLineWorkerService.updateJobAidState(frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCallDuration());
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
@@ -85,6 +86,8 @@ public class JobAidService {
         if (frontLineWorkerCreateResponse.isModified())
             registrationLogService.add(new RegistrationLog(request.getCallId(), request.getCallerId(), request.getOperator(), request.getCircle()));
 
+        //update Capping data for flw- to indicate capping is needed or not
+        frontLineWorkerService.updateCappingDataMk(frontLineWorkerCreateResponse.getFrontLineWorker(), false);
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);

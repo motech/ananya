@@ -99,6 +99,7 @@ public class CertificateCourseService {
             allCourseActions.execute(frontLineWorker, stateRequestList);
             frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
         }
+        frontLineWorkerService.updateCappingDataMA(frontLineWorkerCreateResponse.getFrontLineWorker(), true);
         frontLineWorkerService.updateCCState( frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts(), request.getCcCallDuration());
         audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());

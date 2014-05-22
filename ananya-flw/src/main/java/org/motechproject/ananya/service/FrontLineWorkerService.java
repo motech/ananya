@@ -149,7 +149,17 @@ public class FrontLineWorkerService {
 
 	}
 
+	public void updateCappingDataMk(FrontLineWorker frontLineWorker, boolean value) {
+		frontLineWorker.setCappingEnabledMK(value);
+		allFrontLineWorkers.update(frontLineWorker);
+		log.info("updated capping enabled flag for user: " + frontLineWorker.getMsisdn());
+	}
 
+	public void updateCappingDataMA(FrontLineWorker frontLineWorker, boolean value) {
+		frontLineWorker.setCappingEnabledMA(value);
+		allFrontLineWorkers.update(frontLineWorker);
+		log.info("updated capping enabled flag for user: " + frontLineWorker.getMsisdn());
+	}
 
 	public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
 		for (String prompt : promptList)

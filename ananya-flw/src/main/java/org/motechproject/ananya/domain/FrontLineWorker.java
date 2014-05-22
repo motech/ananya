@@ -87,6 +87,12 @@ public class FrontLineWorker extends MotechBaseDataObject {
     
     @JsonIgnore
     private boolean modified;
+    
+    @JsonIgnore
+    private boolean cappingEnabledMA=false;
+    
+    @JsonIgnore
+    private boolean cappingEnabledMK=true;
 
     @JsonProperty
     private UUID flwId = DUMMY_UUID;
@@ -528,6 +534,23 @@ public class FrontLineWorker extends MotechBaseDataObject {
 	public void setCurrentCourseUsage(Integer currentCourseUsage) {
 		this.currentCourseUsage = currentCourseUsage;
 	}
+
+	public boolean isCappingEnabledMA() {
+		return cappingEnabledMA;
+	}
+
+	public void setCappingEnabledMA(boolean cappingEnabledMA) {
+		this.cappingEnabledMA = cappingEnabledMA;
+	}
+
+	public boolean isCappingEnabledMK() {
+		return cappingEnabledMK;
+	}
+
+	public void setCappingEnabledMK(boolean cappingEnabledMK) {
+		this.cappingEnabledMK = cappingEnabledMK;
+	}
     
+	
     
 }
