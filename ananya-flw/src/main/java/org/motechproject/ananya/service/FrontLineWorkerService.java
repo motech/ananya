@@ -137,7 +137,7 @@ public class FrontLineWorkerService {
 		frontLineWorker.decideRegistrationStatus(locationService.findByExternalId(frontLineWorker.getLocationId()));
 		allFrontLineWorkers.updateFlw(frontLineWorker);
 		log.info("updated: [" + frontLineWorker.getMsisdn() + "] with status :[" + frontLineWorker.getStatus() +
-				"] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getOperator() + ", language : " + frontLineWorker.getLanguage());
+				"] ,operator : " + frontLineWorker.getOperator() + ", circle : " + frontLineWorker.getCircle() + ", language : " + frontLineWorker.getLanguage());
 
 		return new FrontLineWorkerCreateResponse(frontLineWorker, true);
 
