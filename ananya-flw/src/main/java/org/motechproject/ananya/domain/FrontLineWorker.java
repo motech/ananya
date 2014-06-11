@@ -88,10 +88,10 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonIgnore
     private boolean modified;
     
-    @JsonIgnore
+    @JsonProperty
     private boolean cappingEnabledMA=false;
     
-    @JsonIgnore
+    @JsonProperty
     private boolean cappingEnabledMK=true;
 
     @JsonProperty
