@@ -1,4 +1,13 @@
 var callerData = {
     "isRegistered" : "${isCallerRegistered}",
+    "promptsHeard" : {
+        #set($promptsCount = $promptsHeard.size())
+        #foreach($entry in $promptsHeard.entrySet())
+        "$entry.key" : $entry.value
+            #if($foreach.count < $promptsCount)
+            ,
+            #end
+        #end
+    },
     "language" : "${language}"
 };

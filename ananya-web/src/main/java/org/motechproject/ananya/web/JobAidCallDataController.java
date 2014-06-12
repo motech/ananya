@@ -53,11 +53,12 @@ public class JobAidCallDataController {
                                    @RequestParam String circle,
                                    @RequestParam String calledNumber,
                                    @RequestParam String language,
-                                   @RequestParam String dataToPost) {
+                                   @RequestParam String dataToPost,
+                                   @RequestParam String promptList) {
 
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId, calledNumber)
                 .withOperator(operator).withCircle(circle)
-                .withJson(dataToPost).withLanguage(language);
+                .withJson(dataToPost).withLanguage(language).withPromptList(promptList);
 
         jobAidService.handleDisconnectWithoutCapping(jobAidServiceRequest);
 

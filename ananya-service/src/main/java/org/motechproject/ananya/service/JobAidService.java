@@ -88,6 +88,7 @@ public class JobAidService {
 
         //update Capping data for flw- to indicate capping is needed or not
         frontLineWorkerService.updateCappingDataMk(frontLineWorkerCreateResponse.getFrontLineWorker(), false);
+        frontLineWorkerService.updatePromptsHeard(frontLineWorkerCreateResponse.getFrontLineWorker(), request.getPrompts());
         audioTrackerService.saveAllForJobAid(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.JOB_AID);

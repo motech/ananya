@@ -66,12 +66,13 @@ public class CallerDataController extends BaseAnanyaController {
         JobAidServiceRequest jobAidServiceRequest = new JobAidServiceRequest(callId, callerId).
                 withCircle(circle).withOperator(operator);
 
-        JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
+        JobAidCallerDataResponse callerData = jobAidService.getCallerDataForNoCapping(jobAidServiceRequest);
 
         setContentType(response);
         return new ModelAndView("job_aid_caller_data_without_cap")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
-                .addObject("language", (callerData.getLanguage()!=null?callerData.getLanguage():"null"));
+                .addObject("language", (callerData.getLanguage()!=null?callerData.getLanguage():"null"))
+        		.addObject("promptsHeard", callerData.getPromptsHeard());
     }
 
     

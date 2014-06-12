@@ -39,6 +39,7 @@ public class JobAidCallerDataResponse {
     public JobAidCallerDataResponse(FrontLineWorker frontLineWorker) {
         this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
         this.language = frontLineWorker.getLanguage();
+        this.promptsHeard = frontLineWorker.getPromptsHeard();
     }
 
     public static JobAidCallerDataResponse forNewUser() {

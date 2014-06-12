@@ -172,6 +172,13 @@ public class FrontLineWorkerService {
 		allFrontLineWorkers.update(frontLineWorker);
 		log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker.getMsisdn());
 	}
+	
+	public void updatePromptsHeard(FrontLineWorker frontLineWorker, List<String> promptList) {
+		for (String prompt : promptList)
+			frontLineWorker.markPromptHeard(prompt);
+		allFrontLineWorkers.update(frontLineWorker);
+		log.info("updated prompts-heard for " + frontLineWorker.getMsisdn());
+	}
 
 	public void updateCCState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
 		for (String prompt : promptList)
@@ -307,5 +314,7 @@ public class FrontLineWorkerService {
 			}
 		}
 	}
+
+	
 
 }
