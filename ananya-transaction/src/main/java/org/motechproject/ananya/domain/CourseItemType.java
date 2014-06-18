@@ -7,6 +7,7 @@ public enum CourseItemType {
     LESSON,
     QUIZ,
     COURSE,
+    DEFAULT,
     AUDIO;
 
     public static CourseItemType findFor(String entity) {

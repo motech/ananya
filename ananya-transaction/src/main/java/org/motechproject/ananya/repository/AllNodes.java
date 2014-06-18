@@ -42,7 +42,7 @@ public class AllNodes extends MotechBaseRepository<Node> {
     }
 
     @GenerateView
-    private List<Node> findByParentId(String parentId) {
+	public List<Node> findByParentId(String parentId) {
         return queryView("by_parentId", parentId);
     }
 

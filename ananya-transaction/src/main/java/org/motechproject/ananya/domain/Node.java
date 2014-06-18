@@ -102,4 +102,13 @@ public class Node extends MotechBaseDataObject {
         contents = new ArrayList<StringContent>();
         contentIds = new ArrayList<String>();
     }
+
+	@Override
+	public String toString() {
+		return "Node [name=" + name + ", data=" + data + ", parentId="
+				+ parentId + ", contentIds=" + contentIds + ", children="
+				+ children + ", contents=" + contents + ", childrenIds="
+				+ childrenIds + "]";
+	}
+    
 }

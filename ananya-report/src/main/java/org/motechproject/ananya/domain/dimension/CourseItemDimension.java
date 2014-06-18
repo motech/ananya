@@ -68,4 +68,13 @@ public class CourseItemDimension {
     public void setParentDimension(CourseItemDimension parentDimension) {
         parent = parentDimension;
     }
+
+	@Override
+	public String toString() {
+		return "CourseItemDimension [id=" + id + ", name=" + name
+				+ ", contentId=" + contentId + ", parent=" + parent + ", type="
+				+ type + "]";
+	}
+    
+    
 }

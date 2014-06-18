@@ -9,17 +9,25 @@ public class CertificateCourseTree {
     public static final int NUMBER_OF_QUESTIONS_IN_A_CHAPTER = 4;
     public static final int NUMBER_OF_CHAPTERS_IN_COURSE = 9;
 
-    private CertificateCourseContent courseContent = new CertificateCourseContent();
+    private  CertificateCourseContent courseContent = new CertificateCourseContent();
 
-    public Node build() {
+    public  Node build() {
         Node courseNode = new Node("CertificationCourse");
         courseNode.addData("type", "course");
         for (int i = 1; i <= NUMBER_OF_CHAPTERS_IN_COURSE; i++)
             courseNode.addChild(createNodeForChapter(i));
         return courseNode;
+    }    
+   
+    public  Node buildAdditionalNodes(){
+    	Node newChapterNode = new Node("AdditionalChapters");
+    	newChapterNode.addData("type", "default");
+    	for (int i = NUMBER_OF_CHAPTERS_IN_COURSE+1; i <= NUMBER_OF_CHAPTERS_IN_COURSE+2; i++)
+    		newChapterNode.addChild(createNodeForChapter(i));
+    	return newChapterNode;
     }
 
-    private Node createNodeForChapter(int number) {
+    private  Node createNodeForChapter(int number) {
         Node chapterNode = new Node("Chapter " + number);
         chapterNode.addData("type", "chapter");
 
@@ -47,7 +55,7 @@ public class CertificateCourseTree {
         return chapterNode;
     }
 
-    private Node createNodeForLesson(int chapterNumber, int lessonNumber) {
+    private  Node createNodeForLesson(int chapterNumber, int lessonNumber) {
         Node lessonNode = new Node("Chapter " + chapterNumber + " Lesson " + lessonNumber);
         lessonNode.addData("type", "lesson");
 
@@ -62,7 +70,7 @@ public class CertificateCourseTree {
         return lessonNode;
     }
 
-    private Node createNodeForQuestion(int chapterNumber, int questionNumber) {
+    private  Node createNodeForQuestion(int chapterNumber, int questionNumber) {
         Node questionNode = new Node("Chapter " + chapterNumber + " Question " + questionNumber);
         questionNode.addData("type", "quiz");
 

@@ -33,4 +33,8 @@ public class AllCourseItemDimensions {
     public void update(CourseItemDimension courseItemDimension) {
         template.update(courseItemDimension);
     }
+    
+    public void delete(CourseItemDimension courseItemDimension){
+    	template.delete(courseItemDimension);
+    }
 }

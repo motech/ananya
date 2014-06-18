@@ -13,24 +13,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class CertificationCourseSeed {
 
-    @Autowired
-    private AllNodes allNodes;
-    @Autowired
-    private AllCourseItemDimensions allCourseItemDimensions;
-    @Autowired
-    private AllStringContents allStringContents;
-    @Autowired
-    private CertificateCourseSeedService seedService;
+	@Autowired
+	private AllNodes allNodes;
+	@Autowired
+	private AllCourseItemDimensions allCourseItemDimensions;
+	@Autowired
+	private AllStringContents allStringContents;
+	@Autowired
+	private CertificateCourseSeedService seedService;
 
-    @Seed(priority = 0, version = "1.0", comment = "Create and persist the certificate course json-tree in couchdb, add corresponding dimensions to postgres")
-    public void loadSeed() {
-        Node courseTree = new CertificateCourseTree().build();
-        seedService.saveCourseTreeInCouchDb(courseTree);
-        seedService.saveCourseTreeInPostgres(courseTree);
-    }
+	@Seed(priority = 0, version = "1.0", comment = "Create and persist the certificate course json-tree in couchdb, add corresponding dimensions to postgres")
+	public void loadSeed() {
+		Node courseTree = new CertificateCourseTree().build();
+		seedService.saveCourseTreeInCouchDb(courseTree);
+		seedService.saveCourseTreeInPostgres(courseTree);
+	}
 
-    @Seed(priority = 3, version = "1.2", comment = "Update the audio duration and parent node details in couchdb and postgres")
-    public void loadAudioContentDetails() {
-        seedService.updateAudioContentAndParentDetailsInCouchDbAndPostgres();
-    }
+	@Seed(priority = 3, version = "1.2", comment = "Update the audio duration and parent node details in couchdb and postgres")
+	public void loadAudioContentDetails() {
+		seedService.updateAudioContentAndParentDetailsInCouchDbAndPostgres();
+	}
+
+	@Seed(priority = 0, version = "1.20", comment = "Update additional chapters for UP release")
+	public void loadSeedForUP() {
+		Node additionalTree = new CertificateCourseTree().buildAdditionalNodes();
+		seedService.saveCourseTreeInCouchDb(additionalTree);
+		seedService.saveCourseTreeInPostgres(additionalTree);
+		seedService.updateAudioContentAndParentDetailsForNewChapters(additionalTree);  
+		seedService.updateParentIdForAdditionalChaptersInCouchDb();
+	}
 }
