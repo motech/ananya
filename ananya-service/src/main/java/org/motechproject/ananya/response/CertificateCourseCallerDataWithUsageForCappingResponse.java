@@ -34,9 +34,16 @@ public class CertificateCourseCallerDataWithUsageForCappingResponse {
         this.maxAllowedUsageForOperator = maxUsage;
     }
 
-   /* private Integer getCombinedUsage(FrontLineWorker frontLineWorker) {	
-		return frontLineWorker.getCurrentCourseUsage()+frontLineWorker.getCurrentJobAidUsage();
-	}*/
+	public CertificateCourseCallerDataWithUsageForCappingResponse(
+			FrontLineWorker frontLineWorker, int maxUsage, boolean enquirey) {
+		this.bookmark = frontLineWorker.bookMark().asJson();
+        this.language= frontLineWorker.getLanguage();
+        this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
+        this.scoresByChapter = frontLineWorker.reportCard().scoresByChapterIndex();
+        this.currentCertificatCourseUsage = frontLineWorker.getCurrentCourseUsage();
+        this.promptsHeardForMA = frontLineWorker.getPromptsHeardForMA();
+        this.maxAllowedUsageForOperator = maxUsage;
+	}
 
 	public static CertificateCourseCallerDataWithUsageForCappingResponse forNewUser(Integer maxOperatorUsage) {
 		CertificateCourseCallerDataWithUsageForCappingResponse ccResponse=  new CertificateCourseCallerDataWithUsageForCappingResponse("{}", false, null, new HashMap<String, Integer>());

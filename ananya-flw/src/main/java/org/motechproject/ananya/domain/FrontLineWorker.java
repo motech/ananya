@@ -93,7 +93,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     
     @JsonProperty
     private boolean cappingEnabledMK=true;
-
+    
     @JsonProperty
     private UUID flwId = DUMMY_UUID;
 

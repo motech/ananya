@@ -22,6 +22,8 @@ public class JobAidCallerDataResponse {
         this.currentCertificatCourseUsage = frontLineWorker.getCurrentCourseUsage();
     }
 
+    
+    
     public JobAidCallerDataResponse() {
     }
 
@@ -42,7 +44,18 @@ public class JobAidCallerDataResponse {
         this.promptsHeard = frontLineWorker.getPromptsHeard();
     }
 
-    public static JobAidCallerDataResponse forNewUser() {
+    public JobAidCallerDataResponse(FrontLineWorker frontLineWorker,
+			int maxUsage, boolean enquirey) {
+    	this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
+        this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
+        this.promptsHeard = frontLineWorker.getPromptsHeard();
+        this.maxAllowedUsageForOperator = maxUsage;
+        this.language = frontLineWorker.getLanguage();
+	}
+
+
+
+	public static JobAidCallerDataResponse forNewUser() {
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse();
         jobAidCallerDataResponse.isCallerRegistered = false;
         jobAidCallerDataResponse.language = null;

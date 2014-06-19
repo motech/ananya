@@ -95,6 +95,7 @@ public class AdminInquiryService {
 
     private String getCallerDataJs(String msisdn) {
         FrontLineWorker frontLineWorker = frontLineWorkerService.findByCallerId(msisdn);
+        boolean enquirey = true;
         if (frontLineWorker == null)
             return String.format(CALLER_DATA_JSON, "{}", "{}");
 
@@ -102,8 +103,8 @@ public class AdminInquiryService {
         int maxUsage = operatorService.findMaximumUsageFor(frontLineWorker.getOperator(),frontLineWorker.getCircle());
 
         return String.format(CALLER_DATA_JSON,
-                gson.toJson(frontLineWorker.isCappingEnabledMK()?new JobAidCallerDataResponse(frontLineWorker, maxUsage):new JobAidCallerDataResponse(frontLineWorker)),
-                gson.toJson(frontLineWorker.isCappingEnabledMA()?new CertificateCourseCallerDataWithUsageForCappingResponse(frontLineWorker, maxUsage):new CertificateCourseCallerDataResponse(frontLineWorker)));
+                gson.toJson(frontLineWorker.isCappingEnabledMK()?new JobAidCallerDataResponse(frontLineWorker, maxUsage, enquirey):new JobAidCallerDataResponse(frontLineWorker)),
+                gson.toJson(frontLineWorker.isCappingEnabledMA()?new CertificateCourseCallerDataWithUsageForCappingResponse(frontLineWorker, maxUsage,enquirey):new CertificateCourseCallerDataResponse(frontLineWorker)));
     }
 
     private List<CallContent> callContentQueryResult(String callerId, AdminQuery queryType) {
