@@ -99,9 +99,9 @@ public class OperatorSeed {
     
     @Seed(priority = 0, version = "1.19", comment = "adding pulse to second mapping for operators")
     public void addNewOperatorWithCircleAndPulseToSec() throws IOException {    	
-             Operator operator = new Operator("bsnl", convertMinutesToMilliSeconds(60), 500, 60500,circleUp);
+             Operator operator = new Operator("bsnl", convertMinutesToMilliSeconds(60), 500, 60500,"up");
              allOperators.add(operator);     
              allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
-                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),circleUp ));
+                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),"up" ));
     }
 }

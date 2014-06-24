@@ -69,7 +69,7 @@ public class Operator extends MotechBaseDataObject {
         this.endOfPulseInMilliSec = endOfPulseInMilliSec;
     }
 
-    @JsonIgnore
+
 	public String getCircle() {
 		return circle;
 	}
