@@ -6,7 +6,6 @@ import org.motechproject.ananya.repository.AllOperators;
 import org.motechproject.ananya.repository.dimension.AllOperatorDimensions;
 import org.motechproject.deliverytools.seed.Seed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -21,9 +20,7 @@ public class OperatorSeed {
 
     @Autowired
     private AllOperatorDimensions allOperatorDimensions;
-    
-    @Value("#{ananyaProperties['circle.name.up']}")
-    private String circleUp;
+   
 
     protected final static HashMap<String, Integer> operator_usage = new HashMap<>();
     protected final static HashMap<String, Integer> start_of_pulse_map = new HashMap<>();
