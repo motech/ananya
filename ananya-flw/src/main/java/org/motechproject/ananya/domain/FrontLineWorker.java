@@ -23,6 +23,8 @@ public class FrontLineWorker extends MotechBaseDataObject {
     private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
 
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
+    
+    private static final String MAX_USAGE = "max_usage";
 
     @JsonProperty
     private String name;
@@ -330,11 +332,13 @@ public class FrontLineWorker extends MotechBaseDataObject {
     public void resetJobAidUsageAndPrompts() {
         this.currentJobAidUsage = 0;
         this.promptsHeard.remove("Max_Usage");
+        this.promptsHeard.remove(MAX_USAGE);
     }
     
     public void resetCourseUsageAndPrompts() {
         this.currentCourseUsage = 0;
         this.promptsHeardForMA.remove("Max_Usage");
+        this.promptsHeardForMA.remove(MAX_USAGE);
     }
 
     public boolean circleIs(String circle) {

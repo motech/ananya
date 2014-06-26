@@ -226,7 +226,7 @@ public class FrontLineWorkerServiceTest {
         String operator = "airtel";
         String circle = "circle";
         String language = "language";
-        String maxUsagePrompt = "Max_Usage";
+        String maxUsagePrompt = "max_usage";
 
         FrontLineWorker frontLineWorker = new FrontLineWorker(callerId, operator, circle, language);
         frontLineWorker.markPromptHeard(maxUsagePrompt);
