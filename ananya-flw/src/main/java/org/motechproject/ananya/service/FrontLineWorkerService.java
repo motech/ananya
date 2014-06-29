@@ -71,7 +71,7 @@ public class FrontLineWorkerService {
 		}
 		return frontLineWorker;
 	}
-	
+
 	public FrontLineWorker findForJobAidCallerDataWithoutCapping(String callerId) {
 		FrontLineWorker frontLineWorker = findByCallerId(callerId);
 		return frontLineWorker;
@@ -172,7 +172,7 @@ public class FrontLineWorkerService {
 		allFrontLineWorkers.update(frontLineWorker);
 		log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker.getMsisdn());
 	}
-	
+
 	public void updatePromptsHeard(FrontLineWorker frontLineWorker, List<String> promptList) {
 		for (String prompt : promptList)
 			frontLineWorker.markPromptHeard(prompt);
@@ -269,7 +269,9 @@ public class FrontLineWorkerService {
 		}
 		FrontLineWorker flwByOldMsisdn = allFrontLineWorkers.findByMsisdn(msisdn);
 		//Removing oldmsisdn from frontlineworker key
-		removeFrontLineWorkerKey(msisdn);
+		if(flwByOldMsisdn!=null){
+			removeFrontLineWorkerKey(msisdn);
+		}
 		FlwChangeSelector changeSelector = new FlwChangeSelector(flwByOldMsisdn, flwByNewMsisdn);
 		setFlwFields(newMsisdn, changeSelector, flwByOldMsisdn);
 		if (flwByOldMsisdn.isAlreadyRegistered())
@@ -280,11 +282,15 @@ public class FrontLineWorkerService {
 	}
 
 	private void removeFrontLineWorkerKey(String msisdn) {
-		// TODO Auto-generated method stub
+		try{
 		FrontLineWorkerKey frontlineWorkerKey = allFrontLineWorkerKeys.get(msisdn);
 		if(frontlineWorkerKey!=null){
 			allFrontLineWorkerKeys.remove(frontlineWorkerKey);
 		}
+		}catch(DocumentNotFoundException e){
+			log.info("frontlineWorkerKey not present for msisdn:"+msisdn);
+		}
+		
 	}
 
 	private void setFlwFields(String newMsisdn, FlwChangeSelector changeSelector, FrontLineWorker flwByOldMsisdn) {
@@ -315,6 +321,6 @@ public class FrontLineWorkerService {
 		}
 	}
 
-	
+
 
 }
