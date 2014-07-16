@@ -45,6 +45,7 @@ public class CallerDataController extends BaseAnanyaController {
 
         JobAidCallerDataResponse callerData = jobAidService.getCallerData(jobAidServiceRequest);
 
+        log.info("callerData="+callerData.toString());
         setContentType(response);
         return new ModelAndView("job_aid_caller_data")
                 .addObject("isCallerRegistered", callerData.isCallerRegistered())
@@ -52,7 +53,7 @@ public class CallerDataController extends BaseAnanyaController {
                 .addObject("currentCourseUsage", callerData.getCurrentCertificatCourseUsage())
                 .addObject("currentJobAidUsage", callerData.getCurrentJobAidUsage())
                 .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
-                .addObject("promptsHeard", callerData.getPromptsHeard());
+                .addObject("promptsHeard", callerData.getPromptsHeardForCombinedCapping());
     }
 
     
@@ -122,7 +123,7 @@ public class CallerDataController extends BaseAnanyaController {
                 .addObject("currentCourseUsage", callerData.getCurrentCertificatCourseUsage())
                 .addObject("currentJobAidUsage", callerData.getCombinedUsage())
                 .addObject("maxAllowedUsageForOperator", callerData.getMaxAllowedUsageForOperator())
-                .addObject("promptsHeardForMA", callerData.getPromptsHeardForMA());
+                .addObject("promptsHeardForMA", callerData.getPromptsHeardForMACombinedCapping());
     }
 
     private void setContentType(HttpServletResponse response) {

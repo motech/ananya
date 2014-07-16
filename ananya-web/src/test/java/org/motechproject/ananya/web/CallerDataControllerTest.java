@@ -49,6 +49,7 @@ public class CallerDataControllerTest {
         frontLineWorker.setRegistrationStatus(RegistrationStatus.REGISTERED);
         frontLineWorker.setCurrentJobAidUsage(1000);
         frontLineWorker.markPromptHeard("some.wav");
+        frontLineWorker.markPromptHeardForMA("some.wav");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         JobAidCallerDataResponse jobAidCallerDataResponse = new JobAidCallerDataResponse(frontLineWorker, 2000);

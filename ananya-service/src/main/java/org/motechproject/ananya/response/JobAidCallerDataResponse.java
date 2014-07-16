@@ -12,11 +12,13 @@ public class JobAidCallerDataResponse {
     private Integer currentCertificatCourseUsage;
     private Integer maxAllowedUsageForOperator;
     private Map<String, Integer> promptsHeard;
+    private Map<String, Integer> promptsHeardForMA;
 
     public JobAidCallerDataResponse(FrontLineWorker frontLineWorker, Integer maxUsage) {
         this.isCallerRegistered = frontLineWorker.getStatus().isRegistered();
         this.currentJobAidUsage = frontLineWorker.getCurrentJobAidUsage();
         this.promptsHeard = frontLineWorker.getPromptsHeard();
+        this.promptsHeardForMA = frontLineWorker.getPromptsHeardForMA();
         this.maxAllowedUsageForOperator = maxUsage;
         this.language = frontLineWorker.getLanguage();
         this.currentCertificatCourseUsage = frontLineWorker.getCurrentCourseUsage();
@@ -79,6 +81,17 @@ public class JobAidCallerDataResponse {
     }
 
     public Map<String, Integer> getPromptsHeard() {
+        return promptsHeard;
+    }
+    
+    /*
+	 * Objective of this method is to get the max usage prompts heard across ma and mk and add it to prompts heard before sending to front end
+	 */
+    public Map<String, Integer> getPromptsHeardForCombinedCapping() {
+    	if(promptsHeardForMA!=null && promptsHeardForMA.get("max_usage")!=null && promptsHeardForMA.get("max_usage")!=0){
+    	   int max_usage_heard_number = promptsHeardForMA.get("max_usage")+(promptsHeard.get("max_usage")!=null?promptsHeard.get("max_usage"):0);
+ 		   promptsHeard.put("max_usage", max_usage_heard_number);
+    	}
         return promptsHeard;
     }
 
