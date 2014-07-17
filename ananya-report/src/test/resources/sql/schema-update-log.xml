@@ -1,0 +1,901 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+<changeSet context="setup" author="ThoughtWorks-version1.1" id="1">
+        <sql>
+            update
+                report.course_item_measure
+            set
+                location_id = (
+                    select
+                        location_id
+                    from
+                        report.registration_measure
+                    where
+                        course_item_measure.flw_id = registration_measure.flw_id
+                )
+        </sql>
+
+        <sql>
+            update
+                report.call_duration_measure
+            set
+                location_id = (
+                    select
+                        location_id
+                    from
+                        report.registration_measure
+                    where
+                        call_duration_measure.flw_id = registration_measure.flw_id
+                )
+        </sql>
+
+        <sql>
+            update
+                report.sms_sent_measure
+            set
+                location_id = (
+                    select
+                        location_id
+                    from
+                        report.registration_measure
+                    where
+                        sms_sent_measure.flw_id = registration_measure.flw_id
+                )
+        </sql>
+    </changeSet>
+
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="2">
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = 'AWW'
+            where msisdn in (919576026237,919934240573,919304598102 )
+
+        </sql>
+
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = 'ASHA'
+            where msisdn in (
+            918873529527,919604792647,919931877016,919801894047,919693173091,919006944511,
+            919263672067,919931113401,919006241272,918757906652,919204535979,919852750820,
+            919386658281,919608941924, 919204732885,919204299341,919097266325,918969106817,
+            911962682332,919931664833,919801925937,919661296050,918809853323,919798444042,
+            919939673406,919955696356,919801699362,918084983894,919825882760,919331040084,
+            919304263073,919939623914,918434490448,919973094719,919939599071,919234215178,
+            918651416161,919204385105,919661759772,919308559317,919304216561,919525986648
+            )
+        </sql>
+
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = 'ANM'
+            where msisdn in (
+            919162129169,918801894047,918809663088,919304041322,919801199499,919708180816,
+            919534872337,919708844520,917739287514,919661555975,919334321625,919801693144,
+            919430172212,919939370517,919534820564,919431693384,918877788609,919431767865,
+            919507904660,919835637904,919608067586,918298776305,919199032380,917352424325,
+            919934217214,919430086440,919162992021,919661572240,919430981098,919973647457,
+            919771115932,919472371250,917631383639,918051526413,918877881085,919570592199,
+            919570856082,919430618751,918292401304,918969992698,919934294846,919939988858,
+            919204726405,919608065822,919570436983
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="3">
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = null
+            where designation = 'INVALID'
+
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="4">
+        <sql>
+            update
+            report.front_line_worker_dimension
+            set designation = null
+            where designation = ''
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="5">
+        <createTable tableName="temp_content_correction" schemaName="report">
+            <column name="id" type="serial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="content_name" type="varchar(255)"/>
+            <column name="incorrect_duration" type="int"/>
+            <column name="correct_duration" type="int"/>
+        </createTable>
+
+        <sql>
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0011_ch1_qp.wav', 96289, 24819 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0011_ch1_qp.wav', 96289, 23869 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0011_ch1_qp.wav', 96289, 21375 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0011_ch1_qp.wav', 96289, 28974 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0011_ch1_qp.wav', 96289, 29437 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0038_ch2_qp.wav', 16660, 25247 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0038_ch2_qp.wav', 16660, 25072 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0038_ch2_qp.wav', 16660, 21255 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0038_ch2_qp.wav', 16660, 28813 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0038_ch2_qp.wav', 16660, 29741 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0065_ch3_qp.wav', 16448, 24785 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0065_ch3_qp.wav', 16448, 23817 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0065_ch3_qp.wav', 16448, 21260 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0065_ch3_qp.wav', 16448, 28571 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0065_ch3_qp.wav', 16448, 28535 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0092_ch4_qp.wav', 16800, 24957 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0092_ch4_qp.wav', 16800, 24772 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0092_ch4_qp.wav', 16800, 23234 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0092_ch4_qp.wav', 16800, 30338 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0092_ch4_qp.wav', 16800, 30513 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0119_ch5_qp.wav', 16471, 25007 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0119_ch5_qp.wav', 16471, 24604 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0119_ch5_qp.wav', 16471, 21673 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0119_ch5_qp.wav', 16471, 28846 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0119_ch5_qp.wav', 16471, 29509 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0146_ch6_qp.wav', 16969, 24081 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0146_ch6_qp.wav', 16969, 23740 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0146_ch6_qp.wav', 16969, 20782 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0146_ch6_qp.wav', 16969, 27046 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0146_ch6_qp.wav', 16969, 28666 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0173_ch7_qp.wav', 16769, 24969 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0173_ch7_qp.wav', 16769, 24029 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0173_ch7_qp.wav', 16769, 21427 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0173_ch7_qp.wav', 16769, 27792 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0173_ch7_qp.wav', 16769, 28658 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0200_ch8_qp.wav', 16493, 23677 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0200_ch8_qp.wav', 16493, 23434 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0200_ch8_qp.wav', 16493, 20069 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0200_ch8_qp.wav', 16493, 27984 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0200_ch8_qp.wav', 16493, 28709 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 0:0227_ch9_qp.wav', 16668, 24847 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 1:0227_ch9_qp.wav', 16668, 24509 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 2:0227_ch9_qp.wav', 16668, 21575 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 3:0227_ch9_qp.wav', 16668, 28718 );
+            insert into report.temp_content_correction ( content_name, incorrect_duration, correct_duration) VALUES ( 'score 4:0227_ch9_qp.wav', 16668, 28422 );
+        </sql>
+        <sql>
+            update
+                report.course_item_dimension
+            set
+                duration = (
+                    select
+                        tcc.correct_duration
+                    from
+                        report.temp_content_correction tcc
+                    where
+                        tcc.content_name = name
+                )
+            where
+                name in (
+                    select
+                        tcc.content_name
+                    from
+                        report.temp_content_correction tcc
+                )
+        </sql>
+        <sql>
+            update
+                report.course_item_measure
+            set
+                percentage = round(duration * 100.0 / (select duration from report.course_item_dimension cid where cid.id = course_item_id))
+            where
+                course_item_id in (
+                    select
+                        cid.id
+                    from
+                        report.course_item_dimension cid join
+                        report.temp_content_correction tcc on tcc.content_name = cid.name
+                )
+        </sql>
+        <sql>
+            drop table report.temp_content_correction;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="6">
+          <sql>
+             update report.location_dimension set panchayat = null where panchayat =''
+          </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.3" id="7">
+        <sql>
+            update report.call_duration_measure set called_number = 5771102
+            where type = 'CERTIFICATECOURSE'
+            and called_number &lt;&gt; 33578057
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = 5771102
+            where id in
+            (
+            select cdm1.id from report.call_duration_measure cdm1
+            inner join report.call_duration_measure cdm2 on cdm1.call_id = cdm2.call_id
+            where cdm1.type='CALL'
+            and cdm2.type='CERTIFICATECOURSE'
+            and cdm2.called_number &lt;&gt; 33578057
+            )
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = to_number(substring(trim(to_char(called_number,'9999999999999999999999999999')) from 1 for 7),'9999999')
+            where type in ('JOBAID', 'CALL')
+            and called_number &gt; 5771199
+            and called_number not in(33578056, 33578057)
+        </sql>
+        <sql>
+            update report.call_duration_measure set called_number = 57711
+            where called_number not in (select distinct short_code from report.job_aid_content_dimension where short_code is not null)
+            and called_number not in(33578056, 33578057, 5771102)
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.4" id="8">
+        <sql>
+            update report.call_duration_measure cdm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = cdm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = cdm.flw_id order by id desc limit 1);
+
+            update report.course_item_measure cim set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = cim.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = cim.flw_id order by id desc limit 1);
+
+            update report.job_aid_content_measure jacm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = jacm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = jacm.flw_id order by id desc limit 1);
+
+            update report.sms_sent_measure smsm set location_id = ( select location_id from report.registration_measure rm where rm.flw_id = smsm.flw_id order by id desc limit 1) where location_id != ( select location_id from report.registration_measure rm where rm.flw_id = smsm.flw_id order by id desc limit 1);
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="9">
+        <sql>
+            UPDATE
+            report.course_item_dimension AS cid
+            SET
+            duration = 20047
+            WHERE
+            file_name = '0245_ch9_end_op.wav'
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="10">
+        <sql>
+            UPDATE
+                report.call_duration_measure AS cdm
+            SET
+                time_id = td2.id
+            FROM
+                report.time_dimension td1,
+                report.time_dimension td2
+            WHERE
+                    cdm.time_id = td1.id
+                AND td1.date != date_trunc('day',cdm.start_time)
+                AND td2.date = date_trunc('day',cdm.start_time)
+        </sql>
+
+        <sql>
+            UPDATE
+                report.course_item_measure AS cim
+            SET
+                time_id = td2.id
+            FROM
+                report.time_dimension td1,
+                report.time_dimension td2
+            WHERE
+                    cim.time_id = td1.id
+                AND td1.date != date_trunc('day',cim.timestamp)
+                AND td2.date = date_trunc('day',cim.timestamp)
+        </sql>
+
+        <sql>
+            UPDATE
+                report.job_aid_content_measure AS jacm
+            SET
+                time_id = td2.id
+            FROM
+                report.time_dimension td1,
+                report.time_dimension td2
+            WHERE
+                    jacm.time_id = td1.id
+                AND td1.date != date_trunc('day',jacm.timestamp)
+                AND td2.date = date_trunc('day',jacm.timestamp)
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="11">
+        <!--sql to delete duplicate rows in measures created due to multiple disconnects issue-->
+        <sql>
+            DELETE FROM report.call_duration_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id, type ORDER BY id) AS rnum
+            FROM report.call_duration_measure) t
+            WHERE t.rnum > 1);
+        </sql>
+
+        <sql>
+            DELETE FROM report.course_item_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id,flw_id,course_item_id,timestamp ORDER BY id) AS rnum
+            FROM report.course_item_measure) t
+            WHERE t.rnum > 1);
+        </sql>
+
+        <sql>
+            DELETE FROM report.job_aid_content_measure
+            WHERE id IN (
+            SELECT id FROM
+            (SELECT id,	row_number() over (partition BY call_id,flw_id,job_aid_content_id,timestamp ORDER BY id) AS rnum
+            FROM report.job_aid_content_measure) t
+            WHERE t.rnum > 1);
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="12">
+        <sql>
+            UPDATE
+            report.call_duration_measure as cdm
+            SET
+            duration_in_pulse = CEIL (
+            GREATEST((cdm.duration*1000 - od.start_of_pulse_in_milli_sec),0)
+            /
+            (od.end_of_pulse_in_milli_sec - od.start_of_pulse_in_milli_sec)::FLOAT
+            )
+            FROM
+            report.operator_dimension od WHERE cdm.operator = od.name;
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="ThoughtWorks-version1.10" id="13">
+        <sql>
+            update report.location_dimension set district = initcap(district), block = initcap(block), panchayat=initcap(panchayat);
+        </sql>
+    </changeSet>
+
+	<changeSet context="setup" author="Onmobile-version1.0" id="14">
+        <sql>
+			update report.job_aid_content_details_dimension set file_name = '0018_open_defecation_1.wav', duration=124719 where content_id in (select content_id from report.job_aid_content_dimension where parent_id in (select id from report.job_aid_content_dimension where name = 'Level 4 Chapter 4 Lesson4'));
+			update report.job_aid_content_details_dimension set file_name = '0028_when_and_why_to_wash_hands.wav', duration=106275 where content_id in (select content_id from report.job_aid_content_dimension where parent_id in (select id from report.job_aid_content_dimension where name = 'Level 4 Chapter 4 Lesson3'));
+			update report.job_aid_content_dimension set short_code = '5771185' where name = 'Level 4 Chapter 4 Lesson4';
+			update report.job_aid_content_dimension set short_code = '5771185' where parent_id in (select id from report.job_aid_content_dimension where name = 'Level 4 Chapter 4 Lesson4');
+        </sql>
+    </changeSet>
+    
+    <changeSet context="setup" author="Onmobile-version1.0" id="15">
+        <sql>
+			UPDATE report.course_item_details_dimension set duration = '227151' where file_name = '0003_ch1_l1.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '22228' where file_name = '0004_ch1_l1_op.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '211452' where file_name = '0005_ch1_l2.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '22897' where file_name = '0006_ch1_l2_op.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '191241' where file_name = '0007_ch1_l3.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '21662' where file_name = '0008_ch1_l3_op.wav' and language_id = 2 ;                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '56272' where file_name = '0010_ch1_l4_op.wav' and language_id = 2 ;                                                              
+			                                                                                                                
+			UPDATE report.course_item_details_dimension set duration = '42577' where file_name = '0012_ch1_q1.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '17674' where file_name = '0013_ch1_q1_ca.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '23690' where file_name = '0014_ch1_q1_wa.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '34312' where file_name = '0015_ch1_q2.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '23556' where file_name = '0016_ch1_q2_ca.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '23153' where file_name = '0017_ch1_q2_wa.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '37476' where file_name = '0018_ch1_q3.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '18432' where file_name = '0019_ch1_q3_ca.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '22480' where file_name = '0020_ch1_q3_wa.wav' and language_id = 2 ;                              
+			                                                                                                                                
+			UPDATE report.course_item_details_dimension set duration = '31287' where file_name = '0024_ch1_4ca.wav' and language_id = 2 ;                                                                                                            
+			UPDATE report.course_item_details_dimension set duration = '29830' where file_name = '0025_ch1_3ca.wav' and language_id = 2 ;                                                                                                       
+			UPDATE report.course_item_details_dimension set duration = '23564' where file_name = '0026_ch1_2ca.wav' and language_id = 2 ;                                                                                                 
+			UPDATE report.course_item_details_dimension set duration = '26183' where file_name = '0027_ch1_1ca.wav' and language_id = 2 ;                                                                                                   
+			UPDATE report.course_item_details_dimension set duration = '22929' where file_name = '0028_ch1_0ca.wav' and language_id = 2 ;                                                                                                                            
+			UPDATE report.course_item_details_dimension set duration = '28749' where file_name = '0029_ch1_end op.wav' and language_id = 2 ;                                                                                                                                        
+			UPDATE report.course_item_details_dimension set duration = '182675' where file_name = '0036_ch2_l4.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '27503' where file_name = '0048_ch2_q4.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '18425' where file_name = '0049_ch2_q4_ca.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.course_item_details_dimension set duration = '19688' where file_name = '0050_ch2_q4_wa.wav' and language_id = 2 ;
+			
+			UPDATE report.course_item_details_dimension set duration = '25280' where file_name = '0031_ch2_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '31060' where file_name = '0033-ch2_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '21230' where file_name = '0035_ch2_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '62300' where file_name = '0037_ch2_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '33740' where file_name = '0056_ch2_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '21530' where file_name = '0058_ch3_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '26700' where file_name = '0060_ch3_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '26110' where file_name = '0062_ch3_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '62040' where file_name = '0064_ch3_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '30930' where file_name = '0083_ch3_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25200' where file_name = '0085_ch4_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '30870' where file_name = '0087_ch4_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '24610' where file_name = '0089_ch4_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61840' where file_name = '0091_ch4_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '30350' where file_name = '0110_ch4_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '29450' where file_name = '0112_ch5_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '27740' where file_name = '0114_ch5_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '34470' where file_name = '0116_ch5_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61500' where file_name = '0118_ch5_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '30450' where file_name = '0137_ch5_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '37040' where file_name = '0139_ch6_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '27040' where file_name = '0141_ch6_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '31440' where file_name = '0143_ch6_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61380' where file_name = '0145_ch6_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '33200' where file_name = '0164_ch6_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25870' where file_name = '0168_ch7_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '29180' where file_name = '0170_ch7_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61810' where file_name = '0172_ch7_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '30700' where file_name = '0191_ch7_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25200' where file_name = '166_ch7_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25240' where file_name = '0193_ch8_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25940' where file_name = '0195_ch8_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '29170' where file_name = '0197_ch8_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61790' where file_name = '0199_ch8_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '34340' where file_name = '0218_ch8_end_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25210' where file_name = '0220_ch9_l1_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '25970' where file_name = '0222_ch9_l2_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '29560' where file_name = '0224_ch9_l3_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '61790' where file_name = '0226_ch9_l4_op.wav' and language_id = 2; 
+			UPDATE report.course_item_details_dimension set duration = '24350' where file_name = '0245_ch9_end_op.wav' and language_id = 2;                                                                                                                                                                              
+        </sql>
+    </changeSet>
+
+    <changeSet context="setup" author="Onmobile-version1.0" id="16">
+        <sql>
+			UPDATE report.job_aid_content_details_dimension set duration = '103758' where file_name = '0001_prep 4 childbirth.wav' and language_id = 2 ;                                                                                                                                                                       
+			UPDATE report.job_aid_content_details_dimension set duration = '130565' where file_name = '0002_ifa_and_tt.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '118687' where file_name = '0003_planning.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '116840' where file_name = '0007_emerg_for_mother.wav' and language_id = 2 ;                                                                                                                                                                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '51306' where file_name = '0002_select_level.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '63221' where file_name = '0003_select_ch_1.1.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '66539' where file_name = '0004_select_ch_1.2.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '56956' where file_name = '0005_select_ch_1.3.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '54802' where file_name = '0006_select_ch_1.4.wav' and language_id = 2 ;                                                                                                                                                                              
+			UPDATE report.job_aid_content_details_dimension set duration = '41411' where file_name = '0007_lessons_1.1.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '27517' where file_name = '0008_select_lesson_1.1.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '42015' where file_name = '0009_lessons_1.1.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '29435' where file_name = '0010_select_lesson_1.1.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '41298' where file_name = '0011_lessons_1.1.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '32839' where file_name = '0012_select_lesson_1.1.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '30405' where file_name = '0013_lessons_1.1.4.wav' and language_id = 2 ;                                                                                                                                     
+			                                                                                                                                                
+			UPDATE report.job_aid_content_details_dimension set duration = '27871' where file_name = '0014_select_lesson_1.1.4.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '43307' where file_name = '0015_lessons_1.2.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '38124' where file_name = '0016_select_lesson_1.2.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '50507' where file_name = '0017_lessons_1.2.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '41137' where file_name = '0018_select_lesson_1.2.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '40531' where file_name = '0019_lessons_1.2.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '35600' where file_name = '0020_select_lesson_1.2.3.wav' and language_id = 2 ;                                                                                                                                                                                
+			UPDATE report.job_aid_content_details_dimension set duration = '28309' where file_name = '0021_lessons_1.2.4.wav' and language_id = 2 ;                                                                                                                                     
+			                                                                                                
+			UPDATE report.job_aid_content_details_dimension set duration = '16704' where file_name = '0022_select_lesson_1.2.4.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '33094' where file_name = '0023_lessons_1.3.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '27003' where file_name = '0024_select_lesson_1.3.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '29147' where file_name = '0025_lessons_1.3.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '23763' where file_name = '0026_select_lesson_1.3.2.wav' and language_id = 2 ;                                                                                                                                                                                
+			UPDATE report.job_aid_content_details_dimension set duration = '39822' where file_name = '0027_lessons_1.3.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '34190' where file_name = '0028_select_lesson_1.3.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '53599' where file_name = '0029_lessons_1.3.4.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '50504' where file_name = '0030_select_lesson_1.3.4.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '33094' where file_name = '0031_lessons_1.4.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '27003' where file_name = '0032_select_lesson_1.4.1.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '29147' where file_name = '0033_lessons_1.4.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '23763' where file_name = '0034_select_lesson_1.4.2.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '43430' where file_name = '0035_lessons_1.4.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '34753' where file_name = '0036_select_lesson_1.4.3.wav' and language_id = 2 ;                                                                                                                                                                     
+			UPDATE report.job_aid_content_details_dimension set duration = '43682' where file_name = '0037_lessons_1.4.4.wav' and language_id = 2 ;                                                                                                                                     
+			                                                                                                                                
+			UPDATE report.job_aid_content_details_dimension set duration = '44322' where file_name = '0038_select_lesson_1.4.4.wav' and language_id = 2 ;                                                                                                                                                                     
+        </sql>
+    </changeSet>  
+
+     <changeSet context="setup" author="Onmobile-version1.0" id="17">
+        <sql>
+			INSERT INTO report.language_dimension (id,name,language_code,sms_message) SELECT 3,
+            'hindi','hin',sms_message FROM report.language_dimension where id=1;
+			INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
+            content_id, file_name, duration FROM report.course_item_details_dimension where duration is not null and (file_name like '%_ch11_%' OR file_name like '%_ch10_%');
+        </sql>
+    </changeSet>	
+	
+	  <changeSet context="setup" author="Onmobile-version1.0" id="18">
+        <sql>
+update report.course_item_details_dimension set duration = 	218490	where file_name like '%0003_ch1_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23050	where file_name like '%0004_ch1_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	178020	where file_name like '%0005_ch1_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22710	where file_name like '%0006_ch1_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	215070	where file_name like '%0007_ch1_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22170	where file_name like '%0008_ch1_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	167240	where file_name like '%0009_ch1_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	46530	where file_name like '%0010_ch1_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	93010	where file_name like '%0011_ch1_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	38420	where file_name like '%0012_ch1_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17900	where file_name like '%0013_ch1_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21670	where file_name like '%0014_ch1_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	36390	where file_name like '%0015_ch1_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23040	where file_name like '%0016_ch1_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23640	where file_name like '%0017_ch1_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24900	where file_name like '%0018_ch1_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20220	where file_name like '%0019_ch1_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23020	where file_name like '%0020_ch1_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	41550	where file_name like '%0021_ch1_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19110	where file_name like '%0022_ch1_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22450	where file_name like '%0023_ch1_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24160	where file_name like '%0024_ch1_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23080	where file_name like '%0025_ch1_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21970	where file_name like '%0026_ch1_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25820	where file_name like '%0027_ch1_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24190	where file_name like '%0028_ch1_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	26070	where file_name like '%0029_ch1_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	226860	where file_name like '%0030_ch2_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22560	where file_name like '%0031_ch2_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	197640	where file_name like '%0032_ch2_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23480	where file_name like '%0033_ch2_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	202330	where file_name like '%0034_ch2_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22310	where file_name like '%0035_ch2_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	188700	where file_name like '%0036_ch2_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	48680	where file_name like '%0037_ch2_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	15390	where file_name like '%0038_ch2_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	29450	where file_name like '%0039_ch2_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	12930	where file_name like '%0040_ch2_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	15730	where file_name like '%0041_ch2_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	52860	where file_name like '%0042_ch2_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19450	where file_name like '%0043_ch2_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22380	where file_name like '%0044_ch2_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	48040	where file_name like '%0045_ch2_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17810	where file_name like '%0046_ch2_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21540	where file_name like '%0047_ch2_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	39220	where file_name like '%0048_ch2_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19020	where file_name like '%0049_ch2_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20520	where file_name like '%0050_ch2_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24230	where file_name like '%0051_ch2_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23320	where file_name like '%0052_ch2_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20960	where file_name like '%0053_ch2_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24000	where file_name like '%0054_ch2_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22210	where file_name like '%0055_ch2_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	26710	where file_name like '%0056_ch2_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	226830	where file_name like '%0057_ch3_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22490	where file_name like '%0058_ch3_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	213300	where file_name like '%0059_ch3_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23910	where file_name like '%0060_ch3_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	200100	where file_name like '%0061_ch3_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22630	where file_name like '%0062_ch3_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	191650	where file_name like '%0063_ch3_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	48590	where file_name like '%0064_ch3_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	15080	where file_name like '%0065_ch3_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	32080	where file_name like '%0066_ch3_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	16530	where file_name like '%0067_ch3_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21900	where file_name like '%0068_ch3_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	36090	where file_name like '%0069_ch3_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21770	where file_name like '%0070_ch3_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22210	where file_name like '%0071_ch3_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	36880	where file_name like '%0072_ch3_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17670	where file_name like '%0073_ch3_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22640	where file_name like '%0074_ch3_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	41100	where file_name like '%0075_ch3_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20920	where file_name like '%0076_ch3_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21780	where file_name like '%0077_ch3_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24550	where file_name like '%0078_ch3_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23580	where file_name like '%0079_ch3_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21460	where file_name like '%0080_ch3_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22940	where file_name like '%0081_ch3_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23100	where file_name like '%0082_ch3_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24510	where file_name like '%0083_ch3_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	218130	where file_name like '%0084_ch4_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22740	where file_name like '%0085_ch4_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	194840	where file_name like '%0086_ch4_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20650	where file_name like '%0087_ch4_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	185640	where file_name like '%0088_ch4_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20300	where file_name like '%0089_ch4_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	159720	where file_name like '%0090_ch4_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	51040	where file_name like '%0091_ch4_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	15910	where file_name like '%0092_ch4_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	39130	where file_name like '%0093_ch4_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18860	where file_name like '%0094_ch4_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21930	where file_name like '%0095_ch4_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	41650	where file_name like '%0096_ch4_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21590	where file_name like '%0097_ch4_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23270	where file_name like '%0098_ch4_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	36790	where file_name like '%0099_ch4_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17840	where file_name like '%0100_ch4_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21040	where file_name like '%0101_ch4_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	35130	where file_name like '%0102_ch4_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18580	where file_name like '%0103_ch4_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21080	where file_name like '%0104_ch4_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24290	where file_name like '%0105_ch4_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24870	where file_name like '%0106_ch4_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21600	where file_name like '%0107_ch4_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22190	where file_name like '%0108_ch4_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24260	where file_name like '%0109_ch4_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21570	where file_name like '%0110_ch4_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	216750	where file_name like '%0111_ch5_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21900	where file_name like '%0112_ch5_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	209590	where file_name like '%0113_ch5_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21880	where file_name like '%0114_ch5_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	185430	where file_name like '%0115_ch5_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	28900	where file_name like '%0116_ch5_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	185030	where file_name like '%0117_ch5_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	49690	where file_name like '%0118_ch5_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	15410	where file_name like '%0119_ch5_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	37350	where file_name like '%0120_ch5_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	16400	where file_name like '%0121_ch5_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23640	where file_name like '%0122_ch5_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	40110	where file_name like '%0123_ch5_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21720	where file_name like '%0124_ch5_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22560	where file_name like '%0125_ch5_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	37760	where file_name like '%0126_ch5_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19280	where file_name like '%0127_ch5_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22460	where file_name like '%0128_ch5_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	45150	where file_name like '%0129_ch5_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19810	where file_name like '%0130_ch5_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19620	where file_name like '%0131_ch5_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24850	where file_name like '%0132_ch5_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25800	where file_name like '%0133_ch5_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21630	where file_name like '%0134_ch5_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25270	where file_name like '%0135_ch5_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23100	where file_name like '%0136_ch5_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25700	where file_name like '%0137_ch5_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	252200	where file_name like '%0138_ch6_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25710	where file_name like '%0139_ch6_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	215340	where file_name like '%0140_ch6_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21200	where file_name like '%0141_ch6_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	198600	where file_name like '%0142_ch6_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24130	where file_name like '%0143_ch6_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	178180	where file_name like '%0144_ch6_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	47390	where file_name like '%0145_ch6_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14330	where file_name like '%0146_ch6_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	37050	where file_name like '%0147_ch6_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18170	where file_name like '%0148_ch6_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20220	where file_name like '%0149_ch6_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	40350	where file_name like '%0150_ch6_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20700	where file_name like '%0151_ch6_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21420	where file_name like '%0152_ch6_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	36430	where file_name like '%0153_ch6_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19130	where file_name like '%0154_ch6_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21040	where file_name like '%0155_ch6_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	40840	where file_name like '%0156_ch6_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17690	where file_name like '%0157_ch6_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19680	where file_name like '%0158_ch6_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23360	where file_name like '%0159_ch6_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24610	where file_name like '%0160_ch6_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20680	where file_name like '%0161_ch6_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23630	where file_name like '%0162_ch6_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23020	where file_name like '%0163_ch6_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24420	where file_name like '%0164_ch6_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	212210	where file_name like '%0165_ch7_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22530	where file_name like '%0166_ch7_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	237150	where file_name like '%0167_ch7_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21410	where file_name like '%0168_ch7_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	193730	where file_name like '%0169_ch7_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25580	where file_name like '%0170_ch7_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	185180	where file_name like '%0171_ch7_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	49380	where file_name like '%0172_ch7_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14530	where file_name like '%0173_ch7_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	37320	where file_name like '%0174_ch7_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17600	where file_name like '%0175_ch7_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18910	where file_name like '%0176_ch7_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	43310	where file_name like '%0177_ch7_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18550	where file_name like '%0178_ch7_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20440	where file_name like '%0179_ch7_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	43740	where file_name like '%0180_ch7_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18080	where file_name like '%0181_ch7_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22350	where file_name like '%0182_ch7_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	38300	where file_name like '%0183_ch7_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20860	where file_name like '%0184_ch7_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20720	where file_name like '%0185_ch7_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23900	where file_name like '%0186_ch7_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24750	where file_name like '%0187_ch7_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21070	where file_name like '%0188_ch7_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23670	where file_name like '%0189_ch7_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23030	where file_name like '%0190_ch7_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25280	where file_name like '%0191_ch7_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	226020	where file_name like '%0192_ch8_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22850	where file_name like '%0193_ch8_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	187570	where file_name like '%0194_ch8_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20870	where file_name like '%0195_ch8_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	230900	where file_name like '%0196_ch8_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25760	where file_name like '%0197_ch8_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	190800	where file_name like '%0198_ch8_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	48240	where file_name like '%0199_ch8_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14390	where file_name like '%0200_ch8_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	37180	where file_name like '%0201_ch8_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23440	where file_name like '%0202_ch8_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23620	where file_name like '%0203_ch8_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	45430	where file_name like '%0204_ch8_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18270	where file_name like '%0205_ch8_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23220	where file_name like '%0206_ch8_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	39190	where file_name like '%0207_ch8_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18280	where file_name like '%0208_ch8_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21190	where file_name like '%0209_ch8_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	41740	where file_name like '%0210_ch8_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18210	where file_name like '%0211_ch8_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22810	where file_name like '%0212_ch8_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25050	where file_name like '%0213_ch8_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23940	where file_name like '%0214_ch8_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20530	where file_name like '%0215_ch8_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22010	where file_name like '%0216_ch8_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22980	where file_name like '%0217_ch8_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25080	where file_name like '%0218_ch8_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	239500	where file_name like '%0219_ch9_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	26640	where file_name like '%0220_ch9_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	207090	where file_name like '%0221_ch9_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24330	where file_name like '%0222_ch9_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	195570	where file_name like '%0223_ch9_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22680	where file_name like '%0224_ch9_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	181600	where file_name like '%0225_ch9_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	49950	where file_name like '%0226_ch9_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14160	where file_name like '%0227_ch9_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	34640	where file_name like '%0228_ch9_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22400	where file_name like '%0229_ch9_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22280	where file_name like '%0230_ch9_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	38930	where file_name like '%0231_ch9_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18510	where file_name like '%0232_ch9_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23610	where file_name like '%0233_ch9_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	50750	where file_name like '%0234_ch9_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17850	where file_name like '%0235_ch9_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19770	where file_name like '%0236_ch9_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	49040	where file_name like '%0237_ch9_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17960	where file_name like '%0238_ch9_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20730	where file_name like '%0239_ch9_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22180	where file_name like '%0240_ch9_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23730	where file_name like '%0241_ch9_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20280	where file_name like '%0242_ch9_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22790	where file_name like '%0243_ch9_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22440	where file_name like '%0244_ch9_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	27730	where file_name like '%0245_ch9_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	224050	where file_name like '%0288_ch10_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22540	where file_name like '%0289_ch10_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	190870	where file_name like '%0290_ch10_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21640	where file_name like '%0291_ch10_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	205170	where file_name like '%0292_ch10_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24890	where file_name like '%0293_ch10_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	145410	where file_name like '%0294_ch10_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	48080	where file_name like '%0295_ch10_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14310	where file_name like '%0296_ch10_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	35580	where file_name like '%0297_ch10_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22920	where file_name like '%0298_ch10_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23350	where file_name like '%0299_ch10_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	46740	where file_name like '%0300_ch10_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18360	where file_name like '%0301_ch10_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23130	where file_name like '%0302_ch10_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	45830	where file_name like '%0303_ch10_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17510	where file_name like '%0304_ch10_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18680	where file_name like '%0305_ch10_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	46210	where file_name like '%0306_ch10_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18170	where file_name like '%0307_ch10_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20670	where file_name like '%0308_ch10_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23320	where file_name like '%0309_ch10_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23830	where file_name like '%0310_ch10_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20060	where file_name like '%0311_ch10_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21500	where file_name like '%0312_ch10_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22570	where file_name like '%0313_ch10_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	25370	where file_name like '%0314_ch10_end_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	207050	where file_name like '%0315_ch11_l1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23060	where file_name like '%0316_ch11_l1_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	219500	where file_name like '%0317_ch11_l2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21190	where file_name like '%0318_ch11_l2_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	181740	where file_name like '%0319_ch11_l3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21650	where file_name like '%0320_ch11_l3_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	184760	where file_name like '%0321_ch11_l4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	51340	where file_name like '%0322_ch11_l4_op.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	14920	where file_name like '%0323_ch11_qp.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	34300	where file_name like '%0324_ch11_q1.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	17390	where file_name like '%0325_ch11_q1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	20300	where file_name like '%0326_ch11_q1_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	41910	where file_name like '%0327_ch11_q2.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21540	where file_name like '%0328_ch11_q2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23280	where file_name like '%0329_ch11_q2_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	44980	where file_name like '%0330_ch11_q3.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	18150	where file_name like '%0331_ch11_q3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21060	where file_name like '%0332_ch11_q3_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	42920	where file_name like '%0333_ch11_q4.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	19240	where file_name like '%0334_ch11_q4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21760	where file_name like '%0335_ch11_q4_wa.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	23920	where file_name like '%0336_ch11_4_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	24220	where file_name like '%0337_ch11_3_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21660	where file_name like '%0338_ch11_2_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	21110	where file_name like '%0339_ch11_1_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	22930	where file_name like '%0340_ch11_0_ca.wav%' and language_id = 3;
+update report.course_item_details_dimension set duration = 	16130	where file_name like '%0341_ch11_end_op.wav%' and language_id =3                                                                                                                                     
+        </sql>
+    </changeSet>    
+	
+	<changeSet context="setup" author="Onmobile-version1.0" id="19">
+        <sql>
+update report.job_aid_content_details_dimension set duration = 	41780	where file_name like '%0002_select_level.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	50130	where file_name like '%0003_select_chapter_1.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	56990	where file_name like '%0004_select_chapter_1.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	45130	where file_name like '%0005_select_chapter_1.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	47610	where file_name like '%0006_select_chapter_1.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	39130	where file_name like '%0007_lessons_1.1.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	35210	where file_name like '%0008_select_lesson_1.1.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	34600	where file_name like '%0009_lessons_1.1.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	27830	where file_name like '%0010_select_lesson_1.1.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	37580	where file_name like '%0011_lessons_1.1.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	43110	where file_name like '%0012_select_lesson_1.1.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	25080	where file_name like '%0013_lessons_1.1.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	32120	where file_name like '%0014.1_lessons_1.1.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	28990	where file_name like '%0014.2_select_lesson_1.1.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	20490	where file_name like '%0014.3_lesson_1.1.6.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	17200	where file_name like '%0014.4_select_lesson_1.1.6.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	29370	where file_name like '%0014_select_lesson_1.1.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	35330	where file_name like '%0015_lessons_1.2.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	44670	where file_name like '%0016_select_lesson_1.2.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	43900	where file_name like '%0017_lessons_1.2.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	45320	where file_name like '%0018_select_lesson_1.2.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	33490	where file_name like '%0019_lessons_1.2.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	34570	where file_name like '%0020_select_lesson_1.2.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	20170	where file_name like '%0021_lessons_1.2.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	32750	where file_name like '%0022.1_lessons_1.2.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	24480	where file_name like '%0022.3_lessons_1.2.6.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	29120	where file_name like '%0022.4_select_lesson_1.2.6.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	16280	where file_name like '%0022_select_lesson_1.2.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	27530	where file_name like '%0023_lessons_1.3.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	30640	where file_name like '%0024_select_lesson_1.3.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	22670	where file_name like '%0025_lessons_1.3.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	19590	where file_name like '%0026_select_lesson_1.3.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	30230	where file_name like '%0027_lessons_1.3.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	34900	where file_name like '%0028_select_lesson_1.3.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	46460	where file_name like '%0029_lessons_1.3.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	36940	where file_name like '%0030.1_lessons_1.3.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	42260	where file_name like '%0030.2_select_lesson_1.3.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	51040	where file_name like '%0030_select_lesson_1.3.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	27760	where file_name like '%0031_lessons_1.4.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	30140	where file_name like '%0032_select_lesson_1.4.1.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	22310	where file_name like '%0033_lessons_1.4.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	19580	where file_name like '%0034_select_lesson_1.4.2.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	33240	where file_name like '%0035_lessons_1.4.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	37460	where file_name like '%0036_select_lesson_1.4.3.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	38520	where file_name like '%0037_lessons_1.4.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	35750	where file_name like '%0038.1_lessons_1.4.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	41610	where file_name like '%0038.2_select_lesson_1.4.5.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	54630	where file_name like '%0038_select_lesson_1.4.4.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	22840	where file_name like '%0039_0_prompt.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	105400	where file_name like '%0001_prep_for_child_birth.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	144090	where file_name like '%0002_ifa_and_tt.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	117550	where file_name like '%0004_planning_saving.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	123250	where file_name like '%0005_inst_delivery.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	134420	where file_name like '%0006_six_cleans.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	117080	where file_name like '%0007_emereg_for_mother.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	123380	where file_name like '%0008_handling_newborn.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	131160	where file_name like '%0009_cord_care.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	122920	where file_name like '%0010_thermal_care.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	132060	where file_name like '%0011_early_initiation_bf.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	133680	where file_name like '%0012_pnc_visits.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	122210	where file_name like '%0013_emerg_for_mother_after_child_birth.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	131480	where file_name like '%0014_danger_signs_preterm_baby.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	124480	where file_name like '%0015_kangaroo_care_preterm_baby.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	101180	where file_name like '%0016_danger_signs_sepsis.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	105560	where file_name like '%0017_need_fp.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	127850	where file_name like '%0018_spacing_and_y.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	115020	where file_name like '%0019_limiting_and_y.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	104480	where file_name like '%0020_options_ppfp.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	125810	where file_name like '%0021_tubal_ligation.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	129690	where file_name like '%0022_iud.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	113900	where file_name like '%0024_condoms_and_ocp.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	113050	where file_name like '%0025_immonization_imp_and_res.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	111540	where file_name like '%0026_immunization_doses.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	144800	where file_name like '%0027_immunization_comp.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	127300	where file_name like '%0028_exclusive_bf.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	115800	where file_name like '%0029_howto_bf.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	131870	where file_name like '%0031_comp_feeding.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	135020	where file_name like '%0033_quality_food_hand_washing.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	138360	where file_name like '%0034_quantity_food_hand_washing.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	115500	where file_name like '%0035_hand_washing_when_and_why.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	124330	where file_name like '%0036_diarrahoea_prevention.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	119050	where file_name like '%0037_management_and_treatment_of_diarrhea.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	118400	where file_name like '%0038_how_open_def_affects_life.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	101420	where file_name like '%0039_wht_can_u_do_for_open_def.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	103410	where file_name like '%0040_early_recognition_and_treatment_pneumonia.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	120120	where file_name like '%0041_pneumonia_prevention.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	116910	where file_name like '%0042_malaria_prevention.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	108830	where file_name like '%0043_malaria_treatment_and_management.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	114550	where file_name like '%0046_Malnutrition.wav%' and language_id = 3;
+update report.job_aid_content_details_dimension set duration = 	110550	where file_name like '%0047_Iron_deficiency.wav%' and language_id = 3;
+		                                                                                                                                    
+        </sql>
+    </changeSet>  
+
+</databaseChangeLog>
