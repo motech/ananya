@@ -65,6 +65,8 @@ public class FrontLineWorkerService {
 	public FrontLineWorker findForJobAidCallerData(String callerId) {
 		FrontLineWorker frontLineWorker = findByCallerId(callerId);
 		if (frontLineWorker != null && frontLineWorker.jobAidLastAccessedPreviousMonth()) {
+			if(frontLineWorker.courseLastAccessedPreviousMonth())
+				frontLineWorker.resetCourseUsageAndPrompts();
 			frontLineWorker.resetJobAidUsageAndPrompts();
 			allFrontLineWorkers.update(frontLineWorker);
 			log.info("reset last jobaid usage for " + frontLineWorker.getMsisdn());
