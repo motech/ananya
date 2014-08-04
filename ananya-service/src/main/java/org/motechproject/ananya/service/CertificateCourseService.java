@@ -77,6 +77,9 @@ public class CertificateCourseService {
         CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
         if (stateRequestList.isNotEmpty()) {
             FrontLineWorker frontLineWorker = frontLineWorkerCreateResponse.getFrontLineWorker();
+            /*setting passing score in light of UP release*/
+            frontLineWorker.setPassingScore(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE);
+           
             allCourseActions.execute(frontLineWorker, stateRequestList);
             frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
         }
@@ -96,6 +99,9 @@ public class CertificateCourseService {
         CertificateCourseStateRequestList stateRequestList = request.getCertificateCourseStateRequestList();
         if (stateRequestList.isNotEmpty()) {
             FrontLineWorker frontLineWorker = frontLineWorkerCreateResponse.getFrontLineWorker();
+            /*setting passing score in light of UP release*/
+            frontLineWorker.setPassingScore(FrontLineWorker.CERTIFICATE_COURSE_PASSING_SCORE_CAPPING);
+           
             allCourseActions.execute(frontLineWorker, stateRequestList);
             frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
         }

@@ -22,7 +22,15 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
 
+    /**changing the constant passing score to variable to be set in light of UP release*/
+    
+    private int passingScore;
+    
     public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
+    
+    public static final int CERTIFICATE_COURSE_PASSING_SCORE_CAPPING = 22;
+
+    /***/
     
     private static final String MAX_USAGE = "max_usage";
 
@@ -326,7 +334,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
     }
 
     public boolean hasPassedTheCourse() {
-        return reportCard().totalScore() >= CERTIFICATE_COURSE_PASSING_SCORE;
+        return reportCard().totalScore() >= passingScore;
     }
 
     public void resetJobAidUsageAndPrompts() {
@@ -554,7 +562,14 @@ public class FrontLineWorker extends MotechBaseDataObject {
 	public void setCappingEnabledMK(boolean cappingEnabledMK) {
 		this.cappingEnabledMK = cappingEnabledMK;
 	}
-    
+
+	public int getPassingScore() {
+		return passingScore;
+	}
+
+	public void setPassingScore(int passingScore) {
+		this.passingScore = passingScore;
+	}
 	
     
 }
