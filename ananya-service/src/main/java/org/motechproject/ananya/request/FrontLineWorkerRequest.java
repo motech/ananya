@@ -181,4 +181,16 @@ public class FrontLineWorkerRequest implements Serializable {
     public boolean hasMsisdnChange() {
         return isNotBlank(newMsisdn);
     }
+
+	@Override
+	public String toString() {
+		return "FrontLineWorkerRequest [name=" + name + ", msisdn=" + msisdn
+				+ ", language=" + language + ", designation=" + designation
+				+ ", location=" + location + ", lastModified=" + lastModified
+				+ ", flwId=" + flwId + ", verificationStatus="
+				+ verificationStatus + ", alternateContactNumber="
+				+ alternateContactNumber + ", newMsisdn=" + newMsisdn + "]";
+	}
+    
+    
 }

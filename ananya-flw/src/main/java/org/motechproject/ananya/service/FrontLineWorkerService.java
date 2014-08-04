@@ -172,7 +172,8 @@ public class FrontLineWorkerService {
 		frontLineWorker.setLastJobAidAccessTime(DateTime.now());
 
 		allFrontLineWorkers.update(frontLineWorker);
-		log.info("updated prompts-heard, jobaid-usage and access-time for " + frontLineWorker.getMsisdn());
+		log.info("updated prompts-heard to:"+frontLineWorker.getPromptsHeard()+", jobaid-usage to:"+frontLineWorker.getCurrentJobAidUsage()+" and access-time for " + frontLineWorker.getMsisdn());
+		
 	}
 
 	public void updatePromptsHeard(FrontLineWorker frontLineWorker, List<String> promptList) {
@@ -191,7 +192,8 @@ public class FrontLineWorkerService {
 		frontLineWorker.setLastCourseAccessTime(DateTime.now());
 
 		allFrontLineWorkers.update(frontLineWorker);
-		log.info("updated prompts-heard, certificate-usage and access-time for " + frontLineWorker.getMsisdn());
+		log.info("updated prompts-heard to:"+frontLineWorker.getPromptsHeard()+", certificate course-usage to:"+frontLineWorker.getCurrentJobAidUsage()+" and access-time for " + frontLineWorker.getMsisdn());
+		
 	}
 
 	public int getCurrentCourseAttempt(String callerId) {
