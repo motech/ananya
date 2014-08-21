@@ -37,6 +37,10 @@ public class FlwChangeSelector {
         return toFlw == null || toFlw.getCurrentJobAidUsage() == null ? fromFlw.getCurrentJobAidUsage() : toFlw.getCurrentJobAidUsage();
     }
 
+    public Integer getTheLatestCourseUsage() {
+        return toFlw == null || toFlw.getCurrentCourseUsage() == null ? fromFlw.getCurrentCourseUsage() : toFlw.getCurrentCourseUsage();
+    }
+    
     public String getTheLatestOperator() {
         return toFlw == null || isBlank(toFlw.getOperator()) ? fromFlw.getOperator() : toFlw.getOperator();
     }

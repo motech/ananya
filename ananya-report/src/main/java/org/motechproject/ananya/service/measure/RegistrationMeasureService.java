@@ -124,8 +124,7 @@ public class RegistrationMeasureService {
 
         if (!flwDimensionAlreadyExists) frontLineWorkerHistoryService.create(registrationMeasure);
 
-        log.info("RegistrationMeasure created/updated for" + callerId + "[Location=" + registrationMeasure.getLocationDimension().getId() +
-                "|Time=" + registrationMeasure.getTimeDimension().getId() + "|flw=" + registrationMeasure.getFrontLineWorkerDimension().getId() + "]");
+        log.info("RegistrationMeasure created/updated for" + callerId);
         return registrationMeasure;
     }
 

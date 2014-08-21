@@ -303,6 +303,7 @@ public class FrontLineWorkerService {
 		flwByOldMsisdn.setReportCard(changeSelector.getHighestReportCard());
 		flwByOldMsisdn.setBookMark(changeSelector.getHighestBookMark());
 		flwByOldMsisdn.setCurrentJobAidUsage(changeSelector.getTheLatestJobAidUsage());
+		flwByOldMsisdn.setCurrentCourseUsage(changeSelector.getTheLatestCourseUsage());
 		flwByOldMsisdn.setLastJobAidAccessTime(changeSelector.getTheLatestLastJobAidAccessTime());
 		flwByOldMsisdn.setLastCourseAccessTime(changeSelector.getTheLatestLastCourseAccessTime());
 		flwByOldMsisdn.setCertificateCourseAttempts(changeSelector.getLatestCourseAttempt());
