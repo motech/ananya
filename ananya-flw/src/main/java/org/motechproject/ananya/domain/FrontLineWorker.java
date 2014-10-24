@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ public class FrontLineWorker extends MotechBaseDataObject {
 
     /***/
     
+    //Added below line is added for getting default timezone which is "IST"
+    DateTimeZone ISTTimezone = DateTimeZone.getDefault();
+
     private static final String MAX_USAGE = "max_usage";
 
     @JsonProperty
@@ -361,7 +365,7 @@ public class FrontLineWorker extends MotechBaseDataObject {
         return circle;
     }
 
-    @JsonIgnore
+  /*  @JsonIgnore
     public boolean jobAidLastAccessedPreviousMonth() {
         DateTime now = DateTime.now();
         return lastJobAidAccessTime != null &&
@@ -372,6 +376,26 @@ public class FrontLineWorker extends MotechBaseDataObject {
     @JsonIgnore
     public boolean courseLastAccessedPreviousMonth() {
         DateTime now = DateTime.now();
+        return lastCourseAccessTime != null &&
+                (lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                		lastCourseAccessTime.getYear() != now.getYear());
+    }*/
+    
+    @JsonIgnore
+    public boolean jobAidLastAccessedPreviousMonth() {
+        DateTime now = DateTime.now(); 
+        //Added below line to convert any timezone to IST timezone 
+        lastJobAidAccessTime= lastJobAidAccessTime.withZone(ISTTimezone);
+        return lastJobAidAccessTime != null &&
+                (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                        lastJobAidAccessTime.getYear() != now.getYear());
+    }
+    
+    @JsonIgnore
+    public boolean courseLastAccessedPreviousMonth() {
+        DateTime now = DateTime.now();
+        //Added below line to convert any timezone to IST timezone 
+        lastCourseAccessTime = lastCourseAccessTime.withZone(ISTTimezone);
         return lastCourseAccessTime != null &&
                 (lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                 		lastCourseAccessTime.getYear() != now.getYear());
