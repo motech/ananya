@@ -160,7 +160,7 @@ public class FrontLineWorkerService {
 	public void updateCappingDataMA(FrontLineWorker frontLineWorker, boolean value) {
 		frontLineWorker.setCappingEnabledMA(value);
 		allFrontLineWorkers.update(frontLineWorker);
-		log.info("updated capping enabled flag for user: " + frontLineWorker.getMsisdn());
+		log.info("updated capping enabled flag to "+value+" for user: " + frontLineWorker.getMsisdn());
 	}
 
 	public void updateJobAidState(FrontLineWorker frontLineWorker, List<String> promptList, Integer currentCallDuration) {
@@ -170,7 +170,7 @@ public class FrontLineWorkerService {
 		Integer usageByPulseInMilliSec = operatorService.usageByPulseInMilliSec(frontLineWorker.getOperator(), currentCallDuration);
 		frontLineWorker.updateJobAidUsage(usageByPulseInMilliSec);
 		frontLineWorker.setLastJobAidAccessTime(DateTime.now());
-
+		updateCappingDataMk(frontLineWorker, true);//added newly
 		allFrontLineWorkers.update(frontLineWorker);
 		log.info("updated prompts-heard to:"+frontLineWorker.getPromptsHeard()+", jobaid-usage to:"+frontLineWorker.getCurrentJobAidUsage()+" and access-time for " + frontLineWorker.getMsisdn());
 		

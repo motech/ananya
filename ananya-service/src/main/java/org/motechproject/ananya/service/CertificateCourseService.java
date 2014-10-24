@@ -84,6 +84,7 @@ public class CertificateCourseService {
             frontLineWorkerService.updateCertificateCourseState(frontLineWorker);
         }
 
+        frontLineWorkerService.updateCappingDataMA(frontLineWorkerCreateResponse.getFrontLineWorker(), false);
         audioTrackerService.saveAllForCourse(request.getAudioTrackerRequestList());
         callLoggerService.saveAll(request.getCallDurationList());
         dataPublishService.publishDisconnectEvent(request.getCallId(), ServiceType.CERTIFICATE_COURSE);
