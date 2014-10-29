@@ -19,282 +19,282 @@ import java.util.UUID;
 @TypeDiscriminator("doc.type === 'FrontLineWorker'")
 public class FrontLineWorker extends MotechBaseDataObject {
 
-    private final static UUID DUMMY_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
+	private final static UUID DUMMY_UUID = UUID.fromString("11111111-1111-1111-1111-111111111111");
 
-    private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
+	private static Logger log = LoggerFactory.getLogger(FrontLineWorker.class);
 
-    /**changing the constant passing score to variable to be set in light of UP release*/
-    
-    private int passingScore;
-    
-    public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
-    
-    public static final int CERTIFICATE_COURSE_PASSING_SCORE_CAPPING = 22;
+	/**changing the constant passing score to variable to be set in light of UP release*/
 
-    /***/
-    
-    //Added below line is added for getting default timezone which is "IST"
-    DateTimeZone ISTTimezone = DateTimeZone.getDefault();
+	private int passingScore;
 
-    private static final String MAX_USAGE = "max_usage";
+	public static final int CERTIFICATE_COURSE_PASSING_SCORE = 18;
 
-    @JsonProperty
-    private String name;
+	public static final int CERTIFICATE_COURSE_PASSING_SCORE_CAPPING = 22;
 
-    @JsonProperty
-    private String msisdn;
+	/***/
 
-    @JsonProperty
-    private String alternateContactNumber;
+	//Added below line is added for getting default timezone which is "IST"
+	DateTimeZone ISTTimezone = DateTimeZone.getDefault();
 
-    @JsonProperty
-    private String operator;
+	private static final String MAX_USAGE = "max_usage";
 
-    @JsonProperty
-    private String circle;
+	@JsonProperty
+	private String name;
 
-    @JsonProperty
-    private BookMark bookmark;
+	@JsonProperty
+	private String msisdn;
 
-    @JsonProperty
-    private ReportCard reportCard = new ReportCard();
+	@JsonProperty
+	private String alternateContactNumber;
 
-    @JsonProperty
-    private RegistrationStatus status = RegistrationStatus.UNREGISTERED;
+	@JsonProperty
+	private String operator;
 
-    @JsonProperty
-    private Designation designation;
+	@JsonProperty
+	private String circle;
 
-    @JsonProperty
-    private String language;
+	@JsonProperty
+	private BookMark bookmark;
 
-    @JsonProperty
-    private String locationId = Location.getDefaultLocation().getExternalId();
+	@JsonProperty
+	private ReportCard reportCard = new ReportCard();
 
-    @JsonProperty
-    private DateTime registeredDate = DateUtil.now();
+	@JsonProperty
+	private RegistrationStatus status = RegistrationStatus.UNREGISTERED;
 
-    @JsonProperty
-    private Integer certificateCourseAttempts;
+	@JsonProperty
+	private Designation designation;
 
-    @JsonProperty
-    private Integer currentJobAidUsage;
+	@JsonProperty
+	private String language;
 
-    @JsonProperty
-    private Integer currentCourseUsage;
+	@JsonProperty
+	private String locationId = Location.getDefaultLocation().getExternalId();
 
-    @JsonProperty
-    private DateTime lastJobAidAccessTime;
-    
-    @JsonProperty
-    private DateTime lastCourseAccessTime;
+	@JsonProperty
+	private DateTime registeredDate = DateUtil.now();
 
-    @JsonProperty
-    private DateTime lastModified;
+	@JsonProperty
+	private Integer certificateCourseAttempts;
 
-    @JsonProperty
-    private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
+	@JsonProperty
+	private Integer currentJobAidUsage;
 
-    @JsonProperty
-    private Map<String, Integer> promptsHeardForMA = new HashMap<String, Integer>();
+	@JsonProperty
+	private Integer currentCourseUsage;
 
-    
-    @JsonIgnore
-    private boolean modified;
-    
-    @JsonProperty
-    private boolean cappingEnabledMA=false;
-    
-    @JsonProperty
-    private boolean cappingEnabledMK=true;
-    
-    @JsonProperty
-    private UUID flwId = DUMMY_UUID;
+	@JsonProperty
+	private DateTime lastJobAidAccessTime;
 
-    @JsonProperty
-    private VerificationStatus verificationStatus;
+	@JsonProperty
+	private DateTime lastCourseAccessTime;
 
-    public FrontLineWorker() {
-        this.certificateCourseAttempts = 0;
-        this.currentJobAidUsage = 0;
-        this.currentCourseUsage = 0;
-    }
+	@JsonProperty
+	private DateTime lastModified;
 
-    public FrontLineWorker(String msisdn, String operator, String circle, String language) {
-        this();
-        this.msisdn = prefixMsisdnWith91(msisdn);
-        this.circle = circle;
-        this.operator = operator;
-        this.language = language;
-    }
+	@JsonProperty
+	private Map<String, Integer> promptsHeard = new HashMap<String, Integer>();
 
-    public FrontLineWorker(String msisdn, String alternateContactNumber, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
-        this();
-        this.msisdn = prefixMsisdnWith91(msisdn);
-        this.alternateContactNumber = prefixMsisdnWith91(alternateContactNumber);
-        this.name = name;
-        this.designation = designation;
-        this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
-        this.lastModified = lastModified;
-        this.flwId = flwId;
-        this.language = language;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-    public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
-        this.currentJobAidUsage = currentJobAidUsage;
-    }
-
-    public void setCertificateCourseAttempts(Integer certificateCourseAttempts) {
-        this.certificateCourseAttempts = certificateCourseAttempts;
-    }
-
-    public void setReportCard(ReportCard reportCard) {
-        this.reportCard = reportCard;
-    }
-
-    public void setLocation(Location location) {
-        locationId = location.getExternalId();
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDesignation(Designation designation) {
-        this.designation = designation;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public String getLocationId() {
-        return locationId;
-    }
-
-    public void setLocationId(String locationId) {
-        this.locationId = locationId;
-    }
-
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    public String getAlternateContactNumber() {
-        return alternateContactNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Designation getDesignation() {
-        return designation;
-    }
-
-    public BookMark getBookmark() {
-        return bookmark;
-    }
-
-    public String designationName() {
-        return designation != null ? designation.name() : null;
-    }
-
-    public Long msisdn() {
-        return Long.valueOf(msisdn);
-    }
-
-    public Long alternateContactNumber() {
-        return alternateContactNumber == null ? null : Long.valueOf(alternateContactNumber);
-    }
-
-    public BookMark bookMark() {
-        return bookmark != null ? bookmark : new EmptyBookmark();
-    }
-
-    public ReportCard reportCard() {
-        return reportCard;
-    }
-
-    public FrontLineWorker name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String name() {
-        return this.name;
-    }
-
-    public void setBookMark(BookMark bookMark) {
-        this.bookmark = bookMark;
-    }
-
-    @JsonIgnore
-    public boolean isAnganwadi() {
-        return this.designation.equals(Designation.AWW);
-    }
-
-    public DateTime getRegisteredDate() {
-        return registeredDate;
-    }
-
-    public void setRegisteredDate(DateTime registeredDate) {
-        this.registeredDate = registeredDate;
-    }
-
-    public Integer incrementCertificateCourseAttempts() {
-        return ++certificateCourseAttempts;
-    }
-
-    public Integer currentCourseAttempts() {
-        return certificateCourseAttempts;
-    }
-
-    public Integer getCurrentJobAidUsage() {
-        return this.currentJobAidUsage != null ? this.currentJobAidUsage : 0;
-    }
-
-    public RegistrationStatus getStatus() {
-        return status;
-    }
-
-    public void markPromptHeard(String promptKey) {
-        this.promptsHeard.put(promptKey,
-                this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
-    }
-
-    public Map<String, Integer> getPromptsHeard() {
-        return this.promptsHeard;
-    }
-    
-    public void markPromptHeardForMA(String promptKey) {
-        this.promptsHeardForMA.put(promptKey,
-                this.promptsHeardForMA.containsKey(promptKey) ? this.promptsHeardForMA.get(promptKey) + 1 : 1);
-    }
+	@JsonProperty
+	private Map<String, Integer> promptsHeardForMA = new HashMap<String, Integer>();
 
 
-    public Map<String, Integer> getPromptsHeardForMA() {
+	@JsonIgnore
+	private boolean modified;
+
+	@JsonProperty
+	private boolean cappingEnabledMA=false;
+
+	@JsonProperty
+	private boolean cappingEnabledMK=true;
+
+	@JsonProperty
+	private UUID flwId = DUMMY_UUID;
+
+	@JsonProperty
+	private VerificationStatus verificationStatus;
+
+	public FrontLineWorker() {
+		this.certificateCourseAttempts = 0;
+		this.currentJobAidUsage = 0;
+		this.currentCourseUsage = 0;
+	}
+
+	public FrontLineWorker(String msisdn, String operator, String circle, String language) {
+		this();
+		this.msisdn = prefixMsisdnWith91(msisdn);
+		this.circle = circle;
+		this.operator = operator;
+		this.language = language;
+	}
+
+	public FrontLineWorker(String msisdn, String alternateContactNumber, String name, Designation designation, Location location, String language, DateTime lastModified, UUID flwId) {
+		this();
+		this.msisdn = prefixMsisdnWith91(msisdn);
+		this.alternateContactNumber = prefixMsisdnWith91(alternateContactNumber);
+		this.name = name;
+		this.designation = designation;
+		this.locationId = location == null ? Location.getDefaultLocation().getExternalId() : location.getExternalId();
+		this.lastModified = lastModified;
+		this.flwId = flwId;
+		this.language = language;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public void setCurrentJobAidUsage(Integer currentJobAidUsage) {
+		this.currentJobAidUsage = currentJobAidUsage;
+	}
+
+	public void setCertificateCourseAttempts(Integer certificateCourseAttempts) {
+		this.certificateCourseAttempts = certificateCourseAttempts;
+	}
+
+	public void setReportCard(ReportCard reportCard) {
+		this.reportCard = reportCard;
+	}
+
+	public void setLocation(Location location) {
+		locationId = location.getExternalId();
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDesignation(Designation designation) {
+		this.designation = designation;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public String getLocationId() {
+		return locationId;
+	}
+
+	public void setLocationId(String locationId) {
+		this.locationId = locationId;
+	}
+
+	public String getMsisdn() {
+		return msisdn;
+	}
+
+	public String getAlternateContactNumber() {
+		return alternateContactNumber;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Designation getDesignation() {
+		return designation;
+	}
+
+	public BookMark getBookmark() {
+		return bookmark;
+	}
+
+	public String designationName() {
+		return designation != null ? designation.name() : null;
+	}
+
+	public Long msisdn() {
+		return Long.valueOf(msisdn);
+	}
+
+	public Long alternateContactNumber() {
+		return alternateContactNumber == null ? null : Long.valueOf(alternateContactNumber);
+	}
+
+	public BookMark bookMark() {
+		return bookmark != null ? bookmark : new EmptyBookmark();
+	}
+
+	public ReportCard reportCard() {
+		return reportCard;
+	}
+
+	public FrontLineWorker name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String name() {
+		return this.name;
+	}
+
+	public void setBookMark(BookMark bookMark) {
+		this.bookmark = bookMark;
+	}
+
+	@JsonIgnore
+	public boolean isAnganwadi() {
+		return this.designation.equals(Designation.AWW);
+	}
+
+	public DateTime getRegisteredDate() {
+		return registeredDate;
+	}
+
+	public void setRegisteredDate(DateTime registeredDate) {
+		this.registeredDate = registeredDate;
+	}
+
+	public Integer incrementCertificateCourseAttempts() {
+		return ++certificateCourseAttempts;
+	}
+
+	public Integer currentCourseAttempts() {
+		return certificateCourseAttempts;
+	}
+
+	public Integer getCurrentJobAidUsage() {
+		return this.currentJobAidUsage != null ? this.currentJobAidUsage : 0;
+	}
+
+	public RegistrationStatus getStatus() {
+		return status;
+	}
+
+	public void markPromptHeard(String promptKey) {
+		this.promptsHeard.put(promptKey,
+				this.promptsHeard.containsKey(promptKey) ? this.promptsHeard.get(promptKey) + 1 : 1);
+	}
+
+	public Map<String, Integer> getPromptsHeard() {
+		return this.promptsHeard;
+	}
+
+	public void markPromptHeardForMA(String promptKey) {
+		this.promptsHeardForMA.put(promptKey,
+				this.promptsHeardForMA.containsKey(promptKey) ? this.promptsHeardForMA.get(promptKey) + 1 : 1);
+	}
+
+
+	public Map<String, Integer> getPromptsHeardForMA() {
 		return promptsHeardForMA;
 	}
 
 	public void setLastJobAidAccessTime(DateTime lastJobAidAccessTime) {
-        this.lastJobAidAccessTime = lastJobAidAccessTime;
-    }
+		this.lastJobAidAccessTime = lastJobAidAccessTime;
+	}
 
-    public DateTime getLastJobAidAccessTime() {
-        return lastJobAidAccessTime;
-    }
-    
-    public DateTime getLastCourseAccessTime() {
+	public DateTime getLastJobAidAccessTime() {
+		return lastJobAidAccessTime;
+	}
+
+	public DateTime getLastCourseAccessTime() {
 		return lastCourseAccessTime;
 	}
 
@@ -303,76 +303,76 @@ public class FrontLineWorker extends MotechBaseDataObject {
 	}
 
 	public DateTime getLastModified() {
-        return lastModified;
-    }
+		return lastModified;
+	}
 
-    public boolean operatorIs(String operator) {
-        return StringUtils.equalsIgnoreCase(this.operator, operator);
-    }
+	public boolean operatorIs(String operator) {
+		return StringUtils.equalsIgnoreCase(this.operator, operator);
+	}
 
-    public void setRegistrationStatus(RegistrationStatus status) {
-        this.status = status;
-    }
+	public void setRegistrationStatus(RegistrationStatus status) {
+		this.status = status;
+	}
 
-    public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus, String alternateContactNumber) {
-        if (!canBeUpdated(lastModified)) {
-            return false;
-        }
-        this.alternateContactNumber = alternateContactNumber;
-        this.name = name;
-        this.designation = designation;
-        this.lastModified = lastModified == null ? this.lastModified : lastModified;
-        this.verificationStatus = verificationStatus;
-        updateFlwId(flwId);
+	public boolean update(String name, Designation designation, Location location, DateTime lastModified, UUID flwId, VerificationStatus verificationStatus, String alternateContactNumber) {
+		if (!canBeUpdated(lastModified)) {
+			return false;
+		}
+		this.alternateContactNumber = alternateContactNumber;
+		this.name = name;
+		this.designation = designation;
+		this.lastModified = lastModified == null ? this.lastModified : lastModified;
+		this.verificationStatus = verificationStatus;
+		updateFlwId(flwId);
 
-        if (location == null) {
-            location = Location.getDefaultLocation();
-        }
-        this.locationId = location.getExternalId();
+		if (location == null) {
+			location = Location.getDefaultLocation();
+		}
+		this.locationId = location.getExternalId();
 
-        if (isAlreadyRegistered()) {
-            decideRegistrationStatus(location);
-        }
+		if (isAlreadyRegistered()) {
+			decideRegistrationStatus(location);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public boolean hasPassedTheCourse() {
-        return reportCard().totalScore() >= passingScore;
-    }
+	public boolean hasPassedTheCourse() {
+		return reportCard().totalScore() >= passingScore;
+	}
 
-    public void resetJobAidUsageAndPrompts() {
-        this.currentJobAidUsage = 0;
-        this.promptsHeard.remove("Max_Usage");
-        this.promptsHeard.remove(MAX_USAGE);
-    }
-    
-    public void resetCourseUsageAndPrompts() {
-        this.currentCourseUsage = 0;
-        this.promptsHeardForMA.remove("Max_Usage");
-        this.promptsHeardForMA.remove(MAX_USAGE);
-    }
+	public void resetJobAidUsageAndPrompts() {
+		this.currentJobAidUsage = 0;
+		this.promptsHeard.remove("Max_Usage");
+		this.promptsHeard.remove(MAX_USAGE);
+	}
 
-    public boolean circleIs(String circle) {
-        return StringUtils.equalsIgnoreCase(this.circle, circle);
-    }
+	public void resetCourseUsageAndPrompts() {
+		this.currentCourseUsage = 0;
+		this.promptsHeardForMA.remove("Max_Usage");
+		this.promptsHeardForMA.remove(MAX_USAGE);
+	}
 
-    public void setCircle(String circle) {
-        this.circle = circle;
-    }
+	public boolean circleIs(String circle) {
+		return StringUtils.equalsIgnoreCase(this.circle, circle);
+	}
 
-    public String getCircle() {
-        return circle;
-    }
+	public void setCircle(String circle) {
+		this.circle = circle;
+	}
 
-  /*  @JsonIgnore
+	public String getCircle() {
+		return circle;
+	}
+
+	/*  @JsonIgnore
     public boolean jobAidLastAccessedPreviousMonth() {
         DateTime now = DateTime.now();
         return lastJobAidAccessTime != null &&
                 (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                         lastJobAidAccessTime.getYear() != now.getYear());
     }
-    
+
     @JsonIgnore
     public boolean courseLastAccessedPreviousMonth() {
         DateTime now = DateTime.now();
@@ -380,184 +380,191 @@ public class FrontLineWorker extends MotechBaseDataObject {
                 (lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                 		lastCourseAccessTime.getYear() != now.getYear());
     }*/
-    
-    @JsonIgnore
-    public boolean jobAidLastAccessedPreviousMonth() {
-        DateTime now = DateTime.now(); 
-        //Added below line to convert any timezone to IST timezone 
-        lastJobAidAccessTime= lastJobAidAccessTime.withZone(ISTTimezone);
-        return lastJobAidAccessTime != null &&
-                (lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
-                        lastJobAidAccessTime.getYear() != now.getYear());
-    }
-    
-    @JsonIgnore
-    public boolean courseLastAccessedPreviousMonth() {
-        DateTime now = DateTime.now();
-        //Added below line to convert any timezone to IST timezone 
-        lastCourseAccessTime = lastCourseAccessTime.withZone(ISTTimezone);
-        return lastCourseAccessTime != null &&
-                (lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
-                		lastCourseAccessTime.getYear() != now.getYear());
-    }
 
-    @JsonIgnore
-    public void setModified() {
-        this.modified = true;
-    }
+	@JsonIgnore
+	public boolean jobAidLastAccessedPreviousMonth() {
+		DateTime now = DateTime.now(); 
+		//Added below line to convert any timezone to IST timezone 
+		//QA bug fix ::: Null pointer fix for lastJobAidAccessTime
+		if(lastJobAidAccessTime != null){
+			lastJobAidAccessTime= lastJobAidAccessTime.withZone(ISTTimezone);
+			return lastJobAidAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+					lastJobAidAccessTime.getYear() != now.getYear();
+		}
+		return false;     
+	}
 
-    @JsonIgnore
-    public boolean isModified() {
-        return modified;
-    }
+	@JsonIgnore
+	public boolean courseLastAccessedPreviousMonth() {
+		DateTime now = DateTime.now();
+		//Added below line to convert any timezone to IST timezone 
+		//QA bug fix ::: Null pointer fix for lastCourseAccessTime
+		if(lastCourseAccessTime != null){
+			lastCourseAccessTime = lastCourseAccessTime.withZone(ISTTimezone);
+			return lastCourseAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+					lastCourseAccessTime.getYear() != now.getYear();
+		}
+		return false;
+	}
 
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
 
-    public UUID getFlwId() {
-        return flwId;
-    }
+	@JsonIgnore
+	public void setModified() {
+		this.modified = true;
+	}
 
-    public void setFlwId(UUID flwId) {
-        this.flwId = flwId;
-    }
+	@JsonIgnore
+	public boolean isModified() {
+		return modified;
+	}
 
-    public void merge(FrontLineWorker frontLineWorker) {
-        if (this.status.equals(RegistrationStatus.UNREGISTERED)) {
-            this.status = frontLineWorker.getStatus();
-            this.locationId = frontLineWorker.getLocationId();
-            this.designation = frontLineWorker.getDesignation();
-            this.name = frontLineWorker.name();
-            this.registeredDate = frontLineWorker.getRegisteredDate();
-            this.language = frontLineWorker.getLanguage();
-            this.alternateContactNumber = frontLineWorker.getAlternateContactNumber();
-        }
-        if (this.bookmark == null) {
-            this.bookmark = frontLineWorker.bookMark();
-            this.reportCard = frontLineWorker.reportCard();
-            this.certificateCourseAttempts = frontLineWorker.certificateCourseAttempts;
-            this.currentCourseUsage = frontLineWorker.currentCourseUsage;
-            this.promptsHeardForMA = frontLineWorker.promptsHeardForMA;
-            this.lastCourseAccessTime = frontLineWorker.lastCourseAccessTime;
-        }
-        if (this.currentJobAidUsage == 0) {
-            this.currentJobAidUsage = frontLineWorker.currentJobAidUsage;
-            this.lastJobAidAccessTime = frontLineWorker.lastJobAidAccessTime;
-            this.promptsHeard = frontLineWorker.promptsHeard;
-        }
-    }
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FrontLineWorker that = (FrontLineWorker) o;
-        if (msisdn != null ? !msisdn.equals(that.msisdn) : that.msisdn != null) return false;
-        return true;
-    }
+	public UUID getFlwId() {
+		return flwId;
+	}
 
-    @Override
-    public int hashCode() {
-        return msisdn != null ? msisdn.hashCode() : 0;
-    }
+	public void setFlwId(UUID flwId) {
+		this.flwId = flwId;
+	}
 
-    @JsonIgnore
-    public boolean isUnRegistered() {
-        return status.equals(RegistrationStatus.UNREGISTERED);
-    }
+	public void merge(FrontLineWorker frontLineWorker) {
+		if (this.status.equals(RegistrationStatus.UNREGISTERED)) {
+			this.status = frontLineWorker.getStatus();
+			this.locationId = frontLineWorker.getLocationId();
+			this.designation = frontLineWorker.getDesignation();
+			this.name = frontLineWorker.name();
+			this.registeredDate = frontLineWorker.getRegisteredDate();
+			this.language = frontLineWorker.getLanguage();
+			this.alternateContactNumber = frontLineWorker.getAlternateContactNumber();
+		}
+		if (this.bookmark == null) {
+			this.bookmark = frontLineWorker.bookMark();
+			this.reportCard = frontLineWorker.reportCard();
+			this.certificateCourseAttempts = frontLineWorker.certificateCourseAttempts;
+			this.currentCourseUsage = frontLineWorker.currentCourseUsage;
+			this.promptsHeardForMA = frontLineWorker.promptsHeardForMA;
+			this.lastCourseAccessTime = frontLineWorker.lastCourseAccessTime;
+		}
+		if (this.currentJobAidUsage == 0) {
+			this.currentJobAidUsage = frontLineWorker.currentJobAidUsage;
+			this.lastJobAidAccessTime = frontLineWorker.lastJobAidAccessTime;
+			this.promptsHeard = frontLineWorker.promptsHeard;
+		}
+	}
 
-    @JsonIgnore
-    public boolean isAlreadyRegistered() {
-        return !isUnRegistered();
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FrontLineWorker that = (FrontLineWorker) o;
+		if (msisdn != null ? !msisdn.equals(that.msisdn) : that.msisdn != null) return false;
+		return true;
+	}
 
-    public void decideRegistrationStatus(Location location) {
-        boolean locationAbsent = (Location.getDefaultLocation().equals(location));
-        boolean locationIncomplete = location.isMissingDetails();
-        boolean designationInvalid = Designation.isInValid(designationName());
-        boolean nameInvalid = StringUtils.isBlank(name);
-        boolean isLocationStatusNotValid = location.getLocationStatusAsEnum() != LocationStatus.VALID;
+	@Override
+	public int hashCode() {
+		return msisdn != null ? msisdn.hashCode() : 0;
+	}
 
-        if (locationAbsent || locationIncomplete || isLocationStatusNotValid || designationInvalid || nameInvalid) {
-            status = RegistrationStatus.PARTIALLY_REGISTERED;
-            return;
-        }
-        status = RegistrationStatus.REGISTERED;
-    }
+	@JsonIgnore
+	public boolean isUnRegistered() {
+		return status.equals(RegistrationStatus.UNREGISTERED);
+	}
 
-    public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
-        operator = frontLineWorker.getOperator();
-        circle = frontLineWorker.getCircle();
-        locationId = frontLineWorker.getLocationId();
-        return this;
-    }
+	@JsonIgnore
+	public boolean isAlreadyRegistered() {
+		return !isUnRegistered();
+	}
 
-    public boolean courseInProgress() {
-        return bookMark().notAtPlayThanks();
-    }
+	public void decideRegistrationStatus(Location location) {
+		boolean locationAbsent = (Location.getDefaultLocation().equals(location));
+		boolean locationIncomplete = location.isMissingDetails();
+		boolean designationInvalid = Designation.isInValid(designationName());
+		boolean nameInvalid = StringUtils.isBlank(name);
+		boolean isLocationStatusNotValid = location.getLocationStatusAsEnum() != LocationStatus.VALID;
 
-    private String prefixMsisdnWith91(String msisdn) {
-        return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
-    }
+		if (locationAbsent || locationIncomplete || isLocationStatusNotValid || designationInvalid || nameInvalid) {
+			status = RegistrationStatus.PARTIALLY_REGISTERED;
+			return;
+		}
+		status = RegistrationStatus.REGISTERED;
+	}
 
-    private void updateFlwId(UUID flwId) {
-        if (this.flwId != null && !this.flwId.equals(flwId)) {
-            log.warn(String.format("Changing FLW ID for msisdn[%s]", this.msisdn));
-        }
+	public FrontLineWorker updateWith(FrontLineWorker frontLineWorker) {
+		operator = frontLineWorker.getOperator();
+		circle = frontLineWorker.getCircle();
+		locationId = frontLineWorker.getLocationId();
+		return this;
+	}
 
-        this.flwId = flwId;
-    }
+	public boolean courseInProgress() {
+		return bookMark().notAtPlayThanks();
+	}
 
-    public void updateJobAidUsage(Integer durationInMilliSec) {
-        this.currentJobAidUsage += durationInMilliSec;
-    }
-    
-    public void updateCourseUsage(Integer durationInMilliSec) {
-        this.currentCourseUsage += durationInMilliSec;
-    }
+	private String prefixMsisdnWith91(String msisdn) {
+		return msisdn != null && msisdn.length() == 10 ? "91" + msisdn : msisdn;
+	}
 
-    public void updateLocation(Location location) {
-        locationId = location.getExternalId();
-        if (isAlreadyRegistered())
-            decideRegistrationStatus(location);
-    }
+	private void updateFlwId(UUID flwId) {
+		if (this.flwId != null && !this.flwId.equals(flwId)) {
+			log.warn(String.format("Changing FLW ID for msisdn[%s]", this.msisdn));
+		}
 
-    public VerificationStatus getVerificationStatus() {
-        return verificationStatus;
-    }
+		this.flwId = flwId;
+	}
 
-    public void setVerificationStatus(VerificationStatus verificationStatus) {
-        this.verificationStatus = verificationStatus;
-    }
+	public void updateJobAidUsage(Integer durationInMilliSec) {
+		this.currentJobAidUsage += durationInMilliSec;
+	}
 
-    private boolean canBeUpdated(DateTime updatedOn) {
-        if (lastModified == null || updatedOn == null) {
-            return true;
-        }
-        return (DateUtil.isOnOrBefore(lastModified, updatedOn));
-    }
+	public void updateCourseUsage(Integer durationInMilliSec) {
+		this.currentCourseUsage += durationInMilliSec;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	public void updateLocation(Location location) {
+		locationId = location.getExternalId();
+		if (isAlreadyRegistered())
+			decideRegistrationStatus(location);
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public VerificationStatus getVerificationStatus() {
+		return verificationStatus;
+	}
 
-    public void setAlternateContactNumber(String alternateContactNumber) {
-        this.alternateContactNumber = alternateContactNumber;
-    }
+	public void setVerificationStatus(VerificationStatus verificationStatus) {
+		this.verificationStatus = verificationStatus;
+	}
 
-    public ReportCard getReportCard() {
-        return reportCard;
-    }
+	private boolean canBeUpdated(DateTime updatedOn) {
+		if (lastModified == null || updatedOn == null) {
+			return true;
+		}
+		return (DateUtil.isOnOrBefore(lastModified, updatedOn));
+	}
 
-    public void setPromptsHeard(Map<String, Integer> promptsHeard) {
-        this.promptsHeard = promptsHeard;
-    }
-    
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public void setAlternateContactNumber(String alternateContactNumber) {
+		this.alternateContactNumber = alternateContactNumber;
+	}
+
+	public ReportCard getReportCard() {
+		return reportCard;
+	}
+
+	public void setPromptsHeard(Map<String, Integer> promptsHeard) {
+		this.promptsHeard = promptsHeard;
+	}
+
 
 	public void setPromptsHeardForMA(Map<String, Integer> promptsHeardForMA) {
 		this.promptsHeardForMA = promptsHeardForMA;
@@ -594,6 +601,6 @@ public class FrontLineWorker extends MotechBaseDataObject {
 	public void setPassingScore(int passingScore) {
 		this.passingScore = passingScore;
 	}
-	
-    
+
+
 }
