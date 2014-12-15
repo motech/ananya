@@ -27,7 +27,7 @@ public class LocationRegistrationService {
     private LocationService locationService;
     private LocationDimensionService locationDimensionService;
     private RegistrationService registrationService;
- // private static final Object SYNC_LOCK = new Object();
+    private static final Object SYNC_LOCK = new Object();
  	private static HashMap<String, Object> hmLocationDetailsLock = new HashMap<String, Object>();
     Logger logger = Logger.getLogger(LocationRegistrationService.class);
 
@@ -46,13 +46,13 @@ public class LocationRegistrationService {
     }
 
     public void addOrUpdate(LocationSyncRequest locationSyncRequest) {
-    	Object syncLockObject = getSyncLockObject(locationSyncRequest);
-		synchronized (syncLockObject) {
-            if (isNotLatestRequest(locationSyncRequest)) {
-                logger.info("Not syncing " + locationSyncRequest + " since it is not the latest request.");
-                return;
-            }
-
+    	logger.info("got location synch request for:"+locationSyncRequest.toString());
+    	//Object syncLockObject = getSyncLockObject(locationSyncRequest);
+    	if (isNotLatestRequest(locationSyncRequest)) {
+            logger.info("Not syncing " + locationSyncRequest + " since it is not the latest request.");
+            return;
+        }
+		synchronized (SYNC_LOCK) {
             LocationList locationList = new LocationList(locationService.getAll());
             LocationRequest existingLocationRequest = locationSyncRequest.getExistingLocation();
             LocationRequest newLocationRequest = locationSyncRequest.getNewLocation();
@@ -211,10 +211,11 @@ public class LocationRegistrationService {
 		String key = getKey(new Location(existingLocationRequest.getState(), existingLocationRequest.getDistrict(), existingLocationRequest.getBlock(), existingLocationRequest.getPanchayat()));
 		if(!hmLocationDetailsLock.containsKey(key))
 			hmLocationDetailsLock.put(key, new Object());
+		logger.info("returning synch object "+hmLocationDetailsLock.get(key)+" with key as:"+key);
 		return hmLocationDetailsLock.get(key);
 	}
 
 	private String getKey(Location location){
-		return location.getState()+"_"+location.getDistrict()+"_"+location.getBlock()+"_"+location.getPanchayat();
+		return location.getState()+"_"+location.getDistrict()+"_"+location.getBlock();
 	}
 }
