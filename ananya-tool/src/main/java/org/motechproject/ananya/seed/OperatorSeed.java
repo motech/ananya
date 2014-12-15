@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 @Component
 public class OperatorSeed {
@@ -99,6 +102,17 @@ public class OperatorSeed {
              Operator operator = new Operator("bsnl", convertMinutesToMilliSeconds(60), 500, 60500,"up");
              allOperators.add(operator);     
              allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
-                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),"up" ));
+                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),operator.getCircle() ));
+    }
+    
+    @Seed(priority = 0, version = "1.21", comment = "adding pulse to second mapping for operators seperately for bihar circle")
+    public void addBiharVodaIdeaOperators() throws IOException {    
+    		List <String> operatorList =  Arrays.asList("airtel", "vodafone");
+    		for(String operatorString:operatorList){
+             Operator operator = new Operator(operatorString , convertMinutesToMilliSeconds(66), 0, 60000,"bihar");
+             allOperators.add(operator);     
+             allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
+                     operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),operator.getCircle() ));
+    		}
     }
 }

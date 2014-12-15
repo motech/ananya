@@ -1,9 +1,10 @@
 package org.motechproject.ananya.repository;
 
+import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
-import org.motechproject.ananya.domain.Location;
+import org.ektorp.support.View;
 import org.motechproject.ananya.domain.Operator;
 import org.motechproject.dao.MotechBaseRepository;
 import org.slf4j.Logger;
@@ -56,6 +57,13 @@ public class AllOperators extends MotechBaseRepository<Operator> {
         		operatorToReturn = operator;
         }
         return operatorToReturn;
+    }
+    
+    @View(name = "by_name_and_circle", map = "function(doc){if(doc.type === 'Operator') emit([doc.name, doc.circle]);}")
+    public Operator findByNameAndCircle(String name, String circle) {
+    	 List<Operator> operators = queryView("by_name_and_circle", ComplexKey.of(name.toLowerCase(), circle.toLowerCase()));
+        if (operators == null || operators.isEmpty()) return null;
+        return operators.get(0);
     }
     
 }
