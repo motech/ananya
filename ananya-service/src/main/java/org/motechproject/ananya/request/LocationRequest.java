@@ -60,4 +60,12 @@ public class LocationRequest implements Serializable {
     public boolean equals(Object other) {
         return EqualsBuilder.reflectionEquals(this, other);
     }
+
+	@Override
+	public String toString() {
+		return "LocationRequest [state=" + state + ", district=" + district
+				+ ", block=" + block + ", panchayat=" + panchayat + "]";
+	}
+    
+    
 }

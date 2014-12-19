@@ -49,8 +49,8 @@ public class LocationSyncRequest {
 
 	@Override
 	public String toString() {
-		return "LocationSyncRequest [existingLocation=" + existingLocation
-				+ ", newLocation=" + newLocation + ", locationStatus="
+		return "LocationSyncRequest [existingLocation=" + existingLocation!=null?existingLocation.toString():"null"
+				+ ", newLocation=" + newLocation!=null?newLocation.toString():"null" + ", locationStatus="
 				+ locationStatus + ", lastModifiedTime=" + lastModifiedTime
 				+ "]";
 	}
