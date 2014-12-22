@@ -63,6 +63,10 @@ public class LocationList {
     public void add(Location location) {
         locations.add(location);
     }
+    
+    public void remove(Location location) {
+        locations.remove(location);
+    }
 
     public List<Location> getUniqueStateDistrictBlockLocations() {
         ArrayList<Location> uniqueStateDistrictBlockList = new ArrayList<Location>();
@@ -116,4 +120,9 @@ public class LocationList {
         }
         return maxBlockCode + 1;
     }
+    
+    public int getListSize(){
+    	return locations.size();
+    }
+
 }
