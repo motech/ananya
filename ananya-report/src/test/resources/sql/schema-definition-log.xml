@@ -426,6 +426,9 @@
         </createTable>
 
         <sql splitStatements="false">
+            <!--COPY report.temp_msisdn_flw_guid FROM '${data.directory}/flw_guid_from_ref_db.csv' DELIMITERS ',' CSV;-->
+            <!--UPDATE report.front_line_worker_dimension AS flwd SET flw_guid = temp.flw_guid FROM-->
+            <!--report.temp_msisdn_flw_guid AS temp WHERE temp.msisdn = flwd.msisdn;-->
             UPDATE report.front_line_worker_dimension SET flw_guid = ((SELECT '11111111-1111-1111-1111-111111111111'
             WHERE id=id)) where flw_guid is null;
         </sql>
@@ -687,11 +690,22 @@
             (flw_id, is_current);
         </sql>
     </changeSet>
-    
-     <changeSet context="setup" author="Onmobile-version1.11" id="106">
+
+    <changeSet context="setup" author="Onmobile-version1.11" id="106">
         <sql splitStatements="false">
             ALTER TABLE report.operator_dimension ADD COLUMN circle VARCHAR(100);
+			INSERT INTO report.course_item_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
+            content_id, file_name, duration FROM report.course_item_details_dimension where duration is not null and language_id=2;
+			INSERT INTO report.job_aid_content_details_dimension (language_id,content_id,file_name,duration) SELECT 3,
+            content_id, file_name, duration FROM report.job_aid_content_details_dimension where duration is not null and language_id=2;
         </sql>
     </changeSet>
+	
+    <changeSet context="setup" author="Onmobile-version1.11" id="107">
+        <sql splitStatements="false">
+           alter table report.registration_measure alter location_id type bigint;
+        </sql>
+    </changeSet>
+
 
 </databaseChangeLog>
