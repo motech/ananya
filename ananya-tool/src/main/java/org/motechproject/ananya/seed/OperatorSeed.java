@@ -115,4 +115,13 @@ public class OperatorSeed {
                      operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),operator.getCircle() ));
     		}
     }
+    
+    @Seed(priority = 0, version = "1.22", comment = "adding pulse to second mapping for idea seperately for bihar circle")
+    public void addBiharIdeaOperators() throws IOException {    
+    	     Operator operator = new Operator("idea", convertMinutesToMilliSeconds(64), 500, 60500,"bihar");
+             allOperators.add(operator);     
+             allOperatorDimensions.add(new OperatorDimension(operator.getName(), operator.getAllowedUsagePerMonth(),
+                    operator.getStartOfPulseInMilliSec(), operator.getEndOfPulseInMilliSec(),operator.getCircle() ));
+    		
+    }
 }
