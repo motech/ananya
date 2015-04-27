@@ -2,6 +2,8 @@ package org.motechproject.ananya.domain;
 
 import java.util.Date;
 
+
+
 public class FileInfo implements Comparable  {
     private String name;
     private Float size;
